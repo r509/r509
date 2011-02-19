@@ -1,0 +1,3 @@
+ca_cert: 'rubyca.cer'
+ca_key: 'rubyca.key'
+cdp_location: 'URI:http://crl.securetrust.com/STCA.crl'
