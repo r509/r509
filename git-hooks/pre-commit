@@ -1,7 +1,18 @@
 #!/usr/bin/env ruby
-#adapted from http://book.git-scm.com/5_git_hooks.html
+require 'pty'
 html_path = "rspec_results.html"  
-`rspec -f h -o #{html_path} -f p tests/rspec.rb` # run the spec. send progress to screen. save html results to html_path  
+#PTY.spawn trick from
+#http://stackoverflow.com/questions/1154846/continuously-read-from-stdout-of-external-process-in-ruby
+begin
+	PTY.spawn( "rspec --color -f h -o #{html_path} -f d tests/rspec.rb" ) do |stdin, stdout, pid|
+	begin
+		stdin.each { |line| print line }
+	rescue Errno::EIO
+		end
+	end
+rescue PTY::ChildExited
+	puts "The child process exited!"
+end
 
 # find out how many errors were found  
 html = open(html_path).read  
