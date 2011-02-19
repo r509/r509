@@ -14,7 +14,7 @@ pending = html.match(/(\d+) pending/)[0].to_i rescue 0
 
 if failures.zero?  
   puts "0 failed! #{examples} run, #{pending} pending"  
-  `open #{html_path}`
+  puts "View rspec results at #{File.expand_path(html_path)}"  
   exit 0
 else  
   puts "\aDID NOT COMMIT YOUR FILES!"  

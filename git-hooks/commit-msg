@@ -1,0 +1,19 @@
+#!/usr/bin/env ruby
+html_path = "rspec_results.html"
+# find out how many errors were found  
+html = open(html_path).read
+examples = html.match(/(\d+) examples/)[0].to_i rescue 0
+failures = html.match(/(\d+) failures/)[0].to_i rescue 0
+if failures == 0 then
+        failures = html.match(/(\d+) failure/)[0].to_i rescue 0
+end
+pending = html.match(/(\d+) pending/)[0].to_i rescue 0
+
+
+message_file = ARGV[0]
+message = File.read(message_file)
+index = message.index('# Please enter the commit message for your changes. Lines starting')
+message.insert(index-1, "\n#{failures} failed! #{examples} run, #{pending} pending")
+open(message_file,'w') { |f| 
+	f.puts(message)
+}
