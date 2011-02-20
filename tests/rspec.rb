@@ -75,22 +75,25 @@ end
 
 describe Ca do
 	context "issuing" do
-		it "matches subject (non-san) (incomplete)" do
+		it "properly issues (non-san) server cert from test_ca" do
 			csr = Csr.new
 			csr.create_csr_from_cert @@cert
-			cert = Ca::sign_cert(csr).to_pem
-			cert.should match(/BEGIN CERTIFICATE/)
+			cert = Ca::sign_cert(csr,'test_ca','server')
+			cert.to_pem.should match(/BEGIN CERTIFICATE/)
+			cert.subject.to_s.should == '/C=US/ST=Illinois/L=Chicago/O=Paul Kehrer/CN=langui.sh'
+			extended_key_usage = cert.extensions['extendedKeyUsage']
+			extended_key_usage[0]['value'].should == 'TLS Web Server Authentication'
 		end
 		it "contains all san domains (incomplete)" do
 			csr = Csr.new
 			csr.create_csr_from_cert @@cert
-			cert = Ca::sign_cert(csr,['langui.sh','domain2.com'])
+			cert = Ca::sign_cert(csr,'test_ca','server',['langui.sh','domain2.com'])
 			cert.san_names.should == ['langui.sh','domain2.com']
 		end
 		it "issues a csr made via array" do
 			csr = Csr.new
 			csr.create_csr_with_subject [['CN','langui.sh']]
-			cert = Ca::sign_cert(csr)
+			cert = Ca::sign_cert(csr,'test_ca','server')
 			cert.subject.to_s.should == '/CN=langui.sh'
 		end
 	end

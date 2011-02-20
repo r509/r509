@@ -1,3 +1,26 @@
-ca_cert: 'rubyca.cer'
-ca_key: 'rubyca.key'
-cdp_location: 'URI:http://crl.securetrust.com/STCA.crl'
+test_ca: {
+        ca_cert: 'rubyca.cer',
+        ca_key: 'rubyca.key',
+        cdp_location: 'URI:http://crl.domain.com/rubyca.crl',
+        #ocsp_location: 'URI:http://ocsp.domain.com'
+        server: {
+                basic_constraints: "CA:FALSE",
+                key_usage: [digitalSignature,keyEncipherment],
+                extended_key_usage: [serverAuth]
+        },
+        client: {
+                basic_constraints: "CA:FALSE",
+                key_usage: [digitalSignature,keyEncipherment],
+                extended_key_usage: [clientAuth]
+        },
+        email: {
+                basic_constraints: "CA:FALSE",
+                key_usage: [digitalSignature,keyEncipherment],
+                extended_key_usage: [emailProtection]
+        },
+        clientserver: {
+                basic_constraints:  "CA:FALSE",
+                key_usage: [digitalSignature,keyEncipherment],
+                extended_key_usage: [serverAuth,clientAuth]
+        }
+}

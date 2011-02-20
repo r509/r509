@@ -5,6 +5,7 @@ class Cert
 	def initialize(cert)
 		@subject = nil
 		@san_names = nil
+		@extensions = nil
 		begin
 			@cert = OpenSSL::X509::Certificate.new cert
 			@cert.extensions.to_a.each { |extension| 
@@ -30,6 +31,19 @@ class Cert
 		if(@cert.kind_of?(OpenSSL::X509::Certificate)) then
 			return @cert.to_der
 		end
+	end
+
+	def extensions
+		parsed_extensions = Hash.new
+		@cert.extensions.to_a.each { |extension| 
+			extension = extension.to_a
+			if(!parsed_extensions[extension[0]].kind_of?(Array)) then
+				parsed_extensions[extension[0]] = []
+			end
+			hash = {'value' => extension[1], 'critical' => extension[2]}
+			parsed_extensions[extension[0]].push hash
+		}
+		parsed_extensions
 	end
 
 	#takes OpenSSL::X509::Extension object
