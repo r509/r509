@@ -3,6 +3,7 @@ $:.unshift File.expand_path("../", __FILE__)
 require 'Csr'
 require 'Ca'
 require 'Cert'
+require 'Crl'
 require 'test_vars'
 
 
@@ -140,5 +141,36 @@ describe Cert do
 			cert = Cert.new @@cert
 			cert.san_names.should == nil
 		end
+	end
+end
+
+describe Crl do
+	it "generates a crl from an existing revocation list" do
+		crl = Crl.new('test_ca')
+		crl.generate_crl.should match(/BEGIN X509 CRL/)
+	end
+	it "adds a cert to the revocation list" do
+		crl = Crl.new('test_ca')
+		crl.revoke_cert(383834832)
+		crl.generate_crl.should match(/BEGIN X509 CRL/)
+		found = false
+		crl.revoked_list.each { |item| 
+			if item['serial'] == 383834832 then
+				found = true
+			end	
+		}
+		found.should == true
+	end
+	it "removes a cert from the revocation list" do
+		crl = Crl.new('test_ca')
+		crl.unrevoke_cert(383834832)
+		crl.generate_crl
+		found = false
+		crl.revoked_list.each { |item| 
+			if item['serial'] == 383834832 then
+				found = true
+			end	
+		}
+		found.should == false
 	end
 end

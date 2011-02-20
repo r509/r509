@@ -1,7 +1,9 @@
 test_ca: {
-        ca_cert: 'rubyca.cer',
-        ca_key: 'rubyca.key',
-        cdp_location: 'URI:http://crl.domain.com/rubyca.crl',
+        ca_cert: 'cert_data/test_ca/test_ca.cer',
+        ca_key: 'cert_data/test_ca/test_ca.key',
+        cdp_location: 'URI:http://crl.domain.com/test_ca.crl',
+        crl_list: 'cert_data/test_ca/crl_list.txt',
+        crl_number: 'cert_data/test_ca/crl_number.txt',
         ocsp_location: 'URI:http://ocsp.domain.com',
         server: {
                 basic_constraints: "CA:FALSE",
