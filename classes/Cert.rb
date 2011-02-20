@@ -42,7 +42,7 @@ class Cert
 		san_string = extension.to_a[1]
 		stripped = []
 		san_string.split(',').each{ |name| 
-			stripped.push name.strip.gsub(/DNS:/,'')
+			stripped.push name.gsub(/DNS:/,'').strip
 		}
 		@san_names = stripped
 	end

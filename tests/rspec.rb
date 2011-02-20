@@ -32,10 +32,11 @@ describe Csr do
 			csr.create_csr_from_cert @@cert
 			csr.bit_strength.should == 2048
 		end
-		it "encodes the subject data from the cert"
-			#csr = Csr.new
-			#csr.create_csr_from_cert @@cert
-			#csr.subject.should == [["C", "US", 19], ["ST", "Illinois", 19], ["L", "Chicago", 19], ["O", "Paul Kehrer", 19], ["CN", "langui.sh", 19]]
+		it "encodes the subject data from the cert" do
+			csr = Csr.new
+			csr.create_csr_from_cert @@cert
+			csr.subject.to_s.should == '/C=US/ST=Illinois/L=Chicago/O=Paul Kehrer/CN=langui.sh'
+		end
 	end
 	context "when passing a 1024 key length to create_csr_from_cert" do
 		it "has a public key length of 1024" do
@@ -48,7 +49,25 @@ describe Csr do
 		it "duplicates should be removed" do
 			csr = Csr.new
 			csr.create_csr_from_cert @@cert, 2048, ['langui.sh','victoly.com','victoly.com','domain.local','victoly.com']
-			csr.san_names.should == ["DNS: langui.sh", "DNS: victoly.com", "DNS: domain.local"]
+			csr.san_names.should == ["langui.sh", "victoly.com", "domain.local"]
+		end
+	end
+	context "when passing an array to create_csr_with_subject" do
+		it "generates a matching csr" do
+			csr = Csr.new
+			csr.create_csr_with_subject [['CN','langui.sh'],['ST','Illinois'],['L','Chicago'],['C','US'],['emailAddress','ca@langui.sh']]
+			csr.subject.to_s.should == '/CN=langui.sh/ST=Illinois/L=Chicago/C=US/emailAddress=ca@langui.sh'
+		end
+		it "generates a matching csr with san domains" do
+			csr = Csr.new
+			csr.create_csr_with_subject [['CN','langui.sh'],['emailAddress','ca@langui.sh']],2048,['domain2.com','domain3.com']
+			csr.subject.to_s.should == '/CN=langui.sh/emailAddress=ca@langui.sh'
+			csr.san_names.should == ["domain2.com", "domain3.com"]
+		end
+		it "generates a matching csr when supplying raw oids" do
+			csr = Csr.new
+			csr.create_csr_with_subject [['2.5.4.3','common name'],['2.5.4.15','business category'],['2.5.4.7','locality'],['1.3.6.1.4.1.311.60.2.1.3','jurisdiction oid openssl typically does not know']]
+			csr.subject.to_s.should == '/CN=common name/2.5.4.15=business category/L=locality/1.3.6.1.4.1.311.60.2.1.3=jurisdiction oid openssl typically does not know'
 		end
 	end
 end
