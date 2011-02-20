@@ -1,8 +1,9 @@
 require 'openssl'
 
 class Cert
-	attr_reader :cert, :san_names
+	attr_reader :cert, :san_names, :subject
 	def initialize(cert)
+		@subject = nil
 		@san_names = nil
 		begin
 			@cert = OpenSSL::X509::Certificate.new cert
@@ -11,8 +12,9 @@ class Cert
 					parse_san_extension(extension)
 				end
 			}
-		rescue OpenSSL::X509::CertificateError
-			@cert = nil
+			@subject = @cert.subject
+		#rescue OpenSSL::X509::CertificateError
+		#	@cert = nil
 		end
 	end
 
@@ -29,13 +31,6 @@ class Cert
 			return @cert.to_der
 		end
 	end
-
-	def subject
-		if(@cert.kind_of?(OpenSSL::X509::Certificate)) then
-			return @cert.subject.to_a
-		end
-	end
-
 
 	#takes OpenSSL::X509::Extension object
 	def parse_san_extension(extension)

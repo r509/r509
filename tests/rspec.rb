@@ -87,6 +87,12 @@ describe Ca do
 			cert = Ca::sign_cert(csr,['langui.sh','domain2.com'])
 			cert.san_names.should == ['langui.sh','domain2.com']
 		end
+		it "issues a csr made via array" do
+			csr = Csr.new
+			csr.create_csr_with_subject [['CN','langui.sh']]
+			cert = Ca::sign_cert(csr)
+			cert.subject.to_s.should == '/CN=langui.sh'
+		end
 	end
 end
 
@@ -122,7 +128,7 @@ describe Cert do
 			cert.to_s.should == @@cert
 		end
 	end
-	context "generically" do
+	context "generic tests" do
 		it "returns list of san_names when it is a san cert" do
 			cert = Cert.new @@cert_san
 			cert.san_names.should == ['langui.sh']
