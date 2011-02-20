@@ -75,28 +75,44 @@ end
 
 
 describe Ca do
-	context "issuing" do
-		it "properly issues (non-san) server cert from test_ca" do
-			csr = Csr.new
-			csr.create_csr_from_cert @@cert
-			cert = Ca::sign_cert(csr,'test_ca','server')
-			cert.to_pem.should match(/BEGIN CERTIFICATE/)
-			cert.subject.to_s.should == '/C=US/ST=Illinois/L=Chicago/O=Paul Kehrer/CN=langui.sh'
-			extended_key_usage = cert.extensions['extendedKeyUsage']
-			extended_key_usage[0]['value'].should == 'TLS Web Server Authentication'
-		end
-		it "contains all san domains (incomplete)" do
-			csr = Csr.new
-			csr.create_csr_from_cert @@cert
-			cert = Ca::sign_cert(csr,'test_ca','server',['langui.sh','domain2.com'])
-			cert.san_names.should == ['langui.sh','domain2.com']
-		end
-		it "issues a csr made via array" do
-			csr = Csr.new
-			csr.create_csr_with_subject [['CN','langui.sh']]
-			cert = Ca::sign_cert(csr,'test_ca','server')
-			cert.subject.to_s.should == '/CN=langui.sh'
-		end
+	it "properly issues (non-san) server cert from test_ca" do
+		csr = Csr.new
+		csr.create_csr_from_cert @@cert
+		cert = Ca::sign_cert(csr,'test_ca','server')
+		cert.to_pem.should match(/BEGIN CERTIFICATE/)
+		cert.subject.to_s.should == '/C=US/ST=Illinois/L=Chicago/O=Paul Kehrer/CN=langui.sh'
+		extended_key_usage = cert.extensions['extendedKeyUsage']
+		extended_key_usage[0]['value'].should == 'TLS Web Server Authentication'
+	end
+	it "contains all san domains (incomplete)" do
+		csr = Csr.new
+		csr.create_csr_from_cert @@cert
+		cert = Ca::sign_cert(csr,'test_ca','server',nil,['langui.sh','domain2.com'])
+		cert.san_names.should == ['langui.sh','domain2.com']
+	end
+	it "issues a csr made via array" do
+		csr = Csr.new
+		csr.create_csr_with_subject [['CN','langui.sh']]
+		cert = Ca::sign_cert(csr,'test_ca','server')
+		cert.subject.to_s.should == '/CN=langui.sh'
+	end
+	it "issues a cert with the subject array provided" do
+		csr = Csr.new
+		csr.create_csr_with_subject [['CN','langui.sh']]
+		cert = Ca::sign_cert(csr,'test_ca','server',[['CN','someotherdomain.com']])
+		cert.subject.to_s.should == '/CN=someotherdomain.com'
+	end
+	it "tests that policy identifiers are properly encoded" do
+		csr = Csr.new
+		csr.create_csr_with_subject [['CN','somedomain.com']]
+		cert = Ca::sign_cert(csr,'test_ca','server')
+		cert.extensions['certificatePolicies'][0]['value'].should == "Policy: 2.16.840.1.9999999999.1.2.3.4.1\n  CPS: http://example.com/cps\n"
+	end
+	it "tests basic constraints CA:TRUE and pathlen:0 on a subroot" do
+		csr = Csr.new
+		csr.create_csr_with_subject [['CN','Subroot Test']]
+		cert = Ca::sign_cert(csr,'test_ca','subroot')
+		cert.extensions['basicConstraints'][0]['value'].should == 'CA:TRUE, pathlen:0'
 	end
 end
 

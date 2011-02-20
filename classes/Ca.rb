@@ -4,7 +4,7 @@ $:.unshift File.expand_path("../../classes", __FILE__)
 require 'Cert'
 
 class Ca
-	def self.sign_cert(pem,ca,profile,domains=[])
+	def self.sign_cert(pem,ca,profile,subject=nil,domains=[])
 		@config = YAML::load(File.read("config.yaml"))
 		req = OpenSSL::X509::Request.new pem
 		san_names = merge_san_domains(req,domains)
@@ -23,7 +23,13 @@ class Ca
 		cert = OpenSSL::X509::Certificate.new
 		#not_before will be set to 6 hours before now to prevent issues with bad system clocks (clients don't sync)
 		from = Time.now - 6 * 60 * 60
-		cert.subject = req.subject
+		if(subject.kind_of?(Array)) then
+			name = OpenSSL::X509::Name.new
+			subject.each do |item| name.add_entry(item[0],item[1]) end
+			cert.subject = name
+		else
+			cert.subject = req.subject
+		end
 		cert.issuer = ca_cert.subject
 		cert.not_before = from
 		cert.not_after = from + 365 * 24 * 60 * 60
@@ -44,7 +50,9 @@ class Ca
 		ext << ef.create_extension("subjectKeyIdentifier", "hash")
 		ext << ef.create_extension("keyUsage", key_usage.join(","))
 		ext << ef.create_extension("authorityKeyIdentifier", "keyid:always,issuer:always")
-		ext << ef.create_extension("extendedKeyUsage", extended_key_usage.join(","))
+		if(extended_key_usage.size > 0) then
+			ext << ef.create_extension("extendedKeyUsage", extended_key_usage.join(","))
+		end
 		conf = build_conf('certPolicies',@config[ca][profile]['certificate_policies'])
 		ef.config = OpenSSL::Config.parse(conf)
 		#ef.config = OpenSSL::Config.parse(<<-_end_of_cnf_)

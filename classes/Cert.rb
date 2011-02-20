@@ -33,6 +33,14 @@ class Cert
 		end
 	end
 
+	def not_before
+		@cert.not_before
+	end
+
+	def not_after
+		@cert.not_after
+	end
+
 	def extensions
 		parsed_extensions = Hash.new
 		@cert.extensions.to_a.each { |extension| 

@@ -40,5 +40,11 @@ test_ca: {
                 key_usage: [digitalSignature],
                 extended_key_usage: [timeStamping],
                 certificate_policies: [ "policyIdentifier=2.16.840.1.9999999999.1.2.3.4.6", "CPS.1=http://example.com/cps"]
+        },
+        subroot: {
+                basic_constraints:  "CA:TRUE,pathlen:0",
+                key_usage: [keyCertSign,cRLSign],
+                extended_key_usage: [],
+                certificate_policies: [ ]
         }
 }

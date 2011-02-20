@@ -28,7 +28,7 @@ CBydpPHBeew14n0PXXLB8jrDd6PtlKvKWrLVs9igASBuW584chaWNw039zxRKoqq
 PsMwIw+1he4Bax4hH4fM4wQOFpnhk5Y34VmdZqo1JtF7Vn41ghGwsXVswvl6wPC1
 g4+GUUwJtQ6cJyMmN4sIHDbCFTOWBlUijvMrvl3wxncqDmOp
 -----END CERTIFICATE-----', 2048, ['langui.sh','victoly.com','victoly.com','ssl.trustwave.com']
-puts Ca::sign_cert csr,'test_ca','server', ['langui.sh']
+puts Ca::sign_cert csr,'test_ca','server',nil,['langui.sh']
 =begin
 csr = Csr.new
 csr.create_csr_with_subject([['CN','langui.sh'],['ST','Illinois'],['L','Chicago'],['C','US'],['emailAddress','ca@langui.sh']])
