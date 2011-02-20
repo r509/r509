@@ -14,7 +14,11 @@ class Ca
 		ca_key = OpenSSL::PKey::RSA.new File.read(@config[ca]['ca_key'])
 
 		#generate random serial in accordance with best practices
-		serial = OpenSSL::BN.rand(160,0) # 160 bits is 20 bytes (octets). since second param is 0 the most significant bit must always be 1
+		#guidelines state 20-bits of entropy, but we can cram more in
+		#per rfc5280 conforming CAs can make the serial field up to 20 octets
+		serial = OpenSSL::BN.rand(160,0) # 160 bits is 20 bytes (octets).
+		#since second param is 0 the most significant bit must always be 1
+		#this theoretically gives us 159 bits of entropy
 
 		cert = OpenSSL::X509::Certificate.new
 		#not_before will be set to 6 hours before now to prevent issues with bad system clocks (clients don't sync)
@@ -25,13 +29,13 @@ class Ca
 		cert.not_after = from + 365 * 24 * 60 * 60
 		cert.public_key = req.public_key
 		cert.serial =serial
-		cert.version = 2 # X509v3
+		cert.version = 2 #2 means v3
 
 
 		basic_constraints = @config[ca][profile]['basic_constraints']
 		key_usage = @config[ca][profile]['key_usage']
 		extended_key_usage = @config[ca][profile]['extended_key_usage']
-
+		certificate_policies = @config[ca][profile]['certificate_policies']
 		ef = OpenSSL::X509::ExtensionFactory.new
 		ef.subject_certificate = cert
 		ef.issuer_certificate = ca_cert
@@ -41,6 +45,15 @@ class Ca
 		ext << ef.create_extension("keyUsage", key_usage.join(","))
 		ext << ef.create_extension("authorityKeyIdentifier", "keyid:always,issuer:always")
 		ext << ef.create_extension("extendedKeyUsage", extended_key_usage.join(","))
+		conf = build_conf('certPolicies',@config[ca][profile]['certificate_policies'])
+		ef.config = OpenSSL::Config.parse(conf)
+		#ef.config = OpenSSL::Config.parse(<<-_end_of_cnf_)
+		#[certPolicies]
+		#CPS.1 = http://www.example.com/cps
+		#_end_of_cnf_
+
+
+		ext << ef.create_extension("certificatePolicies", '@certPolicies')
 		if ! san_names.empty? then
 			ext << ef.create_extension("subjectAltName", san_names.join(",")) 
 		end
@@ -73,5 +86,11 @@ class Ca
 			domains_from_csr.concat(parsed_domains).uniq!
 		end
 		domains_from_csr
+	end
+
+	def self.build_conf(section,data)
+		conf = ["[#{section}]"]
+		conf.concat data
+		conf.join "\n"
 	end
 end

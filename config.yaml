@@ -2,25 +2,41 @@ test_ca: {
         ca_cert: 'rubyca.cer',
         ca_key: 'rubyca.key',
         cdp_location: 'URI:http://crl.domain.com/rubyca.crl',
-        #ocsp_location: 'URI:http://ocsp.domain.com'
+        ocsp_location: 'URI:http://ocsp.domain.com',
         server: {
                 basic_constraints: "CA:FALSE",
                 key_usage: [digitalSignature,keyEncipherment],
-                extended_key_usage: [serverAuth]
+                extended_key_usage: [serverAuth],
+                certificate_policies: [ "policyIdentifier=2.16.840.1.9999999999.1.2.3.4.1", "CPS.1=http://example.com/cps"]
         },
         client: {
                 basic_constraints: "CA:FALSE",
                 key_usage: [digitalSignature,keyEncipherment],
-                extended_key_usage: [clientAuth]
+                extended_key_usage: [clientAuth],
+                certificate_policies: [ "policyIdentifier=2.16.840.1.9999999999.1.2.3.4.2", "CPS.1=http://example.com/cps"]
         },
         email: {
                 basic_constraints: "CA:FALSE",
                 key_usage: [digitalSignature,keyEncipherment],
-                extended_key_usage: [emailProtection]
+                extended_key_usage: [emailProtection],
+                certificate_policies: [ "policyIdentifier=2.16.840.1.9999999999.1.2.3.4.3", "CPS.1=http://example.com/cps"]
         },
         clientserver: {
                 basic_constraints:  "CA:FALSE",
                 key_usage: [digitalSignature,keyEncipherment],
-                extended_key_usage: [serverAuth,clientAuth]
+                extended_key_usage: [serverAuth,clientAuth],
+                certificate_policies: [ "policyIdentifier=2.16.840.1.9999999999.1.2.3.4.4", "CPS.1=http://example.com/cps"]
+        },
+        codesigning: {
+                basic_constraints:  "CA:FALSE",
+                key_usage: [digitalSignature],
+                extended_key_usage: [codeSigning],
+                certificate_policies: [ "policyIdentifier=2.16.840.1.9999999999.1.2.3.4.5", "CPS.1=http://example.com/cps"]
+        },
+        timestamping: {
+                basic_constraints:  "CA:FALSE",
+                key_usage: [digitalSignature],
+                extended_key_usage: [timeStamping],
+                certificate_policies: [ "policyIdentifier=2.16.840.1.9999999999.1.2.3.4.6", "CPS.1=http://example.com/cps"]
         }
 }
