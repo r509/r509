@@ -76,10 +76,7 @@ class Cert
 	#takes OpenSSL::X509::Extension object
 	def parse_san_extension(extension)
 		san_string = extension.to_a[1]
-		stripped = []
-		san_string.split(',').each{ |name| 
-			stripped.push name.gsub(/DNS:/,'').strip
-		}
+		stripped = san_string.split(',').map{ |name| name.gsub(/DNS:/,'').strip }
 		@san_names = stripped
 	end
 end

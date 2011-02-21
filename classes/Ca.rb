@@ -89,11 +89,8 @@ class Ca
 	def self.merge_san_domains(domains)
 		domains_from_csr = parse_domains_from_csr
 		if (domains.kind_of?(Array)) then
-			parsed_domains = []
-			domains.each { |domain| 
-				parsed_domains.push('DNS: '+domain)
-			}
-			domains_from_csr.concat(parsed_domains).uniq!
+			domains = domains.map { |domain| 'DNS: '+domain }
+			domains_from_csr.concat(domains).uniq!
 		end
 		domains_from_csr
 	end

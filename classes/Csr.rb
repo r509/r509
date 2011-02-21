@@ -114,19 +114,11 @@ class Csr
 	end
 
 	def prefix_domains(domains)
-		prefixed = []
-		domains.each { |domain| 
-			prefixed.push('DNS: '+domain)
-		}
-		prefixed
+		domains.map { |domain| 'DNS: '+domain }
 	end
 
 	def strip_prefix(domains)
-		stripped = []
-		domains.each{ |name| 
-			stripped.push name.gsub(/DNS:/,'').strip
-		}
-		stripped
+		domains.map{ |name| name.gsub(/DNS:/,'').strip }
 	end
 
 	def parse_domains_from_csr
