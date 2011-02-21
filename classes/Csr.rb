@@ -1,13 +1,37 @@
 require 'openssl'
 
 class Csr
-	attr_reader :san_names, :key, :bit_strength, :subject
-	def initialize
-		@req = nil
-		@san_names = nil
-		@bit_strength = nil
-		@key = nil
-		@subject = nil
+	attr_reader :san_names, :key, :bit_strength, :subject, :req
+	def initialize(*args)
+		case args.size
+			when 0
+				@req = nil
+				@subject = nil
+				@bit_strength = nil
+				@san_names = nil
+				@key = nil
+			when 1
+				@req = OpenSSL::X509::Request.new args[0]
+				@subject = @req.subject
+				@san_names = parse_domains_from_csr
+				#cast to int, convert to binary, count size
+				@bit_strength = @req.public_key.n.to_i.to_s(2).size
+				@key = nil
+			when 2
+				#this is mostly a dupe of above. either wrap in a method or find a better solution than case
+				@req = OpenSSL::X509::Request.new args[0]
+				@subject = @req.subject
+				@san_names = parse_domains_from_csr
+				#cast to int, convert to binary, count size
+				@bit_strength = @req.public_key.n.to_i.to_s(2).size
+				@key = OpenSSL::PKey::RSA.new args[1]
+				#verify on the OpenSSL::X509::Request object verifies public key match
+				if !@req.verify(@key.public_key) then
+					raise ArgumentError, 'Key does not match request.'
+				end
+			else
+				raise ArgumentError, 'Too many arguments.'
+		end
 	end
 
 	def to_pem
@@ -27,7 +51,7 @@ class Csr
 	#string pem
 	#int bit_strength
 	#array domains
-	def create_csr_from_cert(pem,bit_strength=2048,domains=[])
+	def create_with_cert(pem,bit_strength=2048,domains=[])
 		domains_to_add = []
 		san_extension = nil
 		cert = OpenSSL::X509::Certificate.new(pem)
@@ -47,7 +71,7 @@ class Csr
 
 	#subject is array of form. you can also use oids (eg, '1.3.6.1.4.1.311.60.2.1.3')
 	#[['CN','langui.sh'],['ST','Illinois'],['L','Chicago'],['C','US'],['emailAddress','ca@langui.sh']]
-	def create_csr_with_subject(subject,bit_strength=2048,domains=[])
+	def create_with_subject(subject,bit_strength=2048,domains=[])
 		subject = OpenSSL::X509::Name.new subject
 		parsed_domains = prefix_domains(domains)
 		create_csr(subject,bit_strength,parsed_domains)
@@ -103,5 +127,22 @@ class Csr
 			stripped.push name.gsub(/DNS:/,'').strip
 		}
 		stripped
+	end
+
+	def parse_domains_from_csr
+		domains_from_csr = []
+		begin
+			set = OpenSSL::ASN1.decode(@req.attributes[0].value) #assuming just one attribute from above, that'd be extReq. this may be unsafe
+			seq = set.value[0]
+			extensions = seq.value.collect{|asn1ext| OpenSSL::X509::Extension.new(asn1ext).to_a }
+			extensions.each { |ext|
+				if ext[0] == 'subjectAltName' then 
+					domains_from_csr = ext[1].gsub(/DNS:/,'').split(',') 
+					domains_from_csr = domains_from_csr.collect {|x| x.strip }
+				end
+			}
+		rescue
+		end
+		domains_from_csr
 	end
 end

@@ -6,8 +6,8 @@ require 'Cert'
 class Ca
 	def self.sign_cert(pem,ca,profile,subject=nil,domains=[])
 		@config = YAML::load(File.read("config.yaml"))
-		req = OpenSSL::X509::Request.new pem
-		san_names = merge_san_domains(req,domains)
+		@req = OpenSSL::X509::Request.new pem
+		san_names = merge_san_domains(domains)
 
 		#load ca key and cert
 		ca_cert = OpenSSL::X509::Certificate.new File.read(@config[ca]['ca_cert'])
@@ -24,16 +24,17 @@ class Ca
 		#not_before will be set to 6 hours before now to prevent issues with bad system clocks (clients don't sync)
 		from = Time.now - 6 * 60 * 60
 		if(subject.kind_of?(Array)) then
-			name = OpenSSL::X509::Name.new
-			subject.each do |item| name.add_entry(item[0],item[1]) end
+			name = OpenSSL::X509::Name.new subject
+			#the following line shouldn't be needed since Name can take an array. remove when i'm sure of this
+			#subject.each do |item| name.add_entry(item[0],item[1]) end
 			cert.subject = name
 		else
-			cert.subject = req.subject
+			cert.subject = @req.subject
 		end
 		cert.issuer = ca_cert.subject
 		cert.not_before = from
 		cert.not_after = from + 365 * 24 * 60 * 60
-		cert.public_key = req.public_key
+		cert.public_key = @req.public_key
 		cert.serial =serial
 		cert.version = 2 #2 means v3
 
@@ -73,25 +74,42 @@ class Ca
 					"OCSP;" << @config[ca]['ocsp_location'])
 		end
 		cert.extensions = ext
-		cert.sign ca_key, OpenSSL::Digest::SHA1.new
+		message_digest = case @config[ca]['message_digest'].downcase
+			when 'sha1' then OpenSSL::Digest::SHA1.new
+			when 'sha256' then OpenSSL::Digest::SHA256.new
+			when 'sha512' then OpenSSL::Digest::SHA512.new
+			when 'md5' then OpenSSL::Digest::MD5.new
+			else OpenSSL::Digest::SHA1.new
+		end
+		cert.sign ca_key, message_digest
 		Cert.new cert
 	end
 
 	private
-	def self.merge_san_domains(req,domains)
-		domains_from_csr = []
-		#some prelim code to try to parse a SAN CSR
-		#set = OpenSSL::ASN1.decode(req.attributes[0].value) #assuming just one attribute from above, that'd be extReq
-		#seq = set.value[0]
-		#seq.value[0].value.each{ |san|
-		#	puts san.value.to_a
-		#}
+	def self.merge_san_domains(domains)
+		domains_from_csr = parse_domains_from_csr
 		if (domains.kind_of?(Array)) then
 			parsed_domains = []
 			domains.each { |domain| 
 				parsed_domains.push('DNS: '+domain)
 			}
 			domains_from_csr.concat(parsed_domains).uniq!
+		end
+		domains_from_csr
+	end
+
+	#this code is identical to the method in Csr. think about moving these to a helper class
+	def self.parse_domains_from_csr
+		domains_from_csr = []
+		begin
+			set = OpenSSL::ASN1.decode(@req.attributes[0].value) #assuming just one attribute from above, that'd be extReq. this may be unsafe
+			seq = set.value[0]
+			extensions = seq.value.collect{|asn1ext| OpenSSL::X509::Extension.new(asn1ext).to_a }
+			extensions.each { |ext| 
+				domains_from_csr = ext[1].gsub(/DNS:/,'').split(',') 
+				domains_from_csr = domains_from_csr.collect {|x| x.strip }
+			}
+		rescue
 		end
 		domains_from_csr
 	end

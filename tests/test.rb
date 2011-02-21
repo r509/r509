@@ -4,7 +4,7 @@ require 'Csr'
 require 'Ca'
 
 csr = Csr.new
-csr.create_csr_from_cert '-----BEGIN CERTIFICATE-----
+csr.create_with_cert '-----BEGIN CERTIFICATE-----
 MIIEEDCCAvigAwIBAgIFMUeG8mMwDQYJKoZIhvcNAQEFBQAwSDELMAkGA1UEBhMC
 VVMxIDAeBgNVBAoTF1NlY3VyZVRydXN0IENvcnBvcmF0aW9uMRcwFQYDVQQDEw5T
 ZWN1cmVUcnVzdCBDQTAeFw0xMDA4MjQxNDEwMDJaFw0xMzA4MjMxNDEwMDJaMFwx
@@ -29,6 +29,7 @@ PsMwIw+1he4Bax4hH4fM4wQOFpnhk5Y34VmdZqo1JtF7Vn41ghGwsXVswvl6wPC1
 g4+GUUwJtQ6cJyMmN4sIHDbCFTOWBlUijvMrvl3wxncqDmOp
 -----END CERTIFICATE-----', 2048, ['langui.sh','victoly.com','victoly.com','ssl.trustwave.com']
 puts Ca::sign_cert csr,'test_ca','server',nil,['langui.sh']
+puts Ca::sign_cert csr,'test_ca','server',[['CN','someotherdomain.com']],['langui.sh']
 =begin
 csr = Csr.new
 csr.create_csr_with_subject([['CN','langui.sh'],['ST','Illinois'],['L','Chicago'],['C','US'],['emailAddress','ca@langui.sh']])
@@ -36,7 +37,7 @@ puts csr.to_pem
 csr = Csr.new
 csr.create_csr_with_subject([['serialNumber','3939737'],['1.3.6.1.4.1.311.60.2.1.3','US'],['1.3.6.1.4.1.311.60.2.1.2','Delaware'],['2.5.4.15','V1.0, Clause 5.(d)'],['C','US'],['ST','Illinois'],['L','Chicago'], ['O','Trustwave Holdings, Inc.'],['CN','ssl.trustwave.com']])
 puts csr.to_pem
-create_csr_from_cert '-----BEGIN CERTIFICATE-----
+create_with_cert '-----BEGIN CERTIFICATE-----
 MIIEwjCCA6qgAwIBAgIFMUeGxxIwDQYJKoZIhvcNAQEFBQAwSDELMAkGA1UEBhMC
 VVMxIDAeBgNVBAoTF1NlY3VyZVRydXN0IENvcnBvcmF0aW9uMRcwFQYDVQQDEw5T
 ZWN1cmVUcnVzdCBDQTAeFw0wOTEwMzAxNjI0NTdaFw0xMjAxMjgxNjI0NTdaMIHQ
@@ -64,7 +65,7 @@ DAAjNpyRb9HnQe1oMM908CtsDo9cwQqrpMWJVufRUHU3TnDxlQB8AeAuIwBiyXFO
 PN/d/qjcvBPeNHj1E9QHn1t6PbgLzb398Oc8NVIq4bA0X9PV1kJDs/4R7H4D7QbI
 wLaJSZZBpGDcPm/ak7is8kZy3CVs9A==
 -----END CERTIFICATE-----', 1024
-create_csr_from_cert '-----BEGIN CERTIFICATE-----
+create_with_cert '-----BEGIN CERTIFICATE-----
 MIID3jCCAsagAwIBAgIQWBfAIo0YFQAEOjrbmfO2GTANBgkqhkiG9w0BAQUFADBk
 MQswCQYDVQQGEwJVUzERMA8GA1UECBMISWxsaW5vaXMxEDAOBgNVBAcTB0NoaWNh
 Z28xEjAQBgNVBAoTCVRydXN0d2F2ZTEcMBoGA1UEAxMTVHJ1c3R3YXZlIFNUQ0Eg
