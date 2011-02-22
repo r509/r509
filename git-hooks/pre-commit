@@ -4,7 +4,7 @@ html_path = "rspec_results.html"
 #PTY.spawn trick from
 #http://stackoverflow.com/questions/1154846/continuously-read-from-stdout-of-external-process-in-ruby
 begin
-	PTY.spawn( "rspec --color -f h -o #{html_path} -f d test/rspec.rb" ) do |stdin, stdout, pid|
+	PTY.spawn( "rspec --color -f h -o #{html_path} -f d spec/main_spec.rb" ) do |stdin, stdout, pid|
 	begin
 		stdin.each { |line| print line }
 	rescue Errno::EIO
@@ -26,7 +26,7 @@ pending = html.match(/(\d+) pending/)[0].to_i rescue 0
 if failures.zero?  
   puts "0 failed! #{examples} run, #{pending} pending"  
   puts "View rspec results at #{File.expand_path(html_path)}"  
-  sleep 3
+  sleep 1
   exit 0
 else  
   puts "\aDID NOT COMMIT YOUR FILES!"  
