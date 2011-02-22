@@ -4,4 +4,3 @@ module Ruby509
 	autoload :Cert, 'ruby509/Cert.rb'
 	autoload :Crl, 'ruby509/Crl.rb'
 end
-

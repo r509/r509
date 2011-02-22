@@ -11,3 +11,4 @@ end
 task :gem_uninstall do
 	`gem uninstall ruby509`
 end
+task :default => :spec
