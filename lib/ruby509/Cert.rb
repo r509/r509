@@ -61,6 +61,14 @@ module Ruby509
 			@cert.not_after
 		end
 
+		def public_key
+			@cert.public_key
+		end
+
+		def issuer
+			@cert.issuer
+		end
+
 		def extensions
 			parsed_extensions = Hash.new
 			@cert.extensions.to_a.each { |extension| 

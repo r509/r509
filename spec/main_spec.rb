@@ -150,6 +150,8 @@ describe Ruby509::Ca do
 end
 
 describe Ruby509::Cert do
+	it "has a public_key"
+	it "has the right issuer"
 	it "returns list of san_names when it is a san cert" do
 		cert = Ruby509::Cert.new @@cert_san
 		cert.san_names.should == ['langui.sh']

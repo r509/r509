@@ -23,8 +23,8 @@ module Ruby509
 			end
 		end
 		def sign_cert(pem,profile,subject=nil,domains=[])
-			@req = OpenSSL::X509::Request.new pem
-			san_names = merge_san_domains(domains)
+			req = OpenSSL::X509::Request.new pem
+			san_names = merge_san_domains(req,domains)
 
 			#load ca key and cert
 			ca_cert = OpenSSL::X509::Certificate.new File.read(@config['ca_cert'])
@@ -46,12 +46,12 @@ module Ruby509
 				#subject.each do |item| name.add_entry(item[0],item[1]) end
 				cert.subject = name
 			else
-				cert.subject = @req.subject
+				cert.subject = req.subject
 			end
 			cert.issuer = ca_cert.subject
 			cert.not_before = from
 			cert.not_after = from + 365 * 24 * 60 * 60
-			cert.public_key = @req.public_key
+			cert.public_key = req.public_key
 			cert.serial =serial
 			cert.version = 2 #2 means v3
 
@@ -103,8 +103,8 @@ module Ruby509
 		end
 
 		private
-		def merge_san_domains(domains)
-			domains_from_csr = parse_domains_from_csr
+		def merge_san_domains(req,domains)
+			domains_from_csr = parse_domains_from_csr(req)
 			if (domains.kind_of?(Array)) then
 				domains = domains.map { |domain| 'DNS: '+domain }
 				domains_from_csr.concat(domains).uniq!
@@ -113,10 +113,10 @@ module Ruby509
 		end
 
 		#this code is identical to the method in Csr. think about moving these to a helper class
-		def parse_domains_from_csr
+		def parse_domains_from_csr(req)
 			domains_from_csr = []
 			begin
-				set = OpenSSL::ASN1.decode(@req.attributes[0].value) #assuming just one attribute from above, that'd be extReq. this may be unsafe
+				set = OpenSSL::ASN1.decode(req.attributes[0].value) #assuming just one attribute from above, that'd be extReq. this may be unsafe
 				seq = set.value[0]
 				extensions = seq.value.collect{|asn1ext| OpenSSL::X509::Extension.new(asn1ext).to_a }
 				extensions.each { |ext| 
