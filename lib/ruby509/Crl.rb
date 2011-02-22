@@ -37,6 +37,14 @@ module Ruby509
 			@crl.to_der
 		end
 
+		def write_pem(filename)
+			File.open(filename, 'w') {|f| f.write(@crl.to_pem) }
+		end
+
+		def write_der(filename)
+			File.open(filename, 'w') {|f| f.write(@crl.to_der) }
+		end
+
 		def last_update
 			@crl.last_update
 		end

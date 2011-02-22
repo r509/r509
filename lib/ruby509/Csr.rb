@@ -49,6 +49,14 @@ module Ruby509
 			end
 		end
 
+		def write_pem(filename)
+			File.open(filename, 'w') {|f| f.write(@req.to_pem) }
+		end
+
+		def write_der(filename)
+			File.open(filename, 'w') {|f| f.write(@req.to_der) }
+		end
+
 		#string pem
 		#int bit_strength
 		#array domains

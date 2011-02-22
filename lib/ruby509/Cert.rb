@@ -69,6 +69,14 @@ module Ruby509
 			@cert.issuer
 		end
 
+		def write_pem(filename)
+			File.open(filename, 'w') {|f| f.write(@cert.to_pem) }
+		end
+
+		def write_der(filename)
+			File.open(filename, 'w') {|f| f.write(@cert.to_der) }
+		end
+
 		def extensions
 			parsed_extensions = Hash.new
 			@cert.extensions.to_a.each { |extension| 

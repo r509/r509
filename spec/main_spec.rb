@@ -5,6 +5,18 @@ require 'test_vars'
 
 
 describe Ruby509::Csr do
+	it "writes to pem" do
+		csr = Ruby509::Csr.new(@@csr)
+		csr.write_pem('/tmp/csr')
+		File.read('/tmp/csr').should == @@csr
+		File.delete('/tmp/csr')
+	end
+	it "writes to der" do
+		csr = Ruby509::Csr.new(@@csr)
+		csr.write_der('/tmp/csr')
+		File.read('/tmp/csr').should == @@csr_der
+		File.delete('/tmp/csr')
+	end
 	context "when initialized" do
 		it "returns nil on to_pem" do
 			csr = Ruby509::Csr.new
@@ -150,8 +162,14 @@ describe Ruby509::Ca do
 end
 
 describe Ruby509::Cert do
-	it "has a public_key"
-	it "has the right issuer"
+	it "has a public_key" do
+		cert = Ruby509::Cert.new @@cert
+		cert.public_key.to_pem.should == @@cert_public_key
+	end
+	it "has the right issuer" do
+		cert = Ruby509::Cert.new @@cert
+		cert.issuer.to_s.should == "/C=US/O=SecureTrust Corporation/CN=SecureTrust CA"
+	end
 	it "returns list of san_names when it is a san cert" do
 		cert = Ruby509::Cert.new @@cert_san
 		cert.san_names.should == ['langui.sh']
@@ -172,6 +190,18 @@ describe Ruby509::Cert do
 	it "return normal object on matching key/cert pair" do
 			expect { Ruby509::Cert.new(@@cert3,@@key3) }.to_not raise_error
 	end
+	it "writes to pem" do
+		cert = Ruby509::Cert.new(@@cert)
+		cert.write_pem('/tmp/cert')
+		File.read('/tmp/cert').should == @@cert+"\n"
+		File.delete('/tmp/cert')
+	end
+	it "writes to der" do
+		cert = Ruby509::Cert.new(@@cert)
+		cert.write_der('/tmp/cert')
+		File.read('/tmp/cert').should == @@cert_der
+		File.delete('/tmp/cert')
+	end
 	context "when initialized with an OpenSSL::X509::Certificate" do
 		it "returns pem on to_pem" do
 			test_cert = Ruby509::Cert.new @@cert
@@ -181,7 +211,7 @@ describe Ruby509::Cert do
 		it "returns der on to_der" do
 			test_cert = Ruby509::Cert.new @@cert
 			cert = Ruby509::Cert.new test_cert
-			cert.to_der.should == @@der
+			cert.to_der.should == @@cert_der
 		end
 		it "returns pem on to_s" do
 			test_cert = Ruby509::Cert.new @@cert
@@ -196,7 +226,7 @@ describe Ruby509::Cert do
 		end
 		it "returns der on to_der" do
 			cert = Ruby509::Cert.new @@cert
-			cert.to_der.should == @@der
+			cert.to_der.should == @@cert_der
 		end
 		it "returns pem on to_s" do
 			cert = Ruby509::Cert.new @@cert
@@ -241,5 +271,19 @@ describe Ruby509::Crl do
 		crl.generate_crl
 		crl.next_update.should == (now+2*3600)
 		
+	end
+	it "writes to pem (improve me)" do
+		crl = Ruby509::Crl.new('test_ca')
+		crl.generate_crl
+		crl.write_pem('/tmp/crl')
+		File.read('/tmp/crl').should_not == ''
+		File.delete('/tmp/crl')
+	end
+	it "writes to der (improve me)" do
+		crl = Ruby509::Crl.new('test_ca')
+		crl.generate_crl
+		crl.write_der('/tmp/crl')
+		File.read('/tmp/crl').should_not == ''
+		File.delete('/tmp/crl')
 	end
 end
