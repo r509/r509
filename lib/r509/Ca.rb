@@ -1,15 +1,15 @@
 require 'openssl'
 require 'yaml'
-require 'ruby509/Cert'
+require 'r509/Cert'
 
-module Ruby509
+module R509
 	class Ca
 		def initialize(ca)
-			if(File.exists?('~/.ruby509.yaml')) then
-				file = File.read('~/.ruby509.yaml')
+			if(File.exists?('~/.r509.yaml')) then
+				file = File.read('~/.r509.yaml')
 				test_ca = false
 			else
-				file = File.read(File.dirname(__FILE__)+'/../../ruby509.yaml')
+				file = File.read(File.dirname(__FILE__)+'/../../r509.yaml')
 				test_ca = true
 			end
 		

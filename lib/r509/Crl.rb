@@ -1,16 +1,16 @@
 require 'openssl'
 require 'yaml'
 
-module Ruby509
+module R509
 	class Crl
 		attr_reader :revoked_list
 		attr_accessor :validity_hours
 		def initialize(ca)
-			if(File.exists?('~/.ruby509.yaml')) then
-				file = File.read('~/.ruby509.yaml')
+			if(File.exists?('~/.r509.yaml')) then
+				file = File.read('~/.r509.yaml')
 				test_ca = false
 			else
-				file = File.read(File.dirname(__FILE__)+'/../../ruby509.yaml')
+				file = File.read(File.dirname(__FILE__)+'/../../r509.yaml')
 				test_ca = true
 			end
 		

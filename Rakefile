@@ -8,12 +8,12 @@ RSpec::Core::RakeTask.new(:rcov) do |t|
 end
 desc 'Build the gem'
 task :gem_build do
-	puts `gem build ruby509.gemspec`
+	puts `gem build r509.gemspec`
 end
 task :gem_install do
-	puts `gem install ruby509-0.1.gem`
+	puts `gem install r509-0.2.gem`
 end
 task :gem_uninstall do
-	puts `gem uninstall ruby509`
+	puts `gem uninstall r509`
 end
 task :default => :spec

@@ -1,6 +1,6 @@
 require 'openssl'
 
-module Ruby509
+module R509
 	class Csr
 		attr_reader :san_names, :key, :subject, :req
 		def initialize(*args)

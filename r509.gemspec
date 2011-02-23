@@ -1,9 +1,9 @@
 $:.push File.expand_path("../lib", __FILE__)  
-require "ruby509/version"  
+require "r509/version"  
 
 spec = Gem::Specification.new do |s|
-  s.name = 'ruby509'
-  s.version = Ruby509::VERSION
+  s.name = 'r509'
+  s.version = R509::VERSION
   s.platform = Gem::Platform::RUBY
   s.has_rdoc = false
   s.summary = "A (relatively) simple X.509 certification authority"
@@ -15,8 +15,8 @@ spec = Gem::Specification.new do |s|
   s.email = "paul@victoly.com"
   s.homepage = "http://langui.sh"
   s.required_ruby_version = ">= 1.8.7"
-  s.files = %w(README ruby509.yaml) + Dir["{lib,spec,cert_data}/**/*"]
-  s.test_file= "spec/main_spec.rb"
+  s.files = %w(README r509.yaml) + Dir["{lib,spec,cert_data}/**/*"]
+  s.test_files= Dir.glob('test/*_spec.rb')
   s.require_path = "lib"
 end
 

@@ -1,6 +1,6 @@
 require 'openssl'
 
-module Ruby509
+module R509
 	class Cert
 		attr_reader :cert, :san_names, :key
 		def initialize(*args)
