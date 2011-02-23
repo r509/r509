@@ -4,7 +4,7 @@ html_path = "rspec_results.html"
 #PTY.spawn trick from
 #http://stackoverflow.com/questions/1154846/continuously-read-from-stdout-of-external-process-in-ruby
 begin
-	PTY.spawn( "rspec --color -f h -o #{html_path} -f d spec/main_spec.rb" ) do |stdin, stdout, pid|
+	PTY.spawn( "rake spec" ) do |stdin, stdout, pid|
 	begin
 		stdin.each { |line| print line }
 	rescue Errno::EIO

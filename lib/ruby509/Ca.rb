@@ -15,6 +15,7 @@ module Ruby509
 		
 			config = YAML::load(file)
 			@config = config[ca]
+			self.message_digest= @config['message_digest']
 			if test_ca then
 				@config['ca_cert'] = File.dirname(__FILE__)+'/../../'+@config['ca_cert']
 				@config['ca_key'] = File.dirname(__FILE__)+'/../../'+@config['ca_key']
@@ -22,6 +23,17 @@ module Ruby509
 				@config['crl_number'] = File.dirname(__FILE__)+'/../../'+@config['crl_number']
 			end
 		end
+
+		def message_digest=(digest)
+			@message_digest = case digest.downcase
+				when 'sha1' then OpenSSL::Digest::SHA1.new
+				when 'sha256' then OpenSSL::Digest::SHA256.new
+				when 'sha512' then OpenSSL::Digest::SHA512.new
+				when 'md5' then OpenSSL::Digest::MD5.new
+				else OpenSSL::Digest::SHA1.new
+			end
+		end
+
 		def sign_cert(pem,profile,subject=nil,domains=[])
 			req = OpenSSL::X509::Request.new pem
 			san_names = merge_san_domains(req,domains)
@@ -42,8 +54,6 @@ module Ruby509
 			from = Time.now - 6 * 60 * 60
 			if(subject.kind_of?(Array)) then
 				name = OpenSSL::X509::Name.new subject
-				#the following line shouldn't be needed since Name can take an array. remove when i'm sure of this
-				#subject.each do |item| name.add_entry(item[0],item[1]) end
 				cert.subject = name
 			else
 				cert.subject = req.subject
@@ -91,14 +101,7 @@ module Ruby509
 						"OCSP;" << @config['ocsp_location'])
 			end
 			cert.extensions = ext
-			message_digest = case @config['message_digest'].downcase
-				when 'sha1' then OpenSSL::Digest::SHA1.new
-				when 'sha256' then OpenSSL::Digest::SHA256.new
-				when 'sha512' then OpenSSL::Digest::SHA512.new
-				when 'md5' then OpenSSL::Digest::MD5.new
-				else OpenSSL::Digest::SHA1.new
-			end
-			cert.sign ca_key, message_digest
+			cert.sign ca_key, @message_digest
 			Cert.new cert
 		end
 
@@ -120,10 +123,11 @@ module Ruby509
 				seq = set.value[0]
 				extensions = seq.value.collect{|asn1ext| OpenSSL::X509::Extension.new(asn1ext).to_a }
 				extensions.each { |ext| 
-					domains_from_csr = ext[1].gsub(/DNS:/,'').split(',') 
+					domains_from_csr = ext[1].split(',') 
 					domains_from_csr = domains_from_csr.collect {|x| x.strip }
 				}
 			rescue
+			#not sure there's ever a case where a valid CSR has no attr extension at all
 			end
 			domains_from_csr
 		end
@@ -133,5 +137,6 @@ module Ruby509
 			conf.concat data
 			conf.join "\n"
 		end
+
 	end
 end

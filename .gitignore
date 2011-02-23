@@ -1,3 +1,4 @@
 .DS_Store
 rspec_results.html
 cert_data/test_ca/crl_number.txt
+coverage

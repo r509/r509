@@ -2,29 +2,24 @@ require 'openssl'
 
 module Ruby509
 	class Csr
-		attr_reader :san_names, :key, :bit_strength, :subject, :req
+		attr_reader :san_names, :key, :subject, :req
 		def initialize(*args)
 			case args.size
 				when 0
 					@req = nil
 					@subject = nil
-					@bit_strength = nil
 					@san_names = nil
 					@key = nil
 				when 1
 					@req = OpenSSL::X509::Request.new args[0]
 					@subject = @req.subject
 					@san_names = parse_domains_from_csr
-					#cast to int, convert to binary, count size
-					@bit_strength = @req.public_key.n.to_i.to_s(2).size
 					@key = nil
 				when 2
 					#this is mostly a dupe of above. either wrap in a method or find a better solution than case
 					@req = OpenSSL::X509::Request.new args[0]
 					@subject = @req.subject
 					@san_names = parse_domains_from_csr
-					#cast to int, convert to binary, count size
-					@bit_strength = @req.public_key.n.to_i.to_s(2).size
 					@key = OpenSSL::PKey::RSA.new args[1]
 					#verify on the OpenSSL::X509::Request object verifies public key match
 					if !@req.verify(@key.public_key) then
@@ -55,6 +50,13 @@ module Ruby509
 
 		def write_der(filename)
 			File.open(filename, 'w') {|f| f.write(@req.to_der) }
+		end
+
+		def bit_strength
+			if !@req.nil?
+				#cast to int, convert to binary, count size
+				@req.public_key.n.to_i.to_s(2).size
+			end
 		end
 
 		#string pem
@@ -94,7 +96,6 @@ module Ruby509
 			@req.version = 0
 			@req.subject = subject
 			@key = OpenSSL::PKey::RSA.generate(bit_strength)
-			@bit_strength = bit_strength
 			@req.public_key = @key.public_key
 			add_san_extension(domains)
 			@req.sign(@key, OpenSSL::Digest::SHA1.new)
