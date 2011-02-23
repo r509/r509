@@ -41,7 +41,7 @@ describe R509::Cert do
 		expect { R509::Cert.new(@@cert,'invalid key') }.to raise_error(OpenSSL::PKey::RSAError)
 	end
 	it "raises exception on non-matching key" do
-		expect { R509::Cert.new(@@cert,@@key3) }.to raise_error(ArgumentError)
+		expect { R509::Cert.new(@@cert,@@key3) }.to raise_error(R509::R509Error)
 	end
 	it "return normal object on matching key/cert pair" do
 		expect { R509::Cert.new(@@cert3,@@key3) }.to_not raise_error

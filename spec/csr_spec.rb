@@ -111,7 +111,7 @@ describe R509::Csr do
 	end
 	context "when supplying a key with csr" do
 		it "raises exception on non-matching key" do
-			expect { R509::Csr.new(@@csr,@@key_csr2) }.to raise_error(ArgumentError)
+			expect { R509::Csr.new(@@csr,@@key_csr2) }.to raise_error(R509::R509Error)
 		end
 		it "accepts matching key" do
 			csr = R509::Csr.new(@@csr2,@@key_csr2)

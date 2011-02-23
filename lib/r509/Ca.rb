@@ -1,8 +1,10 @@
 require 'openssl'
 require 'yaml'
 require 'r509/Cert'
+require 'r509/Exceptions'
 
 module R509
+	# Contains the certification authority signing operation methods
 	class Ca
 		def initialize(ca)
 			if(File.exists?('~/.r509.yaml')) then
@@ -15,6 +17,9 @@ module R509
 		
 			config = YAML::load(file)
 			@config = config[ca]
+			if @config.nil?
+				raise R509Error, 'Invalid CA defined. Check your config yaml.'
+			end
 			self.message_digest= @config['message_digest']
 			if test_ca then
 				@config['ca_cert'] = File.dirname(__FILE__)+'/../../'+@config['ca_cert']
@@ -24,6 +29,8 @@ module R509
 			end
 		end
 
+		# Allows you to change the message digest from what was defined in the config yaml for the selected CA
+		# @param digest [String] New message digest (md5,sha1,sh256,sha512)
 		def message_digest=(digest)
 			@message_digest = case digest.downcase
 				when 'sha1' then OpenSSL::Digest::SHA1.new
@@ -34,8 +41,17 @@ module R509
 			end
 		end
 
-		def sign_cert(pem,profile,subject=nil,domains=[])
-			req = OpenSSL::X509::Request.new pem
+		# Signs a CSR
+		# @param csr [String,R509::Csr,OpenSSL::X509::Request] The CSR
+		# @param profile [String] The profile of the CA you want to use (e.g. "server" in your config yaml)
+		# @param subject [Array] subject array to overwrite what's in the CSR
+		# @param domains [Array] domain array to add to the subjectAltName (SAN) list
+		# @return [R509::Cert] the signed cert object
+		def sign_cert(csr,profile,subject=nil,domains=[])
+			if @config[profile].nil?
+				raise R509Error, 'Profile does not exist for the specified CA. Check your config yaml.'
+			end
+			req = OpenSSL::X509::Request.new csr
 			san_names = merge_san_domains(req,domains)
 
 			#load ca key and cert

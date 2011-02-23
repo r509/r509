@@ -1,6 +1,8 @@
 require 'openssl'
+require 'r509/Exceptions'
 
 module R509
+	# The primary certificate signing request object
 	class Csr
 		attr_reader :san_names, :key, :subject, :req
 		def initialize(*args)
@@ -11,25 +13,23 @@ module R509
 					@san_names = nil
 					@key = nil
 				when 1
-					@req = OpenSSL::X509::Request.new args[0]
-					@subject = @req.subject
-					@san_names = parse_domains_from_csr
+					parse_csr args[0]
 					@key = nil
 				when 2
-					#this is mostly a dupe of above. either wrap in a method or find a better solution than case
-					@req = OpenSSL::X509::Request.new args[0]
-					@subject = @req.subject
-					@san_names = parse_domains_from_csr
+					parse_csr args[0]
 					@key = OpenSSL::PKey::RSA.new args[1]
 					#verify on the OpenSSL::X509::Request object verifies public key match
 					if !@req.verify(@key.public_key) then
-						raise ArgumentError, 'Key does not match request.'
+						raise R509Error, 'Key does not match request.'
 					end
 				else
 					raise ArgumentError, 'Too many arguments.'
 			end
 		end
 
+		# Converts the CSR into the PEM format
+		#
+		# @return [String] the CSR converted into PEM format.
 		def to_pem
 			if(@req.kind_of?(OpenSSL::X509::Request)) then
 				@req.to_pem
@@ -38,20 +38,29 @@ module R509
 
 		alias :to_s :to_pem
 
+		# Converts the CSR into the DER format
+		#
+		# @return [String] the CSR converted into DER format.
 		def to_der
 			if(@req.kind_of?(OpenSSL::X509::Request)) then
 				@req.to_der
 			end
 		end
 
+		# Writes the CSR into the PEM format
+		# @param filename [String] the absolute path to the file you want to write.
 		def write_pem(filename)
 			File.open(filename, 'w') {|f| f.write(@req.to_pem) }
 		end
 
+		# Writes the CSR into the DER format
+		# @param filename [String] the absolute path to the file you want to write.
 		def write_der(filename)
 			File.open(filename, 'w') {|f| f.write(@req.to_der) }
 		end
 
+		# Returns the bit strength of the key used to create the CSR
+		# @return [Integer] the integer bit strength.
 		def bit_strength
 			if !@req.nil?
 				#cast to int, convert to binary, count size
@@ -59,14 +68,16 @@ module R509
 			end
 		end
 
-		#string pem
-		#int bit_strength
-		#array domains
-		def create_with_cert(pem,bit_strength=2048,domains=[])
+		# Creates a new CSR using an existing certificate as the source for its subject and extensions
+		# @param cert [String,OpenSSL::X509::Certificate] certificate data in PEM, DER, or OpenSSL::X509::Certificate form
+		# @param bit_strength [Integer] Bit strength of the private key to generate (default 2048)
+		# @param domains [Array] List of domains to encode as subjectAltNames
+		# @return [R509::Csr] the object
+		def create_with_cert(cert,bit_strength=2048,domains=[])
 			domains_to_add = []
 			san_extension = nil
-			cert = OpenSSL::X509::Certificate.new(pem)
-			cert.extensions.to_a.each { |extension| 
+			parsed_cert = OpenSSL::X509::Certificate.new(cert)
+			parsed_cert.extensions.to_a.each { |extension| 
 				if (extension.to_a[0] == 'subjectAltName') then
 					domains_to_add = parse_san_extension(extension)
 				end
@@ -75,13 +86,22 @@ module R509
 				parsed_domains = prefix_domains(domains)
 				domains_to_add.concat(parsed_domains).uniq!
 			end
-			#name = OpenSSL::X509::Name.new(cert.subject.to_a) #this creates a new name object using an array
-			create_csr(cert.subject,bit_strength,domains_to_add)
+			create_csr(parsed_cert.subject,bit_strength,domains_to_add)
 			@req.to_pem
 		end
 
-		#subject is array of form. you can also use oids (eg, '1.3.6.1.4.1.311.60.2.1.3')
-		#[['CN','langui.sh'],['ST','Illinois'],['L','Chicago'],['C','US'],['emailAddress','ca@langui.sh']]
+		# Creates a new CSR using an array as the subject
+		# @example 
+		# 	csr.create_with_subject [['CN','langui.sh'],['ST','Illinois'],['L','Chicago'],['C','US'],['emailAddress','ca@langui.sh']]
+		#	You can specify the shortname of any OID that OpenSSL knows.
+		# @example 
+		# 	csr.create_with_subject [['1.3.6.1.4.1.311.60.2.1.3','US'],['2.5.4.7','Chicago'],['emailAddress','ca@langui.sh']]
+		#	You can also use OIDs directly (e.g., '1.3.6.1.4.1.311.60.2.1.3')
+		# @param subject [Array] subject takes an array of subject items, e.g.
+		# @param bit_strength [Integer] bit strength of the private key to generate (default 2048)
+		# @param domains [Array] list of domains to encode as subjectAltNames (these will be merged with whatever SAN domains are 
+		#	already present in the CSR
+		# @return [R509::Csr] the object
 		def create_with_subject(subject,bit_strength=2048,domains=[])
 			subject = OpenSSL::X509::Name.new subject
 			parsed_domains = prefix_domains(domains)
@@ -90,6 +110,12 @@ module R509
 		end
 
 		private
+
+		def parse_csr(csr)
+			@req = OpenSSL::X509::Request.new csr
+			@subject = @req.subject
+			@san_names = parse_domains_from_csr
+		end
 
 		def create_csr(subject,bit_strength,domains=[])
 			@req = OpenSSL::X509::Request.new

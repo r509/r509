@@ -92,4 +92,12 @@ describe R509::Ca do
 		cert = ca.sign_cert(csr,'server')
 		cert.cert.signature_algorithm.should == 'sha1WithRSAEncryption'
 	end
+	it "raises exception when providing invalid ca name" do
+		expect { R509::Ca.new('invalid') }.to raise_error(R509::R509Error)
+	end
+	it "raises exception when providing invalid ca profile" do
+		ca = R509::Ca.new('test_ca')
+		csr = R509::Csr.new @@csr
+		expect { ca.sign_cert(csr,'test_ca','invalid') }.to raise_error(R509::R509Error)
+	end
 end
