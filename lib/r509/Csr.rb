@@ -4,7 +4,7 @@ require 'r509/Exceptions'
 module R509
 	# The primary certificate signing request object
 	class Csr
-		attr_reader :san_names, :key, :subject, :req
+		attr_reader :san_names, :key, :subject, :req, :attributes
 		def initialize(*args)
 			case args.size
 				when 0
@@ -114,7 +114,8 @@ module R509
 		def parse_csr(csr)
 			@req = OpenSSL::X509::Request.new csr
 			@subject = @req.subject
-			@san_names = parse_domains_from_csr
+			@attributes = parse_attributes_from_csr @req
+			@san_names = @attributes['subjectAltName']
 		end
 
 		def create_csr(subject,bit_strength,domains=[])
@@ -157,21 +158,31 @@ module R509
 			domains.map{ |name| name.gsub(/DNS:/,'').strip }
 		end
 
-		def parse_domains_from_csr
+		def parse_attributes_from_csr req
+			attributes = Hash.new 
 			domains_from_csr = []
-			begin
-				set = OpenSSL::ASN1.decode(@req.attributes[0].value) #assuming just one attribute from above, that'd be extReq. this may be unsafe
-				seq = set.value[0]
-				extensions = seq.value.collect{|asn1ext| OpenSSL::X509::Extension.new(asn1ext).to_a }
-				extensions.each { |ext|
-					if ext[0] == 'subjectAltName' then 
-						domains_from_csr = ext[1].gsub(/DNS:/,'').split(',') 
-						domains_from_csr = domains_from_csr.collect {|x| x.strip }
-					end
+			set = nil
+			req.attributes.each { |attribute|
+			    if attribute.oid == 'extReq' then
+				set = OpenSSL::ASN1.decode attribute.value
+			    end
+			}
+			if !set.nil? then
+				set.value.each { |set_value| 
+					@seq = set_value
+					extensions = @seq.value.collect{|asn1ext| OpenSSL::X509::Extension.new(asn1ext).to_a }
+					extensions.each { |ext|
+						hash = {'value' => ext[1], 'critical'=> ext[2] }
+						attributes[ext[0]] = hash
+						if ext[0] == 'subjectAltName' then 
+							domains_from_csr = ext[1].gsub(/DNS:/,'').split(',') 
+							domains_from_csr = domains_from_csr.collect {|x| x.strip }
+							attributes[ext[0]] = domains_from_csr
+						end
+					}
 				}
-			rescue
 			end
-			domains_from_csr
+			attributes
 		end
 	end
 end

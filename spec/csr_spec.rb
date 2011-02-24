@@ -6,6 +6,8 @@ require 'rspec'
 
 
 describe R509::Csr do
+	it 'tests a CSR that has a large attribute set'
+	it 'tests the new csr.extensions hash'
 	it "writes to pem" do
 		csr = R509::Csr.new(@@csr)
 		csr.write_pem('/tmp/csr')
