@@ -12,30 +12,22 @@ if ARGV[0].nil? then
 	subject = []
 	print "C (US): "
 	c = gets.chomp
-	if c.empty? then
-		c = 'US'
-	end
+	c = c.empty? ? 'US':c;
 	subject.push ['C',c]
 
 	print "ST (Illinois): "
 	st = gets.chomp
-	if st.empty? then
-		st = 'Illinois'
-	end
+	st = st.empty? ? 'Illinois':st;
 	subject.push ['ST',st]
 
 	print "L (Chicago): "
 	l = gets.chomp
-	if l.empty? then
-		l = 'Chicago'
-	end
+	l = l.empty? ? 'Chicago':l;
 	subject.push ['L',l]
 	
 	print "O (r509 LLC): "
 	o = gets.chomp
-	if o.empty? then
-		o = 'r509 LLC'
-	end
+	o = o.empty? ? 'r509 LLC':o;
 	subject.push ['O',o]
 
 	print "CN: "
