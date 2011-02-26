@@ -6,8 +6,6 @@ require 'rspec'
 
 
 describe R509::Csr do
-	it 'tests a CSR that has a large attribute set'
-	it 'tests the new csr.extensions hash'
 	it "writes to pem" do
 		csr = R509::Csr.new(@@csr)
 		csr.write_pem('/tmp/csr')
@@ -109,6 +107,10 @@ describe R509::Csr do
 		it "parses the san names" do
 			csr = R509::Csr.new @@csr
 			csr.san_names.should == ["test.local", "additionaldomains.com", "saniam.com"]
+		end
+		it "parses san names when there are multiple non-SAN attributes" do
+			csr = R509::Csr.new @@csr4_multiple_attrs
+			csr.san_names.should == ["adomain.com", "anotherdomain.com", "justanexample.com"] 
 		end
 	end
 	context "when supplying a key with csr" do
