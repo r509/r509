@@ -7,7 +7,7 @@ require 'openssl'
 csr = R509::Csr.new
 subject = OpenSSL::X509::Name.new
 if ARGV[0].nil? then
-	puts "Interactive CSR generation using r509. Assuming 2048-bit key"
+	puts "Interactive CSR generation using r509."
 	puts "You can also call with 1 or 2 args (string subject, int bit_strength)"
 	subject = []
 	print "C (US): "
@@ -36,9 +36,6 @@ if ARGV[0].nil? then
 	san_domains = []
 	san_domains = gets.chomp.split(',').collect { |domain| domain.strip }
 	csr.create_with_subject subject,2048,san_domains
-	puts csr.key
-	puts csr
-	puts csr.subject
 else
 	ARGV[0].split('/').each { |item|
 		if item != '' then
@@ -53,7 +50,10 @@ else
 		bit_strength = 2048
 	end
 	csr.create_with_subject subject,bit_strength
-	puts csr.key
-	puts csr
-	puts csr.subject
+end
+puts csr.key
+puts csr
+puts csr.subject
+if RUBY_PLATFORM.match('darwin') != nil then
+	IO.popen('pbcopy','w').puts csr
 end
