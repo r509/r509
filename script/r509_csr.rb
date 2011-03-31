@@ -30,6 +30,12 @@ if ARGV[0].nil? then
 	o = o.empty? ? 'r509 LLC':o;
 	subject.push ['O',o]
 
+	print "OU (null by default): "
+	ou = gets.chomp
+	if(!ou.empty?) then
+        subject.push ['OU',ou]
+    end
+
 	print "CN: "
 	subject.push ['CN',gets.chomp]
 	print "SAN Domains (comma separated):"
