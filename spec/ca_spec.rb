@@ -1,14 +1,15 @@
-$:.unshift File.expand_path("../../lib", __FILE__)
-$:.unshift File.expand_path("../", __FILE__)
-require 'r509.rb'
-require 'test_vars.rb'
-require 'rspec'
-
+require 'spec_helper'
 
 describe R509::Ca do
+  before :all do
+    @cert = TestFixtures::CERT
+    @csr = TestFixtures::CSR
+    @csr3 = TestFixtures::CSR3
+  end
+
 	it "properly issues server cert" do
 		csr = R509::Csr.new
-		csr.create_with_cert @@cert
+		csr.create_with_cert @cert
 		ca = R509::Ca.new('test_ca')
 		cert = ca.sign_cert(csr,'server')
 		cert.to_pem.should match(/BEGIN CERTIFICATE/)
@@ -18,13 +19,13 @@ describe R509::Ca do
 	end
 	it "issues with specified san domains" do
 		csr = R509::Csr.new
-		csr.create_with_cert @@cert
+		csr.create_with_cert @cert
 		ca = R509::Ca.new 'test_ca'
 		cert = ca.sign_cert(csr,'server',nil,['langui.sh','domain2.com'])
 		cert.san_names.should == ['langui.sh','domain2.com']
 	end
 	it "issues with san domains from csr" do
-		csr = R509::Csr.new @@csr
+		csr = R509::Csr.new @csr
 		ca = R509::Ca.new 'test_ca'
 		cert = ca.sign_cert(csr,'server')
 		cert.san_names.should == ['test.local','additionaldomains.com','saniam.com']
@@ -58,35 +59,35 @@ describe R509::Ca do
 		cert.extensions['basicConstraints'][0]['value'].should == 'CA:TRUE, pathlen:0'
 	end
 	it "issues with md5" do
-		csr = R509::Csr.new @@csr3
+		csr = R509::Csr.new @csr3
 		ca = R509::Ca.new 'test_ca'
 		ca.message_digest = 'md5'
 		cert = ca.sign_cert(csr,'server')
 		cert.cert.signature_algorithm.should == 'md5WithRSAEncryption'
 	end
 	it "issues with sha1" do
-		csr = R509::Csr.new @@csr3
+		csr = R509::Csr.new @csr3
 		ca = R509::Ca.new 'test_ca'
 		ca.message_digest = 'sha1'
 		cert = ca.sign_cert(csr,'server')
 		cert.cert.signature_algorithm.should == 'sha1WithRSAEncryption'
 	end
 	it "issues with sha256" do
-		csr = R509::Csr.new @@csr3
+		csr = R509::Csr.new @csr3
 		ca = R509::Ca.new 'test_ca'
 		ca.message_digest = 'sha256'
 		cert = ca.sign_cert(csr,'server')
 		cert.cert.signature_algorithm.should == 'sha256WithRSAEncryption'
 	end
 	it "issues with sha512" do
-		csr = R509::Csr.new @@csr3
+		csr = R509::Csr.new @csr3
 		ca = R509::Ca.new 'test_ca'
 		ca.message_digest = 'sha512'
 		cert = ca.sign_cert(csr,'server')
 		cert.cert.signature_algorithm.should == 'sha512WithRSAEncryption'
 	end
 	it "issues with invalid hash (sha1 fallback)" do
-		csr = R509::Csr.new @@csr3
+		csr = R509::Csr.new @csr3
 		ca = R509::Ca.new 'test_ca'
 		ca.message_digest = 'invalid'
 		cert = ca.sign_cert(csr,'server')
@@ -97,7 +98,7 @@ describe R509::Ca do
 	end
 	it "raises exception when providing invalid ca profile" do
 		ca = R509::Ca.new('test_ca')
-		csr = R509::Csr.new @@csr
+		csr = R509::Csr.new @csr
 		expect { ca.sign_cert(csr,'test_ca','invalid') }.to raise_error(R509::R509Error)
 	end
 end
