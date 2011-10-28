@@ -1,8 +1,5 @@
-$:.unshift File.expand_path("../../lib", __FILE__)
-$:.unshift File.expand_path("../", __FILE__)
-require 'r509.rb'
-require 'test_vars.rb'
-require 'rspec'
+require 'spec_helper'
+require 'stringio'
 
 describe R509::Crl do
 	it "generates a crl and returns pem from an existing revocation list" do
@@ -61,15 +58,17 @@ describe R509::Crl do
 	it "writes to pem (improve me)" do
 		crl = R509::Crl.new('test_ca')
 		crl.generate_crl
-		crl.write_pem('/tmp/crl')
-		File.read('/tmp/crl').should_not == ''
-		File.delete('/tmp/crl')
+    sio = StringIO.new
+    sio.set_enocding("BINARY") if sio.respond_to?(:set_encoding)
+		crl.write_pem(sio)
+		sio.string.should_not == ''
 	end
 	it "writes to der (improve me)" do
 		crl = R509::Crl.new('test_ca')
 		crl.generate_crl
-		crl.write_der('/tmp/crl')
-		File.read('/tmp/crl').should_not == ''
-		File.delete('/tmp/crl')
+    sio = StringIO.new
+    sio.set_enocding("BINARY") if sio.respond_to?(:set_encoding)
+		crl.write_der(sio)
+		sio.string.should_not == ''
 	end
 end

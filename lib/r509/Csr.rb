@@ -1,9 +1,12 @@
 require 'openssl'
 require 'r509/Exceptions'
+require 'r509/io_helpers'
 
 module R509
 	# The primary certificate signing request object
 	class Csr
+    include R509::IOHelpers
+
 		attr_reader :san_names, :key, :subject, :req, :attributes
 		def initialize(*args)
 			case args.size
@@ -48,15 +51,19 @@ module R509
 		end
 
 		# Writes the CSR into the PEM format
-		# @param filename [String] the absolute path to the file you want to write.
-		def write_pem(filename)
-			File.open(filename, 'w') {|f| f.write(@req.to_pem) }
+    #
+		# @param [String, #write] filename_or_io Either a string of the path for 
+    #  the file that you'd like to write, or an IO-like object.
+		def write_pem(filename_or_io)
+      write_data(filename_or_io, @req.to_pem)
 		end
 
 		# Writes the CSR into the DER format
-		# @param filename [String] the absolute path to the file you want to write.
-		def write_der(filename)
-			File.open(filename, 'w') {|f| f.write(@req.to_der) }
+    #
+		# @param [String, #write] filename_or_io Either a string of the path for 
+    #  the file that you'd like to write, or an IO-like object.
+		def write_der(filename_or_io)
+      write_data(filename_or_io, @req.to_der)
 		end
 
 		# Returns the bit strength of the key used to create the CSR

@@ -1,9 +1,12 @@
 require 'openssl'
 require 'r509/Exceptions'
+require 'r509/io_helpers'
 
 module R509
 	# The primary certificate object.
 	class Cert
+    include R509::IOHelpers
+
 		attr_reader :cert, :san_names, :key
 		def initialize(*args)
 			@san_names = nil
@@ -92,15 +95,17 @@ module R509
 		end
 
 		# Writes the Cert into the PEM format
-		# @param filename [String] the absolute path to the file you want to write.
-		def write_pem(filename)
-			File.open(filename, 'w') {|f| f.write(@cert.to_pem) }
+		# @param [String, #write] filename_or_io Either a string of the path for 
+    #  the file that you'd like to write, or an IO-like object.
+		def write_pem(filename_or_io)
+      write_data(filename_or_io, @cert.to_pem)
 		end
 
 		# Writes the Cert into the DER format
-		# @param filename [String] the absolute path to the file you want to write.
-		def write_der(filename)
-			File.open(filename, 'w') {|f| f.write(@cert.to_der) }
+		# @param [String, #write] filename_or_io Either a string of the path for 
+    #  the file that you'd like to write, or an IO-like object.
+		def write_der(filename_or_io)
+      write_data(filename_or_io, @cert.to_der)
 		end
 
 		# Return the certificate extensions
