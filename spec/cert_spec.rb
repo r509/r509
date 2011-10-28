@@ -1,10 +1,4 @@
-$:.unshift File.expand_path("../../lib", __FILE__)
-$:.unshift File.expand_path("../", __FILE__)
-require 'r509.rb'
-require 'fixtures'
-require 'rspec'
-require 'stringio'
-
+require 'spec_helper'
 
 describe R509::Cert do
   before :all do
