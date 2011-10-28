@@ -59,7 +59,7 @@ describe R509::Crl do
 		crl = R509::Crl.new('test_ca')
 		crl.generate_crl
     sio = StringIO.new
-    sio.set_enocding("BINARY") if sio.respond_to?(:set_encoding)
+    sio.set_encoding("BINARY") if sio.respond_to?(:set_encoding)
 		crl.write_pem(sio)
 		sio.string.should_not == ''
 	end
@@ -67,7 +67,7 @@ describe R509::Crl do
 		crl = R509::Crl.new('test_ca')
 		crl.generate_crl
     sio = StringIO.new
-    sio.set_enocding("BINARY") if sio.respond_to?(:set_encoding)
+    sio.set_encoding("BINARY") if sio.respond_to?(:set_encoding)
 		crl.write_der(sio)
 		sio.string.should_not == ''
 	end
