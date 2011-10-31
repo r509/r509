@@ -1,5 +1,5 @@
 require 'openssl'
-require 'yaml'
+require 'r509/Config'
 require 'r509/Exceptions'
 require 'r509/io_helpers'
 
@@ -8,29 +8,28 @@ module R509
 	class Crl
     include R509::IOHelpers
 
-		attr_reader :revoked_list
+    # TODO : Should we remove this in favor of just having all changes 
+    #  being made to the configuration object?
 		attr_accessor :validity_hours
-		def initialize(ca)
-			if(File.exists?('~/.r509.yaml')) then
-				file = File.read('~/.r509.yaml')
-				test_ca = false
-			else
-				file = File.read(File.dirname(__FILE__)+'/../../r509.yaml')
-				test_ca = true
-			end
-		
-			config = YAML::load(file)
-			@config = config[ca]
-			if test_ca then
-				@config['ca_cert'] = File.dirname(__FILE__)+'/../../'+@config['ca_cert']
-				@config['ca_key'] = File.dirname(__FILE__)+'/../../'+@config['ca_key']
-				@config['crl_list'] = File.dirname(__FILE__)+'/../../'+@config['crl_list']
-				@config['crl_number'] = File.dirname(__FILE__)+'/../../'+@config['crl_number']
-			end
+
+		def initialize(config)
+      @config = config
+
+      unless @config.kind_of?(R509::Config)
+        raise R509Error, "config must be a kind of R509::Config"
+      end
+
+      @validity_hours = @config.crl_validity_hours
 			@crl = nil
-			@revoked_list = nil
-			@validity_hours = @config['crl_validity_hours']
 		end
+
+    # Indicates whether the serial number has been revoked, or not.
+    #
+    # @param [Integer] serial The serial number we want to check
+    # @return [Boolean True if the serial number was revoked. False, otherwise.
+    def revoked?(serial)
+      @config.revoked?(serial)
+    end
 		
 		# Returns the CRL in PEM format
 		#
@@ -96,31 +95,20 @@ module R509
 		#	      privilegeWithdrawn      (9),
 		#	      aACompromise           (10) }
 		def revoke_cert(serial,reason=nil)
-			#should probably check to make sure the values passed are sane
-			now = Time.now.to_i
-			line = [serial,now]
-			if(0 <= reason.to_i && reason.to_i <= 10) then
-				line.push reason.to_i
-			end
-			line = line.join(',')
-			open(@config['crl_list'], 'a') { |f|
-				f.puts line
-			}
+      if !reason.nil? and !reason.to_i.between?(1,10)
+        reason = nil
+      end
+
+      @config.revoke_cert(serial, reason.to_i, Time.now)
+      @config.save_crl_list()
 		end
 
 		# Remove serial from revocation list. After unrevoking you must call generate_crl to sign a new CRL
 		#
 		# @param serial [Integer] serial number of the certificate to remove from revocation
 		def unrevoke_cert(serial)
-			#come back around and do this better
-			list = File.readlines(@config['crl_list'])
-			regex = Regexp.new("^"+serial.to_s+",.*") #comma ensures we don't capture a substring of a longer serial accidentally
-			list.delete_if { |line|
-				line.match(regex)
-			}
-			open(@config['crl_list'],'w') { |f| 
-				f.puts list.join
-			}
+      @config.unrevoke_cert(serial)
+      @config.save_crl_list()
 		end
 
 		# Remove serial from revocation list
@@ -133,32 +121,27 @@ module R509
 			crl.last_update = now
 			crl.next_update = now+@validity_hours*3600
 
-			revocation_list = []
-			@revoked_list = [] #empty it out
-			File.open(@config['crl_list']).each { |line|
-				revocation_data = line.chomp.split(',')
+      @config.revoked_certs.each do |serial, reason, revoke_time|
 				revoked = OpenSSL::X509::Revoked.new
-				revoked.serial = OpenSSL::BN.new revocation_data[0].to_s
-				revoked.time = Time.at(revocation_data[1].to_i)
-				@revoked_list.push({'serial'=>revocation_data[0].to_i,'time'=>Time.at(revocation_data[1].to_i),'reason'=>revocation_data[2]})
-				if(revocation_data.size > 2) then
-					reason_code = revocation_data[2].to_i
-					enum = OpenSSL::ASN1::Enumerated(reason_code) #see reason codes below
+				revoked.serial = OpenSSL::BN.new serial.to_s
+				revoked.time = Time.at(revoke_time)
+				if !reason.nil?
+					enum = OpenSSL::ASN1::Enumerated(reason) #see reason codes below
 					ext = OpenSSL::X509::Extension.new("CRLReason", enum)
 					revoked.add_extension(ext)
 				end
 				#now add it to the crl
 				crl.add_revoked(revoked)
-			}
+      end
+			
 			ef = OpenSSL::X509::ExtensionFactory.new
-			ca_cert = OpenSSL::X509::Certificate.new File.read(@config['ca_cert'])
-			ca_key = OpenSSL::PKey::RSA.new File.read(@config['ca_key'])
+			ca_cert = @config.ca_cert
+			ca_key = @config.ca_key
 			ef.issuer_certificate = ca_cert
 			ef.crl = crl
 			#grab crl number from file, increment, write back
-			crl_number = File.read(@config['crl_number'])
-			crl_number = crl_number.to_i + 1;
-			open(@config['crl_number'],'w') { |f| f.puts(crl_number) }
+			crl_number = @config.increment_crl_number
+      @config.save_crl_number()
 			crlnum = OpenSSL::ASN1::Integer(crl_number)
 			crl.add_extension(OpenSSL::X509::Extension.new("crlNumber", crlnum))
 			extensions = []
