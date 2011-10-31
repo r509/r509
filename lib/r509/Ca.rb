@@ -1,35 +1,22 @@
 require 'openssl'
-require 'yaml'
+require 'r509/Config'
 require 'r509/Cert'
 require 'r509/Exceptions'
 
 module R509
 	# Contains the certification authority signing operation methods
 	class Ca
-		def initialize(ca)
-			if(File.exists?('~/.r509.yaml')) then
-				file = File.read('~/.r509.yaml')
-				test_ca = false
-			else
-				file = File.read(File.dirname(__FILE__)+'/../../r509.yaml')
-				test_ca = true
-			end
-		
-			config = YAML::load(file)
-			@config = config[ca]
-			if @config.nil?
-				raise R509Error, 'Invalid CA defined. Check your config yaml.'
-			end
-			self.message_digest= @config['message_digest']
-			if test_ca then
-				@config['ca_cert'] = File.dirname(__FILE__)+'/../../'+@config['ca_cert']
-				@config['ca_key'] = File.dirname(__FILE__)+'/../../'+@config['ca_key']
-				@config['crl_list'] = File.dirname(__FILE__)+'/../../'+@config['crl_list']
-				@config['crl_number'] = File.dirname(__FILE__)+'/../../'+@config['crl_number']
-			end
+    # @param [R509::Config] @config
+		def initialize(config)
+      @config = config
+
+      unless @config.kind_of?(R509::Config)
+        raise R509Error, "config must be a kind of R509::Config"
+      end
+
+			self.message_digest= @config.message_digest
 		end
 
-		# Allows you to change the message digest from what was defined in the config yaml for the selected CA
 		# @param digest [String] New message digest (md5,sha1,sh256,sha512)
 		def message_digest=(digest)
 			@message_digest = case digest.downcase
@@ -43,20 +30,19 @@ module R509
 
 		# Signs a CSR
 		# @param csr [String,R509::Csr,OpenSSL::X509::Request] The CSR
-		# @param profile [String] The profile of the CA you want to use (e.g. "server" in your config yaml)
+		# @param profile [String] The profile of the CA you want to use (e.g. "server" in your config)
 		# @param subject [Array] subject array to overwrite what's in the CSR
 		# @param domains [Array] domain array to add to the subjectAltName (SAN) list
 		# @return [R509::Cert] the signed cert object
 		def sign_cert(csr,profile,subject=nil,domains=[])
-			if @config[profile].nil?
-				raise R509Error, 'Profile does not exist for the specified CA. Check your config yaml.'
-			end
+      prof_obj = @config.profile(profile)
+
 			req = OpenSSL::X509::Request.new csr
 			san_names = merge_san_domains(req,domains)
 
 			#load ca key and cert
-			ca_cert = OpenSSL::X509::Certificate.new File.read(@config['ca_cert'])
-			ca_key = OpenSSL::PKey::RSA.new File.read(@config['ca_key'])
+			ca_cert = @config.ca_cert
+			ca_key = @config.ca_key
 
 			#generate random serial in accordance with best practices
 			#guidelines state 20-bits of entropy, but we can cram more in
@@ -82,10 +68,10 @@ module R509
 			cert.version = 2 #2 means v3
 
 
-			basic_constraints = @config[profile]['basic_constraints']
-			key_usage = @config[profile]['key_usage']
-			extended_key_usage = @config[profile]['extended_key_usage']
-			certificate_policies = @config[profile]['certificate_policies']
+			basic_constraints = prof_obj.basic_constraints
+			key_usage = prof_obj.key_usage
+			extended_key_usage = prof_obj.extended_key_usage
+			certificate_policies = prof_obj.certificate_policies
 			ef = OpenSSL::X509::ExtensionFactory.new
 			ef.subject_certificate = cert
 			ef.issuer_certificate = ca_cert
@@ -97,7 +83,7 @@ module R509
 			if(extended_key_usage.size > 0) then
 				ext << ef.create_extension("extendedKeyUsage", extended_key_usage.join(","))
 			end
-			conf = build_conf('certPolicies',@config[profile]['certificate_policies'])
+			conf = build_conf('certPolicies',prof_obj.certificate_policies)
 			ef.config = OpenSSL::Config.parse(conf)
 			#ef.config = OpenSSL::Config.parse(<<-_end_of_cnf_)
 			#[certPolicies]
@@ -110,11 +96,11 @@ module R509
 				ext << ef.create_extension("subjectAltName", san_names.join(",")) 
 			end
 
-			ext << ef.create_extension("crlDistributionPoints", @config['cdp_location'])
+			ext << ef.create_extension("crlDistributionPoints", @config.cdp_location)
 
-			if @config['ocsp_location'] then
+			if @config.ocsp_location then
 			ext << ef.create_extension("authorityInfoAccess",
-						"OCSP;" << @config['ocsp_location'])
+						"OCSP;" << @config.ocsp_location)
 			end
 			cert.extensions = ext
 			cert.sign ca_key, @message_digest

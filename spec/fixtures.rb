@@ -11,7 +11,6 @@ module TestFixtures
     read_data((FIXTURES_PATH + filename).to_s)
   end
   
-
   #Trustwave cert for langui.sh
   CERT = read_fixture('cert1.pem')
 
@@ -46,4 +45,50 @@ module TestFixtures
   KEY4_ENCRYPTED_DES3 = read_fixture('key4_encrypted_des3.pem')
 
   KEY4 = read_fixture('key4.pem')
+
+  TEST_CA_CERT = read_fixture('test_ca.cer')
+  TEST_CA_KEY  = read_fixture('test_ca.key')
+
+  def self.test_ca_cert
+    OpenSSL::X509::Certificate.new(TEST_CA_CERT)
+  end
+
+  def self.test_ca_key
+    OpenSSL::PKey::RSA.new(TEST_CA_KEY)
+  end
+
+  def self.test_ca_server_profile
+    R509::ConfigProfile.new(
+          :basic_constraints => "CA:FALSE",
+          :key_usage => ["digitalSignature","keyEncipherment"],
+          :extended_key_usage => ["serverAuth"],
+          :certificate_policies => [ 
+            "policyIdentifier=2.16.840.1.9999999999.1.2.3.4.1", 
+            "CPS.1=http://example.com/cps"])
+
+  end
+
+  def self.test_ca_subroot_profile
+    R509::ConfigProfile.new(
+              :basic_constraints => "CA:TRUE,pathlen:0",
+              :key_usage => ["keyCertSign","cRLSign"],
+              :extended_key_usage => [],
+              :certificate_policies => [ ])
+  end
+
+
+  # @return [R509::Config]
+  def self.test_ca_config
+
+    opts = {
+      :cdp_location => 'URI:http://crl.domain.com/test_ca.crl',
+      :ocsp_location => 'URI:http://ocsp.domain.com'
+    }
+    ret = R509::Config.new(test_ca_cert(), test_ca_key(), opts)
+
+    ret.set_profile("server", self.test_ca_server_profile)
+    ret.set_profile("subroot", self.test_ca_subroot_profile)
+
+    ret
+  end
 end
