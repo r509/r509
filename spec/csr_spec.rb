@@ -68,6 +68,11 @@ describe R509::Csr do
 			csr.create_with_cert @cert
 			csr.subject.to_s.should == '/C=US/ST=Illinois/L=Chicago/O=Paul Kehrer/CN=langui.sh'
 		end
+		it "fetches a subject component from the csr" do
+			csr = R509::Csr.new
+			csr.create_with_cert @cert
+			csr.subject_component('CN').to_s.should == 'langui.sh'
+		end
 		it "san domains from the cert should be encoded in the request" do
 			csr = R509::Csr.new
 			csr.create_with_cert @cert_san
@@ -103,7 +108,7 @@ describe R509::Csr do
 		it "generates a matching csr when supplying raw oids" do
 			csr = R509::Csr.new
 			csr.create_with_subject [['2.5.4.3','common name'],['2.5.4.15','business category'],['2.5.4.7','locality'],['1.3.6.1.4.1.311.60.2.1.3','jurisdiction oid openssl typically does not know']]
-			csr.subject.to_s.should == '/CN=common name/2.5.4.15=business category/L=locality/1.3.6.1.4.1.311.60.2.1.3=jurisdiction oid openssl typically does not know'
+			csr.subject.to_s.should == '/CN=common name/businessCategory=business category/L=locality/1.3.6.1.4.1.311.60.2.1.3=jurisdiction oid openssl typically does not know'
 		end
 	end
 	context "when supplying an existing csr" do

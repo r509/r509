@@ -29,6 +29,10 @@ describe R509::Cert do
 		cert = R509::Cert.new @cert
 		cert.not_after.to_i.should == 1377267002
 	end
+    it "fetches a subject component from the cert" do
+		cert = R509::Cert.new @cert
+        cert.subject_component('CN').to_s.should == 'langui.sh'
+    end
 	it "returns list of san_names when it is a san cert" do
 		cert = R509::Cert.new @cert_san
 		cert.san_names.should == ['langui.sh']

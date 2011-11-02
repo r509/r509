@@ -84,6 +84,18 @@ module R509
 			@cert.subject
 		end
 
+        # Returns subject component
+        #
+        # @return [String] value of the subject component requested
+        def subject_component short_name
+            @cert.subject.to_a.each do |element|
+                if element[0].downcase == short_name.downcase then
+                    return element[1]
+                end
+            end
+            nil
+        end
+
 		# Returns the bit strength of the key used to create the certificate
 		#
 		# @return [Integer] integer value of bit strength

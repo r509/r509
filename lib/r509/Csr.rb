@@ -116,6 +116,18 @@ module R509
 			@req.to_pem
 		end
 
+        # Returns subject component
+        #
+        # @return [String] value of the subject component requested
+        def subject_component short_name
+            @req.subject.to_a.each do |element|
+                if element[0].downcase == short_name.downcase then
+                    return element[1]
+                end
+            end
+            nil
+        end
+
 		private
 
 		def parse_csr(csr)
