@@ -18,13 +18,13 @@ describe R509::Csr do
 	it "writes to pem" do
 		csr = R509::Csr.new(@csr)
     sio = StringIO.new
-    sio.set_enocding("BINARY") if sio.respond_to?(:set_encoding)
+    sio.set_encoding("BINARY") if sio.respond_to?(:set_encoding)
 		csr.write_pem(sio)
     sio.string.should == @csr
 	end
 	it "writes to der" do
     sio = StringIO.new
-    sio.set_enocding("BINARY") if sio.respond_to?(:set_encoding)
+    sio.set_encoding("BINARY") if sio.respond_to?(:set_encoding)
 		csr = R509::Csr.new(@csr)
 		csr.write_der(sio)
 		sio.string.should == @csr_der
