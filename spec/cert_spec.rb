@@ -37,6 +37,10 @@ describe R509::Cert do
 		cert = R509::Cert.new @cert
         cert.signature_algorithm.should == 'sha1WithRSAEncryption'
     end
+    it "returns the key algorithm" do
+        cert = R509::Cert.new @cert
+        cert.key_algorithm.should == 'RSA'
+    end
 	it "returns list of san_names when it is a san cert" do
 		cert = R509::Cert.new @cert_san
 		cert.san_names.should == ['langui.sh']

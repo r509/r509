@@ -113,6 +113,19 @@ module R509
             @cert.signature_algorithm 
         end
 
+        # Returns key algorithm (RSA/DSA)
+        # #
+        # # @return [String] value of the key algorithm. RSA or DSA
+        def key_algorithm
+            if @cert.public_key.kind_of? OpenSSL::PKey::RSA then 
+                'RSA'
+            elsif @cert.public_key.kind_of? OpenSSL::PKey::DSA then
+                'DSA'
+            else 
+                nil
+            end
+        end
+
 		# Writes the Cert into the PEM format
 		# @param [String, #write] filename_or_io Either a string of the path for 
     #  the file that you'd like to write, or an IO-like object.

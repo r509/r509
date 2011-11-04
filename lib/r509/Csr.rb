@@ -135,6 +135,19 @@ module R509
             @req.signature_algorithm
         end
 
+        # Returns key algorithm (RSA/DSA)
+        # #
+        # # @return [String] value of the key algorithm. RSA or DSA
+        def key_algorithm
+            if @req.public_key.kind_of? OpenSSL::PKey::RSA then 
+                'RSA'
+            elsif @req.public_key.kind_of? OpenSSL::PKey::DSA then
+                'DSA'
+            else 
+                nil
+            end
+        end
+
 		private
 
 		def parse_csr(csr)

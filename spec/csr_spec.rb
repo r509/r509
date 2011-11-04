@@ -127,9 +127,13 @@ describe R509::Csr do
 			csr = R509::Csr.new @csr
 			csr.subject_component('CN').to_s.should == 'test.local'
 		end
-        it "gets the signature algorithm" do
+        it "returns the signature algorithm" do
 			csr = R509::Csr.new @csr
             csr.signature_algorithm.should == 'sha1WithRSAEncryption'
+        end
+        it "returns the key algorithm" do
+			csr = R509::Csr.new @csr
+            csr.key_algorithm.should == 'RSA'
         end
 	end
 	context "when supplying a key with csr" do
