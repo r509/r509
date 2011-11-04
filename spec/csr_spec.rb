@@ -68,11 +68,6 @@ describe R509::Csr do
 			csr.create_with_cert @cert
 			csr.subject.to_s.should == '/C=US/ST=Illinois/L=Chicago/O=Paul Kehrer/CN=langui.sh'
 		end
-		it "fetches a subject component from the csr" do
-			csr = R509::Csr.new
-			csr.create_with_cert @cert
-			csr.subject_component('CN').to_s.should == 'langui.sh'
-		end
 		it "san domains from the cert should be encoded in the request" do
 			csr = R509::Csr.new
 			csr.create_with_cert @cert_san
@@ -128,6 +123,14 @@ describe R509::Csr do
 			csr = R509::Csr.new @csr4_multiple_attrs
 			csr.san_names.should == ["adomain.com", "anotherdomain.com", "justanexample.com"] 
 		end
+		it "fetches a subject component" do
+			csr = R509::Csr.new @csr
+			csr.subject_component('CN').to_s.should == 'test.local'
+		end
+        it "gets the signature algorithm" do
+			csr = R509::Csr.new @csr
+            csr.signature_algorithm.should == 'sha1WithRSAEncryption'
+        end
 	end
 	context "when supplying a key with csr" do
 		it "raises exception on non-matching key" do

@@ -106,6 +106,13 @@ module R509
 			end
 		end
 
+        # Returns signature algorithm 
+        # # 
+        # # @return [String] value of the signature algorithm. E.g. sha1WithRSAEncryption, sha256WithRSAEncryption, md5WithRSAEncryption
+        def signature_algorithm 
+            @cert.signature_algorithm 
+        end
+
 		# Writes the Cert into the PEM format
 		# @param [String, #write] filename_or_io Either a string of the path for 
     #  the file that you'd like to write, or an IO-like object.

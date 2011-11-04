@@ -128,6 +128,13 @@ module R509
             nil
         end
 
+        # Returns signature algorithm
+        # #
+        # # @return [String] value of the signature algorithm. E.g. sha1WithRSAEncryption, sha256WithRSAEncryption, md5WithRSAEncryption
+        def signature_algorithm
+            @req.signature_algorithm
+        end
+
 		private
 
 		def parse_csr(csr)
