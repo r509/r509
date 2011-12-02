@@ -103,7 +103,10 @@ describe R509::Csr do
 		it "generates a matching csr when supplying raw oids" do
 			csr = R509::Csr.new
 			csr.create_with_subject [['2.5.4.3','common name'],['2.5.4.15','business category'],['2.5.4.7','locality'],['1.3.6.1.4.1.311.60.2.1.3','jurisdiction oid openssl typically does not know']]
-			csr.subject.to_s.should == '/CN=common name/businessCategory=business category/L=locality/1.3.6.1.4.1.311.60.2.1.3=jurisdiction oid openssl typically does not know'
+            # we want the subject to be able to be one of two things, depending on how old your computer is
+            # the "Be" matcher will call .include? on the array here because of be_include
+            # does anyone know of a better, less stupid way to do this?
+            ['/CN=common name/businessCategory=business category/L=locality/1.3.6.1.4.1.311.60.2.1.3=jurisdiction oid openssl typically does not know',"/CN=common name/2.5.4.15=business category/L=locality/1.3.6.1.4.1.311.60.2.1.3=jurisdiction oid openssl typically does not know"].should be_include csr.subject.to_s
 		end
 	end
 	context "when supplying an existing csr" do
