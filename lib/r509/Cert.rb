@@ -144,16 +144,34 @@ module R509
         #
         # @return [Array] an array of hashes representing the extensions in the cert
         def extensions
-            parsed_extensions = Hash.new
-            @cert.extensions.to_a.each { |extension| 
-                extension = extension.to_a
-                if(!parsed_extensions[extension[0]].kind_of?(Array)) then
-                    parsed_extensions[extension[0]] = []
-                end
-                hash = {'value' => extension[1], 'critical' => extension[2]}
-                parsed_extensions[extension[0]].push hash
-            }
-            parsed_extensions
+            if @extensions.nil?
+                @extensions = Hash.new
+                @cert.extensions.to_a.each { |extension| 
+                    extension = extension.to_a
+                    if(!@extensions[extension[0]].kind_of?(Array)) then
+                        @extensions[extension[0]] = []
+                    end
+                    hash = {'value' => extension[1], 'critical' => extension[2]}
+                    @extensions[extension[0]].push hash
+                }
+            end
+            @extensions
+        end
+
+        def keyUsage
+            if self.extensions.has_key?("keyUsage") and self.extensions["keyUsage"].count > 0 and self.extensions["keyUsage"][0].has_key?("value")
+                self.extensions["keyUsage"][0]["value"].split(",").map{|v| v.strip}
+            else
+                []
+            end
+        end
+
+        def extendedKeyUsage
+            if self.extensions.has_key?("extendedKeyUsage") and self.extensions["extendedKeyUsage"].count > 0 and self.extensions["extendedKeyUsage"][0].has_key?("value")
+                self.extensions["extendedKeyUsage"][0]["value"].split(",").map{|v| v.strip}
+            else
+                []
+            end
         end
 
         private

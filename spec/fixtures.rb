@@ -16,6 +16,12 @@ module TestFixtures
 
   CERT_PUBLIC_KEY = read_fixture('cert1_public_key.pem')
 
+  # cert without key usage
+  CERT4 = read_fixture('cert4.pem')
+
+  # cert with multiple EKU
+  CERT5 = read_fixture('cert5.pem')
+
 
   #san cert from self-signed CA for langui.sh
   CERT_SAN = read_fixture('cert_san.pem')

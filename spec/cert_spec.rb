@@ -8,6 +8,8 @@ describe R509::Cert do
     @cert_der = TestFixtures::CERT_DER
     @cert_san = TestFixtures::CERT_SAN
     @key3 = TestFixtures::KEY3
+    @cert4 = TestFixtures::CERT4
+    @cert5 = TestFixtures::CERT5
   end
 	it "has a public_key" do
 		cert = R509::Cert.new @cert
@@ -113,4 +115,34 @@ describe R509::Cert do
 	#		cert.to_s.should == @cert
 	#	end
 	end
+    it "gets key usage from the extensions array" do
+        cert = R509::Cert.new(@cert)
+        cert.extensions["keyUsage"].count.should == 1
+        cert.extensions["keyUsage"][0]["value"].should == "Digital Signature, Key Encipherment"
+    end
+    it "gets key usage from #keyUsage" do
+        cert = R509::Cert.new(@cert)
+        cert.keyUsage.should == ["Digital Signature", "Key Encipherment"]
+    end
+    it "handles lack of key usage" do
+        cert = R509::Cert.new(@cert4)
+        cert.keyUsage.should == []
+    end
+    it "gets extended key usage from the extensions array" do
+        cert = R509::Cert.new(@cert)
+        cert.extensions["extendedKeyUsage"].count.should == 1
+        cert.extensions["extendedKeyUsage"][0]["value"].should == "TLS Web Server Authentication"
+    end
+    it "get extended key usage from #extendedKeyUsage" do
+        cert = R509::Cert.new(@cert)
+        cert.extendedKeyUsage.should == ["TLS Web Server Authentication"]
+    end
+    it "handles lack of extended key usage" do
+        cert = R509::Cert.new(@cert4)
+        cert.extendedKeyUsage.should == []
+    end
+    it "handles multiple extended key usages" do
+        cert = R509::Cert.new(@cert5)
+        cert.extendedKeyUsage.should == ["TLS Web Server Authentication","TLS Web Client Authentication","Microsoft Server Gated Crypto"]
+    end
 end
