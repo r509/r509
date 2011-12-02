@@ -16,6 +16,12 @@ module TestFixtures
 
   CERT_PUBLIC_KEY = read_fixture('cert1_public_key.pem')
 
+  # cert without key usage
+  CERT4 = read_fixture('cert4.pem')
+
+  # cert with multiple EKU
+  CERT5 = read_fixture('cert5.pem')
+
 
   #san cert from self-signed CA for langui.sh
   CERT_SAN = read_fixture('cert_san.pem')
@@ -63,7 +69,7 @@ module TestFixtures
           :key_usage => ["digitalSignature","keyEncipherment"],
           :extended_key_usage => ["serverAuth"],
           :certificate_policies => [ 
-            "policyIdentifier=2.16.840.1.9999999999.1.2.3.4.1", 
+            "policyIdentifier=2.16.840.1.12345.1.2.3.4.1", 
             "CPS.1=http://example.com/cps"])
 
   end
