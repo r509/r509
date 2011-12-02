@@ -63,7 +63,7 @@ module TestFixtures
           :key_usage => ["digitalSignature","keyEncipherment"],
           :extended_key_usage => ["serverAuth"],
           :certificate_policies => [ 
-            "policyIdentifier=2.16.840.1.9999999999.1.2.3.4.1", 
+            "policyIdentifier=2.16.840.1.12345.1.2.3.4.1", 
             "CPS.1=http://example.com/cps"])
 
   end

@@ -45,7 +45,7 @@ describe R509::Ca do
 		csr = R509::Csr.new
 		csr.create_with_subject [['CN','somedomain.com']]
 		cert = @ca.sign_cert(csr,'server')
-		cert.extensions['certificatePolicies'][0]['value'].should == "Policy: 2.16.840.1.9999999999.1.2.3.4.1\n  CPS: http://example.com/cps\n"
+		cert.extensions['certificatePolicies'][0]['value'].should == "Policy: 2.16.840.1.12345.1.2.3.4.1\n  CPS: http://example.com/cps\n"
 	end
 	it "tests basic constraints CA:TRUE and pathlen:0 on a subroot" do
 		csr = R509::Csr.new
