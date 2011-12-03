@@ -113,7 +113,7 @@ module R509
             @cert.signature_algorithm 
         end
 
-        # Returns key algorithm (RSA/DSA)
+        # Returns key algorithm (RSA or DSA)
         # #
         # # @return [String] value of the key algorithm. RSA or DSA
         def key_algorithm
@@ -158,6 +158,9 @@ module R509
             @extensions
         end
 
+        # Return the key usage extensions
+        #
+        # @return [Array] an array containing each KU as a separate string
         def keyUsage
             if self.extensions.has_key?("keyUsage") and self.extensions["keyUsage"].count > 0 and self.extensions["keyUsage"][0].has_key?("value")
                 self.extensions["keyUsage"][0]["value"].split(",").map{|v| v.strip}
@@ -166,6 +169,9 @@ module R509
             end
         end
 
+        # Return the extended key usage extensions
+        #
+        # @return [Array] an array containing each EKU as a separate string
         def extendedKeyUsage
             if self.extensions.has_key?("extendedKeyUsage") and self.extensions["extendedKeyUsage"].count > 0 and self.extensions["extendedKeyUsage"][0].has_key?("value")
                 self.extensions["extendedKeyUsage"][0]["value"].split(",").map{|v| v.strip}
