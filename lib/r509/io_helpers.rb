@@ -1,7 +1,7 @@
 module R509
   module IOHelpers
-		# Writes data into an IO or file
-		# @param [String, #write] filename_or_io Either a string of the path for 
+        # Writes data into an IO or file
+        # @param [String, #write] filename_or_io Either a string of the path for 
     #  the file that you'd like to write, or an IO-like object.
     # @data [String] data The data that we want to write
     def write_data(filename_or_io, data)
@@ -12,8 +12,8 @@ module R509
       end
     end
 
-		# Reads data from an IO or file
-		# @param [String, #write] filename_or_io Either a string of the path for 
+        # Reads data from an IO or file
+        # @param [String, #write] filename_or_io Either a string of the path for 
     #  the file that you'd like to read, or an IO-like object.
     def read_data(filename_or_io)
       if filename_or_io.respond_to?(:read)
