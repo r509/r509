@@ -14,7 +14,7 @@ describe R509::Cert do
     it "has a public_key" do
         cert = R509::Cert.new @cert
         #this is more complex than it should have to be. diff versions of openssl
-        #return subtley diff PEM encodings so we need to look at the modulus (n)
+        #return subtly diff PEM encodings so we need to look at the modulus (n)
         cert.public_key.n.to_i.should == @cert_public_key_modulus.to_i
     end
     it "returns bit strength" do
