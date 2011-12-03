@@ -13,7 +13,7 @@ describe R509::Cert do
   end
 	it "has a public_key" do
 		cert = R509::Cert.new @cert
-		cert.public_key.to_pem.should == @cert_public_key
+		cert.public_key.to_der.to_s.should == @cert_public_key
 	end
 	it "returns bit strength" do
 		cert = R509::Cert.new @cert

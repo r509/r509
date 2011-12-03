@@ -14,7 +14,7 @@ module TestFixtures
   #Trustwave cert for langui.sh
   CERT = read_fixture('cert1.pem')
 
-  CERT_PUBLIC_KEY = read_fixture('cert1_public_key.pem')
+  CERT_PUBLIC_KEY = read_fixture('cert1_public_key.der')
 
   # cert without key usage
   CERT4 = read_fixture('cert4.pem')
