@@ -14,7 +14,7 @@ spec = Gem::Specification.new do |s|
   s.author = "Paul Kehrer"
   s.email = "paul@victoly.com"
   s.homepage = "http://langui.sh"
-  s.required_ruby_version = ">= 1.8.7"
+  s.required_ruby_version = ">= 1.8.6"
   s.files = %w(README.md r509.yaml Rakefile) + Dir["{lib,script,spec,doc,cert_data}/**/*"]
   s.test_files= Dir.glob('test/*_spec.rb')
   s.require_path = "lib"
