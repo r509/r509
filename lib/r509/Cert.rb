@@ -96,14 +96,34 @@ module R509
             nil
         end
 
+        # Returns whether the public key is RSA
+        #
+        # @return [Boolean] true if the public key is RSA, false otherwise
+        def rsa?
+            @cert.public_key.kind_of?(OpenSSL::PKey::RSA)
+        end
+
+        # Returns whether the public key is DSA
+        #
+        # @return [Boolean] true if the public key is DSA, false otherwise
+        def dsa?
+            @cert.public_key.kind_of?(OpenSSL::PKey::DSA)
+        end
+
         # Returns the bit strength of the key used to create the certificate
         #
         # @return [Integer] integer value of bit strength
         def bit_strength
-            if !@cert.nil?
+            if not @cert.nil?
                 #cast to int, convert to binary, count size
-                @cert.public_key.n.to_i.to_s(2).size
+                if self.rsa?
+                    return @cert.public_key.n.to_i.to_s(2).size
+                elsif self.dsa?
+                    return @cert.public_key.g.to_i.to_s(2).size
+                end
             end
+
+            return 0
         end
 
         # Returns signature algorithm 

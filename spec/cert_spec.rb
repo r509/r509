@@ -10,6 +10,7 @@ describe R509::Cert do
     @key3 = TestFixtures::KEY3
     @cert4 = TestFixtures::CERT4
     @cert5 = TestFixtures::CERT5
+    @cert6 = TestFixtures::CERT6
   end
 	it "has a public_key" do
 		cert = R509::Cert.new @cert
@@ -144,5 +145,24 @@ describe R509::Cert do
     it "handles multiple extended key usages" do
         cert = R509::Cert.new(@cert5)
         cert.extendedKeyUsage.should == ["TLS Web Server Authentication","TLS Web Client Authentication","Microsoft Server Gated Crypto"]
+    end
+
+    it "checks rsa?" do
+        cert = R509::Cert.new(@cert)
+        cert.rsa?.should == true
+        cert.dsa?.should == false
+    end
+    it "gets RSA bit strength" do
+        cert = R509::Cert.new(@cert)
+        cert.bit_strength.should == 2048
+    end
+    it "checks dsa?" do
+        cert = R509::Cert.new(@cert6)
+        cert.rsa?.should == false
+        cert.dsa?.should == true
+    end
+    it "gets DSA bit strength" do
+        cert = R509::Cert.new(@cert6)
+        cert.bit_strength.should == 1024
     end
 end
