@@ -22,6 +22,9 @@ module TestFixtures
   # cert with multiple EKU
   CERT5 = read_fixture('cert5.pem')
 
+  # cert with DSA public key
+  CERT6 = read_fixture('cert6.pem')
+
 
   #san cert from self-signed CA for langui.sh
   CERT_SAN = read_fixture('cert_san.pem')
