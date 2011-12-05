@@ -181,7 +181,7 @@ module R509
         # Return the key usage extensions
         #
         # @return [Array] an array containing each KU as a separate string
-        def keyUsage
+        def key_usage
             if self.extensions.has_key?("keyUsage") and self.extensions["keyUsage"].count > 0 and self.extensions["keyUsage"][0].has_key?("value")
                 self.extensions["keyUsage"][0]["value"].split(",").map{|v| v.strip}
             else
@@ -192,7 +192,7 @@ module R509
         # Return the extended key usage extensions
         #
         # @return [Array] an array containing each EKU as a separate string
-        def extendedKeyUsage
+        def extended_key_usage
             if self.extensions.has_key?("extendedKeyUsage") and self.extensions["extendedKeyUsage"].count > 0 and self.extensions["extendedKeyUsage"][0].has_key?("value")
                 self.extensions["extendedKeyUsage"][0]["value"].split(",").map{|v| v.strip}
             else

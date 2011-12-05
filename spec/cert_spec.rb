@@ -129,11 +129,11 @@ describe R509::Cert do
     end
     it "gets key usage from #keyUsage" do
         cert = R509::Cert.new(@cert)
-        cert.keyUsage.should == ["Digital Signature", "Key Encipherment"]
+        cert.key_usage.should == ["Digital Signature", "Key Encipherment"]
     end
     it "handles lack of key usage" do
         cert = R509::Cert.new(@cert4)
-        cert.keyUsage.should == []
+        cert.key_usage.should == []
     end
     it "gets extended key usage from the extensions array" do
         cert = R509::Cert.new(@cert)
@@ -142,15 +142,15 @@ describe R509::Cert do
     end
     it "get extended key usage from #extendedKeyUsage" do
         cert = R509::Cert.new(@cert)
-        cert.extendedKeyUsage.should == ["TLS Web Server Authentication"]
+        cert.extended_key_usage.should == ["TLS Web Server Authentication"]
     end
     it "handles lack of extended key usage" do
         cert = R509::Cert.new(@cert4)
-        cert.extendedKeyUsage.should == []
+        cert.extended_key_usage.should == []
     end
     it "handles multiple extended key usages" do
         cert = R509::Cert.new(@cert5)
-        cert.extendedKeyUsage.should == ["TLS Web Server Authentication","TLS Web Client Authentication","Microsoft Server Gated Crypto"]
+        cert.extended_key_usage.should == ["TLS Web Server Authentication","TLS Web Client Authentication","Microsoft Server Gated Crypto"]
     end
 
     it "checks rsa?" do
