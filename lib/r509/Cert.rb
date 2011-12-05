@@ -137,11 +137,11 @@ module R509
         # #
         # # @return [String] value of the key algorithm. RSA or DSA
         def key_algorithm
-            if @cert.public_key.kind_of? OpenSSL::PKey::RSA then 
-                'RSA'
-            elsif @cert.public_key.kind_of? OpenSSL::PKey::DSA then
-                'DSA'
-            else 
+            if self.rsa?
+                "RSA"
+            elsif self.dsa?
+                "DSA"
+            else
                 nil
             end
         end
