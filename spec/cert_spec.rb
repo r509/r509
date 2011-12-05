@@ -10,6 +10,7 @@ describe R509::Cert do
     @key3 = TestFixtures::KEY3
     @cert4 = TestFixtures::CERT4
     @cert5 = TestFixtures::CERT5
+    @cert6 = TestFixtures::CERT6
   end
     it "has a public_key" do
         cert = R509::Cert.new @cert
@@ -41,9 +42,13 @@ describe R509::Cert do
         cert = R509::Cert.new @cert
         cert.signature_algorithm.should == 'sha1WithRSAEncryption'
     end
-    it "returns the key algorithm" do
+    it "returns the RSA key algorithm" do
         cert = R509::Cert.new @cert
         cert.key_algorithm.should == 'RSA'
+    end
+    it "returns the DSA key algorithm" do
+        cert = R509::Cert.new @cert6
+        cert.key_algorithm.should == 'DSA'
     end
     it "returns list of san_names when it is a san cert" do
         cert = R509::Cert.new @cert_san
@@ -124,11 +129,11 @@ describe R509::Cert do
     end
     it "gets key usage from #keyUsage" do
         cert = R509::Cert.new(@cert)
-        cert.keyUsage.should == ["Digital Signature", "Key Encipherment"]
+        cert.key_usage.should == ["Digital Signature", "Key Encipherment"]
     end
     it "handles lack of key usage" do
         cert = R509::Cert.new(@cert4)
-        cert.keyUsage.should == []
+        cert.key_usage.should == []
     end
     it "gets extended key usage from the extensions array" do
         cert = R509::Cert.new(@cert)
@@ -137,14 +142,33 @@ describe R509::Cert do
     end
     it "get extended key usage from #extendedKeyUsage" do
         cert = R509::Cert.new(@cert)
-        cert.extendedKeyUsage.should == ["TLS Web Server Authentication"]
+        cert.extended_key_usage.should == ["TLS Web Server Authentication"]
     end
     it "handles lack of extended key usage" do
         cert = R509::Cert.new(@cert4)
-        cert.extendedKeyUsage.should == []
+        cert.extended_key_usage.should == []
     end
     it "handles multiple extended key usages" do
         cert = R509::Cert.new(@cert5)
-        cert.extendedKeyUsage.should == ["TLS Web Server Authentication","TLS Web Client Authentication","Microsoft Server Gated Crypto"]
+        cert.extended_key_usage.should == ["TLS Web Server Authentication","TLS Web Client Authentication","Microsoft Server Gated Crypto"]
+    end
+
+    it "checks rsa?" do
+        cert = R509::Cert.new(@cert)
+        cert.rsa?.should == true
+        cert.dsa?.should == false
+    end
+    it "gets RSA bit strength" do
+        cert = R509::Cert.new(@cert)
+        cert.bit_strength.should == 2048
+    end
+    it "checks dsa?" do
+        cert = R509::Cert.new(@cert6)
+        cert.rsa?.should == false
+        cert.dsa?.should == true
+    end
+    it "gets DSA bit strength" do
+        cert = R509::Cert.new(@cert6)
+        cert.bit_strength.should == 1024
     end
 end
