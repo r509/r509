@@ -52,7 +52,7 @@ module R509
 
         # Writes the CSR into the PEM format
     #
-        # @param [String, #write] filename_or_io Either a string of the path for 
+        # @param [String, #write] filename_or_io Either a string of the path for
     #  the file that you'd like to write, or an IO-like object.
         def write_pem(filename_or_io)
       write_data(filename_or_io, @req.to_pem)
@@ -60,7 +60,7 @@ module R509
 
         # Writes the CSR into the DER format
     #
-        # @param [String, #write] filename_or_io Either a string of the path for 
+        # @param [String, #write] filename_or_io Either a string of the path for
     #  the file that you'd like to write, or an IO-like object.
         def write_der(filename_or_io)
       write_data(filename_or_io, @req.to_der)
@@ -84,7 +84,7 @@ module R509
             domains_to_add = []
             san_extension = nil
             parsed_cert = OpenSSL::X509::Certificate.new(cert)
-            parsed_cert.extensions.to_a.each { |extension| 
+            parsed_cert.extensions.to_a.each { |extension|
                 if (extension.to_a[0] == 'subjectAltName') then
                     domains_to_add = parse_san_extension(extension)
                 end
@@ -98,15 +98,15 @@ module R509
         end
 
         # Creates a new CSR using an array as the subject
-        # @example 
+        # @example
         #   csr.create_with_subject [['CN','langui.sh'],['ST','Illinois'],['L','Chicago'],['C','US'],['emailAddress','ca@langui.sh']]
         #   You can specify the shortname of any OID that OpenSSL knows.
-        # @example 
+        # @example
         #   csr.create_with_subject [['1.3.6.1.4.1.311.60.2.1.3','US'],['2.5.4.7','Chicago'],['emailAddress','ca@langui.sh']]
         #   You can also use OIDs directly (e.g., '1.3.6.1.4.1.311.60.2.1.3')
         # @param subject [Array] subject takes an array of subject items, e.g.
         # @param bit_strength [Integer] bit strength of the private key to generate (default 2048)
-        # @param domains [Array] list of domains to encode as subjectAltNames (these will be merged with whatever SAN domains are 
+        # @param domains [Array] list of domains to encode as subjectAltNames (these will be merged with whatever SAN domains are
         #   already present in the CSR
         # @return [R509::Csr] the object
         def create_with_subject(subject,bit_strength=2048,domains=[])
@@ -139,11 +139,11 @@ module R509
         # #
         # # @return [String] value of the key algorithm. RSA or DSA
         def key_algorithm
-            if @req.public_key.kind_of? OpenSSL::PKey::RSA then 
+            if @req.public_key.kind_of? OpenSSL::PKey::RSA then
                 'RSA'
             elsif @req.public_key.kind_of? OpenSSL::PKey::DSA then
                 'DSA'
-            else 
+            else
                 nil
             end
         end
@@ -172,7 +172,7 @@ module R509
         def parse_san_extension(extension)
             san_string = extension.to_a[1]
             stripped = []
-            san_string.split(',').each{ |name| 
+            san_string.split(',').each{ |name|
                 stripped.push name.strip
             }
             stripped
@@ -198,7 +198,7 @@ module R509
         end
 
         def parse_attributes_from_csr req
-            attributes = Hash.new 
+            attributes = Hash.new
             domains_from_csr = []
             set = nil
             req.attributes.each { |attribute|
@@ -207,14 +207,14 @@ module R509
                 end
             }
             if !set.nil? then
-                set.value.each { |set_value| 
+                set.value.each { |set_value|
                     @seq = set_value
                     extensions = @seq.value.collect{|asn1ext| OpenSSL::X509::Extension.new(asn1ext).to_a }
                     extensions.each { |ext|
                         hash = {'value' => ext[1], 'critical'=> ext[2] }
                         attributes[ext[0]] = hash
-                        if ext[0] == 'subjectAltName' then 
-                            domains_from_csr = ext[1].gsub(/DNS:/,'').split(',') 
+                        if ext[0] == 'subjectAltName' then
+                            domains_from_csr = ext[1].gsub(/DNS:/,'').split(',')
                             domains_from_csr = domains_from_csr.collect {|x| x.strip }
                             attributes[ext[0]] = domains_from_csr
                         end
