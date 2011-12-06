@@ -126,11 +126,11 @@ module R509
             return 0
         end
 
-        # Returns signature algorithm 
-        # # 
+        # Returns signature algorithm
+        # #
         # # @return [String] value of the signature algorithm. E.g. sha1WithRSAEncryption, sha256WithRSAEncryption, md5WithRSAEncryption
-        def signature_algorithm 
-            @cert.signature_algorithm 
+        def signature_algorithm
+            @cert.signature_algorithm
         end
 
         # Returns key algorithm (RSA or DSA)
@@ -147,14 +147,14 @@ module R509
         end
 
         # Writes the Cert into the PEM format
-        # @param [String, #write] filename_or_io Either a string of the path for 
+        # @param [String, #write] filename_or_io Either a string of the path for
         #  the file that you'd like to write, or an IO-like object.
         def write_pem(filename_or_io)
             write_data(filename_or_io, @cert.to_pem)
         end
 
         # Writes the Cert into the DER format
-        # @param [String, #write] filename_or_io Either a string of the path for 
+        # @param [String, #write] filename_or_io Either a string of the path for
         #  the file that you'd like to write, or an IO-like object.
         def write_der(filename_or_io)
             write_data(filename_or_io, @cert.to_der)
@@ -166,7 +166,7 @@ module R509
         def extensions
             if @extensions.nil?
                 @extensions = Hash.new
-                @cert.extensions.to_a.each { |extension| 
+                @cert.extensions.to_a.each { |extension|
                     extension = extension.to_a
                     if(!@extensions[extension[0]].kind_of?(Array)) then
                         @extensions[extension[0]] = []
@@ -210,7 +210,7 @@ module R509
 
         def parse_certificate(cert)
             @cert = OpenSSL::X509::Certificate.new cert
-            @cert.extensions.to_a.each { |extension| 
+            @cert.extensions.to_a.each { |extension|
                 if (extension.to_a[0] == 'subjectAltName') then
                     parse_san_extension(extension)
                 end
