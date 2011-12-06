@@ -4,4 +4,6 @@ module R509
     autoload :Csr, 'r509/Csr.rb'
     autoload :Cert, 'r509/Cert.rb'
     autoload :Crl, 'r509/Crl.rb'
+    autoload :Ocsp, 'r509/Ocsp.rb'
+    autoload :Config, 'r509/Config.rb'
 end

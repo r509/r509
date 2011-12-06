@@ -25,7 +25,8 @@ module R509
         include R509::IOHelpers
         extend R509::IOHelpers
         attr_accessor :ca_cert, :ca_key, :crl_validity_hours, :message_digest,
-          :cdp_location, :ocsp_location
+          :cdp_location, :crl_start_skew_seconds, :ocsp_location, :ocsp_chain,
+          :ocsp_start_skew_seconds, :ocsp_validity_hours
 
         # @param [OpenSSL::X509::Certificate] ca_cert
         # @param [OpenSSL::PKey::RSA] ca_key
@@ -41,14 +42,28 @@ module R509
         #  the CRL numbers to.
         # @option opts [String] :crl_list_file The file that we will save
         #  the CRL list data to.
+        # @option opts [OpenSSL::X509::Certificate] :ocsp_cert An optional certificate
+        # that you sign OCSP responses from
+        # @option opts [OpenSSL::PKey::RSA] :ocsp_key An optional key that matches the
+        # :ocsp_cert
+        # @option opts [Array<OpenSSL::X509::Certificate>] :ocsp_chain An optional array
+        # that constitutes the chain to attach to an OCSP response
         #
         def initialize(ca_cert, ca_key, opts = {} )
             @ca_cert = ca_cert
             @ca_key = ca_key
 
-            @crl_validity_hours = opts[:crl_validity_hours] || 168
-            @cdp_location = opts[:cdp_location]
+            #ocsp data
             @ocsp_location = opts[:ocsp_location]
+            @ocsp_cert = opts[:ocsp_cert]
+            @ocsp_key = opts[:ocsp_key]
+            @ocsp_chain = opts[:ocsp_chain] if opts[:ocsp_chain].kind_of?(Array)
+            @ocsp_validity_hours = opts[:ocsp_validity_hours] || 168
+            @ocsp_start_skew_seconds = opts[:ocsp_start_skew_seconds] || 3600
+
+            @crl_validity_hours = opts[:crl_validity_hours] || 168
+            @crl_start_skew_seconds = opts[:crl_start_skew_seconds] || 3600
+            @cdp_location = opts[:cdp_location]
             @message_digest = opts[:message_digest] || "SHA1"
             @crl_number = opts[:crl_number] || 0
 
@@ -81,11 +96,21 @@ module R509
             @revoked_certs = {}
         end
 
+        # @return [OpenSSL::X509::Certificate] either a custom OCSP cert or the ca_cert
+        def ocsp_cert
+            if @ocsp_cert.nil? then @ca_cert else @ocsp_cert end
+        end
+
+        # @return [OpenSSL::PKey::RSA] either a custom OCSP key or the ca_key
+        def ocsp_key
+            if @ocsp_key.nil? then @ca_key else @ocsp_key end
+        end
+
         # @param [String] name The name of the profile
         # @param [ConfigProfile] prof The profile configuration
         def set_profile(name, prof)
             unless prof.is_a?(ConfigProfile)
-                raise TypeError, "profile is suppsoed to be a R509::ConfigProfile"
+                raise TypeError, "profile is supposed to be a R509::ConfigProfile"
             end
             @profiles[name] = prof
         end

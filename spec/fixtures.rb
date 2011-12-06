@@ -14,6 +14,9 @@ module TestFixtures
     #Trustwave cert for langui.sh
     CERT = read_fixture('cert1.pem')
 
+    #Trustwave root cert
+    STCA_CERT = read_fixture('stca.pem')
+
     CERT_PUBLIC_KEY_MODULUS = read_fixture('cert1_public_key_modulus.txt')
 
     # cert without key usage
@@ -57,6 +60,13 @@ module TestFixtures
 
     TEST_CA_CERT = read_fixture('test_ca.cer')
     TEST_CA_KEY  = read_fixture('test_ca.key')
+    SECOND_CA_CERT = read_fixture('second_ca.cer')
+    SECOND_CA_KEY  = read_fixture('second_ca.key')
+
+    OCSP_TEST_CERT = read_fixture('ocsptest.r509.local.pem')
+    OCSP_TEST_CERT2 = read_fixture('ocsptest2.r509.local.pem')
+
+    STCA_OCSP_REQUEST  = read_fixture('stca_ocsp_request.der')
 
     def self.test_ca_cert
         OpenSSL::X509::Certificate.new(TEST_CA_CERT)
@@ -85,6 +95,33 @@ module TestFixtures
                   :certificate_policies => [ ])
     end
 
+    def self.second_ca_cert
+        OpenSSL::X509::Certificate.new(SECOND_CA_CERT)
+    end
+
+    def self.second_ca_key
+        OpenSSL::PKey::RSA.new(SECOND_CA_KEY)
+    end
+
+    def self.second_ca_server_profile
+        R509::ConfigProfile.new(
+              :basic_constraints => "CA:FALSE",
+              :key_usage => ["digitalSignature","keyEncipherment"],
+              :extended_key_usage => ["serverAuth"],
+              :certificate_policies => [
+                "policyIdentifier=2.16.840.1.12345.1.2.3.4.1",
+                "CPS.1=http://example.com/cps"])
+
+    end
+
+    def self.second_ca_subroot_profile
+        R509::ConfigProfile.new(
+                  :basic_constraints => "CA:TRUE,pathlen:0",
+                  :key_usage => ["keyCertSign","cRLSign"],
+                  :extended_key_usage => [],
+                  :certificate_policies => [ ])
+    end
+
 
     # @return [R509::Config]
     def self.test_ca_config
@@ -96,6 +133,20 @@ module TestFixtures
 
         ret.set_profile("server", self.test_ca_server_profile)
         ret.set_profile("subroot", self.test_ca_subroot_profile)
+
+        ret
+    end
+
+    # @return [R509::Config] secondary config
+    def self.second_ca_config
+        opts = {
+          :cdp_location => 'URI:http://crl.domain.com/test_ca.crl',
+          :ocsp_location => 'URI:http://ocsp.domain.com'
+        }
+        ret = R509::Config.new(second_ca_cert(), second_ca_key(), opts)
+
+        ret.set_profile("server", self.second_ca_server_profile)
+        ret.set_profile("subroot", self.second_ca_subroot_profile)
 
         ret
     end

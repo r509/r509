@@ -20,6 +20,7 @@ module R509
             end
 
             @validity_hours = @config.crl_validity_hours
+            @start_skew_seconds = @config.crl_start_skew_seconds
             @crl = nil
         end
 
@@ -118,7 +119,7 @@ module R509
             crl = OpenSSL::X509::CRL.new
             crl.version = 1
             now = Time.at Time.now.to_i
-            crl.last_update = now
+            crl.last_update = now-@start_skew_seconds
             crl.next_update = now+@validity_hours*3600
 
             @config.revoked_certs.each do |serial, reason, revoke_time|

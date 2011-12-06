@@ -49,7 +49,7 @@ describe R509::Crl do
         crl = R509::Crl.new(@test_ca_config)
         now = Time.at Time.now.to_i
         crl.generate_crl
-        crl.last_update.should == now
+        crl.last_update.should == (now - @test_ca_config.crl_start_skew_seconds)
     end
     it "writes to pem (improve me)" do
         crl = R509::Crl.new(@test_ca_config)
