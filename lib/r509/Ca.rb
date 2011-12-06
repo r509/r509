@@ -6,13 +6,13 @@ require 'r509/Exceptions'
 module R509
     # Contains the certification authority signing operation methods
     class Ca
-    # @param [R509::Config] @config
+        # @param [R509::Config] @config
         def initialize(config)
-      @config = config
+            @config = config
 
-      unless @config.kind_of?(R509::Config)
-        raise R509Error, "config must be a kind of R509::Config"
-      end
+            unless @config.kind_of?(R509::Config)
+                raise R509Error, "config must be a kind of R509::Config"
+            end
 
             self.message_digest= @config.message_digest
         end
@@ -35,7 +35,7 @@ module R509
         # @param domains [Array] domain array to add to the subjectAltName (SAN) list
         # @return [R509::Cert] the signed cert object
         def sign_cert(csr,profile,subject=nil,domains=[])
-      prof_obj = @config.profile(profile)
+            prof_obj = @config.profile(profile)
 
             req = OpenSSL::X509::Request.new csr
             san_names = merge_san_domains(req,domains)

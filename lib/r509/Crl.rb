@@ -8,28 +8,28 @@ module R509
     class Crl
     include R509::IOHelpers
 
-    # TODO : Should we remove this in favor of just having all changes
-    #  being made to the configuration object?
+        # TODO : Should we remove this in favor of just having all changes
+        #  being made to the configuration object?
         attr_accessor :validity_hours
 
         def initialize(config)
-      @config = config
+            @config = config
 
-      unless @config.kind_of?(R509::Config)
-        raise R509Error, "config must be a kind of R509::Config"
-      end
+            unless @config.kind_of?(R509::Config)
+                raise R509Error, "config must be a kind of R509::Config"
+            end
 
-      @validity_hours = @config.crl_validity_hours
+            @validity_hours = @config.crl_validity_hours
             @crl = nil
         end
 
-    # Indicates whether the serial number has been revoked, or not.
-    #
-    # @param [Integer] serial The serial number we want to check
-    # @return [Boolean True if the serial number was revoked. False, otherwise.
-    def revoked?(serial)
-      @config.revoked?(serial)
-    end
+        # Indicates whether the serial number has been revoked, or not.
+        #
+        # @param [Integer] serial The serial number we want to check
+        # @return [Boolean True if the serial number was revoked. False, otherwise.
+        def revoked?(serial)
+            @config.revoked?(serial)
+        end
 
         # Returns the CRL in PEM format
         #
@@ -50,17 +50,17 @@ module R509
         # Writes the CRL into the PEM format
         #
         # @param [String, #write] filename_or_io Either a string of the path for
-    #  the file that you'd like to write, or an IO-like object.
+        #  the file that you'd like to write, or an IO-like object.
         def write_pem(filename_or_io)
-      write_data(filename_or_io, @crl.to_pem)
+            write_data(filename_or_io, @crl.to_pem)
         end
 
         # Writes the CRL into the PEM format
         #
         # @param [String, #write] filename_or_io Either a string of the path for
-    #  the file that you'd like to write, or an IO-like object.
+        #  the file that you'd like to write, or an IO-like object.
         def write_der(filename_or_io)
-      write_data(filename_or_io, @crl.to_der)
+            write_data(filename_or_io, @crl.to_der)
         end
 
         # Returns the signing time of the CRL
@@ -95,20 +95,20 @@ module R509
         #         privilegeWithdrawn      (9),
         #         aACompromise           (10) }
         def revoke_cert(serial,reason=nil)
-      if !reason.nil? and !reason.to_i.between?(1,10)
-        reason = nil
-      end
+            if !reason.nil? and !reason.to_i.between?(1,10)
+                reason = nil
+            end
 
-      @config.revoke_cert(serial, reason.to_i, Time.now)
-      @config.save_crl_list()
+            @config.revoke_cert(serial, reason.to_i, Time.now)
+            @config.save_crl_list()
         end
 
         # Remove serial from revocation list. After unrevoking you must call generate_crl to sign a new CRL
         #
         # @param serial [Integer] serial number of the certificate to remove from revocation
         def unrevoke_cert(serial)
-      @config.unrevoke_cert(serial)
-      @config.save_crl_list()
+            @config.unrevoke_cert(serial)
+            @config.save_crl_list()
         end
 
         # Remove serial from revocation list
@@ -121,7 +121,7 @@ module R509
             crl.last_update = now
             crl.next_update = now+@validity_hours*3600
 
-      @config.revoked_certs.each do |serial, reason, revoke_time|
+            @config.revoked_certs.each do |serial, reason, revoke_time|
                 revoked = OpenSSL::X509::Revoked.new
                 revoked.serial = OpenSSL::BN.new serial.to_s
                 revoked.time = Time.at(revoke_time)
@@ -132,7 +132,7 @@ module R509
                 end
                 #now add it to the crl
                 crl.add_revoked(revoked)
-      end
+            end
 
             ef = OpenSSL::X509::ExtensionFactory.new
             ca_cert = @config.ca_cert
@@ -141,7 +141,7 @@ module R509
             ef.crl = crl
             #grab crl number from file, increment, write back
             crl_number = @config.increment_crl_number
-      @config.save_crl_number()
+            @config.save_crl_number()
             crlnum = OpenSSL::ASN1::Integer(crl_number)
             crl.add_extension(OpenSSL::X509::Extension.new("crlNumber", crlnum))
             extensions = []
