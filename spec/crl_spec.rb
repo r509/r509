@@ -2,12 +2,12 @@ require 'spec_helper'
 require 'stringio'
 
 describe R509::Crl do
-  before :each do
-    @cert = TestFixtures::CERT
-    @csr = TestFixtures::CSR
-    @csr3 = TestFixtures::CSR3
-    @test_ca_config = TestFixtures.test_ca_config
-  end
+    before :each do
+        @cert = TestFixtures::CERT
+        @csr = TestFixtures::CSR
+        @csr3 = TestFixtures::CSR3
+        @test_ca_config = TestFixtures.test_ca_config
+    end
     it "generates a crl and returns pem from an existing revocation list" do
         crl = R509::Crl.new(@test_ca_config)
         crl.generate_crl

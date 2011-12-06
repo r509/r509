@@ -1,13 +1,13 @@
 require 'spec_helper'
 
 describe R509::Ca do
-  before :each do
-    @cert = TestFixtures::CERT
-    @csr = TestFixtures::CSR
-    @csr3 = TestFixtures::CSR3
-    @test_ca_config = TestFixtures.test_ca_config
-    @ca = R509::Ca.new(@test_ca_config)
-  end
+    before :each do
+        @cert = TestFixtures::CERT
+        @csr = TestFixtures::CSR
+        @csr3 = TestFixtures::CSR3
+        @test_ca_config = TestFixtures.test_ca_config
+        @ca = R509::Ca.new(@test_ca_config)
+    end
 
     it "properly issues server cert" do
         csr = R509::Csr.new

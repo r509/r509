@@ -1,17 +1,17 @@
 require 'spec_helper'
 
 describe R509::Cert do
-  before :all do
-    @cert = TestFixtures::CERT
-    @cert_public_key_modulus = TestFixtures::CERT_PUBLIC_KEY_MODULUS
-    @cert3 = TestFixtures::CERT3
-    @cert_der = TestFixtures::CERT_DER
-    @cert_san = TestFixtures::CERT_SAN
-    @key3 = TestFixtures::KEY3
-    @cert4 = TestFixtures::CERT4
-    @cert5 = TestFixtures::CERT5
-    @cert6 = TestFixtures::CERT6
-  end
+    before :all do
+        @cert = TestFixtures::CERT
+        @cert_public_key_modulus = TestFixtures::CERT_PUBLIC_KEY_MODULUS
+        @cert3 = TestFixtures::CERT3
+        @cert_der = TestFixtures::CERT_DER
+        @cert_san = TestFixtures::CERT_SAN
+        @key3 = TestFixtures::KEY3
+        @cert4 = TestFixtures::CERT4
+        @cert5 = TestFixtures::CERT5
+        @cert6 = TestFixtures::CERT6
+    end
     it "has a public_key" do
         cert = R509::Cert.new @cert
         #this is more complex than it should have to be. diff versions of openssl
