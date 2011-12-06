@@ -89,7 +89,7 @@ describe R509::Cert do
     end
     it "parses san extension" do
         cert = R509::Cert.new(@cert_san)
-        cert.san_names.should == ["langui.sh"] 
+        cert.san_names.should == ["langui.sh"]
     end
     context "when initialized with an OpenSSL::X509::Certificate" do
         it "returns pem on to_pem" do

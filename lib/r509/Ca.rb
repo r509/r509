@@ -93,7 +93,7 @@ module R509
 
             ext << ef.create_extension("certificatePolicies", '@certPolicies')
             if ! san_names.empty? then
-                ext << ef.create_extension("subjectAltName", san_names.join(",")) 
+                ext << ef.create_extension("subjectAltName", san_names.join(","))
             end
 
             ext << ef.create_extension("crlDistributionPoints", @config.cdp_location)
@@ -124,8 +124,8 @@ module R509
                 set = OpenSSL::ASN1.decode(req.attributes[0].value) #assuming just one attribute from above, that'd be extReq. this may be unsafe
                 seq = set.value[0]
                 extensions = seq.value.collect{|asn1ext| OpenSSL::X509::Extension.new(asn1ext).to_a }
-                extensions.each { |ext| 
-                    domains_from_csr = ext[1].split(',') 
+                extensions.each { |ext|
+                    domains_from_csr = ext[1].split(',')
                     domains_from_csr = domains_from_csr.collect {|x| x.strip }
                 }
             rescue

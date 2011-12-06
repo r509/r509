@@ -8,7 +8,7 @@ module R509
     class Crl
     include R509::IOHelpers
 
-    # TODO : Should we remove this in favor of just having all changes 
+    # TODO : Should we remove this in favor of just having all changes
     #  being made to the configuration object?
         attr_accessor :validity_hours
 
@@ -30,14 +30,14 @@ module R509
     def revoked?(serial)
       @config.revoked?(serial)
     end
-        
+
         # Returns the CRL in PEM format
         #
         # @return [String] the CRL in PEM format
         def to_pem
             @crl.to_pem
         end
-        
+
         alias :to_s :to_pem
 
         # Returns the CRL in DER format
@@ -49,7 +49,7 @@ module R509
 
         # Writes the CRL into the PEM format
         #
-        # @param [String, #write] filename_or_io Either a string of the path for 
+        # @param [String, #write] filename_or_io Either a string of the path for
     #  the file that you'd like to write, or an IO-like object.
         def write_pem(filename_or_io)
       write_data(filename_or_io, @crl.to_pem)
@@ -57,7 +57,7 @@ module R509
 
         # Writes the CRL into the PEM format
         #
-        # @param [String, #write] filename_or_io Either a string of the path for 
+        # @param [String, #write] filename_or_io Either a string of the path for
     #  the file that you'd like to write, or an IO-like object.
         def write_der(filename_or_io)
       write_data(filename_or_io, @crl.to_der)
@@ -69,7 +69,7 @@ module R509
         def last_update
             @crl.last_update
         end
-        
+
         # Returns the next update time for the CRL
         #
         # @return [Time] when it will be updated next
@@ -133,7 +133,7 @@ module R509
                 #now add it to the crl
                 crl.add_revoked(revoked)
       end
-            
+
             ef = OpenSSL::X509::ExtensionFactory.new
             ca_cert = @config.ca_cert
             ca_key = @config.ca_key

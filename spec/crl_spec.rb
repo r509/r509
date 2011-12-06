@@ -32,7 +32,7 @@ describe R509::Crl do
     end
     it "sets validity period properly through the setter" do
         crl = R509::Crl.new(@test_ca_config)
-    # TODO : Is this kind of behavior redundant? Should they just be 
+    # TODO : Is this kind of behavior redundant? Should they just be
     #   setting things on the config object?
         crl.validity_hours = 2
         now = Time.at Time.now.to_i

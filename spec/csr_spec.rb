@@ -3,18 +3,18 @@ require 'stringio'
 
 
 describe R509::Csr do
-  before :all do
-    @cert = TestFixtures::CERT
-    @cert_san = TestFixtures::CERT_SAN
-    @csr = TestFixtures::CSR
-    @csr2 = TestFixtures::CSR2
-    @csr3 = TestFixtures::CSR3
-    @csr_der = TestFixtures::CSR_DER
-    @csr4_multiple_attrs = TestFixtures::CSR4_MULTIPLE_ATTRS
-    @key3 = TestFixtures::KEY3
-    @key_csr2 = TestFixtures::KEY_CSR2
+    before :all do
+        @cert = TestFixtures::CERT
+        @cert_san = TestFixtures::CERT_SAN
+        @csr = TestFixtures::CSR
+        @csr2 = TestFixtures::CSR2
+        @csr3 = TestFixtures::CSR3
+        @csr_der = TestFixtures::CSR_DER
+        @csr4_multiple_attrs = TestFixtures::CSR4_MULTIPLE_ATTRS
+        @key3 = TestFixtures::KEY3
+        @key_csr2 = TestFixtures::KEY_CSR2
+    end
 
-  end
     it "writes to pem" do
         csr = R509::Csr.new(@csr)
     sio = StringIO.new
@@ -124,7 +124,7 @@ describe R509::Csr do
         end
         it "parses san names when there are multiple non-SAN attributes" do
             csr = R509::Csr.new @csr4_multiple_attrs
-            csr.san_names.should == ["adomain.com", "anotherdomain.com", "justanexample.com"] 
+            csr.san_names.should == ["adomain.com", "anotherdomain.com", "justanexample.com"]
         end
         it "fetches a subject component" do
             csr = R509::Csr.new @csr
