@@ -73,27 +73,29 @@ module R509
             @do_save_crl_list = false
 
             if opts.has_key?(:crl_number_file)
-            # If this is specified, then it had better not be nil.
-            @crl_number_file = opts[:crl_number_file]
-            # Now read the number from the file.
-            @crl_number = read_data(@crl_number_file).to_i
+                # If this is specified, then it had better not be nil.
+                @crl_number_file = opts[:crl_number_file]
+                # Now read the number from the file.
+                @crl_number = read_data(@crl_number_file).to_i
 
-            @do_save_crl_number = true
+                @do_save_crl_number = true
             end
 
             if opts.has_key?(:crl_list_file)
-            @crl_list_file = opts[:crl_list_file]
-            @do_save_crl_list = true
+                @crl_list_file = opts[:crl_list_file]
+                @do_save_crl_list = true
+                load_revoke_crl_list
+            else
+                @revoked_certs = {}
             end
 
             @profiles = {}
-            if opts[:profiles]
-            opts[:profiles].each_pair do |name, prof|
-              @profiles[name] = prof
-            end
+                if opts[:profiles]
+                opts[:profiles].each_pair do |name, prof|
+                  set_profile(name, prof)
+                end
             end
 
-            @revoked_certs = {}
         end
 
         # @return [OpenSSL::X509::Certificate] either a custom OCSP cert or the ca_cert
@@ -231,6 +233,8 @@ module R509
                 raise R509Error, "No valid CRL list file specified for loading"
             end
 
+            @revoked_certs = {}
+
             data = read_data(filename_or_io)
 
             data.each_line do |line|
@@ -253,6 +257,9 @@ module R509
         # @option opts [String] :ca_root_path The root path for the CA. Defautls to
         #  the current working directory.
         def self.load_from_hash(conf, opts = {})
+            if conf.nil?
+                raise ArgumentError, "conf not found"
+            end
             unless conf.kind_of?(::Hash)
                 raise ArgumentError, "conf must be a Hash"
             end
@@ -290,6 +297,7 @@ module R509
             ret = self.new(cert, key, opts)
 
             # The remaining keys should all be profiles :)
+            profs = {}
             conf.keys.each do |profile|
                 data = conf.delete(profile)
                 profs[profile] = ConfigProfile.new(:key_usage => data["key_usage"],
