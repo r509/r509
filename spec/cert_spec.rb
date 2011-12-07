@@ -13,7 +13,7 @@ describe R509::Cert do
         @cert6 = TestFixtures::CERT6
     end
     it "raises error when no parameters supplied" do
-        expect { R509::Cert.new.to raise_error(R509::R509Error) }
+        expect { R509::Cert.new}.to raise_error(ArgumentError)
     end
     it "has a public_key" do
         cert = R509::Cert.new @cert
