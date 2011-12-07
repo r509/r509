@@ -7,6 +7,8 @@ describe R509::Csr do
         @cert = TestFixtures::CERT
         @cert_san = TestFixtures::CERT_SAN
         @csr = TestFixtures::CSR
+        @csr_public_key_modulus = TestFixtures::CSR_PUBLIC_KEY_MODULUS
+        @csr_invalid_signature = TestFixtures::CSR_INVALID_SIGNATURE
         @csr2 = TestFixtures::CSR2
         @csr3 = TestFixtures::CSR3
         @csr_der = TestFixtures::CSR_DER
@@ -141,6 +143,21 @@ describe R509::Csr do
         it "returns the key algorithm" do
             csr = R509::Csr.new @csr
             csr.key_algorithm.should == 'RSA'
+        end
+        it "returns the public key" do
+            #this is more complex than it should have to be. diff versions of openssl
+            #return subtly diff PEM encodings so we need to look at the modulus (n)
+            #but beware, because n is not present for DSA certificates
+            csr = R509::Csr.new @csr
+            csr.public_key.n.to_i.should == @csr_public_key_modulus.to_i
+        end
+        it "returns true with valid signature" do
+            csr = R509::Csr.new @csr
+            csr.verify_signature.should == true
+        end
+        it "returns false on invalid signature" do
+            csr = R509::Csr.new @csr_invalid_signature
+            csr.verify_signature.should == false
         end
     end
     context "when supplying a key with csr" do

@@ -16,6 +16,7 @@ describe R509::Cert do
         cert = R509::Cert.new @cert
         #this is more complex than it should have to be. diff versions of openssl
         #return subtly diff PEM encodings so we need to look at the modulus (n)
+        #but beware, because n is not present for DSA certificates
         cert.public_key.n.to_i.should == @cert_public_key_modulus.to_i
     end
     it "returns bit strength" do

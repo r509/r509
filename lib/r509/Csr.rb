@@ -56,6 +56,22 @@ module R509
             end
         end
 
+        # @return [OpenSSL::PKey::RSA] public key
+        def public_key
+            if(@req.kind_of?(OpenSSL::X509::Request)) then
+                @req.public_key
+            end
+        end
+
+        # Verifies the integrity of the signature on the request
+        # @return [Boolean]
+        def verify_signature
+            if(@req.kind_of?(OpenSSL::X509::Request)) then
+                @req.verify(public_key)
+            else
+                false
+            end
+        end
 
         # Converts the CSR into the PEM format
         #
@@ -82,7 +98,7 @@ module R509
         # @param [String, #write] filename_or_io Either a string of the path for
     #  the file that you'd like to write, or an IO-like object.
         def write_pem(filename_or_io)
-      write_data(filename_or_io, @req.to_pem)
+            write_data(filename_or_io, @req.to_pem)
         end
 
         # Writes the CSR into the DER format
@@ -90,7 +106,7 @@ module R509
         # @param [String, #write] filename_or_io Either a string of the path for
     #  the file that you'd like to write, or an IO-like object.
         def write_der(filename_or_io)
-      write_data(filename_or_io, @req.to_der)
+            write_data(filename_or_io, @req.to_der)
         end
 
         # Returns the bit strength of the key used to create the CSR
