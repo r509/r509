@@ -31,6 +31,34 @@ module R509
             self.message_digest='sha1' #default
         end
 
+        # Static method that creates a new CSR using an array as the subject
+        # @example
+        #   Csr.create_with_subject [['CN','langui.sh'],['ST','Illinois'],['L','Chicago'],['C','US'],['emailAddress','ca@langui.sh']]
+        #   You can specify the shortname of any OID that OpenSSL knows.
+        # @example
+        #   Csr.create_with_subject [['1.3.6.1.4.1.311.60.2.1.3','US'],['2.5.4.7','Chicago'],['emailAddress','ca@langui.sh']]
+        #   You can also use OIDs directly (e.g., '1.3.6.1.4.1.311.60.2.1.3')
+        # @param subject [Array] subject takes an array of subject items, e.g.
+        # @param bit_strength [Integer] bit strength of the private key to generate (default 2048)
+        # @param domains [Array] list of domains to encode as subjectAltNames 
+        # @return [R509::Csr] the object
+        def self.create_with_subject(subject, bit_strength=2048, domains=[])
+            csr = Csr.new
+            csr.create_with_subject(subject, bit_strength, domains)
+            csr
+        end
+
+        # Static method that creates a new CSR using an existing certificate as the source for its subject and extensions
+        # @param cert [String,OpenSSL::X509::Certificate] certificate data in PEM, DER, or OpenSSL::X509::Certificate form
+        # @param bit_strength [Integer] Bit strength of the private key to generate (default 2048)
+        # @param domains [Array] List of domains to encode as subjectAltNames
+        # @return [R509::Csr] the object
+        def self.create_with_cert(cert, bit_strength=2048, domains=[])
+            csr = Csr.new
+            csr.create_with_cert(cert, bit_strength, domains)
+            csr
+        end
+
         # @return [String] message digest friendly name
         def message_digest
             case @message_digest

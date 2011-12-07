@@ -18,8 +18,7 @@ describe R509::Ocsp::Signer do
         response.status.should == OpenSSL::OCSP::RESPONSE_STATUS_UNAUTHORIZED
     end
     it "responds successfully from the test_ca" do
-        csr = R509::Csr.new
-        csr.create_with_subject [['CN','ocsptest.r509.local']]
+        csr = R509::Csr.create_with_subject [['CN','ocsptest.r509.local']]
         ca = R509::Ca.new(@test_ca_config)
         cert = ca.sign_cert(csr,'server')
         ocsp_request = OpenSSL::OCSP::Request.new
@@ -33,14 +32,12 @@ describe R509::Ocsp::Signer do
     it "rejects request with 2 certs from different known CAs" do
         ca = R509::Ca.new(@test_ca_config)
 
-        csr = R509::Csr.new
-        csr.create_with_subject [['CN','ocsptest.r509.local']]
+        csr = R509::Csr.create_with_subject [['CN','ocsptest.r509.local']]
         cert = ca.sign_cert(csr,'server')
 
         ca2 = R509::Ca.new(@second_ca_config)
 
-        csr2 = R509::Csr.new
-        csr2.create_with_subject [['CN','ocsptest2.r509.local']]
+        csr2 = R509::Csr.create_with_subject [['CN','ocsptest2.r509.local']]
         cert2 = ca2.sign_cert(csr2,'server')
 
         ocsp_request = OpenSSL::OCSP::Request.new
@@ -57,8 +54,7 @@ describe R509::Ocsp::Signer do
     it "rejects request with 1 cert from known CA and 1 cert from unknown CA" do
         ca = R509::Ca.new(@test_ca_config)
 
-        csr = R509::Csr.new
-        csr.create_with_subject [['CN','ocsptest.r509.local']]
+        csr = R509::Csr.create_with_subject [['CN','ocsptest.r509.local']]
         cert = ca.sign_cert(csr,'server')
 
         ocsp_request = OpenSSL::OCSP::Request.new
@@ -75,12 +71,10 @@ describe R509::Ocsp::Signer do
     it "responds successfully with 2 certs from 1 known CA" do
         ca = R509::Ca.new(@test_ca_config)
 
-        csr = R509::Csr.new
-        csr.create_with_subject [['CN','ocsptest.r509.local']]
+        csr = R509::Csr.create_with_subject [['CN','ocsptest.r509.local']]
         cert = ca.sign_cert(csr,'server')
 
-        csr2 = R509::Csr.new
-        csr2.create_with_subject [['CN','ocsptest.r509.local']]
+        csr2 = R509::Csr.create_with_subject [['CN','ocsptest.r509.local']]
         cert2 = ca.sign_cert(csr2,'server')
 
         ocsp_request = OpenSSL::OCSP::Request.new
