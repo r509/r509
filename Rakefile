@@ -5,7 +5,7 @@ require "#{File.dirname(__FILE__)}/lib/r509/version"
 task :default => :spec
 RSpec::Core::RakeTask.new(:spec)
 
-desc 'Run all rspec tests with rcov'
+desc 'Run all rspec tests with rcov (1.8 only)'
 RSpec::Core::RakeTask.new(:rcov) do |t|
 	t.rcov_opts =  %q[--exclude "spec,gems"]
 	t.rcov = true
