@@ -28,6 +28,8 @@ module TestFixtures
     # cert with DSA public key
     CERT6 = read_fixture('cert6.pem')
 
+    DSA_KEY = read_fixture('dsa_key.pem')
+
 
     #san cert from self-signed CA for langui.sh
     CERT_SAN = read_fixture('cert_san.pem')
@@ -47,6 +49,8 @@ module TestFixtures
     CSR_DSA = read_fixture('csr_dsa.pem')
 
     KEY_CSR = read_fixture('csr1_key.pem')
+
+    KEY_CSR_DER = read_fixture('csr1_key.der')
 
     CSR2 = read_fixture('csr2.pem')
 
