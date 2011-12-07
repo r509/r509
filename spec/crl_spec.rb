@@ -13,6 +13,9 @@ describe R509::Crl do
         crl.generate_crl
         crl.to_pem.should match(/BEGIN X509 CRL/)
     end
+    it "raises exception when no R509::Config object is passed to the constructor" do
+        expect { R509::Crl.new(['random']) }.to raise_error(R509::R509Error)
+    end
     it "returns der on to_der" do
         crl = R509::Crl.new(@test_ca_config)
         crl.generate_crl
@@ -22,18 +25,23 @@ describe R509::Crl do
         crl = R509::Crl.new(@test_ca_config)
         crl.revoke_cert(383834832)
         crl.generate_crl.should match(/BEGIN X509 CRL/)
-    crl.revoked?(383834832).should == true
+        crl.revoked?(383834832).should == true
     end
+    it "adds a cert to the revocation list with an invalid reason code"
+        #crl = R509::Crl.new(@test_ca_config)
+        #crl.revoke_cert(383834832,15)
+        #crl.generate_crl.should match(/BEGIN X509 CRL/)
+        #crl.revoked?(383834832).should == true
     it "removes a cert from the revocation list" do
         crl = R509::Crl.new(@test_ca_config)
         crl.unrevoke_cert(383834832)
         crl.generate_crl
-    crl.revoked?(383834832).should == false
+        crl.revoked?(383834832).should == false
     end
     it "sets validity period properly through the setter" do
         crl = R509::Crl.new(@test_ca_config)
-    # TODO : Is this kind of behavior redundant? Should they just be
-    #   setting things on the config object?
+        # TODO : Is this kind of behavior redundant? Should they just be
+        #   setting things on the config object?
         crl.validity_hours = 2
         now = Time.at Time.now.to_i
         crl.generate_crl
@@ -54,16 +62,16 @@ describe R509::Crl do
     it "writes to pem (improve me)" do
         crl = R509::Crl.new(@test_ca_config)
         crl.generate_crl
-    sio = StringIO.new
-    sio.set_encoding("BINARY") if sio.respond_to?(:set_encoding)
+        sio = StringIO.new
+        sio.set_encoding("BINARY") if sio.respond_to?(:set_encoding)
         crl.write_pem(sio)
         sio.string.should_not == ''
     end
     it "writes to der (improve me)" do
         crl = R509::Crl.new(@test_ca_config)
         crl.generate_crl
-    sio = StringIO.new
-    sio.set_encoding("BINARY") if sio.respond_to?(:set_encoding)
+        sio = StringIO.new
+        sio.set_encoding("BINARY") if sio.respond_to?(:set_encoding)
         crl.write_der(sio)
         sio.string.should_not == ''
     end
