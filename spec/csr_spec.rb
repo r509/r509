@@ -42,6 +42,10 @@ describe R509::Csr do
             csr = R509::Csr.new
             csr.to_s.should == nil
         end
+        it "Uses SHA1 as the default signature algorithm" do
+            csr = R509::Csr.new
+            csr.message_digest.should == 'sha1'
+        end
         it "raises exception when providing invalid csr" do
             expect { R509::Csr.new('invalid csr') }.to raise_error(OpenSSL::X509::RequestError)
         end
@@ -146,6 +150,38 @@ describe R509::Csr do
         it "accepts matching key" do
             csr = R509::Csr.new(@csr2,@key_csr2)
             csr.to_pem.should == @csr2
+        end
+    end
+    context "when setting alternate signature algorithms" do
+        it "sets sha1 properly after setting to another hash" do
+            csr = R509::Csr.new
+            csr.message_digest = 'sha256'
+            csr.message_digest.should == 'sha256'
+            csr.message_digest = 'sha1'
+            csr.message_digest.should == 'sha1'
+            csr.create_with_subject [['CN','sha1-signature-alg.test']]
+            csr.signature_algorithm.should == "sha1WithRSAEncryption"
+        end
+        it "sets sha256 properly" do
+            csr = R509::Csr.new
+            csr.message_digest = 'sha256'
+            csr.message_digest.should == 'sha256'
+            csr.create_with_subject [['CN','sha256-signature-alg.test']]
+            csr.signature_algorithm.should == "sha256WithRSAEncryption"
+        end
+        it "sets sha512 properly" do
+            csr = R509::Csr.new
+            csr.message_digest = 'sha512'
+            csr.message_digest.should == 'sha512'
+            csr.create_with_subject [['CN','sha512-signature-alg.test']]
+            csr.signature_algorithm.should == "sha512WithRSAEncryption"
+        end
+        it "sets md5 properly" do
+            csr = R509::Csr.new
+            csr.message_digest = 'md5'
+            csr.message_digest.should == 'md5'
+            csr.create_with_subject [['CN','md5-signature-alg.test']]
+            csr.signature_algorithm.should == "md5WithRSAEncryption"
         end
     end
 end

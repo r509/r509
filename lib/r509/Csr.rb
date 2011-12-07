@@ -28,7 +28,35 @@ module R509
                 else
                     raise ArgumentError, 'Too many arguments.'
             end
+            self.message_digest='sha1' #default
         end
+
+        # @return [String] message digest friendly name
+        def message_digest
+            friendly_output = case @message_digest
+                when OpenSSL::Digest::SHA1.new then 'sha1'
+                when OpenSSL::Digest::SHA256.new then 'sha256'
+                when OpenSSL::Digest::SHA512.new then 'sha512'
+                when OpenSSL::Digest::MD5.new then 'md5'
+                else 'sha1'
+            end
+            friendly_output
+        end
+
+        # Changes the message digest (must be called before
+        # creation of signed object via methods create_with_cert or
+        # create_with_subject
+        # @param digest [String] New message digest (md5,sha1,sh256,sha512)
+        def message_digest=(digest)
+            @message_digest = case digest.downcase
+                when 'sha1' then OpenSSL::Digest::SHA1.new
+                when 'sha256' then OpenSSL::Digest::SHA256.new
+                when 'sha512' then OpenSSL::Digest::SHA512.new
+                when 'md5' then OpenSSL::Digest::MD5.new
+                else OpenSSL::Digest::SHA1.new
+            end
+        end
+
 
         # Converts the CSR into the PEM format
         #
@@ -164,7 +192,7 @@ module R509
             @key = OpenSSL::PKey::RSA.generate(bit_strength)
             @req.public_key = @key.public_key
             add_san_extension(domains)
-            @req.sign(@key, OpenSSL::Digest::SHA1.new)
+            @req.sign(@key, @message_digest)
             @subject = @req.subject
         end
 
