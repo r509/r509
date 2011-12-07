@@ -40,7 +40,7 @@ module R509
         #   You can also use OIDs directly (e.g., '1.3.6.1.4.1.311.60.2.1.3')
         # @param subject [Array] subject takes an array of subject items, e.g.
         # @param bit_strength [Integer] bit strength of the private key to generate (default 2048)
-        # @param domains [Array] list of domains to encode as subjectAltNames 
+        # @param domains [Array] list of domains to encode as subjectAltNames
         # @return [R509::Csr] the object
         def self.create_with_subject(subject, bit_strength=2048, domains=[])
             csr = Csr.new
@@ -157,7 +157,7 @@ module R509
                 if self.rsa?
                     return @req.public_key.n.to_i.to_s(2).size
                 elsif self.dsa?
-                    return @req.public_key.pub_key.to_i.to_s(2).size
+                    return @req.public_key.p.to_i.to_s(2).size
                 end
             end
         end

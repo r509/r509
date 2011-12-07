@@ -118,7 +118,7 @@ module R509
             if self.rsa?
                 return @cert.public_key.n.to_i.to_s(2).size
             elsif self.dsa?
-                return @cert.public_key.pub_key.to_i.to_s(2).size
+                return @cert.public_key.p.to_i.to_s(2).size
             end
         end
 
