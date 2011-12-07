@@ -1,5 +1,5 @@
-$:.push File.expand_path("../lib", __FILE__)  
-require "r509/version"  
+$:.push File.expand_path("../lib", __FILE__)
+require "r509/version"
 
 spec = Gem::Specification.new do |s|
   s.name = 'r509'
@@ -7,7 +7,7 @@ spec = Gem::Specification.new do |s|
   s.platform = Gem::Platform::RUBY
   s.has_rdoc = false
   s.summary = "A (relatively) simple X.509 certification authority"
-  s.description = 'A module that allows you to create CSRs, issue certs off a CA, view the certs, and create CRLs'
+  s.description = 'A module that allows you to create CSRs, issue certs off a CA, view the certs, create CRLs, run an OCSP responder, and much more'
   #s.add_dependency 'openssl'
   s.add_development_dependency 'rspec'
   s.add_development_dependency 'syntax'
