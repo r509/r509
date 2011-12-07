@@ -69,35 +69,20 @@ describe R509::Csr do
     end
     context "when passing a cert (single param) to create_with_cert" do
         it "returns a valid pem" do
-            csr = R509::Csr.create_with_cert @cert
+            csr = R509::Csr.create_with_cert @cert, 1024
             csr.to_pem.should match(/CERTIFICATE REQUEST/)
         end
-        it "has a public key length of 2048" do
+        it "has a public key length of 2048 by default" do
             csr = R509::Csr.create_with_cert @cert
             csr.bit_strength.should == 2048
         end
         it "encodes the subject data from the cert" do
-            csr = R509::Csr.create_with_cert @cert
+            csr = R509::Csr.create_with_cert @cert,1024
             csr.subject.to_s.should == '/C=US/ST=Illinois/L=Chicago/O=Paul Kehrer/CN=langui.sh'
         end
         it "san domains from the cert should be encoded in the request" do
             csr = R509::Csr.create_with_cert @cert_san, 1024
             csr.to_pem.should match(/CERTIFICATE REQUEST/)
-        end
-        it "has a public key length of 2048 by default" do
-            csr = R509::Csr.new
-            csr.create_with_cert @cert
-            csr.bit_strength.should == 2048
-        end
-        it "encodes the subject data from the cert" do
-            csr = R509::Csr.new
-            csr.create_with_cert @cert,1024
-            csr.subject.to_s.should == '/C=US/ST=Illinois/L=Chicago/O=Paul Kehrer/CN=langui.sh'
-        end
-        it "san domains from the cert should be encoded in the request" do
-            csr = R509::Csr.new
-            csr.create_with_cert @cert_san,1024
-            csr.san_names.should == ['langui.sh']
         end
     end
     context "when passing a 1024 key length to create_with_cert" do
@@ -150,6 +135,10 @@ describe R509::Csr do
         it "fetches a subject component" do
             csr = R509::Csr.new @csr
             csr.subject_component('CN').to_s.should == 'test.local'
+        end
+        it "returns nil when subject component not found" do
+            csr = R509::Csr.new @csr
+            csr.subject_component('OU').should be_nil
         end
         it "returns the signature algorithm" do
             csr = R509::Csr.new @csr
