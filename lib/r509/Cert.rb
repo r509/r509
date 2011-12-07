@@ -137,8 +137,6 @@ module R509
                 "RSA"
             elsif self.dsa?
                 "DSA"
-            else
-                nil
             end
         end
 
