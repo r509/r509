@@ -1,4 +1,6 @@
+require 'rubygems'
 require 'rspec/core/rake_task'
+require "#{File.dirname(__FILE__)}/lib/r509/version"
 
 task :default => :spec
 RSpec::Core::RakeTask.new(:spec)
@@ -17,7 +19,7 @@ end
 
 desc 'Install gem'
 task :gem_install do
-	puts `gem install r509-0.2.gem`
+	puts `gem install r509-#{R509::VERSION}.gem`
 end
 
 desc 'Uninstall gem'

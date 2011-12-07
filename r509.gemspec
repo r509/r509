@@ -12,7 +12,7 @@ spec = Gem::Specification.new do |s|
   s.add_development_dependency 'rspec'
   s.add_development_dependency 'syntax'
   s.author = "Paul Kehrer"
-  s.email = "paul@victoly.com"
+  s.email = "paul.l.kehrer@gmail.com"
   s.homepage = "http://langui.sh"
   s.required_ruby_version = ">= 1.8.6"
   s.files = %w(README.md r509.yaml Rakefile) + Dir["{lib,script,spec,doc,cert_data}/**/*"]

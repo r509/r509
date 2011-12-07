@@ -96,45 +96,65 @@ module R509
             nil
         end
 
+        # Returns whether the public key is RSA
+        #
+        # @return [Boolean] true if the public key is RSA, false otherwise
+        def rsa?
+            @cert.public_key.kind_of?(OpenSSL::PKey::RSA)
+        end
+
+        # Returns whether the public key is DSA
+        #
+        # @return [Boolean] true if the public key is DSA, false otherwise
+        def dsa?
+            @cert.public_key.kind_of?(OpenSSL::PKey::DSA)
+        end
+
         # Returns the bit strength of the key used to create the certificate
         #
         # @return [Integer] integer value of bit strength
         def bit_strength
-            if !@cert.nil?
+            if not @cert.nil?
                 #cast to int, convert to binary, count size
-                @cert.public_key.n.to_i.to_s(2).size
+                if self.rsa?
+                    return @cert.public_key.n.to_i.to_s(2).size
+                elsif self.dsa?
+                    return @cert.public_key.g.to_i.to_s(2).size
+                end
             end
+
+            return 0
         end
 
-        # Returns signature algorithm 
-        # # 
+        # Returns signature algorithm
+        # #
         # # @return [String] value of the signature algorithm. E.g. sha1WithRSAEncryption, sha256WithRSAEncryption, md5WithRSAEncryption
-        def signature_algorithm 
-            @cert.signature_algorithm 
+        def signature_algorithm
+            @cert.signature_algorithm
         end
 
-        # Returns key algorithm (RSA/DSA)
+        # Returns key algorithm (RSA or DSA)
         # #
         # # @return [String] value of the key algorithm. RSA or DSA
         def key_algorithm
-            if @cert.public_key.kind_of? OpenSSL::PKey::RSA then 
-                'RSA'
-            elsif @cert.public_key.kind_of? OpenSSL::PKey::DSA then
-                'DSA'
-            else 
+            if self.rsa?
+                "RSA"
+            elsif self.dsa?
+                "DSA"
+            else
                 nil
             end
         end
 
         # Writes the Cert into the PEM format
-        # @param [String, #write] filename_or_io Either a string of the path for 
+        # @param [String, #write] filename_or_io Either a string of the path for
         #  the file that you'd like to write, or an IO-like object.
         def write_pem(filename_or_io)
             write_data(filename_or_io, @cert.to_pem)
         end
 
         # Writes the Cert into the DER format
-        # @param [String, #write] filename_or_io Either a string of the path for 
+        # @param [String, #write] filename_or_io Either a string of the path for
         #  the file that you'd like to write, or an IO-like object.
         def write_der(filename_or_io)
             write_data(filename_or_io, @cert.to_der)
@@ -146,7 +166,7 @@ module R509
         def extensions
             if @extensions.nil?
                 @extensions = Hash.new
-                @cert.extensions.to_a.each { |extension| 
+                @cert.extensions.to_a.each { |extension|
                     extension = extension.to_a
                     if(!@extensions[extension[0]].kind_of?(Array)) then
                         @extensions[extension[0]] = []
@@ -158,7 +178,10 @@ module R509
             @extensions
         end
 
-        def keyUsage
+        # Return the key usage extensions
+        #
+        # @return [Array] an array containing each KU as a separate string
+        def key_usage
             if self.extensions.has_key?("keyUsage") and self.extensions["keyUsage"].count > 0 and self.extensions["keyUsage"][0].has_key?("value")
                 self.extensions["keyUsage"][0]["value"].split(",").map{|v| v.strip}
             else
@@ -166,7 +189,10 @@ module R509
             end
         end
 
-        def extendedKeyUsage
+        # Return the extended key usage extensions
+        #
+        # @return [Array] an array containing each EKU as a separate string
+        def extended_key_usage
             if self.extensions.has_key?("extendedKeyUsage") and self.extensions["extendedKeyUsage"].count > 0 and self.extensions["extendedKeyUsage"][0].has_key?("value")
                 self.extensions["extendedKeyUsage"][0]["value"].split(",").map{|v| v.strip}
             else
@@ -184,7 +210,7 @@ module R509
 
         def parse_certificate(cert)
             @cert = OpenSSL::X509::Certificate.new cert
-            @cert.extensions.to_a.each { |extension| 
+            @cert.extensions.to_a.each { |extension|
                 if (extension.to_a[0] == 'subjectAltName') then
                     parse_san_extension(extension)
                 end
