@@ -40,7 +40,11 @@ describe R509::Cert do
     end
     it "fetches a subject component" do
         cert = R509::Cert.new @cert
-        cert.subject_component('CN').to_s.should == 'langui.sh'
+        cert.subject_component('CN').should == 'langui.sh'
+    end
+    it "returns nil when subject component not found" do
+        cert = R509::Cert.new @cert
+        cert.subject_component('OU').should be_nil
     end
     it "returns signature algorithm" do
         cert = R509::Cert.new @cert

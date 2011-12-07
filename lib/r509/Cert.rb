@@ -89,7 +89,7 @@ module R509
         # @return [String] value of the subject component requested
         def subject_component short_name
             @cert.subject.to_a.each do |element|
-                if element[0].downcase == short_name.downcase then
+                if element[0] == short_name.upcase then
                     return element[1]
                 end
             end
