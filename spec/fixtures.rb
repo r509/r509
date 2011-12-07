@@ -38,6 +38,10 @@ module TestFixtures
 
     CSR = read_fixture('csr1.pem')
 
+    CSR_PUBLIC_KEY_MODULUS = read_fixture('csr1_public_key_modulus.txt')
+
+    CSR_INVALID_SIGNATURE = read_fixture('csr_invalid_signature.pem')
+
     CSR_DER = read_fixture('csr1.der')
 
     KEY_CSR = read_fixture('csr1_key.pem')

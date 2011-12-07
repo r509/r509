@@ -4,6 +4,7 @@ describe R509::Ca do
     before :each do
         @cert = TestFixtures::CERT
         @csr = TestFixtures::CSR
+        @csr_invalid_signature = TestFixtures::CSR_INVALID_SIGNATURE
         @csr3 = TestFixtures::CSR3
         @test_ca_config = TestFixtures.test_ca_config
         @ca = R509::Ca.new(@test_ca_config)
@@ -89,5 +90,9 @@ describe R509::Ca do
     it "raises exception when providing invalid ca profile" do
         csr = R509::Csr.new @csr
         expect { @ca.sign_cert(csr,'invalid') }.to raise_error(R509::R509Error)
+    end
+    it "raises exception when attempting to issue CSR with invalid signature" do
+        csr = R509::Csr.new @csr_invalid_signature
+        expect { @ca.sign_cert(csr,'server') }.to raise_error(R509::R509Error)
     end
 end

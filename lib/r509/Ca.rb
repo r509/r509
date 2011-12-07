@@ -35,9 +35,13 @@ module R509
         # @param domains [Array] domain array to add to the subjectAltName (SAN) list
         # @return [R509::Cert] the signed cert object
         def sign_cert(csr,profile,subject=nil,domains=[])
+            req = OpenSSL::X509::Request.new csr
+            if !req.verify(req.public_key)
+                raise R509Error, "Certificate request signature is invalid."
+            end
+
             prof_obj = @config.profile(profile)
 
-            req = OpenSSL::X509::Request.new csr
             san_names = merge_san_domains(req,domains)
 
             #load ca key and cert
