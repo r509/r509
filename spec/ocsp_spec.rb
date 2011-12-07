@@ -19,7 +19,7 @@ describe R509::Ocsp::Signer do
     end
     it "responds successfully from the test_ca" do
         csr = R509::Csr.new
-        csr.create_with_subject [['CN','ocsptest.r509.local']]
+        csr.create_with_subject [['CN','ocsptest.r509.local']],1024
         ca = R509::Ca.new(@test_ca_config)
         cert = ca.sign_cert(csr,'server')
         ocsp_request = OpenSSL::OCSP::Request.new
@@ -34,13 +34,13 @@ describe R509::Ocsp::Signer do
         ca = R509::Ca.new(@test_ca_config)
 
         csr = R509::Csr.new
-        csr.create_with_subject [['CN','ocsptest.r509.local']]
+        csr.create_with_subject [['CN','ocsptest.r509.local']],1024
         cert = ca.sign_cert(csr,'server')
 
         ca2 = R509::Ca.new(@second_ca_config)
 
         csr2 = R509::Csr.new
-        csr2.create_with_subject [['CN','ocsptest2.r509.local']]
+        csr2.create_with_subject [['CN','ocsptest2.r509.local']],1024
         cert2 = ca2.sign_cert(csr2,'server')
 
         ocsp_request = OpenSSL::OCSP::Request.new
@@ -58,7 +58,7 @@ describe R509::Ocsp::Signer do
         ca = R509::Ca.new(@test_ca_config)
 
         csr = R509::Csr.new
-        csr.create_with_subject [['CN','ocsptest.r509.local']]
+        csr.create_with_subject [['CN','ocsptest.r509.local']],1024
         cert = ca.sign_cert(csr,'server')
 
         ocsp_request = OpenSSL::OCSP::Request.new
@@ -76,11 +76,11 @@ describe R509::Ocsp::Signer do
         ca = R509::Ca.new(@test_ca_config)
 
         csr = R509::Csr.new
-        csr.create_with_subject [['CN','ocsptest.r509.local']]
+        csr.create_with_subject [['CN','ocsptest.r509.local']],1024
         cert = ca.sign_cert(csr,'server')
 
         csr2 = R509::Csr.new
-        csr2.create_with_subject [['CN','ocsptest.r509.local']]
+        csr2.create_with_subject [['CN','ocsptest.r509.local']],1024
         cert2 = ca.sign_cert(csr2,'server')
 
         ocsp_request = OpenSSL::OCSP::Request.new
