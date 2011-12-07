@@ -43,7 +43,7 @@ module R509::Ocsp::Helper
         def check_request(request)
             parsed_request = OpenSSL::OCSP::Request.new request
             parsed_request.certid.map do |certid|
-                validated_config = FirstConfigMatch::match(certid,@configs)
+                validated_config = R509::Helper::FirstConfigMatch::match(certid,@configs)
                 check_status(certid,validated_config)
             end
         end

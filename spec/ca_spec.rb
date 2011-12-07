@@ -12,7 +12,7 @@ describe R509::Ca do
 
     it "properly issues server cert" do
         csr = R509::Csr.new
-        csr.create_with_cert @cert
+        csr.create_with_cert @cert,1024
         cert = @ca.sign_cert(csr,'server')
         cert.to_pem.should match(/BEGIN CERTIFICATE/)
         cert.subject.to_s.should == '/C=US/ST=Illinois/L=Chicago/O=Paul Kehrer/CN=langui.sh'
@@ -21,7 +21,7 @@ describe R509::Ca do
     end
     it "issues with specified san domains" do
         csr = R509::Csr.new
-        csr.create_with_cert @cert
+        csr.create_with_cert @cert,1024
         cert = @ca.sign_cert(csr,'server',nil,['langui.sh','domain2.com'])
         cert.san_names.should == ['langui.sh','domain2.com']
     end
@@ -32,25 +32,25 @@ describe R509::Ca do
     end
     it "issues a csr made via array" do
         csr = R509::Csr.new
-        csr.create_with_subject [['CN','langui.sh']]
+        csr.create_with_subject [['CN','langui.sh']],1024
         cert = @ca.sign_cert(csr,'server')
         cert.subject.to_s.should == '/CN=langui.sh'
     end
     it "issues a cert with the subject array provided" do
         csr = R509::Csr.new
-        csr.create_with_subject [['CN','langui.sh']]
+        csr.create_with_subject [['CN','langui.sh']],1024
         cert = @ca.sign_cert(csr,'server',[['CN','someotherdomain.com']])
         cert.subject.to_s.should == '/CN=someotherdomain.com'
     end
     it "tests that policy identifiers are properly encoded" do
         csr = R509::Csr.new
-        csr.create_with_subject [['CN','somedomain.com']]
+        csr.create_with_subject [['CN','somedomain.com']],1024
         cert = @ca.sign_cert(csr,'server')
         cert.extensions['certificatePolicies'][0]['value'].should == "Policy: 2.16.840.1.12345.1.2.3.4.1\n  CPS: http://example.com/cps\n"
     end
     it "tests basic constraints CA:TRUE and pathlen:0 on a subroot" do
         csr = R509::Csr.new
-        csr.create_with_subject [['CN','Subroot Test']]
+        csr.create_with_subject [['CN','Subroot Test']],1024
         cert = @ca.sign_cert(csr,'subroot')
         cert.extensions['basicConstraints'][0]['value'].should == 'CA:TRUE, pathlen:0'
     end
