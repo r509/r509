@@ -94,18 +94,21 @@ describe R509::Ocsp::Signer do
         response = ocsp_handler.sign_response(statuses)
         response.status.should == OpenSSL::OCSP::RESPONSE_STATUS_SUCCESSFUL
     end
-=begin
-    it "validates an OCSP response" do
+    it "signs an OCSP response properly" do
         cert = OpenSSL::X509::Certificate.new(@ocsp_test_cert)
         ocsp_request = OpenSSL::OCSP::Request.new
-        certid = OpenSSL::OCSP::CertificateId.new(cert.cert,@test_ca_config.ca_cert)
+        certid = OpenSSL::OCSP::CertificateId.new(cert,@test_ca_config.ca_cert)
         ocsp_request.add_certid(certid)
         ocsp_handler = R509::Ocsp::Signer.new([@test_ca_config])
         statuses = ocsp_handler.check_request(ocsp_request)
         response = ocsp_handler.sign_response(statuses)
-        response.verify()
+        #TODO: learn what this really means
+        #and how to suppress the output when it doesn't match
+        #/Users/pkehrer/Code/r509/spec/ocsp_spec.rb:107: warning: error:27069076:OCSP routines:OCSP_basic_verify:signer certificate not found
+        store = OpenSSL::X509::Store.new
+        store.add_cert(@test_ca_config.ca_cert)
+        response.basic.verify([@test_ca_config.ca_cert],store).should == true
     end
-=end
 end
 
 describe R509::Ocsp::Helper::RequestChecker do
