@@ -27,11 +27,14 @@ describe R509::Crl do
         crl.generate_crl.should match(/BEGIN X509 CRL/)
         crl.revoked?(383834832).should == true
     end
-    it "adds a cert to the revocation list with an invalid reason code"
-        #crl = R509::Crl.new(@test_ca_config)
-        #crl.revoke_cert(383834832,15)
-        #crl.generate_crl.should match(/BEGIN X509 CRL/)
-        #crl.revoked?(383834832).should == true
+    it "adds a cert to the revocation list with an invalid reason code" do
+        crl = R509::Crl.new(@test_ca_config)
+        crl.revoke_cert(383834832,15)
+        crl.generate_crl.should match(/BEGIN X509 CRL/)
+        crl.revoked?(383834832).should == true
+        #this really tests R509::Config (we need to work on the logical org here)
+        @test_ca_config.revoked_cert(383834832)[:reason].should == 0
+    end
     it "removes a cert from the revocation list" do
         crl = R509::Crl.new(@test_ca_config)
         crl.unrevoke_cert(383834832)

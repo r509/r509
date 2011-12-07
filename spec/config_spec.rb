@@ -31,7 +31,7 @@ describe R509::Config do
                 TestFixtures.test_ca_cert,
                 TestFixtures.test_ca_key
             )
-            
+
             expect{ config.set_profile("bogus", "not a ConfigProfile")}.to raise_error TypeError
         end
 
@@ -121,6 +121,8 @@ describe R509::Config do
             config.revoke_cert(12345, 1)
 
             config.revoked?(12345).should == true
+
+            config.revoked_cert(12345)[:reason].should == 1
 
             config.save_crl_list
 

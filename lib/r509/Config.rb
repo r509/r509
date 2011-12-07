@@ -171,6 +171,11 @@ module R509
             ret
         end
 
+        # @return [Array] serial, reason, revoke_time tuple
+        def revoked_cert(serial)
+            @revoked_certs[serial]
+        end
+
         # @param [Integer] serial The serial number we want to check
         # @return [Boolean True if the serial number was revoked. False, otherwise.
         def revoked?(serial)
