@@ -38,7 +38,6 @@ module R509
                 when OpenSSL::Digest::SHA256.new then 'sha256'
                 when OpenSSL::Digest::SHA512.new then 'sha512'
                 when OpenSSL::Digest::MD5.new then 'md5'
-                else 'sha1'
             end
         end
 
@@ -94,27 +93,44 @@ module R509
         end
 
         # Writes the CSR into the PEM format
-    #
+        #
         # @param [String, #write] filename_or_io Either a string of the path for
-    #  the file that you'd like to write, or an IO-like object.
+        #  the file that you'd like to write, or an IO-like object.
         def write_pem(filename_or_io)
             write_data(filename_or_io, @req.to_pem)
         end
 
         # Writes the CSR into the DER format
-    #
+        #
         # @param [String, #write] filename_or_io Either a string of the path for
-    #  the file that you'd like to write, or an IO-like object.
+        #  the file that you'd like to write, or an IO-like object.
         def write_der(filename_or_io)
             write_data(filename_or_io, @req.to_der)
+        end
+
+        # Returns whether the public key is RSA
+        #
+        # @return [Boolean] true if the public key is RSA, false otherwise
+        def rsa?
+            @req.public_key.kind_of?(OpenSSL::PKey::RSA)
+        end
+
+        # Returns whether the public key is DSA
+        #
+        # @return [Boolean] true if the public key is DSA, false otherwise
+        def dsa?
+            @req.public_key.kind_of?(OpenSSL::PKey::DSA)
         end
 
         # Returns the bit strength of the key used to create the CSR
         # @return [Integer] the integer bit strength.
         def bit_strength
             if !@req.nil?
-                #cast to int, convert to binary, count size
-                @req.public_key.n.to_i.to_s(2).size
+                if self.rsa?
+                    return @req.public_key.n.to_i.to_s(2).size
+                elsif self.dsa?
+                    return @req.public_key.pub_key.to_i.to_s(2).size
+                end
             end
         end
 
@@ -182,10 +198,12 @@ module R509
         # #
         # # @return [String] value of the key algorithm. RSA or DSA
         def key_algorithm
-            if @req.public_key.kind_of? OpenSSL::PKey::RSA then
-                'RSA'
-            elsif @req.public_key.kind_of? OpenSSL::PKey::DSA then
-                'DSA'
+            if not @req.nil?
+                if @req.public_key.kind_of? OpenSSL::PKey::RSA then
+                    'RSA'
+                elsif @req.public_key.kind_of? OpenSSL::PKey::DSA then
+                    'DSA'
+                end
             else
                 nil
             end

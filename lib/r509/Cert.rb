@@ -114,16 +114,12 @@ module R509
         #
         # @return [Integer] integer value of bit strength
         def bit_strength
-            if not @cert.nil?
-                #cast to int, convert to binary, count size
-                if self.rsa?
-                    return @cert.public_key.n.to_i.to_s(2).size
-                elsif self.dsa?
-                    return @cert.public_key.g.to_i.to_s(2).size
-                end
+            #cast to int, convert to binary, count size
+            if self.rsa?
+                return @cert.public_key.n.to_i.to_s(2).size
+            elsif self.dsa?
+                return @cert.public_key.pub_key.to_i.to_s(2).size
             end
-
-            return 0
         end
 
         # Returns signature algorithm

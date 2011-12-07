@@ -44,6 +44,8 @@ module TestFixtures
 
     CSR_DER = read_fixture('csr1.der')
 
+    CSR_DSA = read_fixture('csr_dsa.pem')
+
     KEY_CSR = read_fixture('csr1_key.pem')
 
     CSR2 = read_fixture('csr2.pem')

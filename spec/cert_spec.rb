@@ -12,6 +12,9 @@ describe R509::Cert do
         @cert5 = TestFixtures::CERT5
         @cert6 = TestFixtures::CERT6
     end
+    it "raises error when no parameters supplied" do
+        expect { R509::Cert.new}.to raise_error(ArgumentError)
+    end
     it "has a public_key" do
         cert = R509::Cert.new @cert
         #this is more complex than it should have to be. diff versions of openssl

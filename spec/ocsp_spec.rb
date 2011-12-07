@@ -49,7 +49,7 @@ describe R509::Ocsp::Signer do
         certid2 = OpenSSL::OCSP::CertificateId.new(cert2.cert,@second_ca_config.ca_cert)
         ocsp_request.add_certid(certid2)
 
-        ocsp_handler = R509::Ocsp::Signer.new([@test_ca_config])
+        ocsp_handler = R509::Ocsp::Signer.new([@test_ca_config,@second_ca_config])
         statuses = ocsp_handler.check_request(ocsp_request)
         response = ocsp_handler.sign_response(statuses)
         response.status.should == OpenSSL::OCSP::RESPONSE_STATUS_UNAUTHORIZED

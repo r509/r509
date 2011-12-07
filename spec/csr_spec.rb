@@ -12,6 +12,7 @@ describe R509::Csr do
         @csr2 = TestFixtures::CSR2
         @csr3 = TestFixtures::CSR3
         @csr_der = TestFixtures::CSR_DER
+        @csr_dsa = TestFixtures::CSR_DSA
         @csr4_multiple_attrs = TestFixtures::CSR4_MULTIPLE_ATTRS
         @key3 = TestFixtures::KEY3
         @key_csr2 = TestFixtures::KEY_CSR2
@@ -44,6 +45,10 @@ describe R509::Csr do
             csr = R509::Csr.new
             csr.to_s.should == nil
         end
+        it "returns nil on key_algorithm" do
+            csr = R509::Csr.new
+            csr.key_algorithm.should == nil
+        end
         it "Uses SHA1 as the default signature algorithm" do
             csr = R509::Csr.new
             csr.message_digest.should == 'sha1'
@@ -56,6 +61,10 @@ describe R509::Csr do
         end
         it "raises exception with too many params" do
             expect { R509::Csr.new(@csr3,@key3,'thirdparam') }.to raise_error(ArgumentError)
+        end
+        it "returns false from verify_signature with no CSR present" do
+            csr = R509::Csr.new
+            csr.verify_signature.should == false
         end
     end
     context "when passing a cert (single param) to create_with_cert" do
@@ -140,9 +149,13 @@ describe R509::Csr do
             csr = R509::Csr.new @csr
             csr.signature_algorithm.should == 'sha1WithRSAEncryption'
         end
-        it "returns the key algorithm" do
+        it "returns RSA key algorithm for RSA CSR" do
             csr = R509::Csr.new @csr
             csr.key_algorithm.should == 'RSA'
+        end
+        it "returns DSA key algorithm for DSA CSR" do
+            csr = R509::Csr.new @csr_dsa
+            csr.key_algorithm.should == 'DSA'
         end
         it "returns the public key" do
             #this is more complex than it should have to be. diff versions of openssl
@@ -179,6 +192,11 @@ describe R509::Csr do
             csr.create_with_subject [['CN','sha1-signature-alg.test']]
             csr.signature_algorithm.should == "sha1WithRSAEncryption"
         end
+        it "sets sha1 if you pass an invalid message digest" do
+            csr = R509::Csr.new
+            csr.message_digest = 'sha88'
+            csr.message_digest.should == 'sha1'
+        end
         it "sets sha256 properly" do
             csr = R509::Csr.new
             csr.message_digest = 'sha256'
@@ -201,4 +219,23 @@ describe R509::Csr do
             csr.signature_algorithm.should == "md5WithRSAEncryption"
         end
     end
+    it "checks rsa?" do
+        csr = R509::Csr.new(@csr)
+        csr.rsa?.should == true
+        csr.dsa?.should == false
+    end
+    it "gets RSA bit strength" do
+        csr = R509::Csr.new(@csr)
+        csr.bit_strength.should == 2048
+    end
+    it "checks dsa?" do
+        csr = R509::Csr.new(@csr_dsa)
+        csr.rsa?.should == false
+        csr.dsa?.should == true
+    end
+    it "gets DSA bit strength" do
+        csr = R509::Csr.new(@csr_dsa)
+        csr.bit_strength.should == 1024
+    end
+
 end
