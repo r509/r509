@@ -34,10 +34,10 @@ module R509
         # @return [String] message digest friendly name
         def message_digest
             case @message_digest
-                when OpenSSL::Digest::SHA1.new then 'sha1'
-                when OpenSSL::Digest::SHA256.new then 'sha256'
-                when OpenSSL::Digest::SHA512.new then 'sha512'
-                when OpenSSL::Digest::MD5.new then 'md5'
+                when OpenSSL::Digest::SHA1 then 'sha1'
+                when OpenSSL::Digest::SHA256 then 'sha256'
+                when OpenSSL::Digest::SHA512 then 'sha512'
+                when OpenSSL::Digest::MD5 then 'md5'
             end
         end
 
