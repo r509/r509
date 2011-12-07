@@ -69,55 +69,46 @@ describe R509::Csr do
     end
     context "when passing a cert (single param) to create_with_cert" do
         it "returns a valid pem" do
-            csr = R509::Csr.new
-            csr.create_with_cert @cert,1024
+            csr = R509::Csr.create_with_cert @cert, 1024
             csr.to_pem.should match(/CERTIFICATE REQUEST/)
         end
         it "has a public key length of 2048 by default" do
-            csr = R509::Csr.new
-            csr.create_with_cert @cert
+            csr = R509::Csr.create_with_cert @cert
             csr.bit_strength.should == 2048
         end
         it "encodes the subject data from the cert" do
-            csr = R509::Csr.new
-            csr.create_with_cert @cert,1024
+            csr = R509::Csr.create_with_cert @cert,1024
             csr.subject.to_s.should == '/C=US/ST=Illinois/L=Chicago/O=Paul Kehrer/CN=langui.sh'
         end
         it "san domains from the cert should be encoded in the request" do
-            csr = R509::Csr.new
-            csr.create_with_cert @cert_san,1024
-            csr.san_names.should == ['langui.sh']
+            csr = R509::Csr.create_with_cert @cert_san, 1024
+            csr.to_pem.should match(/CERTIFICATE REQUEST/)
         end
     end
     context "when passing a 1024 key length to create_with_cert" do
         it "has a public key length of 1024" do
-            csr = R509::Csr.new
-            csr.create_with_cert @cert,1024
+            csr = R509::Csr.create_with_cert(@cert,1024)
             csr.bit_strength.should == 1024
         end
     end
     context "when passing a list of domains to create_with_cert" do
         it "duplicates should be removed" do
-            csr = R509::Csr.new
-            csr.create_with_cert @cert, 1024, ['langui.sh','victoly.com','victoly.com','domain.local','victoly.com']
+            csr = R509::Csr.create_with_cert @cert, 1024, ['langui.sh','victoly.com','victoly.com','domain.local','victoly.com']
             csr.san_names.should == ["langui.sh", "victoly.com", "domain.local"]
         end
     end
     context "when passing an array to create_with_subject" do
         it "generates a matching csr" do
-            csr = R509::Csr.new
-            csr.create_with_subject [['CN','langui.sh'],['ST','Illinois'],['L','Chicago'],['C','US'],['emailAddress','ca@langui.sh']],1024
+            csr = R509::Csr.create_with_subject [['CN','langui.sh'],['ST','Illinois'],['L','Chicago'],['C','US'],['emailAddress','ca@langui.sh']],1024
             csr.subject.to_s.should == '/CN=langui.sh/ST=Illinois/L=Chicago/C=US/emailAddress=ca@langui.sh'
         end
         it "generates a matching csr with san domains" do
-            csr = R509::Csr.new
-            csr.create_with_subject [['CN','langui.sh'],['emailAddress','ca@langui.sh']],1024,['domain2.com','domain3.com']
+            csr = R509::Csr.create_with_subject [['CN','langui.sh'],['emailAddress','ca@langui.sh']],1024,['domain2.com','domain3.com']
             csr.subject.to_s.should == '/CN=langui.sh/emailAddress=ca@langui.sh'
             csr.san_names.should == ["domain2.com", "domain3.com"]
         end
         it "generates a matching csr when supplying raw oids" do
-            csr = R509::Csr.new
-            csr.create_with_subject [['2.5.4.3','common name'],['2.5.4.15','business category'],['2.5.4.7','locality'],['1.3.6.1.4.1.311.60.2.1.3','jurisdiction oid openssl typically does not know']],1024
+            csr = R509::Csr.create_with_subject [['2.5.4.3','common name'],['2.5.4.15','business category'],['2.5.4.7','locality'],['1.3.6.1.4.1.311.60.2.1.3','jurisdiction oid openssl typically does not know']],1024
             # we want the subject to be able to be one of two things, depending on how old your computer is
             # the "Be" matcher will call .include? on the array here because of be_include
             # does anyone know of a better, less stupid way to do this?
@@ -144,6 +135,10 @@ describe R509::Csr do
         it "fetches a subject component" do
             csr = R509::Csr.new @csr
             csr.subject_component('CN').to_s.should == 'test.local'
+        end
+        it "returns nil when subject component not found" do
+            csr = R509::Csr.new @csr
+            csr.subject_component('OU').should be_nil
         end
         it "returns the signature algorithm" do
             csr = R509::Csr.new @csr
@@ -184,12 +179,11 @@ describe R509::Csr do
     end
     context "when setting alternate signature algorithms" do
         it "sets sha1 properly after setting to another hash" do
-            csr = R509::Csr.new
+            csr = R509::Csr.create_with_subject [['CN','sha1-signature-alg.test']],1024
             csr.message_digest = 'sha256'
             csr.message_digest.should == 'sha256'
             csr.message_digest = 'sha1'
             csr.message_digest.should == 'sha1'
-            csr.create_with_subject [['CN','sha1-signature-alg.test']],1024
             csr.signature_algorithm.should == "sha1WithRSAEncryption"
         end
         it "sets sha1 if you pass an invalid message digest" do
@@ -198,24 +192,21 @@ describe R509::Csr do
             csr.message_digest.should == 'sha1'
         end
         it "sets sha256 properly" do
-            csr = R509::Csr.new
+            csr = R509::Csr.create_with_subject [['CN','sha256-signature-alg.test']],1024
             csr.message_digest = 'sha256'
             csr.message_digest.should == 'sha256'
-            csr.create_with_subject [['CN','sha256-signature-alg.test']],1024
             csr.signature_algorithm.should == "sha256WithRSAEncryption"
         end
         it "sets sha512 properly" do
-            csr = R509::Csr.new
+            csr = R509::Csr.create_with_subject [['CN','sha512-signature-alg.test']],1024
             csr.message_digest = 'sha512'
             csr.message_digest.should == 'sha512'
-            csr.create_with_subject [['CN','sha512-signature-alg.test']],1024
             csr.signature_algorithm.should == "sha512WithRSAEncryption"
         end
         it "sets md5 properly" do
-            csr = R509::Csr.new
+            csr = R509::Csr.create_with_subject [['CN','md5-signature-alg.test']],1024
             csr.message_digest = 'md5'
             csr.message_digest.should == 'md5'
-            csr.create_with_subject [['CN','md5-signature-alg.test']],1024
             csr.signature_algorithm.should == "md5WithRSAEncryption"
         end
     end
