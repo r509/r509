@@ -145,6 +145,10 @@ describe R509::Csr do
             csr = R509::Csr.new @csr
             csr.subject_component('CN').to_s.should == 'test.local'
         end
+        it "returns nil when subject component not found" do
+            csr = R509::Csr.new @csr
+            csr.subject_component('OU').should be_nil
+        end
         it "returns the signature algorithm" do
             csr = R509::Csr.new @csr
             csr.signature_algorithm.should == 'sha1WithRSAEncryption'
