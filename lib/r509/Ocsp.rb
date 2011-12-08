@@ -8,12 +8,14 @@ module R509::Ocsp
     # A class for signing OCSP responses
     class Signer
 
-        # @param config [Array<R509::Config>] array of configs corresponding to all
+        # @options [] options
+        # @options options [Boolean] :copy_nonce
+        # @options options [Array<R509::Config>] array of configs corresponding to all
         # possible OCSP issuance roots
         # that we want to issue OCSP responses for
-        def initialize(configs)
-            @request_checker = Helper::RequestChecker.new(configs)
-            @response_signer = Helper::ResponseSigner.new(configs)
+        def initialize(options)
+            @request_checker = Helper::RequestChecker.new(options[:configs])
+            @response_signer = Helper::ResponseSigner.new(options)
         end
 
         def check_request(request)
@@ -22,6 +24,47 @@ module R509::Ocsp
 
         def sign_response(statuses)
             @response_signer.sign_response(statuses)
+        end
+    end
+end
+
+module R509::Ocsp::Request
+    module Nonce
+        PRESENT_AND_EQUAL = 1
+        BOTH_ABSENT = 2
+        RESPONSE_ONLY = 3
+        NOT_EQUAL = 0
+        REQUEST_ONLY = -1
+    end
+end
+
+module R509::Ocsp
+    class Response
+        # @param ocsp_response [OpenSSL::OCSP::Response]
+        def initialize(ocsp_response)
+            @ocsp_response = ocsp_response
+        end
+
+        # @return [OpenSSL::OCSP] response status of this response
+        def status
+            @ocsp_response.status
+        end
+
+        # @param ca_cert [OpenSSL::X509::Certificate] the CA certificate to verify against
+        # @return [Boolean] true if the response is valid according to the given root
+        def verify(ca_cert)
+            #TODO: learn what this really means
+            #and how to suppress the output when it doesn't match
+            #/Users/pkehrer/Code/r509/spec/ocsp_spec.rb:107: warning: error:27069076:OCSP routines:OCSP_basic_verify:signer certificate not found
+            store = OpenSSL::X509::Store.new
+            store.add_cert(ca_cert)
+            @ocsp_response.basic.verify([ca_cert], store)
+        end
+
+        # @param ocsp_request [OpenSSL::OCSP::Request] the OCSP request whose nonce to check
+        # @return [R509::Ocsp::Request] the status code of the nonce check
+        def check_nonce(ocsp_request)
+            ocsp_request.check_nonce(@ocsp_response.basic)
         end
     end
 end
@@ -42,10 +85,12 @@ module R509::Ocsp::Helper
         # @param request [String] DER encoded OCSP request string
         def check_request(request)
             parsed_request = OpenSSL::OCSP::Request.new request
-            parsed_request.certid.map do |certid|
-                validated_config = R509::Helper::FirstConfigMatch::match(certid,@configs)
-                check_status(certid,validated_config)
-            end
+            { :parsed_request => parsed_request,
+                :statuses => parsed_request.certid.map { |certid|
+                    validated_config = R509::Helper::FirstConfigMatch::match(certid,@configs)
+                    check_status(certid, validated_config)
+                }
+            }
         end
 
         private
@@ -53,7 +98,7 @@ module R509::Ocsp::Helper
         # Checks the status of a certificate with the corresponding CA
         # @param certid [OpenSSL::OCSP::CertificateId] The certId object from check_request
         # @param validated_config [R509::Config]
-        def check_status(certid,validated_config)
+        def check_status(certid, validated_config)
             if(validated_config == nil) then
                 return nil
             else
@@ -64,8 +109,13 @@ module R509::Ocsp::Helper
     end
 
     class ResponseSigner
-        def initialize(configs)
-            @configs = configs
+        def initialize(options)
+            if options.has_key?(:copy_nonce)
+                @copy_nonce = options[:copy_nonce]
+            else
+                @copy_nonce = false
+            end
+            @configs = options[:configs]
             unless @configs.kind_of?(Array)
                 raise R509::R509Error, "Must pass an array of R509::Config objects"
             end
@@ -74,15 +124,19 @@ module R509::Ocsp::Helper
             end
             @default_config = @configs[0]
         end
+
         # Signs response. Only call this after loading a request or adding your own status
         #
+        # @param request_data [Hash] of { :parsed_request, :statuses }
         # @return [OpenSSL::OCSP::OCSPResponse]
-        def sign_response(statuses)
+        def sign_response(request_data)
             basic_response = OpenSSL::OCSP::BasicResponse.new
+
+            basic_response.copy_nonce(request_data[:parsed_request]) if @copy_nonce
 
             has_invalid = false
             config = nil
-            statuses.each do |status|
+            request_data[:statuses].each do |status|
                 if status.nil? or status[:config].nil?
                     has_invalid = true
                 else
@@ -132,7 +186,7 @@ module R509::Ocsp::Helper
             #    unauthorized          (6)       --Request unauthorized
             #}
             #
-            OpenSSL::OCSP::Response.create(response_status,basic_response)
+            R509::Ocsp::Response.new(OpenSSL::OCSP::Response.create(response_status,basic_response))
         end
     end
 end
