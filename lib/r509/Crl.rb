@@ -6,7 +6,7 @@ require 'r509/io_helpers'
 module R509
     # Used to generate CRLs
     class Crl
-    include R509::IOHelpers
+        include R509::IOHelpers
 
         # TODO : Should we remove this in favor of just having all changes
         #  being made to the configuration object?
