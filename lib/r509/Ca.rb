@@ -36,9 +36,9 @@ module R509
             end
 
             if options.has_key?(:message_digest)
-                message_digest = translate_message_digest(options[:message_digest])
+                message_digest = R509::MessageDigest.new(options[:message_digest])
             else
-                message_digest = translate_message_digest(@config.message_digest)
+                message_digest = R509::MessageDigest.new(@config.message_digest)
             end
 
             profile = @config.profile(options[:profile_name])
@@ -122,7 +122,7 @@ module R509
                         "OCSP;" << @config.ocsp_location)
             end
             cert.extensions = ext
-            cert.sign ca_key, message_digest
+            cert.sign ca_key, message_digest.digest
             Cert.new cert
         end
 
@@ -149,16 +149,6 @@ module R509
             conf = ["[#{section}]"]
             conf.concat data
             conf.join "\n"
-        end
-
-        def translate_message_digest(digest)
-            case digest.downcase
-                when 'sha1' then OpenSSL::Digest::SHA1.new
-                when 'sha256' then OpenSSL::Digest::SHA256.new
-                when 'sha512' then OpenSSL::Digest::SHA512.new
-                when 'md5' then OpenSSL::Digest::MD5.new
-                else OpenSSL::Digest::SHA1.new
-            end
         end
 
     end
