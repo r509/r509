@@ -5,6 +5,7 @@ require 'stringio'
 describe R509::PrivateKey do
     before :all do
         @key_csr = TestFixtures::KEY_CSR
+        @csr_public_key_modulus = TestFixtures::CSR_PUBLIC_KEY_MODULUS
         @key_csr_der = TestFixtures::KEY_CSR_DER
         @dsa_key = TestFixtures::DSA_KEY
     end
@@ -12,7 +13,7 @@ describe R509::PrivateKey do
         expect { R509::PrivateKey.new(:type=>:not_rsa_or_dsa) }.to raise_error(ArgumentError)
     end
     it "throws an exception when no hash is provided" do
-        expect { R509::PrivateKey.new() }.to raise_error(ArgumentError)
+        expect { R509::PrivateKey.new('string') }.to raise_error(ArgumentError,'Must provide a hash of options')
     end
     it "defaults to RSA" do
         private_key = R509::PrivateKey.new(:bit_strength=>1024)
@@ -48,6 +49,10 @@ describe R509::PrivateKey do
         private_key = R509::PrivateKey.new(:type => :dsa, :bit_strength => 512)
         private_key.bit_strength.should == 512
         private_key.key.p.to_i.to_s(2).size.should == 512
+    end
+    it "returns the public key" do
+        private_key = R509::PrivateKey.new(:key => @key_csr)
+        private_key.public_key.n.to_i.should == @csr_public_key_modulus.to_i
     end
     it "writes pem" do
         private_key = R509::PrivateKey.new(:key => @key_csr)

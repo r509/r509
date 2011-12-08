@@ -40,6 +40,11 @@ module R509
             end
         end
 
+        # @return [OpenSSL::PKey::RSA,OpenSSL::PKey::RSA] public key
+        def public_key
+            @key.public_key
+        end
+
         # Converts the key into the PEM format
         #
         # @return [String] the CSR converted into PEM format.

@@ -1,6 +1,7 @@
 require 'openssl'
 require 'r509/Exceptions'
 require 'r509/io_helpers'
+require 'r509/PrivateKey'
 
 module R509
     # The primary certificate signing request object
@@ -20,7 +21,7 @@ module R509
                     @key = nil
                 when 2
                     parse_csr args[0]
-                    @key = OpenSSL::PKey::RSA.new args[1]
+                    @key = R509::PrivateKey.new(:key => args[1])
                     #verify on the OpenSSL::X509::Request object verifies public key match
                     if !@req.verify(@key.public_key) then
                         raise R509Error, 'Key does not match request.'
@@ -250,10 +251,11 @@ module R509
             @req = OpenSSL::X509::Request.new
             @req.version = 0
             @req.subject = subject
-            @key = OpenSSL::PKey::RSA.generate(bit_strength)
+            @key = R509::PrivateKey.new(:type => :rsa,
+                                        :bit_strength => bit_strength)
             @req.public_key = @key.public_key
             add_san_extension(domains)
-            @req.sign(@key, @message_digest)
+            @req.sign(@key.key, @message_digest)
             @subject = @req.subject
         end
 
