@@ -2,11 +2,13 @@ require 'openssl'
 require 'r509/Exceptions'
 require 'r509/io_helpers'
 require 'r509/PrivateKey'
+require 'r509/HelperClasses'
 
 module R509
     # The primary certificate signing request object
     class Csr
-    include R509::IOHelpers
+        include R509::IOHelpers
+        include R509::Helper::CsrHelper
 
         attr_reader :san_names, :key, :subject, :req, :attributes
         def initialize(*args)
@@ -243,7 +245,7 @@ module R509
         def parse_csr(csr)
             @req = OpenSSL::X509::Request.new csr
             @subject = @req.subject
-            @attributes = parse_attributes_from_csr @req
+            @attributes = parse_attributes_from_csr(@req) #method from HelperClasses
             @san_names = @attributes['subjectAltName']
         end
 
@@ -286,33 +288,6 @@ module R509
 
         def strip_prefix(domains)
             domains.map{ |name| name.gsub(/DNS:/,'').strip }
-        end
-
-        def parse_attributes_from_csr req
-            attributes = Hash.new
-            domains_from_csr = []
-            set = nil
-            req.attributes.each { |attribute|
-                if attribute.oid == 'extReq' then
-                set = OpenSSL::ASN1.decode attribute.value
-                end
-            }
-            if !set.nil? then
-                set.value.each { |set_value|
-                    @seq = set_value
-                    extensions = @seq.value.collect{|asn1ext| OpenSSL::X509::Extension.new(asn1ext).to_a }
-                    extensions.each { |ext|
-                        hash = {'value' => ext[1], 'critical'=> ext[2] }
-                        attributes[ext[0]] = hash
-                        if ext[0] == 'subjectAltName' then
-                            domains_from_csr = ext[1].gsub(/DNS:/,'').split(',')
-                            domains_from_csr = domains_from_csr.collect {|x| x.strip }
-                            attributes[ext[0]] = domains_from_csr
-                        end
-                    }
-                }
-            end
-            attributes
         end
     end
 end

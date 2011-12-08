@@ -2,10 +2,13 @@ require 'openssl'
 require 'r509/Config'
 require 'r509/Cert'
 require 'r509/Exceptions'
+require 'r509/HelperClasses'
 
 module R509
     # Contains the certification authority signing operation methods
     class Ca
+        include R509::Helper::CsrHelper
+
         # @param [R509::Config] @config
         def initialize(config)
             @config = config
@@ -121,21 +124,13 @@ module R509
             domains_from_csr
         end
 
-        #this code is identical to the method in Csr. think about moving these to a helper class
         def parse_domains_from_csr(req)
-            domains_from_csr = []
-            begin
-                set = OpenSSL::ASN1.decode(req.attributes[0].value) #assuming just one attribute from above, that'd be extReq. this may be unsafe
-                seq = set.value[0]
-                extensions = seq.value.collect{|asn1ext| OpenSSL::X509::Extension.new(asn1ext).to_a }
-                extensions.each { |ext|
-                    domains_from_csr = ext[1].split(',')
-                    domains_from_csr = domains_from_csr.collect {|x| x.strip }
-                }
-            rescue
-            #not sure there's ever a case where a valid CSR has no attr extension at all
+            attributes = parse_attributes_from_csr(req) #method from CsrHelper module
+            if attributes['subjectAltName'].kind_of?(Array)
+                attributes['subjectAltName'].collect{ |domain| 'DNS:'+domain }
+            else
+                []
             end
-            domains_from_csr
         end
 
         def build_conf(section,data)
