@@ -12,7 +12,7 @@ describe R509::Ocsp::Signer do
         @second_ca_config = TestFixtures.second_ca_config
     end
     it "rejects ocsp requests from an unknown CA" do
-        ocsp_handler = R509::Ocsp::Signer.new([@test_ca_config])
+        ocsp_handler = R509::Ocsp::Signer.new({ :configs => [@test_ca_config] })
         statuses = ocsp_handler.check_request(@stca_ocsp_request)
         response = ocsp_handler.sign_response(statuses)
         response.status.should == OpenSSL::OCSP::RESPONSE_STATUS_UNAUTHORIZED
@@ -24,7 +24,7 @@ describe R509::Ocsp::Signer do
         ocsp_request = OpenSSL::OCSP::Request.new
         certid = OpenSSL::OCSP::CertificateId.new(cert.cert,@test_ca_config.ca_cert)
         ocsp_request.add_certid(certid)
-        ocsp_handler = R509::Ocsp::Signer.new([@test_ca_config])
+        ocsp_handler = R509::Ocsp::Signer.new({ :configs => [@test_ca_config] })
         statuses = ocsp_handler.check_request(ocsp_request)
         response = ocsp_handler.sign_response(statuses)
         response.status.should == OpenSSL::OCSP::RESPONSE_STATUS_SUCCESSFUL
@@ -46,7 +46,7 @@ describe R509::Ocsp::Signer do
         certid2 = OpenSSL::OCSP::CertificateId.new(cert2.cert,@second_ca_config.ca_cert)
         ocsp_request.add_certid(certid2)
 
-        ocsp_handler = R509::Ocsp::Signer.new([@test_ca_config,@second_ca_config])
+        ocsp_handler = R509::Ocsp::Signer.new({ :configs => [@test_ca_config,@second_ca_config] })
         statuses = ocsp_handler.check_request(ocsp_request)
         response = ocsp_handler.sign_response(statuses)
         response.status.should == OpenSSL::OCSP::RESPONSE_STATUS_UNAUTHORIZED
@@ -63,7 +63,7 @@ describe R509::Ocsp::Signer do
         certid2 = OpenSSL::OCSP::CertificateId.new(OpenSSL::X509::Certificate.new(@cert),OpenSSL::X509::Certificate.new(@stca_cert))
         ocsp_request.add_certid(certid2)
 
-        ocsp_handler = R509::Ocsp::Signer.new([@test_ca_config])
+        ocsp_handler = R509::Ocsp::Signer.new({ :configs => [@test_ca_config] })
         statuses = ocsp_handler.check_request(ocsp_request)
         response = ocsp_handler.sign_response(statuses)
         response.status.should == OpenSSL::OCSP::RESPONSE_STATUS_UNAUTHORIZED
@@ -83,7 +83,7 @@ describe R509::Ocsp::Signer do
         certid2 = OpenSSL::OCSP::CertificateId.new(cert2.cert,@test_ca_config.ca_cert)
         ocsp_request.add_certid(certid2)
 
-        ocsp_handler = R509::Ocsp::Signer.new([@test_ca_config])
+        ocsp_handler = R509::Ocsp::Signer.new({ :configs => [@test_ca_config] })
         statuses = ocsp_handler.check_request(ocsp_request)
         response = ocsp_handler.sign_response(statuses)
         response.status.should == OpenSSL::OCSP::RESPONSE_STATUS_SUCCESSFUL
@@ -93,17 +93,68 @@ describe R509::Ocsp::Signer do
         ocsp_request = OpenSSL::OCSP::Request.new
         certid = OpenSSL::OCSP::CertificateId.new(cert,@test_ca_config.ca_cert)
         ocsp_request.add_certid(certid)
-        ocsp_handler = R509::Ocsp::Signer.new([@test_ca_config])
+        ocsp_handler = R509::Ocsp::Signer.new({ :configs => [@test_ca_config] })
         statuses = ocsp_handler.check_request(ocsp_request)
         response = ocsp_handler.sign_response(statuses)
-        #TODO: learn what this really means
-        #and how to suppress the output when it doesn't match
-        #/Users/pkehrer/Code/r509/spec/ocsp_spec.rb:107: warning: error:27069076:OCSP routines:OCSP_basic_verify:signer certificate not found
-        store = OpenSSL::X509::Store.new
-        store.add_cert(@test_ca_config.ca_cert)
-        response.basic.verify([@test_ca_config.ca_cert],store).should == true
+        response.verify(@test_ca_config.ca_cert).should == true
     end
-    it "copies nonce from request to response"
+    it "copies nonce from request to response present and equal" do
+        cert = OpenSSL::X509::Certificate.new(@ocsp_test_cert)
+        ocsp_request = OpenSSL::OCSP::Request.new
+        certid = OpenSSL::OCSP::CertificateId.new(cert,@test_ca_config.ca_cert)
+        ocsp_request.add_certid(certid)
+        ocsp_request.add_nonce
+        ocsp_handler = R509::Ocsp::Signer.new({ :copy_nonce => true, :configs => [@test_ca_config] })
+        statuses = ocsp_handler.check_request(ocsp_request)
+        response = ocsp_handler.sign_response(statuses)
+        response.check_nonce(ocsp_request).should == R509::Ocsp::Request::Nonce::PRESENT_AND_EQUAL
+    end
+    it "doesn't copy nonce if request doesn't have one" do
+        cert = OpenSSL::X509::Certificate.new(@ocsp_test_cert)
+        ocsp_request = OpenSSL::OCSP::Request.new
+        certid = OpenSSL::OCSP::CertificateId.new(cert,@test_ca_config.ca_cert)
+        ocsp_request.add_certid(certid)
+        ocsp_handler = R509::Ocsp::Signer.new({ :copy_nonce => true, :configs => [@test_ca_config] })
+        statuses = ocsp_handler.check_request(ocsp_request)
+        response = ocsp_handler.sign_response(statuses)
+        response.check_nonce(ocsp_request).should == R509::Ocsp::Request::Nonce::BOTH_ABSENT
+    end
+    it "has a nonce in the response only" do
+        cert = OpenSSL::X509::Certificate.new(@ocsp_test_cert)
+        bogus_ocsp_request = OpenSSL::OCSP::Request.new
+        ocsp_request = OpenSSL::OCSP::Request.new
+        certid = OpenSSL::OCSP::CertificateId.new(cert,@test_ca_config.ca_cert)
+        ocsp_request.add_certid(certid)
+        ocsp_request.add_nonce
+        ocsp_handler = R509::Ocsp::Signer.new({ :copy_nonce => true, :configs => [@test_ca_config] })
+        statuses = ocsp_handler.check_request(ocsp_request)
+        response = ocsp_handler.sign_response(statuses)
+        response.check_nonce(bogus_ocsp_request).should == R509::Ocsp::Request::Nonce::RESPONSE_ONLY
+    end
+    it "nonce in request and response is not equal" do
+        cert = OpenSSL::X509::Certificate.new(@ocsp_test_cert)
+        bogus_ocsp_request = OpenSSL::OCSP::Request.new
+        bogus_ocsp_request.add_nonce
+        ocsp_request = OpenSSL::OCSP::Request.new
+        certid = OpenSSL::OCSP::CertificateId.new(cert,@test_ca_config.ca_cert)
+        ocsp_request.add_certid(certid)
+        ocsp_request.add_nonce
+        ocsp_handler = R509::Ocsp::Signer.new({ :copy_nonce => true, :configs => [@test_ca_config] })
+        statuses = ocsp_handler.check_request(ocsp_request)
+        response = ocsp_handler.sign_response(statuses)
+        response.check_nonce(bogus_ocsp_request).should == R509::Ocsp::Request::Nonce::NOT_EQUAL
+    end
+    it "nonce in request only" do
+        cert = OpenSSL::X509::Certificate.new(@ocsp_test_cert)
+        ocsp_request = OpenSSL::OCSP::Request.new
+        certid = OpenSSL::OCSP::CertificateId.new(cert,@test_ca_config.ca_cert)
+        ocsp_request.add_certid(certid)
+        ocsp_request.add_nonce
+        ocsp_handler = R509::Ocsp::Signer.new({ :copy_nonce => false, :configs => [@test_ca_config] })
+        statuses = ocsp_handler.check_request(ocsp_request)
+        response = ocsp_handler.sign_response(statuses)
+        response.check_nonce(ocsp_request).should == R509::Ocsp::Request::Nonce::REQUEST_ONLY
+    end
 end
 
 describe R509::Ocsp::Helper::RequestChecker do
@@ -134,7 +185,7 @@ describe R509::Ocsp::Helper::ResponseSigner do
         expect { R509::Ocsp::Helper::ResponseSigner.new({}) }.to raise_error(R509::R509Error)
     end
     it "fails if you give it an empty array of configs" do
-        expect { R509::Ocsp::Helper::ResponseSigner.new([]) }.to raise_error(R509::R509Error)
+        expect { R509::Ocsp::Helper::ResponseSigner.new({:configs=>[]}) }.to raise_error(R509::R509Error)
     end
 end
 
