@@ -13,7 +13,7 @@ describe R509::Ca do
     it "properly issues server cert" do
         csr = R509::Csr.new
         csr.create_with_cert @cert,1024
-        cert = @ca.sign_cert(csr,'server')
+        cert = @ca.sign_cert({ :csr => csr, :profile_name => 'server' })
         cert.to_pem.should match(/BEGIN CERTIFICATE/)
         cert.subject.to_s.should == '/C=US/ST=Illinois/L=Chicago/O=Paul Kehrer/CN=langui.sh'
         extended_key_usage = cert.extensions['extendedKeyUsage']
@@ -22,66 +22,61 @@ describe R509::Ca do
     it "issues with specified san domains" do
         csr = R509::Csr.new
         csr.create_with_cert @cert,1024
-        cert = @ca.sign_cert(csr,'server',nil,['langui.sh','domain2.com'])
+        cert = @ca.sign_cert(:csr => csr, :profile_name => 'server', :domains => ['langui.sh','domain2.com'])
         cert.san_names.should == ['langui.sh','domain2.com']
     end
     it "issues with san domains from csr" do
         csr = R509::Csr.new @csr
-        cert = @ca.sign_cert(csr,'server')
+        cert = @ca.sign_cert(:csr => csr, :profile_name => 'server')
         cert.san_names.should == ['test.local','additionaldomains.com','saniam.com']
     end
     it "issues a csr made via array" do
         csr = R509::Csr.new
         csr.create_with_subject [['CN','langui.sh']],1024
-        cert = @ca.sign_cert(csr,'server')
+        cert = @ca.sign_cert(:csr => csr, :profile_name => 'server')
         cert.subject.to_s.should == '/CN=langui.sh'
     end
     it "issues a cert with the subject array provided" do
         csr = R509::Csr.new
         csr.create_with_subject [['CN','langui.sh']],1024
-        cert = @ca.sign_cert(csr,'server',[['CN','someotherdomain.com']])
+        cert = @ca.sign_cert(:csr => csr, :profile_name => 'server', :subject => [['CN','someotherdomain.com']])
         cert.subject.to_s.should == '/CN=someotherdomain.com'
     end
     it "tests that policy identifiers are properly encoded" do
         csr = R509::Csr.new
         csr.create_with_subject [['CN','somedomain.com']],1024
-        cert = @ca.sign_cert(csr,'server')
+        cert = @ca.sign_cert(:csr => csr, :profile_name => 'server')
         cert.extensions['certificatePolicies'][0]['value'].should == "Policy: 2.16.840.1.12345.1.2.3.4.1\n  CPS: http://example.com/cps\n"
     end
     it "tests basic constraints CA:TRUE and pathlen:0 on a subroot" do
         csr = R509::Csr.new
         csr.create_with_subject [['CN','Subroot Test']],1024
-        cert = @ca.sign_cert(csr,'subroot')
+        cert = @ca.sign_cert(:csr => csr, :profile_name => 'subroot')
         cert.extensions['basicConstraints'][0]['value'].should == 'CA:TRUE, pathlen:0'
     end
     it "issues with md5" do
         csr = R509::Csr.new @csr3
-        @ca.message_digest = 'md5'
-        cert = @ca.sign_cert(csr,'server')
+        cert = @ca.sign_cert(:csr => csr, :profile_name => 'server', :message_digest => 'md5')
         cert.cert.signature_algorithm.should == 'md5WithRSAEncryption'
     end
     it "issues with sha1" do
         csr = R509::Csr.new @csr3
-        @ca.message_digest = 'sha1'
-        cert = @ca.sign_cert(csr,'server')
+        cert = @ca.sign_cert(:csr => csr, :profile_name => 'server', :message_digest => 'sha1')
         cert.cert.signature_algorithm.should == 'sha1WithRSAEncryption'
     end
     it "issues with sha256" do
         csr = R509::Csr.new @csr3
-        @ca.message_digest = 'sha256'
-        cert = @ca.sign_cert(csr,'server')
+        cert = @ca.sign_cert(:csr => csr, :profile_name => 'server', :message_digest => 'sha256')
         cert.cert.signature_algorithm.should == 'sha256WithRSAEncryption'
     end
     it "issues with sha512" do
         csr = R509::Csr.new @csr3
-        @ca.message_digest = 'sha512'
-        cert = @ca.sign_cert(csr,'server')
+        cert = @ca.sign_cert(:csr => csr, :profile_name => 'server', :message_digest => 'sha512')
         cert.cert.signature_algorithm.should == 'sha512WithRSAEncryption'
     end
     it "issues with invalid hash (sha1 fallback)" do
         csr = R509::Csr.new @csr3
-        @ca.message_digest = 'invalid'
-        cert = @ca.sign_cert(csr,'server')
+        cert = @ca.sign_cert(:csr => csr, :profile_name => 'server', :message_digest => 'invalid')
         cert.cert.signature_algorithm.should == 'sha1WithRSAEncryption'
     end
     it "raises exception unless you provide a proper config" do
@@ -89,10 +84,10 @@ describe R509::Ca do
     end
     it "raises exception when providing invalid ca profile" do
         csr = R509::Csr.new @csr
-        expect { @ca.sign_cert(csr,'invalid') }.to raise_error(R509::R509Error)
+        expect { @ca.sign_cert(:csr => csr, :profile_name => 'invalid') }.to raise_error(R509::R509Error)
     end
     it "raises exception when attempting to issue CSR with invalid signature" do
         csr = R509::Csr.new @csr_invalid_signature
-        expect { @ca.sign_cert(csr,'server') }.to raise_error(R509::R509Error)
+        expect { @ca.sign_cert(:csr => csr, :profile_name => 'server') }.to raise_error(R509::R509Error)
     end
 end

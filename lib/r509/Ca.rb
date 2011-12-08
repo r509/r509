@@ -16,36 +16,31 @@ module R509
             unless @config.kind_of?(R509::Config)
                 raise R509Error, "config must be a kind of R509::Config"
             end
-
-            self.message_digest= @config.message_digest
-        end
-
-        # @param digest [String] New message digest (md5,sha1,sh256,sha512)
-        def message_digest=(digest)
-            @message_digest = case digest.downcase
-                when 'sha1' then OpenSSL::Digest::SHA1.new
-                when 'sha256' then OpenSSL::Digest::SHA256.new
-                when 'sha512' then OpenSSL::Digest::SHA512.new
-                when 'md5' then OpenSSL::Digest::MD5.new
-                else OpenSSL::Digest::SHA1.new
-            end
         end
 
         # Signs a CSR
-        # @param csr [String,R509::Csr,OpenSSL::X509::Request] The CSR
-        # @param profile [String] The profile of the CA you want to use (e.g. "server" in your config)
-        # @param subject [Array] subject array to overwrite what's in the CSR
-        # @param domains [Array] domain array to add to the subjectAltName (SAN) list
+        # @param options []
+        # @options :csr [String, R509::Csr, OpenSSL:X509::Request]
+        # @options :profile_name [String] The CA profile you want to use (eg "server in your config)
+        # @options :subject [Array] subject array to overwrite what's in the CSR
+        # @options :domains [Array] list of SAN names to add to the certificate's subjectAltName
+        # @options :message_digest [String] the message digest to use for this certificate instead of the config's default
         # @return [R509::Cert] the signed cert object
-        def sign_cert(csr,profile,subject=nil,domains=[])
-            req = OpenSSL::X509::Request.new csr
+        def sign_cert(options)
+            req = OpenSSL::X509::Request.new options[:csr]
             if !req.verify(req.public_key)
                 raise R509Error, "Certificate request signature is invalid."
             end
 
-            prof_obj = @config.profile(profile)
+            if options.has_key?(:message_digest)
+                message_digest = translate_message_digest(options[:message_digest])
+            else
+                message_digest = translate_message_digest(@config.message_digest)
+            end
 
-            san_names = merge_san_domains(req,domains)
+            prof_obj = @config.profile(options[:profile_name])
+
+            san_names = merge_san_domains(req, options[:domains])
 
             #load ca key and cert
             ca_cert = @config.ca_cert
@@ -61,8 +56,8 @@ module R509
             cert = OpenSSL::X509::Certificate.new
             #not_before will be set to 6 hours before now to prevent issues with bad system clocks (clients don't sync)
             from = Time.now - 6 * 60 * 60
-            if(subject.kind_of?(Array)) then
-                name = OpenSSL::X509::Name.new subject
+            if(options[:subject].kind_of?(Array)) then
+                name = OpenSSL::X509::Name.new options[:subject]
                 cert.subject = name
             else
                 cert.subject = req.subject
@@ -110,7 +105,7 @@ module R509
                         "OCSP;" << @config.ocsp_location)
             end
             cert.extensions = ext
-            cert.sign ca_key, @message_digest
+            cert.sign ca_key, message_digest
             Cert.new cert
         end
 
@@ -137,6 +132,16 @@ module R509
             conf = ["[#{section}]"]
             conf.concat data
             conf.join "\n"
+        end
+
+        def translate_message_digest(digest)
+            case digest.downcase
+                when 'sha1' then OpenSSL::Digest::SHA1.new
+                when 'sha256' then OpenSSL::Digest::SHA256.new
+                when 'sha512' then OpenSSL::Digest::SHA512.new
+                when 'md5' then OpenSSL::Digest::MD5.new
+                else OpenSSL::Digest::SHA1.new
+            end
         end
 
     end
