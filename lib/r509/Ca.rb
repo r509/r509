@@ -25,6 +25,9 @@ module R509
         # @options :subject [Array] subject array to overwrite what's in the CSR
         # @options :domains [Array] list of SAN names to add to the certificate's subjectAltName
         # @options :message_digest [String] the message digest to use for this certificate instead of the config's default
+        # @options :serial [String] the serial number you want to issue the certificate with
+        # @options :not_before [Time] the notBefore for the certificate
+        # @options :not_after [Time] the notAfter for the certificate
         # @return [R509::Cert] the signed cert object
         def sign_cert(options)
             req = OpenSSL::X509::Request.new options[:csr]
@@ -38,7 +41,7 @@ module R509
                 message_digest = translate_message_digest(@config.message_digest)
             end
 
-            prof_obj = @config.profile(options[:profile_name])
+            profile = @config.profile(options[:profile_name])
 
             san_names = merge_san_domains(req, options[:domains])
 
@@ -46,16 +49,30 @@ module R509
             ca_cert = @config.ca_cert
             ca_key = @config.ca_key
 
-            #generate random serial in accordance with best practices
-            #guidelines state 20-bits of entropy, but we can cram more in
-            #per rfc5280 conforming CAs can make the serial field up to 20 octets
-            serial = OpenSSL::BN.rand(160,0) # 160 bits is 20 bytes (octets).
-            #since second param is 0 the most significant bit must always be 1
-            #this theoretically gives us 159 bits of entropy
+            if options.has_key?(:serial)
+                serial = OpenSSL::BN.new(options[:serial].to_s)
+            else
+                #generate random serial in accordance with best practices
+                #guidelines state 20-bits of entropy, but we can cram more in
+                #per rfc5280 conforming CAs can make the serial field up to 20 octets
+                serial = OpenSSL::BN.rand(160,0) # 160 bits is 20 bytes (octets).
+                #since second param is 0 the most significant bit must always be 1
+                #this theoretically gives us 159 bits of entropy
+            end
+
+            if options.has_key?(:not_before)
+                not_before = options[:not_before]
+            else
+                #not_before will be set to 6 hours before now to prevent issues with bad system clocks (clients don't sync)
+                not_before = Time.now - 6 * 60 * 60
+            end
+            if options.has_key?(:not_after)
+                not_after = options[:not_after]
+            else
+                not_after = not_before + 365 * 24 * 60 * 60
+            end
 
             cert = OpenSSL::X509::Certificate.new
-            #not_before will be set to 6 hours before now to prevent issues with bad system clocks (clients don't sync)
-            from = Time.now - 6 * 60 * 60
             if(options[:subject].kind_of?(Array)) then
                 name = OpenSSL::X509::Name.new options[:subject]
                 cert.subject = name
@@ -63,17 +80,17 @@ module R509
                 cert.subject = req.subject
             end
             cert.issuer = ca_cert.subject
-            cert.not_before = from
-            cert.not_after = from + 365 * 24 * 60 * 60
+            cert.not_before = not_before
+            cert.not_after = not_after
             cert.public_key = req.public_key
             cert.serial =serial
             cert.version = 2 #2 means v3
 
 
-            basic_constraints = prof_obj.basic_constraints
-            key_usage = prof_obj.key_usage
-            extended_key_usage = prof_obj.extended_key_usage
-            certificate_policies = prof_obj.certificate_policies
+            basic_constraints = profile.basic_constraints
+            key_usage = profile.key_usage
+            extended_key_usage = profile.extended_key_usage
+            certificate_policies = profile.certificate_policies
             ef = OpenSSL::X509::ExtensionFactory.new
             ef.subject_certificate = cert
             ef.issuer_certificate = ca_cert
@@ -85,7 +102,7 @@ module R509
             if(extended_key_usage.size > 0) then
                 ext << ef.create_extension("extendedKeyUsage", extended_key_usage.join(","))
             end
-            conf = build_conf('certPolicies',prof_obj.certificate_policies)
+            conf = build_conf('certPolicies',profile.certificate_policies)
             ef.config = OpenSSL::Config.parse(conf)
             #ef.config = OpenSSL::Config.parse(<<-_end_of_cnf_)
             #[certPolicies]

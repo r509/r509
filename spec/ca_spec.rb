@@ -79,6 +79,40 @@ describe R509::Ca do
         cert = @ca.sign_cert(:csr => csr, :profile_name => 'server', :message_digest => 'invalid')
         cert.cert.signature_algorithm.should == 'sha1WithRSAEncryption'
     end
+    it "generates random serial when serial is not specified" do
+        csr = R509::Csr.new @csr3
+        cert = @ca.sign_cert(:csr => csr, :profile_name => "server")
+        cert.cert.serial.to_s.size.should >= 48
+    end
+    it "accepts specified serial number" do
+        csr = R509::Csr.new @csr3
+        cert = @ca.sign_cert(:csr => csr, :profile_name => "server", :serial => 12345)
+        cert.cert.serial.should == 12345
+    end
+    it "has default notBefore/notAfter dates" do
+        not_before = (Time.now - (6 * 60 * 60)).utc
+        not_after = (Time.now - (6 * 60 * 60) + (365 * 24 * 60 * 60)).utc
+        csr = R509::Csr.new @csr3
+        cert = @ca.sign_cert(:csr => csr, :profile_name => "server")
+        cert.cert.not_before.year.should == not_before.year
+        cert.cert.not_before.month.should == not_before.month
+        cert.cert.not_before.day.should == not_before.day
+        cert.cert.not_before.hour.should == not_before.hour
+        cert.cert.not_before.min.should == not_before.min
+        cert.cert.not_after.year.should == not_after.year
+        cert.cert.not_after.month.should == not_after.month
+        cert.cert.not_after.day.should == not_after.day
+        cert.cert.not_after.hour.should == not_after.hour
+        cert.cert.not_after.min.should == not_after.min
+    end
+    it "allows you to specify notBefore/notAfter dates" do
+        not_before = Time.now - 5 * 60 * 60
+        not_after = Time.now + 5 * 60 * 60
+        csr = R509::Csr.new @csr3
+        cert = @ca.sign_cert(:csr => csr, :profile_name => "server", :not_before => not_before, :not_after => not_after)
+        cert.cert.not_before.ctime.should == not_before.utc.ctime
+        cert.cert.not_after.ctime.should == not_after.utc.ctime
+    end
     it "raises exception unless you provide a proper config" do
         expect { R509::Ca.new('invalid') }.to raise_error(R509::R509Error)
     end
