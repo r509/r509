@@ -26,6 +26,7 @@ module R509
             if opts.has_key?(:key)
                 case @type
                 when :rsa
+                    #TODO: Replace with OpenSSL::PKey.read ?
                     @key = OpenSSL::PKey::RSA.new(opts[:key])
                 when :dsa
                     @key = OpenSSL::PKey::DSA.new(opts[:key])

@@ -50,6 +50,12 @@ describe R509::PrivateKey do
         private_key.bit_strength.should == 512
         private_key.key.p.to_i.to_s(2).size.should == 512
     end
+    it "has an exponent of 65537 for new RSA keys" do
+        #this test actually checks ruby's underlying libs to make sure they're
+        #doing what they're supposed to be doing.
+        private_key = R509::PrivateKey.new(:type => :rsa, :bit_strength => 512)
+        private_key.key.e.should == 65537
+    end
     it "returns the public key" do
         private_key = R509::PrivateKey.new(:key => @key_csr)
         private_key.public_key.n.to_i.should == @csr_public_key_modulus.to_i

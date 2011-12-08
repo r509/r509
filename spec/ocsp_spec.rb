@@ -103,6 +103,7 @@ describe R509::Ocsp::Signer do
         store.add_cert(@test_ca_config.ca_cert)
         response.basic.verify([@test_ca_config.ca_cert],store).should == true
     end
+    it "copies nonce from request to response"
 end
 
 describe R509::Ocsp::Helper::RequestChecker do
