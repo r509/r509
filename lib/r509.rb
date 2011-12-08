@@ -7,4 +7,5 @@ module R509
     autoload :Ocsp, 'r509/Ocsp.rb'
     autoload :Config, 'r509/Config.rb'
     autoload :PrivateKey, 'r509/PrivateKey.rb'
+    autoload :MessageDigest, 'r509/MessageDigest.rb'
 end
