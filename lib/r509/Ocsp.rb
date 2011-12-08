@@ -8,12 +8,14 @@ module R509::Ocsp
     # A class for signing OCSP responses
     class Signer
 
-        # @param config [Array<R509::Config>] array of configs corresponding to all
+        # @options [] options
+        # @options options [Boolean] :copy_nonce
+        # @options options [Array<R509::Config>] array of configs corresponding to all
         # possible OCSP issuance roots
         # that we want to issue OCSP responses for
-        def initialize(configs)
-            @request_checker = Helper::RequestChecker.new(configs)
-            @response_signer = Helper::ResponseSigner.new(configs)
+        def initialize(options)
+            @request_checker = Helper::RequestChecker.new(options[:configs])
+            @response_signer = Helper::ResponseSigner.new(options)
         end
 
         def check_request(request)
@@ -23,6 +25,16 @@ module R509::Ocsp
         def sign_response(statuses)
             @response_signer.sign_response(statuses)
         end
+    end
+end
+
+module R509::Ocsp::Request
+    module Nonce
+        PRESENT_AND_EQUAL = 1
+        BOTH_ABSENT = 2
+        RESPONSE_ONLY = 3
+        NOT_EQUAL = 0
+        REQUEST_ONLY = -1
     end
 end
 
@@ -42,10 +54,12 @@ module R509::Ocsp::Helper
         # @param request [String] DER encoded OCSP request string
         def check_request(request)
             parsed_request = OpenSSL::OCSP::Request.new request
-            parsed_request.certid.map do |certid|
-                validated_config = R509::Helper::FirstConfigMatch::match(certid,@configs)
-                check_status(certid,validated_config)
-            end
+            { :parsed_request => parsed_request,
+                :statuses => parsed_request.certid.map { |certid|
+                    validated_config = R509::Helper::FirstConfigMatch::match(certid,@configs)
+                    check_status(certid, validated_config)
+                }
+            }
         end
 
         private
@@ -53,7 +67,7 @@ module R509::Ocsp::Helper
         # Checks the status of a certificate with the corresponding CA
         # @param certid [OpenSSL::OCSP::CertificateId] The certId object from check_request
         # @param validated_config [R509::Config]
-        def check_status(certid,validated_config)
+        def check_status(certid, validated_config)
             if(validated_config == nil) then
                 return nil
             else
@@ -64,8 +78,13 @@ module R509::Ocsp::Helper
     end
 
     class ResponseSigner
-        def initialize(configs)
-            @configs = configs
+        def initialize(options)
+            if options.has_key?(:copy_nonce)
+                @copy_nonce = options[:copy_nonce]
+            else
+                @copy_nonce = false
+            end
+            @configs = options[:configs]
             unless @configs.kind_of?(Array)
                 raise R509::R509Error, "Must pass an array of R509::Config objects"
             end
@@ -74,15 +93,19 @@ module R509::Ocsp::Helper
             end
             @default_config = @configs[0]
         end
+
         # Signs response. Only call this after loading a request or adding your own status
         #
+        # @param request_data [Hash] of { :parsed_request, :statuses }
         # @return [OpenSSL::OCSP::OCSPResponse]
-        def sign_response(statuses)
+        def sign_response(request_data)
             basic_response = OpenSSL::OCSP::BasicResponse.new
+
+            basic_response.copy_nonce(request_data[:parsed_request]) if @copy_nonce
 
             has_invalid = false
             config = nil
-            statuses.each do |status|
+            request_data[:statuses].each do |status|
                 if status.nil? or status[:config].nil?
                     has_invalid = true
                 else
