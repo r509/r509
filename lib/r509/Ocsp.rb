@@ -38,6 +38,37 @@ module R509::Ocsp::Request
     end
 end
 
+module R509::Ocsp
+    class Response
+        # @param ocsp_response [OpenSSL::OCSP::Response]
+        def initialize(ocsp_response)
+            @ocsp_response = ocsp_response
+        end
+
+        # @return [OpenSSL::OCSP] response status of this response
+        def status
+            @ocsp_response.status
+        end
+
+        # @param ca_cert [OpenSSL::X509::Certificate] the CA certificate to verify against
+        # @return [Boolean] true if the response is valid according to the given root
+        def verify(ca_cert)
+            #TODO: learn what this really means
+            #and how to suppress the output when it doesn't match
+            #/Users/pkehrer/Code/r509/spec/ocsp_spec.rb:107: warning: error:27069076:OCSP routines:OCSP_basic_verify:signer certificate not found
+            store = OpenSSL::X509::Store.new
+            store.add_cert(ca_cert)
+            @ocsp_response.basic.verify([ca_cert], store)
+        end
+
+        # @param ocsp_request [OpenSSL::OCSP::Request] the OCSP request whose nonce to check
+        # @return [R509::Ocsp::Request] the status code of the nonce check
+        def check_nonce(ocsp_request)
+            ocsp_request.check_nonce(@ocsp_response.basic)
+        end
+    end
+end
+
 module R509::Ocsp::Helper
     class RequestChecker
         def initialize(configs)
@@ -155,7 +186,7 @@ module R509::Ocsp::Helper
             #    unauthorized          (6)       --Request unauthorized
             #}
             #
-            OpenSSL::OCSP::Response.create(response_status,basic_response)
+            R509::Ocsp::Response.new(OpenSSL::OCSP::Response.create(response_status,basic_response))
         end
     end
 end
