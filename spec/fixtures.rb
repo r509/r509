@@ -52,6 +52,8 @@ module TestFixtures
 
     KEY_CSR_DER = read_fixture('csr1_key.der')
 
+    KEY_CSR_ENCRYPTED = read_fixture('csr1_key_encrypted_des3.pem')
+
     CSR2 = read_fixture('csr2.pem')
 
     KEY_CSR2 = read_fixture('csr2_key.pem')

@@ -1,5 +1,6 @@
 require 'openssl'
 require 'r509/io_helpers'
+require 'r509/Exceptions'
 
 module R509
     class PrivateKey
@@ -21,15 +22,19 @@ module R509
                 raise ArgumentError, 'Must provide :rsa or :dsa as type'
             end
             @bit_strength = opts[:bit_strength] || 2048
-            @password = opts[:password] || nil
+            password = opts[:password] || nil
 
             if opts.has_key?(:key)
-                case @type
-                when :rsa
-                    #TODO: Replace with OpenSSL::PKey.read ?
-                    @key = OpenSSL::PKey::RSA.new(opts[:key])
-                when :dsa
-                    @key = OpenSSL::PKey::DSA.new(opts[:key])
+                begin
+                    case @type
+                    when :rsa
+                        #TODO: Replace with OpenSSL::PKey.read ?
+                        @key = OpenSSL::PKey::RSA.new(opts[:key],password)
+                    when :dsa
+                        @key = OpenSSL::PKey::DSA.new(opts[:key],password)
+                    end
+                rescue
+                    raise R509::R509Error, "Failed to load private key. Invalid key or incorrect password."
                 end
             else
                 case @type
@@ -55,6 +60,19 @@ module R509
 
         alias :to_s :to_pem
 
+        # Converts the key into encrypted PEM format
+        #
+        # @param [String,OpenSSL::Cipher] cipher to use for encryption
+        # full list of available ciphers can be obtained with OpenSSL::Cipher.ciphers
+        # (common ones are des3, aes256, aes128)
+        # @param [String] password password
+        # @return [String] the CSR converted into encrypted PEM format.
+        def to_encrypted_pem(cipher,password)
+            cipher = OpenSSL::Cipher::Cipher.new(cipher)
+            @key.to_pem(cipher,password)
+        end
+
+
         # Converts the key into the DER format
         #
         # @return [String] the CSR converted into DER format.
@@ -68,6 +86,19 @@ module R509
         #  the file that you'd like to write, or an IO-like object.
         def write_pem(filename_or_io)
             write_data(filename_or_io, @key.to_pem)
+        end
+
+
+        # Writes the key into encrypted PEM format with specified cipher
+        #
+        # @param [String, #write] filename_or_io Either a string of the path for
+        #  the file that you'd like to write, or an IO-like object.
+        # @param [String,OpenSSL::Cipher] cipher to use for encryption
+        # full list of available ciphers can be obtained with OpenSSL::Cipher.ciphers
+        # (common ones are des3, aes256, aes128)
+        # @param [String] password password
+        def write_encrypted_pem(filename_or_io,cipher,password)
+            write_data(filename_or_io, to_encrypted_pem(cipher,password))
         end
 
         # Writes the key into the DER format

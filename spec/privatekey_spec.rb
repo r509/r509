@@ -5,6 +5,7 @@ require 'stringio'
 describe R509::PrivateKey do
     before :all do
         @key_csr = TestFixtures::KEY_CSR
+        @key_csr_encrypted = TestFixtures::KEY_CSR_ENCRYPTED
         @csr_public_key_modulus = TestFixtures::CSR_PUBLIC_KEY_MODULUS
         @key_csr_der = TestFixtures::KEY_CSR_DER
         @dsa_key = TestFixtures::DSA_KEY
@@ -83,6 +84,40 @@ describe R509::PrivateKey do
         sio.set_encoding("BINARY") if sio.respond_to?(:set_encoding)
         private_key.write_der(sio)
         sio.string.should == @key_csr_der
+    end
+    it "loads an encrypted private key with the right password" do
+        private_key = R509::PrivateKey.new(:key => @key_csr_encrypted, :password => 'Testing1')
+        private_key.public_key.n.to_i.should == @csr_public_key_modulus.to_i
+    end
+    it "fails to load an encrypted private key with wrong password" do
+        expect { R509::PrivateKey.new(:key => @key_csr_encrypted, :password => 'wrongPassword') }.to raise_error(R509::R509Error,"Failed to load private key. Invalid key or incorrect password.")
+    end
+    it "returns an encrypted pem" do
+        private_key = R509::PrivateKey.new(:key => @key_csr)
+        encrypted_private_key = private_key.to_encrypted_pem('des3','Testing1')
+        decrypted_private_key = R509::PrivateKey.new(:key => encrypted_private_key, :password => 'Testing1')
+        private_key.to_pem.should == decrypted_private_key.to_pem
+    end
+    it "writes an encrypted pem" do
+        private_key = R509::PrivateKey.new(:key => @key_csr)
+        sio = StringIO.new
+        sio.set_encoding("BINARY") if sio.respond_to?(:set_encoding)
+        private_key.write_encrypted_pem(sio,'des3','Testing1')
+        sio.string.match(/Proc-Type: 4,ENCRYPTED/).should_not == nil
+    end
+    it "creates an encrypted private key with des3 cipher" do
+        private_key = R509::PrivateKey.new(:key => @key_csr)
+        sio = StringIO.new
+        sio.set_encoding("BINARY") if sio.respond_to?(:set_encoding)
+        private_key.write_encrypted_pem(sio,'des3','Testing1')
+        sio.string.match(/DES-EDE3-CBC/).should_not == nil
+    end
+    it "creates an encrypted private key with aes128 cipher" do
+        private_key = R509::PrivateKey.new(:key => @key_csr)
+        sio = StringIO.new
+        sio.set_encoding("BINARY") if sio.respond_to?(:set_encoding)
+        private_key.write_encrypted_pem(sio,'aes128','Testing1')
+        sio.string.match(/AES-128-CBC/).should_not == nil
     end
 end
 

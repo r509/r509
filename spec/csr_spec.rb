@@ -57,7 +57,7 @@ describe R509::Csr do
             expect { R509::Csr.new('invalid csr') }.to raise_error(OpenSSL::X509::RequestError)
         end
         it "raises exception when providing invalid key" do
-            expect { R509::Csr.new(@csr,'invalid key') }.to raise_error(OpenSSL::PKey::RSAError)
+            expect { R509::Csr.new(@csr,'invalid key') }.to raise_error(R509::R509Error,"Failed to load private key. Invalid key or incorrect password.")
         end
         it "raises exception with too many params" do
             expect { R509::Csr.new(@csr3,@key3,'thirdparam') }.to raise_error(ArgumentError)
