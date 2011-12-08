@@ -54,6 +54,16 @@ describe R509::PrivateKey do
         private_key = R509::PrivateKey.new(:key => @key_csr)
         private_key.public_key.n.to_i.should == @csr_public_key_modulus.to_i
     end
+    it "returns pem" do
+        #load the DER, check that it matches the PEM on to_pem
+        private_key = R509::PrivateKey.new(:key => @key_csr_der)
+        private_key.to_pem.should == @key_csr
+    end
+    it "returns der" do
+        #load the PEM, check that it matches the DER on to_der
+        private_key = R509::PrivateKey.new(:key => @key_csr)
+        private_key.to_der.should == @key_csr_der
+    end
     it "writes pem" do
         private_key = R509::PrivateKey.new(:key => @key_csr)
         sio = StringIO.new
