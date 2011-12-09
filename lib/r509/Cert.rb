@@ -8,24 +8,25 @@ module R509
     include R509::IOHelpers
 
         attr_reader :cert, :san_names, :key
-        def initialize(*args)
-            @san_names = nil
-            @extensions = nil
-            @cert = nil
-            @key = nil
-            case args.size
-                when 0 then raise ArgumentError, 'Too few args. 1-2 (cert,key)'
-                when 1
-                    parse_certificate(args[0])
-                when 2
-                    parse_certificate(args[0])
-                    @key = OpenSSL::PKey::RSA.new args[1]
-                    #we can't use verify here because verify does not do what it does for CSR
-                    if !(@cert.public_key.to_s == @key.public_key.to_s) then
-                        raise R509Error, 'Key does not match cert.'
-                    end
-                else
-                    raise ArgumentError, 'Too many args. Max 2 (cert,key)'
+
+        # @option opts [String,OpenSSL::X509::Certificate] :cert a cert
+        # @option opts [String] :password optional password for private key
+        # @option opts [String,OpenSSL::PKey::RSA,OpenSSL::PKey::DSA] :key optional private key
+        def initialize(opts={})
+            if not opts.kind_of?(Hash)
+                raise ArgumentError, 'Must provide a hash of options'
+            end
+            if not opts.has_key?(:cert)
+                raise ArgumentError, 'Must provide :cert'
+            end
+
+            parse_certificate(opts[:cert])
+
+            if opts.has_key?(:key)
+                @key = R509::PrivateKey.new(:key => opts[:key], :password => opts[:password])
+                if not @cert.public_key.to_s == @key.public_key.to_s then
+                    raise R509Error, 'Key does not match cert.'
+                end
             end
         end
 

@@ -122,7 +122,7 @@ module R509
             end
             cert.extensions = ext
             cert.sign ca_key, message_digest.digest
-            Cert.new cert
+            Cert.new(:cert => cert)
         end
 
         private
