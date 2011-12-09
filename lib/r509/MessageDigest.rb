@@ -22,6 +22,7 @@ module R509
             when 'sha256' then OpenSSL::Digest::SHA256.new
             when 'sha512' then OpenSSL::Digest::SHA512.new
             when 'md5' then OpenSSL::Digest::MD5.new
+            when 'dss1' then OpenSSL::Digest::DSS1.new
             else
                 @name = "sha1"
                 OpenSSL::Digest::SHA1.new
@@ -34,6 +35,7 @@ module R509
             when OpenSSL::Digest::SHA256 then 'sha256'
             when OpenSSL::Digest::SHA512 then 'sha512'
             when OpenSSL::Digest::MD5 then 'md5'
+            when OpenSSL::Digest::DSS1 then 'dss1'
             else
                 raise ArgumentError, "Unknown digest"
             end

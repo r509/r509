@@ -43,6 +43,16 @@ describe R509::MessageDigest do
         md.name.should == "md5"
         md.digest.kind_of?(OpenSSL::Digest::MD5).should == true
     end
+    it "translates dss1 name -> digest" do
+        md = R509::MessageDigest.new("dss1")
+        md.name.should == "dss1"
+        md.digest.kind_of?(OpenSSL::Digest::DSS1).should == true
+    end
+    it "translates DSS1 name -> digest" do
+        md = R509::MessageDigest.new("DSS1")
+        md.name.should == "dss1"
+        md.digest.kind_of?(OpenSSL::Digest::DSS1).should == true
+    end
     it "translates unknown name -> digest" do
         md = R509::MessageDigest.new("unknown")
         md.name.should == "sha1"
@@ -67,6 +77,11 @@ describe R509::MessageDigest do
         md = R509::MessageDigest.new(OpenSSL::Digest::MD5.new)
         md.name.should == "md5"
         md.digest.kind_of?(OpenSSL::Digest::MD5).should == true
+    end
+    it "translates dss1 digest -> name" do
+        md = R509::MessageDigest.new(OpenSSL::Digest::DSS1.new)
+        md.name.should == "dss1"
+        md.digest.kind_of?(OpenSSL::Digest::DSS1).should == true
     end
     it "exception on unknown digest -> name" do
         expect{ R509::MessageDigest.new(12345) }.to raise_error(ArgumentError)
