@@ -16,7 +16,7 @@ module R509
         # @option opts [Integer] :bit_strength
         # @option opts [String] :password
         # @option opts [Array] :domains List of domains to encode as subjectAltNames
-        # @option opts [Array,OpenSSL::X509::Name] :subject array of subject items
+        # @option opts [R509::Subject,Array,OpenSSL::X509::Name] :subject array of subject items
         # @example [['CN','langui.sh'],['ST','Illinois'],['L','Chicago'],['C','US'],['emailAddress','ca@langui.sh']]
         # you can also pass OIDs (see tests)
         # @option opts [String,R509::Cert,OpenSSL::X509::Certificate] :cert takes a cert (used for generating a CSR with the certificate's values)
@@ -50,9 +50,8 @@ module R509
                 create_request(cert_data[:subject],merged_domains) #sets @req
             elsif opts.has_key?(:subject)
                 domains = opts[:domains] || []
-                subject = OpenSSL::X509::Name.new(opts[:subject])
                 parsed_domains = prefix_domains(domains)
-                create_request(subject,parsed_domains) #sets @req
+                create_request(opts[:subject], parsed_domains) #sets @req
             elsif opts.has_key?(:csr)
                 if opts.has_key?(:domains)
                     raise ArgumentError, "You can't add domains to an existing CSR"
@@ -193,7 +192,7 @@ module R509
 
         def parse_csr(csr)
             @req = OpenSSL::X509::Request.new csr
-            @subject = @req.subject
+            @subject = R509::Subject.new(@req.subject)
             @attributes = parse_attributes_from_csr(@req) #method from HelperClasses
             @san_names = @attributes['subjectAltName']
         end
@@ -202,7 +201,7 @@ module R509
             domains.uniq! #de-duplicate the array
             @req = OpenSSL::X509::Request.new
             @req.version = 0
-            @req.subject = subject
+            @req.subject = R509::Subject.new(subject).name
             if @key.nil?
                 @key = R509::PrivateKey.new(:type => @type,
                                             :bit_strength => @bit_strength)
@@ -211,7 +210,7 @@ module R509
             add_san_extension(domains)
             @attributes = parse_attributes_from_csr(@req) #method from HelperClasses
             @san_names = @attributes['subjectAltName']
-            @subject = @req.subject
+            @subject = R509::Subject.new(@req.subject)
         end
 
         # parses an existing cert to get data to add to new CSR

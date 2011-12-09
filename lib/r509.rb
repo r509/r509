@@ -8,4 +8,5 @@ module R509
     autoload :Config, 'r509/Config.rb'
     autoload :PrivateKey, 'r509/PrivateKey.rb'
     autoload :MessageDigest, 'r509/MessageDigest.rb'
+    autoload :Subject, 'r509/Subject.rb'
 end
