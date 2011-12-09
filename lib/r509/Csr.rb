@@ -189,6 +189,8 @@ module R509
         end
 
         # Returns a hash structure you can pass to the Ca
+        # You will want to call this method if you intend to alter the values
+        # and then pass them to the Ca class.
         #
         # @return [Hash] :subject and :san_names you can pass to Ca
         def to_hash
