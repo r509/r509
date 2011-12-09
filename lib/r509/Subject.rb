@@ -18,7 +18,23 @@ module R509
         end
 
         def []=(key, value)
-            @name.add_entry(key, value)
+            added = false
+            @name = OpenSSL::X509::Name.new(@name.to_a.map{ |item|
+                if key == item[0]
+                    added = true
+                    [key, value]
+                else
+                    item
+                end
+            })
+
+            if not added
+                @name.add_entry(key, value)
+            end
+        end
+
+        def delete(key)
+            @name = OpenSSL::X509::Name.new(@name.to_a.select{ |item| item[0] != key })
         end
 
         def to_s
