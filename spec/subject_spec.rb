@@ -45,5 +45,21 @@ describe R509::Subject do
         ['/CN=common name/businessCategory=business category/L=locality/1.3.6.1.4.1.311.60.2.1.3=jurisdiction oid openssl typically does not know',"/CN=common name/2.5.4.15=business category/L=locality/1.3.6.1.4.1.311.60.2.1.3=jurisdiction oid openssl typically does not know"].should be_include subject.name.to_s
     end
 
+    it "edits an existing subject entry" do
+        subject = R509::Subject.new([["CN", "domain1.com"], ["O", "my org"]])
+        subject.to_s.should == "/CN=domain1.com/O=my org"
+
+        subject["CN"] = "domain2.com"
+        subject.to_s.should == "/CN=domain2.com/O=my org"
+    end
+
+    it "deletes an existing subject entry" do
+        subject = R509::Subject.new([["CN", "domain1.com"], ["O", "my org"]])
+        subject.to_s.should == "/CN=domain1.com/O=my org"
+
+        subject.delete("CN")
+        subject.to_s.should == "/O=my org"
+    end
+
 end
 
