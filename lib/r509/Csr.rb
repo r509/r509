@@ -203,7 +203,7 @@ module R509
             @req = OpenSSL::X509::Request.new csr
             @subject = R509::Subject.new(@req.subject)
             @attributes = parse_attributes_from_csr(@req) #method from HelperClasses
-            @san_names = @attributes['subjectAltName']
+            @san_names = @attributes['subjectAltName'] || []
         end
 
         def create_request(subject,domains=[])
@@ -218,7 +218,7 @@ module R509
             @req.public_key = @key.public_key
             add_san_extension(domains)
             @attributes = parse_attributes_from_csr(@req) #method from HelperClasses
-            @san_names = @attributes['subjectAltName']
+            @san_names = @attributes['subjectAltName'] || []
             @subject = R509::Subject.new(@req.subject)
         end
 

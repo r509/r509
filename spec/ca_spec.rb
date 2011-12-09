@@ -10,6 +10,10 @@ describe R509::Ca do
         @ca = R509::Ca.new(@test_ca_config)
     end
 
+    it "raise exception if you don't pass an R509::Csr in :csr" do
+        csr = OpenSSL::X509::Request.new(@csr)
+        expect { @ca.sign_cert({ :csr => csr, :profile_name => 'server' }) }.to raise_error(R509::R509Error, 'You must pass an R509::Csr object for :csr')
+    end
     it "properly issues server cert" do
         csr = R509::Csr.new(:cert => @cert, :bit_strength => 1024)
         cert = @ca.sign_cert({ :csr => csr, :profile_name => 'server' })
@@ -20,7 +24,9 @@ describe R509::Ca do
     end
     it "issues with specified san domains" do
         csr = R509::Csr.new(:cert => @cert, :bit_strength => 1024)
-        cert = @ca.sign_cert(:csr => csr, :profile_name => 'server', :domains => ['langui.sh','domain2.com'])
+        csr_hash = csr.to_hash
+        csr_hash[:san_names] = ['langui.sh','domain2.com']
+        cert = @ca.sign_cert(:csr => csr, :profile_name => 'server', :csr_hash => csr_hash )
         cert.san_names.should == ['langui.sh','domain2.com']
     end
     it "issues with san domains from csr" do
@@ -35,7 +41,10 @@ describe R509::Ca do
     end
     it "issues a cert with the subject array provided" do
         csr = R509::Csr.new(:csr => @csr)
-        cert = @ca.sign_cert(:csr => csr, :profile_name => 'server', :subject => [['CN','someotherdomain.com']])
+        csr_hash = csr.to_hash
+        csr_hash[:subject]['CN'] = "someotherdomain.com"
+        csr_hash[:subject].delete("O")
+        cert = @ca.sign_cert(:csr => csr, :profile_name => 'server', :csr_hash => csr_hash)
         cert.subject.to_s.should == '/CN=someotherdomain.com'
     end
     it "tests that policy identifiers are properly encoded" do

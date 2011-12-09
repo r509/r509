@@ -19,21 +19,36 @@ module R509
         end
 
         # Signs a CSR
-        # @option options :csr [String, R509::Csr, OpenSSL:X509::Request]
+        # @option options :csr [R509::Csr]
         # @option options :profile_name [String] The CA profile you want to use (eg "server in your config)
-        # @option options :subject [Array] subject array to overwrite what's in the CSR
-        # @option options :domains [Array] list of SAN names to add to the certificate's subjectAltName
+        # @option options :csr_hash [Hash] a hash containing the subject and SAN names you want encoded for this cert. Generate by calling Csr#to_hash
         # @option options :message_digest [String] the message digest to use for this certificate instead of the config's default
         # @option options :serial [String] the serial number you want to issue the certificate with
         # @option options :not_before [Time] the notBefore for the certificate
         # @option options :not_after [Time] the notAfter for the certificate
         # @return [R509::Cert] the signed cert object
         def sign_cert(options)
-            req = OpenSSL::X509::Request.new options[:csr]
-            if !req.verify(req.public_key)
+            if not options[:csr].kind_of?(R509::Csr)
+                raise R509Error, "You must pass an R509::Csr object for :csr"
+            else
+                csr = options[:csr]
+            end
+
+            if options.has_key?(:csr_hash)
+                san_names = prefix_domains(options[:csr_hash][:san_names])
+                subject = options[:csr_hash][:subject]
+            else
+                san_names = prefix_domains(csr.to_hash[:san_names])
+                subject = csr.to_hash[:subject]
+            end
+
+
+
+            if !csr.verify_signature
                 raise R509Error, "Certificate request signature is invalid."
             end
 
+            #handle DSA here
             if options.has_key?(:message_digest)
                 message_digest = R509::MessageDigest.new(options[:message_digest])
             else
@@ -41,8 +56,6 @@ module R509
             end
 
             profile = @config.profile(options[:profile_name])
-
-            san_names = merge_san_domains(req, options[:domains])
 
             #load ca key and cert
             ca_cert = @config.ca_cert
@@ -72,16 +85,11 @@ module R509
             end
 
             cert = OpenSSL::X509::Certificate.new
-            if(options[:subject].kind_of?(Array)) then
-                name = OpenSSL::X509::Name.new options[:subject]
-                cert.subject = name
-            else
-                cert.subject = req.subject
-            end
+            cert.subject = subject.name
             cert.issuer = ca_cert.subject
             cert.not_before = not_before
             cert.not_after = not_after
-            cert.public_key = req.public_key
+            cert.public_key = csr.public_key
             cert.serial =serial
             cert.version = 2 #2 means v3
 
@@ -126,22 +134,9 @@ module R509
         end
 
         private
-        def merge_san_domains(req,domains)
-            domains_from_csr = parse_domains_from_csr(req)
-            if (domains.kind_of?(Array)) then
-                domains = domains.map { |domain| 'DNS: '+domain }
-                domains_from_csr.concat(domains).uniq!
-            end
-            domains_from_csr
-        end
 
-        def parse_domains_from_csr(req)
-            attributes = parse_attributes_from_csr(req) #method from CsrHelper module
-            if attributes['subjectAltName'].kind_of?(Array)
-                attributes['subjectAltName'].collect{ |domain| 'DNS:'+domain }
-            else
-                []
-            end
+        def prefix_domains(domains)
+            domains.map { |domain| 'DNS: '+domain }
         end
 
         def build_conf(section,data)

@@ -104,6 +104,10 @@ describe R509::Csr do
         csr.to_hash[:subject].to_s.should == '/CN=test.local/O=Testing CSR'
         csr.to_hash[:san_names].should == ["test.local", "additionaldomains.com", "saniam.com"]
     end
+    it "san_names is an empty array when there are no SAN names" do
+        csr = R509::Csr.new( :subject => [['CN','langui.sh'],['emailAddress','ca@langui.sh']], :bit_strength => 512)
+        csr.san_names.should == []
+    end
     context "when initialized" do
         it "raises exception when providing invalid csr" do
             expect { R509::Csr.new({:csr => 'invalid csr'}) }.to raise_error(OpenSSL::X509::RequestError)
