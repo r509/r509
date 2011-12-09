@@ -98,6 +98,12 @@ describe R509::Csr do
         csr = R509::Csr.new( :bit_strength => 512, :subject => [['CN','test2345.com']], :domains => ["test2.local","test.local","test.local"] )
         csr.san_names.should == ["test2.local", "test.local"]
     end
+    it "creates a valid hash object with to_hash" do
+        csr = R509::Csr.new(:csr => @csr)
+        csr.to_hash[:subject].kind_of?(R509::Subject).should == true
+        csr.to_hash[:subject].to_s.should == '/CN=test.local/O=Testing CSR'
+        csr.to_hash[:san_names].should == ["test.local", "additionaldomains.com", "saniam.com"]
+    end
     context "when initialized" do
         it "raises exception when providing invalid csr" do
             expect { R509::Csr.new({:csr => 'invalid csr'}) }.to raise_error(OpenSSL::X509::RequestError)

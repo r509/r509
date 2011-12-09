@@ -188,6 +188,13 @@ module R509
             end
         end
 
+        # Returns a hash structure you can pass to the Ca
+        #
+        # @return [Hash] :subject and :san_names you can pass to Ca
+        def to_hash
+            { :subject => @subject , :san_names => @san_names }
+        end
+
         private
 
         def parse_csr(csr)
