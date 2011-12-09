@@ -43,14 +43,20 @@ module R509
             end
 
             if opts.has_key?(:cert)
+                domains = opts[:domains] || []
+                parsed_domains = prefix_domains(domains)
                 cert_data = parse_cert(opts[:cert])
-                create_request(cert_data[:subject],cert_data[:subjectAltName]) #sets @req
+                merged_domains = cert_data[:subjectAltName].concat(parsed_domains)
+                create_request(cert_data[:subject],merged_domains) #sets @req
             elsif opts.has_key?(:subject)
                 domains = opts[:domains] || []
                 subject = OpenSSL::X509::Name.new(opts[:subject])
                 parsed_domains = prefix_domains(domains)
                 create_request(subject,parsed_domains) #sets @req
             elsif opts.has_key?(:csr)
+                if opts.has_key?(:domains)
+                    raise ArgumentError, "You can't add domains to an existing CSR"
+                end
                 parse_csr(opts[:csr])
             else
                 raise ArgumentError, "Must provide one of cert, subject, or csr"
@@ -193,6 +199,7 @@ module R509
         end
 
         def create_request(subject,domains=[])
+            domains.uniq! #de-duplicate the array
             @req = OpenSSL::X509::Request.new
             @req.version = 0
             @req.subject = subject
