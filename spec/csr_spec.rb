@@ -17,6 +17,7 @@ describe R509::Csr do
         @csr4_multiple_attrs = TestFixtures::CSR4_MULTIPLE_ATTRS
         @key3 = TestFixtures::KEY3
         @key_csr2 = TestFixtures::KEY_CSR2
+        @dsa_key = TestFixtures::DSA_KEY
     end
 
     it "raises an exception when passing non-hash" do
@@ -52,10 +53,30 @@ describe R509::Csr do
     it "raises an exception when you don't provide cert, subject, or CSR" do
         expect { R509::Csr.new(:bit_strength => 1024) }.to raise_error(ArgumentError,'Must provide one of cert, subject, or csr')
     end
-    it "changes the message_digest to DSS1 when passed a DSA key"
-    it "changes the message_digest to DSS1 when creating a DSA key"
-    it "signs a CSR properly when passed a DSA key"
-    it "signs a CSR properly when creating a DSA key"
+    it "changes the message_digest to DSS1 when passed a DSA key" do
+        csr = R509::Csr.new(:subject => [["CN","dsasigned.com"]], :key => @dsa_key)
+        csr.message_digest.name.should == 'dss1'
+        csr.signature_algorithm.should == 'dsaWithSHA1'
+        #dss1 is actually the same as SHA1
+        #Yes this is confusing
+        #see http://www.ruby-doc.org/stdlib-1.9.3/libdoc/openssl/rdoc/OpenSSL/PKey/DSA.html
+    end
+    it "changes the message_digest to DSS1 when creating a DSA key" do
+        csr = R509::Csr.new(:subject => [["CN","dsasigned.com"]], :type => :dsa)
+        csr.message_digest.name.should == 'dss1'
+        csr.signature_algorithm.should == 'dsaWithSHA1'
+        #dss1 is actually the same as SHA1
+        #Yes this is confusing
+        #see http://www.ruby-doc.org/stdlib-1.9.3/libdoc/openssl/rdoc/OpenSSL/PKey/DSA.html
+    end
+    it "signs a CSR properly when passed a DSA key" do
+        csr = R509::Csr.new(:subject => [["CN","dsasigned.com"]], :key => @dsa_key)
+        csr.verify_signature.should == true
+    end
+    it "signs a CSR properly when creating a DSA key" do
+        csr = R509::Csr.new(:subject => [["CN","dsasigned.com"]], :type => :dsa)
+        csr.verify_signature.should == true
+    end
     it "writes to pem" do
         csr = R509::Csr.new({:csr => @csr})
         sio = StringIO.new

@@ -57,6 +57,9 @@ module R509
             end
 
             if dsa?
+                #only DSS1 is acceptable for DSA signing in OpenSSL < 1.0
+                #post-1.0 you can sign with anything, but let's be conservative
+                #see: http://www.ruby-doc.org/stdlib-1.9.3/libdoc/openssl/rdoc/OpenSSL/PKey/DSA.html
                 @message_digest = R509::MessageDigest.new('dss1')
             elsif opts.has_key?(:message_digest)
                 @message_digest = R509::MessageDigest.new(opts[:message_digest])
