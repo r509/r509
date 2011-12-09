@@ -11,7 +11,10 @@ module R509
         attr_reader :basic_constraints, :key_usage, :extended_key_usage,
           :certificate_policies
 
-        # @options [:basic_constraints, :key_usage, :extended_key_usage, :certificate_policies] opts A hash of configuration profiles
+        # @option [String] :basic_constraints
+        # @option [Array] :key_usage
+        # @option [Array] :extended_key_usage
+        # @option [Array] :certificate_policies
         def initialize(opts = {})
           @basic_constraints = opts[:basic_constraints]
           @key_usage = opts[:key_usage]
@@ -30,7 +33,6 @@ module R509
 
         # @param [OpenSSL::X509::Certificate] ca_cert
         # @param [OpenSSL::PKey::RSA] ca_key
-        # @options [] opts
         # @option opts [Integer] :crl_validity_hours (168) The number of hours that
         #  a CRL will be valid. Defaults to 7 days.
         # @option opts [Hash<String, ConfigProfile>] :profiles
@@ -258,8 +260,7 @@ module R509
         # Load the configuration from a data hash. The same type that might be
         # used when loading from a YAML file.
         # @param [Hash] conf A hash containing all the configuration options
-        # @options [:ca_root_path] opts
-        # @option opts [String] :ca_root_path The root path for the CA. Defautls to
+        # @option opts [String] :ca_root_path The root path for the CA. Defaults to
         #  the current working directory.
         def self.load_from_hash(conf, opts = {})
             if conf.nil?

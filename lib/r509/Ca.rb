@@ -19,15 +19,14 @@ module R509
         end
 
         # Signs a CSR
-        # @param options []
-        # @options :csr [String, R509::Csr, OpenSSL:X509::Request]
-        # @options :profile_name [String] The CA profile you want to use (eg "server in your config)
-        # @options :subject [Array] subject array to overwrite what's in the CSR
-        # @options :domains [Array] list of SAN names to add to the certificate's subjectAltName
-        # @options :message_digest [String] the message digest to use for this certificate instead of the config's default
-        # @options :serial [String] the serial number you want to issue the certificate with
-        # @options :not_before [Time] the notBefore for the certificate
-        # @options :not_after [Time] the notAfter for the certificate
+        # @option options :csr [String, R509::Csr, OpenSSL:X509::Request]
+        # @option options :profile_name [String] The CA profile you want to use (eg "server in your config)
+        # @option options :subject [Array] subject array to overwrite what's in the CSR
+        # @option options :domains [Array] list of SAN names to add to the certificate's subjectAltName
+        # @option options :message_digest [String] the message digest to use for this certificate instead of the config's default
+        # @option options :serial [String] the serial number you want to issue the certificate with
+        # @option options :not_before [Time] the notBefore for the certificate
+        # @option options :not_after [Time] the notAfter for the certificate
         # @return [R509::Cert] the signed cert object
         def sign_cert(options)
             req = OpenSSL::X509::Request.new options[:csr]

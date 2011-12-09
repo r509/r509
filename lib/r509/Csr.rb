@@ -11,17 +11,16 @@ module R509
         include R509::Helper::CsrHelper
 
         attr_reader :san_names, :key, :subject, :req, :attributes, :message_digest
-        # @ options [] opts
-        # @options opts [String,OpenSSL::X509::Request] :csr a csr
-        # @options opts [Symbol] :type :rsa/:dsa
-        # @options opts [Integer] :bit_strength
-        # @options opts [String] :password
-        # @options opts [Array] :domains List of domains to encode as subjectAltNames
-        # @options opts [Array,OpenSSL::X509::Name] :subject array of subject items
+        # @option opts [String,OpenSSL::X509::Request] :csr a csr
+        # @option opts [Symbol] :type :rsa/:dsa
+        # @option opts [Integer] :bit_strength
+        # @option opts [String] :password
+        # @option opts [Array] :domains List of domains to encode as subjectAltNames
+        # @option opts [Array,OpenSSL::X509::Name] :subject array of subject items
         # @example [['CN','langui.sh'],['ST','Illinois'],['L','Chicago'],['C','US'],['emailAddress','ca@langui.sh']]
         # you can also pass OIDs (see tests)
-        # @options opts [String,R509::Cert,OpenSSL::X509::Certificate] :cert takes a cert (used for generating a CSR with the certificate's values)
-        # @options opts [String,OpenSSL::PKey::RSA,OpenSSL::PKey::DSA] :key
+        # @option opts [String,R509::Cert,OpenSSL::X509::Certificate] :cert takes a cert (used for generating a CSR with the certificate's values)
+        # @option opts [String,OpenSSL::PKey::RSA,OpenSSL::PKey::DSA] :key
         def initialize(opts={})
             if not opts.kind_of?(Hash)
                 raise ArgumentError, 'Must provide a hash of options'

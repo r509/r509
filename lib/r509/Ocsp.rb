@@ -8,11 +8,9 @@ module R509::Ocsp
     # A class for signing OCSP responses
     class Signer
 
-        # @options [] options
-        # @options options [Boolean] :copy_nonce
-        # @options options [Array<R509::Config>] array of configs corresponding to all
-        # possible OCSP issuance roots
-        # that we want to issue OCSP responses for
+        # @option options [Boolean] :copy_nonce
+        # @option options [Array<R509::Config>] array of configs corresponding to all
+        # possible OCSP issuance roots that we want to issue OCSP responses for
         def initialize(options)
             @request_checker = Helper::RequestChecker.new(options[:configs])
             @response_signer = Helper::ResponseSigner.new(options)

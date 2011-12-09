@@ -8,11 +8,10 @@ module R509
 
         attr_reader :bit_strength, :key
 
-        # @ options [] opts
-        # @options opts [Symbol] :type :rsa/:dsa
-        # @options opts [Integer] :bit_strength
-        # @options opts [String] :password
-        # @options opts [String,OpenSSL::PKey::RSA,OpenSSL::PKey::DSA] :key
+        # @option opts [Symbol] :type :rsa/:dsa
+        # @option opts [Integer] :bit_strength
+        # @option opts [String] :password
+        # @option opts [String,OpenSSL::PKey::RSA,OpenSSL::PKey::DSA] :key
         def initialize(opts)
             if not opts.kind_of?(Hash)
                 raise ArgumentError, 'Must provide a hash of options'
