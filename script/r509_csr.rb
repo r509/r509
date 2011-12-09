@@ -4,7 +4,6 @@ require 'rubygems'
 require 'r509'
 require 'openssl'
 
-csr = R509::Csr.new
 subject = OpenSSL::X509::Name.new
 if ARGV[0].nil? then
 	puts "Interactive CSR generation using r509."
@@ -24,7 +23,7 @@ if ARGV[0].nil? then
 	l = gets.chomp
 	l = l.empty? ? 'Chicago':l;
 	subject.push ['L',l]
-	
+
 	print "O (r509 LLC): "
 	o = gets.chomp
 	o = o.empty? ? 'r509 LLC':o;
@@ -41,7 +40,7 @@ if ARGV[0].nil? then
 	print "SAN Domains (comma separated):"
 	san_domains = []
 	san_domains = gets.chomp.split(',').collect { |domain| domain.strip }
-	csr.create_with_subject subject,2048,san_domains
+    csr = R509::Csr.new(:subject => subject, :bit_strength => 2048, :domains => san_domains)
 else
 	ARGV[0].split('/').each { |item|
 		if item != '' then
@@ -55,7 +54,7 @@ else
 	else
 		bit_strength = 2048
 	end
-	csr.create_with_subject subject,bit_strength
+    csr = R509::Csr.new(:subject => subject, :bit_strength => 2048)
 end
 puts csr.key
 puts csr
