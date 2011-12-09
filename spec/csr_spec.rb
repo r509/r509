@@ -62,7 +62,7 @@ describe R509::Csr do
         #see http://www.ruby-doc.org/stdlib-1.9.3/libdoc/openssl/rdoc/OpenSSL/PKey/DSA.html
     end
     it "changes the message_digest to DSS1 when creating a DSA key" do
-        csr = R509::Csr.new(:subject => [["CN","dsasigned.com"]], :type => :dsa)
+        csr = R509::Csr.new(:subject => [["CN","dsasigned.com"]], :type => :dsa, :bit_strength => 512)
         csr.message_digest.name.should == 'dss1'
         csr.signature_algorithm.should == 'dsaWithSHA1'
         #dss1 is actually the same as SHA1
@@ -74,7 +74,7 @@ describe R509::Csr do
         csr.verify_signature.should == true
     end
     it "signs a CSR properly when creating a DSA key" do
-        csr = R509::Csr.new(:subject => [["CN","dsasigned.com"]], :type => :dsa)
+        csr = R509::Csr.new(:subject => [["CN","dsasigned.com"]], :type => :dsa, :bit_strength => 512)
         csr.verify_signature.should == true
     end
     it "writes to pem" do
