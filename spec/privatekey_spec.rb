@@ -16,9 +16,18 @@ describe R509::PrivateKey do
     it "throws an exception when no hash is provided" do
         expect { R509::PrivateKey.new('string') }.to raise_error(ArgumentError,'Must provide a hash of options')
     end
+    it "returns the right value for #rsa?" do
+        private_key = R509::PrivateKey.new(:key=>@key_csr)
+        private_key.dsa?.should == false
+        private_key.rsa?.should == true
+    end
+    it "returns the right value for #dsa?" do
+        private_key = R509::PrivateKey.new(:key => @dsa_key)
+        private_key.rsa?.should == false
+        private_key.dsa?.should == true
+    end
     it "defaults to RSA" do
         private_key = R509::PrivateKey.new(:bit_strength=>1024)
-        private_key.type.should == :rsa
         private_key.key.kind_of?(OpenSSL::PKey::RSA).should == true
     end
     it "loads a pre-existing RSA key" do
@@ -37,12 +46,14 @@ describe R509::PrivateKey do
         private_key.key.n.to_i.to_s(2).size.should == 512
     end
     it "loads a pre-existing DSA key" do
-        private_key = R509::PrivateKey.new(:key => @dsa_key, :type => :dsa)
+        private_key = R509::PrivateKey.new(:key => @dsa_key)
+        private_key.key.kind_of?(OpenSSL::PKey::DSA).should == true
         private_key.key.to_pem.should == @dsa_key
         @dsa_key.should_not == nil
     end
     it "generates a DSA key at the default bit strength (2048)" do
         private_key = R509::PrivateKey.new(:type => :dsa)
+        private_key.dsa?.should == true
         private_key.bit_strength.should == 2048
         private_key.key.p.to_i.to_s(2).size.should == 2048
     end

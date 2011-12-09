@@ -6,7 +6,7 @@ module R509
     class PrivateKey
         include R509::IOHelpers
 
-        attr_reader :type, :bit_strength, :key
+        attr_reader :bit_strength, :key
 
         # @ options [] opts
         # @options opts [Symbol] :type :rsa/:dsa
@@ -17,27 +17,27 @@ module R509
             if not opts.kind_of?(Hash)
                 raise ArgumentError, 'Must provide a hash of options'
             end
-            @type = opts[:type] || :rsa
-            if @type != :rsa and @type != :dsa
-                raise ArgumentError, 'Must provide :rsa or :dsa as type'
+            type = opts[:type] || :rsa
+            if type != :rsa and type != :dsa and @key.nil?
+                raise ArgumentError, 'Must provide :rsa or :dsa as type when key is nil'
             end
             @bit_strength = opts[:bit_strength] || 2048
             password = opts[:password] || nil
 
             if opts.has_key?(:key)
+                #OpenSSL::PKey.read solves this begin/rescue garbage but is only
+                #available to Ruby 1.9.3+
                 begin
-                    case @type
-                    when :rsa
-                        #TODO: Replace with OpenSSL::PKey.read ?
-                        @key = OpenSSL::PKey::RSA.new(opts[:key],password)
-                    when :dsa
+                    @key = OpenSSL::PKey::RSA.new(opts[:key],password)
+                rescue OpenSSL::PKey::RSAError
+                    begin
                         @key = OpenSSL::PKey::DSA.new(opts[:key],password)
+                    rescue
+                        raise R509::R509Error, "Failed to load private key. Invalid key or incorrect password."
                     end
-                rescue
-                    raise R509::R509Error, "Failed to load private key. Invalid key or incorrect password."
                 end
             else
-                case @type
+                case type
                 when :rsa
                     @key = OpenSSL::PKey::RSA.new(@bit_strength)
                 when :dsa
@@ -107,6 +107,21 @@ module R509
         #  the file that you'd like to write, or an IO-like object.
         def write_der(filename_or_io)
             write_data(filename_or_io, @key.to_der)
+        end
+
+
+        # Returns whether the public key is RSA
+        #
+        # @return [Boolean] true if the public key is RSA, false otherwise
+        def rsa?
+            @key.kind_of?(OpenSSL::PKey::RSA)
+        end
+
+        # Returns whether the public key is DSA
+        #
+        # @return [Boolean] true if the public key is DSA, false otherwise
+        def dsa?
+            @key.kind_of?(OpenSSL::PKey::DSA)
         end
     end
 end

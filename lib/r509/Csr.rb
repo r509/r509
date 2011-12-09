@@ -10,80 +10,68 @@ module R509
         include R509::IOHelpers
         include R509::Helper::CsrHelper
 
-        attr_reader :san_names, :key, :subject, :req, :attributes
-        def initialize(*args)
-            case args.size
-                when 0
-                    @req = nil
-                    @subject = nil
-                    @san_names = nil
-                    @key = nil
-                when 1
-                    parse_csr args[0]
-                    @key = nil
-                when 2
-                    parse_csr args[0]
-                    @key = R509::PrivateKey.new(:key => args[1])
-                    #verify on the OpenSSL::X509::Request object verifies public key match
-                    if !@req.verify(@key.public_key) then
-                        raise R509Error, 'Key does not match request.'
-                    end
-                else
-                    raise ArgumentError, 'Too many arguments.'
+        attr_reader :san_names, :key, :subject, :req, :attributes, :message_digest
+        # @ options [] opts
+        # @options opts [String,OpenSSL::X509::Request] :csr a csr
+        # @options opts [Symbol] :type :rsa/:dsa
+        # @options opts [Integer] :bit_strength
+        # @options opts [String] :password
+        # @options opts [Array] :domains List of domains to encode as subjectAltNames
+        # @options opts [Array,OpenSSL::X509::Name] :subject array of subject items
+        # @example [['CN','langui.sh'],['ST','Illinois'],['L','Chicago'],['C','US'],['emailAddress','ca@langui.sh']]
+        # you can also pass OIDs (see tests)
+        # @options opts [String,R509::Cert,OpenSSL::X509::Certificate] :cert takes a cert (used for generating a CSR with the certificate's values)
+        # @options opts [String,OpenSSL::PKey::RSA,OpenSSL::PKey::DSA] :key
+        def initialize(opts={})
+            if not opts.kind_of?(Hash)
+                raise ArgumentError, 'Must provide a hash of options'
             end
-            self.message_digest='sha1' #default
-        end
-
-        # Static method that creates a new CSR using an array as the subject
-        # @example
-        #   Csr.create_with_subject [['CN','langui.sh'],['ST','Illinois'],['L','Chicago'],['C','US'],['emailAddress','ca@langui.sh']]
-        #   You can specify the shortname of any OID that OpenSSL knows.
-        # @example
-        #   Csr.create_with_subject [['1.3.6.1.4.1.311.60.2.1.3','US'],['2.5.4.7','Chicago'],['emailAddress','ca@langui.sh']]
-        #   You can also use OIDs directly (e.g., '1.3.6.1.4.1.311.60.2.1.3')
-        # @param subject [Array] subject takes an array of subject items, e.g.
-        # @param bit_strength [Integer] bit strength of the private key to generate (default 2048)
-        # @param domains [Array] list of domains to encode as subjectAltNames
-        # @return [R509::Csr] the object
-        def self.create_with_subject(subject, bit_strength=2048, domains=[])
-            csr = Csr.new
-            csr.create_with_subject(subject, bit_strength, domains)
-            csr
-        end
-
-        # Static method that creates a new CSR using an existing certificate as the source for its subject and extensions
-        # @param cert [String,OpenSSL::X509::Certificate] certificate data in PEM, DER, or OpenSSL::X509::Certificate form
-        # @param bit_strength [Integer] Bit strength of the private key to generate (default 2048)
-        # @param domains [Array] List of domains to encode as subjectAltNames
-        # @return [R509::Csr] the object
-        def self.create_with_cert(cert, bit_strength=2048, domains=[])
-            csr = Csr.new
-            csr.create_with_cert(cert, bit_strength, domains)
-            csr
-        end
-
-        # @return [String] message digest friendly name
-        def message_digest
-            case @message_digest
-                when OpenSSL::Digest::SHA1 then 'sha1'
-                when OpenSSL::Digest::SHA256 then 'sha256'
-                when OpenSSL::Digest::SHA512 then 'sha512'
-                when OpenSSL::Digest::MD5 then 'md5'
+            if (opts.has_key?(:cert) and opts.has_key?(:subject)) or
+                (opts.has_key?(:cert) and opts.has_key?(:csr)) or
+                (opts.has_key?(:subject) and opts.has_key?(:csr))
+                raise ArgumentError, "Can only provide one of cert, subject, or csr"
             end
-        end
+            @bit_strength = opts[:bit_strength] || 2048
+            password = opts[:password] || nil
 
-        # Changes the message digest (must be called before
-        # creation of signed object via methods create_with_cert or
-        # create_with_subject
-        # @param digest [String] New message digest (md5,sha1,sh256,sha512)
-        def message_digest=(digest)
-            @message_digest = case digest.downcase
-                when 'sha1' then OpenSSL::Digest::SHA1.new
-                when 'sha256' then OpenSSL::Digest::SHA256.new
-                when 'sha512' then OpenSSL::Digest::SHA512.new
-                when 'md5' then OpenSSL::Digest::MD5.new
-                else OpenSSL::Digest::SHA1.new
+            if opts.has_key?(:key)
+                @key = R509::PrivateKey.new(:key => opts[:key], :password => password)
             end
+
+            @type = opts[:type] || :rsa
+            if @type != :rsa and @type != :dsa and @key.nil?
+                raise ArgumentError, 'Must provide :rsa or :dsa as type when key is nil'
+            end
+
+            if opts.has_key?(:cert)
+                cert_data = parse_cert(opts[:cert])
+                create_request(cert_data[:subject],cert_data[:subjectAltName]) #sets @req
+            elsif opts.has_key?(:subject)
+                domains = opts[:domains] || []
+                subject = OpenSSL::X509::Name.new(opts[:subject])
+                parsed_domains = prefix_domains(domains)
+                create_request(subject,parsed_domains) #sets @req
+            elsif opts.has_key?(:csr)
+                parse_csr(opts[:csr])
+            else
+                raise ArgumentError, "Must provide one of cert, subject, or csr"
+            end
+
+            if dsa?
+                @message_digest = R509::MessageDigest.new('dss1')
+            elsif opts.has_key?(:message_digest)
+                @message_digest = R509::MessageDigest.new(opts[:message_digest])
+            else
+                @message_digest = R509::MessageDigest.new('sha1')
+            end
+
+            if not opts.has_key?(:csr)
+                @req.sign(@key.key, @message_digest.digest)
+            end
+            if not @key.nil? and not @req.verify(@key.public_key) then
+                raise R509Error, 'Key does not match request.'
+            end
+
         end
 
         # @return [OpenSSL::PKey::RSA] public key
@@ -96,11 +84,7 @@ module R509
         # Verifies the integrity of the signature on the request
         # @return [Boolean]
         def verify_signature
-            if(@req.kind_of?(OpenSSL::X509::Request)) then
-                @req.verify(public_key)
-            else
-                false
-            end
+            @req.verify(public_key)
         end
 
         # Converts the CSR into the PEM format
@@ -156,54 +140,11 @@ module R509
         # Returns the bit strength of the key used to create the CSR
         # @return [Integer] the integer bit strength.
         def bit_strength
-            if !@req.nil?
-                if self.rsa?
-                    return @req.public_key.n.to_i.to_s(2).size
-                elsif self.dsa?
-                    return @req.public_key.p.to_i.to_s(2).size
-                end
+            if self.rsa?
+                return @req.public_key.n.to_i.to_s(2).size
+            elsif self.dsa?
+                return @req.public_key.p.to_i.to_s(2).size
             end
-        end
-
-        # Creates a new CSR using an existing certificate as the source for its subject and extensions
-        # @param cert [String,OpenSSL::X509::Certificate] certificate data in PEM, DER, or OpenSSL::X509::Certificate form
-        # @param bit_strength [Integer] Bit strength of the private key to generate (default 2048)
-        # @param domains [Array] List of domains to encode as subjectAltNames
-        # @return [R509::Csr] the object
-        def create_with_cert(cert,bit_strength=2048,domains=[])
-            domains_to_add = []
-            san_extension = nil
-            parsed_cert = OpenSSL::X509::Certificate.new(cert)
-            parsed_cert.extensions.to_a.each { |extension|
-                if (extension.to_a[0] == 'subjectAltName') then
-                    domains_to_add = parse_san_extension(extension)
-                end
-            }
-            if (domains.kind_of?(Array)) then
-                parsed_domains = prefix_domains(domains)
-                domains_to_add.concat(parsed_domains).uniq!
-            end
-            create_csr(parsed_cert.subject,bit_strength,domains_to_add)
-            @req.to_pem
-        end
-
-        # Creates a new CSR using an array as the subject
-        # @example
-        #   csr.create_with_subject [['CN','langui.sh'],['ST','Illinois'],['L','Chicago'],['C','US'],['emailAddress','ca@langui.sh']]
-        #   You can specify the shortname of any OID that OpenSSL knows.
-        # @example
-        #   csr.create_with_subject [['1.3.6.1.4.1.311.60.2.1.3','US'],['2.5.4.7','Chicago'],['emailAddress','ca@langui.sh']]
-        #   You can also use OIDs directly (e.g., '1.3.6.1.4.1.311.60.2.1.3')
-        # @param subject [Array] subject takes an array of subject items, e.g.
-        # @param bit_strength [Integer] bit strength of the private key to generate (default 2048)
-        # @param domains [Array] list of domains to encode as subjectAltNames (these will be merged with whatever SAN domains are
-        #   already present in the CSR
-        # @return [R509::Csr] the object
-        def create_with_subject(subject,bit_strength=2048,domains=[])
-            subject = OpenSSL::X509::Name.new subject
-            parsed_domains = prefix_domains(domains)
-            create_csr(subject,bit_strength,parsed_domains)
-            @req.to_pem
         end
 
         # Returns subject component
@@ -249,16 +190,32 @@ module R509
             @san_names = @attributes['subjectAltName']
         end
 
-        def create_csr(subject,bit_strength,domains=[])
+        def create_request(subject,domains=[])
             @req = OpenSSL::X509::Request.new
             @req.version = 0
             @req.subject = subject
-            @key = R509::PrivateKey.new(:type => :rsa,
-                                        :bit_strength => bit_strength)
+            if @key.nil?
+                @key = R509::PrivateKey.new(:type => @type,
+                                            :bit_strength => @bit_strength)
+            end
             @req.public_key = @key.public_key
             add_san_extension(domains)
-            @req.sign(@key.key, @message_digest)
+            @attributes = parse_attributes_from_csr(@req) #method from HelperClasses
+            @san_names = @attributes['subjectAltName']
             @subject = @req.subject
+        end
+
+        # parses an existing cert to get data to add to new CSR
+        def parse_cert(cert)
+            domains_to_add = []
+            san_extension = nil
+            parsed_cert = OpenSSL::X509::Certificate.new(cert)
+            parsed_cert.extensions.to_a.each { |extension|
+                if (extension.to_a[0] == 'subjectAltName') then
+                    domains_to_add = parse_san_extension(extension)
+                end
+            }
+            {:subject => parsed_cert.subject, :subjectAltName => domains_to_add}
         end
 
         #takes OpenSSL::X509::Extension object

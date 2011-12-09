@@ -4,22 +4,14 @@ module R509
     class MessageDigest
         attr_reader :name, :digest
 
-        def initialize(*args)
-            case args.size
-            when 1
-                arg = args[0]
-
-                if arg.kind_of?(String)
-                    @name = arg.downcase
-                    @digest = translate_name_to_digest
-                else
-                    @digest = arg
-                    @name = translate_digest_to_name
-                end
+        def initialize(arg)
+            if arg.kind_of?(String)
+                @name = arg.downcase
+                @digest = translate_name_to_digest
             else
-                raise ArgumentError, "Expected 1 argument, got #{args.size}"
+                @digest = arg
+                @name = translate_digest_to_name
             end
-            @name = name
         end
 
         private
@@ -30,7 +22,7 @@ module R509
             when 'sha256' then OpenSSL::Digest::SHA256.new
             when 'sha512' then OpenSSL::Digest::SHA512.new
             when 'md5' then OpenSSL::Digest::MD5.new
-            else 
+            else
                 @name = "sha1"
                 OpenSSL::Digest::SHA1.new
             end

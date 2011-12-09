@@ -68,7 +68,7 @@ describe R509::MessageDigest do
         md.name.should == "md5"
         md.digest.kind_of?(OpenSSL::Digest::MD5).should == true
     end
-    it "translates unknown digest -> name" do
+    it "exception on unknown digest -> name" do
         expect{ R509::MessageDigest.new(12345) }.to raise_error(ArgumentError)
     end
 end
