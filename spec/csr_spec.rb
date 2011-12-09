@@ -53,6 +53,9 @@ describe R509::Csr do
     it "raises an exception when you don't provide cert, subject, or CSR" do
         expect { R509::Csr.new(:bit_strength => 1024) }.to raise_error(ArgumentError,'Must provide one of cert, subject, or csr')
     end
+    it "raises an exception if you provide a list of domains with an existing CSR" do
+        expect { R509::Csr.new(:csr => @csr, :domains => ['moredomainsiwanttoadd.com']) }.to raise_error(ArgumentError,'You can\'t add domains to an existing CSR')
+    end
     it "changes the message_digest to DSS1 when passed a DSA key" do
         csr = R509::Csr.new(:subject => [["CN","dsasigned.com"]], :key => @dsa_key)
         csr.message_digest.name.should == 'dss1'
@@ -78,7 +81,7 @@ describe R509::Csr do
         csr.verify_signature.should == true
     end
     it "writes to pem" do
-        csr = R509::Csr.new({:csr => @csr})
+        csr = R509::Csr.new(:csr => @csr)
         sio = StringIO.new
         sio.set_encoding("BINARY") if sio.respond_to?(:set_encoding)
         csr.write_pem(sio)
@@ -87,9 +90,13 @@ describe R509::Csr do
     it "writes to der" do
         sio = StringIO.new
         sio.set_encoding("BINARY") if sio.respond_to?(:set_encoding)
-        csr = R509::Csr.new({:csr => @csr})
+        csr = R509::Csr.new(:csr => @csr)
         csr.write_der(sio)
         sio.string.should == @csr_der
+    end
+    it "duplicate SAN names should be removed" do
+        csr = R509::Csr.new( :bit_strength => 512, :subject => [['CN','test2345.com']], :domains => ["test2.local","test.local","test.local"] )
+        csr.san_names.should == ["test2.local", "test.local"]
     end
     context "when initialized" do
         it "raises exception when providing invalid csr" do
@@ -112,9 +119,17 @@ describe R509::Csr do
             csr = R509::Csr.new( :bit_strength => 1024, :cert => @cert )
             csr.subject.to_s.should == '/C=US/ST=Illinois/L=Chicago/O=Paul Kehrer/CN=langui.sh'
         end
-        it "san domains from the cert should be encoded in the request" do
+        it "SAN domains from the cert should be encoded in the request" do
             csr = R509::Csr.new( :bit_strength => 1024, :cert => @cert_san )
             csr.san_names.should == ["langui.sh"]
+        end
+        it "duplicate SAN names should be removed" do
+            csr = R509::Csr.new( :cert => @cert, :domains => ["test2.local","test.local","test.local"] )
+            csr.san_names.should == ["test2.local", "test.local"]
+        end
+        it "SAN names added in addition to those present in the cert should be merged" do
+            csr = R509::Csr.new( :cert => @cert_san, :domains => ["test2.local","test.local","test.local"] )
+            csr.san_names.should == ["langui.sh","test2.local", "test.local"]
         end
     end
     context "when passing a subject array" do
