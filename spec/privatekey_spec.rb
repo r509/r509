@@ -57,7 +57,7 @@ describe R509::PrivateKey do
         private_key.bit_strength.should == 2048
         private_key.key.p.to_i.to_s(2).size.should == 2048
     end
-    it "generates a RSA key at a custom bit strength" do
+    it "generates a DSA key at a custom bit strength" do
         private_key = R509::PrivateKey.new(:type => :dsa, :bit_strength => 512)
         private_key.bit_strength.should == 512
         private_key.key.p.to_i.to_s(2).size.should == 512
