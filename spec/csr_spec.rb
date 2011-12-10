@@ -8,6 +8,7 @@ describe R509::Csr do
         @cert = TestFixtures::CERT
         @cert_san = TestFixtures::CERT_SAN
         @csr = TestFixtures::CSR
+        @csr_der = TestFixtures::CSR_DER
         @csr_public_key_modulus = TestFixtures::CSR_PUBLIC_KEY_MODULUS
         @csr_invalid_signature = TestFixtures::CSR_INVALID_SIGNATURE
         @csr2 = TestFixtures::CSR2
@@ -27,6 +28,10 @@ describe R509::Csr do
         csr = R509::Csr.new(:subject => [['CN','testing.rsa']], :bit_strength => 1024)
         csr.rsa?.should == true
         csr.dsa?.should == false
+    end
+    it "returns expected value for to_der" do
+        csr = R509::Csr.new(:csr => @csr)
+        csr.to_der.should == @csr_der
     end
     it "key creation defaults to 2048 when no bit strength or key is passed" do
         csr = R509::Csr.new(:subject => [['CN','testing2048.rsa']])

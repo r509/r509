@@ -98,9 +98,7 @@ module R509
         #
         # @return [String] the CSR converted into PEM format.
         def to_pem
-            if(@req.kind_of?(OpenSSL::X509::Request)) then
-                @req.to_pem
-            end
+            @req.to_pem
         end
 
         alias :to_s :to_pem
@@ -109,9 +107,7 @@ module R509
         #
         # @return [String] the CSR converted into DER format.
         def to_der
-            if(@req.kind_of?(OpenSSL::X509::Request)) then
-                @req.to_der
-            end
+            @req.to_der
         end
 
         # Writes the CSR into the PEM format
