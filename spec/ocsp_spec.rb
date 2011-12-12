@@ -189,3 +189,19 @@ describe R509::Ocsp::Helper::ResponseSigner do
     end
 end
 
+describe R509::Ocsp::Response do
+    before :all do
+        @ocsp_test_cert = TestFixtures::OCSP_TEST_CERT
+        @test_ca_config = TestFixtures.test_ca_config
+    end
+    it "returns data on to_der" do
+        cert = OpenSSL::X509::Certificate.new(@ocsp_test_cert)
+        ocsp_request = OpenSSL::OCSP::Request.new
+        certid = OpenSSL::OCSP::CertificateId.new(cert,@test_ca_config.ca_cert)
+        ocsp_request.add_certid(certid)
+        ocsp_handler = R509::Ocsp::Signer.new({ :configs => [@test_ca_config] })
+        statuses = ocsp_handler.check_request(ocsp_request)
+        response = ocsp_handler.sign_response(statuses)
+        response.to_der.should_not == nil
+    end
+end
