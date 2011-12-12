@@ -9,4 +9,5 @@ module R509
     autoload :PrivateKey, 'r509/PrivateKey.rb'
     autoload :MessageDigest, 'r509/MessageDigest.rb'
     autoload :Subject, 'r509/Subject.rb'
+    autoload :Validity, 'r509/Validity.rb'
 end

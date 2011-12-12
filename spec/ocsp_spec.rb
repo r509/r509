@@ -166,10 +166,19 @@ describe R509::Ocsp::Helper::RequestChecker do
         @second_ca_config = TestFixtures.second_ca_config
     end
     it "fails if you don't give it an array of configs" do
-        expect { R509::Ocsp::Helper::RequestChecker.new({}) }.to raise_error(R509::R509Error)
+        expect { R509::Ocsp::Helper::RequestChecker.new({}, nil) }.to raise_error(R509::R509Error)
     end
     it "fails if you give it an empty array of configs" do
-        expect { R509::Ocsp::Helper::RequestChecker.new([]) }.to raise_error(R509::R509Error)
+        expect { R509::Ocsp::Helper::RequestChecker.new([], nil) }.to raise_error(R509::R509Error)
+    end
+    it "fails if you give it a valid config but nil validity checker" do
+        expect { R509::Ocsp::Helper::RequestChecker.new([@test_ca_config], nil) }.to raise_error(R509::R509Error)
+    end
+    it "fails if you give it a valid config but the validity checker doesn't respond to a check method" do
+        class FakeChecker
+        end
+        fake_checker = FakeChecker.new
+        expect { R509::Ocsp::Helper::RequestChecker.new([@test_ca_config], fake_checker) }.to raise_error(R509::R509Error)
     end
 end
 

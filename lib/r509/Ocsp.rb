@@ -2,7 +2,6 @@ require 'openssl'
 require 'r509/Exceptions'
 require 'r509/Config'
 require 'r509/HelperClasses'
-require 'r509/CertificateStatusChecker'
 
 module R509::Ocsp
     # A class for signing OCSP responses
@@ -12,7 +11,12 @@ module R509::Ocsp
         # @option options [Array<R509::Config>] array of configs corresponding to all
         # possible OCSP issuance roots that we want to issue OCSP responses for
         def initialize(options)
-            @request_checker = Helper::RequestChecker.new(options[:configs])
+            if options.has_key?(:validity_checker)
+                @validity_checker = options[:validity_checker]
+            else
+                @validity_checker = R509::Validity::DefaultChecker.new
+            end
+            @request_checker = Helper::RequestChecker.new(options[:configs], @validity_checker)
             @response_signer = Helper::ResponseSigner.new(options)
         end
 
@@ -74,13 +78,20 @@ end
 
 module R509::Ocsp::Helper
     class RequestChecker
-        def initialize(configs)
+        def initialize(configs, validity_checker)
             @configs = configs
             unless @configs.kind_of?(Array)
                 raise R509::R509Error, "Must pass an array of R509::Config objects"
             end
             if @configs.empty?
                 raise R509::R509Error, "Must be at least one R509::Config object"
+            end
+            @validity_checker = validity_checker
+            if @validity_checker.nil?
+                raise R509::R509Error, "Must supply a R509::Validity::Checker"
+            end
+            if not @validity_checker.respond_to?(:check)
+                raise R509::R509Error, "The validity checker must have a check method"
             end
         end
         # Loads and checks a raw OCSP request
@@ -105,8 +116,14 @@ module R509::Ocsp::Helper
             if(validated_config == nil) then
                 return nil
             else
-                certificate_checker = CertificateStatusChecker.new(validated_config)
-                certificate_checker.get_status(certid)
+                validity_status = @validity_checker.check(certid)
+                return {
+                    :certid => certid,
+                    :status => validity_status.ocsp_status,
+                    :revocation_reason => validity_status.revocation_reason,
+                    :revocation_time => validity_status.revocation_time,
+                    :config => validated_config
+                }
             end
         end
     end
