@@ -79,6 +79,7 @@ module TestFixtures
     OCSP_TEST_CERT2 = read_fixture('ocsptest2.r509.local.pem')
 
     STCA_OCSP_REQUEST  = read_fixture('stca_ocsp_request.der')
+    STCA_OCSP_RESPONSE  = read_fixture('stca_ocsp_response.der')
 
     def self.test_ca_cert
         OpenSSL::X509::Certificate.new(TEST_CA_CERT)

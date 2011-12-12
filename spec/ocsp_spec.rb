@@ -202,6 +202,18 @@ describe R509::Ocsp::Response do
     before :all do
         @ocsp_test_cert = TestFixtures::OCSP_TEST_CERT
         @test_ca_config = TestFixtures.test_ca_config
+        @ocsp_response_der = TestFixtures::STCA_OCSP_RESPONSE
+    end
+    it "raises an exception if you try to pass the wrong type to the constructor" do
+        expect { R509::Ocsp::Response.new(@ocsp_response_der) }.to raise_error(R509::R509Error, 'You must pass an OpenSSL::OCSP::Response object to the constructor. See R509::Ocsp::Response#parse if you are trying to parse')
+    end
+    it "raises an exception if you pass nil to #parse" do
+        expect { R509::Ocsp::Response.parse(nil) }.to raise_error(R509::R509Error, 'You must pass a DER encoded OCSP response to this method')
+    end
+    it "parses a response der and returns the right object on #parse" do
+        ocsp_response = R509::Ocsp::Response.parse(@ocsp_response_der)
+        ocsp_response.kind_of?(R509::Ocsp::Response).should == true
+        ocsp_response.status.should == OpenSSL::OCSP::RESPONSE_STATUS_SUCCESSFUL
     end
     it "returns data on to_der" do
         cert = OpenSSL::X509::Certificate.new(@ocsp_test_cert)
