@@ -225,4 +225,14 @@ describe R509::Ocsp::Response do
         response = ocsp_handler.sign_response(statuses)
         response.to_der.should_not == nil
     end
+    it "returns a BasicResponse object on #basic" do
+        cert = OpenSSL::X509::Certificate.new(@ocsp_test_cert)
+        ocsp_request = OpenSSL::OCSP::Request.new
+        certid = OpenSSL::OCSP::CertificateId.new(cert,@test_ca_config.ca_cert)
+        ocsp_request.add_certid(certid)
+        ocsp_handler = R509::Ocsp::Signer.new({ :configs => [@test_ca_config] })
+        statuses = ocsp_handler.check_request(ocsp_request)
+        response = ocsp_handler.sign_response(statuses)
+        response.basic.kind_of?(OpenSSL::OCSP::BasicResponse).should == true
+    end
 end

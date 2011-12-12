@@ -67,6 +67,11 @@ module R509::Ocsp
             @ocsp_response.to_der
         end
 
+        # @return [OpenSSL::OCSP::BasicResponse]
+        def basic
+            @ocsp_response.basic
+        end
+
         # @param ca_cert [OpenSSL::X509::Certificate] the CA certificate to verify against
         # @return [Boolean] true if the response is valid according to the given root
         def verify(ca_cert)
