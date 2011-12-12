@@ -44,7 +44,17 @@ module R509::Ocsp
     class Response
         # @param ocsp_response [OpenSSL::OCSP::Response]
         def initialize(ocsp_response)
+            if not ocsp_response.kind_of?(OpenSSL::OCSP::Response)
+                raise R509::R509Error, 'You must pass an OpenSSL::OCSP::Response object to the constructor. See R509::Ocsp::Response#parse if you are trying to parse'
+            end
             @ocsp_response = ocsp_response
+        end
+
+        def self.parse(ocsp_string)
+            if ocsp_string.nil?
+                raise R509::R509Error, 'You must pass a DER encoded OCSP response to this method'
+            end
+            R509::Ocsp::Response.new(OpenSSL::OCSP::Response.new(ocsp_string))
         end
 
         # @return [OpenSSL::OCSP] response status of this response
