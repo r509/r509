@@ -286,8 +286,9 @@ module R509
                 raise R509Error, "ca_root_path is not a directory: #{ca_root_path}"
             end
 
-            ca_cert_file = ca_root_path + conf.delete('ca_cert')
-            ca_key_file = ca_root_path + conf.delete('ca_key')
+            ca_cert_hash = conf.delete('ca_cert')
+            ca_cert_file = ca_root_path + ca_cert_hash['cert']
+            ca_key_file = ca_root_path + ca_cert_hash['key']
             ca_cert = R509::Cert.new(
                 :cert => read_data(ca_cert_file),
                 :key => read_data(ca_key_file)
