@@ -8,7 +8,6 @@ module R509
     # The primary certificate signing request object
     class Csr
         include R509::IOHelpers
-        include R509::Helper::CsrHelper
 
         attr_reader :san_names, :key, :subject, :req, :attributes, :message_digest
         # @option opts [String,OpenSSL::X509::Request] :csr a csr
@@ -238,6 +237,34 @@ module R509
                 end
             }
             {:subject => parsed_cert.subject, :subjectAltName => domains_to_add}
+        end
+
+        # @return [Hash] attributes of a CSR
+        def parse_attributes_from_csr(req)
+            attributes = Hash.new
+            domains_from_csr = []
+            set = nil
+            req.attributes.each { |attribute|
+                if attribute.oid == 'extReq' then
+                set = OpenSSL::ASN1.decode attribute.value
+                end
+            }
+            if !set.nil? then
+                set.value.each { |set_value|
+                    @seq = set_value
+                    extensions = @seq.value.collect{|asn1ext| OpenSSL::X509::Extension.new(asn1ext).to_a }
+                    extensions.each { |ext|
+                        hash = {'value' => ext[1], 'critical'=> ext[2] }
+                        attributes[ext[0]] = hash
+                        if ext[0] == 'subjectAltName' then
+                            domains_from_csr = ext[1].gsub(/DNS:/,'').split(',')
+                            domains_from_csr = domains_from_csr.collect {|x| x.strip }
+                            attributes[ext[0]] = domains_from_csr
+                        end
+                    }
+                }
+            end
+            attributes
         end
 
         #takes OpenSSL::X509::Extension object
