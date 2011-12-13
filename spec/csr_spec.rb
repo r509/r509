@@ -33,6 +33,14 @@ describe R509::Csr do
         csr = R509::Csr.new(:csr => @csr)
         csr.to_der.should == @csr_der
     end
+    it "returns true from #has_private_key? when private key is present" do
+        csr = R509::Csr.new(:bit_strength => 512, :subject => [['CN','private-key-check.com']])
+        csr.has_private_key?.should == true
+    end
+    it "returns false from #has_private_key? when private key is not present" do
+        csr = R509::Csr.new(:csr => @csr)
+        csr.has_private_key?.should == false
+    end
     it "key creation defaults to 2048 when no bit strength or key is passed" do
         csr = R509::Csr.new(:subject => [['CN','testing2048.rsa']])
         csr.bit_strength.should == 2048

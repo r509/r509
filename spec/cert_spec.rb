@@ -33,6 +33,14 @@ describe R509::Cert do
         cert = R509::Cert.new(:cert => @cert)
         cert.issuer.to_s.should == "/C=US/O=SecureTrust Corporation/CN=SecureTrust CA"
     end
+    it "returns true from has_private_key? when a key is present" do
+        cert = R509::Cert.new(:cert => @cert3, :key => @key3)
+        cert.has_private_key?.should == true
+    end
+    it "returns false from has_private_key? when a key is not present" do
+        cert = R509::Cert.new(:cert => @cert)
+        cert.has_private_key?.should == false
+    end
     it "has the right not_before" do
         cert = R509::Cert.new(:cert => @cert)
         cert.not_before.to_i.should == 1282659002

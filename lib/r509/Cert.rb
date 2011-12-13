@@ -85,6 +85,15 @@ module R509
             @cert.subject
         end
 
+        # @return [Boolean] Boolean of whether the object contains a private key
+        def has_private_key?
+            if not @key.nil?
+                true
+            else
+                false
+            end
+        end
+
         # Returns subject component
         #
         # @return [String] value of the subject component requested

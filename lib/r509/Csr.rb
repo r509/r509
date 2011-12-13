@@ -94,6 +94,15 @@ module R509
             @req.verify(public_key)
         end
 
+        # @return [Boolean] Boolean of whether the object contains a private key
+        def has_private_key?
+            if not @key.nil?
+                true
+            else
+                false
+            end
+        end
+
         # Converts the CSR into the PEM format
         #
         # @return [String] the CSR converted into PEM format.
