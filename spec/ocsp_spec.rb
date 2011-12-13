@@ -19,7 +19,7 @@ describe R509::Ocsp::Signer do
     end
     it "responds successfully from the test_ca" do
         csr = R509::Csr.new( :subject => [['CN','ocsptest.r509.local']], :bit_strength => 1024 )
-        ca = R509::CertificateAuthority.new(@test_ca_config)
+        ca = R509::CertificateAuthority::Signer.new(@test_ca_config)
         cert = ca.sign_cert(:csr => csr, :profile_name => 'server')
         ocsp_request = OpenSSL::OCSP::Request.new
         certid = OpenSSL::OCSP::CertificateId.new(cert.cert,@test_ca_config.ca_cert.cert)
@@ -30,12 +30,12 @@ describe R509::Ocsp::Signer do
         response.status.should == OpenSSL::OCSP::RESPONSE_STATUS_SUCCESSFUL
     end
     it "rejects request with 2 certs from different known CAs" do
-        ca = R509::CertificateAuthority.new(@test_ca_config)
+        ca = R509::CertificateAuthority::Signer.new(@test_ca_config)
 
         csr = R509::Csr.new( :subject => [['CN','ocsptest.r509.local']], :bit_strength => 1024 )
         cert = ca.sign_cert(:csr => csr, :profile_name => 'server')
 
-        ca2 = R509::CertificateAuthority.new(@second_ca_config)
+        ca2 = R509::CertificateAuthority::Signer.new(@second_ca_config)
 
         csr2 = R509::Csr.new( :subject => [['CN','ocsptest2.r509.local']], :bit_strength => 1024 )
         cert2 = ca2.sign_cert(:csr => csr2, :profile_name => 'server')
@@ -52,7 +52,7 @@ describe R509::Ocsp::Signer do
         response.status.should == OpenSSL::OCSP::RESPONSE_STATUS_UNAUTHORIZED
     end
     it "rejects request with 1 cert from known CA and 1 cert from unknown CA" do
-        ca = R509::CertificateAuthority.new(@test_ca_config)
+        ca = R509::CertificateAuthority::Signer.new(@test_ca_config)
 
         csr = R509::Csr.new( :subject => [['CN','ocsptest.r509.local']], :bit_strength => 1024 )
         cert = ca.sign_cert(:csr => csr, :profile_name => 'server')
@@ -69,7 +69,7 @@ describe R509::Ocsp::Signer do
         response.status.should == OpenSSL::OCSP::RESPONSE_STATUS_UNAUTHORIZED
     end
     it "responds successfully with 2 certs from 1 known CA" do
-        ca = R509::CertificateAuthority.new(@test_ca_config)
+        ca = R509::CertificateAuthority::Signer.new(@test_ca_config)
 
         csr = R509::Csr.new( :subject => [['CN','ocsptest.r509.local']], :bit_strength => 1024 )
         cert = ca.sign_cert(:csr => csr, :profile_name => 'server')

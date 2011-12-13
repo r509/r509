@@ -4,15 +4,15 @@ require 'r509/Cert'
 require 'r509/Exceptions'
 require 'r509/HelperClasses'
 
-module R509
+module R509::CertificateAuthority
     # Contains the certification authority signing operation methods
-    class CertificateAuthority
+    class Signer
         # @param [R509::Config] @config
         def initialize(config)
             @config = config
 
             unless @config.kind_of?(R509::Config)
-                raise R509Error, "config must be a kind of R509::Config"
+                raise R509::R509Error, "config must be a kind of R509::Config"
             end
         end
 
@@ -27,7 +27,7 @@ module R509
         # @return [R509::Cert] the signed cert object
         def sign_cert(options)
             if not options[:csr].kind_of?(R509::Csr)
-                raise R509Error, "You must pass an R509::Csr object for :csr"
+                raise R509::R509Error, "You must pass an R509::Csr object for :csr"
             else
                 csr = options[:csr]
             end
@@ -43,7 +43,7 @@ module R509
 
 
             if !csr.verify_signature
-                raise R509Error, "Certificate request signature is invalid."
+                raise R509::R509Error, "Certificate request signature is invalid."
             end
 
             #handle DSA here
@@ -126,7 +126,7 @@ module R509
             #@config.ca_cert.key.key ... ugly. ca_cert returns R509::Cert
             # #key returns R509::PrivateKey and #key on that returns OpenSSL object we need
             cert.sign( @config.ca_cert.key.key, message_digest.digest )
-            Cert.new(:cert => cert)
+            R509::Cert.new(:cert => cert)
         end
 
         private

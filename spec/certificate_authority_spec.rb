@@ -1,13 +1,13 @@
 require 'spec_helper'
 
-describe R509::CertificateAuthority do
+describe R509::CertificateAuthority::Signer do
     before :each do
         @cert = TestFixtures::CERT
         @csr = TestFixtures::CSR
         @csr_invalid_signature = TestFixtures::CSR_INVALID_SIGNATURE
         @csr3 = TestFixtures::CSR3
         @test_ca_config = TestFixtures.test_ca_config
-        @ca = R509::CertificateAuthority.new(@test_ca_config)
+        @ca = R509::CertificateAuthority::Signer.new(@test_ca_config)
     end
 
     it "raise exception if you don't pass an R509::Csr in :csr" do
@@ -117,7 +117,7 @@ describe R509::CertificateAuthority do
         cert.cert.not_after.ctime.should == not_after.utc.ctime
     end
     it "raises exception unless you provide a proper config" do
-        expect { R509::CertificateAuthority.new('invalid') }.to raise_error(R509::R509Error)
+        expect { R509::CertificateAuthority::Signer.new('invalid') }.to raise_error(R509::R509Error)
     end
     it "raises exception when providing invalid ca profile" do
         csr = R509::Csr.new(:csr => @csr)
