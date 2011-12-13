@@ -31,7 +31,7 @@ module R509
           :cdp_location, :crl_start_skew_seconds, :ocsp_location, :ocsp_chain,
           :ocsp_start_skew_seconds, :ocsp_validity_hours
 
-        # @options opts [R509::Cert] :ca_cert Cert+Key pair
+        # @option opts [R509::Cert] :ca_cert Cert+Key pair
         # @option opts [Integer] :crl_validity_hours (168) The number of hours that
         #  a CRL will be valid. Defaults to 7 days.
         # @option opts [Hash<String, ConfigProfile>] :profiles
