@@ -201,7 +201,8 @@ module R509::Ocsp::Helper
             if config.nil?
                 config = @default_config
             end
-            basic_response.sign(config.ocsp_cert,config.ocsp_key,config.ocsp_chain)
+            #confusing, but R509::Cert contains R509::PrivateKey under #key. PrivateKey#key gives the OpenSSL object
+            basic_response.sign(config.ocsp_cert.cert,config.ocsp_cert.key.key,config.ocsp_chain)
 
             #turns out BasicResponse#sign can take up to 4 params
             #cert

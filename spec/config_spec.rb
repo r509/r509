@@ -5,8 +5,9 @@ require 'r509/Exceptions'
 describe R509::Config do
     context "when initialized with a cert and key" do
         before :each do
-          @config = R509::Config.new(TestFixtures.test_ca_cert,
-                                     TestFixtures.test_ca_key)
+            @config = R509::Config.new(
+                :ca_cert => TestFixtures.test_ca_cert
+            )
         end
 
         subject {@config}
@@ -23,13 +24,21 @@ describe R509::Config do
         end
 
         it "should have the proper CA key" do
-            @config.ca_key.to_pem.should == TestFixtures.test_ca_key.to_pem
+            @config.ca_cert.key.to_pem.should == TestFixtures.test_ca_cert.key.to_pem
         end
 
+        it "raises an error if you don't pass :ca_cert" do
+            expect { R509::Config.new(:crl_number => 0) }.to raise_error ArgumentError, 'Config object requires that you pass :ca_cert'
+        end
+        it "raises an error if :ca_cert is not of type R509::Cert" do
+            expect { R509::Config.new(:ca_cert => 'not a cert, and not right type') }.to raise_error ArgumentError, ':ca_cert must be of type R509::Cert'
+        end
+        it "raises an error if :ca_cert does not contain a private key" do
+            expect { R509::Config.new( :ca_cert => R509::Cert.new( :cert => TestFixtures::TEST_CA_CERT) ) }.to raise_error ArgumentError, ':ca_cert object must contain a private key, not just a certificate'
+        end
         it "fails to specify a non-ConfigProfile as the profile" do
             config = R509::Config.new(
-                TestFixtures.test_ca_cert,
-                TestFixtures.test_ca_key
+                :ca_cert => TestFixtures.test_ca_cert
             )
 
             expect{ config.set_profile("bogus", "not a ConfigProfile")}.to raise_error TypeError
@@ -37,9 +46,8 @@ describe R509::Config do
 
         it "can specify crl_number_file" do
             config = R509::Config.new(
-                TestFixtures.test_ca_cert,
-                TestFixtures.test_ca_key,
-                { :crl_number_file => "#{File.dirname(__FILE__)}/fixtures/crl_number_file.txt" }
+                :ca_cert => TestFixtures.test_ca_cert,
+                :crl_number_file => "#{File.dirname(__FILE__)}/fixtures/crl_number_file.txt"
             )
 
             config.crl_number.should == 10
@@ -49,9 +57,8 @@ describe R509::Config do
 
         it "can write the crl_number_file when its filename was specified originally" do
             config = R509::Config.new(
-                TestFixtures.test_ca_cert,
-                TestFixtures.test_ca_key,
-                { :crl_number_file => "#{File.dirname(__FILE__)}/fixtures/crl_number_file.txt" }
+                :ca_cert => TestFixtures.test_ca_cert,
+                :crl_number_file => "#{File.dirname(__FILE__)}/fixtures/crl_number_file.txt"
             )
 
             config.save_crl_number
@@ -59,9 +66,8 @@ describe R509::Config do
 
         it "doesn't write the crl_number_file when its filename was specified originally but is manually specified to nil" do
             config = R509::Config.new(
-                TestFixtures.test_ca_cert,
-                TestFixtures.test_ca_key,
-                { :crl_number_file => "#{File.dirname(__FILE__)}/fixtures/crl_number_file.txt" }
+                :ca_cert => TestFixtures.test_ca_cert,
+                :crl_number_file => "#{File.dirname(__FILE__)}/fixtures/crl_number_file.txt"
             )
 
             expect{ config.save_crl_number(nil) }.to raise_error R509::R509Error
@@ -69,8 +75,7 @@ describe R509::Config do
 
         it "writes the crl_number_file when its filename was not specified originally but is manually specified" do
             config = R509::Config.new(
-                TestFixtures.test_ca_cert,
-                TestFixtures.test_ca_key
+                :ca_cert => TestFixtures.test_ca_cert
             )
 
             # reset it to 10, which is what we expect it to be
@@ -83,17 +88,15 @@ describe R509::Config do
 
         it "can specify crl_list_file" do
             config = R509::Config.new(
-                TestFixtures.test_ca_cert,
-                TestFixtures.test_ca_key,
-                { :crl_list_file => "#{File.dirname(__FILE__)}/fixtures/crl_list_file.txt" }
+                :ca_cert => TestFixtures.test_ca_cert,
+                :crl_list_file => "#{File.dirname(__FILE__)}/fixtures/crl_list_file.txt"
             )
         end
 
         it "can save crl_list_file" do
             config = R509::Config.new(
-                TestFixtures.test_ca_cert,
-                TestFixtures.test_ca_key,
-                { :crl_list_file => "#{File.dirname(__FILE__)}/fixtures/crl_list_file.txt" }
+                :ca_cert => TestFixtures.test_ca_cert,
+                :crl_list_file => "#{File.dirname(__FILE__)}/fixtures/crl_list_file.txt"
             )
 
             config.save_crl_list
@@ -101,9 +104,8 @@ describe R509::Config do
 
         it "doesn't write the crl_list_file when its filename was specified originally but is manually specified to nil" do
             config = R509::Config.new(
-                TestFixtures.test_ca_cert,
-                TestFixtures.test_ca_key,
-                { :crl_list_file => "#{File.dirname(__FILE__)}/fixtures/crl_list_file.txt" }
+                :ca_cert => TestFixtures.test_ca_cert,
+                :crl_list_file => "#{File.dirname(__FILE__)}/fixtures/crl_list_file.txt"
             )
 
             expect{ config.save_crl_list(nil) }.to raise_error(R509::R509Error)
@@ -111,9 +113,8 @@ describe R509::Config do
 
         it "can revoke (with reason) and save crl_list_file" do
             config = R509::Config.new(
-                TestFixtures.test_ca_cert,
-                TestFixtures.test_ca_key,
-                { :crl_list_file => "#{File.dirname(__FILE__)}/fixtures/crl_list_file.txt" }
+                :ca_cert => TestFixtures.test_ca_cert,
+                :crl_list_file => "#{File.dirname(__FILE__)}/fixtures/crl_list_file.txt"
             )
 
             config.revoked?(12345).should == false
@@ -127,9 +128,8 @@ describe R509::Config do
             config.save_crl_list
 
             config2 = R509::Config.new(
-                TestFixtures.test_ca_cert,
-                TestFixtures.test_ca_key,
-                { :crl_list_file => "#{File.dirname(__FILE__)}/fixtures/crl_list_file.txt" }
+                :ca_cert => TestFixtures.test_ca_cert,
+                :crl_list_file => "#{File.dirname(__FILE__)}/fixtures/crl_list_file.txt"
             )
 
             config2.revoked?(12345).should == true
@@ -143,8 +143,7 @@ describe R509::Config do
 
         it "doesn't try to load a nil crl_list_file" do
             config = R509::Config.new(
-                TestFixtures.test_ca_cert,
-                TestFixtures.test_ca_key
+                :ca_cert => TestFixtures.test_ca_cert
             )
 
             expect{ config.load_revoke_crl_list }.to raise_error(R509::R509Error)
@@ -154,9 +153,8 @@ describe R509::Config do
             first_profile = R509::ConfigProfile.new
 
             config = R509::Config.new(
-                TestFixtures.test_ca_cert,
-                TestFixtures.test_ca_key,
-                { :profiles => { "first_profile" => first_profile } }
+                :ca_cert => TestFixtures.test_ca_cert,
+                :profiles => { "first_profile" => first_profile }
             )
 
             config.profile("first_profile").should == first_profile
@@ -164,9 +162,8 @@ describe R509::Config do
 
         it "shouldn't let you specify a profile that's not a ConfigProfile, on instantiation" do
             expect{ R509::Config.new(
-                TestFixtures.test_ca_cert,
-                TestFixtures.test_ca_key,
-                { :profiles => { "first_profile" => "not a ConfigProfile" } }
+                :ca_cert => TestFixtures.test_ca_cert,
+                :profiles => { "first_profile" => "not a ConfigProfile" }
             ) }.to raise_error TypeError
         end
 

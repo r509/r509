@@ -57,10 +57,6 @@ module R509
 
             profile = @config.profile(options[:profile_name])
 
-            #load ca key and cert
-            ca_cert = @config.ca_cert
-            ca_key = @config.ca_key
-
             if options.has_key?(:serial)
                 serial = OpenSSL::BN.new(options[:serial].to_s)
             else
@@ -86,7 +82,7 @@ module R509
 
             cert = OpenSSL::X509::Certificate.new
             cert.subject = subject.name
-            cert.issuer = ca_cert.subject
+            cert.issuer = @config.ca_cert.subject
             cert.not_before = not_before
             cert.not_after = not_after
             cert.public_key = csr.public_key
@@ -100,7 +96,7 @@ module R509
             certificate_policies = profile.certificate_policies
             ef = OpenSSL::X509::ExtensionFactory.new
             ef.subject_certificate = cert
-            ef.issuer_certificate = ca_cert
+            ef.issuer_certificate = @config.ca_cert.cert
             ext = []
             ext << ef.create_extension("basicConstraints", basic_constraints, true)
             ext << ef.create_extension("subjectKeyIdentifier", "hash")
@@ -129,7 +125,9 @@ module R509
                         "OCSP;" << @config.ocsp_location)
             end
             cert.extensions = ext
-            cert.sign ca_key, message_digest.digest
+            #@config.ca_cert.key.key ... ugly. ca_cert returns R509::Cert
+            # #key returns R509::PrivateKey and #key on that returns OpenSSL object we need
+            cert.sign( @config.ca_cert.key.key, message_digest.digest )
             Cert.new(:cert => cert)
         end
 

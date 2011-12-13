@@ -27,12 +27,11 @@ module R509
     class Config
         include R509::IOHelpers
         extend R509::IOHelpers
-        attr_accessor :ca_cert, :ca_key, :crl_validity_hours, :message_digest,
+        attr_accessor :ca_cert, :crl_validity_hours, :message_digest,
           :cdp_location, :crl_start_skew_seconds, :ocsp_location, :ocsp_chain,
           :ocsp_start_skew_seconds, :ocsp_validity_hours
 
-        # @param [OpenSSL::X509::Certificate] ca_cert
-        # @param [OpenSSL::PKey::RSA] ca_key
+        # @options opts [R509::Cert] :ca_cert Cert+Key pair
         # @option opts [Integer] :crl_validity_hours (168) The number of hours that
         #  a CRL will be valid. Defaults to 7 days.
         # @option opts [Hash<String, ConfigProfile>] :profiles
@@ -44,21 +43,34 @@ module R509
         #  the CRL numbers to.
         # @option opts [String] :crl_list_file The file that we will save
         #  the CRL list data to.
-        # @option opts [OpenSSL::X509::Certificate] :ocsp_cert An optional certificate
-        # that you sign OCSP responses from
-        # @option opts [OpenSSL::PKey::RSA] :ocsp_key An optional key that matches the
-        # :ocsp_cert
+        # @option opts [R509::Cert] :ocsp_cert An optional cert+key pair
+        # OCSP signing delegate
         # @option opts [Array<OpenSSL::X509::Certificate>] :ocsp_chain An optional array
         # that constitutes the chain to attach to an OCSP response
         #
-        def initialize(ca_cert, ca_key, opts = {} )
-            @ca_cert = ca_cert
-            @ca_key = ca_key
+        def initialize(opts = {} )
+            if not opts.has_key?(:ca_cert) then
+                raise ArgumentError, 'Config object requires that you pass :ca_cert'
+            end
+
+            @ca_cert = opts[:ca_cert]
+
+            if not @ca_cert.kind_of?(R509::Cert) then
+                raise ArgumentError, ':ca_cert must be of type R509::Cert'
+            end
+            if not @ca_cert.has_private_key?
+                raise ArgumentError, ':ca_cert object must contain a private key, not just a certificate'
+            end
 
             #ocsp data
-            @ocsp_location = opts[:ocsp_location]
+            if opts.has_key?(:ocsp_cert) and not opts[:ocsp_cert].kind_of(R509::Cert) then
+                raise ArgumentError, ':ocsp_cert, if provided, must be of type R509::Cert'
+            end
+            if opts.has_key?(:ocsp_cert) and not opts[:ocsp_cert].has_private_key?
+                raise ArgumentError, ':ocsp_cert must contain a private key, not just a certificate'
+            end
             @ocsp_cert = opts[:ocsp_cert]
-            @ocsp_key = opts[:ocsp_key]
+            @ocsp_location = opts[:ocsp_location]
             @ocsp_chain = opts[:ocsp_chain] if opts[:ocsp_chain].kind_of?(Array)
             @ocsp_validity_hours = opts[:ocsp_validity_hours] || 168
             @ocsp_start_skew_seconds = opts[:ocsp_start_skew_seconds] || 3600
@@ -100,14 +112,9 @@ module R509
 
         end
 
-        # @return [OpenSSL::X509::Certificate] either a custom OCSP cert or the ca_cert
+        # @return [R509::Cert] either a custom OCSP cert or the ca_cert
         def ocsp_cert
             if @ocsp_cert.nil? then @ca_cert else @ocsp_cert end
-        end
-
-        # @return [OpenSSL::PKey::RSA] either a custom OCSP key or the ca_key
-        def ocsp_key
-            if @ocsp_key.nil? then @ca_key else @ocsp_key end
         end
 
         # @param [String] name The name of the profile
@@ -281,10 +288,13 @@ module R509
 
             ca_cert_file = ca_root_path + conf.delete('ca_cert')
             ca_key_file = ca_root_path + conf.delete('ca_key')
-            cert = OpenSSL::X509::Certificate.new(read_data(ca_cert_file))
-            key = OpenSSL::PKey::RSA.new(read_data(ca_key_file))
+            ca_cert = R509::Cert.new(
+                :cert => read_data(ca_cert_file),
+                :key => read_data(ca_key_file)
+            )
 
             opts = {
+                :ca_cert => ca_cert,
                 :crl_validity_hours => conf.delete('crl_validity_hours'),
                 :ocsp_location => conf.delete('ocsp_location'),
                 :cdp_location => conf.delete('cdp_location'),
@@ -300,7 +310,7 @@ module R509
             end
 
             # Create the instance.
-            ret = self.new(cert, key, opts)
+            ret = self.new(opts)
 
             # The remaining keys should all be profiles :)
             profs = {}

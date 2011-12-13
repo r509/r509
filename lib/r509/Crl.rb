@@ -136,9 +136,7 @@ module R509
             end
 
             ef = OpenSSL::X509::ExtensionFactory.new
-            ca_cert = @config.ca_cert
-            ca_key = @config.ca_key
-            ef.issuer_certificate = ca_cert
+            ef.issuer_certificate = @config.ca_cert.cert
             ef.crl = crl
             #grab crl number from file, increment, write back
             crl_number = @config.increment_crl_number
@@ -150,7 +148,7 @@ module R509
             extensions.each{|oid, value, critical|
                 crl.add_extension(ef.create_extension(oid, value, critical))
             }
-            crl.sign(ca_key, OpenSSL::Digest::SHA1.new)
+            crl.sign(@config.ca_cert.key.key, OpenSSL::Digest::SHA1.new)
             @crl = crl
             @crl.to_pem
         end

@@ -82,11 +82,7 @@ module TestFixtures
     STCA_OCSP_RESPONSE  = read_fixture('stca_ocsp_response.der')
 
     def self.test_ca_cert
-        OpenSSL::X509::Certificate.new(TEST_CA_CERT)
-    end
-
-    def self.test_ca_key
-        OpenSSL::PKey::RSA.new(TEST_CA_KEY)
+        R509::Cert.new(:cert => TEST_CA_CERT, :key => TEST_CA_KEY)
     end
 
     def self.test_ca_server_profile
@@ -109,11 +105,7 @@ module TestFixtures
     end
 
     def self.second_ca_cert
-        OpenSSL::X509::Certificate.new(SECOND_CA_CERT)
-    end
-
-    def self.second_ca_key
-        OpenSSL::PKey::RSA.new(SECOND_CA_KEY)
+        R509::Cert.new(:cert => SECOND_CA_CERT, :key => SECOND_CA_KEY)
     end
 
     def self.second_ca_server_profile
@@ -139,10 +131,11 @@ module TestFixtures
     # @return [R509::Config]
     def self.test_ca_config
         opts = {
+          :ca_cert => test_ca_cert(),
           :cdp_location => 'URI:http://crl.domain.com/test_ca.crl',
           :ocsp_location => 'URI:http://ocsp.domain.com'
         }
-        ret = R509::Config.new(test_ca_cert(), test_ca_key(), opts)
+        ret = R509::Config.new(opts)
 
         ret.set_profile("server", self.test_ca_server_profile)
         ret.set_profile("subroot", self.test_ca_subroot_profile)
@@ -153,10 +146,11 @@ module TestFixtures
     # @return [R509::Config] secondary config
     def self.second_ca_config
         opts = {
+          :ca_cert => second_ca_cert(),
           :cdp_location => 'URI:http://crl.domain.com/test_ca.crl',
           :ocsp_location => 'URI:http://ocsp.domain.com'
         }
-        ret = R509::Config.new(second_ca_cert(), second_ca_key(), opts)
+        ret = R509::Config.new(opts)
 
         ret.set_profile("server", self.second_ca_server_profile)
         ret.set_profile("subroot", self.second_ca_subroot_profile)
