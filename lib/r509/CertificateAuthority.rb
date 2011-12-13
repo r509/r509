@@ -6,7 +6,7 @@ require 'r509/HelperClasses'
 
 module R509
     # Contains the certification authority signing operation methods
-    class Ca
+    class CertificateAuthority
         # @param [R509::Config] @config
         def initialize(config)
             @config = config
