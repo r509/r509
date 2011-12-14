@@ -198,7 +198,7 @@ module R509
         #
         # @return [Hash] :subject and :san_names you can pass to Ca
         def to_hash
-            { :subject => @subject , :san_names => @san_names }
+            { :subject => @subject.dup , :san_names => @san_names.dup }
         end
 
         private

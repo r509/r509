@@ -18,8 +18,9 @@ module R509::CertificateAuthority
 
         # Signs a CSR
         # @option options :csr [R509::Csr]
+        # @option options :spki [R509::Spki]
         # @option options :profile_name [String] The CA profile you want to use (eg "server in your config)
-        # @option options :csr_hash [Hash] a hash containing the subject and SAN names you want encoded for this cert. Generate by calling Csr#to_hash
+        # @option options :data_hash [Hash] a hash containing the subject and SAN names you want encoded for this cert. Generate by calling Csr#to_hash or Spki#to_hash
         # @option options :message_digest [String] the message digest to use for this certificate instead of the config's default
         # @option options :serial [String] the serial number you want to issue the certificate with
         # @option options :not_before [Time] the notBefore for the certificate
@@ -32,9 +33,9 @@ module R509::CertificateAuthority
                 csr = options[:csr]
             end
 
-            if options.has_key?(:csr_hash)
-                san_names = prefix_domains(options[:csr_hash][:san_names])
-                subject = options[:csr_hash][:subject]
+            if options.has_key?(:data_hash)
+                san_names = prefix_domains(options[:data_hash][:san_names])
+                subject = options[:data_hash][:subject]
             else
                 san_names = prefix_domains(csr.to_hash[:san_names])
                 subject = csr.to_hash[:subject]

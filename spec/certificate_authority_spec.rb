@@ -24,9 +24,9 @@ describe R509::CertificateAuthority::Signer do
     end
     it "issues with specified san domains" do
         csr = R509::Csr.new(:cert => @cert, :bit_strength => 1024)
-        csr_hash = csr.to_hash
-        csr_hash[:san_names] = ['langui.sh','domain2.com']
-        cert = @ca.sign_cert(:csr => csr, :profile_name => 'server', :csr_hash => csr_hash )
+        data_hash = csr.to_hash
+        data_hash[:san_names] = ['langui.sh','domain2.com']
+        cert = @ca.sign_cert(:csr => csr, :profile_name => 'server', :data_hash => data_hash )
         cert.san_names.should == ['langui.sh','domain2.com']
     end
     it "issues with san domains from csr" do
@@ -41,11 +41,13 @@ describe R509::CertificateAuthority::Signer do
     end
     it "issues a cert with the subject array provided" do
         csr = R509::Csr.new(:csr => @csr)
-        csr_hash = csr.to_hash
-        csr_hash[:subject]['CN'] = "someotherdomain.com"
-        csr_hash[:subject].delete("O")
-        cert = @ca.sign_cert(:csr => csr, :profile_name => 'server', :csr_hash => csr_hash)
+        puts csr.subject.to_s
+        data_hash = csr.to_hash
+        data_hash[:subject]['CN'] = "someotherdomain.com"
+        data_hash[:subject].delete("O")
+        cert = @ca.sign_cert(:csr => csr, :profile_name => 'server', :data_hash => data_hash )
         cert.subject.to_s.should == '/CN=someotherdomain.com'
+        puts cert.subject.to_s
     end
     it "tests that policy identifiers are properly encoded" do
         csr = R509::Csr.new(:csr => @csr)
