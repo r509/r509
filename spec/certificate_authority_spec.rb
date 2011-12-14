@@ -8,11 +8,32 @@ describe R509::CertificateAuthority::Signer do
         @csr3 = TestFixtures::CSR3
         @test_ca_config = TestFixtures.test_ca_config
         @ca = R509::CertificateAuthority::Signer.new(@test_ca_config)
+        @spki = TestFixtures::SPKI
     end
 
-    it "raise exception if you don't pass an R509::Csr in :csr" do
+    it "raises an error if you don't pass csr or spki" do
+        expect { @ca.sign_cert({ :profile_name => 'server' }) }.to raise_error(ArgumentError, "You must supply either :csr or :spki")
+    end
+    it "raises an error if you pass both csr and spki" do
+        csr = R509::Csr.new(:csr => @csr)
+        spki = R509::Spki.new(:spki => @spki, :subject=>[['CN','test']])
+        expect { @ca.sign_cert({ :spki => spki, :csr => csr, :profile_name => 'server' }) }.to raise_error(ArgumentError, "You can't pass both :csr and :spki")
+    end
+    it "raise an error if you don't pass an R509::Spki in :spki" do
+        spki = OpenSSL::Netscape::SPKI.new(@spki)
+        expect { @ca.sign_cert({ :spki => spki, :profile_name => 'server' }) }.to raise_error(ArgumentError, 'You must pass an R509::Spki object for :spki')
+    end
+    it "raise an error if you don't pass an R509::Csr in :csr" do
         csr = OpenSSL::X509::Request.new(@csr)
-        expect { @ca.sign_cert({ :csr => csr, :profile_name => 'server' }) }.to raise_error(R509::R509Error, 'You must pass an R509::Csr object for :csr')
+        expect { @ca.sign_cert({ :csr => csr, :profile_name => 'server' }) }.to raise_error(ArgumentError, 'You must pass an R509::Csr object for :csr')
+    end
+    it "properly issues server cert using spki" do
+        spki = R509::Spki.new(:spki => @spki, :subject=>[['CN','test.local']])
+        cert = @ca.sign_cert({ :spki => spki, :profile_name => 'server' })
+        cert.to_pem.should match(/BEGIN CERTIFICATE/)
+        cert.subject.to_s.should == '/CN=test.local'
+        extended_key_usage = cert.extensions['extendedKeyUsage']
+        extended_key_usage[0]['value'].should == 'TLS Web Server Authentication'
     end
     it "properly issues server cert" do
         csr = R509::Csr.new(:cert => @cert, :bit_strength => 1024)
@@ -41,13 +62,11 @@ describe R509::CertificateAuthority::Signer do
     end
     it "issues a cert with the subject array provided" do
         csr = R509::Csr.new(:csr => @csr)
-        puts csr.subject.to_s
         data_hash = csr.to_hash
         data_hash[:subject]['CN'] = "someotherdomain.com"
         data_hash[:subject].delete("O")
         cert = @ca.sign_cert(:csr => csr, :profile_name => 'server', :data_hash => data_hash )
         cert.subject.to_s.should == '/CN=someotherdomain.com'
-        puts cert.subject.to_s
     end
     it "tests that policy identifiers are properly encoded" do
         csr = R509::Csr.new(:csr => @csr)

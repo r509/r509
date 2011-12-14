@@ -2,6 +2,7 @@
 module R509
     autoload :CertificateAuthority, 'r509/CertificateAuthority.rb'
     autoload :Csr, 'r509/Csr.rb'
+    autoload :Spki, 'r509/Spki.rb'
     autoload :Cert, 'r509/Cert.rb'
     autoload :Crl, 'r509/Crl.rb'
     autoload :Ocsp, 'r509/Ocsp.rb'

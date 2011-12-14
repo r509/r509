@@ -36,7 +36,11 @@ module TestFixtures
 
     CERT_DER = read_fixture('cert1.der')
 
-    SPKAC = read_fixture('spkac.txt')
+    SPKI = read_fixture('spkac.txt')
+
+    SPKI_DER = read_fixture('spkac.der')
+
+    SPKI_DSA = read_fixture('spkac_dsa.txt')
 
     CSR = read_fixture('csr1.pem')
 

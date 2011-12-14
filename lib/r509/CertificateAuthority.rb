@@ -27,23 +27,38 @@ module R509::CertificateAuthority
         # @option options :not_after [Time] the notAfter for the certificate
         # @return [R509::Cert] the signed cert object
         def sign_cert(options)
-            if not options[:csr].kind_of?(R509::Csr)
-                raise R509::R509Error, "You must pass an R509::Csr object for :csr"
-            else
-                csr = options[:csr]
+            if options.has_key?(:csr) and options.has_key?(:spki)
+                raise ArgumentError, "You can't pass both :csr and :spki"
+            elsif not options.has_key?(:csr) and not options.has_key?(:spki)
+                raise ArgumentError, "You must supply either :csr or :spki"
+            elsif options.has_key?(:csr)
+                if not options[:csr].kind_of?(R509::Csr)
+                    raise ArgumentError, "You must pass an R509::Csr object for :csr"
+                else
+                    csr = options[:csr]
+                end
+            elsif not options.has_key?(:csr) and options.has_key?(:spki)
+                if not options[:spki].kind_of?(R509::Spki)
+                    raise ArgumentError, "You must pass an R509::Spki object for :spki"
+                else
+                    spki = options[:spki]
+                end
             end
 
             if options.has_key?(:data_hash)
                 san_names = prefix_domains(options[:data_hash][:san_names])
                 subject = options[:data_hash][:subject]
-            else
+            elsif csr.nil?
+                san_names = prefix_domains(spki.to_hash[:san_names])
+                subject = spki.to_hash[:subject]
+            elsif spki.nil?
                 san_names = prefix_domains(csr.to_hash[:san_names])
                 subject = csr.to_hash[:subject]
             end
 
 
 
-            if !csr.verify_signature
+            if spki.nil? and not csr.verify_signature
                 raise R509::R509Error, "Certificate request signature is invalid."
             end
 
@@ -84,7 +99,11 @@ module R509::CertificateAuthority
             cert.issuer = @config.ca_cert.subject
             cert.not_before = not_before
             cert.not_after = not_after
-            cert.public_key = csr.public_key
+            if not csr.nil?
+                cert.public_key = csr.public_key
+            elsif not spki.nil?
+                cert.public_key = spki.public_key
+            end
             cert.serial =serial
             cert.version = 2 #2 means v3
 
