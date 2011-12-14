@@ -135,6 +135,11 @@ module R509
             @profiles[prof]
         end
 
+        # @return [Integer] The number of profiles
+        def num_profiles
+          @profiles.count
+        end
+
         # @return [Integer] the last CRL number
         def crl_number
             @crl_number
@@ -310,8 +315,6 @@ module R509
                 opts[:crl_number_file] = (ca_root_path + conf.delete('crl_number')).to_s
             end
 
-            # Create the instance.
-            ret = self.new(opts)
 
             # The remaining keys should all be profiles :)
             profs = {}
@@ -324,10 +327,8 @@ module R509
             end
             opts[:profiles] = profs
 
-            # Read in revoked certificates.
-            ret.load_revoke_crl_list()
-
-            ret
+            # Create the instance.
+            self.new(opts)
         end
 
         # Loads the named configuration config from a yaml file.
