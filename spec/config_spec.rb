@@ -18,6 +18,7 @@ describe R509::Config do
         its(:ocsp_location) {should be_nil}
         its(:crl_number) {should == 0}
         its(:revoked_certs) {should == []}
+        its(:num_profiles) {should == 0}
 
         it "should have the proper CA cert" do
             @config.ca_cert.to_pem.should == TestFixtures.test_ca_cert.to_pem
@@ -172,6 +173,12 @@ describe R509::Config do
             config.crl_validity_hours.should == 168
             config.message_digest.should == "SHA1"
             config.crl_number.should == 10
+            config.num_profiles.should == 2
+        end
+
+        it "should load YAML which only has a CA Cert and Key defined" do
+            config = R509::Config.from_yaml("test_ca", File.read("#{File.dirname(__FILE__)}/fixtures/config_test_minimal.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"})
+            config.num_profiles.should == 0
         end
 
         it "should fail if YAML config is null" do
