@@ -8,9 +8,7 @@ module R509
     class Crl
         include R509::IOHelpers
 
-        # TODO : Should we remove this in favor of just having all changes
-        #  being made to the configuration object?
-        attr_accessor :validity_hours
+        attr_reader :crl_number,:crl_list_file,:crl_number_file, :validity_hours
 
         def initialize(config)
             @config = config
@@ -22,6 +20,17 @@ module R509
             @validity_hours = @config.crl_validity_hours
             @start_skew_seconds = @config.crl_start_skew_seconds
             @crl = nil
+
+            @crl_number_file = @config.crl_number_file
+            if not @crl_number_file.nil?
+                @crl_number = read_data(@crl_number_file).to_i
+            else
+                @crl_number = 0
+            end
+
+
+            @crl_list_file = @config.crl_list_file
+            load_crl_list(@crl_list_file)
         end
 
         # Indicates whether the serial number has been revoked, or not.
@@ -29,7 +38,12 @@ module R509
         # @param [Integer] serial The serial number we want to check
         # @return [Boolean True if the serial number was revoked. False, otherwise.
         def revoked?(serial)
-            @config.revoked?(serial)
+          @revoked_certs.has_key?(serial)
+        end
+
+        # @return [Array] serial, reason, revoke_time tuple
+        def revoked_cert(serial)
+            @revoked_certs[serial]
         end
 
         # Returns the CRL in PEM format
@@ -82,6 +96,7 @@ module R509
         #
         # @param serial [Integer] serial number of the certificate to revoke
         # @param reason [Integer] reason for revocation
+        # @param revoke_time [Integer]
         #
         #   reason codes defined by rfc 5280
         #   CRLReason ::= ENUMERATED {
@@ -95,21 +110,27 @@ module R509
         #         removeFromCRL           (8),
         #         privilegeWithdrawn      (9),
         #         aACompromise           (10) }
-        def revoke_cert(serial,reason=nil)
-            if !reason.nil? and !reason.to_i.between?(1,10)
-                reason = nil
+        def revoke_cert(serial,reason=nil, revoke_time=Time.now.to_i)
+            if not reason.to_i.between?(0,10)
+                reason = 0
             end
-
-            @config.revoke_cert(serial, reason.to_i, Time.now)
-            @config.save_crl_list()
+            serial = serial.to_i
+            reason = reason.to_i
+            revoke_time = revoke_time.to_i
+            @revoked_certs[serial] = {:reason => reason, :revoke_time => revoke_time}
+            generate_crl()
+            save_crl_list()
+            nil
         end
 
         # Remove serial from revocation list. After unrevoking you must call generate_crl to sign a new CRL
         #
         # @param serial [Integer] serial number of the certificate to remove from revocation
         def unrevoke_cert(serial)
-            @config.unrevoke_cert(serial)
-            @config.save_crl_list()
+            @revoked_certs.delete(serial)
+            generate_crl()
+            save_crl_list()
+            nil
         end
 
         # Remove serial from revocation list
@@ -121,8 +142,9 @@ module R509
             now = Time.at Time.now.to_i
             crl.last_update = now-@start_skew_seconds
             crl.next_update = now+@validity_hours*3600
+            crl.issuer = @config.ca_cert.issuer
 
-            @config.revoked_certs.each do |serial, reason, revoke_time|
+            self.revoked_certs.each do |serial, reason, revoke_time|
                 revoked = OpenSSL::X509::Revoked.new
                 revoked.serial = OpenSSL::BN.new serial.to_s
                 revoked.time = Time.at(revoke_time)
@@ -139,8 +161,7 @@ module R509
             ef.issuer_certificate = @config.ca_cert.cert
             ef.crl = crl
             #grab crl number from file, increment, write back
-            crl_number = @config.increment_crl_number
-            @config.save_crl_number()
+            crl_number = increment_crl_number
             crlnum = OpenSSL::ASN1::Integer(crl_number)
             crl.add_extension(OpenSSL::X509::Extension.new("crlNumber", crlnum))
             extensions = []
@@ -151,6 +172,80 @@ module R509
             crl.sign(@config.ca_cert.key.key, OpenSSL::Digest::SHA1.new)
             @crl = crl
             @crl.to_pem
+        end
+
+        # @return [Array<Array>] Returns an array of serial, reason, revoke_time
+        #  tuples.
+        def revoked_certs
+            ret = []
+            @revoked_certs.keys.sort.each do |serial|
+                ret << [serial, @revoked_certs[serial][:reason], @revoked_certs[serial][:revoke_time]]
+            end
+            ret
+        end
+
+        # Increments the crl_number.
+        # @return [Integer] the new CRL number
+        #
+        def increment_crl_number
+            @crl_number += 1
+            save_crl_number()
+            @crl_number
+        end
+
+        # Loads the certificate revocation list from file.
+        # @param [String, #read, nil] filename_or_io The
+        #  crl will be read from either the file (if a string), or IO.
+        def load_crl_list(filename_or_io)
+            return nil if filename_or_io.nil?
+
+            @revoked_certs = {}
+
+            data = read_data(filename_or_io)
+
+            data.each_line do |line|
+                line.chomp!
+                serial,  revoke_time, reason = line.split(',', 3)
+                serial = serial.to_i
+                reason = (reason == '') ? nil : reason.to_i
+                revoke_time = (revoke_time == '') ? nil : revoke_time.to_i
+                self.revoke_cert(serial, reason, revoke_time)
+            end
+            nil
+        end
+
+        # Saves the CRL list to a filename or IO. If the class was initialized
+        # with :crl_list_file, then the filename specified by that will be used
+        # by default.
+        # @param [String, #write, nil] filename_or_io If provided, the generated
+        #  crl will be written to either the file (if a string), or IO. If nil,
+        #  then the @crl_list_file will be used. If that is nil, then an error
+        #  will be raised.
+        # @raise [R509Error] Raised if there's no @crl_list_file to save to.
+        def save_crl_list(filename_or_io = @crl_list_file)
+            return nil if filename_or_io.nil?
+
+            data = []
+            self.revoked_certs.each do |serial, reason, revoke_time|
+                data << [serial, revoke_time, reason].join(',')
+            end
+            write_data(filename_or_io, data.join("\n"))
+            nil
+        end
+
+        # Save the CRL number to a filename or IO. If the class was initialized
+        # with :crl_number_file, then the filename specified by that will be used
+        # by default.
+        # @param [String, #write, nil] filename_or_io If provided, the current
+        #  crl number will be written to either the file (if a string), or IO. If nil,
+        #  then the @crl_number_file will be used. If that is nil, then an error
+        #  will be raised.
+        def save_crl_number(filename_or_io = @crl_number_file)
+            return nil if filename_or_io.nil?
+            # No valid filename or IO was specified, so bail.
+
+            write_data(filename_or_io, self.crl_number.to_s)
+            nil
         end
     end
 end

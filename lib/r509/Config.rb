@@ -29,7 +29,7 @@ module R509
         extend R509::IOHelpers
         attr_accessor :ca_cert, :crl_validity_hours, :message_digest,
           :cdp_location, :crl_start_skew_seconds, :ocsp_location, :ocsp_chain,
-          :ocsp_start_skew_seconds, :ocsp_validity_hours
+          :ocsp_start_skew_seconds, :ocsp_validity_hours, :crl_number_file, :crl_list_file
 
         # @option opts [R509::Cert] :ca_cert Cert+Key pair
         # @option opts [Integer] :crl_validity_hours (168) The number of hours that
@@ -38,11 +38,10 @@ module R509
         # @option opts [String] :message_digest (SHA1) The hashing algorithm to use.
         # @option opts [String] :cdp_location
         # @option opts [String] :ocsp_location
-        # @option opts [Integer] :crl_number (0) The initial CRL number.
         # @option opts [String] :crl_number_file The file that we will save
-        #  the CRL numbers to.
+        #  the CRL numbers to. defaults to a StringIO object if not provided
         # @option opts [String] :crl_list_file The file that we will save
-        #  the CRL list data to.
+        #  the CRL list data to. defaults to a StringIO object if not provided
         # @option opts [R509::Cert] :ocsp_cert An optional cert+key pair
         # OCSP signing delegate
         # @option opts [Array<OpenSSL::X509::Certificate>] :ocsp_chain An optional array
@@ -77,31 +76,12 @@ module R509
 
             @crl_validity_hours = opts[:crl_validity_hours] || 168
             @crl_start_skew_seconds = opts[:crl_start_skew_seconds] || 3600
+            @crl_number_file = opts[:crl_number_file] || nil
+            @crl_list_file = opts[:crl_list_file] || nil
             @cdp_location = opts[:cdp_location]
             @message_digest = opts[:message_digest] || "SHA1"
-            @crl_number = opts[:crl_number] || 0
 
-            #the following indicates that we should automatically save the
-            #respective files automatically.
-            @do_save_crl_number = false
-            @do_save_crl_list = false
 
-            if opts.has_key?(:crl_number_file)
-                # If this is specified, then it had better not be nil.
-                @crl_number_file = opts[:crl_number_file]
-                # Now read the number from the file.
-                @crl_number = read_data(@crl_number_file).to_i
-
-                @do_save_crl_number = true
-            end
-
-            if opts.has_key?(:crl_list_file)
-                @crl_list_file = opts[:crl_list_file]
-                @do_save_crl_list = true
-                load_revoke_crl_list
-            else
-                @revoked_certs = {}
-            end
 
             @profiles = {}
                 if opts[:profiles]
@@ -140,132 +120,6 @@ module R509
           @profiles.count
         end
 
-        # @return [Integer] the last CRL number
-        def crl_number
-            @crl_number
-        end
-
-        # Increments the crl_number. If you want the changes to be saved, then
-        # you must call save_crl_number()
-        # @return [Integer] the new CRL number
-        #
-        def increment_crl_number
-            # Have our superclass do the incrementing for us.
-            @crl_number += 1
-        end
-
-        # Adds a new revoked certificate to our config. If you want to save the
-        # changes to the CRL list, then you must call save_crl_list()
-        # @param [Integer] serial
-        # @param [Integer, nil] reason
-        # @param [Integer] revoke_time
-        def revoke_cert(serial, reason = nil, revoke_time = Time.now.to_i)
-            serial = serial.to_i
-            reason = reason.to_i unless reason.nil?
-            revoke_time = revoke_time.to_i
-            @revoked_certs[serial] = {:reason => reason, :revoke_time => revoke_time}
-            nil
-        end
-
-        # Unrevokes a certificate, by serial number. If you want to save the
-        # changes to the CRL list, then you must call save_crl_list()
-        # @param [Integer] serial
-        def unrevoke_cert(serial)
-            @revoked_certs.delete(serial)
-            nil
-        end
-
-        # @return [Array<Array>] Returns an array of serial, reason, revoke_time
-        #  tuples.
-        def revoked_certs
-            ret = []
-            @revoked_certs.keys.sort.each do |serial|
-                ret << [serial, @revoked_certs[serial][:reason], @revoked_certs[serial][:revoke_time]]
-            end
-            ret
-        end
-
-        # @return [Array] serial, reason, revoke_time tuple
-        def revoked_cert(serial)
-            @revoked_certs[serial]
-        end
-
-        # @param [Integer] serial The serial number we want to check
-        # @return [Boolean True if the serial number was revoked. False, otherwise.
-        def revoked?(serial)
-          @revoked_certs.has_key?(serial)
-        end
-
-        # Save the CRL number to a filename or IO. If the class was initialized
-        # with :crl_number_file, then the filename specified by that will be used
-        # by default. If this was not specified, and no filename_or_io was provided,
-        # then nothing will be done.
-        # @param [String, #write, nil] filename_or_io If provided, the current
-        #  crl number will be written to either the file (if a string), or IO. If nil,
-        #  then the @crl_number_file will be used. If that is nil, then an error
-        #  will be raised.
-        def save_crl_number(filename_or_io = @crl_number_file)
-            return nil if filename_or_io.nil? && @do_save_crl_number == false
-
-            # No valid filename or IO was specified, so bail.
-            if filename_or_io.nil?
-                raise R509Error, "No valid CRL number file specified for saving"
-            end
-
-            write_data(filename_or_io, self.crl_number.to_s)
-            nil
-        end
-
-        # Saves the CRL list to a filename or IO. If the class was initialized
-        # with :crl_list_file, then the filename specified by that will be used
-        # by default. If this was not specified, and no filename_or_io was provided,
-        # then nothing will be done.
-        # @param [String, #write, nil] filename_or_io If provided, the generated
-        #  crl will be written to either the file (if a string), or IO. If nil,
-        #  then the @crl_list_file will be used. If that is nil, then an error
-        #  will be raised.
-        # @raise [R509Error] Raised if there's no @crl_list_file to save to.
-        def save_crl_list(filename_or_io = @crl_list_file)
-            return nil if filename_or_io.nil? && @do_save_crl_list == false
-
-            # No valid filename or IO was specified, so bail.
-            if filename_or_io.nil?
-                raise R509Error, "No valid CRL list file specified for saving"
-            end
-
-            data = []
-            self.revoked_certs.each do |serial, reason, revoke_time|
-                data << [serial, revoke_time, reason].join(',')
-            end
-            write_data(filename_or_io, data.join("\n"))
-            nil
-        end
-
-        # Loads the revoked CRL list from file.
-        # @param [String, #read, nil] filename_or_io If provided, the
-        #  crl will be read from either the file (if a string), or IO. If nil,
-        #  then the @crl_list_file will be used. If that is nil, then an error
-        #  will be raised.
-        def load_revoke_crl_list(filename_or_io = @crl_list_file)
-            # No valid filename or IO was specified, so bail.
-            if filename_or_io.nil?
-                raise R509Error, "No valid CRL list file specified for loading"
-            end
-
-            @revoked_certs = {}
-
-            data = read_data(filename_or_io)
-
-            data.each_line do |line|
-                line.chomp!
-                serial,  revoke_time, reason = line.split(',', 3)
-                serial = serial.to_i
-                reason = (reason == '') ? nil : reason.to_i
-                revoke_time = (revoke_time == '') ? nil : revoke_time.to_i
-                self.revoke_cert(serial, reason, revoke_time)
-            end
-            nil
-        end
 
         ######### Class Methods ##########
 

@@ -85,6 +85,8 @@ module TestFixtures
     STCA_OCSP_REQUEST  = read_fixture('stca_ocsp_request.der')
     STCA_OCSP_RESPONSE  = read_fixture('stca_ocsp_response.der')
 
+    CRL_LIST_FILE = (FIXTURES_PATH+'crl_list_file.txt').to_s
+
     def self.test_ca_cert
         R509::Cert.new(:cert => TEST_CA_CERT, :key => TEST_CA_KEY)
     end
@@ -134,10 +136,17 @@ module TestFixtures
 
     # @return [R509::Config]
     def self.test_ca_config
+        crl_list_sio = StringIO.new
+        crl_list_sio.set_encoding("BINARY") if crl_list_sio.respond_to?(:set_encoding)
+        crl_number_sio = StringIO.new
+        crl_number_sio.set_encoding("BINARY") if crl_number_sio.respond_to?(:set_encoding)
+
         opts = {
           :ca_cert => test_ca_cert(),
           :cdp_location => 'URI:http://crl.domain.com/test_ca.crl',
-          :ocsp_location => 'URI:http://ocsp.domain.com'
+          :ocsp_location => 'URI:http://ocsp.domain.com',
+          :crl_list_file => crl_list_sio,
+          :crl_number_file => crl_number_sio
         }
         ret = R509::Config.new(opts)
 
