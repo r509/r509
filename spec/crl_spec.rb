@@ -18,9 +18,10 @@ describe R509::Crl do
     end
     it "can write the crl_number_file" do
         crl = R509::Crl.new(@test_ca_config)
-        crl.crl_number_file.string.should == ""
+        crl.crl_number_file.string.should == "1"
+        crl.crl_number_file.reopen("")
         crl.save_crl_number
-        crl.crl_number_file.string.should == "0"
+        crl.crl_number_file.string.should == "1"
     end
     it "adds a cert to the revocation list" do
         crl = R509::Crl.new(@test_ca_config)
@@ -118,11 +119,6 @@ describe R509::Crl do
         crl.revoke_cert(12345)
         crl.save_crl_list
         crl.crl_list_file.string.should match(/[0-9]+,[0-9]+,[0-9]+,[0-9]+,[0-9]+/)
-    end
-    it "writes crl number" do
-        crl = R509::Crl.new(@test_ca_config)
-        crl.save_crl_number
-        crl.crl_number_file.string.should == "0"
     end
     it "doesn't write the crl_number_file when it is nil" do
         config = R509::Config.new(
