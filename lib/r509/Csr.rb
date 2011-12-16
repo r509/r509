@@ -214,7 +214,8 @@ module R509
             domains.uniq! #de-duplicate the array
             @req = OpenSSL::X509::Request.new
             @req.version = 0
-            @req.subject = R509::Subject.new(subject).name
+            @subject = R509::Subject.new(subject)
+            @req.subject = @subject.name
             if @key.nil?
                 @key = R509::PrivateKey.new(:type => @type,
                                             :bit_strength => @bit_strength)
@@ -223,7 +224,6 @@ module R509
             add_san_extension(domains)
             @attributes = parse_attributes_from_csr(@req) #method from HelperClasses
             @san_names = @attributes['subjectAltName'] || []
-            @subject = R509::Subject.new(@req.subject)
         end
 
         # parses an existing cert to get data to add to new CSR

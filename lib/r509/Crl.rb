@@ -118,6 +118,9 @@ module R509
             serial = serial.to_i
             reason = reason.to_i
             revoke_time = revoke_time.to_i
+            if revoked?(serial)
+                raise R509::R509Error, "Cannot revoke a previously revoked certificate"
+            end
             @revoked_certs[serial] = {:reason => reason, :revoke_time => revoke_time}
             if generate_and_save
                 generate_crl()

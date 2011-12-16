@@ -61,5 +61,45 @@ describe R509::Subject do
         subject.to_s.should == "/O=my org"
     end
 
+    it "is empty when initialized" do
+        subject = R509::Subject.new
+        subject.empty?.should == true
+        subject["CN"] = "domain.com"
+        subject.empty?.should == false
+    end
+
+    it "is not empty" do
+        subject = R509::Subject.new([["CN", "domain1.com"]])
+        subject.empty?.should == false
+    end
+
+    it "can get a component out of the subject" do
+        subject = R509::Subject.new([["CN", "domain.com"]])
+        subject["CN"].should == "domain.com"
+        subject["O"].should == nil
+    end
+
+    it "adds an OID" do
+        subject = R509::Subject.new
+        subject['1.3.6.1.4.1.311.60.2.1.3'] = 'jurisdiction oid openssl typically does not know'
+        subject['1.3.6.1.4.1.311.60.2.1.3'].should == 'jurisdiction oid openssl typically does not know'
+    end
+
+    it "deletes an OID" do
+        subject = R509::Subject.new([["CN", "domain.com"], ['1.3.6.1.4.1.311.60.2.1.3', 'jurisdiction oid openssl typically does not know']])
+        subject.to_s.should == "/CN=domain.com/1.3.6.1.4.1.311.60.2.1.3=jurisdiction oid openssl typically does not know"
+        subject.delete("1.3.6.1.4.1.311.60.2.1.3")
+        subject.to_s.should == "/CN=domain.com"
+    end
+
+    it "fails when you instantiate with an unknown shortname" do
+        expect { R509::Subject.new([["NOTRIGHT", "foo"]]) }.to raise_error(OpenSSL::X509::NameError)
+    end
+
+    it "fails when you add an unknown shortname" do
+        subject = R509::Subject.new
+        expect { subject["WRONG"] = "bar" }.to raise_error(OpenSSL::X509::NameError)
+    end
+
 end
 

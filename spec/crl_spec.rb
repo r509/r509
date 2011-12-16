@@ -43,6 +43,15 @@ describe R509::Crl do
         parsed_crl.revoked[0].extensions[0].oid.should == "CRLReason"
         parsed_crl.revoked[0].extensions[0].value.should == "Key Compromise"
     end
+    it "cannot revoke the same serial twice" do
+        crl = R509::Crl.new(@test_ca_config)
+        crl.revoked?(12345).should == false
+        crl.revoke_cert(12345, 1)
+        crl.revoked?(12345).should == true
+        crl.revoked_cert(12345)[:reason].should == 1
+        expect { crl.revoke_cert(12345, 1) }.to raise_error(R509::R509Error, "Cannot revoke a previously revoked certificate")
+        crl.revoked?(12345).should == true
+    end
     it "adds a cert to the revocation list with an invalid reason code" do
         crl = R509::Crl.new(@test_ca_config)
         crl.revoke_cert(383834832,15)
