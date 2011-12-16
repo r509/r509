@@ -97,6 +97,23 @@ describe R509::Ocsp::Signer do
         statuses = ocsp_handler.check_request(ocsp_request)
         response = ocsp_handler.sign_response(statuses)
         response.verify(@test_ca_config.ca_cert.cert).should == true
+        response.basic.status[0][1].should == OpenSSL::OCSP::V_CERTSTATUS_GOOD
+    end
+    it "passes in a specific validity checker" do
+        class R509::Validity::BogusTestChecker < R509::Validity::Checker
+            def check(serial)
+                R509::Validity::Status.new(:status => R509::Validity::REVOKED, :revocation_time => Time.now.to_i)
+            end
+        end
+        cert = OpenSSL::X509::Certificate.new(@ocsp_test_cert)
+        ocsp_request = OpenSSL::OCSP::Request.new
+        certid = OpenSSL::OCSP::CertificateId.new(cert,@test_ca_config.ca_cert.cert)
+        ocsp_request.add_certid(certid)
+        ocsp_handler = R509::Ocsp::Signer.new({ :configs => [@test_ca_config], :validity_checker => R509::Validity::BogusTestChecker.new })
+        statuses = ocsp_handler.check_request(ocsp_request)
+        response = ocsp_handler.sign_response(statuses)
+        response.verify(@test_ca_config.ca_cert.cert).should == true
+        response.basic.status[0][1].should == OpenSSL::OCSP::V_CERTSTATUS_REVOKED
     end
     it "copies nonce from request to response present and equal" do
         cert = OpenSSL::X509::Certificate.new(@ocsp_test_cert)

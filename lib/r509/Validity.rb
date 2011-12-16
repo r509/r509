@@ -12,6 +12,10 @@ module R509::Validity
             @status = options[:status]
             @revocation_time = options[:revocation_time] || nil
             @revocation_reason = options[:revocation_reason] || 0
+
+            if (@status == R509::Validity::REVOKED and @revocation_time.nil?)
+                @revocation_time = Time.now.to_i
+            end
         end
 
         def ocsp_status
