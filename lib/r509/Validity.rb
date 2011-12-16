@@ -8,7 +8,7 @@ module R509::Validity
     class Status
         attr_reader :status, :revocation_time, :revocation_reason
 
-        def initialize(options)
+        def initialize(options={})
             @status = options[:status]
             @revocation_time = options[:revocation_time] || nil
             @revocation_reason = options[:revocation_reason] || 0
@@ -29,9 +29,19 @@ module R509::Validity
     end
 
     class Writer
+        def issue(serial)
+            raise NotImplementedError, "You must call #issue on a subclass of Writer"
+        end
+
+        def revoke(serial, reason)
+            raise NotImplementedError, "You must call #revoke on a subclass of Writer"
+        end
     end
 
     class Checker
+        def check(serial)
+            raise NotImplementedError, "You must call #check on a subclass of Checker"
+        end
     end
 
     class DefaultChecker < R509::Validity::Checker
@@ -41,7 +51,10 @@ module R509::Validity
     end
 
     class DefaultWriter < R509::Validity::Writer
-        def write(serial, status)
+        def issue(serial)
+        end
+
+        def revoke(serial, reason)
         end
     end
 end
