@@ -187,38 +187,6 @@ module R509
             ret
         end
 
-        # Increments the crl_number.
-        # @return [Integer] the new CRL number
-        #
-        def increment_crl_number
-            @crl_number += 1
-            save_crl_number()
-            @crl_number
-        end
-
-        # Loads the certificate revocation list from file.
-        # @param [String, #read, nil] filename_or_io The
-        #  crl will be read from either the file (if a string), or IO.
-        def load_crl_list(filename_or_io)
-            return nil if filename_or_io.nil?
-
-            @revoked_certs = {}
-
-            data = read_data(filename_or_io)
-
-            data.each_line do |line|
-                line.chomp!
-                serial,  revoke_time, reason = line.split(',', 3)
-                serial = serial.to_i
-                reason = (reason == '') ? nil : reason.to_i
-                revoke_time = (revoke_time == '') ? nil : revoke_time.to_i
-                self.revoke_cert(serial, reason, revoke_time, false)
-            end
-            generate_crl
-            save_crl_list
-            nil
-        end
-
         # Saves the CRL list to a filename or IO. If the class was initialized
         # with :crl_list_file, then the filename specified by that will be used
         # by default.
@@ -252,6 +220,44 @@ module R509
             write_data(filename_or_io, self.crl_number.to_s)
             nil
         end
+
+        private
+
+        # Increments the crl_number.
+        # @return [Integer] the new CRL number
+        #
+        def increment_crl_number
+            @crl_number += 1
+            save_crl_number()
+            @crl_number
+        end
+
+        # Loads the certificate revocation list from file.
+        # @param [String, #read, nil] filename_or_io The
+        #  crl will be read from either the file (if a string), or IO.
+        def load_crl_list(filename_or_io)
+            @revoked_certs = {}
+
+            if filename_or_io.nil?
+                generate_crl
+                return nil
+            end
+
+            data = read_data(filename_or_io)
+
+            data.each_line do |line|
+                line.chomp!
+                serial,  revoke_time, reason = line.split(',', 3)
+                serial = serial.to_i
+                reason = (reason == '') ? nil : reason.to_i
+                revoke_time = (revoke_time == '') ? nil : revoke_time.to_i
+                self.revoke_cert(serial, reason, revoke_time, false)
+            end
+            generate_crl
+            save_crl_list
+            nil
+        end
+
     end
 end
 

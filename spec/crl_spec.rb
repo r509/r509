@@ -72,6 +72,14 @@ describe R509::Crl do
         crl.revoked_cert(12345)[:reason].should == 0
 
     end
+    it "when nil crl_list_file still call generate_crl" do
+        config = R509::Config.new(
+            :ca_cert => TestFixtures.test_ca_cert,
+            :crl_list_file => nil
+        )
+        crl = R509::Crl.new(config)
+        crl.to_pem.should match(/BEGIN X509 CRL/)
+    end
     it "sets validity via yaml" do
         crl = R509::Crl.new(@test_ca_config)
         now = Time.at Time.now.to_i
