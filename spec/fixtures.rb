@@ -76,6 +76,10 @@ module TestFixtures
 
     TEST_CA_CERT = read_fixture('test_ca.cer')
     TEST_CA_KEY  = read_fixture('test_ca.key')
+
+    TEST_CA_OCSP_CERT = read_fixture('test_ca_ocsp.cer')
+    TEST_CA_OCSP_KEY  = read_fixture('test_ca_ocsp.key')
+
     SECOND_CA_CERT = read_fixture('second_ca.cer')
     SECOND_CA_KEY  = read_fixture('second_ca.key')
 
@@ -107,6 +111,14 @@ module TestFixtures
                   :basic_constraints => "CA:TRUE,pathlen:0",
                   :key_usage => ["keyCertSign","cRLSign"],
                   :extended_key_usage => [],
+                  :certificate_policies => [ ])
+    end
+
+    def self.test_ca_ocspsigner_profile
+        R509::ConfigProfile.new(
+                  :basic_constraints => "CA:FALSE",
+                  :key_usage => ["digitalSignature"],
+                  :extended_key_usage => ["OCSPSigning"],
                   :certificate_policies => [ ])
     end
 
@@ -152,6 +164,7 @@ module TestFixtures
 
         ret.set_profile("server", self.test_ca_server_profile)
         ret.set_profile("subroot", self.test_ca_subroot_profile)
+        ret.set_profile("ocspsigner", self.test_ca_ocspsigner_profile)
 
         ret
     end

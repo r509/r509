@@ -35,6 +35,27 @@ describe R509::Config do
         it "raises an error if :ca_cert does not contain a private key" do
             expect { R509::Config.new( :ca_cert => R509::Cert.new( :cert => TestFixtures::TEST_CA_CERT) ) }.to raise_error ArgumentError, ':ca_cert object must contain a private key, not just a certificate'
         end
+        it "raises an error if :ocsp_cert that is not R509::Cert" do
+            expect { R509::Config.new(:ca_cert => TestFixtures.test_ca_cert, :ocsp_cert => "not a cert") }.to raise_error ArgumentError, ':ocsp_cert, if provided, must be of type R509::Cert'
+        end
+        it "raises an error if :ocsp_cert does not contain a private key" do
+            expect { R509::Config.new( :ca_cert => TestFixtures.test_ca_cert, :ocsp_cert => R509::Cert.new( :cert => TestFixtures::TEST_CA_CERT) ) }.to raise_error ArgumentError, ':ocsp_cert must contain a private key, not just a certificate'
+        end
+        it "returns the correct cert object on #ocsp_cert if none is specified" do
+            @config.ocsp_cert.should == @config.ca_cert
+        end
+        it "returns the correct cert object on #ocsp_cert if an ocsp_cert was specified" do
+            ocsp_cert = R509::Cert.new(
+                :cert => TestFixtures::TEST_CA_OCSP_CERT,
+                :key => TestFixtures::TEST_CA_OCSP_KEY
+            )
+            config = R509::Config.new(
+                :ca_cert => TestFixtures.test_ca_cert,
+                :ocsp_cert => ocsp_cert
+            )
+
+            config.ocsp_cert.should == ocsp_cert
+        end
         it "fails to specify a non-ConfigProfile as the profile" do
             config = R509::Config.new(
                 :ca_cert => TestFixtures.test_ca_cert
