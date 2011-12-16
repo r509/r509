@@ -62,7 +62,7 @@ module R509
             end
 
             #ocsp data
-            if opts.has_key?(:ocsp_cert) and not opts[:ocsp_cert].kind_of(R509::Cert) then
+            if opts.has_key?(:ocsp_cert) and not opts[:ocsp_cert].kind_of?(R509::Cert) then
                 raise ArgumentError, ':ocsp_cert, if provided, must be of type R509::Cert'
             end
             if opts.has_key?(:ocsp_cert) and not opts[:ocsp_cert].has_private_key?
