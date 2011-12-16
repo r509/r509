@@ -97,6 +97,7 @@ module R509
         # @param serial [Integer] serial number of the certificate to revoke
         # @param reason [Integer] reason for revocation
         # @param revoke_time [Integer]
+        # @param generate_and_save [Boolean] whether we want to generate the CRL and save its file (default=true)
         #
         #   reason codes defined by rfc 5280
         #   CRLReason ::= ENUMERATED {
@@ -110,7 +111,7 @@ module R509
         #         removeFromCRL           (8),
         #         privilegeWithdrawn      (9),
         #         aACompromise           (10) }
-        def revoke_cert(serial,reason=nil, revoke_time=Time.now.to_i)
+        def revoke_cert(serial,reason=nil, revoke_time=Time.now.to_i, generate_and_save=true)
             if not reason.to_i.between?(0,10)
                 reason = 0
             end
@@ -118,8 +119,10 @@ module R509
             reason = reason.to_i
             revoke_time = revoke_time.to_i
             @revoked_certs[serial] = {:reason => reason, :revoke_time => revoke_time}
-            generate_crl()
-            save_crl_list()
+            if generate_and_save
+                generate_crl()
+                save_crl_list()
+            end
             nil
         end
 
@@ -209,8 +212,10 @@ module R509
                 serial = serial.to_i
                 reason = (reason == '') ? nil : reason.to_i
                 revoke_time = (revoke_time == '') ? nil : revoke_time.to_i
-                self.revoke_cert(serial, reason, revoke_time)
+                self.revoke_cert(serial, reason, revoke_time, false)
             end
+            generate_crl
+            save_crl_list
             nil
         end
 
