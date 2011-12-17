@@ -10,7 +10,7 @@ spec = Gem::Specification.new do |s|
   s.description = 'A module that allows you to create CSRs, issue certs off a CA, view the certs, create CRLs, run an OCSP responder, and much more'
   #s.add_dependency 'openssl'
   s.add_development_dependency 'rspec'
-  s.add_development_dependency 'syntax'
+  s.add_development_dependency 'rake'
   s.author = "Paul Kehrer"
   s.email = "paul.l.kehrer@gmail.com"
   s.homepage = "http://langui.sh"
