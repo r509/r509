@@ -28,6 +28,9 @@ Inside the gem there is a script directory that contains r509\_csr.rb. You can u
 ##Running Tests
 If you want to run the tests for r509 you'll need rspec. Additionally, you may want to install rcov (ruby 1.8 only) and yard for running the code coverage and documentation tasks in the Rakefile. ```rake -T``` for a complete list of rake tasks available.
 
+##Continuous Integration [![Build Status](https://secure.travis-ci.org/reaperhulk/r509.png)](http://travis-ci.org/reaperhulk/r509)
+We run continuous integration tests (using Travis-CI) against 1.8.7, 1.9.2, 1.9.3, and ruby-head.
+
 ##Thanks to...
 * [Sean Schulte](https://github.com/sirsean)
 * [Mike Ryan](https://github.com/justfalter)
