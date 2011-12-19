@@ -185,7 +185,7 @@ describe R509::Config::SubjectItemPolicy do
     end
     it "loads all the supplied and optional elements" do
         subject_item_policy = R509::Config::SubjectItemPolicy.new("CN" => "supplied", "O" => "supplied", "OU" => "optional", "L" => "supplied", "emailAddress" => "optional")
-        subject_item_policy.optional.should == ["OU","emailAddress"]
-        subject_item_policy.supplied.should == ["CN","O","L"]
+        subject_item_policy.optional.should include("OU","emailAddress")
+        subject_item_policy.supplied.should include("CN","O","L")
     end
 end
