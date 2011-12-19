@@ -31,18 +31,19 @@ module R509
 
         # returns information about the subject item policy for a profile
         class SubjectItemPolicy
+            attr_reader :supplied, :optional
             def initialize(hash={})
                 if not hash.kind_of?(Hash)
                     raise ArgumentError, "Must supply a hash in form 'shortname'=>'required/optional'"
                 end
-                @supplied = {}
-                @optional = {}
+                @supplied = []
+                @optional = []
                 if not hash.empty?
                     hash.each_pair do |key,value|
                         if value == "supplied"
-                            @supplied[key.upcase] = true
+                            @supplied.push(key)
                         elsif value == "optional"
-                            @optional[key.upcase] = true
+                            @optional.push(key)
                         else
                             raise ArgumentError, "Unknown subject item policy value. Allowed values are supplied and optional"
                         end
@@ -54,19 +55,19 @@ module R509
             # @return [R509::Subject] validated version of the subject or error
             def validate_subject(subject)
                 validated_subject = subject.clone
-                provided_supplied = {}
+                provided_supplied = []
                 validated_subject.to_a.each do |value|
                     element = value[0]
-                    if @supplied.has_key?(element)
-                        provided_supplied[element] = true
-                    elsif @optional.has_key?(element)
+                    if @supplied.include?(element)
+                        provided_supplied.push(element)
+                    elsif @optional.include?(element)
                     else
                         validated_subject.delete(element)
                     end
                 end
-                diff = @supplied.to_a - provided_supplied.to_a
+                diff = @supplied - provided_supplied
                 if not diff.empty?
-                    raise R509::R509Error, "This profile requires you supply "+@supplied.keys.join(", ")
+                    raise R509::R509Error, "This profile requires you supply "+@supplied.join(", ")
                 end
                 validated_subject
             end
@@ -223,10 +224,14 @@ module R509
                 profs = {}
                 conf.keys.each do |profile|
                     data = conf.delete(profile)
+                    if not data["subject_item_policy"].nil?
+                        subject_item_policy = R509::Config::SubjectItemPolicy.new(data["subject_item_policy"])
+                    end
                     profs[profile] = R509::Config::CaProfile.new(:key_usage => data["key_usage"],
                                                        :extended_key_usage => data["extended_key_usage"],
                                                        :basic_constraints => data["basic_constraints"],
-                                                       :certificate_policies => data["certificate_policies"])
+                                                       :certificate_policies => data["certificate_policies"],
+                                                       :subject_item_policy => subject_item_policy)
                 end
                 opts[:profiles] = profs
 
