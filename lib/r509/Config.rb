@@ -54,22 +54,24 @@ module R509
             # @param [R509::Subject] subject
             # @return [R509::Subject] validated version of the subject or error
             def validate_subject(subject)
-                validated_subject = subject.clone
-                supplied = []
-                validated_subject.to_a.each do |value|
-                    element = value[0]
-                    if @required.include?(element)
-                        supplied.push(element)
-                    elsif @optional.include?(element)
-                    else
-                        validated_subject.delete(element)
-                    end
+                # convert the subject components into an array of component names that match
+                # those that are on the required list
+                supplied = subject.to_a.each do |item|
+                    @required.include?(item[0])
+                end.map do |item|
+                    item[0]
                 end
+                # so we can make sure they gave us everything that's required
                 diff = @required - supplied
                 if not diff.empty?
                     raise R509::R509Error, "This profile requires you supply "+@required.join(", ")
                 end
-                validated_subject
+
+                # the validated subject contains only those subject components that are either
+                # required or optional
+                R509::Subject.new(subject.to_a.select do |item|
+                    @required.include?(item[0]) or @optional.include?(item[0])
+                end)
             end
         end
 
