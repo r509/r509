@@ -31,21 +31,21 @@ module R509
 
         # returns information about the subject item policy for a profile
         class SubjectItemPolicy
-            attr_reader :supplied, :optional
+            attr_reader :required, :optional
             def initialize(hash={})
                 if not hash.kind_of?(Hash)
                     raise ArgumentError, "Must supply a hash in form 'shortname'=>'required/optional'"
                 end
-                @supplied = []
+                @required = []
                 @optional = []
                 if not hash.empty?
                     hash.each_pair do |key,value|
-                        if value == "supplied"
-                            @supplied.push(key)
+                        if value == "required"
+                            @required.push(key)
                         elsif value == "optional"
                             @optional.push(key)
                         else
-                            raise ArgumentError, "Unknown subject item policy value. Allowed values are supplied and optional"
+                            raise ArgumentError, "Unknown subject item policy value. Allowed values are required and optional"
                         end
                     end
                 end
@@ -55,19 +55,19 @@ module R509
             # @return [R509::Subject] validated version of the subject or error
             def validate_subject(subject)
                 validated_subject = subject.clone
-                provided_supplied = []
+                supplied = []
                 validated_subject.to_a.each do |value|
                     element = value[0]
-                    if @supplied.include?(element)
-                        provided_supplied.push(element)
+                    if @required.include?(element)
+                        supplied.push(element)
                     elsif @optional.include?(element)
                     else
                         validated_subject.delete(element)
                     end
                 end
-                diff = @supplied - provided_supplied
+                diff = @required - supplied
                 if not diff.empty?
-                    raise R509::R509Error, "This profile requires you supply "+@supplied.join(", ")
+                    raise R509::R509Error, "This profile requires you supply "+@required.join(", ")
                 end
                 validated_subject
             end

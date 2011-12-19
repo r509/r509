@@ -108,10 +108,10 @@ module TestFixtures
 
     def self.test_ca_server_profile_with_subject_item_policy
         subject_item_policy = R509::Config::SubjectItemPolicy.new(
-            "CN" => "supplied",
+            "CN" => "required",
             "O" => "optional",
-            "ST" => "supplied",
-            "C" => "supplied",
+            "ST" => "required",
+            "C" => "required",
             "OU" => "optional"
         )
         R509::Config::CaProfile.new(

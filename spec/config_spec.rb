@@ -103,7 +103,7 @@ describe R509::Config::CaConfig do
             config = R509::Config::CaConfig.from_yaml("test_ca", File.read("#{File.dirname(__FILE__)}/fixtures/config_test.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"})
             config.profile("server").subject_item_policy.should be_nil
             config.profile("server_with_subject_item_policy").subject_item_policy.optional.should == ["O","OU"]
-            config.profile("server_with_subject_item_policy").subject_item_policy.supplied.should == ["CN","ST","C"]
+            config.profile("server_with_subject_item_policy").subject_item_policy.required.should == ["CN","ST","C"]
         end
 
         it "should load YAML which only has a CA Cert and Key defined" do
@@ -152,40 +152,40 @@ describe R509::Config::SubjectItemPolicy do
     it "raises an error if you supply a non-hash" do
         expect { R509::Config::SubjectItemPolicy.new('string') }.to raise_error(ArgumentError, "Must supply a hash in form 'shortname'=>'required/optional'")
     end
-    it "raises an error if a required ('supplied') element is missing" do
-        subject_item_policy = R509::Config::SubjectItemPolicy.new("CN" => "supplied", "O" => "supplied", "OU" => "optional", "L" => "supplied")
+    it "raises an error if a required element is missing" do
+        subject_item_policy = R509::Config::SubjectItemPolicy.new("CN" => "required", "O" => "required", "OU" => "optional", "L" => "required")
         subject = R509::Subject.new [["CN","langui.sh"],["OU","Org Unit"],["O","Org"]]
         expect { subject_item_policy.validate_subject(subject) }.to raise_error(R509::R509Error, /This profile requires you supply/)
     end
-    it "raises an error if your hash values are anything other than supplied or optional" do
-        expect { R509::Config::SubjectItemPolicy.new("CN" => "somethirdoption") }.to raise_error(ArgumentError, "Unknown subject item policy value. Allowed values are supplied and optional")
+    it "raises an error if your hash values are anything other than required or optional" do
+        expect { R509::Config::SubjectItemPolicy.new("CN" => "somethirdoption") }.to raise_error(ArgumentError, "Unknown subject item policy value. Allowed values are required and optional")
     end
     it "validates a subject with the same fields as the policy" do
-        subject_item_policy = R509::Config::SubjectItemPolicy.new("CN" => "supplied", "O" => "supplied", "OU" => "optional")
+        subject_item_policy = R509::Config::SubjectItemPolicy.new("CN" => "required", "O" => "required", "OU" => "optional")
         subject = R509::Subject.new [["CN","langui.sh"],["OU","Org Unit"],["O","Org"]]
         validated_subject = subject_item_policy.validate_subject(subject)
         validated_subject.to_s.should == subject.to_s
     end
     it "does not match if you get case of subject_item_policy element wrong" do
-        subject_item_policy = R509::Config::SubjectItemPolicy.new("cn" => "supplied")
+        subject_item_policy = R509::Config::SubjectItemPolicy.new("cn" => "required")
         subject = R509::Subject.new [["CN","langui.sh"]]
         expect { subject_item_policy.validate_subject(subject) }.to raise_error(R509::R509Error, 'This profile requires you supply cn')
     end
     it "removes subject items that are not in the policy" do
-        subject_item_policy = R509::Config::SubjectItemPolicy.new("CN" => "supplied")
+        subject_item_policy = R509::Config::SubjectItemPolicy.new("CN" => "required")
         subject = R509::Subject.new [["CN","langui.sh"],["OU","Org Unit"],["O","Org"]]
         validated_subject = subject_item_policy.validate_subject(subject)
         validated_subject.to_s.should == "/CN=langui.sh"
     end
     it "does not reorder subject items as it validates" do
-        subject_item_policy = R509::Config::SubjectItemPolicy.new("CN" => "supplied", "O" => "supplied", "OU" => "optional", "L" => "supplied")
+        subject_item_policy = R509::Config::SubjectItemPolicy.new("CN" => "required", "O" => "required", "OU" => "optional", "L" => "required")
         subject = R509::Subject.new [["L","Chicago"],["CN","langui.sh"],["OU","Org Unit"],["O","Org"]]
         validated_subject = subject_item_policy.validate_subject(subject)
         validated_subject.to_s.should == subject.to_s
     end
-    it "loads all the supplied and optional elements" do
-        subject_item_policy = R509::Config::SubjectItemPolicy.new("CN" => "supplied", "O" => "supplied", "OU" => "optional", "L" => "supplied", "emailAddress" => "optional")
+    it "loads all the required and optional elements" do
+        subject_item_policy = R509::Config::SubjectItemPolicy.new("CN" => "required", "O" => "required", "OU" => "optional", "L" => "required", "emailAddress" => "optional")
         subject_item_policy.optional.should include("OU","emailAddress")
-        subject_item_policy.supplied.should include("CN","O","L")
+        subject_item_policy.required.should include("CN","O","L")
     end
 end
