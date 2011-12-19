@@ -19,13 +19,13 @@ module R509
             # @option [Array] :certificate_policies
             # @option [R509::Config::SubjectItemPolicy] :subject_item_policy optional
             def initialize(opts = {})
-              @basic_constraints = opts[:basic_constraints]
-              @key_usage = opts[:key_usage]
-              @extended_key_usage = opts[:extended_key_usage]
-              @certificate_policies = opts[:certificate_policies]
-              if opts.has_key?(:subject_item_policy) and not opts[:subject_item_policy].kind_of?(R509::Config::SubjectItemPolicy)
-              end
-              @subject_item_policy = opts[:subject_item_policy] || nil
+                @basic_constraints = opts[:basic_constraints]
+                @key_usage = opts[:key_usage]
+                @extended_key_usage = opts[:extended_key_usage]
+                @certificate_policies = opts[:certificate_policies]
+                if opts.has_key?(:subject_item_policy) and not opts[:subject_item_policy].kind_of?(R509::Config::SubjectItemPolicy)
+                end
+                @subject_item_policy = opts[:subject_item_policy] || nil
             end
         end
 

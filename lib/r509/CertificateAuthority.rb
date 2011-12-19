@@ -14,6 +14,9 @@ module R509::CertificateAuthority
             unless @config.kind_of?(R509::Config::CaConfig)
                 raise R509::R509Error, "config must be a kind of R509::Config::CaConfig"
             end
+            if @config.num_profiles == 0
+                raise R509::R509Error, "You must have at least one CaProfile on your CaConfig to issue"
+            end
         end
 
         # Signs a CSR
