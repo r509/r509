@@ -13,7 +13,7 @@ describe R509::Crl do
         crl.generate_crl
         crl.to_pem.should match(/BEGIN X509 CRL/)
     end
-    it "raises exception when no R509::Config object is passed to the constructor" do
+    it "raises exception when no R509::Config::CaConfig object is passed to the constructor" do
         expect { R509::Crl.new(['random']) }.to raise_error(R509::R509Error)
     end
     it "can write the crl_number_file" do
@@ -71,7 +71,7 @@ describe R509::Crl do
         parsed_crl.revoked.empty?.should == true
     end
     it "loads an existing revocation list file" do
-        config = R509::Config.new(
+        config = R509::Config::CaConfig.new(
             :ca_cert => TestFixtures.test_ca_cert,
             :crl_list_file => TestFixtures::CRL_LIST_FILE
         )
@@ -82,7 +82,7 @@ describe R509::Crl do
 
     end
     it "when nil crl_list_file still call generate_crl" do
-        config = R509::Config.new(
+        config = R509::Config::CaConfig.new(
             :ca_cert => TestFixtures.test_ca_cert,
             :crl_list_file => nil
         )
@@ -138,14 +138,14 @@ describe R509::Crl do
         crl.crl_list_file.string.should match(/[0-9]+,[0-9]+,[0-9]+,[0-9]+,[0-9]+/)
     end
     it "doesn't write the crl_number_file when it is nil" do
-        config = R509::Config.new(
+        config = R509::Config::CaConfig.new(
             :ca_cert => TestFixtures.test_ca_cert
         )
         crl = R509::Crl.new(config)
         expect { crl.save_crl_number }.to_not raise_error(StandardError)
     end
     it "doesn't write the crl_list_file when it is nil" do
-        config = R509::Config.new(
+        config = R509::Config::CaConfig.new(
             :ca_cert => TestFixtures.test_ca_cert
         )
         crl = R509::Crl.new(config)

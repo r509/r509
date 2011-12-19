@@ -11,8 +11,8 @@ module R509::CertificateAuthority
         def initialize(config)
             @config = config
 
-            unless @config.kind_of?(R509::Config)
-                raise R509::R509Error, "config must be a kind of R509::Config"
+            unless @config.kind_of?(R509::Config::CaConfig)
+                raise R509::R509Error, "config must be a kind of R509::Config::CaConfig"
             end
         end
 
@@ -92,7 +92,7 @@ module R509::CertificateAuthority
             end
 
             cert = OpenSSL::X509::Certificate.new
-            cert.subject = subject.name
+            cert.subject = validate_subject(subject,profile)
             cert.issuer = @config.ca_cert.subject
             cert.not_before = not_before
             cert.not_after = not_after
@@ -152,6 +152,14 @@ module R509::CertificateAuthority
             conf = ["[#{section}]"]
             conf.concat data
             conf.join "\n"
+        end
+
+        def validate_subject(subject,profile)
+            if profile.subject_item_policy.nil? then
+                subject.name
+            else
+                profile.subject_item_policy.validate_subject(subject)
+            end
         end
 
     end

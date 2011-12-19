@@ -96,7 +96,7 @@ module TestFixtures
     end
 
     def self.test_ca_server_profile
-        R509::ConfigProfile.new(
+        R509::Config::CaProfile.new(
               :basic_constraints => "CA:FALSE",
               :key_usage => ["digitalSignature","keyEncipherment"],
               :extended_key_usage => ["serverAuth"],
@@ -107,7 +107,7 @@ module TestFixtures
     end
 
     def self.test_ca_subroot_profile
-        R509::ConfigProfile.new(
+        R509::Config::CaProfile.new(
                   :basic_constraints => "CA:TRUE,pathlen:0",
                   :key_usage => ["keyCertSign","cRLSign"],
                   :extended_key_usage => [],
@@ -115,7 +115,7 @@ module TestFixtures
     end
 
     def self.test_ca_ocspsigner_profile
-        R509::ConfigProfile.new(
+        R509::Config::CaProfile.new(
                   :basic_constraints => "CA:FALSE",
                   :key_usage => ["digitalSignature"],
                   :extended_key_usage => ["OCSPSigning"],
@@ -127,7 +127,7 @@ module TestFixtures
     end
 
     def self.second_ca_server_profile
-        R509::ConfigProfile.new(
+        R509::Config::CaProfile.new(
               :basic_constraints => "CA:FALSE",
               :key_usage => ["digitalSignature","keyEncipherment"],
               :extended_key_usage => ["serverAuth"],
@@ -138,7 +138,7 @@ module TestFixtures
     end
 
     def self.second_ca_subroot_profile
-        R509::ConfigProfile.new(
+        R509::Config::CaProfile.new(
                   :basic_constraints => "CA:TRUE,pathlen:0",
                   :key_usage => ["keyCertSign","cRLSign"],
                   :extended_key_usage => [],
@@ -146,7 +146,7 @@ module TestFixtures
     end
 
 
-    # @return [R509::Config]
+    # @return [R509::Config::CaConfig]
     def self.test_ca_config
         crl_list_sio = StringIO.new
         crl_list_sio.set_encoding("BINARY") if crl_list_sio.respond_to?(:set_encoding)
@@ -160,7 +160,7 @@ module TestFixtures
           :crl_list_file => crl_list_sio,
           :crl_number_file => crl_number_sio
         }
-        ret = R509::Config.new(opts)
+        ret = R509::Config::CaConfig.new(opts)
 
         ret.set_profile("server", self.test_ca_server_profile)
         ret.set_profile("subroot", self.test_ca_subroot_profile)
@@ -169,14 +169,14 @@ module TestFixtures
         ret
     end
 
-    # @return [R509::Config] secondary config
+    # @return [R509::Config::CaConfig] secondary config
     def self.second_ca_config
         opts = {
           :ca_cert => second_ca_cert(),
           :cdp_location => 'URI:http://crl.domain.com/test_ca.crl',
           :ocsp_location => 'URI:http://ocsp.domain.com'
         }
-        ret = R509::Config.new(opts)
+        ret = R509::Config::CaConfig.new(opts)
 
         ret.set_profile("server", self.second_ca_server_profile)
         ret.set_profile("subroot", self.second_ca_subroot_profile)

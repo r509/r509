@@ -13,8 +13,8 @@ module R509
         def initialize(config)
             @config = config
 
-            unless @config.kind_of?(R509::Config)
-                raise R509Error, "config must be a kind of R509::Config"
+            unless @config.kind_of?(R509::Config::CaConfig)
+                raise R509Error, "config must be a kind of R509::Config::CaConfig"
             end
 
             @validity_hours = @config.crl_validity_hours
