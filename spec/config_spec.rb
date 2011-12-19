@@ -149,7 +149,7 @@ describe R509::Config::SubjectItemPolicy do
     it "raises an error if a required ('supplied') element is missing" do
         subject_item_policy = R509::Config::SubjectItemPolicy.new("CN" => "supplied", "O" => "supplied", "OU" => "optional", "L" => "supplied")
         subject = R509::Subject.new [["CN","langui.sh"],["OU","Org Unit"],["O","Org"]]
-        expect { subject_item_policy.validate_subject(subject) }.to raise_error(R509::R509Error, 'This profile requires you supply CN, O, L')
+        expect { subject_item_policy.validate_subject(subject) }.to raise_error(R509::R509Error, /This profile requires you supply/)
     end
     it "raises an error if your hash values are anything other than supplied or optional" do
         expect { R509::Config::SubjectItemPolicy.new("CN" => "somethirdoption") }.to raise_error(ArgumentError, "Unknown subject item policy value. Allowed values are supplied and optional")
