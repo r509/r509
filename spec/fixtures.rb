@@ -106,6 +106,26 @@ module TestFixtures
 
     end
 
+    def self.test_ca_server_profile_with_subject_item_policy
+        subject_item_policy = R509::Config::SubjectItemPolicy.new(
+            "CN" => "supplied",
+            "O" => "optional",
+            "ST" => "supplied",
+            "C" => "supplied",
+            "OU" => "optional"
+        )
+        R509::Config::CaProfile.new(
+            :basic_constraints => "CA:FALSE",
+            :key_usage => ["digitalSignature","keyEncipherment"],
+            :extended_key_usage => ["serverAuth"],
+            :certificate_policies => [
+                "policyIdentifier=2.16.840.1.12345.1.2.3.4.1",
+                "CPS.1=http://example.com/cps"
+            ],
+            :subject_item_policy => subject_item_policy
+        )
+    end
+
     def self.test_ca_subroot_profile
         R509::Config::CaProfile.new(
                   :basic_constraints => "CA:TRUE,pathlen:0",
@@ -165,6 +185,7 @@ module TestFixtures
         ret.set_profile("server", self.test_ca_server_profile)
         ret.set_profile("subroot", self.test_ca_subroot_profile)
         ret.set_profile("ocspsigner", self.test_ca_ocspsigner_profile)
+        ret.set_profile("server_with_subject_item_policy", self.test_ca_server_profile_with_subject_item_policy)
 
         ret
     end

@@ -92,7 +92,9 @@ module R509::CertificateAuthority
             end
 
             cert = OpenSSL::X509::Certificate.new
-            cert.subject = validate_subject(subject,profile)
+
+            validated_subject = validate_subject(subject,profile)
+            cert.subject = validated_subject.name
             cert.issuer = @config.ca_cert.subject
             cert.not_before = not_before
             cert.not_after = not_after
@@ -156,7 +158,7 @@ module R509::CertificateAuthority
 
         def validate_subject(subject,profile)
             if profile.subject_item_policy.nil? then
-                subject.name
+                subject
             else
                 profile.subject_item_policy.validate_subject(subject)
             end

@@ -43,6 +43,16 @@ describe R509::CertificateAuthority::Signer do
         extended_key_usage = cert.extensions['extendedKeyUsage']
         extended_key_usage[0]['value'].should == 'TLS Web Server Authentication'
     end
+    it "when supplied, uses subject_item_policy to determine allowed subject" do
+        csr = R509::Csr.new(:cert => @cert, :bit_strength => 512)
+        cert = @ca.sign_cert({ :csr => csr, :profile_name => 'server_with_subject_item_policy' })
+        #profile requires C, ST, CN. O and OU are optional
+        cert.subject.to_s.should == '/C=US/ST=Illinois/O=Paul Kehrer/CN=langui.sh'
+    end
+    it "raises error when issuing cert with csr that does not match subject_item_policy" do
+        csr = R509::Csr.new(:csr => @csr)
+        expect { @ca.sign_cert({ :csr => csr, :profile_name => 'server_with_subject_item_policy' }) }.to raise_error(R509::R509Error, /This profile requires you supply/)
+    end
     it "issues with specified san domains" do
         csr = R509::Csr.new(:cert => @cert, :bit_strength => 1024)
         data_hash = csr.to_hash
