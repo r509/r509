@@ -10,6 +10,7 @@ module R509
 
         attr_reader :crl_number,:crl_list_file,:crl_number_file, :validity_hours
 
+        # @param [R509::Config::CaConfig]
         def initialize(config)
             @config = config
 

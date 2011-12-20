@@ -4,6 +4,7 @@ require 'r509/Cert'
 require 'r509/Exceptions'
 require 'r509/HelperClasses'
 
+# CertificateAuthority related classes
 module R509::CertificateAuthority
     # Contains the certification authority signing operation methods
     class Signer

@@ -3,6 +3,7 @@ require 'r509/io_helpers'
 require 'r509/Exceptions'
 
 module R509
+    #private key management
     class PrivateKey
         include R509::IOHelpers
 

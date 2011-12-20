@@ -7,6 +7,7 @@ require 'fileutils'
 require 'pathname'
 
 module R509
+    # Module to contain all configuration related classes (e.g. CaConfig, CaProfile, SubjectItemPolicy)
     module Config
         # Provides access to configuration profiles
         class CaProfile
@@ -32,6 +33,15 @@ module R509
         # returns information about the subject item policy for a profile
         class SubjectItemPolicy
             attr_reader :required, :optional
+
+            # @param [Hash] hash of required/optional subject items. These must be in OpenSSL shortname format.
+            # @example {"CN" => required,
+            # "O" => "required",
+            # "OU" => "optional",
+            # "ST" => "required",
+            # "C" => "required",
+            # "L" => "required",
+            # "emailAddress" => "optional"
             def initialize(hash={})
                 if not hash.kind_of?(Hash)
                     raise ArgumentError, "Must supply a hash in form 'shortname'=>'required/optional'"

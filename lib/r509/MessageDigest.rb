@@ -1,9 +1,11 @@
 require 'openssl'
 
 module R509
+    #MessageDigest allows you to specify MDs in a more friendly fashion
     class MessageDigest
         attr_reader :name, :digest
 
+        # @param [String,OpenSSL::Digest]
         def initialize(arg)
             if arg.kind_of?(String)
                 @name = arg.downcase
@@ -16,6 +18,7 @@ module R509
 
         private
 
+        # @return [OpenSSL::Digest]
         def translate_name_to_digest
             case @name
             when 'sha1' then OpenSSL::Digest::SHA1.new
@@ -29,6 +32,7 @@ module R509
             end
         end
 
+        # @return [String]
         def translate_digest_to_name
             case @digest
             when OpenSSL::Digest::SHA1 then 'sha1'

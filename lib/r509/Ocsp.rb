@@ -3,6 +3,7 @@ require 'r509/Exceptions'
 require 'r509/Config'
 require 'r509/HelperClasses'
 
+# OCSP related classes (signing, response, request)
 module R509::Ocsp
     # A class for signing OCSP responses
     class Signer
@@ -20,18 +21,24 @@ module R509::Ocsp
             @response_signer = Helper::ResponseSigner.new(options)
         end
 
+        # passes request on to the request_checker
         def check_request(request)
             @request_checker.check_request(request)
         end
 
+        #passes the status result obtained from the request_checker to the response signer
         def sign_response(statuses)
             @response_signer.sign_response(statuses)
         end
     end
 end
 
+#holds OCSP request related items
 module R509::Ocsp::Request
+    # contains constants r509 uses for OCSP responses
     module Nonce
+        #these values are defined at
+        #http://www.ruby-doc.org/stdlib-1.9.3/libdoc/openssl/rdoc/OpenSSL/OCSP/Request.html
         PRESENT_AND_EQUAL = 1
         BOTH_ABSENT = 2
         RESPONSE_ONLY = 3
@@ -41,6 +48,7 @@ module R509::Ocsp::Request
 end
 
 module R509::Ocsp
+    #builds OCSP responses
     class Response
         # @param ocsp_response [OpenSSL::OCSP::Response]
         def initialize(ocsp_response)
@@ -49,7 +57,8 @@ module R509::Ocsp
             end
             @ocsp_response = ocsp_response
         end
-
+        # @param [String, OpenSSL::OCSP::Response] parses an existing response
+        # @return [R509::Ocsp::Response]
         def self.parse(ocsp_string)
             if ocsp_string.nil?
                 raise R509::R509Error, 'You must pass a DER encoded OCSP response to this method'
@@ -91,8 +100,12 @@ module R509::Ocsp
     end
 end
 
+#Helper module for OCSP handling
 module R509::Ocsp::Helper
+    # checks requests for validity against a set of configs
     class RequestChecker
+        # @param [Array<R509::Config::CaConfig>] configs
+        # @param [R509::Validity::Checker] validity_checker an implementation of the R509::Validity::Checker class
         def initialize(configs, validity_checker)
             @configs = configs
             unless @configs.kind_of?(Array)
@@ -112,6 +125,7 @@ module R509::Ocsp::Helper
         # Loads and checks a raw OCSP request
         #
         # @param request [String] DER encoded OCSP request string
+        # @return [Hash] hash from the check_status method
         def check_request(request)
             parsed_request = OpenSSL::OCSP::Request.new request
             { :parsed_request => parsed_request,
@@ -143,7 +157,10 @@ module R509::Ocsp::Helper
         end
     end
 
+    #signs OCSP responses
     class ResponseSigner
+        # @option options [Boolean] :copy_nonce
+        # @option options [Array<R509::Config::CaConfig>] :configs
         def initialize(options)
             if options.has_key?(:copy_nonce)
                 @copy_nonce = options[:copy_nonce]
