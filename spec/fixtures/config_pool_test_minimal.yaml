@@ -1,0 +1,15 @@
+certificate_authorities: {
+    test_ca: {
+        ca_cert: {
+            cert: 'test_ca.cer',
+            key: 'test_ca.key'
+        }
+    },
+    second_ca: {
+        ca_cert: {
+            cert: 'test_ca.cer',
+            key: 'test_ca.key'
+        }
+    }
+}
+config_is_string: "this is bogus"
