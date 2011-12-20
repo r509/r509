@@ -2,6 +2,42 @@ require 'spec_helper'
 require 'r509/Config'
 require 'r509/Exceptions'
 
+describe R509::Config::CaConfigPool do
+    context "defined manually" do
+        it "has no configs" do
+            pool = R509::Config::CaConfigPool.new({})
+
+            pool["first"].should == nil
+        end
+
+        it "has one config" do
+            config = R509::Config::CaConfig.new(
+                :ca_cert => TestFixtures.test_ca_cert,
+                :profiles => { "first_profile" => R509::Config::CaProfile.new }
+            )
+
+            pool = R509::Config::CaConfigPool.new({
+                "first" => config
+            })
+
+            pool["first"].should == config
+        end
+    end
+
+    context "loaded from YAML" do
+        it "should load two configs" do
+            pool = R509::Config::CaConfigPool.from_yaml("certificate_authorities", File.read("#{File.dirname(__FILE__)}/fixtures/config_pool_test_minimal.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"})
+
+            pool.names.should == ["test_ca", "second_ca"]
+
+            pool["test_ca"].should_not == nil
+            pool["test_ca"].num_profiles.should == 0
+            pool["second_ca"].should_not == nil
+            pool["second_ca"].num_profiles.should == 0
+        end
+    end
+end
+
 describe R509::Config::CaConfig do
     context "when initialized with a cert and key" do
         before :each do

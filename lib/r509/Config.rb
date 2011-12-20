@@ -85,6 +85,37 @@ module R509
             end
         end
 
+        # pool of configs, so we can support multiple CAs from a single config file
+        class CaConfigPool
+            # @option configs [Hash<String, R509::Config::CaConfig>] the configs to add to the pool
+            def initialize(configs)
+                @configs = configs
+            end
+
+            # get all the config names
+            def names
+                @configs.keys
+            end
+
+            # retrieve a particular config by its name
+            def [](name)
+                @configs[name]
+            end
+
+            # Loads the named configuration config from a yaml string.
+            # @param [String] conf_name The name of the config within the file. Note
+            #  that a single yaml file can contain more than one configuration.
+            # @param [String] yaml_file The filename to load yaml config data from.
+            def self.from_yaml(name, yaml_data, opts = {})
+                conf = YAML.load(yaml_data)
+                configs = {}
+                conf[name].each_pair do |ca_name, data|
+                    configs[ca_name] = R509::Config::CaConfig.load_from_hash(data, opts)
+                end
+                R509::Config::CaConfigPool.new(configs)
+            end
+        end
+
         # Stores a configuration for our CA.
         class CaConfig
             include R509::IOHelpers
