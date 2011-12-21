@@ -3,6 +3,10 @@ require 'r509/Subject'
 require 'openssl'
 
 describe R509::Subject do
+    before :all do
+        @csr_unknown_oid = TestFixtures::CSR_UNKNOWN_OID
+    end
+
     it "initializes an empty subject and gets the name" do
         subject = R509::Subject.new
         subject.name.to_s.should == ""
@@ -101,5 +105,111 @@ describe R509::Subject do
         expect { subject["WRONG"] = "bar" }.to raise_error(OpenSSL::X509::NameError)
     end
 
+    it "parses unknown OIDs out of a CSR" do
+        csr = R509::Csr.new(:csr => @csr_unknown_oid)
+        subject = R509::Subject.new(csr.subject)
+        subject["1.3.6.1.4.1.311.60.2.1.3"].should == "US"
+        subject["1.3.6.1.4.1.311.60.2.1.2"].should == "Texas"
+        subject["businessCategory"].should == "V1.0, Clause 5.(b)"
+        subject["serialNumber"].should == "123"
+        subject["C"].should == "US"
+        subject["postalCode"].should == "60602"
+        subject["ST"].should == "Illinois"
+        subject["L"].should == "Chicago"
+        subject["street"].should == "123 Fake St"
+        subject["O"].should == "Some Company, LLC"
+        subject["OU"].should == "NOC"
+        subject["CN"].should == "mydomain.com"
+    end
+
 end
 
+describe R509::NameSanitizer do
+    before :all do
+        @sanitizer = R509::NameSanitizer.new
+    end
+
+    it "when it has only known OIDs" do
+        name = OpenSSL::X509::Name.new [["C", "US"], ["ST", "Illinois"]]
+        array = @sanitizer.sanitize(name)
+        array.size.should == 2
+        array[0][0].should == "C"
+        array[0][1].should == "US"
+        array[1][0].should == "ST"
+        array[1][1].should == "Illinois"
+    end
+
+    it "when it has only unknown OIDs" do
+        name = OpenSSL::X509::Name.new [["1.2.3.4", "US"], ["1.2.3.5", "Illinois"]]
+        array = @sanitizer.sanitize(name)
+        array.size.should == 2
+        array[0][0].should == "1.2.3.4"
+        array[0][1].should == "US"
+        array[1][0].should == "1.2.3.5"
+        array[1][1].should == "Illinois"
+    end
+
+    it "when it has an unknown between two knowns" do
+        name = OpenSSL::X509::Name.new [["CN", "domain.com"], ["1.2.3.4", "US"], ["ST", "Illinois"]]
+        array = @sanitizer.sanitize(name)
+        array.size.should == 3
+        array[0][0].should == "CN"
+        array[0][1].should == "domain.com"
+        array[1][0].should == "1.2.3.4"
+        array[1][1].should == "US"
+        array[2][0].should == "ST"
+        array[2][1].should == "Illinois"
+    end
+
+    it "when it has a known between two unknowns" do
+        name = OpenSSL::X509::Name.new [["1.2.3.4", "domain.com"], ["C", "US"], ["1.2.3.5", "Illinois"]]
+        array = @sanitizer.sanitize(name)
+        array.size.should == 3
+        array[0][0].should == "1.2.3.4"
+        array[0][1].should == "domain.com"
+        array[1][0].should == "C"
+        array[1][1].should == "US"
+        array[2][0].should == "1.2.3.5"
+        array[2][1].should == "Illinois"
+    end
+
+    it "when a known has the same value as an unknown defined before it" do
+        name = OpenSSL::X509::Name.new [["1.2.3.4", "domain.com"], ["CN", "domain.com"]]
+        array = @sanitizer.sanitize(name)
+        array.size.should == 2
+        array[0][0].should == "1.2.3.4"
+        array[0][1].should == "domain.com"
+        array[1][0].should == "CN"
+        array[1][1].should == "domain.com"
+    end
+
+    it "when two unknowns have the same value" do
+        name = OpenSSL::X509::Name.new [["1.2.3.4", "domain.com"], ["1.2.3.5", "domain.com"]]
+        array = @sanitizer.sanitize(name)
+        array.size.should == 2
+        array[0][0].should == "1.2.3.4"
+        array[0][1].should == "domain.com"
+        array[1][0].should == "1.2.3.5"
+        array[1][1].should == "domain.com"
+    end
+
+    it "when two unknowns have the same oid and different values" do
+        name = OpenSSL::X509::Name.new [["1.2.3.4", "domain.com"], ["1.2.3.4", "other"]]
+        array = @sanitizer.sanitize(name)
+        array.size.should == 2
+        array[0][0].should == "1.2.3.4"
+        array[0][1].should == "domain.com"
+        array[1][0].should == "1.2.3.4"
+        array[1][1].should == "other"
+    end
+
+    it "when two unknowns have the same oid and the same value" do
+        name = OpenSSL::X509::Name.new [["1.2.3.4", "domain.com"], ["1.2.3.4", "domain.com"]]
+        array = @sanitizer.sanitize(name)
+        array.size.should == 2
+        array[0][0].should == "1.2.3.4"
+        array[0][1].should == "domain.com"
+        array[1][0].should == "1.2.3.4"
+        array[1][1].should == "domain.com"
+    end
+end
