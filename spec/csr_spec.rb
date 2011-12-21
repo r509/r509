@@ -19,6 +19,7 @@ describe R509::Csr do
         @key3 = TestFixtures::KEY3
         @key_csr2 = TestFixtures::KEY_CSR2
         @dsa_key = TestFixtures::DSA_KEY
+        @csr_unknown_oid = TestFixtures::CSR_UNKNOWN_OID
     end
 
     it "raises an exception when passing non-hash" do
@@ -224,6 +225,11 @@ describe R509::Csr do
         it "returns false on invalid signature" do
             csr = R509::Csr.new({ :csr => @csr_invalid_signature })
             csr.verify_signature.should == false
+        end
+        it "when the CSR has unknown OIDs" do
+            csr = R509::Csr.new(:csr => @csr_unknown_oid)
+            csr.subject["1.3.6.1.4.1.311.60.2.1.3"].should == "US"
+            csr.subject["1.3.6.1.4.1.311.60.2.1.2"].should == "Texas"
         end
     end
     context "when supplying a key with csr" do
