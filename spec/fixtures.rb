@@ -30,6 +30,9 @@ module TestFixtures
 
     DSA_KEY = read_fixture('dsa_key.pem')
 
+    # this CSR has unknown OIDs, which we should successfully parse out into Subject
+    CSR_UNKNOWN_OID = read_fixture('unknown_oid.csr')
+
 
     #san cert from self-signed CA for langui.sh
     CERT_SAN = read_fixture('cert_san.pem')
