@@ -8,6 +8,8 @@ describe R509::Csr do
         @cert = TestFixtures::CERT
         @cert_san = TestFixtures::CERT_SAN
         @csr = TestFixtures::CSR
+        @csr_newlines = TestFixtures::CSR_NEWLINES
+        @csr_no_begin_end = TestFixtures::CSR_NO_BEGIN_END
         @csr_der = TestFixtures::CSR_DER
         @csr_public_key_modulus = TestFixtures::CSR_PUBLIC_KEY_MODULUS
         @csr_invalid_signature = TestFixtures::CSR_INVALID_SIGNATURE
@@ -33,6 +35,14 @@ describe R509::Csr do
     it "returns expected value for to_der" do
         csr = R509::Csr.new(:csr => @csr)
         csr.to_der.should == @csr_der
+    end
+    it "loads a csr with extraneous newlines" do
+        csr = R509::Csr.new(:csr => @csr_newlines)
+        csr.to_pem.should match(/-----BEGIN CERTIFICATE REQUEST-----/)
+    end
+    it "loads a csr with no begin/end lines" do
+        csr = R509::Csr.new(:csr => @csr_no_begin_end)
+        csr.to_pem.should match(/-----BEGIN CERTIFICATE REQUEST-----/)
     end
     it "returns true from #has_private_key? when private key is present" do
         csr = R509::Csr.new(:bit_strength => 512, :subject => [['CN','private-key-check.com']])
