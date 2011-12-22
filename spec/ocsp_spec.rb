@@ -97,6 +97,7 @@ describe R509::Ocsp::Signer do
         statuses = ocsp_handler.check_request(ocsp_request)
         response = ocsp_handler.sign_response(statuses)
         response.verify(@test_ca_config.ca_cert.cert).should == true
+        response.verify(@second_ca_config.ca_cert.cert).should == false
         response.basic.status[0][1].should == OpenSSL::OCSP::V_CERTSTATUS_GOOD
     end
     it "passes in a specific validity checker" do

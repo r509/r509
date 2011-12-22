@@ -84,12 +84,16 @@ module R509::Ocsp
         # @param ca_cert [OpenSSL::X509::Certificate] the CA certificate to verify against
         # @return [Boolean] true if the response is valid according to the given root
         def verify(ca_cert)
-            #TODO: learn what this really means
-            #and how to suppress the output when it doesn't match
-            #/Users/pkehrer/Code/r509/spec/ocsp_spec.rb:107: warning: error:27069076:OCSP routines:OCSP_basic_verify:signer certificate not found
             store = OpenSSL::X509::Store.new
             store.add_cert(ca_cert)
-            @ocsp_response.basic.verify([ca_cert], store)
+            #suppress verbosity since #verify will output a warning if it does not match
+            #as well as returning false. we just want the boolean
+            original_verbosity = $VERBOSE
+            $VERBOSE = nil
+            #still a bit unclear on why we add to store and pass in array to verify
+            result = @ocsp_response.basic.verify([ca_cert], store)
+            $VERBOSE = original_verbosity
+            return result
         end
 
         # @param ocsp_request [OpenSSL::OCSP::Request] the OCSP request whose nonce to check
