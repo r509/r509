@@ -24,6 +24,46 @@ describe R509::Config::CaConfigPool do
         end
     end
 
+    context "all configs" do
+        it "no configs" do
+            pool = R509::Config::CaConfigPool.new({})
+            pool.all.should == []
+        end
+
+        it "one config" do
+            config = R509::Config::CaConfig.new(
+                :ca_cert => TestFixtures.test_ca_cert,
+                :profiles => { "first_profile" => R509::Config::CaProfile.new }
+            )
+
+            pool = R509::Config::CaConfigPool.new({
+                "first" => config
+            })
+
+            pool.all.should == [config]
+        end
+
+        it "two configs" do
+            config1 = R509::Config::CaConfig.new(
+                :ca_cert => TestFixtures.test_ca_cert,
+                :profiles => { "first_profile" => R509::Config::CaProfile.new }
+            )
+            config2 = R509::Config::CaConfig.new(
+                :ca_cert => TestFixtures.test_ca_cert,
+                :profiles => { "first_profile" => R509::Config::CaProfile.new }
+            )
+
+            pool = R509::Config::CaConfigPool.new({
+                "first" => config1,
+                "second" => config2
+            })
+
+            pool.all.size.should == 2
+            pool.all.include?(config1).should == true
+            pool.all.include?(config2).should == true
+        end
+    end
+
     context "loaded from YAML" do
         it "should load two configs" do
             pool = R509::Config::CaConfigPool.from_yaml("certificate_authorities", File.read("#{File.dirname(__FILE__)}/fixtures/config_pool_test_minimal.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"})
