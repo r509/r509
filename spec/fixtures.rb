@@ -53,6 +53,10 @@ module TestFixtures
 
     CSR_DER = read_fixture('csr1.der')
 
+    CSR_NEWLINES = read_fixture('csr1_newlines.pem')
+
+    CSR_NO_BEGIN_END = read_fixture('csr1_no_begin_end.pem')
+
     CSR_DSA = read_fixture('csr_dsa.pem')
 
     KEY_CSR = read_fixture('csr1_key.pem')

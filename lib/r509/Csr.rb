@@ -204,7 +204,28 @@ module R509
         private
 
         def parse_csr(csr)
-            @req = OpenSSL::X509::Request.new csr
+            begin
+                @req = OpenSSL::X509::Request.new csr
+            rescue OpenSSL::X509::RequestError
+                #let's try to load this thing by handling a few
+                #common error cases
+                if csr.kind_of?(String)
+                    #normalize line endings (really just for the next replace)
+                    csr.gsub!(/\r\n?/, "\n")
+                    #remove extraneous newlines
+                    csr.gsub!(/^\s*\n/,'')
+                    #and leading/trailing whitespace
+                    csr.gsub!(/^\s*|\s*$/,'')
+                    if not csr.match(/-----BEGIN.+-----/) and csr.match(/MII/)
+                        #if csr is probably PEM (MII is the beginning of every base64
+                        #encoded DER) then add the wrapping lines if they aren't provided.
+                        #tools like Microsoft's xenroll do this.
+                        csr = "-----BEGIN CERTIFICATE REQUEST-----\n"+csr+"\n-----END CERTIFICATE REQUEST-----"
+                    end
+                end
+                #and now we try again...
+                @req = OpenSSL::X509::Request.new csr
+            end
             @subject = R509::Subject.new(@req.subject)
             @attributes = parse_attributes_from_csr(@req) #method from HelperClasses
             @san_names = @attributes['subjectAltName'] || []
