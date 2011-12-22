@@ -102,6 +102,11 @@ module R509
                 @configs[name]
             end
 
+            # @return a list of all the configs in this pool
+            def all
+                @configs.values
+            end
+
             # Loads the named configuration config from a yaml string.
             # @param [String] conf_name The name of the config within the file. Note
             #  that a single yaml file can contain more than one configuration.
