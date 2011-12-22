@@ -20,7 +20,6 @@ describe R509::Spki do
         expect { R509::Spki.new(:spki => @spki, :subject => [['CN','test']], :san_names => "hello.com") }.to raise_error(ArgumentError,'if san_names are provided they must be in an Array')
     end
     it "loads an RSA spkac" do
-        OpenSSL::Netscape::SPKI.new(@spki)
         spki = R509::Spki.new( :spki => @spki, :subject => [['CN','spkitest.com']] )
         spki.to_pem.should == @spki
     end
