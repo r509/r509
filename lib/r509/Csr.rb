@@ -214,8 +214,8 @@ module R509
                     csr.gsub!(/\r\n?/, "\n")
                     #remove extraneous newlines
                     csr.gsub!(/^\s*\n/,'')
-                    #and whitespace
-                    csr.gsub!(/\s*$/,'')
+                    #and leading/trailing whitespace
+                    csr.gsub!(/^\s*|\s*$/,'')
                     if not csr.match(/-----BEGIN.+-----/) and csr.match(/MII/)
                         #if csr is probably PEM (MII is the beginning of every base64
                         #encoded DER) then add the wrapping lines if they aren't provided.
