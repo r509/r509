@@ -11,7 +11,7 @@ module R509
 
         # @option opts [String,OpenSSL::X509::Certificate] :cert a cert
         # @option opts [String] :password optional password for private key
-        # @option opts [String,OpenSSL::PKey::RSA,OpenSSL::PKey::DSA] :key optional private key
+        # @option opts [String,R509::PrivateKey,OpenSSL::PKey::RSA,OpenSSL::PKey::DSA] :key optional private key
         def initialize(opts={})
             if not opts.kind_of?(Hash)
                 raise ArgumentError, 'Must provide a hash of options'
@@ -23,7 +23,11 @@ module R509
             parse_certificate(opts[:cert])
 
             if opts.has_key?(:key)
-                @key = R509::PrivateKey.new(:key => opts[:key], :password => opts[:password])
+                if opts[:key].kind_of?(R509::PrivateKey)
+                    @key = opts[:key]
+                else
+                    @key = R509::PrivateKey.new(:key => opts[:key], :password => opts[:password])
+                end
                 if not @cert.public_key.to_s == @key.public_key.to_s then
                     raise R509Error, 'Key does not match cert.'
                 end

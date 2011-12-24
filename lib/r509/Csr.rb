@@ -19,7 +19,7 @@ module R509
         # @example [['CN','langui.sh'],['ST','Illinois'],['L','Chicago'],['C','US'],['emailAddress','ca@langui.sh']]
         # you can also pass OIDs (see tests)
         # @option opts [String,R509::Cert,OpenSSL::X509::Certificate] :cert takes a cert (used for generating a CSR with the certificate's values)
-        # @option opts [String,OpenSSL::PKey::RSA,OpenSSL::PKey::DSA] :key
+        # @option opts [R509::PrivateKey,String,OpenSSL::PKey::RSA,OpenSSL::PKey::DSA] :key
         def initialize(opts={})
             if not opts.kind_of?(Hash)
                 raise ArgumentError, 'Must provide a hash of options'
@@ -33,7 +33,11 @@ module R509
             password = opts[:password] || nil
 
             if opts.has_key?(:key)
-                @key = R509::PrivateKey.new(:key => opts[:key], :password => password)
+                if opts[:key].kind_of?(R509::PrivateKey)
+                    @key = opts[:key]
+                else
+                    @key = R509::PrivateKey.new(:key => opts[:key], :password => password)
+                end
             end
 
             @type = opts[:type] || :rsa
