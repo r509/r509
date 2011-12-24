@@ -20,7 +20,7 @@ describe R509::Ocsp::Signer do
     it "responds successfully from the test_ca" do
         csr = R509::Csr.new( :subject => [['CN','ocsptest.r509.local']], :bit_strength => 1024 )
         ca = R509::CertificateAuthority::Signer.new(@test_ca_config)
-        cert = ca.sign_cert(:csr => csr, :profile_name => 'server')
+        cert = ca.sign(:csr => csr, :profile_name => 'server')
         ocsp_request = OpenSSL::OCSP::Request.new
         certid = OpenSSL::OCSP::CertificateId.new(cert.cert,@test_ca_config.ca_cert.cert)
         ocsp_request.add_certid(certid)
@@ -33,12 +33,12 @@ describe R509::Ocsp::Signer do
         ca = R509::CertificateAuthority::Signer.new(@test_ca_config)
 
         csr = R509::Csr.new( :subject => [['CN','ocsptest.r509.local']], :bit_strength => 1024 )
-        cert = ca.sign_cert(:csr => csr, :profile_name => 'server')
+        cert = ca.sign(:csr => csr, :profile_name => 'server')
 
         ca2 = R509::CertificateAuthority::Signer.new(@second_ca_config)
 
         csr2 = R509::Csr.new( :subject => [['CN','ocsptest2.r509.local']], :bit_strength => 1024 )
-        cert2 = ca2.sign_cert(:csr => csr2, :profile_name => 'server')
+        cert2 = ca2.sign(:csr => csr2, :profile_name => 'server')
 
         ocsp_request = OpenSSL::OCSP::Request.new
         certid = OpenSSL::OCSP::CertificateId.new(cert.cert,@test_ca_config.ca_cert.cert)
@@ -55,7 +55,7 @@ describe R509::Ocsp::Signer do
         ca = R509::CertificateAuthority::Signer.new(@test_ca_config)
 
         csr = R509::Csr.new( :subject => [['CN','ocsptest.r509.local']], :bit_strength => 1024 )
-        cert = ca.sign_cert(:csr => csr, :profile_name => 'server')
+        cert = ca.sign(:csr => csr, :profile_name => 'server')
 
         ocsp_request = OpenSSL::OCSP::Request.new
         certid = OpenSSL::OCSP::CertificateId.new(cert.cert,@test_ca_config.ca_cert.cert)
@@ -72,10 +72,10 @@ describe R509::Ocsp::Signer do
         ca = R509::CertificateAuthority::Signer.new(@test_ca_config)
 
         csr = R509::Csr.new( :subject => [['CN','ocsptest.r509.local']], :bit_strength => 1024 )
-        cert = ca.sign_cert(:csr => csr, :profile_name => 'server')
+        cert = ca.sign(:csr => csr, :profile_name => 'server')
 
         csr2 = R509::Csr.new( :subject => [['CN','ocsptest.r509.local']], :bit_strength => 1024 )
-        cert2 = ca.sign_cert(:csr => csr2, :profile_name => 'server')
+        cert2 = ca.sign(:csr => csr2, :profile_name => 'server')
 
         ocsp_request = OpenSSL::OCSP::Request.new
         certid = OpenSSL::OCSP::CertificateId.new(cert.cert,@test_ca_config.ca_cert.cert)

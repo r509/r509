@@ -30,7 +30,7 @@ module R509::CertificateAuthority
         # @option options :not_before [Time] the notBefore for the certificate
         # @option options :not_after [Time] the notAfter for the certificate
         # @return [R509::Cert] the signed cert object
-        def sign_cert(options)
+        def sign(options)
             if options.has_key?(:csr) and options.has_key?(:spki)
                 raise ArgumentError, "You can't pass both :csr and :spki"
             elsif not options.has_key?(:csr) and not options.has_key?(:spki)
