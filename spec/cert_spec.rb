@@ -16,7 +16,7 @@ describe R509::Cert do
         expect { R509::Cert.new('no hash')}.to raise_error(ArgumentError, 'Must provide a hash of options')
     end
     it "raises exception when no :cert supplied" do
-        expect { R509::Cert.new(:password => "random")}.to raise_error(ArgumentError, 'Must provide :cert')
+        expect { R509::Cert.new(:key => "random")}.to raise_error(ArgumentError, 'Must provide :cert')
     end
     it "has a public_key" do
         cert = R509::Cert.new(:cert => @cert)

@@ -10,8 +10,7 @@ module R509
         attr_reader :cert, :san_names, :key
 
         # @option opts [String,OpenSSL::X509::Certificate] :cert a cert
-        # @option opts [String] :password optional password for private key
-        # @option opts [String,R509::PrivateKey,OpenSSL::PKey::RSA,OpenSSL::PKey::DSA] :key optional private key
+        # @option opts [R509::PrivateKey,String] :key optional private key to supply. either an unencrypted PEM/DER string or an R509::PrivateKey object (use the latter if you need password/hardware support)
         def initialize(opts={})
             if not opts.kind_of?(Hash)
                 raise ArgumentError, 'Must provide a hash of options'
@@ -26,7 +25,7 @@ module R509
                 if opts[:key].kind_of?(R509::PrivateKey)
                     @key = opts[:key]
                 else
-                    @key = R509::PrivateKey.new(:key => opts[:key], :password => opts[:password])
+                    @key = R509::PrivateKey.new(:key => opts[:key])
                 end
                 if not @cert.public_key.to_s == @key.public_key.to_s then
                     raise R509Error, 'Key does not match cert.'

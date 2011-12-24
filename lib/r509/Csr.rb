@@ -13,13 +13,12 @@ module R509
         # @option opts [String,OpenSSL::X509::Request] :csr a csr
         # @option opts [Symbol] :type :rsa/:dsa
         # @option opts [Integer] :bit_strength
-        # @option opts [String] :password
         # @option opts [Array] :domains List of domains to encode as subjectAltNames
         # @option opts [R509::Subject,Array,OpenSSL::X509::Name] :subject array of subject items
         # @example [['CN','langui.sh'],['ST','Illinois'],['L','Chicago'],['C','US'],['emailAddress','ca@langui.sh']]
         # you can also pass OIDs (see tests)
         # @option opts [String,R509::Cert,OpenSSL::X509::Certificate] :cert takes a cert (used for generating a CSR with the certificate's values)
-        # @option opts [R509::PrivateKey,String,OpenSSL::PKey::RSA,OpenSSL::PKey::DSA] :key
+        # @option opts [R509::PrivateKey,String] :key optional private key to supply. either an unencrypted PEM/DER string or an R509::PrivateKey object (use the latter if you need password/hardware support)
         def initialize(opts={})
             if not opts.kind_of?(Hash)
                 raise ArgumentError, 'Must provide a hash of options'
@@ -30,13 +29,12 @@ module R509
                 raise ArgumentError, "Can only provide one of cert, subject, or csr"
             end
             @bit_strength = opts[:bit_strength] || 2048
-            password = opts[:password] || nil
 
             if opts.has_key?(:key)
                 if opts[:key].kind_of?(R509::PrivateKey)
                     @key = opts[:key]
                 else
-                    @key = R509::PrivateKey.new(:key => opts[:key], :password => password)
+                    @key = R509::PrivateKey.new(:key => opts[:key])
                 end
             end
 
