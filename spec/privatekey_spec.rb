@@ -130,5 +130,24 @@ describe R509::PrivateKey do
         private_key.write_encrypted_pem(sio,'aes128','Testing1')
         sio.string.match(/AES-128-CBC/).should_not == nil
     end
+    it "returns false for in_hardware? when it's...not" do
+        private_key = R509::PrivateKey.new(:key => @key_csr)
+        private_key.in_hardware?.should == false
+    end
+    it "returns true for in_hardware? when it...is"
+    it "raises an error if you provide engine and key" do
+        expect { R509::PrivateKey.new(:key => @key_csr, :engine => 'not really an engine') }.to raise_error(ArgumentError, "You can't pass both :key and :engine")
+    end
+    it "raises an error if you provide a key_name with no engine" do
+        expect { R509::PrivateKey.new(:key_name => 'my_key') }.to raise_error(ArgumentError, 'When providing a :key_name you MUST provide an :engine')
+    end
+    it "raises an error when providing an engine with no key_name" do
+        expect { R509::PrivateKey.new(:engine => 'engine_goes_here') }.to raise_error(ArgumentError, 'When providing an :engine you MUST provide a :key_name')
+    end
+    it "raises an error if engine is not an OpenSSL::Engine" do
+        expect { R509::PrivateKey.new(:key_name => 'my_key', :engine => 'not really an engine') }.to raise_error(ArgumentError, 'When providing an engine, it must be of type OpenSSL::Engine')
+    end
+    it "raises an error if you call output methods (pem,der,write) when using a hardware key"
+    it "loads a hardware key successfully"
 end
 

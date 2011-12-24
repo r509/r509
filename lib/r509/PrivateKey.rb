@@ -7,24 +7,33 @@ module R509
     class PrivateKey
         include R509::IOHelpers
 
-        attr_reader :bit_strength, :key
-
         # @option opts [Symbol] :type :rsa/:dsa
         # @option opts [Integer] :bit_strength
         # @option opts [String] :password
         # @option opts [String,OpenSSL::PKey::RSA,OpenSSL::PKey::DSA] :key
+        # @option opts [OpenSSL::Engine] :engine
+        # @option opts [string] :key_name (used with engine)
         def initialize(opts)
             if not opts.kind_of?(Hash)
                 raise ArgumentError, 'Must provide a hash of options'
             end
-            type = opts[:type] || :rsa
-            if type != :rsa and type != :dsa and @key.nil?
-                raise ArgumentError, 'Must provide :rsa or :dsa as type when key is nil'
+
+            if opts.has_key?(:engine) and opts.has_key?(:key)
+                raise ArgumentError, 'You can\'t pass both :key and :engine'
+            elsif opts.has_key?(:key_name) and not opts.has_key?(:engine)
+                raise ArgumentError, 'When providing a :key_name you MUST provide an :engine'
+            elsif opts.has_key?(:engine) and not opts.has_key?(:key_name)
+                raise ArgumentError, 'When providing an :engine you MUST provide a :key_name'
+            elsif opts.has_key?(:engine) and opts.has_key?(:key_name)
+                if not opts[:engine].kind_of?(OpenSSL::Engine)
+                    raise ArgumentError, 'When providing an engine, it must be of type OpenSSL::Engine'
+                end
+                @engine = opts[:engine]
+                @key_name = opts[:key_name]
             end
-            @bit_strength = opts[:bit_strength] || 2048
-            password = opts[:password] || nil
 
             if opts.has_key?(:key)
+                password = opts[:password] || nil
                 #OpenSSL::PKey.read solves this begin/rescue garbage but is only
                 #available to Ruby 1.9.3+
                 begin
@@ -37,28 +46,61 @@ module R509
                     end
                 end
             else
+                bit_strength = opts[:bit_strength] || 2048
+                type = opts[:type] || :rsa
                 case type
                 when :rsa
-                    @key = OpenSSL::PKey::RSA.new(@bit_strength)
+                    @key = OpenSSL::PKey::RSA.new(bit_strength)
                 when :dsa
-                    @key = OpenSSL::PKey::DSA.new(@bit_strength)
+                    @key = OpenSSL::PKey::DSA.new(bit_strength)
+                else
+                    raise ArgumentError, 'Must provide :rsa or :dsa as type when key or engine is nil'
                 end
             end
         end
 
-        # @return [OpenSSL::PKey::RSA,OpenSSL::PKey::RSA] public key
-        def public_key
-            @key.public_key
+        def bit_strength
+            if self.rsa?
+                return self.public_key.n.to_i.to_s(2).size
+            elsif self.dsa?
+                return self.public_key.p.to_i.to_s(2).size
+            end
         end
+
+        # @return [OpenSSL::PKey::RSA,OpenSSL::PKey::DSA,OpenSSL::Engine pkey] this method may return the PKey object itself or a handle to the private key in the HSM (which will not show the private key, just public)
+        def key
+            if in_hardware?
+                @engine.load_private_key(@key_name)
+            else
+                @key
+            end
+        end
+
+        # @return [Boolean] whether the key is resident in hardware or not
+        def in_hardware?
+            if not @engine.nil?
+                true
+            else
+                false
+            end
+        end
+
+        # @return [OpenSSL::PKey::RSA,OpenSSL::PKey::DSA] public key
+        def public_key
+            self.key.public_key
+        end
+
+        alias :to_s :public_key
 
         # Converts the key into the PEM format
         #
         # @return [String] the CSR converted into PEM format.
         def to_pem
-            @key.to_pem
+            if in_hardware?
+                raise R509::R509Error, "This method cannot be called when using keys in hardware"
+            end
+            self.key.to_pem
         end
-
-        alias :to_s :to_pem
 
         # Converts the key into encrypted PEM format
         #
@@ -68,8 +110,11 @@ module R509
         # @param [String] password password
         # @return [String] the CSR converted into encrypted PEM format.
         def to_encrypted_pem(cipher,password)
+            if in_hardware?
+                raise R509::R509Error, "This method cannot be called when using keys in hardware"
+            end
             cipher = OpenSSL::Cipher::Cipher.new(cipher)
-            @key.to_pem(cipher,password)
+            self.key.to_pem(cipher,password)
         end
 
 
@@ -77,7 +122,10 @@ module R509
         #
         # @return [String] the CSR converted into DER format.
         def to_der
-            @key.to_der
+            if in_hardware?
+                raise R509::R509Error, "This method cannot be called when using keys in hardware"
+            end
+            self.key.to_der
         end
 
         # Writes the key into the PEM format
@@ -85,7 +133,7 @@ module R509
         # @param [String, #write] filename_or_io Either a string of the path for
         #  the file that you'd like to write, or an IO-like object.
         def write_pem(filename_or_io)
-            write_data(filename_or_io, @key.to_pem)
+            write_data(filename_or_io, self.key.to_pem)
         end
 
 
@@ -106,7 +154,7 @@ module R509
         # @param [String, #write] filename_or_io Either a string of the path for
         #  the file that you'd like to write, or an IO-like object.
         def write_der(filename_or_io)
-            write_data(filename_or_io, @key.to_der)
+            write_data(filename_or_io, self.key.to_der)
         end
 
 
@@ -114,14 +162,14 @@ module R509
         #
         # @return [Boolean] true if the public key is RSA, false otherwise
         def rsa?
-            @key.kind_of?(OpenSSL::PKey::RSA)
+            self.key.kind_of?(OpenSSL::PKey::RSA)
         end
 
         # Returns whether the public key is DSA
         #
         # @return [Boolean] true if the public key is DSA, false otherwise
         def dsa?
-            @key.kind_of?(OpenSSL::PKey::DSA)
+            self.key.kind_of?(OpenSSL::PKey::DSA)
         end
     end
 end
