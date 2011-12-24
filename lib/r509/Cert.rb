@@ -61,6 +61,13 @@ module R509
             @cert.not_before
         end
 
+        # Returns the serial number of the certificate in decimal form
+        #
+        # @return [Integer]
+        def serial
+            @cert.serial.to_i
+        end
+
         # Returns ending (notAfter) of certificate validity period
         #
         # @return [Time] time object

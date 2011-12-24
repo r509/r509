@@ -143,7 +143,7 @@ describe R509::Cert do
         cert.extensions["keyUsage"].count.should == 1
         cert.extensions["keyUsage"][0]["value"].should == "Digital Signature, Key Encipherment"
     end
-    it "gets key usage from #keyUsage" do
+    it "gets key usage from #key_usage" do
         cert = R509::Cert.new(:cert => @cert)
         cert.key_usage.should == ["Digital Signature", "Key Encipherment"]
     end
@@ -156,7 +156,7 @@ describe R509::Cert do
         cert.extensions["extendedKeyUsage"].count.should == 1
         cert.extensions["extendedKeyUsage"][0]["value"].should == "TLS Web Server Authentication"
     end
-    it "get extended key usage from #extendedKeyUsage" do
+    it "get extended key usage from #extended_key_usage" do
         cert = R509::Cert.new(:cert => @cert)
         cert.extended_key_usage.should == ["TLS Web Server Authentication"]
     end
@@ -186,5 +186,9 @@ describe R509::Cert do
     it "gets DSA bit strength" do
         cert = R509::Cert.new(:cert => @cert6)
         cert.bit_strength.should == 1024
+    end
+    it "gets serial of cert" do
+        cert = R509::Cert.new(:cert => @cert6)
+        cert.serial.should == 951504
     end
 end
