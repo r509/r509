@@ -153,8 +153,8 @@ describe R509::CertificateAuthority::Signer do
         cert.cert.not_before.ctime.should == not_before.utc.ctime
         cert.cert.not_after.ctime.should == not_after.utc.ctime
     end
-    it "raises exception unless you provide a proper config" do
-        expect { R509::CertificateAuthority::Signer.new('invalid') }.to raise_error(R509::R509Error)
+    it "raises exception unless you provide a proper config (or nil)" do
+        expect { R509::CertificateAuthority::Signer.new('invalid') }.to raise_error(R509::R509Error, 'config must be a kind of R509::Config::CaConfig or nil (for self-sign only)')
     end
     it "raises exception when providing invalid ca profile" do
         csr = R509::Csr.new(:csr => @csr)
@@ -163,5 +163,50 @@ describe R509::CertificateAuthority::Signer do
     it "raises exception when attempting to issue CSR with invalid signature" do
         csr = R509::Csr.new(:csr => @csr_invalid_signature)
         expect { @ca.sign(:csr => csr, :profile_name => 'server') }.to raise_error(R509::R509Error, 'Certificate request signature is invalid.')
+    end
+    it "properly issues a self-signed certificate with custom fields" do
+        not_before = Time.now.to_i
+        not_after = Time.now.to_i+3600*24*7300
+        csr = R509::Csr.new(
+            :subject => [['C','US'],['O','r509 LLC'],['CN','r509 Self-Signed CA Test']],
+            :bit_strength => 1024
+        )
+        cert = @ca.selfsign(
+            :csr => csr,
+            :serial => 3,
+            :not_before => not_before,
+            :not_after => not_after,
+            :message_digest => 'sha256'
+        )
+        cert.signature_algorithm.should == 'sha256WithRSAEncryption'
+        cert.serial.should == 3
+        cert.not_before.to_i.should == not_before
+        cert.not_after.to_i.should == not_after
+        cert.subject.to_s.should == '/C=US/O=r509 LLC/CN=r509 Self-Signed CA Test'
+        cert.issuer.to_s.should == '/C=US/O=r509 LLC/CN=r509 Self-Signed CA Test'
+        cert.extensions['basicConstraints'][0]['value'].should == 'CA:TRUE'
+    end
+    it "properly issues a self-signed certificate with defaults" do
+        csr = R509::Csr.new(
+            :subject => [['C','US'],['O','r509 LLC'],['CN','r509 Self-Signed CA Test']],
+            :bit_strength => 1024
+        )
+        cert = @ca.selfsign(
+            :csr => csr
+        )
+        cert.signature_algorithm.should == 'sha1WithRSAEncryption'
+        (cert.not_after.to_i-cert.not_before.to_i).should == 31536000
+        cert.subject.to_s.should == '/C=US/O=r509 LLC/CN=r509 Self-Signed CA Test'
+        cert.issuer.to_s.should == '/C=US/O=r509 LLC/CN=r509 Self-Signed CA Test'
+        cert.extensions['basicConstraints'][0]['value'].should == 'CA:TRUE'
+    end
+    it "raises an error if attempting to self-sign without a key" do
+        csr = R509::Csr.new(:csr => @csr3)
+        expect { @ca.selfsign( :csr => csr ) }.to raise_error(ArgumentError, "CSR must also have a private key to self sign")
+    end
+    it "raises an error if you call sign without passing a config to the object" do
+        ca_signer = R509::CertificateAuthority::Signer.new
+        csr = R509::Csr.new(:csr => @csr3)
+        expect { ca_signer.sign(:csr => csr, :profile_name => "server") }.to raise_error(R509::R509Error, "When instantiating the signer without a config you can only call #selfsign")
     end
 end

@@ -9,13 +9,13 @@ module R509::CertificateAuthority
     # Contains the certification authority signing operation methods
     class Signer
         # @param [R509::Config] @config
-        def initialize(config)
+        def initialize(config=nil)
             @config = config
 
-            unless @config.kind_of?(R509::Config::CaConfig)
-                raise R509::R509Error, "config must be a kind of R509::Config::CaConfig"
+            if not @config.nil? and not @config.kind_of?(R509::Config::CaConfig)
+                raise R509::R509Error, "config must be a kind of R509::Config::CaConfig or nil (for self-sign only)"
             end
-            if @config.num_profiles == 0
+            if not @config.nil? and @config.num_profiles == 0
                 raise R509::R509Error, "You must have at least one CaProfile on your CaConfig to issue"
             end
         end
@@ -31,6 +31,9 @@ module R509::CertificateAuthority
         # @option options :not_after [Time] the notAfter for the certificate
         # @return [R509::Cert] the signed cert object
         def sign(options)
+            if @config.nil?
+                raise R509::R509Error, "When instantiating the signer without a config you can only call #selfsign"
+            end
             if options.has_key?(:csr) and options.has_key?(:spki)
                 raise ArgumentError, "You can't pass both :csr and :spki"
             elsif not options.has_key?(:csr) and not options.has_key?(:spki)
@@ -50,10 +53,10 @@ module R509::CertificateAuthority
             end
 
             if options.has_key?(:data_hash)
-                san_names = prefix_domains(options[:data_hash][:san_names])
+                san_names = options[:data_hash][:san_names]
                 subject = options[:data_hash][:subject]
             else
-                san_names = prefix_domains(signable_object.to_hash[:san_names])
+                san_names = signable_object.to_hash[:san_names]
                 subject = signable_object.to_hash[:subject]
             end
 
@@ -72,86 +75,86 @@ module R509::CertificateAuthority
 
             profile = @config.profile(options[:profile_name])
 
-            if options.has_key?(:serial)
-                serial = OpenSSL::BN.new(options[:serial].to_s)
-            else
-                #generate random serial in accordance with best practices
-                #guidelines state 20-bits of entropy, but we can cram more in
-                #per rfc5280 conforming CAs can make the serial field up to 20 octets
-                serial = OpenSSL::BN.rand(160,0) # 160 bits is 20 bytes (octets).
-                #since second param is 0 the most significant bit must always be 1
-                #this theoretically gives us 159 bits of entropy
-            end
-
-            if options.has_key?(:not_before)
-                not_before = options[:not_before]
-            else
-                #not_before will be set to 6 hours before now to prevent issues with bad system clocks (clients don't sync)
-                not_before = Time.now - 6 * 60 * 60
-            end
-            if options.has_key?(:not_after)
-                not_after = options[:not_after]
-            else
-                not_after = not_before + 365 * 24 * 60 * 60
-            end
-
-            cert = OpenSSL::X509::Certificate.new
-
             validated_subject = validate_subject(subject,profile)
-            cert.subject = validated_subject.name
-            cert.issuer = @config.ca_cert.subject
-            cert.not_before = not_before
-            cert.not_after = not_after
-            cert.public_key = signable_object.public_key
-            cert.serial =serial
-            cert.version = 2 #2 means v3
 
+            cert = build_cert(
+                :subject => validated_subject.name,
+                :issuer => @config.ca_cert.subject,
+                :not_before => options[:not_before],
+                :not_after => options[:not_after],
+                :public_key => signable_object.public_key,
+                :serial => options[:serial]
+            )
 
             basic_constraints = profile.basic_constraints
             key_usage = profile.key_usage
             extended_key_usage = profile.extended_key_usage
             certificate_policies = profile.certificate_policies
-            ef = OpenSSL::X509::ExtensionFactory.new
-            ef.subject_certificate = cert
-            ef.issuer_certificate = @config.ca_cert.cert
-            ext = []
-            ext << ef.create_extension("basicConstraints", basic_constraints, true)
-            ext << ef.create_extension("subjectKeyIdentifier", "hash")
-            ext << ef.create_extension("keyUsage", key_usage.join(","))
-            ext << ef.create_extension("authorityKeyIdentifier", "keyid:always,issuer:always")
-            if(extended_key_usage.size > 0) then
-                ext << ef.create_extension("extendedKeyUsage", extended_key_usage.join(","))
-            end
-            conf = build_conf('certPolicies',profile.certificate_policies)
-            ef.config = OpenSSL::Config.parse(conf)
-            #ef.config = OpenSSL::Config.parse(<<-_end_of_cnf_)
-            #[certPolicies]
-            #CPS.1 = http://www.example.com/cps
-            #_end_of_cnf_
+
+            build_extensions(
+                :subject_certificate => cert,
+                :issuer_certificate => @config.ca_cert.cert,
+                :basic_constraints => basic_constraints,
+                :key_usage => key_usage,
+                :extended_key_usage => extended_key_usage,
+                :certificate_policies => certificate_policies,
+                :san_names => san_names
+            )
 
 
-            ext << ef.create_extension("certificatePolicies", '@certPolicies')
-            if ! san_names.empty? then
-                ext << ef.create_extension("subjectAltName", san_names.join(","))
-            end
-
-            ext << ef.create_extension("crlDistributionPoints", @config.cdp_location)
-
-            if @config.ocsp_location then
-            ext << ef.create_extension("authorityInfoAccess",
-                        "OCSP;" << @config.ocsp_location)
-            end
-            cert.extensions = ext
             #@config.ca_cert.key.key ... ugly. ca_cert returns R509::Cert
             # #key returns R509::PrivateKey and #key on that returns OpenSSL object we need
             cert.sign( @config.ca_cert.key.key, message_digest.digest )
             R509::Cert.new(:cert => cert)
         end
 
+        # Self-signs a CSR
+        # @option options :csr [R509::Csr]
+        # @option options :message_digest [String] the message digest to use for this certificate (defaults to sha1)
+        # @option options :serial [String] the serial number you want to issue the certificate with (defaults to random)
+        # @option options :not_before [Time] the notBefore for the certificate (defaults to now)
+        # @option options :not_after [Time] the notAfter for the certificate (defaults to 1 year)
+        # @return [R509::Cert] the signed cert object
+        def selfsign(options)
+            csr = options[:csr]
+            if csr.key.nil?
+                raise ArgumentError, 'CSR must also have a private key to self sign'
+            end
+            cert = build_cert(
+                :subject => csr.subject.name,
+                :issuer => csr.subject.name,
+                :not_before => options[:not_before],
+                :not_after => options[:not_after],
+                :public_key => csr.public_key,
+                :serial => options[:serial]
+            )
+
+            build_extensions(
+                :subject_certificate => cert,
+                :issuer_certificate => cert,
+                :basic_constraints => "CA:TRUE"
+                #:key_usage => key_usage,
+                #:extended_key_usage => extended_key_usage,
+                #:certificate_policies => certificate_policies,
+                #:san_names => san_names
+            )
+
+
+            if options.has_key?(:message_digest)
+                message_digest = R509::MessageDigest.new(options[:message_digest])
+            else
+                message_digest = R509::MessageDigest.new('sha1')
+            end
+
+            # Csr#key returns R509::PrivateKey and #key on that returns OpenSSL object we need
+            cert.sign( csr.key.key, message_digest.digest )
+            R509::Cert.new(:cert => cert)
+        end
+
         private
 
-        def prefix_domains(domains)
-            domains.map { |domain| 'DNS: '+domain }
+        def process_san_names(domains)
+            domains.map { |domain| 'DNS: '+domain }.join(",")
         end
 
         def build_conf(section,data)
@@ -166,6 +169,99 @@ module R509::CertificateAuthority
             else
                 profile.subject_item_policy.validate_subject(subject)
             end
+        end
+
+        def build_cert(options)
+
+            cert = OpenSSL::X509::Certificate.new
+
+            cert.subject = options[:subject]
+            cert.issuer = options[:issuer]
+            cert.not_before = calculate_not_before(options[:not_before])
+            cert.not_after = calculate_not_after(options[:not_after],cert.not_before)
+            cert.public_key = options[:public_key]
+            cert.serial = create_serial(options[:serial])
+            cert.version = 2 #2 means v3
+            cert
+        end
+
+        def create_serial(serial)
+            if not serial.nil?
+                serial = OpenSSL::BN.new(serial.to_s)
+            else
+                #generate random serial in accordance with best practices
+                #guidelines state 20-bits of entropy, but we can cram more in
+                #per rfc5280 conforming CAs can make the serial field up to 20 octets
+                serial = OpenSSL::BN.rand(160,0) # 160 bits is 20 bytes (octets).
+                #since second param is 0 the most significant bit must always be 1
+                #this theoretically gives us 159 bits of entropy
+            end
+            serial
+        end
+
+        def build_extensions(options)
+            ef = OpenSSL::X509::ExtensionFactory.new
+
+            ef.subject_certificate = options[:subject_certificate]
+
+            ef.issuer_certificate = options[:issuer_certificate]
+
+            ext = []
+            if not options[:basic_constraints].nil?
+                ext << ef.create_extension("basicConstraints", options[:basic_constraints], true)
+            end
+            if options.has_key?(:key_usage) and not options[:key_usage].empty?
+                ext << ef.create_extension("keyUsage", options[:key_usage].join(","))
+            end
+            if options.has_key?(:extended_key_usage) and not options[:extended_key_usage].empty?
+                ext << ef.create_extension("extendedKeyUsage", options[:extended_key_usage].join(","))
+            end
+            ext << ef.create_extension("subjectKeyIdentifier", "hash")
+
+            #attach the key identifier if it's not a self-sign
+            if not ef.subject_certificate == ef.issuer_certificate
+                ext << ef.create_extension("authorityKeyIdentifier", "keyid:always,issuer:always")
+            end
+
+            if not options[:certificate_policies].nil?
+                conf = build_conf('certPolicies',options[:certificate_policies])
+                ef.config = OpenSSL::Config.parse(conf)
+                ext << ef.create_extension("certificatePolicies", '@certPolicies')
+            end
+            #ef.config = OpenSSL::Config.parse(<<-_end_of_cnf_)
+            #[certPolicies]
+            #CPS.1 = http://www.example.com/cps
+            #_end_of_cnf_
+
+            if options.has_key?(:san_names) and not options[:san_names].empty?
+                ext << ef.create_extension("subjectAltName", process_san_names(options[:san_names]))
+            end
+
+            if not @config.nil? and not @config.cdp_location.nil?
+                ext << ef.create_extension("crlDistributionPoints", @config.cdp_location)
+            end
+
+            if not @config.nil? and not @config.ocsp_location.nil? then
+            ext << ef.create_extension("authorityInfoAccess",
+                        "OCSP;" << @config.ocsp_location)
+            end
+            options[:subject_certificate].extensions = ext
+            nil
+        end
+
+        def calculate_not_before(not_before)
+            if not_before.nil?
+                #not_before will be set to 6 hours before now to prevent issues with bad system clocks (clients don't sync)
+                not_before = Time.now - 6 * 60 * 60
+            end
+            not_before
+        end
+
+        def calculate_not_after(not_after,not_before)
+            if not_after.nil?
+                not_after = not_before + 365 * 24 * 60 * 60
+            end
+            not_after
         end
 
     end
