@@ -93,14 +93,10 @@ module R509
         # #
         # # @return [String] value of the key algorithm. RSA or DSA
         def key_algorithm
-            if not @spki.nil?
-                if @spki.public_key.kind_of? OpenSSL::PKey::RSA then
-                    'RSA'
-                elsif @spki.public_key.kind_of? OpenSSL::PKey::DSA then
-                    'DSA'
-                end
-            else
-                nil
+            if @spki.public_key.kind_of? OpenSSL::PKey::RSA then
+                'RSA'
+            elsif @spki.public_key.kind_of? OpenSSL::PKey::DSA then
+                'DSA'
             end
         end
 
