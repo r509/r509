@@ -83,9 +83,9 @@ module R509
         # @return [Integer] the integer bit strength.
         def bit_strength
             if self.rsa?
-                return @spki.public_key.n.to_i.to_s(2).size
+                return @spki.public_key.n.num_bits
             elsif self.dsa?
-                return @spki.public_key.p.to_i.to_s(2).size
+                return @spki.public_key.p.num_bits
             end
         end
 

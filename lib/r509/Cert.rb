@@ -136,9 +136,9 @@ module R509
         def bit_strength
             #cast to int, convert to binary, count size
             if self.rsa?
-                return @cert.public_key.n.to_i.to_s(2).size
+                return @cert.public_key.n.num_bits
             elsif self.dsa?
-                return @cert.public_key.p.to_i.to_s(2).size
+                return @cert.public_key.p.num_bits
             end
         end
 
