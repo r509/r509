@@ -89,6 +89,10 @@ describe R509::Cert do
     it "return normal object on matching key/cert pair" do
         expect { R509::Cert.new(:cert => @cert3, :key => @key3) }.to_not raise_error
     end
+    it "loads properly when an R509::PrivateKey is provided" do
+        key = R509::PrivateKey.new(:key => @key3)
+        expect { R509::Cert.new(:key => key, :cert => @cert3)}.to_not raise_error
+    end
     it "writes to pem" do
         cert = R509::Cert.new(:cert => @cert)
         sio = StringIO.new

@@ -62,6 +62,10 @@ describe R509::Csr do
         #validate the CSR matches the key
         csr.req.verify(csr.key.public_key).should == true
     end
+    it "loads successfully when an R509::PrivateKey is provided" do
+        key = R509::PrivateKey.new(:key => @key3)
+        expect { R509::Csr.new(:key => key, :csr => @csr3)}.to_not raise_error
+    end
     it "raises an exception when you pass a cert and subject" do
         expect { R509::Csr.new(:cert => @cert, :subject => [['CN','fail.com']]) }.to raise_error(ArgumentError,'Can only provide one of cert, subject, or csr')
     end
