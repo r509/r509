@@ -59,6 +59,7 @@ module R509
             end
         end
 
+        # @return [Integer]
         def bit_strength
             if self.rsa?
                 return self.public_key.n.to_i.to_s(2).size
