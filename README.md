@@ -86,6 +86,23 @@ R509::Cert.new(
 )
 ```
 
+###Self-Signed Certificate
+To create a self-signed certificate
+
+```ruby
+not_before = Time.now.to_i
+not_after = Time.now.to_i+3600*24*7300
+csr = R509::Csr.new(
+    :subject => [['C','US'],['O','r509 LLC'],['CN','r509 Self-Signed CA Test']]
+)
+ca = R509::CertificateAuthority::Signer.new
+cert = ca.selfsign(
+    :csr => csr,
+    :not_before => not_before,
+    :not_after => not_after
+)
+```
+
 ###Config
 
 Create a basic CaConfig object
@@ -214,6 +231,19 @@ cert = ca.sign_cert(
     :data_hash => data_hash
 )
 ```
+
+###Load Hardware Engines
+
+```ruby
+OpenSSL::Engine.load("engine_name")
+engine = OpenSSL::Engine.by_id("engine_name")
+key = R509::PrivateKey(
+    :engine => engine,
+    :key_name => "my_key_name"
+)
+```
+
+You can then use this key for signing
 
 ##Thanks to...
 * [Sean Schulte](https://github.com/sirsean)
