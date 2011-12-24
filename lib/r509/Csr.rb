@@ -185,14 +185,10 @@ module R509
         # #
         # # @return [String] value of the key algorithm. RSA or DSA
         def key_algorithm
-            if not @req.nil?
-                if @req.public_key.kind_of? OpenSSL::PKey::RSA then
-                    'RSA'
-                elsif @req.public_key.kind_of? OpenSSL::PKey::DSA then
-                    'DSA'
-                end
-            else
-                nil
+            if @req.public_key.kind_of? OpenSSL::PKey::RSA then
+                'RSA'
+            elsif @req.public_key.kind_of? OpenSSL::PKey::DSA then
+                'DSA'
             end
         end
 
