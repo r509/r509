@@ -55,7 +55,7 @@ else
     else
         bit_strength = 2048
     end
-    csr = R509::Csr.new(:subject => subject, :bit_strength => 2048)
+    csr = R509::Csr.new(:subject => subject, :bit_strength => bit_strength)
 end
 puts csr.key
 puts csr
