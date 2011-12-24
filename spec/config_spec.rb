@@ -178,8 +178,8 @@ describe R509::Config::CaConfig do
         it "should load subject_item_policy from yaml (if present)" do
             config = R509::Config::CaConfig.from_yaml("test_ca", File.read("#{File.dirname(__FILE__)}/fixtures/config_test.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"})
             config.profile("server").subject_item_policy.should be_nil
-            config.profile("server_with_subject_item_policy").subject_item_policy.optional.should == ["O","OU"]
-            config.profile("server_with_subject_item_policy").subject_item_policy.required.should == ["CN","ST","C"]
+            config.profile("server_with_subject_item_policy").subject_item_policy.optional.should include("O","OU")
+            config.profile("server_with_subject_item_policy").subject_item_policy.required.should include("CN","ST","C")
         end
 
         it "should load YAML which only has a CA Cert and Key defined" do
