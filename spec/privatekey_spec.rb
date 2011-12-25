@@ -136,9 +136,7 @@ describe R509::PrivateKey do
     end
     it "returns true for in_hardware? when an engine is present" do
         engine = double("engine")
-        engine.stub(:kind_of?) { |arg|
-            (arg == OpenSSL::Engine)?true:false
-        }
+        engine.should_receive(:kind_of?).with(OpenSSL::Engine).and_return(true)
         key_name = "r509_key"
         key = R509::PrivateKey.new(
             :engine => engine,
@@ -160,9 +158,7 @@ describe R509::PrivateKey do
     end
     it "raises an error if you call output methods (pem,der,write) when using a hardware key" do
         engine = double("engine")
-        engine.stub(:kind_of?) { |arg|
-            arg == OpenSSL::Engine
-        }
+        engine.should_receive(:kind_of?).with(OpenSSL::Engine).and_return(true)
         key_name = "r509_key"
         key = R509::PrivateKey.new(
             :engine => engine,
@@ -176,15 +172,11 @@ describe R509::PrivateKey do
     end
     it "loads a hardware key successfully" do
         engine = double("engine")
-        engine.stub(:kind_of?) { |arg|
-            (arg == OpenSSL::Engine)?true:false
-        }
+        engine.should_receive(:kind_of?).with(OpenSSL::Engine).and_return(true)
         faux_key = double("faux_key")
-        faux_key.stub(:public_key) { "returning public key" }
-        engine.stub(:load_private_key) { faux_key }
+        faux_key.should_receive(:public_key).and_return("returning public key")
         key_name = "r509_key"
-        engine.should_receive(:load_private_key).with(key_name)
-        faux_key.should_receive(:public_key)
+        engine.should_receive(:load_private_key).with(key_name).and_return(faux_key)
         key = R509::PrivateKey.new(
             :engine => engine,
             :key_name => key_name
