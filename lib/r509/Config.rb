@@ -3,6 +3,7 @@ require 'openssl'
 require 'r509/Exceptions'
 require 'r509/io_helpers'
 require 'r509/Subject'
+require 'r509/PrivateKey'
 require 'fileutils'
 require 'pathname'
 
@@ -245,11 +246,31 @@ module R509
 
                 ca_cert_hash = conf.delete('ca_cert')
                 ca_cert_file = ca_root_path + ca_cert_hash['cert']
-                ca_key_file = ca_root_path + ca_cert_hash['key']
-                ca_cert = R509::Cert.new(
-                    :cert => read_data(ca_cert_file),
-                    :key => read_data(ca_key_file)
-                )
+                if ca_cert_hash.has_key?('engine') and ca_cert_hash.has_key?('key')
+                    raise R509Error, "You can't specify both key and engine"
+                elsif ca_cert_hash.has_key?('engine') and not ca_cert_hash.has_key?('key_name')
+                    raise R509Error, "You must supply a key_name with an engine"
+                elsif ca_cert_hash.has_key?('engine') and ca_cert_hash.has_key?('key_name')
+                    engine = OpenSSL::Engine.by_id(ca_cert_hash['engine'])
+                    ca_key = R509::PrivateKey.new(
+                        :engine => engine,
+                        :key_name => ca_cert_hash['key_name']
+                    )
+                    ca_cert = R509::Cert.new(
+                        :cert => read_data(ca_cert_file),
+                        :key => ca_key
+                    )
+                else
+                    ca_key_file = ca_root_path + ca_cert_hash['key']
+                    ca_key = R509::PrivateKey.new(
+                        :key => read_data(ca_key_file),
+                        :password => ca_cert_hash['password']
+                    )
+                    ca_cert = R509::Cert.new(
+                        :cert => read_data(ca_cert_file),
+                        :key => ca_key
+                    )
+                end
 
                 opts = {
                     :ca_cert => ca_cert,

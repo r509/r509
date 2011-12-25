@@ -187,6 +187,20 @@ describe R509::Config::CaConfig do
             config.num_profiles.should == 0
         end
 
+        it "should load YAML which has CA cert and key with password" do
+            expect { R509::Config::CaConfig.from_yaml("password_ca", File.read("#{File.dirname(__FILE__)}/fixtures/config_test_password.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"}) }.to_not raise_error
+        end
+
+        it "should load YAML which has engine"
+
+        it "should fail if YAML for ca_cert contains engine and key" do
+            expect { R509::Config::CaConfig.from_yaml("engine_and_key", File.read("#{File.dirname(__FILE__)}/fixtures/config_test_engine_key.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"}) }.to raise_error(R509::R509Error, "You can't specify both key and engine")
+        end
+
+        it "should fail if YAML for ca_cert contains engine but no key_name" do
+            expect { R509::Config::CaConfig.from_yaml("engine_no_key_name", File.read("#{File.dirname(__FILE__)}/fixtures/config_test_engine_no_key_name.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"}) }.to raise_error(R509::R509Error, 'You must supply a key_name with an engine')
+        end
+
         it "should fail if YAML config is null" do
             expect{ R509::Config::CaConfig.from_yaml("no_config_here", File.read("#{File.dirname(__FILE__)}/fixtures/config_test.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"}) }.to raise_error(ArgumentError)
         end
