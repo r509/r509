@@ -6,15 +6,15 @@ r509 is a wrapper for various OpenSSL functions to allow easy creation of CSRs, 
 r509 requires the Ruby OpenSSL bindings as well as yaml support (present by default in modern Ruby builds).
 To install the gem: ```gem install r509-(version).gem```
 
-##Basic Usage
-
-Inside the gem there is a script directory that contains r509\_csr.rb. You can use this in interactive mode to generate a CSR. More complex usage is found in the unit tests and below.
-
-##Running Tests
-If you want to run the tests for r509 you'll need rspec. Additionally, you may want to install rcov (ruby 1.8 only) and yard for running the code coverage and documentation tasks in the Rakefile. ```rake -T``` for a complete list of rake tasks available.
+##Running Tests/Building Gem
+If you want to run the tests for r509 you'll need rspec. Additionally, you may want to install rcov/simplecov (ruby 1.8/1.9 respectively) and yard for running the code coverage and documentation tasks in the Rakefile. ```rake -T``` for a complete list of rake tasks available.
 
 ##Continuous Integration
-We run continuous integration tests (using Travis-CI) against 1.8.7, 1.9.2, 1.9.3, and ruby-head.
+We run continuous integration tests (using Travis-CI) against 1.8.7, 1.9.2, 1.9.3, ree, and ruby-head.
+
+##Scripts
+
+Inside the gem there is a script directory that contains r509\_csr.rb. You can use this in interactive mode to generate a CSR. Other scripts may be written over time.
 
 ##Usage
 ###CSR
@@ -170,17 +170,44 @@ test_ca: {
     crl_validity_hours: 168, #7 days
     ocsp_location: 'URI:http://ocsp.domain.com',
     message_digest: 'SHA1', #SHA1, SHA256, SHA512 supported. MD5 too, but you really shouldn't use that unless you have a good reason
-    server: {
-        basic_constraints: "CA:FALSE",
-        key_usage: [digitalSignature,keyEncipherment],
-        extended_key_usage: [serverAuth],
-        certificate_policies: [ "policyIdentifier=2.16.840.1.9999999999.1.2.3.4.1", "CPS.1=http://example.com/cps"],
-        subject_item_policy: {
-            "CN" : "required",
-            "O" : "optional",
-            "ST" : "required",
-            "C" : "required",
-            "OU" : "optional" }
+    profiles: {
+        server: {
+            basic_constraints: "CA:FALSE",
+            key_usage: [digitalSignature,keyEncipherment],
+            extended_key_usage: [serverAuth],
+            certificate_policies: [ "policyIdentifier=2.16.840.1.9999999999.1.2.3.4.1", "CPS.1=http://example.com/cps"],
+            subject_item_policy: {
+                "CN" : "required",
+                "O" : "optional",
+                "ST" : "required",
+                "C" : "required",
+                "OU" : "optional" }
+        }
+    }
+}
+```
+
+Load Muliple CaConfigs Using a CaConfigPool
+
+```ruby
+pool = R509::Config::CaConfigPool.from_yaml("certificate_authorities", "config_pool.yaml")
+```
+
+Example (Minimal) Config Pool YAML
+
+```yaml
+certificate_authorities: {
+    test_ca: {
+        ca_cert: {
+            cert: 'test_ca.cer',
+            key: 'test_ca.key'
+        }
+    },
+    second_ca: {
+        ca_cert: {
+            cert: 'second_ca.cer',
+            key: 'second_ca.key'
+        }
     }
 }
 ```
@@ -250,4 +277,4 @@ You can then use this key for signing
 * [Mike Ryan](https://github.com/justfalter)
 
 ##License
-See the COPYING file. Licensed under the Apache 2.0 License
+See the LICENSE file. Licensed under the Apache 2.0 License
