@@ -161,7 +161,7 @@ describe R509::PrivateKey do
     it "raises an error if you call output methods (pem,der,write) when using a hardware key" do
         engine = double("engine")
         engine.stub(:kind_of?) { |arg|
-            (arg == OpenSSL::Engine)?true:false
+            arg == OpenSSL::Engine
         }
         key_name = "r509_key"
         key = R509::PrivateKey.new(
