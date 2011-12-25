@@ -231,12 +231,9 @@ module R509
                 if conf.nil?
                     raise ArgumentError, "conf not found"
                 end
-                unless conf.kind_of?(::Hash)
+                unless conf.kind_of?(Hash)
                     raise ArgumentError, "conf must be a Hash"
                 end
-
-                # Duplicate the hash since we will be destroying parts of it.
-                conf = conf.dup
 
                 ca_root_path = Pathname.new(opts[:ca_root_path] || FileUtils.getwd)
 
@@ -244,14 +241,20 @@ module R509
                     raise R509Error, "ca_root_path is not a directory: #{ca_root_path}"
                 end
 
-                ca_cert_hash = conf.delete('ca_cert')
+                ca_cert_hash = conf['ca_cert']
                 ca_cert_file = ca_root_path + ca_cert_hash['cert']
                 if ca_cert_hash.has_key?('engine') and ca_cert_hash.has_key?('key')
                     raise R509Error, "You can't specify both key and engine"
                 elsif ca_cert_hash.has_key?('engine') and not ca_cert_hash.has_key?('key_name')
                     raise R509Error, "You must supply a key_name with an engine"
                 elsif ca_cert_hash.has_key?('engine') and ca_cert_hash.has_key?('key_name')
-                    engine = OpenSSL::Engine.by_id(ca_cert_hash['engine'])
+                    if ca_cert_hash['engine'].responds_to?(:load_private_key)
+                        #this path is only for testing...ugh
+                        engine = ca_cert_hash['engine']
+                    else
+                        #this path can't be tested by unit tests. bah!
+                        engine = OpenSSL::Engine.by_id(ca_cert_hash['engine'])
+                    end
                     ca_key = R509::PrivateKey.new(
                         :engine => engine,
                         :key_name => ca_cert_hash['key_name']
@@ -274,25 +277,24 @@ module R509
 
                 opts = {
                     :ca_cert => ca_cert,
-                    :crl_validity_hours => conf.delete('crl_validity_hours'),
-                    :ocsp_location => conf.delete('ocsp_location'),
-                    :cdp_location => conf.delete('cdp_location'),
-                    :message_digest => conf.delete('message_digest'),
+                    :crl_validity_hours => conf['crl_validity_hours'],
+                    :ocsp_location => conf['ocsp_location'],
+                    :cdp_location => conf['cdp_location'],
+                    :message_digest => conf['message_digest'],
                 }
 
                 if conf.has_key?("crl_list")
-                    opts[:crl_list_file] = (ca_root_path + conf.delete('crl_list')).to_s
+                    opts[:crl_list_file] = (ca_root_path + conf['crl_list']).to_s
                 end
 
                 if conf.has_key?("crl_number")
-                    opts[:crl_number_file] = (ca_root_path + conf.delete('crl_number')).to_s
+                    opts[:crl_number_file] = (ca_root_path + conf['crl_number']).to_s
                 end
 
 
-                # The remaining keys should all be profiles :)
                 profs = {}
-                conf.keys.each do |profile|
-                    data = conf.delete(profile)
+                conf['profiles'].keys.each do |profile|
+                    data = conf['profiles'][profile]
                     if not data["subject_item_policy"].nil?
                         subject_item_policy = R509::Config::SubjectItemPolicy.new(data["subject_item_policy"])
                     end
@@ -301,7 +303,7 @@ module R509
                                                        :basic_constraints => data["basic_constraints"],
                                                        :certificate_policies => data["certificate_policies"],
                                                        :subject_item_policy => subject_item_policy)
-                end
+                end unless conf['profiles'].nil?
                 opts[:profiles] = profs
 
                 # Create the instance.
@@ -322,7 +324,11 @@ module R509
             #  that a single yaml file can contain more than one configuration.
             # @param [String] yaml_file The filename to load yaml config data from.
             def self.from_yaml(conf_name, yaml_data, opts = {})
-                conf = YAML.load(yaml_data)
+                if not yaml_data.kind_of?(Hash)
+                    conf = YAML.load(yaml_data)
+                else
+                    conf = yaml_data
+                end
                 self.load_from_hash(conf[conf_name], opts)
             end
         end
