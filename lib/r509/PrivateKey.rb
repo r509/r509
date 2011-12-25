@@ -95,7 +95,7 @@ module R509
 
         # Converts the key into the PEM format
         #
-        # @return [String] the CSR converted into PEM format.
+        # @return [String] the key converted into PEM format.
         def to_pem
             if in_hardware?
                 raise R509::R509Error, "This method cannot be called when using keys in hardware"
@@ -109,7 +109,7 @@ module R509
         # full list of available ciphers can be obtained with OpenSSL::Cipher.ciphers
         # (common ones are des3, aes256, aes128)
         # @param [String] password password
-        # @return [String] the CSR converted into encrypted PEM format.
+        # @return [String] the key converted into encrypted PEM format.
         def to_encrypted_pem(cipher,password)
             if in_hardware?
                 raise R509::R509Error, "This method cannot be called when using keys in hardware"
@@ -121,7 +121,7 @@ module R509
 
         # Converts the key into the DER format
         #
-        # @return [String] the CSR converted into DER format.
+        # @return [String] the key converted into DER format.
         def to_der
             if in_hardware?
                 raise R509::R509Error, "This method cannot be called when using keys in hardware"
@@ -134,7 +134,7 @@ module R509
         # @param [String, #write] filename_or_io Either a string of the path for
         #  the file that you'd like to write, or an IO-like object.
         def write_pem(filename_or_io)
-            write_data(filename_or_io, self.key.to_pem)
+            write_data(filename_or_io, self.to_pem)
         end
 
 
@@ -155,7 +155,7 @@ module R509
         # @param [String, #write] filename_or_io Either a string of the path for
         #  the file that you'd like to write, or an IO-like object.
         def write_der(filename_or_io)
-            write_data(filename_or_io, self.key.to_der)
+            write_data(filename_or_io, self.to_der)
         end
 
 
