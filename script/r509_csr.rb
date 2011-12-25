@@ -9,7 +9,7 @@ selfsign = 0
 if ARGV[0].nil? then
     puts "Interactive CSR generation using r509 v#{R509::VERSION}."
     puts ""
-    puts "You can also call with 1 or 2 args (string subject, int bit_strength, [optional days selfsign length])"
+    puts "You can also call with 1-3 args (string subject, int bit_strength, [optional days selfsign length])"
     subject = []
     print "C (US): "
     c = gets.chomp
