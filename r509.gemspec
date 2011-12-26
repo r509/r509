@@ -8,9 +8,10 @@ spec = Gem::Specification.new do |s|
   s.has_rdoc = false
   s.summary = "A (relatively) simple X.509 certification authority"
   s.description = 'A module that allows you to create CSRs, issue certs off a CA, view the certs, create CRLs, run an OCSP responder, and much more'
-  #s.add_dependency 'openssl'
   s.add_development_dependency 'rspec'
   s.add_development_dependency 'rake'
+  s.add_development_dependency 'rcov' if RUBY_VERSION.split('.')[1].to_i == 8
+  s.add_development_dependency 'simplecov' if RUBY_VERSION.split('.')[1].to_i == 9
   s.author = "Paul Kehrer"
   s.email = "paul.l.kehrer@gmail.com"
   s.homepage = "http://langui.sh"
