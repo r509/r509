@@ -231,7 +231,7 @@ describe R509::Config::CaConfig do
         conf.should_receive(:[]).at_least(1).times.and_return(nil)
         conf.should_receive(:has_key?).at_least(1).times.and_return(false)
 
-        engine.should_receive(:responds_to?).with(:load_private_key).and_return(true)
+        engine.should_receive(:respond_to?).with(:load_private_key).and_return(true)
         engine.should_receive(:kind_of?).with(OpenSSL::Engine).and_return(true)
         faux_key.should_receive(:public_key).and_return(public_key)
         engine.should_receive(:load_private_key).with("r509_key").and_return(faux_key)

@@ -325,7 +325,7 @@ module R509
                     raise R509Error, "You must supply a key_name with an engine"
                 end
 
-                if ca_cert_hash['engine'].responds_to?(:load_private_key)
+                if ca_cert_hash['engine'].respond_to?(:load_private_key)
                     #this path is only for testing...ugh
                     engine = ca_cert_hash['engine']
                 else
