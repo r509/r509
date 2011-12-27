@@ -212,15 +212,11 @@ describe R509::Config::CaConfig do
 
     it "should load YAML which has an engine" do
         #i can test this, it's just gonna take a whole lot of floorin' it!
-        yaml = double("yaml")
         conf = double("conf")
         engine = double("engine")
         faux_key = double("faux_key")
 
         public_key = OpenSSL::PKey::RSA.new("-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAqLfP8948QEZMMkZNHLDP\nOHZVrPdVvecD6bp8dz96LalMQiWjgMkJf7mPHXoNMQ5rIpntiUOmhupu+sty30+C\ndbZZIbZohioTSYq9ZIC/LC9ME12F78GRMKhBGA+ZiouzWvXqOEdMnanfSgKrlSIS\nssF71dfmOEQ08fn9Vl5jAgWmGe+v615iHqBNGr64kYooTrZYLaPlTScO1UZ76vnB\nHfNQU+tsEZNXxtZXKQqkxHxLShCOj6qmYRNn/upTZoWWd04+zXjYGEC3eKvi9ctN\n9FY+KJ6QCCa8H0Kt3cU5qyw6pzdljhbG6NKhod7OMqlGjmHdsCAYAqe3xH+V/8oe\ndwIDAQAB\n-----END PUBLIC KEY-----\n")
-
-        yaml.should_receive(:kind_of?).with(Hash).and_return(true)
-        yaml.should_receive(:[]).with("engine_ca").and_return(conf)
 
         conf.should_receive(:kind_of?).with(Hash).and_return(true)
         conf.should_receive(:[]).with("ca_cert").and_return(
@@ -236,7 +232,7 @@ describe R509::Config::CaConfig do
         faux_key.should_receive(:public_key).and_return(public_key)
         engine.should_receive(:load_private_key).with("r509_key").and_return(faux_key)
 
-        config = R509::Config::CaConfig.from_yaml("engine_ca", yaml)
+        config = R509::Config::CaConfig.load_from_hash(conf)
     end
 
     it "should fail if YAML for ca_cert contains engine and key" do
