@@ -222,7 +222,7 @@ module R509::CertificateAuthority
             ext << ef.create_extension("subjectKeyIdentifier", "hash")
 
             #attach the key identifier if it's not a self-sign
-            if not ef.subject_certificate == ef.issuer_certificate
+            if not ef.subject_certificate == ef.issuer_certificate and R509::Cert.new(:cert=>options[:issuer_certificate]).extensions['subjectKeyIdentifier']
                 ext << ef.create_extension("authorityKeyIdentifier", "keyid:always,issuer:always")
             end
 

@@ -205,7 +205,7 @@ describe R509::Cert do
     end
     it "handles multiple extended key usages" do
         cert = R509::Cert.new(:cert => @cert5)
-        cert.extended_key_usage.should == ["TLS Web Server Authentication","TLS Web Client Authentication","Microsoft Server Gated Crypto"]
+        cert.extended_key_usage.should include("TLS Web Server Authentication","TLS Web Client Authentication","Microsoft Server Gated Crypto")
     end
 
     it "checks rsa?" do

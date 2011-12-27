@@ -153,6 +153,14 @@ describe R509::CertificateAuthority::Signer do
         cert.cert.not_before.ctime.should == not_before.utc.ctime
         cert.cert.not_after.ctime.should == not_after.utc.ctime
     end
+    it "issues a certificate from a root that does not have a subjectKeyIdentifier" do
+        config = R509::Config::CaConfig.from_yaml("missing_key_identifier_ca", File.read("#{File.dirname(__FILE__)}/fixtures/config_test_various.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"})
+        ca = R509::CertificateAuthority::Signer.new(config)
+        csr = R509::Csr.new(:csr => @csr3)
+        cert = ca.sign(:csr => csr, :profile_name => "server")
+        cert.extensions['authorityKeyIdentifier'].should == nil
+        cert.extended_key_usage.should include("TLS Web Server Authentication")
+    end
     it "raises error unless you provide a proper config (or nil)" do
         expect { R509::CertificateAuthority::Signer.new('invalid') }.to raise_error(R509::R509Error, 'config must be a kind of R509::Config::CaConfig or nil (for self-sign only)')
     end
