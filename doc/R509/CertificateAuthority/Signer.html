@@ -1,0 +1,796 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta name="Content-Type" content="text/html; charset=en_us" />
+<title>Class: R509::CertificateAuthority::Signer</title>
+<link rel="stylesheet" href="../../css/style.css" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="../../css/common.css" type="text/css" media="screen" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  relpath = '../..';
+  if (relpath != '') relpath += '/';
+</script>
+<script type="text/javascript" charset="utf-8" src="../../js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="../../js/app.js"></script>
+
+  </head>
+  <body>
+    <script type="text/javascript" charset="utf-8">
+      if (window.top.frames.main) document.body.className = 'frames';
+    </script>
+    
+    <div id="header">
+      <div id="menu">
+  
+    <a href="../../_index.html">Index (S)</a> &raquo; 
+    <span class='title'><span class='object_link'><a href="../../R509.html" title="R509 (module)">R509</a></span></span> &raquo; <span class='title'><span class='object_link'><a href="../CertificateAuthority.html" title="R509::CertificateAuthority (module)">CertificateAuthority</a></span></span>
+     &raquo; 
+    <span class="title">Signer</span>
+  
+  
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  <a id="class_list_link" href="#">Class List</a>
+  <a id="method_list_link" href="#">Method List</a>
+  <a id ="file_list_link" href="#">File List</a>
+</div>
+
+      <div class="clear"></div>
+    </div>
+    
+    <iframe id="search_frame"></iframe>
+    
+    <div id="content"><h1>Class: R509::CertificateAuthority::Signer
+  
+  
+  
+</h1>
+
+<dl class="box">
+  
+    <dt class="r1">Inherits:</dt>
+    <dd class="r1">
+      <span class="inheritName">Object</span>
+      
+        <ul class="fullTree">
+          <li>Object</li>
+          
+            <li class="next">R509::CertificateAuthority::Signer</li>
+          
+        </ul>
+        <a href="#" class="inheritanceTree">show all</a>
+      
+      </dd>
+    
+  
+  
+    
+  
+    
+  
+  
+  
+    <dt class="r2 last">Defined in:</dt>
+    <dd class="r2 last">lib/r509/CertificateAuthority.rb</dd>
+  
+</dl>
+<div class="clear"></div>
+
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    
+<p>Contains the certification authority signing operation methods</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+</div>
+
+
+  
+    <h2>
+      Instance Method Summary
+      <small>(<a href="#" class="summary_toggle">collapse</a>)</small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#initialize-instance_method" title="#initialize (instance method)">- (Signer) <strong>initialize</strong>(config = nil) </a>
+    
+
+    
+  </span>
+  
+    <span class="note title constructor">constructor</span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>A new instance of Signer.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#selfsign-instance_method" title="#selfsign (instance method)">- (R509::Cert) <strong>selfsign</strong>(options) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Self-signs a CSR.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#sign-instance_method" title="#sign (instance method)">- (R509::Cert) <strong>sign</strong>(options) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Signs a CSR.</p>
+</div></span>
+  
+</li>
+
+      
+    </ul>
+  
+
+<div id="constructor_details" class="method_details_list">
+  <h2>Constructor Details</h2>
+  
+    <div class="method_details first">
+  <p class="signature first" id="initialize-instance_method">
+  
+    - (<tt><span class='object_link'><a href="" title="R509::CertificateAuthority::Signer (class)">Signer</a></span></tt>) <strong>initialize</strong>(config = nil) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    
+<p>A new instance of Signer</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
+  
+    <li>
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../Config.html" title="R509::Config (module)">R509::Config</a></span></tt>)</span>
+      
+      
+        <span class='name'>@config</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/r509/CertificateAuthority.rb', line 12</span>
+
+<span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span><span class='lparen token'>(</span><span class='config identifier id'>config</span><span class='assign token'>=</span><span class='nil nil kw'>nil</span><span class='rparen token'>)</span>
+    <span class='@config ivar id'>@config</span> <span class='assign token'>=</span> <span class='config identifier id'>config</span>
+
+    <span class='if if kw'>if</span> <span class='not not kw'>not</span> <span class='@config ivar id'>@config</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span> <span class='and and kw'>and</span> <span class='not not kw'>not</span> <span class='@config ivar id'>@config</span><span class='dot token'>.</span><span class='kind_of? fid id'>kind_of?</span><span class='lparen token'>(</span><span class='R509 constant id'>R509</span><span class='colon2 op'>::</span><span class='Config constant id'>Config</span><span class='colon2 op'>::</span><span class='CaConfig constant id'>CaConfig</span><span class='rparen token'>)</span>
+        <span class='raise identifier id'>raise</span> <span class='R509 constant id'>R509</span><span class='colon2 op'>::</span><span class='R509Error constant id'>R509Error</span><span class='comma token'>,</span> <span class='string val'>&quot;config must be a kind of R509::Config::CaConfig or nil (for self-sign only)&quot;</span>
+    <span class='end end kw'>end</span>
+    <span class='if if kw'>if</span> <span class='not not kw'>not</span> <span class='@config ivar id'>@config</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span> <span class='and and kw'>and</span> <span class='@config ivar id'>@config</span><span class='dot token'>.</span><span class='num_profiles identifier id'>num_profiles</span> <span class='eq op'>==</span> <span class='integer val'>0</span>
+        <span class='raise identifier id'>raise</span> <span class='R509 constant id'>R509</span><span class='colon2 op'>::</span><span class='R509Error constant id'>R509Error</span><span class='comma token'>,</span> <span class='string val'>&quot;You must have at least one CaProfile on your CaConfig to issue&quot;</span>
+    <span class='end end kw'>end</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+  
+</div>
+
+
+  <div id="instance_method_details" class="method_details_list">
+    <h2>Instance Method Details</h2>
+    
+    
+      <div class="method_details first">
+  <p class="signature first" id="selfsign-instance_method">
+  
+    - (<tt><span class='object_link'><a href="../Cert.html" title="R509::Cert (class)">R509::Cert</a></span></tt>) <strong>selfsign</strong>(options) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    
+<p>Self-signs a CSR</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
+  
+    <li>
+      
+        <span class='type'>(<tt>Hash</tt>)</span>
+      
+      
+        <span class='name'>options</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>a customizable set of options</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+  
+    
+    
+    <h3>Options Hash (<tt>options</tt>):</h3>
+    <ul class="option">
+      
+        <li>
+          <span class="type">(<tt><span class='object_link'><a href="../Csr.html" title="R509::Csr (class)">R509::Csr</a></span></tt>)</span>
+          <span class="name">:csr</span>
+          <span class="default">
+            
+          </span>
+          &mdash; <div class='inline'></div>
+        </tr>
+      
+        <li>
+          <span class="type">(<tt>String</tt>)</span>
+          <span class="name">:message_digest</span>
+          <span class="default">
+            
+          </span>
+          &mdash; <div class='inline'>
+<p>the message digest to use for this certificate (defaults to sha1)</p>
+</div>
+        </tr>
+      
+        <li>
+          <span class="type">(<tt>String</tt>)</span>
+          <span class="name">:serial</span>
+          <span class="default">
+            
+          </span>
+          &mdash; <div class='inline'>
+<p>the serial number you want to issue the certificate with (defaults to
+random)</p>
+</div>
+        </tr>
+      
+        <li>
+          <span class="type">(<tt>Time</tt>)</span>
+          <span class="name">:not_before</span>
+          <span class="default">
+            
+          </span>
+          &mdash; <div class='inline'>
+<p>the notBefore for the certificate (defaults to now)</p>
+</div>
+        </tr>
+      
+        <li>
+          <span class="type">(<tt>Time</tt>)</span>
+          <span class="name">:not_after</span>
+          <span class="default">
+            
+          </span>
+          &mdash; <div class='inline'>
+<p>the notAfter for the certificate (defaults to 1 year)</p>
+</div>
+        </tr>
+      
+    </ul>
+  
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../Cert.html" title="R509::Cert (class)">R509::Cert</a></span></tt>)</span>
+      
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the signed cert object</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/r509/CertificateAuthority.rb', line 118</span>
+
+<span class='def def kw'>def</span> <span class='selfsign identifier id'>selfsign</span><span class='lparen token'>(</span><span class='options identifier id'>options</span><span class='rparen token'>)</span>
+    <span class='if if kw'>if</span> <span class='not not kw'>not</span> <span class='options identifier id'>options</span><span class='dot token'>.</span><span class='kind_of? fid id'>kind_of?</span><span class='lparen token'>(</span><span class='Hash constant id'>Hash</span><span class='rparen token'>)</span>
+        <span class='raise identifier id'>raise</span> <span class='ArgumentError constant id'>ArgumentError</span><span class='comma token'>,</span> <span class='string val'>&quot;You must pass a hash of options consisting of at minimum :csr&quot;</span>
+    <span class='end end kw'>end</span>
+    <span class='csr identifier id'>csr</span> <span class='assign token'>=</span> <span class='options identifier id'>options</span><span class='lbrack token'>[</span><span class='symbol val'>:csr</span><span class='rbrack token'>]</span>
+    <span class='if if kw'>if</span> <span class='csr identifier id'>csr</span><span class='dot token'>.</span><span class='key identifier id'>key</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span>
+        <span class='raise identifier id'>raise</span> <span class='ArgumentError constant id'>ArgumentError</span><span class='comma token'>,</span> <span class='string val'>'CSR must also have a private key to self sign'</span>
+    <span class='end end kw'>end</span>
+    <span class='cert identifier id'>cert</span> <span class='assign token'>=</span> <span class='build_cert identifier id'>build_cert</span><span class='lparen token'>(</span>
+        <span class='symbol val'>:subject</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='csr identifier id'>csr</span><span class='dot token'>.</span><span class='subject identifier id'>subject</span><span class='dot token'>.</span><span class='name identifier id'>name</span><span class='comma token'>,</span>
+        <span class='symbol val'>:issuer</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='csr identifier id'>csr</span><span class='dot token'>.</span><span class='subject identifier id'>subject</span><span class='dot token'>.</span><span class='name identifier id'>name</span><span class='comma token'>,</span>
+        <span class='symbol val'>:not_before</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='options identifier id'>options</span><span class='lbrack token'>[</span><span class='symbol val'>:not_before</span><span class='rbrack token'>]</span><span class='comma token'>,</span>
+        <span class='symbol val'>:not_after</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='options identifier id'>options</span><span class='lbrack token'>[</span><span class='symbol val'>:not_after</span><span class='rbrack token'>]</span><span class='comma token'>,</span>
+        <span class='symbol val'>:public_key</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='csr identifier id'>csr</span><span class='dot token'>.</span><span class='public_key identifier id'>public_key</span><span class='comma token'>,</span>
+        <span class='symbol val'>:serial</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='options identifier id'>options</span><span class='lbrack token'>[</span><span class='symbol val'>:serial</span><span class='rbrack token'>]</span>
+    <span class='rparen token'>)</span>
+
+    <span class='build_extensions identifier id'>build_extensions</span><span class='lparen token'>(</span>
+        <span class='symbol val'>:subject_certificate</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='cert identifier id'>cert</span><span class='comma token'>,</span>
+        <span class='symbol val'>:issuer_certificate</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='cert identifier id'>cert</span><span class='comma token'>,</span>
+        <span class='symbol val'>:basic_constraints</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>&quot;CA:TRUE&quot;</span>
+        <span class='comment val'>#:key_usage =&gt; key_usage,</span>
+        <span class='comment val'>#:extended_key_usage =&gt; extended_key_usage,</span>
+        <span class='comment val'>#:certificate_policies =&gt; certificate_policies,</span>
+        <span class='comment val'>#:san_names =&gt; san_names</span>
+    <span class='rparen token'>)</span>
+
+
+    <span class='if if kw'>if</span> <span class='options identifier id'>options</span><span class='dot token'>.</span><span class='has_key? fid id'>has_key?</span><span class='lparen token'>(</span><span class='symbol val'>:message_digest</span><span class='rparen token'>)</span>
+        <span class='message_digest identifier id'>message_digest</span> <span class='assign token'>=</span> <span class='R509 constant id'>R509</span><span class='colon2 op'>::</span><span class='MessageDigest constant id'>MessageDigest</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='options identifier id'>options</span><span class='lbrack token'>[</span><span class='symbol val'>:message_digest</span><span class='rbrack token'>]</span><span class='rparen token'>)</span>
+    <span class='else else kw'>else</span>
+        <span class='message_digest identifier id'>message_digest</span> <span class='assign token'>=</span> <span class='R509 constant id'>R509</span><span class='colon2 op'>::</span><span class='MessageDigest constant id'>MessageDigest</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='string val'>'sha1'</span><span class='rparen token'>)</span>
+    <span class='end end kw'>end</span>
+
+    <span class='comment val'># Csr#key returns R509::PrivateKey and #key on that returns OpenSSL object we need</span>
+    <span class='cert identifier id'>cert</span><span class='dot token'>.</span><span class='sign identifier id'>sign</span><span class='lparen token'>(</span> <span class='csr identifier id'>csr</span><span class='dot token'>.</span><span class='key identifier id'>key</span><span class='dot token'>.</span><span class='key identifier id'>key</span><span class='comma token'>,</span> <span class='message_digest identifier id'>message_digest</span><span class='dot token'>.</span><span class='digest identifier id'>digest</span> <span class='rparen token'>)</span>
+    <span class='R509 constant id'>R509</span><span class='colon2 op'>::</span><span class='Cert constant id'>Cert</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='symbol val'>:cert</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='cert identifier id'>cert</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="sign-instance_method">
+  
+    - (<tt><span class='object_link'><a href="../Cert.html" title="R509::Cert (class)">R509::Cert</a></span></tt>) <strong>sign</strong>(options) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    
+<p>Signs a CSR</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
+  
+    <li>
+      
+        <span class='type'>(<tt>Hash</tt>)</span>
+      
+      
+        <span class='name'>options</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>a customizable set of options</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+  
+    
+    
+    <h3>Options Hash (<tt>options</tt>):</h3>
+    <ul class="option">
+      
+        <li>
+          <span class="type">(<tt><span class='object_link'><a href="../Csr.html" title="R509::Csr (class)">R509::Csr</a></span></tt>)</span>
+          <span class="name">:csr</span>
+          <span class="default">
+            
+          </span>
+          &mdash; <div class='inline'></div>
+        </tr>
+      
+        <li>
+          <span class="type">(<tt><span class='object_link'><a href="../Spki.html" title="R509::Spki (class)">R509::Spki</a></span></tt>)</span>
+          <span class="name">:spki</span>
+          <span class="default">
+            
+          </span>
+          &mdash; <div class='inline'></div>
+        </tr>
+      
+        <li>
+          <span class="type">(<tt>String</tt>)</span>
+          <span class="name">:profile_name</span>
+          <span class="default">
+            
+          </span>
+          &mdash; <div class='inline'>
+<p>The CA profile you want to use (eg “server in your config)</p>
+</div>
+        </tr>
+      
+        <li>
+          <span class="type">(<tt>Hash</tt>)</span>
+          <span class="name">:data_hash</span>
+          <span class="default">
+            
+          </span>
+          &mdash; <div class='inline'>
+<p>a hash containing the subject and SAN names you want encoded for this cert.
+Generate by calling Csr#to_hash or Spki#to_hash</p>
+</div>
+        </tr>
+      
+        <li>
+          <span class="type">(<tt>String</tt>)</span>
+          <span class="name">:message_digest</span>
+          <span class="default">
+            
+          </span>
+          &mdash; <div class='inline'>
+<p>the message digest to use for this certificate instead of the config’s
+default</p>
+</div>
+        </tr>
+      
+        <li>
+          <span class="type">(<tt>String</tt>)</span>
+          <span class="name">:serial</span>
+          <span class="default">
+            
+          </span>
+          &mdash; <div class='inline'>
+<p>the serial number you want to issue the certificate with</p>
+</div>
+        </tr>
+      
+        <li>
+          <span class="type">(<tt>Time</tt>)</span>
+          <span class="name">:not_before</span>
+          <span class="default">
+            
+          </span>
+          &mdash; <div class='inline'>
+<p>the notBefore for the certificate</p>
+</div>
+        </tr>
+      
+        <li>
+          <span class="type">(<tt>Time</tt>)</span>
+          <span class="name">:not_after</span>
+          <span class="default">
+            
+          </span>
+          &mdash; <div class='inline'>
+<p>the notAfter for the certificate</p>
+</div>
+        </tr>
+      
+    </ul>
+  
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../Cert.html" title="R509::Cert (class)">R509::Cert</a></span></tt>)</span>
+      
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the signed cert object</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/r509/CertificateAuthority.rb', line 33</span>
+
+<span class='def def kw'>def</span> <span class='sign identifier id'>sign</span><span class='lparen token'>(</span><span class='options identifier id'>options</span><span class='rparen token'>)</span>
+    <span class='if if kw'>if</span> <span class='@config ivar id'>@config</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span>
+        <span class='raise identifier id'>raise</span> <span class='R509 constant id'>R509</span><span class='colon2 op'>::</span><span class='R509Error constant id'>R509Error</span><span class='comma token'>,</span> <span class='string val'>&quot;When instantiating the signer without a config you can only call #selfsign&quot;</span>
+    <span class='end end kw'>end</span>
+    <span class='if if kw'>if</span> <span class='options identifier id'>options</span><span class='dot token'>.</span><span class='has_key? fid id'>has_key?</span><span class='lparen token'>(</span><span class='symbol val'>:csr</span><span class='rparen token'>)</span> <span class='and and kw'>and</span> <span class='options identifier id'>options</span><span class='dot token'>.</span><span class='has_key? fid id'>has_key?</span><span class='lparen token'>(</span><span class='symbol val'>:spki</span><span class='rparen token'>)</span>
+        <span class='raise identifier id'>raise</span> <span class='ArgumentError constant id'>ArgumentError</span><span class='comma token'>,</span> <span class='string val'>&quot;You can't pass both :csr and :spki&quot;</span>
+    <span class='elsif elsif kw'>elsif</span> <span class='not not kw'>not</span> <span class='options identifier id'>options</span><span class='dot token'>.</span><span class='has_key? fid id'>has_key?</span><span class='lparen token'>(</span><span class='symbol val'>:csr</span><span class='rparen token'>)</span> <span class='and and kw'>and</span> <span class='not not kw'>not</span> <span class='options identifier id'>options</span><span class='dot token'>.</span><span class='has_key? fid id'>has_key?</span><span class='lparen token'>(</span><span class='symbol val'>:spki</span><span class='rparen token'>)</span>
+        <span class='raise identifier id'>raise</span> <span class='ArgumentError constant id'>ArgumentError</span><span class='comma token'>,</span> <span class='string val'>&quot;You must supply either :csr or :spki&quot;</span>
+    <span class='elsif elsif kw'>elsif</span> <span class='options identifier id'>options</span><span class='dot token'>.</span><span class='has_key? fid id'>has_key?</span><span class='lparen token'>(</span><span class='symbol val'>:csr</span><span class='rparen token'>)</span>
+        <span class='if if kw'>if</span> <span class='not not kw'>not</span> <span class='options identifier id'>options</span><span class='lbrack token'>[</span><span class='symbol val'>:csr</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='kind_of? fid id'>kind_of?</span><span class='lparen token'>(</span><span class='R509 constant id'>R509</span><span class='colon2 op'>::</span><span class='Csr constant id'>Csr</span><span class='rparen token'>)</span>
+            <span class='raise identifier id'>raise</span> <span class='ArgumentError constant id'>ArgumentError</span><span class='comma token'>,</span> <span class='string val'>&quot;You must pass an R509::Csr object for :csr&quot;</span>
+        <span class='else else kw'>else</span>
+            <span class='signable_object identifier id'>signable_object</span> <span class='assign token'>=</span> <span class='options identifier id'>options</span><span class='lbrack token'>[</span><span class='symbol val'>:csr</span><span class='rbrack token'>]</span>
+        <span class='end end kw'>end</span>
+    <span class='elsif elsif kw'>elsif</span> <span class='not not kw'>not</span> <span class='options identifier id'>options</span><span class='dot token'>.</span><span class='has_key? fid id'>has_key?</span><span class='lparen token'>(</span><span class='symbol val'>:csr</span><span class='rparen token'>)</span> <span class='and and kw'>and</span> <span class='options identifier id'>options</span><span class='dot token'>.</span><span class='has_key? fid id'>has_key?</span><span class='lparen token'>(</span><span class='symbol val'>:spki</span><span class='rparen token'>)</span>
+        <span class='if if kw'>if</span> <span class='not not kw'>not</span> <span class='options identifier id'>options</span><span class='lbrack token'>[</span><span class='symbol val'>:spki</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='kind_of? fid id'>kind_of?</span><span class='lparen token'>(</span><span class='R509 constant id'>R509</span><span class='colon2 op'>::</span><span class='Spki constant id'>Spki</span><span class='rparen token'>)</span>
+            <span class='raise identifier id'>raise</span> <span class='ArgumentError constant id'>ArgumentError</span><span class='comma token'>,</span> <span class='string val'>&quot;You must pass an R509::Spki object for :spki&quot;</span>
+        <span class='else else kw'>else</span>
+            <span class='signable_object identifier id'>signable_object</span> <span class='assign token'>=</span> <span class='options identifier id'>options</span><span class='lbrack token'>[</span><span class='symbol val'>:spki</span><span class='rbrack token'>]</span>
+        <span class='end end kw'>end</span>
+    <span class='end end kw'>end</span>
+
+    <span class='if if kw'>if</span> <span class='options identifier id'>options</span><span class='dot token'>.</span><span class='has_key? fid id'>has_key?</span><span class='lparen token'>(</span><span class='symbol val'>:data_hash</span><span class='rparen token'>)</span>
+        <span class='san_names identifier id'>san_names</span> <span class='assign token'>=</span> <span class='options identifier id'>options</span><span class='lbrack token'>[</span><span class='symbol val'>:data_hash</span><span class='rbrack token'>]</span><span class='lbrack token'>[</span><span class='symbol val'>:san_names</span><span class='rbrack token'>]</span>
+        <span class='subject identifier id'>subject</span> <span class='assign token'>=</span> <span class='options identifier id'>options</span><span class='lbrack token'>[</span><span class='symbol val'>:data_hash</span><span class='rbrack token'>]</span><span class='lbrack token'>[</span><span class='symbol val'>:subject</span><span class='rbrack token'>]</span>
+    <span class='else else kw'>else</span>
+        <span class='san_names identifier id'>san_names</span> <span class='assign token'>=</span> <span class='signable_object identifier id'>signable_object</span><span class='dot token'>.</span><span class='to_hash identifier id'>to_hash</span><span class='lbrack token'>[</span><span class='symbol val'>:san_names</span><span class='rbrack token'>]</span>
+        <span class='subject identifier id'>subject</span> <span class='assign token'>=</span> <span class='signable_object identifier id'>signable_object</span><span class='dot token'>.</span><span class='to_hash identifier id'>to_hash</span><span class='lbrack token'>[</span><span class='symbol val'>:subject</span><span class='rbrack token'>]</span>
+    <span class='end end kw'>end</span>
+
+
+
+    <span class='if if kw'>if</span> <span class='options identifier id'>options</span><span class='dot token'>.</span><span class='has_key? fid id'>has_key?</span><span class='lparen token'>(</span><span class='symbol val'>:csr</span><span class='rparen token'>)</span> <span class='and and kw'>and</span> <span class='not not kw'>not</span> <span class='options identifier id'>options</span><span class='lbrack token'>[</span><span class='symbol val'>:csr</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='verify_signature identifier id'>verify_signature</span>
+        <span class='raise identifier id'>raise</span> <span class='R509 constant id'>R509</span><span class='colon2 op'>::</span><span class='R509Error constant id'>R509Error</span><span class='comma token'>,</span> <span class='string val'>&quot;Certificate request signature is invalid.&quot;</span>
+    <span class='end end kw'>end</span>
+
+    <span class='comment val'>#handle DSA here</span>
+    <span class='if if kw'>if</span> <span class='options identifier id'>options</span><span class='dot token'>.</span><span class='has_key? fid id'>has_key?</span><span class='lparen token'>(</span><span class='symbol val'>:message_digest</span><span class='rparen token'>)</span>
+        <span class='message_digest identifier id'>message_digest</span> <span class='assign token'>=</span> <span class='R509 constant id'>R509</span><span class='colon2 op'>::</span><span class='MessageDigest constant id'>MessageDigest</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='options identifier id'>options</span><span class='lbrack token'>[</span><span class='symbol val'>:message_digest</span><span class='rbrack token'>]</span><span class='rparen token'>)</span>
+    <span class='else else kw'>else</span>
+        <span class='message_digest identifier id'>message_digest</span> <span class='assign token'>=</span> <span class='R509 constant id'>R509</span><span class='colon2 op'>::</span><span class='MessageDigest constant id'>MessageDigest</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='@config ivar id'>@config</span><span class='dot token'>.</span><span class='message_digest identifier id'>message_digest</span><span class='rparen token'>)</span>
+    <span class='end end kw'>end</span>
+
+    <span class='profile identifier id'>profile</span> <span class='assign token'>=</span> <span class='@config ivar id'>@config</span><span class='dot token'>.</span><span class='profile identifier id'>profile</span><span class='lparen token'>(</span><span class='options identifier id'>options</span><span class='lbrack token'>[</span><span class='symbol val'>:profile_name</span><span class='rbrack token'>]</span><span class='rparen token'>)</span>
+
+    <span class='validated_subject identifier id'>validated_subject</span> <span class='assign token'>=</span> <span class='validate_subject identifier id'>validate_subject</span><span class='lparen token'>(</span><span class='subject identifier id'>subject</span><span class='comma token'>,</span><span class='profile identifier id'>profile</span><span class='rparen token'>)</span>
+
+    <span class='cert identifier id'>cert</span> <span class='assign token'>=</span> <span class='build_cert identifier id'>build_cert</span><span class='lparen token'>(</span>
+        <span class='symbol val'>:subject</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='validated_subject identifier id'>validated_subject</span><span class='dot token'>.</span><span class='name identifier id'>name</span><span class='comma token'>,</span>
+        <span class='symbol val'>:issuer</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='@config ivar id'>@config</span><span class='dot token'>.</span><span class='ca_cert identifier id'>ca_cert</span><span class='dot token'>.</span><span class='subject identifier id'>subject</span><span class='comma token'>,</span>
+        <span class='symbol val'>:not_before</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='options identifier id'>options</span><span class='lbrack token'>[</span><span class='symbol val'>:not_before</span><span class='rbrack token'>]</span><span class='comma token'>,</span>
+        <span class='symbol val'>:not_after</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='options identifier id'>options</span><span class='lbrack token'>[</span><span class='symbol val'>:not_after</span><span class='rbrack token'>]</span><span class='comma token'>,</span>
+        <span class='symbol val'>:public_key</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='signable_object identifier id'>signable_object</span><span class='dot token'>.</span><span class='public_key identifier id'>public_key</span><span class='comma token'>,</span>
+        <span class='symbol val'>:serial</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='options identifier id'>options</span><span class='lbrack token'>[</span><span class='symbol val'>:serial</span><span class='rbrack token'>]</span>
+    <span class='rparen token'>)</span>
+
+    <span class='basic_constraints identifier id'>basic_constraints</span> <span class='assign token'>=</span> <span class='profile identifier id'>profile</span><span class='dot token'>.</span><span class='basic_constraints identifier id'>basic_constraints</span>
+    <span class='key_usage identifier id'>key_usage</span> <span class='assign token'>=</span> <span class='profile identifier id'>profile</span><span class='dot token'>.</span><span class='key_usage identifier id'>key_usage</span>
+    <span class='extended_key_usage identifier id'>extended_key_usage</span> <span class='assign token'>=</span> <span class='profile identifier id'>profile</span><span class='dot token'>.</span><span class='extended_key_usage identifier id'>extended_key_usage</span>
+    <span class='certificate_policies identifier id'>certificate_policies</span> <span class='assign token'>=</span> <span class='profile identifier id'>profile</span><span class='dot token'>.</span><span class='certificate_policies identifier id'>certificate_policies</span>
+
+    <span class='build_extensions identifier id'>build_extensions</span><span class='lparen token'>(</span>
+        <span class='symbol val'>:subject_certificate</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='cert identifier id'>cert</span><span class='comma token'>,</span>
+        <span class='symbol val'>:issuer_certificate</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='@config ivar id'>@config</span><span class='dot token'>.</span><span class='ca_cert identifier id'>ca_cert</span><span class='dot token'>.</span><span class='cert identifier id'>cert</span><span class='comma token'>,</span>
+        <span class='symbol val'>:basic_constraints</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='basic_constraints identifier id'>basic_constraints</span><span class='comma token'>,</span>
+        <span class='symbol val'>:key_usage</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='key_usage identifier id'>key_usage</span><span class='comma token'>,</span>
+        <span class='symbol val'>:extended_key_usage</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='extended_key_usage identifier id'>extended_key_usage</span><span class='comma token'>,</span>
+        <span class='symbol val'>:certificate_policies</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='certificate_policies identifier id'>certificate_policies</span><span class='comma token'>,</span>
+        <span class='symbol val'>:san_names</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='san_names identifier id'>san_names</span>
+    <span class='rparen token'>)</span>
+
+
+    <span class='comment val'>#@config.ca_cert.key.key ... ugly. ca_cert returns R509::Cert</span>
+    <span class='comment val'># #key returns R509::PrivateKey and #key on that returns OpenSSL object we need</span>
+    <span class='cert identifier id'>cert</span><span class='dot token'>.</span><span class='sign identifier id'>sign</span><span class='lparen token'>(</span> <span class='@config ivar id'>@config</span><span class='dot token'>.</span><span class='ca_cert identifier id'>ca_cert</span><span class='dot token'>.</span><span class='key identifier id'>key</span><span class='dot token'>.</span><span class='key identifier id'>key</span><span class='comma token'>,</span> <span class='message_digest identifier id'>message_digest</span><span class='dot token'>.</span><span class='digest identifier id'>digest</span> <span class='rparen token'>)</span>
+    <span class='R509 constant id'>R509</span><span class='colon2 op'>::</span><span class='Cert constant id'>Cert</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='symbol val'>:cert</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='cert identifier id'>cert</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+</div>
+    
+    <div id="footer">
+  Generated on Tue Dec 27 14:58:05 2011 by 
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.6.4 (ruby-1.8.7).
+</div>
+
+  </body>
+</html>

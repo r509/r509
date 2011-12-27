@@ -1,0 +1,1468 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta name="Content-Type" content="text/html; charset=en_us" />
+<title>Class: R509::PrivateKey</title>
+<link rel="stylesheet" href="../css/style.css" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="../css/common.css" type="text/css" media="screen" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  relpath = '..';
+  if (relpath != '') relpath += '/';
+</script>
+<script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
+  </head>
+  <body>
+    <script type="text/javascript" charset="utf-8">
+      if (window.top.frames.main) document.body.className = 'frames';
+    </script>
+    
+    <div id="header">
+      <div id="menu">
+  
+    <a href="../_index.html">Index (P)</a> &raquo; 
+    <span class='title'><span class='object_link'><a href="../R509.html" title="R509 (module)">R509</a></span></span>
+     &raquo; 
+    <span class="title">PrivateKey</span>
+  
+  
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  <a id="class_list_link" href="#">Class List</a>
+  <a id="method_list_link" href="#">Method List</a>
+  <a id ="file_list_link" href="#">File List</a>
+</div>
+
+      <div class="clear"></div>
+    </div>
+    
+    <iframe id="search_frame"></iframe>
+    
+    <div id="content"><h1>Class: R509::PrivateKey
+  
+  
+  
+</h1>
+
+<dl class="box">
+  
+    <dt class="r1">Inherits:</dt>
+    <dd class="r1">
+      <span class="inheritName">Object</span>
+      
+        <ul class="fullTree">
+          <li>Object</li>
+          
+            <li class="next">R509::PrivateKey</li>
+          
+        </ul>
+        <a href="#" class="inheritanceTree">show all</a>
+      
+      </dd>
+    
+  
+  
+    
+  
+    
+      <dt class="r2">Includes:</dt>
+      <dd class="r2"><span class='object_link'><a href="IOHelpers.html" title="R509::IOHelpers (module)">IOHelpers</a></span></dd>
+      
+    
+  
+  
+  
+    <dt class="r1 last">Defined in:</dt>
+    <dd class="r1 last">lib/r509/PrivateKey.rb</dd>
+  
+</dl>
+<div class="clear"></div>
+
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    
+<p>private key management</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+</div>
+
+  
+  
+  
+  
+
+  
+    <h2>
+      Instance Method Summary
+      <small>(<a href="#" class="summary_toggle">collapse</a>)</small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#bit_strength-instance_method" title="#bit_strength (instance method)">- (Integer) <strong>bit_strength</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#dsa%3F-instance_method" title="#dsa? (instance method)">- (Boolean) <strong>dsa?</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Returns whether the public key is DSA.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#in_hardware%3F-instance_method" title="#in_hardware? (instance method)">- (Boolean) <strong>in_hardware?</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Whether the key is resident in hardware or not.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#initialize-instance_method" title="#initialize (instance method)">- (PrivateKey) <strong>initialize</strong>(opts) </a>
+    
+
+    
+  </span>
+  
+    <span class="note title constructor">constructor</span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>A new instance of PrivateKey.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#key-instance_method" title="#key (instance method)">- (OpenSSL::PKey::RSA, ...) <strong>key</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>This method may return the PKey object itself or a handle to the private
+key in the HSM (which will not show the private key, just public).</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#public_key-instance_method" title="#public_key (instance method)">- (OpenSSL::PKey::RSA, OpenSSL::PKey::DSA) <strong>public_key</strong> </a>
+    
+
+    
+      (also: #to_s)
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Public key.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#rsa%3F-instance_method" title="#rsa? (instance method)">- (Boolean) <strong>rsa?</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Returns whether the public key is RSA.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#to_der-instance_method" title="#to_der (instance method)">- (String) <strong>to_der</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Converts the key into the DER format.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#to_encrypted_pem-instance_method" title="#to_encrypted_pem (instance method)">- (String) <strong>to_encrypted_pem</strong>(cipher, password) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Converts the key into encrypted PEM format.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#to_pem-instance_method" title="#to_pem (instance method)">- (String) <strong>to_pem</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Converts the key into the PEM format.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#write_der-instance_method" title="#write_der (instance method)">- (Object) <strong>write_der</strong>(filename_or_io) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Writes the key into the DER format.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#write_encrypted_pem-instance_method" title="#write_encrypted_pem (instance method)">- (Object) <strong>write_encrypted_pem</strong>(filename_or_io, cipher, password) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Writes the key into encrypted PEM format with specified cipher.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#write_pem-instance_method" title="#write_pem (instance method)">- (Object) <strong>write_pem</strong>(filename_or_io) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Writes the key into the PEM format.</p>
+</div></span>
+  
+</li>
+
+      
+    </ul>
+  
+
+
+  
+  
+  
+  
+  
+  
+  
+  <h3 class="inherited">Methods included from <span class='object_link'><a href="IOHelpers.html" title="R509::IOHelpers (module)">IOHelpers</a></span></h3>
+  <p class="inherited"><span class='object_link'><a href="IOHelpers.html#read_data-instance_method" title="R509::IOHelpers#read_data (method)">#read_data</a></span>, <span class='object_link'><a href="IOHelpers.html#write_data-instance_method" title="R509::IOHelpers#write_data (method)">#write_data</a></span></p>
+<div id="constructor_details" class="method_details_list">
+  <h2>Constructor Details</h2>
+  
+    <div class="method_details first">
+  <p class="signature first" id="initialize-instance_method">
+  
+    - (<tt><span class='object_link'><a href="" title="R509::PrivateKey (class)">PrivateKey</a></span></tt>) <strong>initialize</strong>(opts) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    
+<p>A new instance of PrivateKey</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
+  
+    <li>
+      
+        <span class='type'>(<tt>Hash</tt>)</span>
+      
+      
+        <span class='name'>opts</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>a customizable set of options</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+  
+    
+    
+    <h3>Options Hash (<tt>opts</tt>):</h3>
+    <ul class="option">
+      
+        <li>
+          <span class="type">(<tt>Symbol</tt>)</span>
+          <span class="name">:type</span>
+          <span class="default">
+            
+          </span>
+          &mdash; <div class='inline'>
+<p>:rsa/:dsa</p>
+</div>
+        </tr>
+      
+        <li>
+          <span class="type">(<tt>Integer</tt>)</span>
+          <span class="name">:bit_strength</span>
+          <span class="default">
+            
+          </span>
+          
+        </tr>
+      
+        <li>
+          <span class="type">(<tt>String</tt>)</span>
+          <span class="name">:password</span>
+          <span class="default">
+            
+          </span>
+          
+        </tr>
+      
+        <li>
+          <span class="type">(<tt>String</tt>, <tt>OpenSSL::PKey::RSA</tt>, <tt>OpenSSL::PKey::DSA</tt>)</span>
+          <span class="name">:key</span>
+          <span class="default">
+            
+          </span>
+          
+        </tr>
+      
+        <li>
+          <span class="type">(<tt>OpenSSL::Engine</tt>)</span>
+          <span class="name">:engine</span>
+          <span class="default">
+            
+          </span>
+          
+        </tr>
+      
+        <li>
+          <span class="type">(<tt>string</tt>)</span>
+          <span class="name">:key_name</span>
+          <span class="default">
+            
+              &mdash; default:
+              <tt>used with engine</tt>
+            
+          </span>
+          &mdash; <div class='inline'></div>
+        </tr>
+      
+    </ul>
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/r509/PrivateKey.rb', line 16</span>
+
+<span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span><span class='lparen token'>(</span><span class='opts identifier id'>opts</span><span class='rparen token'>)</span>
+    <span class='if if kw'>if</span> <span class='not not kw'>not</span> <span class='opts identifier id'>opts</span><span class='dot token'>.</span><span class='kind_of? fid id'>kind_of?</span><span class='lparen token'>(</span><span class='Hash constant id'>Hash</span><span class='rparen token'>)</span>
+        <span class='raise identifier id'>raise</span> <span class='ArgumentError constant id'>ArgumentError</span><span class='comma token'>,</span> <span class='string val'>'Must provide a hash of options'</span>
+    <span class='end end kw'>end</span>
+
+    <span class='if if kw'>if</span> <span class='opts identifier id'>opts</span><span class='dot token'>.</span><span class='has_key? fid id'>has_key?</span><span class='lparen token'>(</span><span class='symbol val'>:engine</span><span class='rparen token'>)</span> <span class='and and kw'>and</span> <span class='opts identifier id'>opts</span><span class='dot token'>.</span><span class='has_key? fid id'>has_key?</span><span class='lparen token'>(</span><span class='symbol val'>:key</span><span class='rparen token'>)</span>
+        <span class='raise identifier id'>raise</span> <span class='ArgumentError constant id'>ArgumentError</span><span class='comma token'>,</span> <span class='string val'>'You can\'t pass both :key and :engine'</span>
+    <span class='elsif elsif kw'>elsif</span> <span class='opts identifier id'>opts</span><span class='dot token'>.</span><span class='has_key? fid id'>has_key?</span><span class='lparen token'>(</span><span class='symbol val'>:key_name</span><span class='rparen token'>)</span> <span class='and and kw'>and</span> <span class='not not kw'>not</span> <span class='opts identifier id'>opts</span><span class='dot token'>.</span><span class='has_key? fid id'>has_key?</span><span class='lparen token'>(</span><span class='symbol val'>:engine</span><span class='rparen token'>)</span>
+        <span class='raise identifier id'>raise</span> <span class='ArgumentError constant id'>ArgumentError</span><span class='comma token'>,</span> <span class='string val'>'When providing a :key_name you MUST provide an :engine'</span>
+    <span class='elsif elsif kw'>elsif</span> <span class='opts identifier id'>opts</span><span class='dot token'>.</span><span class='has_key? fid id'>has_key?</span><span class='lparen token'>(</span><span class='symbol val'>:engine</span><span class='rparen token'>)</span> <span class='and and kw'>and</span> <span class='not not kw'>not</span> <span class='opts identifier id'>opts</span><span class='dot token'>.</span><span class='has_key? fid id'>has_key?</span><span class='lparen token'>(</span><span class='symbol val'>:key_name</span><span class='rparen token'>)</span>
+        <span class='raise identifier id'>raise</span> <span class='ArgumentError constant id'>ArgumentError</span><span class='comma token'>,</span> <span class='string val'>'When providing an :engine you MUST provide a :key_name'</span>
+    <span class='elsif elsif kw'>elsif</span> <span class='opts identifier id'>opts</span><span class='dot token'>.</span><span class='has_key? fid id'>has_key?</span><span class='lparen token'>(</span><span class='symbol val'>:engine</span><span class='rparen token'>)</span> <span class='and and kw'>and</span> <span class='opts identifier id'>opts</span><span class='dot token'>.</span><span class='has_key? fid id'>has_key?</span><span class='lparen token'>(</span><span class='symbol val'>:key_name</span><span class='rparen token'>)</span>
+        <span class='if if kw'>if</span> <span class='not not kw'>not</span> <span class='opts identifier id'>opts</span><span class='lbrack token'>[</span><span class='symbol val'>:engine</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='kind_of? fid id'>kind_of?</span><span class='lparen token'>(</span><span class='OpenSSL constant id'>OpenSSL</span><span class='colon2 op'>::</span><span class='Engine constant id'>Engine</span><span class='rparen token'>)</span>
+            <span class='raise identifier id'>raise</span> <span class='ArgumentError constant id'>ArgumentError</span><span class='comma token'>,</span> <span class='string val'>'When providing an engine, it must be of type OpenSSL::Engine'</span>
+        <span class='end end kw'>end</span>
+        <span class='@engine ivar id'>@engine</span> <span class='assign token'>=</span> <span class='opts identifier id'>opts</span><span class='lbrack token'>[</span><span class='symbol val'>:engine</span><span class='rbrack token'>]</span>
+        <span class='@key_name ivar id'>@key_name</span> <span class='assign token'>=</span> <span class='opts identifier id'>opts</span><span class='lbrack token'>[</span><span class='symbol val'>:key_name</span><span class='rbrack token'>]</span>
+    <span class='end end kw'>end</span>
+
+    <span class='if if kw'>if</span> <span class='opts identifier id'>opts</span><span class='dot token'>.</span><span class='has_key? fid id'>has_key?</span><span class='lparen token'>(</span><span class='symbol val'>:key</span><span class='rparen token'>)</span>
+        <span class='password identifier id'>password</span> <span class='assign token'>=</span> <span class='opts identifier id'>opts</span><span class='lbrack token'>[</span><span class='symbol val'>:password</span><span class='rbrack token'>]</span> <span class='orop op'>||</span> <span class='nil nil kw'>nil</span>
+        <span class='comment val'>#OpenSSL::PKey.read solves this begin/rescue garbage but is only</span>
+        <span class='comment val'>#available to Ruby 1.9.3+</span>
+        <span class='begin begin kw'>begin</span>
+            <span class='@key ivar id'>@key</span> <span class='assign token'>=</span> <span class='OpenSSL constant id'>OpenSSL</span><span class='colon2 op'>::</span><span class='PKey constant id'>PKey</span><span class='colon2 op'>::</span><span class='RSA constant id'>RSA</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='opts identifier id'>opts</span><span class='lbrack token'>[</span><span class='symbol val'>:key</span><span class='rbrack token'>]</span><span class='comma token'>,</span><span class='password identifier id'>password</span><span class='rparen token'>)</span>
+        <span class='rescue rescue kw'>rescue</span> <span class='OpenSSL constant id'>OpenSSL</span><span class='colon2 op'>::</span><span class='PKey constant id'>PKey</span><span class='colon2 op'>::</span><span class='RSAError constant id'>RSAError</span>
+            <span class='begin begin kw'>begin</span>
+                <span class='@key ivar id'>@key</span> <span class='assign token'>=</span> <span class='OpenSSL constant id'>OpenSSL</span><span class='colon2 op'>::</span><span class='PKey constant id'>PKey</span><span class='colon2 op'>::</span><span class='DSA constant id'>DSA</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='opts identifier id'>opts</span><span class='lbrack token'>[</span><span class='symbol val'>:key</span><span class='rbrack token'>]</span><span class='comma token'>,</span><span class='password identifier id'>password</span><span class='rparen token'>)</span>
+            <span class='rescue rescue kw'>rescue</span>
+                <span class='raise identifier id'>raise</span> <span class='R509 constant id'>R509</span><span class='colon2 op'>::</span><span class='R509Error constant id'>R509Error</span><span class='comma token'>,</span> <span class='string val'>&quot;Failed to load private key. Invalid key or incorrect password.&quot;</span>
+            <span class='end end kw'>end</span>
+        <span class='end end kw'>end</span>
+    <span class='else else kw'>else</span>
+        <span class='bit_strength identifier id'>bit_strength</span> <span class='assign token'>=</span> <span class='opts identifier id'>opts</span><span class='lbrack token'>[</span><span class='symbol val'>:bit_strength</span><span class='rbrack token'>]</span> <span class='orop op'>||</span> <span class='integer val'>2048</span>
+        <span class='type identifier id'>type</span> <span class='assign token'>=</span> <span class='opts identifier id'>opts</span><span class='lbrack token'>[</span><span class='symbol val'>:type</span><span class='rbrack token'>]</span> <span class='orop op'>||</span> <span class='symbol val'>:rsa</span>
+        <span class='case case kw'>case</span> <span class='type identifier id'>type</span>
+        <span class='when when kw'>when</span> <span class='symbol val'>:rsa</span>
+            <span class='@key ivar id'>@key</span> <span class='assign token'>=</span> <span class='OpenSSL constant id'>OpenSSL</span><span class='colon2 op'>::</span><span class='PKey constant id'>PKey</span><span class='colon2 op'>::</span><span class='RSA constant id'>RSA</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='bit_strength identifier id'>bit_strength</span><span class='rparen token'>)</span>
+        <span class='when when kw'>when</span> <span class='symbol val'>:dsa</span>
+            <span class='@key ivar id'>@key</span> <span class='assign token'>=</span> <span class='OpenSSL constant id'>OpenSSL</span><span class='colon2 op'>::</span><span class='PKey constant id'>PKey</span><span class='colon2 op'>::</span><span class='DSA constant id'>DSA</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='bit_strength identifier id'>bit_strength</span><span class='rparen token'>)</span>
+        <span class='else else kw'>else</span>
+            <span class='raise identifier id'>raise</span> <span class='ArgumentError constant id'>ArgumentError</span><span class='comma token'>,</span> <span class='string val'>'Must provide :rsa or :dsa as type when key or engine is nil'</span>
+        <span class='end end kw'>end</span>
+    <span class='end end kw'>end</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+  
+</div>
+
+
+  <div id="instance_method_details" class="method_details_list">
+    <h2>Instance Method Details</h2>
+    
+    
+      <div class="method_details first">
+  <p class="signature first" id="bit_strength-instance_method">
+  
+    - (<tt>Integer</tt>) <strong>bit_strength</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>Integer</tt>)</span>
+      
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+63
+64
+65
+66
+67
+68
+69</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/r509/PrivateKey.rb', line 63</span>
+
+<span class='def def kw'>def</span> <span class='bit_strength identifier id'>bit_strength</span>
+    <span class='if if kw'>if</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='rsa? fid id'>rsa?</span>
+        <span class='return return kw'>return</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='public_key identifier id'>public_key</span><span class='dot token'>.</span><span class='n identifier id'>n</span><span class='dot token'>.</span><span class='num_bits identifier id'>num_bits</span>
+    <span class='elsif elsif kw'>elsif</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='dsa? fid id'>dsa?</span>
+        <span class='return return kw'>return</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='public_key identifier id'>public_key</span><span class='dot token'>.</span><span class='p identifier id'>p</span><span class='dot token'>.</span><span class='num_bits identifier id'>num_bits</span>
+    <span class='end end kw'>end</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="dsa?-instance_method">
+  
+    - (<tt>Boolean</tt>) <strong>dsa?</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns whether the public key is DSA</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>true if the public key is DSA, false otherwise</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+172
+173
+174</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/r509/PrivateKey.rb', line 172</span>
+
+<span class='def def kw'>def</span> <span class='dsa? fid id'>dsa?</span>
+    <span class='self self kw'>self</span><span class='dot token'>.</span><span class='key identifier id'>key</span><span class='dot token'>.</span><span class='kind_of? fid id'>kind_of?</span><span class='lparen token'>(</span><span class='OpenSSL constant id'>OpenSSL</span><span class='colon2 op'>::</span><span class='PKey constant id'>PKey</span><span class='colon2 op'>::</span><span class='DSA constant id'>DSA</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="in_hardware?-instance_method">
+  
+    - (<tt>Boolean</tt>) <strong>in_hardware?</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    
+<p>Whether the key is resident in hardware or not</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>whether the key is resident in hardware or not</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+81
+82
+83
+84
+85
+86
+87</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/r509/PrivateKey.rb', line 81</span>
+
+<span class='def def kw'>def</span> <span class='in_hardware? fid id'>in_hardware?</span>
+    <span class='if if kw'>if</span> <span class='not not kw'>not</span> <span class='@engine ivar id'>@engine</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span>
+        <span class='true true kw'>true</span>
+    <span class='else else kw'>else</span>
+        <span class='false false kw'>false</span>
+    <span class='end end kw'>end</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="key-instance_method">
+  
+    - (<tt>OpenSSL::PKey::RSA</tt>, ...) <strong>key</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    
+<p>This method may return the PKey object itself or a handle to the private
+key in the HSM (which will not show the private key, just public)</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>OpenSSL::PKey::RSA</tt>, <tt>OpenSSL::PKey::DSA</tt>, <tt>OpenSSL::Engine pkey</tt>)</span>
+      
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>this method may return the PKey object itself or a handle to the private
+key in the HSM (which will not show the private key, just public)</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+72
+73
+74
+75
+76
+77
+78</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/r509/PrivateKey.rb', line 72</span>
+
+<span class='def def kw'>def</span> <span class='key identifier id'>key</span>
+    <span class='if if kw'>if</span> <span class='in_hardware? fid id'>in_hardware?</span>
+        <span class='@engine ivar id'>@engine</span><span class='dot token'>.</span><span class='load_private_key identifier id'>load_private_key</span><span class='lparen token'>(</span><span class='@key_name ivar id'>@key_name</span><span class='rparen token'>)</span>
+    <span class='else else kw'>else</span>
+        <span class='@key ivar id'>@key</span>
+    <span class='end end kw'>end</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="public_key-instance_method">
+  
+    - (<tt>OpenSSL::PKey::RSA</tt>, <tt>OpenSSL::PKey::DSA</tt>) <strong>public_key</strong> 
+  
+
+  
+    <span class="aliases">Also known as:
+    <span class="names"><span id='to_s-instance_method'>to_s</span></span>
+    </span>
+  
+</p><div class="docstring">
+  <div class="discussion">
+    
+<p>Public key</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>OpenSSL::PKey::RSA</tt>, <tt>OpenSSL::PKey::DSA</tt>)</span>
+      
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>public key</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+90
+91
+92</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/r509/PrivateKey.rb', line 90</span>
+
+<span class='def def kw'>def</span> <span class='public_key identifier id'>public_key</span>
+    <span class='self self kw'>self</span><span class='dot token'>.</span><span class='key identifier id'>key</span><span class='dot token'>.</span><span class='public_key identifier id'>public_key</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="rsa?-instance_method">
+  
+    - (<tt>Boolean</tt>) <strong>rsa?</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns whether the public key is RSA</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>true if the public key is RSA, false otherwise</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+165
+166
+167</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/r509/PrivateKey.rb', line 165</span>
+
+<span class='def def kw'>def</span> <span class='rsa? fid id'>rsa?</span>
+    <span class='self self kw'>self</span><span class='dot token'>.</span><span class='key identifier id'>key</span><span class='dot token'>.</span><span class='kind_of? fid id'>kind_of?</span><span class='lparen token'>(</span><span class='OpenSSL constant id'>OpenSSL</span><span class='colon2 op'>::</span><span class='PKey constant id'>PKey</span><span class='colon2 op'>::</span><span class='RSA constant id'>RSA</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="to_der-instance_method">
+  
+    - (<tt>String</tt>) <strong>to_der</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    
+<p>Converts the key into the DER format</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the key converted into DER format.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+125
+126
+127
+128
+129
+130</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/r509/PrivateKey.rb', line 125</span>
+
+<span class='def def kw'>def</span> <span class='to_der identifier id'>to_der</span>
+    <span class='if if kw'>if</span> <span class='in_hardware? fid id'>in_hardware?</span>
+        <span class='raise identifier id'>raise</span> <span class='R509 constant id'>R509</span><span class='colon2 op'>::</span><span class='R509Error constant id'>R509Error</span><span class='comma token'>,</span> <span class='string val'>&quot;This method cannot be called when using keys in hardware&quot;</span>
+    <span class='end end kw'>end</span>
+    <span class='self self kw'>self</span><span class='dot token'>.</span><span class='key identifier id'>key</span><span class='dot token'>.</span><span class='to_der identifier id'>to_der</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="to_encrypted_pem-instance_method">
+  
+    - (<tt>String</tt>) <strong>to_encrypted_pem</strong>(cipher, password) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    
+<p>Converts the key into encrypted PEM format</p>
+
+<p>full list of available ciphers can be obtained with OpenSSL::Cipher.ciphers
+(common ones are des3, aes256, aes128)</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
+  
+    <li>
+      
+        <span class='type'>(<tt>String</tt>, <tt>OpenSSL::Cipher</tt>)</span>
+      
+      
+        <span class='name'>cipher</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>to use for encryption</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+        <span class='name'>password</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>password</p>
+</div>
+      
+    </li>
+  
+</ul>
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the key converted into encrypted PEM format.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+113
+114
+115
+116
+117
+118
+119</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/r509/PrivateKey.rb', line 113</span>
+
+<span class='def def kw'>def</span> <span class='to_encrypted_pem identifier id'>to_encrypted_pem</span><span class='lparen token'>(</span><span class='cipher identifier id'>cipher</span><span class='comma token'>,</span><span class='password identifier id'>password</span><span class='rparen token'>)</span>
+    <span class='if if kw'>if</span> <span class='in_hardware? fid id'>in_hardware?</span>
+        <span class='raise identifier id'>raise</span> <span class='R509 constant id'>R509</span><span class='colon2 op'>::</span><span class='R509Error constant id'>R509Error</span><span class='comma token'>,</span> <span class='string val'>&quot;This method cannot be called when using keys in hardware&quot;</span>
+    <span class='end end kw'>end</span>
+    <span class='cipher identifier id'>cipher</span> <span class='assign token'>=</span> <span class='OpenSSL constant id'>OpenSSL</span><span class='colon2 op'>::</span><span class='Cipher constant id'>Cipher</span><span class='colon2 op'>::</span><span class='Cipher constant id'>Cipher</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='cipher identifier id'>cipher</span><span class='rparen token'>)</span>
+    <span class='self self kw'>self</span><span class='dot token'>.</span><span class='key identifier id'>key</span><span class='dot token'>.</span><span class='to_pem identifier id'>to_pem</span><span class='lparen token'>(</span><span class='cipher identifier id'>cipher</span><span class='comma token'>,</span><span class='password identifier id'>password</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="to_pem-instance_method">
+  
+    - (<tt>String</tt>) <strong>to_pem</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    
+<p>Converts the key into the PEM format</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the key converted into PEM format.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+99
+100
+101
+102
+103
+104</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/r509/PrivateKey.rb', line 99</span>
+
+<span class='def def kw'>def</span> <span class='to_pem identifier id'>to_pem</span>
+    <span class='if if kw'>if</span> <span class='in_hardware? fid id'>in_hardware?</span>
+        <span class='raise identifier id'>raise</span> <span class='R509 constant id'>R509</span><span class='colon2 op'>::</span><span class='R509Error constant id'>R509Error</span><span class='comma token'>,</span> <span class='string val'>&quot;This method cannot be called when using keys in hardware&quot;</span>
+    <span class='end end kw'>end</span>
+    <span class='self self kw'>self</span><span class='dot token'>.</span><span class='key identifier id'>key</span><span class='dot token'>.</span><span class='to_pem identifier id'>to_pem</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="write_der-instance_method">
+  
+    - (<tt>Object</tt>) <strong>write_der</strong>(filename_or_io) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    
+<p>Writes the key into the DER format</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
+  
+    <li>
+      
+        <span class='type'>(<tt>String</tt>, <tt>#write</tt>)</span>
+      
+      
+        <span class='name'>filename_or_io</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Either a string of the path for the file that you’d like to write, or an
+IO-like object.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+157
+158
+159</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/r509/PrivateKey.rb', line 157</span>
+
+<span class='def def kw'>def</span> <span class='write_der identifier id'>write_der</span><span class='lparen token'>(</span><span class='filename_or_io identifier id'>filename_or_io</span><span class='rparen token'>)</span>
+    <span class='write_data identifier id'>write_data</span><span class='lparen token'>(</span><span class='filename_or_io identifier id'>filename_or_io</span><span class='comma token'>,</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='to_der identifier id'>to_der</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="write_encrypted_pem-instance_method">
+  
+    - (<tt>Object</tt>) <strong>write_encrypted_pem</strong>(filename_or_io, cipher, password) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    
+<p>Writes the key into encrypted PEM format with specified cipher</p>
+
+<p>full list of available ciphers can be obtained with OpenSSL::Cipher.ciphers
+(common ones are des3, aes256, aes128)</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
+  
+    <li>
+      
+        <span class='type'>(<tt>String</tt>, <tt>#write</tt>)</span>
+      
+      
+        <span class='name'>filename_or_io</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Either a string of the path for the file that you’d like to write, or an
+IO-like object.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='type'>(<tt>String</tt>, <tt>OpenSSL::Cipher</tt>)</span>
+      
+      
+        <span class='name'>cipher</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>to use for encryption</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+        <span class='name'>password</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>password</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+149
+150
+151</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/r509/PrivateKey.rb', line 149</span>
+
+<span class='def def kw'>def</span> <span class='write_encrypted_pem identifier id'>write_encrypted_pem</span><span class='lparen token'>(</span><span class='filename_or_io identifier id'>filename_or_io</span><span class='comma token'>,</span><span class='cipher identifier id'>cipher</span><span class='comma token'>,</span><span class='password identifier id'>password</span><span class='rparen token'>)</span>
+    <span class='write_data identifier id'>write_data</span><span class='lparen token'>(</span><span class='filename_or_io identifier id'>filename_or_io</span><span class='comma token'>,</span> <span class='to_encrypted_pem identifier id'>to_encrypted_pem</span><span class='lparen token'>(</span><span class='cipher identifier id'>cipher</span><span class='comma token'>,</span><span class='password identifier id'>password</span><span class='rparen token'>)</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="write_pem-instance_method">
+  
+    - (<tt>Object</tt>) <strong>write_pem</strong>(filename_or_io) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    
+<p>Writes the key into the PEM format</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
+  
+    <li>
+      
+        <span class='type'>(<tt>String</tt>, <tt>#write</tt>)</span>
+      
+      
+        <span class='name'>filename_or_io</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Either a string of the path for the file that you’d like to write, or an
+IO-like object.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+136
+137
+138</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/r509/PrivateKey.rb', line 136</span>
+
+<span class='def def kw'>def</span> <span class='write_pem identifier id'>write_pem</span><span class='lparen token'>(</span><span class='filename_or_io identifier id'>filename_or_io</span><span class='rparen token'>)</span>
+    <span class='write_data identifier id'>write_data</span><span class='lparen token'>(</span><span class='filename_or_io identifier id'>filename_or_io</span><span class='comma token'>,</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='to_pem identifier id'>to_pem</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+</div>
+    
+    <div id="footer">
+  Generated on Tue Dec 27 14:58:05 2011 by 
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.6.4 (ruby-1.8.7).
+</div>
+
+  </body>
+</html>

@@ -1,0 +1,117 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta name="Content-Type" content="text/html; charset=en_us" />
+<title>File: r509</title>
+<link rel="stylesheet" href="css/style.css" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="css/common.css" type="text/css" media="screen" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  relpath = '';
+  if (relpath != '') relpath += '/';
+</script>
+<script type="text/javascript" charset="utf-8" src="js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/app.js"></script>
+
+  </head>
+  <body>
+    <script type="text/javascript" charset="utf-8">
+      if (window.top.frames.main) document.body.className = 'frames';
+    </script>
+    
+    <div id="header">
+      <div id="menu">
+  
+    <a href="_index.html" title="Index">Index</a> &raquo; 
+    <span class="title">File: r509</span>
+  
+  
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  <a id="class_list_link" href="#">Class List</a>
+  <a id="method_list_link" href="#">Method List</a>
+  <a id ="file_list_link" href="#">File List</a>
+</div>
+
+      <div class="clear"></div>
+    </div>
+    
+    <iframe id="search_frame"></iframe>
+    
+    <div id="content"><div id='filecontents'>
+<p>test_ca: {</p>
+
+<pre class="code"><span class='ca_cert identifier id'>ca_cert</span><span class='colon op'>:</span> <span class='lbrace token'>{</span>
+    <span class='cert identifier id'>cert</span><span class='colon op'>:</span> <span class='string val'>'spec/fixtures/test_ca.cer'</span><span class='comma token'>,</span>
+    <span class='key identifier id'>key</span><span class='colon op'>:</span> <span class='string val'>'spec/fixtures/test_ca.key'</span>
+<span class='rbrace token'>}</span><span class='comma token'>,</span>
+<span class='comment val'>#ocsp_cert: {</span>
+<span class='comment val'>#    :cert: 'spec/fixtures/test_ca.cer',</span>
+<span class='comment val'>#    :key: 'spec/fixtures/test_ca.key',</span>
+<span class='comment val'>#},</span>
+<span class='cdp_location identifier id'>cdp_location</span><span class='colon op'>:</span> <span class='string val'>'URI:http://crl.domain.com/test_ca.crl'</span><span class='comma token'>,</span>
+<span class='crl_list identifier id'>crl_list</span><span class='colon op'>:</span> <span class='string val'>'spec/fixtures/test_ca_crl_list.txt'</span><span class='comma token'>,</span>
+<span class='crl_number identifier id'>crl_number</span><span class='colon op'>:</span> <span class='string val'>'spec/fixtures/test_ca_crl_number.txt'</span><span class='comma token'>,</span>
+<span class='crl_validity_hours identifier id'>crl_validity_hours</span><span class='colon op'>:</span> <span class='integer val'>168</span><span class='comma token'>,</span> <span class='comment val'>#7 days</span>
+<span class='ocsp_location identifier id'>ocsp_location</span><span class='colon op'>:</span> <span class='string val'>'URI:http://ocsp.domain.com'</span><span class='comma token'>,</span>
+<span class='message_digest identifier id'>message_digest</span><span class='colon op'>:</span> <span class='string val'>'SHA1'</span><span class='comma token'>,</span> <span class='comment val'>#SHA1, SHA256, SHA512 supported. MD5 too, but you really shouldn't use that unless you have a good reason</span>
+<span class='profiles identifier id'>profiles</span><span class='colon op'>:</span> <span class='lbrace token'>{</span>
+    <span class='server identifier id'>server</span><span class='colon op'>:</span> <span class='lbrace token'>{</span>
+        <span class='basic_constraints identifier id'>basic_constraints</span><span class='colon op'>:</span> <span class='string val'>&quot;CA:FALSE&quot;</span><span class='comma token'>,</span>
+        <span class='key_usage identifier id'>key_usage</span><span class='colon op'>:</span> <span class='lbrack token'>[</span><span class='digitalSignature identifier id'>digitalSignature</span><span class='comma token'>,</span><span class='keyEncipherment identifier id'>keyEncipherment</span><span class='rbrack token'>]</span><span class='comma token'>,</span>
+        <span class='extended_key_usage identifier id'>extended_key_usage</span><span class='colon op'>:</span> <span class='lbrack token'>[</span><span class='serverAuth identifier id'>serverAuth</span><span class='rbrack token'>]</span><span class='comma token'>,</span>
+        <span class='certificate_policies identifier id'>certificate_policies</span><span class='colon op'>:</span> <span class='lbrack token'>[</span> <span class='lbrack token'>[</span> <span class='string val'>&quot;policyIdentifier=2.16.840.1.9999999999.1.2.3.4.1&quot;</span><span class='comma token'>,</span> <span class='string val'>&quot;CPS.1=http://example.com/cps&quot;</span><span class='rbrack token'>]</span> <span class='rbrack token'>]</span>
+    <span class='rbrace token'>}</span><span class='comma token'>,</span>
+    <span class='client identifier id'>client</span><span class='colon op'>:</span> <span class='lbrace token'>{</span>
+        <span class='basic_constraints identifier id'>basic_constraints</span><span class='colon op'>:</span> <span class='string val'>&quot;CA:FALSE&quot;</span><span class='comma token'>,</span>
+        <span class='key_usage identifier id'>key_usage</span><span class='colon op'>:</span> <span class='lbrack token'>[</span><span class='digitalSignature identifier id'>digitalSignature</span><span class='comma token'>,</span><span class='keyEncipherment identifier id'>keyEncipherment</span><span class='rbrack token'>]</span><span class='comma token'>,</span>
+        <span class='extended_key_usage identifier id'>extended_key_usage</span><span class='colon op'>:</span> <span class='lbrack token'>[</span><span class='clientAuth identifier id'>clientAuth</span><span class='rbrack token'>]</span><span class='comma token'>,</span>
+        <span class='certificate_policies identifier id'>certificate_policies</span><span class='colon op'>:</span> <span class='lbrack token'>[</span> <span class='lbrack token'>[</span> <span class='string val'>&quot;policyIdentifier=2.16.840.1.9999999999.1.2.3.4.2&quot;</span><span class='comma token'>,</span> <span class='string val'>&quot;CPS.1=http://example.com/cps&quot;</span><span class='rbrack token'>]</span> <span class='rbrack token'>]</span>
+    <span class='rbrace token'>}</span><span class='comma token'>,</span>
+    <span class='email identifier id'>email</span><span class='colon op'>:</span> <span class='lbrace token'>{</span>
+        <span class='basic_constraints identifier id'>basic_constraints</span><span class='colon op'>:</span> <span class='string val'>&quot;CA:FALSE&quot;</span><span class='comma token'>,</span>
+        <span class='key_usage identifier id'>key_usage</span><span class='colon op'>:</span> <span class='lbrack token'>[</span><span class='digitalSignature identifier id'>digitalSignature</span><span class='comma token'>,</span><span class='keyEncipherment identifier id'>keyEncipherment</span><span class='rbrack token'>]</span><span class='comma token'>,</span>
+        <span class='extended_key_usage identifier id'>extended_key_usage</span><span class='colon op'>:</span> <span class='lbrack token'>[</span><span class='emailProtection identifier id'>emailProtection</span><span class='rbrack token'>]</span><span class='comma token'>,</span>
+        <span class='certificate_policies identifier id'>certificate_policies</span><span class='colon op'>:</span> <span class='lbrack token'>[</span> <span class='lbrack token'>[</span> <span class='string val'>&quot;policyIdentifier=2.16.840.1.9999999999.1.2.3.4.3&quot;</span><span class='comma token'>,</span> <span class='string val'>&quot;CPS.1=http://example.com/cps&quot;</span><span class='rbrack token'>]</span> <span class='rbrack token'>]</span>
+    <span class='rbrace token'>}</span><span class='comma token'>,</span>
+    <span class='clientserver identifier id'>clientserver</span><span class='colon op'>:</span> <span class='lbrace token'>{</span>
+        <span class='basic_constraints identifier id'>basic_constraints</span><span class='colon op'>:</span>  <span class='string val'>&quot;CA:FALSE&quot;</span><span class='comma token'>,</span>
+        <span class='key_usage identifier id'>key_usage</span><span class='colon op'>:</span> <span class='lbrack token'>[</span><span class='digitalSignature identifier id'>digitalSignature</span><span class='comma token'>,</span><span class='keyEncipherment identifier id'>keyEncipherment</span><span class='rbrack token'>]</span><span class='comma token'>,</span>
+        <span class='extended_key_usage identifier id'>extended_key_usage</span><span class='colon op'>:</span> <span class='lbrack token'>[</span><span class='serverAuth identifier id'>serverAuth</span><span class='comma token'>,</span><span class='clientAuth identifier id'>clientAuth</span><span class='rbrack token'>]</span><span class='comma token'>,</span>
+        <span class='certificate_policies identifier id'>certificate_policies</span><span class='colon op'>:</span> <span class='lbrack token'>[</span> <span class='lbrack token'>[</span> <span class='string val'>&quot;policyIdentifier=2.16.840.1.9999999999.1.2.3.4.4&quot;</span><span class='comma token'>,</span> <span class='string val'>&quot;CPS.1=http://example.com/cps&quot;</span><span class='rbrack token'>]</span> <span class='rbrack token'>]</span>
+    <span class='rbrace token'>}</span><span class='comma token'>,</span>
+    <span class='codesigning identifier id'>codesigning</span><span class='colon op'>:</span> <span class='lbrace token'>{</span>
+        <span class='basic_constraints identifier id'>basic_constraints</span><span class='colon op'>:</span>  <span class='string val'>&quot;CA:FALSE&quot;</span><span class='comma token'>,</span>
+        <span class='key_usage identifier id'>key_usage</span><span class='colon op'>:</span> <span class='lbrack token'>[</span><span class='digitalSignature identifier id'>digitalSignature</span><span class='rbrack token'>]</span><span class='comma token'>,</span>
+        <span class='extended_key_usage identifier id'>extended_key_usage</span><span class='colon op'>:</span> <span class='lbrack token'>[</span><span class='codeSigning identifier id'>codeSigning</span><span class='rbrack token'>]</span><span class='comma token'>,</span>
+        <span class='certificate_policies identifier id'>certificate_policies</span><span class='colon op'>:</span> <span class='lbrack token'>[</span> <span class='lbrack token'>[</span> <span class='string val'>&quot;policyIdentifier=2.16.840.1.9999999999.1.2.3.4.5&quot;</span><span class='comma token'>,</span> <span class='string val'>&quot;CPS.1=http://example.com/cps&quot;</span><span class='rbrack token'>]</span> <span class='rbrack token'>]</span>
+    <span class='rbrace token'>}</span><span class='comma token'>,</span>
+    <span class='timestamping identifier id'>timestamping</span><span class='colon op'>:</span> <span class='lbrace token'>{</span>
+        <span class='basic_constraints identifier id'>basic_constraints</span><span class='colon op'>:</span>  <span class='string val'>&quot;CA:FALSE&quot;</span><span class='comma token'>,</span>
+        <span class='key_usage identifier id'>key_usage</span><span class='colon op'>:</span> <span class='lbrack token'>[</span><span class='digitalSignature identifier id'>digitalSignature</span><span class='rbrack token'>]</span><span class='comma token'>,</span>
+        <span class='extended_key_usage identifier id'>extended_key_usage</span><span class='colon op'>:</span> <span class='lbrack token'>[</span><span class='timeStamping identifier id'>timeStamping</span><span class='rbrack token'>]</span><span class='comma token'>,</span>
+        <span class='certificate_policies identifier id'>certificate_policies</span><span class='colon op'>:</span> <span class='lbrack token'>[</span> <span class='lbrack token'>[</span> <span class='string val'>&quot;policyIdentifier=2.16.840.1.9999999999.1.2.3.4.6&quot;</span><span class='comma token'>,</span> <span class='string val'>&quot;CPS.1=http://example.com/cps&quot;</span><span class='rbrack token'>]</span> <span class='rbrack token'>]</span>
+    <span class='rbrace token'>}</span><span class='comma token'>,</span>
+    <span class='subroot identifier id'>subroot</span><span class='colon op'>:</span> <span class='lbrace token'>{</span>
+        <span class='basic_constraints identifier id'>basic_constraints</span><span class='colon op'>:</span>  <span class='string val'>&quot;CA:TRUE,pathlen:0&quot;</span><span class='comma token'>,</span>
+        <span class='key_usage identifier id'>key_usage</span><span class='colon op'>:</span> <span class='lbrack token'>[</span><span class='keyCertSign identifier id'>keyCertSign</span><span class='comma token'>,</span><span class='cRLSign identifier id'>cRLSign</span><span class='rbrack token'>]</span><span class='comma token'>,</span>
+        <span class='extended_key_usage identifier id'>extended_key_usage</span><span class='colon op'>:</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span><span class='comma token'>,</span>
+        <span class='certificate_policies identifier id'>certificate_policies</span><span class='colon op'>:</span> <span class='lbrack token'>[</span> <span class='rbrack token'>]</span>
+    <span class='rbrace token'>}</span>
+<span class='rbrace token'>}</span>
+</pre>
+
+<p>}</p>
+</div></div>
+    
+    <div id="footer">
+  Generated on Tue Dec 27 14:57:59 2011 by 
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.6.4 (ruby-1.8.7).
+</div>
+
+  </body>
+</html>
