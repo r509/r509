@@ -112,8 +112,12 @@ module TestFixtures
               :key_usage => ["digitalSignature","keyEncipherment"],
               :extended_key_usage => ["serverAuth"],
               :certificate_policies => [
-                "policyIdentifier=2.16.840.1.12345.1.2.3.4.1",
-                "CPS.1=http://example.com/cps"])
+                    [
+                        "policyIdentifier=2.16.840.1.12345.1.2.3.4.1",
+                        "CPS.1=http://example.com/cps"
+                    ]
+                ]
+        )
 
     end
 
@@ -130,8 +134,10 @@ module TestFixtures
             :key_usage => ["digitalSignature","keyEncipherment"],
             :extended_key_usage => ["serverAuth"],
             :certificate_policies => [
-                "policyIdentifier=2.16.840.1.12345.1.2.3.4.1",
-                "CPS.1=http://example.com/cps"
+                [
+                    "policyIdentifier=2.16.840.1.12345.1.2.3.4.1",
+                    "CPS.1=http://example.com/cps"
+                ]
             ],
             :subject_item_policy => subject_item_policy
         )
@@ -142,7 +148,7 @@ module TestFixtures
                   :basic_constraints => "CA:TRUE,pathlen:0",
                   :key_usage => ["keyCertSign","cRLSign"],
                   :extended_key_usage => [],
-                  :certificate_policies => [ ])
+                  :certificate_policies => nil)
     end
 
     def self.test_ca_ocspsigner_profile
@@ -150,7 +156,7 @@ module TestFixtures
                   :basic_constraints => "CA:FALSE",
                   :key_usage => ["digitalSignature"],
                   :extended_key_usage => ["OCSPSigning"],
-                  :certificate_policies => [ ])
+                  :certificate_policies => nil)
     end
 
     def self.second_ca_cert
@@ -163,8 +169,12 @@ module TestFixtures
               :key_usage => ["digitalSignature","keyEncipherment"],
               :extended_key_usage => ["serverAuth"],
               :certificate_policies => [
-                "policyIdentifier=2.16.840.1.12345.1.2.3.4.1",
-                "CPS.1=http://example.com/cps"])
+                    [
+                        "policyIdentifier=2.16.840.1.12345.1.2.3.4.1",
+                        "CPS.1=http://example.com/cps"
+                    ]
+                ]
+        )
 
     end
 
@@ -173,7 +183,7 @@ module TestFixtures
                   :basic_constraints => "CA:TRUE,pathlen:0",
                   :key_usage => ["keyCertSign","cRLSign"],
                   :extended_key_usage => [],
-                  :certificate_policies => [ ])
+                  :certificate_policies => nil)
     end
 
 

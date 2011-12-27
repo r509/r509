@@ -42,7 +42,22 @@ missing_key_identifier_ca: {
             basic_constraints: "CA:FALSE",
             key_usage: [digitalSignature,keyEncipherment],
             extended_key_usage: [serverAuth],
-            certificate_policies: [ "policyIdentifier=2.16.840.1.9999999999.1.2.3.4.1", "CPS.1=http://example.com/cps"]
+            certificate_policies: [ [ "policyIdentifier=2.16.840.1.9999999999.3.0"], [ "policyIdentifier=2.16.840.1.9999999999.1.2.3.4.1", "CPS.1=http://example.com/cps"] ]
+        }
+    }
+}
+multi_policy_ca: {
+    ca_cert: {
+        cert: 'test_ca.cer',
+        key: 'test_ca.key'
+    },
+    message_digest: 'SHA1', #SHA1, SHA256, SHA512 supported. MD5 too, but you really shouldn't use that unless you have a good reason
+    profiles: {
+        server: {
+            basic_constraints: "CA:FALSE",
+            key_usage: [digitalSignature,keyEncipherment],
+            extended_key_usage: [serverAuth],
+            certificate_policies: [ [ "policyIdentifier=2.16.840.1.9999999999.3.0"], [ "policyIdentifier=2.16.840.1.9999999999.1.2.3.4.1", "CPS.1=http://example.com/cps"] ]
         }
     }
 }

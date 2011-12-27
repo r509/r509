@@ -226,10 +226,17 @@ module R509::CertificateAuthority
                 ext << ef.create_extension("authorityKeyIdentifier", "keyid:always,issuer:always")
             end
 
-            if not options[:certificate_policies].nil?
-                conf = build_conf('certPolicies',options[:certificate_policies])
-                ef.config = OpenSSL::Config.parse(conf)
-                ext << ef.create_extension("certificatePolicies", '@certPolicies')
+            if not options[:certificate_policies].nil? and not options[:certificate_policies].empty?
+                conf = []
+                conf_names = []
+                i = 0
+                options[:certificate_policies].each do |policy|
+                    conf << build_conf("certPolicies#{i}",policy)
+                    conf_names << "@certPolicies#{i}"
+                    i+=1
+                end
+                ef.config = OpenSSL::Config.parse(conf.join("\n"))
+                ext << ef.create_extension("certificatePolicies", conf_names.join(","))
             end
             #ef.config = OpenSSL::Config.parse(<<-_end_of_cnf_)
             #[certPolicies]

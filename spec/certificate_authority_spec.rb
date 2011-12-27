@@ -89,6 +89,13 @@ describe R509::CertificateAuthority::Signer do
         cert = @ca.sign(:csr => csr, :profile_name => 'server')
         cert.extensions['certificatePolicies'][0]['value'].should == "Policy: 2.16.840.1.12345.1.2.3.4.1\n  CPS: http://example.com/cps\n"
     end
+    it "multiple policy identifiers are properly encoded" do
+        csr = R509::Csr.new(:csr => @csr)
+        config = R509::Config::CaConfig.from_yaml("multi_policy_ca", File.read("#{File.dirname(__FILE__)}/fixtures/config_test_various.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"})
+        ca = R509::CertificateAuthority::Signer.new(config)
+        cert = ca.sign(:csr => csr, :profile_name => 'server')
+        cert.extensions['certificatePolicies'][0]['value'].should == "Policy: 2.16.840.1.9999999999.3.0\nPolicy: 2.16.840.1.9999999999.1.2.3.4.1\n  CPS: http://example.com/cps\n"
+    end
     it "tests basic constraints CA:TRUE and pathlen:0 on a subroot" do
         csr = R509::Csr.new(:csr => @csr)
         cert = @ca.sign(:csr => csr, :profile_name => 'subroot')
