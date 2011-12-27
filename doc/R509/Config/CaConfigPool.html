@@ -2,17 +2,27 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
-    <meta name="Content-Type" content="text/html; charset=en_us" />
-<title>Class: R509::Config::CaConfigPool</title>
-<link rel="stylesheet" href="../../css/style.css" type="text/css" media="screen" charset="utf-8" />
-<link rel="stylesheet" href="../../css/common.css" type="text/css" media="screen" charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=en_us" />
+<title>
+  Class: R509::Config::CaConfigPool
+  
+    &mdash; Documentation by YARD 0.7.4
+  
+</title>
+
+  <link rel="stylesheet" href="../../css/style.css" type="text/css" media="screen" charset="utf-8" />
+
+  <link rel="stylesheet" href="../../css/common.css" type="text/css" media="screen" charset="utf-8" />
 
 <script type="text/javascript" charset="utf-8">
   relpath = '../..';
   if (relpath != '') relpath += '/';
 </script>
-<script type="text/javascript" charset="utf-8" src="../../js/jquery.js"></script>
-<script type="text/javascript" charset="utf-8" src="../../js/app.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../../js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../../js/app.js"></script>
+
 
   </head>
   <body>
@@ -33,11 +43,14 @@
 </div>
 
       <div id="search">
-  <a id="class_list_link" href="#">Class List</a>
-  <a id="method_list_link" href="#">Method List</a>
-  <a id ="file_list_link" href="#">File List</a>
+  
+    <a id="class_list_link" href="#">Class List</a>
+  
+    <a id="method_list_link" href="#">Method List</a>
+  
+    <a id="file_list_link" href="#">File List</a>
+  
 </div>
-
       <div class="clear"></div>
     </div>
     
@@ -81,15 +94,17 @@
 
 <h2>Overview</h2><div class="docstring">
   <div class="discussion">
-    
-<p>pool of configs, so we can support multiple CAs from a single config file</p>
+    <p>pool of configs, so we can support multiple CAs from a single config file</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+
 </div>
+
+
 
 
   
@@ -116,8 +131,7 @@
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>Loads the named configuration config from a yaml string.</p>
+    <span class="summary_desc"><div class='inline'><p>Loads the named configuration config from a yaml string.</p>
 </div></span>
   
 </li>
@@ -148,8 +162,7 @@
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>retrieve a particular config by its name.</p>
+    <span class="summary_desc"><div class='inline'><p>retrieve a particular config by its name.</p>
 </div></span>
   
 </li>
@@ -171,8 +184,7 @@
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>A list of all the configs in this pool.</p>
+    <span class="summary_desc"><div class='inline'><p>A list of all the configs in this pool.</p>
 </div></span>
   
 </li>
@@ -196,8 +208,7 @@
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>A new instance of CaConfigPool.</p>
+    <span class="summary_desc"><div class='inline'><p>A new instance of CaConfigPool.</p>
 </div></span>
   
 </li>
@@ -219,8 +230,7 @@
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>get all the config names.</p>
+    <span class="summary_desc"><div class='inline'><p>get all the config names.</p>
 </div></span>
   
 </li>
@@ -241,8 +251,7 @@
   
 </p><div class="docstring">
   <div class="discussion">
-    
-<p>A new instance of CaConfigPool</p>
+    <p>A new instance of CaConfigPool</p>
 
 
   </div>
@@ -253,16 +262,15 @@
   
     <li>
       
-        <span class='type'>(<tt>Hash</tt>)</span>
-      
-      
         <span class='name'>configs</span>
+      
+      
+        <span class='type'>(<tt>Hash</tt>)</span>
       
       
       
         &mdash;
-        <div class='inline'>
-<p>a customizable set of options</p>
+        <div class='inline'><p>a customizable set of options</p>
 </div>
       
     </li>
@@ -276,18 +284,18 @@
     <ul class="option">
       
         <li>
-          <span class="type">(<tt>Hash&lt;String, <span class='object_link'><a href="CaConfig.html" title="R509::Config::CaConfig (class)">R509::Config::CaConfig</a></span>&gt;</tt>)</span>
           <span class="name">the</span>
+          <span class="type">(<tt>Hash&lt;String, <span class='object_link'><a href="CaConfig.html" title="R509::Config::CaConfig (class)">R509::Config::CaConfig</a></span>&gt;</tt>)</span>
           <span class="default">
             
           </span>
-          &mdash; <div class='inline'>
-<p>configs to add to the pool</p>
+          &mdash; <div class='inline'><p>configs to add to the pool</p>
 </div>
-        </tr>
+        </li>
       
     </ul>
   
+
 
 </div><table class="source_code">
   <tr>
@@ -302,9 +310,9 @@
     <td>
       <pre class="code"><span class="info file"># File 'lib/r509/Config.rb', line 92</span>
 
-<span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span><span class='lparen token'>(</span><span class='configs identifier id'>configs</span><span class='rparen token'>)</span>
-    <span class='@configs ivar id'>@configs</span> <span class='assign token'>=</span> <span class='configs identifier id'>configs</span>
-<span class='end end kw'>end</span>
+<span class='rubyid_def def kw'>def</span> <span class='rubyid_initialize identifier id'>initialize</span><span class='lparen token'>(</span><span class='rubyid_configs identifier id'>configs</span><span class='rparen token'>)</span>
+    <span class='rubyid_@configs ivar id'>@configs</span> <span class='assign token'>=</span> <span class='rubyid_configs identifier id'>configs</span>
+<span class='rubyid_end end kw'>end</span>
 </pre>
     </td>
   </tr>
@@ -327,8 +335,7 @@
   
 </p><div class="docstring">
   <div class="discussion">
-    
-<p>Loads the named configuration config from a yaml string.</p>
+    <p>Loads the named configuration config from a yaml string.</p>
 
 
   </div>
@@ -339,38 +346,37 @@
   
     <li>
       
-        <span class='type'>(<tt>String</tt>)</span>
-      
-      
         <span class='name'>conf_name</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
       
       
       
         &mdash;
-        <div class='inline'>
-<p>The name of the config within the file. Note that a single yaml file can
-contain more than one configuration.</p>
+        <div class='inline'><p>The name of the config within the file. Note
+that a single yaml file can contain more than one configuration.</p>
 </div>
       
     </li>
   
     <li>
       
-        <span class='type'>(<tt>String</tt>)</span>
-      
-      
         <span class='name'>yaml_file</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
       
       
       
         &mdash;
-        <div class='inline'>
-<p>The filename to load yaml config data from.</p>
+        <div class='inline'><p>The filename to load yaml config data from.</p>
 </div>
       
     </li>
   
 </ul>
+
 
 </div><table class="source_code">
   <tr>
@@ -390,14 +396,14 @@ contain more than one configuration.</p>
     <td>
       <pre class="code"><span class="info file"># File 'lib/r509/Config.rb', line 115</span>
 
-<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='from_yaml identifier id'>from_yaml</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='yaml_data identifier id'>yaml_data</span><span class='comma token'>,</span> <span class='opts identifier id'>opts</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span><span class='rparen token'>)</span>
-    <span class='conf identifier id'>conf</span> <span class='assign token'>=</span> <span class='YAML constant id'>YAML</span><span class='dot token'>.</span><span class='load identifier id'>load</span><span class='lparen token'>(</span><span class='yaml_data identifier id'>yaml_data</span><span class='rparen token'>)</span>
-    <span class='configs identifier id'>configs</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span>
-    <span class='conf identifier id'>conf</span><span class='lbrack token'>[</span><span class='name identifier id'>name</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='each_pair identifier id'>each_pair</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='ca_name identifier id'>ca_name</span><span class='comma token'>,</span> <span class='data identifier id'>data</span><span class='bitor op'>|</span>
-        <span class='configs identifier id'>configs</span><span class='lbrack token'>[</span><span class='ca_name identifier id'>ca_name</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='R509 constant id'>R509</span><span class='colon2 op'>::</span><span class='Config constant id'>Config</span><span class='colon2 op'>::</span><span class='CaConfig constant id'>CaConfig</span><span class='dot token'>.</span><span class='load_from_hash identifier id'>load_from_hash</span><span class='lparen token'>(</span><span class='data identifier id'>data</span><span class='comma token'>,</span> <span class='opts identifier id'>opts</span><span class='rparen token'>)</span>
-    <span class='end end kw'>end</span>
-    <span class='R509 constant id'>R509</span><span class='colon2 op'>::</span><span class='Config constant id'>Config</span><span class='colon2 op'>::</span><span class='CaConfigPool constant id'>CaConfigPool</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='configs identifier id'>configs</span><span class='rparen token'>)</span>
-<span class='end end kw'>end</span>
+<span class='rubyid_def def kw'>def</span> <span class='rubyid_self self kw'>self</span><span class='dot token'>.</span><span class='rubyid_from_yaml identifier id'>from_yaml</span><span class='lparen token'>(</span><span class='rubyid_name identifier id'>name</span><span class='comma token'>,</span> <span class='rubyid_yaml_data identifier id'>yaml_data</span><span class='comma token'>,</span> <span class='rubyid_opts identifier id'>opts</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span><span class='rparen token'>)</span>
+    <span class='rubyid_conf identifier id'>conf</span> <span class='assign token'>=</span> <span class='rubyid_YAML constant id'>YAML</span><span class='dot token'>.</span><span class='rubyid_load identifier id'>load</span><span class='lparen token'>(</span><span class='rubyid_yaml_data identifier id'>yaml_data</span><span class='rparen token'>)</span>
+    <span class='rubyid_configs identifier id'>configs</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span>
+    <span class='rubyid_conf identifier id'>conf</span><span class='lbrack token'>[</span><span class='rubyid_name identifier id'>name</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='rubyid_each_pair identifier id'>each_pair</span> <span class='rubyid_do do kw'>do</span> <span class='bitor op'>|</span><span class='rubyid_ca_name identifier id'>ca_name</span><span class='comma token'>,</span> <span class='rubyid_data identifier id'>data</span><span class='bitor op'>|</span>
+        <span class='rubyid_configs identifier id'>configs</span><span class='lbrack token'>[</span><span class='rubyid_ca_name identifier id'>ca_name</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='rubyid_R509 constant id'>R509</span><span class='colon2 op'>::</span><span class='rubyid_Config constant id'>Config</span><span class='colon2 op'>::</span><span class='rubyid_CaConfig constant id'>CaConfig</span><span class='dot token'>.</span><span class='rubyid_load_from_hash identifier id'>load_from_hash</span><span class='lparen token'>(</span><span class='rubyid_data identifier id'>data</span><span class='comma token'>,</span> <span class='rubyid_opts identifier id'>opts</span><span class='rparen token'>)</span>
+    <span class='rubyid_end end kw'>end</span>
+    <span class='rubyid_R509 constant id'>R509</span><span class='colon2 op'>::</span><span class='rubyid_Config constant id'>Config</span><span class='colon2 op'>::</span><span class='rubyid_CaConfigPool constant id'>CaConfigPool</span><span class='dot token'>.</span><span class='rubyid_new identifier id'>new</span><span class='lparen token'>(</span><span class='rubyid_configs identifier id'>configs</span><span class='rparen token'>)</span>
+<span class='rubyid_end end kw'>end</span>
 </pre>
     </td>
   </tr>
@@ -419,14 +425,14 @@ contain more than one configuration.</p>
   
 </p><div class="docstring">
   <div class="discussion">
-    
-<p>retrieve a particular config by its name</p>
+    <p>retrieve a particular config by its name</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+
 </div><table class="source_code">
   <tr>
     <td>
@@ -440,9 +446,9 @@ contain more than one configuration.</p>
     <td>
       <pre class="code"><span class="info file"># File 'lib/r509/Config.rb', line 102</span>
 
-<span class='def def kw'>def</span> <span class='aref op'>[]</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
-    <span class='@configs ivar id'>@configs</span><span class='lbrack token'>[</span><span class='name identifier id'>name</span><span class='rbrack token'>]</span>
-<span class='end end kw'>end</span>
+<span class='rubyid_def def kw'>def</span> <span class='aref op'>[]</span><span class='lparen token'>(</span><span class='rubyid_name identifier id'>name</span><span class='rparen token'>)</span>
+    <span class='rubyid_@configs ivar id'>@configs</span><span class='lbrack token'>[</span><span class='rubyid_name identifier id'>name</span><span class='rbrack token'>]</span>
+<span class='rubyid_end end kw'>end</span>
 </pre>
     </td>
   </tr>
@@ -458,26 +464,25 @@ contain more than one configuration.</p>
   
 </p><div class="docstring">
   <div class="discussion">
-    
-<p>A list of all the configs in this pool</p>
+    <p>A list of all the configs in this pool</p>
 
 
   </div>
 </div>
 <div class="tags">
-  <h3>Returns:</h3>
+  
+<h3>Returns:</h3>
 <ul class="return">
   
     <li>
+      
       
         <span class='type'></span>
       
       
       
-      
         
-        <div class='inline'>
-<p>a list of all the configs in this pool</p>
+        <div class='inline'><p>a list of all the configs in this pool</p>
 </div>
       
     </li>
@@ -497,9 +502,9 @@ contain more than one configuration.</p>
     <td>
       <pre class="code"><span class="info file"># File 'lib/r509/Config.rb', line 107</span>
 
-<span class='def def kw'>def</span> <span class='all identifier id'>all</span>
-    <span class='@configs ivar id'>@configs</span><span class='dot token'>.</span><span class='values identifier id'>values</span>
-<span class='end end kw'>end</span>
+<span class='rubyid_def def kw'>def</span> <span class='rubyid_all identifier id'>all</span>
+    <span class='rubyid_@configs ivar id'>@configs</span><span class='dot token'>.</span><span class='rubyid_values identifier id'>values</span>
+<span class='rubyid_end end kw'>end</span>
 </pre>
     </td>
   </tr>
@@ -515,14 +520,14 @@ contain more than one configuration.</p>
   
 </p><div class="docstring">
   <div class="discussion">
-    
-<p>get all the config names</p>
+    <p>get all the config names</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+
 </div><table class="source_code">
   <tr>
     <td>
@@ -536,9 +541,9 @@ contain more than one configuration.</p>
     <td>
       <pre class="code"><span class="info file"># File 'lib/r509/Config.rb', line 97</span>
 
-<span class='def def kw'>def</span> <span class='names identifier id'>names</span>
-    <span class='@configs ivar id'>@configs</span><span class='dot token'>.</span><span class='keys identifier id'>keys</span>
-<span class='end end kw'>end</span>
+<span class='rubyid_def def kw'>def</span> <span class='rubyid_names identifier id'>names</span>
+    <span class='rubyid_@configs ivar id'>@configs</span><span class='dot token'>.</span><span class='rubyid_keys identifier id'>keys</span>
+<span class='rubyid_end end kw'>end</span>
 </pre>
     </td>
   </tr>
@@ -550,9 +555,9 @@ contain more than one configuration.</p>
 </div>
     
     <div id="footer">
-  Generated on Tue Dec 27 14:58:04 2011 by 
+  Generated on Tue Dec 27 16:08:46 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.6.4 (ruby-1.8.7).
+  0.7.4 (ruby-1.8.7).
 </div>
 
   </body>

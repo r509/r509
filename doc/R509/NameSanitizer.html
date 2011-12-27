@@ -2,17 +2,27 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
-    <meta name="Content-Type" content="text/html; charset=en_us" />
-<title>Class: R509::NameSanitizer</title>
-<link rel="stylesheet" href="../css/style.css" type="text/css" media="screen" charset="utf-8" />
-<link rel="stylesheet" href="../css/common.css" type="text/css" media="screen" charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=en_us" />
+<title>
+  Class: R509::NameSanitizer
+  
+    &mdash; Documentation by YARD 0.7.4
+  
+</title>
+
+  <link rel="stylesheet" href="../css/style.css" type="text/css" media="screen" charset="utf-8" />
+
+  <link rel="stylesheet" href="../css/common.css" type="text/css" media="screen" charset="utf-8" />
 
 <script type="text/javascript" charset="utf-8">
   relpath = '..';
   if (relpath != '') relpath += '/';
 </script>
-<script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
-<script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
 
   </head>
   <body>
@@ -33,11 +43,14 @@
 </div>
 
       <div id="search">
-  <a id="class_list_link" href="#">Class List</a>
-  <a id="method_list_link" href="#">Method List</a>
-  <a id ="file_list_link" href="#">File List</a>
+  
+    <a id="class_list_link" href="#">Class List</a>
+  
+    <a id="method_list_link" href="#">Method List</a>
+  
+    <a id="file_list_link" href="#">File List</a>
+  
 </div>
-
       <div class="clear"></div>
     </div>
     
@@ -81,18 +94,19 @@
 
 <h2>Overview</h2><div class="docstring">
   <div class="discussion">
-    
-<p>Sanitize an X509::Name. The #to_a method replaces unknown OIDs with
-“UNDEF”, but the #to_s method doesn’t. What we want to do is build
-the array that would have been produced by #to_a if it didn’t throw away
-the OID.</p>
+    <p>Sanitize an X509::Name. The #to<em>a method replaces unknown OIDs with &quot;UNDEF&quot;, but the #to</em>s
+method doesn&#39;t. What we want to do is build the array that would have been produced by #to_a
+if it didn&#39;t throw away the OID.</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+
 </div>
+
+
 
 
   
@@ -119,9 +133,7 @@ the OID.</p>
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>An array of the form [[“OID”, “VALUE], [”OID“, ”VALUE“]] with
-”UNDEF“ replaced by the actual OID.</p>
+    <span class="summary_desc"><div class='inline'><p>An array of the form [[&quot;OID&quot;, &quot;VALUE], [&quot;OID&quot;, &quot;VALUE&quot;]] with &quot;UNDEF&quot; replaced by the actual OID.</p>
 </div></span>
   
 </li>
@@ -145,9 +157,7 @@ the OID.</p>
   
 </p><div class="docstring">
   <div class="discussion">
-    
-<p>An array of the form [[“OID”, “VALUE], [”OID“, ”VALUE“]] with
-”UNDEF“ replaced by the actual OID</p>
+    <p>An array of the form [[&quot;OID&quot;, &quot;VALUE], [&quot;OID&quot;, &quot;VALUE&quot;]] with &quot;UNDEF&quot; replaced by the actual OID</p>
 
 
   </div>
@@ -158,16 +168,15 @@ the OID.</p>
   
     <li>
       
-        <span class='type'>(<tt>Hash</tt>)</span>
-      
-      
         <span class='name'>name</span>
+      
+      
+        <span class='type'>(<tt>Hash</tt>)</span>
       
       
       
         &mdash;
-        <div class='inline'>
-<p>a customizable set of options</p>
+        <div class='inline'><p>a customizable set of options</p>
 </div>
       
     </li>
@@ -181,30 +190,29 @@ the OID.</p>
     <ul class="option">
       
         <li>
-          <span class="type">(<tt>OpenSSL::X509::Name</tt>)</span>
           <span class="name"></span>
+          <span class="type">(<tt>OpenSSL::X509::Name</tt>)</span>
           <span class="default">
             
           </span>
           
-        </tr>
+        </li>
       
     </ul>
   
+
 <h3>Returns:</h3>
 <ul class="return">
   
     <li>
       
+      
         <span class='type'></span>
       
       
       
-      
         
-        <div class='inline'>
-<p>an array of the form [[“OID”, “VALUE], [”OID“, ”VALUE“]] with
-”UNDEF“ replaced by the actual OID</p>
+        <div class='inline'><p>an array of the form [[&quot;OID&quot;, &quot;VALUE], [&quot;OID&quot;, &quot;VALUE&quot;]] with &quot;UNDEF&quot; replaced by the actual OID</p>
 </div>
       
     </li>
@@ -246,31 +254,31 @@ the OID.</p>
     <td>
       <pre class="code"><span class="info file"># File 'lib/r509/Subject.rb', line 90</span>
 
-<span class='def def kw'>def</span> <span class='sanitize identifier id'>sanitize</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span>
-    <span class='line identifier id'>line</span> <span class='assign token'>=</span> <span class='name identifier id'>name</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span>
-    <span class='array identifier id'>array</span> <span class='assign token'>=</span> <span class='name identifier id'>name</span><span class='dot token'>.</span><span class='to_a identifier id'>to_a</span><span class='dot token'>.</span><span class='dup identifier id'>dup</span>
-    <span class='used_oids identifier id'>used_oids</span> <span class='assign token'>=</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span>
-    <span class='undefined_components identifier id'>undefined_components</span><span class='lparen token'>(</span><span class='array identifier id'>array</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='component identifier id'>component</span><span class='bitor op'>|</span>
-        <span class='begin begin kw'>begin</span>
+<span class='rubyid_def def kw'>def</span> <span class='rubyid_sanitize identifier id'>sanitize</span><span class='lparen token'>(</span><span class='rubyid_name identifier id'>name</span><span class='rparen token'>)</span>
+    <span class='rubyid_line identifier id'>line</span> <span class='assign token'>=</span> <span class='rubyid_name identifier id'>name</span><span class='dot token'>.</span><span class='rubyid_to_s identifier id'>to_s</span>
+    <span class='rubyid_array identifier id'>array</span> <span class='assign token'>=</span> <span class='rubyid_name identifier id'>name</span><span class='dot token'>.</span><span class='rubyid_to_a identifier id'>to_a</span><span class='dot token'>.</span><span class='rubyid_dup identifier id'>dup</span>
+    <span class='rubyid_used_oids identifier id'>used_oids</span> <span class='assign token'>=</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span>
+    <span class='rubyid_undefined_components identifier id'>undefined_components</span><span class='lparen token'>(</span><span class='rubyid_array identifier id'>array</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='rubyid_each identifier id'>each</span> <span class='rubyid_do do kw'>do</span> <span class='bitor op'>|</span><span class='rubyid_component identifier id'>component</span><span class='bitor op'>|</span>
+        <span class='rubyid_begin begin kw'>begin</span>
             <span class='comment val'># get the OID from the subject line that has this value</span>
-            <span class='oids identifier id'>oids</span> <span class='assign token'>=</span> <span class='line identifier id'>line</span><span class='dot token'>.</span><span class='scan identifier id'>scan</span><span class='lparen token'>(</span><span class='dregexp node'>/\/([\d\.]+)=#{component[:value]}/</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='flatten identifier id'>flatten</span>
-            <span class='if if kw'>if</span> <span class='oids identifier id'>oids</span><span class='dot token'>.</span><span class='size identifier id'>size</span> <span class='eq op'>==</span> <span class='integer val'>1</span>
-                <span class='oid identifier id'>oid</span> <span class='assign token'>=</span> <span class='oids identifier id'>oids</span><span class='dot token'>.</span><span class='first identifier id'>first</span>
-            <span class='else else kw'>else</span>
-                <span class='oid identifier id'>oid</span> <span class='assign token'>=</span> <span class='oids identifier id'>oids</span><span class='dot token'>.</span><span class='select identifier id'>select</span><span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='match identifier id'>match</span><span class='bitor op'>|</span> <span class='not not kw'>not</span> <span class='used_oids identifier id'>used_oids</span><span class='dot token'>.</span><span class='include? fid id'>include?</span><span class='lparen token'>(</span><span class='match identifier id'>match</span><span class='rparen token'>)</span> <span class='rbrace token'>}</span><span class='dot token'>.</span><span class='first identifier id'>first</span>
-            <span class='end end kw'>end</span>
+            <span class='rubyid_oids identifier id'>oids</span> <span class='assign token'>=</span> <span class='rubyid_line identifier id'>line</span><span class='dot token'>.</span><span class='rubyid_scan identifier id'>scan</span><span class='lparen token'>(</span><span class='dregexp node'>/\/([\d\.]+)=#{component[:value]}/</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='rubyid_flatten identifier id'>flatten</span>
+            <span class='rubyid_if if kw'>if</span> <span class='rubyid_oids identifier id'>oids</span><span class='dot token'>.</span><span class='rubyid_size identifier id'>size</span> <span class='eq op'>==</span> <span class='integer val'>1</span>
+                <span class='rubyid_oid identifier id'>oid</span> <span class='assign token'>=</span> <span class='rubyid_oids identifier id'>oids</span><span class='dot token'>.</span><span class='rubyid_first identifier id'>first</span>
+            <span class='rubyid_else else kw'>else</span>
+                <span class='rubyid_oid identifier id'>oid</span> <span class='assign token'>=</span> <span class='rubyid_oids identifier id'>oids</span><span class='dot token'>.</span><span class='rubyid_select identifier id'>select</span><span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='rubyid_match identifier id'>match</span><span class='bitor op'>|</span> <span class='rubyid_not not kw'>not</span> <span class='rubyid_used_oids identifier id'>used_oids</span><span class='dot token'>.</span><span class='rubyid_include? fid id'>include?</span><span class='lparen token'>(</span><span class='rubyid_match identifier id'>match</span><span class='rparen token'>)</span> <span class='rbrace token'>}</span><span class='dot token'>.</span><span class='rubyid_first identifier id'>first</span>
+            <span class='rubyid_end end kw'>end</span>
             <span class='comment val'># replace the &quot;UNDEF&quot; OID name in the array at the index the UNDEF was found</span>
-            <span class='array identifier id'>array</span><span class='lbrack token'>[</span><span class='component identifier id'>component</span><span class='lbrack token'>[</span><span class='symbol val'>:index</span><span class='rbrack token'>]</span><span class='rbrack token'>]</span><span class='lbrack token'>[</span><span class='integer val'>0</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='oid identifier id'>oid</span>
+            <span class='rubyid_array identifier id'>array</span><span class='lbrack token'>[</span><span class='rubyid_component identifier id'>component</span><span class='lbrack token'>[</span><span class='symbol val'>:index</span><span class='rbrack token'>]</span><span class='rbrack token'>]</span><span class='lbrack token'>[</span><span class='integer val'>0</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='rubyid_oid identifier id'>oid</span>
             <span class='comment val'># remove the first occurrence of this in the subject line (so we can handle the same oid/value pair multiple times)</span>
-            <span class='line identifier id'>line</span> <span class='assign token'>=</span> <span class='line identifier id'>line</span><span class='dot token'>.</span><span class='sub identifier id'>sub</span><span class='lparen token'>(</span><span class='dstring node'>&quot;/#{oid}=#{component[:value]}&quot;</span><span class='comma token'>,</span> <span class='string val'>&quot;&quot;</span><span class='rparen token'>)</span>
+            <span class='rubyid_line identifier id'>line</span> <span class='assign token'>=</span> <span class='rubyid_line identifier id'>line</span><span class='dot token'>.</span><span class='rubyid_sub identifier id'>sub</span><span class='lparen token'>(</span><span class='dstring node'>&quot;/#{oid}=#{component[:value]}&quot;</span><span class='comma token'>,</span> <span class='string val'>&quot;&quot;</span><span class='rparen token'>)</span>
             <span class='comment val'># we record which OIDs we've used in case two different unknown OIDs have the same value</span>
-            <span class='used_oids identifier id'>used_oids</span> <span class='lshft op'>&lt;&lt;</span> <span class='oid identifier id'>oid</span>
-        <span class='rescue rescue kw'>rescue</span>
+            <span class='rubyid_used_oids identifier id'>used_oids</span> <span class='lshft op'>&lt;&lt;</span> <span class='rubyid_oid identifier id'>oid</span>
+        <span class='rubyid_rescue rescue kw'>rescue</span>
             <span class='comment val'># I don't expect this to happen, but if it does we'll just not replace UNDEF and continue</span>
-        <span class='end end kw'>end</span>
-    <span class='end end kw'>end</span>
-    <span class='array identifier id'>array</span>
-<span class='end end kw'>end</span>
+        <span class='rubyid_end end kw'>end</span>
+    <span class='rubyid_end end kw'>end</span>
+    <span class='rubyid_array identifier id'>array</span>
+<span class='rubyid_end end kw'>end</span>
 </pre>
     </td>
   </tr>
@@ -282,9 +290,9 @@ the OID.</p>
 </div>
     
     <div id="footer">
-  Generated on Tue Dec 27 14:58:02 2011 by 
+  Generated on Tue Dec 27 16:08:50 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.6.4 (ruby-1.8.7).
+  0.7.4 (ruby-1.8.7).
 </div>
 
   </body>

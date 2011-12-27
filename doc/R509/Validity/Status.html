@@ -2,17 +2,27 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
-    <meta name="Content-Type" content="text/html; charset=en_us" />
-<title>Class: R509::Validity::Status</title>
-<link rel="stylesheet" href="../../css/style.css" type="text/css" media="screen" charset="utf-8" />
-<link rel="stylesheet" href="../../css/common.css" type="text/css" media="screen" charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=en_us" />
+<title>
+  Class: R509::Validity::Status
+  
+    &mdash; Documentation by YARD 0.7.4
+  
+</title>
+
+  <link rel="stylesheet" href="../../css/style.css" type="text/css" media="screen" charset="utf-8" />
+
+  <link rel="stylesheet" href="../../css/common.css" type="text/css" media="screen" charset="utf-8" />
 
 <script type="text/javascript" charset="utf-8">
   relpath = '../..';
   if (relpath != '') relpath += '/';
 </script>
-<script type="text/javascript" charset="utf-8" src="../../js/jquery.js"></script>
-<script type="text/javascript" charset="utf-8" src="../../js/app.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../../js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../../js/app.js"></script>
+
 
   </head>
   <body>
@@ -33,11 +43,14 @@
 </div>
 
       <div id="search">
-  <a id="class_list_link" href="#">Class List</a>
-  <a id="method_list_link" href="#">Method List</a>
-  <a id ="file_list_link" href="#">File List</a>
+  
+    <a id="class_list_link" href="#">Class List</a>
+  
+    <a id="method_list_link" href="#">Method List</a>
+  
+    <a id="file_list_link" href="#">File List</a>
+  
 </div>
-
       <div class="clear"></div>
     </div>
     
@@ -81,14 +94,14 @@
 
 <h2>Overview</h2><div class="docstring">
   <div class="discussion">
-    
-<p>data about the status of a certificate</p>
+    <p>data about the status of a certificate</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+
 </div>
 
   <h2>Instance Attribute Summary <small>(<a href="#" class="summary_toggle">collapse</a>)</small></h2>
@@ -113,8 +126,7 @@
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>Returns the value of attribute revocation_reason.</p>
+    <span class="summary_desc"><div class='inline'><p>Returns the value of attribute revocation_reason.</p>
 </div></span>
   
 </li>
@@ -139,8 +151,7 @@
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>Returns the value of attribute revocation_time.</p>
+    <span class="summary_desc"><div class='inline'><p>Returns the value of attribute revocation_time.</p>
 </div></span>
   
 </li>
@@ -165,14 +176,15 @@
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>Returns the value of attribute status.</p>
+    <span class="summary_desc"><div class='inline'><p>Returns the value of attribute status.</p>
 </div></span>
   
 </li>
 
     
   </ul>
+
+
 
 
   
@@ -201,8 +213,7 @@
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>A new instance of Status.</p>
+    <span class="summary_desc"><div class='inline'><p>A new instance of Status.</p>
 </div></span>
   
 </li>
@@ -224,8 +235,7 @@
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>OpenSSL status constants when passing R509 constants.</p>
+    <span class="summary_desc"><div class='inline'><p>OpenSSL status constants when passing R509 constants.</p>
 </div></span>
   
 </li>
@@ -246,14 +256,14 @@
   
 </p><div class="docstring">
   <div class="discussion">
-    
-<p>A new instance of Status</p>
+    <p>A new instance of Status</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+
 </div><table class="source_code">
   <tr>
     <td>
@@ -273,15 +283,15 @@
     <td>
       <pre class="code"><span class="info file"># File 'lib/r509/Validity.rb', line 14</span>
 
-<span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span><span class='lparen token'>(</span><span class='options identifier id'>options</span><span class='assign token'>=</span><span class='lbrace token'>{</span><span class='rbrace token'>}</span><span class='rparen token'>)</span>
-    <span class='@status ivar id'>@status</span> <span class='assign token'>=</span> <span class='options identifier id'>options</span><span class='lbrack token'>[</span><span class='symbol val'>:status</span><span class='rbrack token'>]</span>
-    <span class='@revocation_time ivar id'>@revocation_time</span> <span class='assign token'>=</span> <span class='options identifier id'>options</span><span class='lbrack token'>[</span><span class='symbol val'>:revocation_time</span><span class='rbrack token'>]</span> <span class='orop op'>||</span> <span class='nil nil kw'>nil</span>
-    <span class='@revocation_reason ivar id'>@revocation_reason</span> <span class='assign token'>=</span> <span class='options identifier id'>options</span><span class='lbrack token'>[</span><span class='symbol val'>:revocation_reason</span><span class='rbrack token'>]</span> <span class='orop op'>||</span> <span class='integer val'>0</span>
+<span class='rubyid_def def kw'>def</span> <span class='rubyid_initialize identifier id'>initialize</span><span class='lparen token'>(</span><span class='rubyid_options identifier id'>options</span><span class='assign token'>=</span><span class='lbrace token'>{</span><span class='rbrace token'>}</span><span class='rparen token'>)</span>
+    <span class='rubyid_@status ivar id'>@status</span> <span class='assign token'>=</span> <span class='rubyid_options identifier id'>options</span><span class='lbrack token'>[</span><span class='symbol val'>:status</span><span class='rbrack token'>]</span>
+    <span class='rubyid_@revocation_time ivar id'>@revocation_time</span> <span class='assign token'>=</span> <span class='rubyid_options identifier id'>options</span><span class='lbrack token'>[</span><span class='symbol val'>:revocation_time</span><span class='rbrack token'>]</span> <span class='orop op'>||</span> <span class='rubyid_nil nil kw'>nil</span>
+    <span class='rubyid_@revocation_reason ivar id'>@revocation_reason</span> <span class='assign token'>=</span> <span class='rubyid_options identifier id'>options</span><span class='lbrack token'>[</span><span class='symbol val'>:revocation_reason</span><span class='rbrack token'>]</span> <span class='orop op'>||</span> <span class='integer val'>0</span>
 
-    <span class='if if kw'>if</span> <span class='lparen token'>(</span><span class='@status ivar id'>@status</span> <span class='eq op'>==</span> <span class='R509 constant id'>R509</span><span class='colon2 op'>::</span><span class='Validity constant id'>Validity</span><span class='colon2 op'>::</span><span class='REVOKED constant id'>REVOKED</span> <span class='and and kw'>and</span> <span class='@revocation_time ivar id'>@revocation_time</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span><span class='rparen token'>)</span>
-        <span class='@revocation_time ivar id'>@revocation_time</span> <span class='assign token'>=</span> <span class='Time constant id'>Time</span><span class='dot token'>.</span><span class='now identifier id'>now</span><span class='dot token'>.</span><span class='to_i identifier id'>to_i</span>
-    <span class='end end kw'>end</span>
-<span class='end end kw'>end</span>
+    <span class='rubyid_if if kw'>if</span> <span class='lparen token'>(</span><span class='rubyid_@status ivar id'>@status</span> <span class='eq op'>==</span> <span class='rubyid_R509 constant id'>R509</span><span class='colon2 op'>::</span><span class='rubyid_Validity constant id'>Validity</span><span class='colon2 op'>::</span><span class='rubyid_REVOKED constant id'>REVOKED</span> <span class='rubyid_and and kw'>and</span> <span class='rubyid_@revocation_time ivar id'>@revocation_time</span><span class='dot token'>.</span><span class='rubyid_nil? fid id'>nil?</span><span class='rparen token'>)</span>
+        <span class='rubyid_@revocation_time ivar id'>@revocation_time</span> <span class='assign token'>=</span> <span class='rubyid_Time constant id'>Time</span><span class='dot token'>.</span><span class='rubyid_now identifier id'>now</span><span class='dot token'>.</span><span class='rubyid_to_i identifier id'>to_i</span>
+    <span class='rubyid_end end kw'>end</span>
+<span class='rubyid_end end kw'>end</span>
 </pre>
     </td>
   </tr>
@@ -305,14 +315,14 @@
   
 </p><div class="docstring">
   <div class="discussion">
-    
-<p>Returns the value of attribute revocation_reason</p>
+    <p>Returns the value of attribute revocation_reason</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+
 </div><table class="source_code">
   <tr>
     <td>
@@ -326,9 +336,9 @@
     <td>
       <pre class="code"><span class="info file"># File 'lib/r509/Validity.rb', line 12</span>
 
-<span class='def def kw'>def</span> <span class='revocation_reason identifier id'>revocation_reason</span>
-  <span class='@revocation_reason ivar id'>@revocation_reason</span>
-<span class='end end kw'>end</span>
+<span class='rubyid_def def kw'>def</span> <span class='rubyid_revocation_reason identifier id'>revocation_reason</span>
+  <span class='rubyid_@revocation_reason ivar id'>@revocation_reason</span>
+<span class='rubyid_end end kw'>end</span>
 </pre>
     </td>
   </tr>
@@ -347,14 +357,14 @@
   
 </p><div class="docstring">
   <div class="discussion">
-    
-<p>Returns the value of attribute revocation_time</p>
+    <p>Returns the value of attribute revocation_time</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+
 </div><table class="source_code">
   <tr>
     <td>
@@ -368,9 +378,9 @@
     <td>
       <pre class="code"><span class="info file"># File 'lib/r509/Validity.rb', line 12</span>
 
-<span class='def def kw'>def</span> <span class='revocation_time identifier id'>revocation_time</span>
-  <span class='@revocation_time ivar id'>@revocation_time</span>
-<span class='end end kw'>end</span>
+<span class='rubyid_def def kw'>def</span> <span class='rubyid_revocation_time identifier id'>revocation_time</span>
+  <span class='rubyid_@revocation_time ivar id'>@revocation_time</span>
+<span class='rubyid_end end kw'>end</span>
 </pre>
     </td>
   </tr>
@@ -389,14 +399,14 @@
   
 </p><div class="docstring">
   <div class="discussion">
-    
-<p>Returns the value of attribute status</p>
+    <p>Returns the value of attribute status</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+
 </div><table class="source_code">
   <tr>
     <td>
@@ -410,9 +420,9 @@
     <td>
       <pre class="code"><span class="info file"># File 'lib/r509/Validity.rb', line 12</span>
 
-<span class='def def kw'>def</span> <span class='status identifier id'>status</span>
-  <span class='@status ivar id'>@status</span>
-<span class='end end kw'>end</span>
+<span class='rubyid_def def kw'>def</span> <span class='rubyid_status identifier id'>status</span>
+  <span class='rubyid_@status ivar id'>@status</span>
+<span class='rubyid_end end kw'>end</span>
 </pre>
     </td>
   </tr>
@@ -435,26 +445,25 @@
   
 </p><div class="docstring">
   <div class="discussion">
-    
-<p>OpenSSL status constants when passing R509 constants</p>
+    <p>OpenSSL status constants when passing R509 constants</p>
 
 
   </div>
 </div>
 <div class="tags">
-  <h3>Returns:</h3>
+  
+<h3>Returns:</h3>
 <ul class="return">
   
     <li>
+      
       
         <span class='type'>(<tt>OpenSSL::OCSP::STATUS</tt>)</span>
       
       
       
-      
         &mdash;
-        <div class='inline'>
-<p>OpenSSL status constants when passing R509 constants</p>
+        <div class='inline'><p>OpenSSL status constants when passing R509 constants</p>
 </div>
       
     </li>
@@ -483,18 +492,18 @@
     <td>
       <pre class="code"><span class="info file"># File 'lib/r509/Validity.rb', line 25</span>
 
-<span class='def def kw'>def</span> <span class='ocsp_status identifier id'>ocsp_status</span>
-    <span class='case case kw'>case</span> <span class='@status ivar id'>@status</span>
-    <span class='when when kw'>when</span> <span class='R509 constant id'>R509</span><span class='colon2 op'>::</span><span class='Validity constant id'>Validity</span><span class='colon2 op'>::</span><span class='VALID constant id'>VALID</span>
-        <span class='OpenSSL constant id'>OpenSSL</span><span class='colon2 op'>::</span><span class='OCSP constant id'>OCSP</span><span class='colon2 op'>::</span><span class='V_CERTSTATUS_GOOD constant id'>V_CERTSTATUS_GOOD</span>
-    <span class='when when kw'>when</span> <span class='R509 constant id'>R509</span><span class='colon2 op'>::</span><span class='Validity constant id'>Validity</span><span class='colon2 op'>::</span><span class='REVOKED constant id'>REVOKED</span>
-        <span class='OpenSSL constant id'>OpenSSL</span><span class='colon2 op'>::</span><span class='OCSP constant id'>OCSP</span><span class='colon2 op'>::</span><span class='V_CERTSTATUS_REVOKED constant id'>V_CERTSTATUS_REVOKED</span>
-    <span class='when when kw'>when</span> <span class='R509 constant id'>R509</span><span class='colon2 op'>::</span><span class='Validity constant id'>Validity</span><span class='colon2 op'>::</span><span class='UNKNOWN constant id'>UNKNOWN</span>
-        <span class='OpenSSL constant id'>OpenSSL</span><span class='colon2 op'>::</span><span class='OCSP constant id'>OCSP</span><span class='colon2 op'>::</span><span class='V_CERTSTATUS_UNKNOWN constant id'>V_CERTSTATUS_UNKNOWN</span>
-    <span class='else else kw'>else</span>
-        <span class='OpenSSL constant id'>OpenSSL</span><span class='colon2 op'>::</span><span class='OCSP constant id'>OCSP</span><span class='colon2 op'>::</span><span class='V_CERTSTATUS_UNKNOWN constant id'>V_CERTSTATUS_UNKNOWN</span>
-    <span class='end end kw'>end</span>
-<span class='end end kw'>end</span>
+<span class='rubyid_def def kw'>def</span> <span class='rubyid_ocsp_status identifier id'>ocsp_status</span>
+    <span class='rubyid_case case kw'>case</span> <span class='rubyid_@status ivar id'>@status</span>
+    <span class='rubyid_when when kw'>when</span> <span class='rubyid_R509 constant id'>R509</span><span class='colon2 op'>::</span><span class='rubyid_Validity constant id'>Validity</span><span class='colon2 op'>::</span><span class='rubyid_VALID constant id'>VALID</span>
+        <span class='rubyid_OpenSSL constant id'>OpenSSL</span><span class='colon2 op'>::</span><span class='rubyid_OCSP constant id'>OCSP</span><span class='colon2 op'>::</span><span class='rubyid_V_CERTSTATUS_GOOD constant id'>V_CERTSTATUS_GOOD</span>
+    <span class='rubyid_when when kw'>when</span> <span class='rubyid_R509 constant id'>R509</span><span class='colon2 op'>::</span><span class='rubyid_Validity constant id'>Validity</span><span class='colon2 op'>::</span><span class='rubyid_REVOKED constant id'>REVOKED</span>
+        <span class='rubyid_OpenSSL constant id'>OpenSSL</span><span class='colon2 op'>::</span><span class='rubyid_OCSP constant id'>OCSP</span><span class='colon2 op'>::</span><span class='rubyid_V_CERTSTATUS_REVOKED constant id'>V_CERTSTATUS_REVOKED</span>
+    <span class='rubyid_when when kw'>when</span> <span class='rubyid_R509 constant id'>R509</span><span class='colon2 op'>::</span><span class='rubyid_Validity constant id'>Validity</span><span class='colon2 op'>::</span><span class='rubyid_UNKNOWN constant id'>UNKNOWN</span>
+        <span class='rubyid_OpenSSL constant id'>OpenSSL</span><span class='colon2 op'>::</span><span class='rubyid_OCSP constant id'>OCSP</span><span class='colon2 op'>::</span><span class='rubyid_V_CERTSTATUS_UNKNOWN constant id'>V_CERTSTATUS_UNKNOWN</span>
+    <span class='rubyid_else else kw'>else</span>
+        <span class='rubyid_OpenSSL constant id'>OpenSSL</span><span class='colon2 op'>::</span><span class='rubyid_OCSP constant id'>OCSP</span><span class='colon2 op'>::</span><span class='rubyid_V_CERTSTATUS_UNKNOWN constant id'>V_CERTSTATUS_UNKNOWN</span>
+    <span class='rubyid_end end kw'>end</span>
+<span class='rubyid_end end kw'>end</span>
 </pre>
     </td>
   </tr>
@@ -506,9 +515,9 @@
 </div>
     
     <div id="footer">
-  Generated on Tue Dec 27 14:58:06 2011 by 
+  Generated on Tue Dec 27 16:08:47 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.6.4 (ruby-1.8.7).
+  0.7.4 (ruby-1.8.7).
 </div>
 
   </body>

@@ -2,17 +2,27 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
-    <meta name="Content-Type" content="text/html; charset=en_us" />
-<title>Documentation by YARD 0.6.4</title>
-<link rel="stylesheet" href="css/style.css" type="text/css" media="screen" charset="utf-8" />
-<link rel="stylesheet" href="css/common.css" type="text/css" media="screen" charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=en_us" />
+<title>
+  File: README
+  
+    &mdash; Documentation by YARD 0.7.4
+  
+</title>
+
+  <link rel="stylesheet" href="css/style.css" type="text/css" media="screen" charset="utf-8" />
+
+  <link rel="stylesheet" href="css/common.css" type="text/css" media="screen" charset="utf-8" />
 
 <script type="text/javascript" charset="utf-8">
   relpath = '';
   if (relpath != '') relpath += '/';
 </script>
-<script type="text/javascript" charset="utf-8" src="js/jquery.js"></script>
-<script type="text/javascript" charset="utf-8" src="js/app.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="js/app.js"></script>
+
 
   </head>
   <body>
@@ -31,17 +41,20 @@
 </div>
 
       <div id="search">
-  <a id="class_list_link" href="#">Class List</a>
-  <a id="method_list_link" href="#">Method List</a>
-  <a id ="file_list_link" href="#">File List</a>
+  
+    <a id="class_list_link" href="#">Class List</a>
+  
+    <a id="method_list_link" href="#">Method List</a>
+  
+    <a id="file_list_link" href="#">File List</a>
+  
 </div>
-
       <div class="clear"></div>
     </div>
     
     <iframe id="search_frame"></iframe>
     
-    <div id="content"><div id='filecontents'><h1>r509 <a href="http://travis-ci.org/reaperhulk/r509"><img src="https://secure.travis-ci.org/reaperhulk/r509.png" alt="Build Status" /></a></h1>
+    <div id="content"><div id='filecontents'><h1>r509 <a href="http://travis-ci.org/reaperhulk/r509"><img src="https://secure.travis-ci.org/reaperhulk/r509.png" alt="Build Status"></a></h1>
 
 <p>r509 is a wrapper for various OpenSSL functions to allow easy creation of CSRs, signing of certificates, and revocation via CRL.</p>
 
@@ -52,7 +65,7 @@ To install the gem: <code>gem install r509-(version).gem</code></p>
 
 <h2>Running Tests/Building Gem</h2>
 
-<p>If you want to run the tests for r509 you'll need rspec. Additionally, you may want to install rcov/simplecov (ruby 1.8/1.9 respectively) and yard for running the code coverage and documentation tasks in the Rakefile. <code>rake -T</code> for a complete list of rake tasks available.</p>
+<p>If you want to run the tests for r509 you&#39;ll need rspec. Additionally, you may want to install rcov/simplecov (ruby 1.8/1.9 respectively) and yard for running the code coverage and documentation tasks in the Rakefile. <code>rake -T</code> for a complete list of rake tasks available.</p>
 
 <h2>Continuous Integration</h2>
 
@@ -68,336 +81,299 @@ To install the gem: <code>gem install r509-(version).gem</code></p>
 
 <p>To generate a 2048-bit RSA CSR</p>
 
-<p>```ruby
-csr = R509::Csr.new(</p>
-
-<pre class="code"><span class='symbol val'>:subject</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrack token'>[</span>
-    <span class='lbrack token'>[</span><span class='string val'>'CN'</span><span class='comma token'>,</span><span class='string val'>'somedomain.com'</span><span class='rbrack token'>]</span><span class='comma token'>,</span>
-    <span class='lbrack token'>[</span><span class='string val'>'O'</span><span class='comma token'>,</span><span class='string val'>'My Org'</span><span class='rbrack token'>]</span><span class='comma token'>,</span>
-    <span class='lbrack token'>[</span><span class='string val'>'L'</span><span class='comma token'>,</span><span class='string val'>'City'</span><span class='rbrack token'>]</span><span class='comma token'>,</span>
-    <span class='lbrack token'>[</span><span class='string val'>'ST'</span><span class='comma token'>,</span><span class='string val'>'State'</span><span class='rbrack token'>]</span><span class='comma token'>,</span>
-    <span class='lbrack token'>[</span><span class='string val'>'C'</span><span class='comma token'>,</span><span class='string val'>'US'</span><span class='rbrack token'>]</span>
-<span class='rbrack token'>]</span>
-</pre>
-
-<p>)
-```</p>
+<p><code>ruby
+csr = R509::Csr.new(
+    :subject =&gt; [
+        [&#39;CN&#39;,&#39;somedomain.com&#39;],
+        [&#39;O&#39;,&#39;My Org&#39;],
+        [&#39;L&#39;,&#39;City&#39;],
+        [&#39;ST&#39;,&#39;State&#39;],
+        [&#39;C&#39;,&#39;US&#39;]
+    ]
+)
+</code></p>
 
 <p>To load an existing CSR (without private key)</p>
 
 <p><code>ruby
-csr_pem = File.read("/path/to/csr")
+csr_pem = File.read(&quot;/path/to/csr&quot;)
 csr = R509::Csr.new(:csr =&gt; csr_pem)
 </code></p>
 
 <p>To create a new CSR from the subject of a certificate</p>
 
 <p><code>ruby
-cert_pem = File.read("/path/to/cert")
+cert_pem = File.read(&quot;/path/to/cert&quot;)
 csr = R509::Csr.new(:cert =&gt; cert_pem)
 </code></p>
 
 <p>To create a CSR with SAN names</p>
 
-<p>```ruby
-csr = R509::Csr.new(</p>
-
-<pre class="code"><span class='symbol val'>:subject</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrack token'>[</span><span class='lbrack token'>[</span><span class='string val'>'CN'</span><span class='comma token'>,</span><span class='string val'>'something.com'</span><span class='rbrack token'>]</span><span class='rbrack token'>]</span><span class='comma token'>,</span>
-<span class='symbol val'>:san_names</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrack token'>[</span><span class='string val'>&quot;something2.com&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;something3.com&quot;</span><span class='rbrack token'>]</span>
-</pre>
-
-<p>)
-```</p>
+<p><code>ruby
+csr = R509::Csr.new(
+    :subject =&gt; [[&#39;CN&#39;,&#39;something.com&#39;]],
+    :san_names =&gt; [&quot;something2.com&quot;,&quot;something3.com&quot;]
+)
+</code></p>
 
 <h3>Cert</h3>
 
 <p>To load an existing certificate</p>
 
 <p><code>ruby
-cert_pem = File.read("/path/to/cert")
+cert_pem = File.read(&quot;/path/to/cert&quot;)
 cert = R509::Cert.new(:cert =&gt; cert_pem)
 </code></p>
 
 <p>Load a cert and key</p>
 
-<p>```ruby
-cert<em>pem = File.read("/path/to/cert")
-key</em>pem = File.read("/path/to/key")
-cert = R509::Cert.new(</p>
-
-<pre class="code"><span class='symbol val'>:cert</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='cert_pem identifier id'>cert_pem</span><span class='comma token'>,</span>
-<span class='symbol val'>:key</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='key_pem identifier id'>key_pem</span>
-</pre>
-
-<p>)
-```</p>
+<p><code>ruby
+cert_pem = File.read(&quot;/path/to/cert&quot;)
+key_pem = File.read(&quot;/path/to/key&quot;)
+cert = R509::Cert.new(
+    :cert =&gt; cert_pem,
+    :key =&gt; key_pem
+)
+</code></p>
 
 <p>Load an encrypted private key</p>
 
-<p>```ruby
-cert<em>pem = File.read("/path/to/cert")
-key</em>pem = File.read("/path/to/key")
-cert = R509::Cert.new(</p>
-
-<pre class="code"><span class='symbol val'>:cert</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='cert_pem identifier id'>cert_pem</span><span class='comma token'>,</span>
-<span class='symbol val'>:key</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='key_pem identifier id'>key_pem</span><span class='comma token'>,</span>
-<span class='symbol val'>:password</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>&quot;private_key_password&quot;</span>
-</pre>
-
-<p>)
-```</p>
+<p><code>ruby
+cert_pem = File.read(&quot;/path/to/cert&quot;)
+key_pem = File.read(&quot;/path/to/key&quot;)
+cert = R509::Cert.new(
+    :cert =&gt; cert_pem,
+    :key =&gt; key_pem,
+    :password =&gt; &quot;private_key_password&quot;
+)
+</code></p>
 
 <p>Load a PKCS12 file</p>
 
 <p>```ruby
-pkcs12_der = File.read("/path/to/p12")
-cert = R509::Cert.new(</p>
-
-<pre class="code"><span class='symbol val'>:pkcs12</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='pkcs12_der identifier id'>pkcs12_der</span><span class='comma token'>,</span>
-<span class='symbol val'>:password</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>&quot;password&quot;</span>
-</pre>
-
-<p>)</p>
+pkcs12<em>der = File.read(&quot;/path/to/p12&quot;)
+cert = R509::Cert.new(
+    :pkcs12 =&gt; pkcs12</em>der,
+    :password =&gt; &quot;password&quot;
+)</p>
 
 <h3>Self-Signed Certificate</h3>
 
 <p>To create a self-signed certificate</p>
 
-<p>```ruby
-not<em>before = Time.now.to</em>i
-not<em>after = Time.now.to</em>i+3600<em>24</em>7300
-csr = R509::Csr.new(</p>
-
-<pre class="code"><span class='symbol val'>:subject</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrack token'>[</span><span class='lbrack token'>[</span><span class='string val'>'C'</span><span class='comma token'>,</span><span class='string val'>'US'</span><span class='rbrack token'>]</span><span class='comma token'>,</span><span class='lbrack token'>[</span><span class='string val'>'O'</span><span class='comma token'>,</span><span class='string val'>'r509 LLC'</span><span class='rbrack token'>]</span><span class='comma token'>,</span><span class='lbrack token'>[</span><span class='string val'>'CN'</span><span class='comma token'>,</span><span class='string val'>'r509 Self-Signed CA Test'</span><span class='rbrack token'>]</span><span class='rbrack token'>]</span>
-</pre>
-
-<p>)
+<p><code>ruby
+not_before = Time.now.to_i
+not_after = Time.now.to_i+3600*24*7300
+csr = R509::Csr.new(
+    :subject =&gt; [[&#39;C&#39;,&#39;US&#39;],[&#39;O&#39;,&#39;r509 LLC&#39;],[&#39;CN&#39;,&#39;r509 Self-Signed CA Test&#39;]]
+)
 ca = R509::CertificateAuthority::Signer.new
-cert = ca.selfsign(</p>
-
-<pre class="code"><span class='symbol val'>:csr</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='csr identifier id'>csr</span><span class='comma token'>,</span>
-<span class='symbol val'>:not_before</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='not_before identifier id'>not_before</span><span class='comma token'>,</span>
-<span class='symbol val'>:not_after</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='not_after identifier id'>not_after</span>
-</pre>
-
-<p>)
-```</p>
+cert = ca.selfsign(
+    :csr =&gt; csr,
+    :not_before =&gt; not_before,
+    :not_after =&gt; not_after
+)
+</code></p>
 
 <h3>Config</h3>
 
 <p>Create a basic CaConfig object</p>
 
-<p>```ruby
-cert<em>pem = File.read("/path/to/cert")
-key</em>pem = File.read("/path/to/key")
-cert = R509::Cert.new(</p>
+<p><code>ruby
+cert_pem = File.read(&quot;/path/to/cert&quot;)
+key_pem = File.read(&quot;/path/to/key&quot;)
+cert = R509::Cert.new(
+    :cert =&gt; cert_pem,
+    :key =&gt; key_pem
+)
+config = R509::Config::CaConfig.new(
+    :ca_cert =&gt; cert
+)
+</code></p>
 
-<pre class="code"><span class='symbol val'>:cert</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='cert_pem identifier id'>cert_pem</span><span class='comma token'>,</span>
-<span class='symbol val'>:key</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='key_pem identifier id'>key_pem</span>
-</pre>
-
-<p>)
-config = R509::Config::CaConfig.new(</p>
-
-<pre class="code"><span class='symbol val'>:ca_cert</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='cert identifier id'>cert</span>
-</pre>
-
-<p>)
-```</p>
-
-<p>Add a signing profile named "server" (CaProfile) to a config object</p>
+<p>Add a signing profile named &quot;server&quot; (CaProfile) to a config object</p>
 
 <p>```ruby
-profile = R509::Config::CaProfile.new(</p>
-
-<pre class="code"><span class='symbol val'>:basic_constraints</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>&quot;CA:FALSE&quot;</span><span class='comma token'>,</span>
-<span class='symbol val'>:key_usage</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrack token'>[</span><span class='string val'>&quot;digitalSignature&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;keyEncipherment&quot;</span><span class='rbrack token'>]</span><span class='comma token'>,</span>
-<span class='symbol val'>:extended_key_usage</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrack token'>[</span><span class='string val'>&quot;serverAuth&quot;</span><span class='rbrack token'>]</span><span class='comma token'>,</span>
-<span class='symbol val'>:certificate_policies</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrack token'>[</span><span class='string val'>&quot;policyIdentifier=2.16.840.1.999999999.1.2.3.4.1&quot;</span><span class='comma token'>,</span> <span class='string val'>&quot;CPS.1=http://example.com/cps&quot;</span><span class='rbrack token'>]</span><span class='comma token'>,</span>
-<span class='symbol val'>:subject_item_policy</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='nil nil kw'>nil</span>
-</pre>
-
-<p>)</p>
+profile = R509::Config::CaProfile.new(
+    :basic<em>constraints =&gt; &quot;CA:FALSE&quot;,
+    :key</em>usage =&gt; [&quot;digitalSignature&quot;,&quot;keyEncipherment&quot;],
+    :extended<em>key</em>usage =&gt; [&quot;serverAuth&quot;],
+    :certificate<em>policies =&gt; [ [&quot;policyIdentifier=2.16.840.1.999999999.1.2.3.4.1&quot;, &quot;CPS.1=http://example.com/cps&quot;] ],
+    :subject</em>item_policy =&gt; nil
+)</p>
 
 <h1>config object from above assumed</h1>
 
-<p>config.set_profile("server",profile)
+<p>config.set_profile(&quot;server&quot;,profile)
 ```</p>
 
-<p>Set up a subject item policy (required/optional). The keys must match OpenSSL's shortnames!</p>
+<p>Set up a subject item policy (required/optional). The keys must match OpenSSL&#39;s shortnames!</p>
 
 <p>```ruby
-profile = R509::Config::CaProfile.new(</p>
-
-<pre class="code"><span class='symbol val'>:basic_constraints</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>&quot;CA:FALSE&quot;</span><span class='comma token'>,</span>
-<span class='symbol val'>:key_usage</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrack token'>[</span><span class='string val'>&quot;digitalSignature&quot;</span><span class='comma token'>,</span><span class='string val'>&quot;keyEncipherment&quot;</span><span class='rbrack token'>]</span><span class='comma token'>,</span>
-<span class='symbol val'>:extended_key_usage</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrack token'>[</span><span class='string val'>&quot;serverAuth&quot;</span><span class='rbrack token'>]</span><span class='comma token'>,</span>
-<span class='symbol val'>:certificate_policies</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrack token'>[</span><span class='string val'>&quot;policyIdentifier=2.16.840.1.999999999.1.2.3.4.1&quot;</span><span class='comma token'>,</span> <span class='string val'>&quot;CPS.1=http://example.com/cps&quot;</span><span class='rbrack token'>]</span><span class='comma token'>,</span>
-<span class='symbol val'>:subject_item_policy</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrace token'>{</span>
-    <span class='string val'>&quot;CN&quot;</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>&quot;required&quot;</span><span class='comma token'>,</span>
-    <span class='string val'>&quot;O&quot;</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>&quot;optional&quot;</span>
-<span class='rbrace token'>}</span>
-</pre>
-
-<p>)</p>
+profile = R509::Config::CaProfile.new(
+    :basic<em>constraints =&gt; &quot;CA:FALSE&quot;,
+    :key</em>usage =&gt; [&quot;digitalSignature&quot;,&quot;keyEncipherment&quot;],
+    :extended<em>key</em>usage =&gt; [&quot;serverAuth&quot;],
+    :certificate<em>policies =&gt; [ [&quot;policyIdentifier=2.16.840.1.999999999.1.2.3.4.1&quot;, &quot;CPS.1=http://example.com/cps&quot;] ],
+    :subject</em>item_policy =&gt; {
+        &quot;CN&quot; =&gt; &quot;required&quot;,
+        &quot;O&quot; =&gt; &quot;optional&quot;
+    }
+)</p>
 
 <h1>config object from above assumed</h1>
 
-<p>config.set_profile("server",profile)
+<p>config.set_profile(&quot;server&quot;,profile)
 ```</p>
 
 <p>Load CaConfig + Profile from YAML</p>
 
 <p><code>ruby
-config = R509::Config::CaConfig.from_yaml("test_ca", "config_test.yaml")
+config = R509::Config::CaConfig.from_yaml(&quot;test_ca&quot;, &quot;config_test.yaml&quot;)
 </code></p>
 
 <p>Example YAML (more options are supported than this example)</p>
 
-<p>```yaml
-test_ca: {</p>
-
-<pre class="code"><span class='ca_cert identifier id'>ca_cert</span><span class='colon op'>:</span> <span class='lbrace token'>{</span>
-    <span class='cert identifier id'>cert</span><span class='colon op'>:</span> <span class='string val'>'/path/to/test_ca.cer'</span><span class='comma token'>,</span>
-    <span class='key identifier id'>key</span><span class='colon op'>:</span> <span class='string val'>'/path/to/test_ca.key'</span>
-<span class='rbrace token'>}</span><span class='comma token'>,</span>
-<span class='crl_list identifier id'>crl_list</span><span class='colon op'>:</span> <span class='string val'>&quot;crl_list_file.txt&quot;</span><span class='comma token'>,</span>
-<span class='crl_number identifier id'>crl_number</span><span class='colon op'>:</span> <span class='string val'>&quot;crl_number_file.txt&quot;</span><span class='comma token'>,</span>
-<span class='cdp_location identifier id'>cdp_location</span><span class='colon op'>:</span> <span class='string val'>'URI:http://crl.domain.com/test_ca.crl'</span><span class='comma token'>,</span>
-<span class='crl_validity_hours identifier id'>crl_validity_hours</span><span class='colon op'>:</span> <span class='integer val'>168</span><span class='comma token'>,</span> <span class='comment val'>#7 days</span>
-<span class='ocsp_location identifier id'>ocsp_location</span><span class='colon op'>:</span> <span class='string val'>'URI:http://ocsp.domain.com'</span><span class='comma token'>,</span>
-<span class='message_digest identifier id'>message_digest</span><span class='colon op'>:</span> <span class='string val'>'SHA1'</span><span class='comma token'>,</span> <span class='comment val'>#SHA1, SHA256, SHA512 supported. MD5 too, but you really shouldn't use that unless you have a good reason</span>
-<span class='profiles identifier id'>profiles</span><span class='colon op'>:</span> <span class='lbrace token'>{</span>
-    <span class='server identifier id'>server</span><span class='colon op'>:</span> <span class='lbrace token'>{</span>
-        <span class='basic_constraints identifier id'>basic_constraints</span><span class='colon op'>:</span> <span class='string val'>&quot;CA:FALSE&quot;</span><span class='comma token'>,</span>
-        <span class='key_usage identifier id'>key_usage</span><span class='colon op'>:</span> <span class='lbrack token'>[</span><span class='digitalSignature identifier id'>digitalSignature</span><span class='comma token'>,</span><span class='keyEncipherment identifier id'>keyEncipherment</span><span class='rbrack token'>]</span><span class='comma token'>,</span>
-        <span class='extended_key_usage identifier id'>extended_key_usage</span><span class='colon op'>:</span> <span class='lbrack token'>[</span><span class='serverAuth identifier id'>serverAuth</span><span class='rbrack token'>]</span><span class='comma token'>,</span>
-        <span class='certificate_policies identifier id'>certificate_policies</span><span class='colon op'>:</span> <span class='lbrack token'>[</span> <span class='string val'>&quot;policyIdentifier=2.16.840.1.9999999999.1.2.3.4.1&quot;</span><span class='comma token'>,</span> <span class='string val'>&quot;CPS.1=http://example.com/cps&quot;</span><span class='rbrack token'>]</span><span class='comma token'>,</span>
-        <span class='subject_item_policy identifier id'>subject_item_policy</span><span class='colon op'>:</span> <span class='lbrace token'>{</span>
-            <span class='string val'>&quot;CN&quot;</span> <span class='colon op'>:</span> <span class='string val'>&quot;required&quot;</span><span class='comma token'>,</span>
-            <span class='string val'>&quot;O&quot;</span> <span class='colon op'>:</span> <span class='string val'>&quot;optional&quot;</span><span class='comma token'>,</span>
-            <span class='string val'>&quot;ST&quot;</span> <span class='colon op'>:</span> <span class='string val'>&quot;required&quot;</span><span class='comma token'>,</span>
-            <span class='string val'>&quot;C&quot;</span> <span class='colon op'>:</span> <span class='string val'>&quot;required&quot;</span><span class='comma token'>,</span>
-            <span class='string val'>&quot;OU&quot;</span> <span class='colon op'>:</span> <span class='string val'>&quot;optional&quot;</span> <span class='rbrace token'>}</span>
-    <span class='rbrace token'>}</span>
-<span class='rbrace token'>}</span>
-</pre>
-
-<p>}
-```</p>
+<p><code>yaml
+test_ca: {
+    ca_cert: {
+        cert: &#39;/path/to/test_ca.cer&#39;,
+        key: &#39;/path/to/test_ca.key&#39;
+    },
+    crl_list: &quot;crl_list_file.txt&quot;,
+    crl_number: &quot;crl_number_file.txt&quot;,
+    cdp_location: &#39;URI:http://crl.domain.com/test_ca.crl&#39;,
+    crl_validity_hours: 168, #7 days
+    ocsp_location: &#39;URI:http://ocsp.domain.com&#39;,
+    message_digest: &#39;SHA1&#39;, #SHA1, SHA256, SHA512 supported. MD5 too, but you really shouldn&#39;t use that unless you have a good reason
+    profiles: {
+        server: {
+            basic_constraints: &quot;CA:FALSE&quot;,
+            key_usage: [digitalSignature,keyEncipherment],
+            extended_key_usage: [serverAuth],
+            certificate_policies: [ [ &quot;policyIdentifier=2.16.840.1.9999999999.1.2.3.4.1&quot;, &quot;CPS.1=http://example.com/cps&quot;] ],
+            subject_item_policy: {
+                &quot;CN&quot; : &quot;required&quot;,
+                &quot;O&quot; : &quot;optional&quot;,
+                &quot;ST&quot; : &quot;required&quot;,
+                &quot;C&quot; : &quot;required&quot;,
+                &quot;OU&quot; : &quot;optional&quot; }
+        }
+    }
+}
+</code></p>
 
 <p>Load Muliple CaConfigs Using a CaConfigPool</p>
 
 <p><code>ruby
-pool = R509::Config::CaConfigPool.from_yaml("certificate_authorities", "config_pool.yaml")
+pool = R509::Config::CaConfigPool.from_yaml(&quot;certificate_authorities&quot;, &quot;config_pool.yaml&quot;)
 </code></p>
 
 <p>Example (Minimal) Config Pool YAML</p>
 
-<p>```yaml
-certificate_authorities: {</p>
-
-<pre class="code"><span class='test_ca identifier id'>test_ca</span><span class='colon op'>:</span> <span class='lbrace token'>{</span>
-    <span class='ca_cert identifier id'>ca_cert</span><span class='colon op'>:</span> <span class='lbrace token'>{</span>
-        <span class='cert identifier id'>cert</span><span class='colon op'>:</span> <span class='string val'>'test_ca.cer'</span><span class='comma token'>,</span>
-        <span class='key identifier id'>key</span><span class='colon op'>:</span> <span class='string val'>'test_ca.key'</span>
-    <span class='rbrace token'>}</span>
-<span class='rbrace token'>}</span><span class='comma token'>,</span>
-<span class='second_ca identifier id'>second_ca</span><span class='colon op'>:</span> <span class='lbrace token'>{</span>
-    <span class='ca_cert identifier id'>ca_cert</span><span class='colon op'>:</span> <span class='lbrace token'>{</span>
-        <span class='cert identifier id'>cert</span><span class='colon op'>:</span> <span class='string val'>'second_ca.cer'</span><span class='comma token'>,</span>
-        <span class='key identifier id'>key</span><span class='colon op'>:</span> <span class='string val'>'second_ca.key'</span>
-    <span class='rbrace token'>}</span>
-<span class='rbrace token'>}</span>
-</pre>
-
-<p>}
-```</p>
+<p><code>yaml
+certificate_authorities: {
+    test_ca: {
+        ca_cert: {
+            cert: &#39;test_ca.cer&#39;,
+            key: &#39;test_ca.key&#39;
+        }
+    },
+    second_ca: {
+        ca_cert: {
+            cert: &#39;second_ca.cer&#39;,
+            key: &#39;second_ca.key&#39;
+        }
+    }
+}
+</code></p>
 
 <h3>CertificateAuthority</h3>
 
 <p>Sign a CSR</p>
 
 <p>```ruby
-csr = R509::Csr.new(</p>
-
-<pre class="code"><span class='symbol val'>:subject</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrack token'>[</span>
-    <span class='lbrack token'>[</span><span class='string val'>'CN'</span><span class='comma token'>,</span><span class='string val'>'somedomain.com'</span><span class='rbrack token'>]</span><span class='comma token'>,</span>
-    <span class='lbrack token'>[</span><span class='string val'>'O'</span><span class='comma token'>,</span><span class='string val'>'My Org'</span><span class='rbrack token'>]</span><span class='comma token'>,</span>
-    <span class='lbrack token'>[</span><span class='string val'>'L'</span><span class='comma token'>,</span><span class='string val'>'City'</span><span class='rbrack token'>]</span><span class='comma token'>,</span>
-    <span class='lbrack token'>[</span><span class='string val'>'ST'</span><span class='comma token'>,</span><span class='string val'>'State'</span><span class='rbrack token'>]</span><span class='comma token'>,</span>
-    <span class='lbrack token'>[</span><span class='string val'>'C'</span><span class='comma token'>,</span><span class='string val'>'US'</span><span class='rbrack token'>]</span>
-<span class='rbrack token'>]</span>
-</pre>
-
-<p>)</p>
+csr = R509::Csr.new(
+    :subject =&gt; [
+        [&#39;CN&#39;,&#39;somedomain.com&#39;],
+        [&#39;O&#39;,&#39;My Org&#39;],
+        [&#39;L&#39;,&#39;City&#39;],
+        [&#39;ST&#39;,&#39;State&#39;],
+        [&#39;C&#39;,&#39;US&#39;]
+    ]
+)</p>
 
 <h1>assume config from yaml load above</h1>
 
 <p>ca = R509::CertificateAuthority::Signer.new(config)
-cert = ca.sign(</p>
-
-<pre class="code"><span class='symbol val'>:profile_name</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>&quot;server&quot;</span><span class='comma token'>,</span>
-<span class='symbol val'>:csr</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='csr identifier id'>csr</span>
-</pre>
-
-<p>)
+cert = ca.sign(
+    :profile_name =&gt; &quot;server&quot;,
+    :csr =&gt; csr
+)
 ```</p>
 
-<p>Override a CSR's subject or SAN names when signing</p>
+<p>Override a CSR&#39;s subject or SAN names when signing</p>
 
 <p>```ruby
-csr = R509::Csr.new(</p>
-
-<pre class="code"><span class='symbol val'>:subject</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrack token'>[</span>
-    <span class='lbrack token'>[</span><span class='string val'>'CN'</span><span class='comma token'>,</span><span class='string val'>'somedomain.com'</span><span class='rbrack token'>]</span><span class='comma token'>,</span>
-    <span class='lbrack token'>[</span><span class='string val'>'O'</span><span class='comma token'>,</span><span class='string val'>'My Org'</span><span class='rbrack token'>]</span><span class='comma token'>,</span>
-    <span class='lbrack token'>[</span><span class='string val'>'L'</span><span class='comma token'>,</span><span class='string val'>'City'</span><span class='rbrack token'>]</span><span class='comma token'>,</span>
-    <span class='lbrack token'>[</span><span class='string val'>'ST'</span><span class='comma token'>,</span><span class='string val'>'State'</span><span class='rbrack token'>]</span><span class='comma token'>,</span>
-    <span class='lbrack token'>[</span><span class='string val'>'C'</span><span class='comma token'>,</span><span class='string val'>'US'</span><span class='rbrack token'>]</span>
-<span class='rbrack token'>]</span>
-</pre>
-
-<p>)
+csr = R509::Csr.new(
+    :subject =&gt; [
+        [&#39;CN&#39;,&#39;somedomain.com&#39;],
+        [&#39;O&#39;,&#39;My Org&#39;],
+        [&#39;L&#39;,&#39;City&#39;],
+        [&#39;ST&#39;,&#39;State&#39;],
+        [&#39;C&#39;,&#39;US&#39;]
+    ]
+)
 data<em>hash = csr.to</em>hash
-data<em>hash[:san</em>names] = ["sannames.com","domain2.com"]
-data<em>hash[:subject]["CN"] = "newdomain.com"
-data</em>hash[:subejct]["O"] = "Org 2.0"</p>
+data<em>hash[:san</em>names] = [&quot;sannames.com&quot;,&quot;domain2.com&quot;]
+data<em>hash[:subject][&quot;CN&quot;] = &quot;newdomain.com&quot;
+data</em>hash[:subejct][&quot;O&quot;] = &quot;Org 2.0&quot;</p>
 
 <h1>assume config from yaml load above</h1>
 
 <p>ca = R509::CertificateAuthority::Signer.new(config)
-cert = ca.sign(</p>
-
-<pre class="code"><span class='symbol val'>:profile_name</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>&quot;server&quot;</span><span class='comma token'>,</span>
-<span class='symbol val'>:csr</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='csr identifier id'>csr</span><span class='comma token'>,</span>
-<span class='symbol val'>:data_hash</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='data_hash identifier id'>data_hash</span>
-</pre>
-
-<p>)
+cert = ca.sign(
+    :profile<em>name =&gt; &quot;server&quot;,
+    :csr =&gt; csr,
+    :data</em>hash =&gt; data_hash
+)
 ```</p>
 
 <h3>Load Hardware Engines</h3>
 
 <p>The engine you want to load must already be available to OpenSSL. How to compile/install OpenSSL engines is outside the scope of this document.</p>
 
-<p>```ruby
-OpenSSL::Engine.load("engine<em>name")
-engine = OpenSSL::Engine.by</em>id("engine_name")
-key = R509::PrivateKey(</p>
-
-<pre class="code"><span class='symbol val'>:engine</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='engine identifier id'>engine</span><span class='comma token'>,</span>
-<span class='symbol val'>:key_name</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>&quot;my_key_name&quot;</span>
-</pre>
-
-<p>)
-```</p>
+<p><code>ruby
+OpenSSL::Engine.load(&quot;engine_name&quot;)
+engine = OpenSSL::Engine.by_id(&quot;engine_name&quot;)
+key = R509::PrivateKey(
+    :engine =&gt; engine,
+    :key_name =&gt; &quot;my_key_name&quot;
+)
+</code></p>
 
 <p>You can then use this key for signing.</p>
 
+<h3>OID Mapping</h3>
+
+<p>Register one</p>
+
+<p><code>ruby
+R509::OidMapper.register(&quot;1.3.5.6.7.8.3.23.3&quot;,&quot;short_name&quot;,&quot;optional_long_name&quot;)
+</code></p>
+
+<p>Register in batch</p>
+
+<p><code>ruby
+R509::OidMapper.batch_register([
+    {:oid =&gt; &quot;1.3.5.6.7.8.3.23.3&quot;, :short_name =&gt; &quot;short_name&quot;, :long_name =&gt; &quot;optional_long_name&quot;},
+    {:oid =&gt; &quot;1.3.5.6.7.8.3.23.5&quot;, :short_name =&gt; &quot;another_name&quot;}
+])
+</code></p>
+
 <h2>Documentation</h2>
 
-<p>There is (relatively) complete documentation available for every method and class in r509 available via yardoc. If you installed via gem it should be pre-generated in the doc directory. If you cloned this repo, just type <code>rake yard</code> with the yard gem installed.</p>
+<p>There is (relatively) complete documentation available for every method and class in r509 available via yardoc. If you installed via gem it should be pre-generated in the doc directory. If you cloned this repo, just type <code>rake yard</code> with the yard gem installed. You will also need the redcarpet and github-markup gems to properly parse the Readme.md.</p>
 
 <h2>Thanks to...</h2>
 
@@ -406,15 +382,15 @@ key = R509::PrivateKey(</p>
 <li><a href="https://github.com/justfalter">Mike Ryan</a></li>
 </ul>
 
-
 <h2>License</h2>
 
-<p>See the LICENSE file. Licensed under the Apache 2.0 License</p></div></div>
+<p>See the LICENSE file. Licensed under the Apache 2.0 License</p>
+</div></div>
     
     <div id="footer">
-  Generated on Tue Dec 27 14:57:59 2011 by 
+  Generated on Tue Dec 27 16:08:45 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.6.4 (ruby-1.8.7).
+  0.7.4 (ruby-1.8.7).
 </div>
 
   </body>

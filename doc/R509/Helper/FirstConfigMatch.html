@@ -2,17 +2,27 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
-    <meta name="Content-Type" content="text/html; charset=en_us" />
-<title>Class: R509::Helper::FirstConfigMatch</title>
-<link rel="stylesheet" href="../../css/style.css" type="text/css" media="screen" charset="utf-8" />
-<link rel="stylesheet" href="../../css/common.css" type="text/css" media="screen" charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=en_us" />
+<title>
+  Class: R509::Helper::FirstConfigMatch
+  
+    &mdash; Documentation by YARD 0.7.4
+  
+</title>
+
+  <link rel="stylesheet" href="../../css/style.css" type="text/css" media="screen" charset="utf-8" />
+
+  <link rel="stylesheet" href="../../css/common.css" type="text/css" media="screen" charset="utf-8" />
 
 <script type="text/javascript" charset="utf-8">
   relpath = '../..';
   if (relpath != '') relpath += '/';
 </script>
-<script type="text/javascript" charset="utf-8" src="../../js/jquery.js"></script>
-<script type="text/javascript" charset="utf-8" src="../../js/app.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../../js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../../js/app.js"></script>
+
 
   </head>
   <body>
@@ -33,11 +43,14 @@
 </div>
 
       <div id="search">
-  <a id="class_list_link" href="#">Class List</a>
-  <a id="method_list_link" href="#">Method List</a>
-  <a id ="file_list_link" href="#">File List</a>
+  
+    <a id="class_list_link" href="#">Class List</a>
+  
+    <a id="method_list_link" href="#">Method List</a>
+  
+    <a id="file_list_link" href="#">File List</a>
+  
 </div>
-
       <div class="clear"></div>
     </div>
     
@@ -81,15 +94,17 @@
 
 <h2>Overview</h2><div class="docstring">
   <div class="discussion">
-    
-<p>helper class used to return the first matching config</p>
+    <p>helper class used to return the first matching config</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+
 </div>
+
+
 
 
   
@@ -144,13 +159,14 @@
   </div>
 </div>
 <div class="tags">
-  <h3>Returns:</h3>
+  
+<h3>Returns:</h3>
 <ul class="return">
   
     <li>
       
-        <span class='type'>(<tt><span class='object_link'><a href="../Config/CaConfig.html" title="R509::Config::CaConfig (class)">R509::Config::CaConfig</a></span></tt>)</span>
       
+        <span class='type'>(<tt><span class='object_link'><a href="../Config/CaConfig.html" title="R509::Config::CaConfig (class)">R509::Config::CaConfig</a></span></tt>)</span>
       
       
       
@@ -178,16 +194,16 @@
     <td>
       <pre class="code"><span class="info file"># File 'lib/r509/HelperClasses.rb', line 9</span>
 
-<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='match identifier id'>match</span><span class='lparen token'>(</span><span class='certid identifier id'>certid</span><span class='comma token'>,</span><span class='configs identifier id'>configs</span><span class='rparen token'>)</span>
-    <span class='configs identifier id'>configs</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='config identifier id'>config</span><span class='bitor op'>|</span>
-        <span class='root_certid identifier id'>root_certid</span> <span class='assign token'>=</span> <span class='OpenSSL constant id'>OpenSSL</span><span class='colon2 op'>::</span><span class='OCSP constant id'>OCSP</span><span class='colon2 op'>::</span><span class='CertificateId constant id'>CertificateId</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='config identifier id'>config</span><span class='dot token'>.</span><span class='ca_cert identifier id'>ca_cert</span><span class='dot token'>.</span><span class='cert identifier id'>cert</span><span class='comma token'>,</span><span class='config identifier id'>config</span><span class='dot token'>.</span><span class='ca_cert identifier id'>ca_cert</span><span class='dot token'>.</span><span class='cert identifier id'>cert</span><span class='rparen token'>)</span>
-        <span class='if if kw'>if</span> <span class='certid identifier id'>certid</span><span class='dot token'>.</span><span class='cmp_issuer identifier id'>cmp_issuer</span><span class='lparen token'>(</span><span class='root_certid identifier id'>root_certid</span><span class='rparen token'>)</span> <span class='then then kw'>then</span>
-            <span class='return return kw'>return</span> <span class='config identifier id'>config</span>
-        <span class='end end kw'>end</span>
-    <span class='end end kw'>end</span>
+<span class='rubyid_def def kw'>def</span> <span class='rubyid_self self kw'>self</span><span class='dot token'>.</span><span class='rubyid_match identifier id'>match</span><span class='lparen token'>(</span><span class='rubyid_certid identifier id'>certid</span><span class='comma token'>,</span><span class='rubyid_configs identifier id'>configs</span><span class='rparen token'>)</span>
+    <span class='rubyid_configs identifier id'>configs</span><span class='dot token'>.</span><span class='rubyid_each identifier id'>each</span> <span class='rubyid_do do kw'>do</span> <span class='bitor op'>|</span><span class='rubyid_config identifier id'>config</span><span class='bitor op'>|</span>
+        <span class='rubyid_root_certid identifier id'>root_certid</span> <span class='assign token'>=</span> <span class='rubyid_OpenSSL constant id'>OpenSSL</span><span class='colon2 op'>::</span><span class='rubyid_OCSP constant id'>OCSP</span><span class='colon2 op'>::</span><span class='rubyid_CertificateId constant id'>CertificateId</span><span class='dot token'>.</span><span class='rubyid_new identifier id'>new</span><span class='lparen token'>(</span><span class='rubyid_config identifier id'>config</span><span class='dot token'>.</span><span class='rubyid_ca_cert identifier id'>ca_cert</span><span class='dot token'>.</span><span class='rubyid_cert identifier id'>cert</span><span class='comma token'>,</span><span class='rubyid_config identifier id'>config</span><span class='dot token'>.</span><span class='rubyid_ca_cert identifier id'>ca_cert</span><span class='dot token'>.</span><span class='rubyid_cert identifier id'>cert</span><span class='rparen token'>)</span>
+        <span class='rubyid_if if kw'>if</span> <span class='rubyid_certid identifier id'>certid</span><span class='dot token'>.</span><span class='rubyid_cmp_issuer identifier id'>cmp_issuer</span><span class='lparen token'>(</span><span class='rubyid_root_certid identifier id'>root_certid</span><span class='rparen token'>)</span> <span class='rubyid_then then kw'>then</span>
+            <span class='rubyid_return return kw'>return</span> <span class='rubyid_config identifier id'>config</span>
+        <span class='rubyid_end end kw'>end</span>
+    <span class='rubyid_end end kw'>end</span>
     <span class='comment val'>#if no match return nil</span>
-    <span class='nil nil kw'>nil</span>
-<span class='end end kw'>end</span>
+    <span class='rubyid_nil nil kw'>nil</span>
+<span class='rubyid_end end kw'>end</span>
 </pre>
     </td>
   </tr>
@@ -199,9 +215,9 @@
 </div>
     
     <div id="footer">
-  Generated on Tue Dec 27 14:58:02 2011 by 
+  Generated on Tue Dec 27 16:08:47 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.6.4 (ruby-1.8.7).
+  0.7.4 (ruby-1.8.7).
 </div>
 
   </body>

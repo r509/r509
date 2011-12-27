@@ -2,17 +2,27 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
-    <meta name="Content-Type" content="text/html; charset=en_us" />
-<title>Class: R509::OidMapper</title>
-<link rel="stylesheet" href="../css/style.css" type="text/css" media="screen" charset="utf-8" />
-<link rel="stylesheet" href="../css/common.css" type="text/css" media="screen" charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=en_us" />
+<title>
+  Class: R509::OidMapper
+  
+    &mdash; Documentation by YARD 0.7.4
+  
+</title>
+
+  <link rel="stylesheet" href="../css/style.css" type="text/css" media="screen" charset="utf-8" />
+
+  <link rel="stylesheet" href="../css/common.css" type="text/css" media="screen" charset="utf-8" />
 
 <script type="text/javascript" charset="utf-8">
   relpath = '..';
   if (relpath != '') relpath += '/';
 </script>
-<script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
-<script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
 
   </head>
   <body>
@@ -33,11 +43,14 @@
 </div>
 
       <div id="search">
-  <a id="class_list_link" href="#">Class List</a>
-  <a id="method_list_link" href="#">Method List</a>
-  <a id ="file_list_link" href="#">File List</a>
+  
+    <a id="class_list_link" href="#">Class List</a>
+  
+    <a id="method_list_link" href="#">Method List</a>
+  
+    <a id="file_list_link" href="#">File List</a>
+  
 </div>
-
       <div class="clear"></div>
     </div>
     
@@ -81,15 +94,17 @@
 
 <h2>Overview</h2><div class="docstring">
   <div class="discussion">
-    
-<p>Helps map raw OIDs to friendlier short names</p>
+    <p>Helps map raw OIDs to friendlier short names</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+
 </div>
+
+
 
 
   
@@ -116,9 +131,8 @@
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>{:oid =&gt; “1.2.3.4.5”, :short_name =&gt; “sName”, :long_name
-=&gt; “lName”} :long_name is optional.</p>
+    <span class="summary_desc"><div class='inline'><p>=&gt; &quot;1.2.3.4.5&quot;, :short<em>name =&gt; &quot;sName&quot;, :long</em>name =&gt; &quot;lName&quot;
+:long_name is optional.</p>
 </div></span>
   
 </li>
@@ -140,8 +154,7 @@
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>Success/failure.</p>
+    <span class="summary_desc"><div class='inline'><p>Success/failure.</p>
 </div></span>
   
 </li>
@@ -165,9 +178,8 @@
   
 </p><div class="docstring">
   <div class="discussion">
-    
-<p>{:oid =&gt; “1.2.3.4.5”, :short_name =&gt; “sName”, :long_name
-=&gt; “lName”} :long_name is optional</p>
+    <p>=&gt; &quot;1.2.3.4.5&quot;, :short<em>name =&gt; &quot;sName&quot;, :long</em>name =&gt; &quot;lName&quot;
+:long_name is optional</p>
 
 
   </div>
@@ -178,21 +190,21 @@
   
     <li>
       
-        <span class='type'>(<tt>Array</tt>)</span>
-      
-      
         <span class='name'>oids</span>
+      
+      
+        <span class='type'>(<tt>Array</tt>)</span>
       
       
       
         &mdash;
-        <div class='inline'>
-<p>An array of hashes</p>
+        <div class='inline'><p>An array of hashes</p>
 </div>
       
     </li>
   
 </ul>
+
 
 </div><table class="source_code">
   <tr>
@@ -210,12 +222,12 @@
     <td>
       <pre class="code"><span class="info file"># File 'lib/r509/OidMapper.rb', line 24</span>
 
-<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='batch_register identifier id'>batch_register</span><span class='lparen token'>(</span><span class='oids identifier id'>oids</span><span class='rparen token'>)</span>
-    <span class='oids identifier id'>oids</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='oid_hash identifier id'>oid_hash</span><span class='bitor op'>|</span>
-        <span class='self self kw'>self</span><span class='dot token'>.</span><span class='register identifier id'>register</span><span class='lparen token'>(</span><span class='oid_hash identifier id'>oid_hash</span><span class='lbrack token'>[</span><span class='symbol val'>:oid</span><span class='rbrack token'>]</span><span class='comma token'>,</span><span class='oid_hash identifier id'>oid_hash</span><span class='lbrack token'>[</span><span class='symbol val'>:short_name</span><span class='rbrack token'>]</span><span class='comma token'>,</span><span class='oid_hash identifier id'>oid_hash</span><span class='lbrack token'>[</span><span class='symbol val'>:long_name</span><span class='rbrack token'>]</span><span class='rparen token'>)</span>
-    <span class='end end kw'>end</span>
-    <span class='nil nil kw'>nil</span>
-<span class='end end kw'>end</span>
+<span class='rubyid_def def kw'>def</span> <span class='rubyid_self self kw'>self</span><span class='dot token'>.</span><span class='rubyid_batch_register identifier id'>batch_register</span><span class='lparen token'>(</span><span class='rubyid_oids identifier id'>oids</span><span class='rparen token'>)</span>
+    <span class='rubyid_oids identifier id'>oids</span><span class='dot token'>.</span><span class='rubyid_each identifier id'>each</span> <span class='rubyid_do do kw'>do</span> <span class='bitor op'>|</span><span class='rubyid_oid_hash identifier id'>oid_hash</span><span class='bitor op'>|</span>
+        <span class='rubyid_self self kw'>self</span><span class='dot token'>.</span><span class='rubyid_register identifier id'>register</span><span class='lparen token'>(</span><span class='rubyid_oid_hash identifier id'>oid_hash</span><span class='lbrack token'>[</span><span class='symbol val'>:oid</span><span class='rbrack token'>]</span><span class='comma token'>,</span><span class='rubyid_oid_hash identifier id'>oid_hash</span><span class='lbrack token'>[</span><span class='symbol val'>:short_name</span><span class='rbrack token'>]</span><span class='comma token'>,</span><span class='rubyid_oid_hash identifier id'>oid_hash</span><span class='lbrack token'>[</span><span class='symbol val'>:long_name</span><span class='rbrack token'>]</span><span class='rparen token'>)</span>
+    <span class='rubyid_end end kw'>end</span>
+    <span class='rubyid_nil nil kw'>nil</span>
+<span class='rubyid_end end kw'>end</span>
 </pre>
     </td>
   </tr>
@@ -231,8 +243,7 @@
   
 </p><div class="docstring">
   <div class="discussion">
-    
-<p>Success/failure</p>
+    <p>Success/failure</p>
 
 
   </div>
@@ -243,68 +254,65 @@
   
     <li>
       
-        <span class='type'>(<tt>String</tt>)</span>
-      
-      
         <span class='name'>oid</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
       
       
       
         &mdash;
-        <div class='inline'>
-<p>A string representation of the OID you want to map (e.g. “1.6.2.3.55”)</p>
+        <div class='inline'><p>A string representation of the OID you want to map (e.g. &quot;1.6.2.3.55&quot;)</p>
 </div>
       
     </li>
   
     <li>
-      
-        <span class='type'>(<tt>String</tt>)</span>
-      
       
         <span class='name'>short_name</span>
       
       
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
       
         &mdash;
-        <div class='inline'>
-<p>The short name (e.g. CN, O, OU, emailAddress)</p>
+        <div class='inline'><p>The short name (e.g. CN, O, OU, emailAddress)</p>
 </div>
       
     </li>
   
     <li>
       
-        <span class='type'>(<tt>String</tt>)</span>
-      
-      
         <span class='name'>long_name</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
       
       
         <em class="default">(defaults to: <tt>nil</tt>)</em>
       
       
         &mdash;
-        <div class='inline'>
-<p>Optional long name. Defaults to the same as short_name</p>
+        <div class='inline'><p>Optional long name. Defaults to the same as short_name</p>
 </div>
       
     </li>
   
 </ul>
+
 <h3>Returns:</h3>
 <ul class="return">
   
     <li>
       
+      
         <span class='type'>(<tt>Boolean</tt>)</span>
       
       
       
-      
         &mdash;
-        <div class='inline'>
-<p>success/failure</p>
+        <div class='inline'><p>success/failure</p>
 </div>
       
     </li>
@@ -327,12 +335,12 @@
     <td>
       <pre class="code"><span class="info file"># File 'lib/r509/OidMapper.rb', line 14</span>
 
-<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='register identifier id'>register</span><span class='lparen token'>(</span><span class='oid identifier id'>oid</span><span class='comma token'>,</span><span class='short_name identifier id'>short_name</span><span class='comma token'>,</span><span class='long_name identifier id'>long_name</span><span class='assign token'>=</span><span class='nil nil kw'>nil</span><span class='rparen token'>)</span>
-    <span class='if if kw'>if</span> <span class='long_name identifier id'>long_name</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span>
-        <span class='long_name identifier id'>long_name</span> <span class='assign token'>=</span> <span class='short_name identifier id'>short_name</span>
-    <span class='end end kw'>end</span>
-    <span class='OpenSSL constant id'>OpenSSL</span><span class='colon2 op'>::</span><span class='ASN1 constant id'>ASN1</span><span class='colon2 op'>::</span><span class='ObjectId constant id'>ObjectId</span><span class='dot token'>.</span><span class='register identifier id'>register</span><span class='lparen token'>(</span><span class='oid identifier id'>oid</span><span class='comma token'>,</span> <span class='short_name identifier id'>short_name</span><span class='comma token'>,</span> <span class='long_name identifier id'>long_name</span><span class='rparen token'>)</span>
-<span class='end end kw'>end</span>
+<span class='rubyid_def def kw'>def</span> <span class='rubyid_self self kw'>self</span><span class='dot token'>.</span><span class='rubyid_register identifier id'>register</span><span class='lparen token'>(</span><span class='rubyid_oid identifier id'>oid</span><span class='comma token'>,</span><span class='rubyid_short_name identifier id'>short_name</span><span class='comma token'>,</span><span class='rubyid_long_name identifier id'>long_name</span><span class='assign token'>=</span><span class='rubyid_nil nil kw'>nil</span><span class='rparen token'>)</span>
+    <span class='rubyid_if if kw'>if</span> <span class='rubyid_long_name identifier id'>long_name</span><span class='dot token'>.</span><span class='rubyid_nil? fid id'>nil?</span>
+        <span class='rubyid_long_name identifier id'>long_name</span> <span class='assign token'>=</span> <span class='rubyid_short_name identifier id'>short_name</span>
+    <span class='rubyid_end end kw'>end</span>
+    <span class='rubyid_OpenSSL constant id'>OpenSSL</span><span class='colon2 op'>::</span><span class='rubyid_ASN1 constant id'>ASN1</span><span class='colon2 op'>::</span><span class='rubyid_ObjectId constant id'>ObjectId</span><span class='dot token'>.</span><span class='rubyid_register identifier id'>register</span><span class='lparen token'>(</span><span class='rubyid_oid identifier id'>oid</span><span class='comma token'>,</span> <span class='rubyid_short_name identifier id'>short_name</span><span class='comma token'>,</span> <span class='rubyid_long_name identifier id'>long_name</span><span class='rparen token'>)</span>
+<span class='rubyid_end end kw'>end</span>
 </pre>
     </td>
   </tr>
@@ -344,9 +352,9 @@
 </div>
     
     <div id="footer">
-  Generated on Tue Dec 27 14:58:06 2011 by 
+  Generated on Tue Dec 27 16:08:45 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.6.4 (ruby-1.8.7).
+  0.7.4 (ruby-1.8.7).
 </div>
 
   </body>

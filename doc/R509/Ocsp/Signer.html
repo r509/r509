@@ -2,17 +2,27 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
-    <meta name="Content-Type" content="text/html; charset=en_us" />
-<title>Class: R509::Ocsp::Signer</title>
-<link rel="stylesheet" href="../../css/style.css" type="text/css" media="screen" charset="utf-8" />
-<link rel="stylesheet" href="../../css/common.css" type="text/css" media="screen" charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=en_us" />
+<title>
+  Class: R509::Ocsp::Signer
+  
+    &mdash; Documentation by YARD 0.7.4
+  
+</title>
+
+  <link rel="stylesheet" href="../../css/style.css" type="text/css" media="screen" charset="utf-8" />
+
+  <link rel="stylesheet" href="../../css/common.css" type="text/css" media="screen" charset="utf-8" />
 
 <script type="text/javascript" charset="utf-8">
   relpath = '../..';
   if (relpath != '') relpath += '/';
 </script>
-<script type="text/javascript" charset="utf-8" src="../../js/jquery.js"></script>
-<script type="text/javascript" charset="utf-8" src="../../js/app.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../../js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../../js/app.js"></script>
+
 
   </head>
   <body>
@@ -33,11 +43,14 @@
 </div>
 
       <div id="search">
-  <a id="class_list_link" href="#">Class List</a>
-  <a id="method_list_link" href="#">Method List</a>
-  <a id ="file_list_link" href="#">File List</a>
+  
+    <a id="class_list_link" href="#">Class List</a>
+  
+    <a id="method_list_link" href="#">Method List</a>
+  
+    <a id="file_list_link" href="#">File List</a>
+  
 </div>
-
       <div class="clear"></div>
     </div>
     
@@ -81,15 +94,17 @@
 
 <h2>Overview</h2><div class="docstring">
   <div class="discussion">
-    
-<p>A class for signing OCSP responses</p>
+    <p>A class for signing OCSP responses</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+
 </div>
+
+
 
 
   
@@ -116,8 +131,7 @@
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>passes request on to the request_checker.</p>
+    <span class="summary_desc"><div class='inline'><p>passes request on to the request_checker.</p>
 </div></span>
   
 </li>
@@ -141,8 +155,7 @@
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>possible OCSP issuance roots that we want to issue OCSP responses for.</p>
+    <span class="summary_desc"><div class='inline'><p>possible OCSP issuance roots that we want to issue OCSP responses for.</p>
 </div></span>
   
 </li>
@@ -164,9 +177,7 @@
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>passes the status result obtained from the request_checker to the response
-signer.</p>
+    <span class="summary_desc"><div class='inline'><p>passes the status result obtained from the request_checker to the response signer.</p>
 </div></span>
   
 </li>
@@ -187,8 +198,7 @@ signer.</p>
   
 </p><div class="docstring">
   <div class="discussion">
-    
-<p>possible OCSP issuance roots that we want to issue OCSP responses for</p>
+    <p>possible OCSP issuance roots that we want to issue OCSP responses for</p>
 
 
   </div>
@@ -199,16 +209,15 @@ signer.</p>
   
     <li>
       
-        <span class='type'>(<tt>Hash</tt>)</span>
-      
-      
         <span class='name'>options</span>
+      
+      
+        <span class='type'>(<tt>Hash</tt>)</span>
       
       
       
         &mdash;
-        <div class='inline'>
-<p>a customizable set of options</p>
+        <div class='inline'><p>a customizable set of options</p>
 </div>
       
     </li>
@@ -222,27 +231,27 @@ signer.</p>
     <ul class="option">
       
         <li>
-          <span class="type">(<tt>Boolean</tt>)</span>
           <span class="name">:copy_nonce</span>
+          <span class="type">(<tt>Boolean</tt>)</span>
           <span class="default">
             
           </span>
           
-        </tr>
+        </li>
       
         <li>
-          <span class="type">(<tt>Array&lt;<span class='object_link'><a href="../Config.html" title="R509::Config (module)">R509::Config</a></span>&gt;</tt>)</span>
           <span class="name">array</span>
+          <span class="type">(<tt>Array&lt;<span class='object_link'><a href="../Config.html" title="R509::Config (module)">R509::Config</a></span>&gt;</tt>)</span>
           <span class="default">
             
           </span>
-          &mdash; <div class='inline'>
-<p>of configs corresponding to all</p>
+          &mdash; <div class='inline'><p>of configs corresponding to all</p>
 </div>
-        </tr>
+        </li>
       
     </ul>
   
+
 
 </div><table class="source_code">
   <tr>
@@ -263,15 +272,15 @@ signer.</p>
     <td>
       <pre class="code"><span class="info file"># File 'lib/r509/Ocsp.rb', line 14</span>
 
-<span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span><span class='lparen token'>(</span><span class='options identifier id'>options</span><span class='rparen token'>)</span>
-    <span class='if if kw'>if</span> <span class='options identifier id'>options</span><span class='dot token'>.</span><span class='has_key? fid id'>has_key?</span><span class='lparen token'>(</span><span class='symbol val'>:validity_checker</span><span class='rparen token'>)</span>
-        <span class='@validity_checker ivar id'>@validity_checker</span> <span class='assign token'>=</span> <span class='options identifier id'>options</span><span class='lbrack token'>[</span><span class='symbol val'>:validity_checker</span><span class='rbrack token'>]</span>
-    <span class='else else kw'>else</span>
-        <span class='@validity_checker ivar id'>@validity_checker</span> <span class='assign token'>=</span> <span class='R509 constant id'>R509</span><span class='colon2 op'>::</span><span class='Validity constant id'>Validity</span><span class='colon2 op'>::</span><span class='DefaultChecker constant id'>DefaultChecker</span><span class='dot token'>.</span><span class='new identifier id'>new</span>
-    <span class='end end kw'>end</span>
-    <span class='@request_checker ivar id'>@request_checker</span> <span class='assign token'>=</span> <span class='Helper constant id'>Helper</span><span class='colon2 op'>::</span><span class='RequestChecker constant id'>RequestChecker</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='options identifier id'>options</span><span class='lbrack token'>[</span><span class='symbol val'>:configs</span><span class='rbrack token'>]</span><span class='comma token'>,</span> <span class='@validity_checker ivar id'>@validity_checker</span><span class='rparen token'>)</span>
-    <span class='@response_signer ivar id'>@response_signer</span> <span class='assign token'>=</span> <span class='Helper constant id'>Helper</span><span class='colon2 op'>::</span><span class='ResponseSigner constant id'>ResponseSigner</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='options identifier id'>options</span><span class='rparen token'>)</span>
-<span class='end end kw'>end</span>
+<span class='rubyid_def def kw'>def</span> <span class='rubyid_initialize identifier id'>initialize</span><span class='lparen token'>(</span><span class='rubyid_options identifier id'>options</span><span class='rparen token'>)</span>
+    <span class='rubyid_if if kw'>if</span> <span class='rubyid_options identifier id'>options</span><span class='dot token'>.</span><span class='rubyid_has_key? fid id'>has_key?</span><span class='lparen token'>(</span><span class='symbol val'>:validity_checker</span><span class='rparen token'>)</span>
+        <span class='rubyid_@validity_checker ivar id'>@validity_checker</span> <span class='assign token'>=</span> <span class='rubyid_options identifier id'>options</span><span class='lbrack token'>[</span><span class='symbol val'>:validity_checker</span><span class='rbrack token'>]</span>
+    <span class='rubyid_else else kw'>else</span>
+        <span class='rubyid_@validity_checker ivar id'>@validity_checker</span> <span class='assign token'>=</span> <span class='rubyid_R509 constant id'>R509</span><span class='colon2 op'>::</span><span class='rubyid_Validity constant id'>Validity</span><span class='colon2 op'>::</span><span class='rubyid_DefaultChecker constant id'>DefaultChecker</span><span class='dot token'>.</span><span class='rubyid_new identifier id'>new</span>
+    <span class='rubyid_end end kw'>end</span>
+    <span class='rubyid_@request_checker ivar id'>@request_checker</span> <span class='assign token'>=</span> <span class='rubyid_Helper constant id'>Helper</span><span class='colon2 op'>::</span><span class='rubyid_RequestChecker constant id'>RequestChecker</span><span class='dot token'>.</span><span class='rubyid_new identifier id'>new</span><span class='lparen token'>(</span><span class='rubyid_options identifier id'>options</span><span class='lbrack token'>[</span><span class='symbol val'>:configs</span><span class='rbrack token'>]</span><span class='comma token'>,</span> <span class='rubyid_@validity_checker ivar id'>@validity_checker</span><span class='rparen token'>)</span>
+    <span class='rubyid_@response_signer ivar id'>@response_signer</span> <span class='assign token'>=</span> <span class='rubyid_Helper constant id'>Helper</span><span class='colon2 op'>::</span><span class='rubyid_ResponseSigner constant id'>ResponseSigner</span><span class='dot token'>.</span><span class='rubyid_new identifier id'>new</span><span class='lparen token'>(</span><span class='rubyid_options identifier id'>options</span><span class='rparen token'>)</span>
+<span class='rubyid_end end kw'>end</span>
 </pre>
     </td>
   </tr>
@@ -294,14 +303,14 @@ signer.</p>
   
 </p><div class="docstring">
   <div class="discussion">
-    
-<p>passes request on to the request_checker</p>
+    <p>passes request on to the request_checker</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+
 </div><table class="source_code">
   <tr>
     <td>
@@ -315,9 +324,9 @@ signer.</p>
     <td>
       <pre class="code"><span class="info file"># File 'lib/r509/Ocsp.rb', line 25</span>
 
-<span class='def def kw'>def</span> <span class='check_request identifier id'>check_request</span><span class='lparen token'>(</span><span class='request identifier id'>request</span><span class='rparen token'>)</span>
-    <span class='@request_checker ivar id'>@request_checker</span><span class='dot token'>.</span><span class='check_request identifier id'>check_request</span><span class='lparen token'>(</span><span class='request identifier id'>request</span><span class='rparen token'>)</span>
-<span class='end end kw'>end</span>
+<span class='rubyid_def def kw'>def</span> <span class='rubyid_check_request identifier id'>check_request</span><span class='lparen token'>(</span><span class='rubyid_request identifier id'>request</span><span class='rparen token'>)</span>
+    <span class='rubyid_@request_checker ivar id'>@request_checker</span><span class='dot token'>.</span><span class='rubyid_check_request identifier id'>check_request</span><span class='lparen token'>(</span><span class='rubyid_request identifier id'>request</span><span class='rparen token'>)</span>
+<span class='rubyid_end end kw'>end</span>
 </pre>
     </td>
   </tr>
@@ -333,15 +342,14 @@ signer.</p>
   
 </p><div class="docstring">
   <div class="discussion">
-    
-<p>passes the status result obtained from the request_checker to the response
-signer</p>
+    <p>passes the status result obtained from the request_checker to the response signer</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+
 </div><table class="source_code">
   <tr>
     <td>
@@ -355,9 +363,9 @@ signer</p>
     <td>
       <pre class="code"><span class="info file"># File 'lib/r509/Ocsp.rb', line 30</span>
 
-<span class='def def kw'>def</span> <span class='sign_response identifier id'>sign_response</span><span class='lparen token'>(</span><span class='statuses identifier id'>statuses</span><span class='rparen token'>)</span>
-    <span class='@response_signer ivar id'>@response_signer</span><span class='dot token'>.</span><span class='sign_response identifier id'>sign_response</span><span class='lparen token'>(</span><span class='statuses identifier id'>statuses</span><span class='rparen token'>)</span>
-<span class='end end kw'>end</span>
+<span class='rubyid_def def kw'>def</span> <span class='rubyid_sign_response identifier id'>sign_response</span><span class='lparen token'>(</span><span class='rubyid_statuses identifier id'>statuses</span><span class='rparen token'>)</span>
+    <span class='rubyid_@response_signer ivar id'>@response_signer</span><span class='dot token'>.</span><span class='rubyid_sign_response identifier id'>sign_response</span><span class='lparen token'>(</span><span class='rubyid_statuses identifier id'>statuses</span><span class='rparen token'>)</span>
+<span class='rubyid_end end kw'>end</span>
 </pre>
     </td>
   </tr>
@@ -369,9 +377,9 @@ signer</p>
 </div>
     
     <div id="footer">
-  Generated on Tue Dec 27 14:58:06 2011 by 
+  Generated on Tue Dec 27 16:08:47 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.6.4 (ruby-1.8.7).
+  0.7.4 (ruby-1.8.7).
 </div>
 
   </body>

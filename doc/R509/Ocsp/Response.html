@@ -2,17 +2,27 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
-    <meta name="Content-Type" content="text/html; charset=en_us" />
-<title>Class: R509::Ocsp::Response</title>
-<link rel="stylesheet" href="../../css/style.css" type="text/css" media="screen" charset="utf-8" />
-<link rel="stylesheet" href="../../css/common.css" type="text/css" media="screen" charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=en_us" />
+<title>
+  Class: R509::Ocsp::Response
+  
+    &mdash; Documentation by YARD 0.7.4
+  
+</title>
+
+  <link rel="stylesheet" href="../../css/style.css" type="text/css" media="screen" charset="utf-8" />
+
+  <link rel="stylesheet" href="../../css/common.css" type="text/css" media="screen" charset="utf-8" />
 
 <script type="text/javascript" charset="utf-8">
   relpath = '../..';
   if (relpath != '') relpath += '/';
 </script>
-<script type="text/javascript" charset="utf-8" src="../../js/jquery.js"></script>
-<script type="text/javascript" charset="utf-8" src="../../js/app.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../../js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../../js/app.js"></script>
+
 
   </head>
   <body>
@@ -33,11 +43,14 @@
 </div>
 
       <div id="search">
-  <a id="class_list_link" href="#">Class List</a>
-  <a id="method_list_link" href="#">Method List</a>
-  <a id ="file_list_link" href="#">File List</a>
+  
+    <a id="class_list_link" href="#">Class List</a>
+  
+    <a id="method_list_link" href="#">Method List</a>
+  
+    <a id="file_list_link" href="#">File List</a>
+  
 </div>
-
       <div class="clear"></div>
     </div>
     
@@ -81,15 +94,17 @@
 
 <h2>Overview</h2><div class="docstring">
   <div class="discussion">
-    
-<p>builds OCSP responses</p>
+    <p>builds OCSP responses</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+
 </div>
+
+
 
 
   
@@ -167,8 +182,7 @@
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>The status code of the nonce check.</p>
+    <span class="summary_desc"><div class='inline'><p>The status code of the nonce check.</p>
 </div></span>
   
 </li>
@@ -192,8 +206,7 @@
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>A new instance of Response.</p>
+    <span class="summary_desc"><div class='inline'><p>A new instance of Response.</p>
 </div></span>
   
 </li>
@@ -215,8 +228,7 @@
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>Response status of this response.</p>
+    <span class="summary_desc"><div class='inline'><p>Response status of this response.</p>
 </div></span>
   
 </li>
@@ -238,8 +250,7 @@
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>Der encoded string.</p>
+    <span class="summary_desc"><div class='inline'><p>Der encoded string.</p>
 </div></span>
   
 </li>
@@ -261,8 +272,7 @@
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>True if the response is valid according to the given root.</p>
+    <span class="summary_desc"><div class='inline'><p>True if the response is valid according to the given root.</p>
 </div></span>
   
 </li>
@@ -283,8 +293,7 @@
   
 </p><div class="docstring">
   <div class="discussion">
-    
-<p>A new instance of Response</p>
+    <p>A new instance of Response</p>
 
 
   </div>
@@ -295,16 +304,17 @@
   
     <li>
       
-        <span class='type'>(<tt>OpenSSL::OCSP::Response</tt>)</span>
-      
-      
         <span class='name'>ocsp_response</span>
+      
+      
+        <span class='type'>(<tt>OpenSSL::OCSP::Response</tt>)</span>
       
       
       
     </li>
   
 </ul>
+
 
 </div><table class="source_code">
   <tr>
@@ -322,12 +332,12 @@
     <td>
       <pre class="code"><span class="info file"># File 'lib/r509/Ocsp.rb', line 54</span>
 
-<span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span><span class='lparen token'>(</span><span class='ocsp_response identifier id'>ocsp_response</span><span class='rparen token'>)</span>
-    <span class='if if kw'>if</span> <span class='not not kw'>not</span> <span class='ocsp_response identifier id'>ocsp_response</span><span class='dot token'>.</span><span class='kind_of? fid id'>kind_of?</span><span class='lparen token'>(</span><span class='OpenSSL constant id'>OpenSSL</span><span class='colon2 op'>::</span><span class='OCSP constant id'>OCSP</span><span class='colon2 op'>::</span><span class='Response constant id'>Response</span><span class='rparen token'>)</span>
-        <span class='raise identifier id'>raise</span> <span class='R509 constant id'>R509</span><span class='colon2 op'>::</span><span class='R509Error constant id'>R509Error</span><span class='comma token'>,</span> <span class='string val'>'You must pass an OpenSSL::OCSP::Response object to the constructor. See R509::Ocsp::Response#parse if you are trying to parse'</span>
-    <span class='end end kw'>end</span>
-    <span class='@ocsp_response ivar id'>@ocsp_response</span> <span class='assign token'>=</span> <span class='ocsp_response identifier id'>ocsp_response</span>
-<span class='end end kw'>end</span>
+<span class='rubyid_def def kw'>def</span> <span class='rubyid_initialize identifier id'>initialize</span><span class='lparen token'>(</span><span class='rubyid_ocsp_response identifier id'>ocsp_response</span><span class='rparen token'>)</span>
+    <span class='rubyid_if if kw'>if</span> <span class='rubyid_not not kw'>not</span> <span class='rubyid_ocsp_response identifier id'>ocsp_response</span><span class='dot token'>.</span><span class='rubyid_kind_of? fid id'>kind_of?</span><span class='lparen token'>(</span><span class='rubyid_OpenSSL constant id'>OpenSSL</span><span class='colon2 op'>::</span><span class='rubyid_OCSP constant id'>OCSP</span><span class='colon2 op'>::</span><span class='rubyid_Response constant id'>Response</span><span class='rparen token'>)</span>
+        <span class='rubyid_raise identifier id'>raise</span> <span class='rubyid_R509 constant id'>R509</span><span class='colon2 op'>::</span><span class='rubyid_R509Error constant id'>R509Error</span><span class='comma token'>,</span> <span class='string val'>'You must pass an OpenSSL::OCSP::Response object to the constructor. See R509::Ocsp::Response#parse if you are trying to parse'</span>
+    <span class='rubyid_end end kw'>end</span>
+    <span class='rubyid_@ocsp_response ivar id'>@ocsp_response</span> <span class='assign token'>=</span> <span class='rubyid_ocsp_response identifier id'>ocsp_response</span>
+<span class='rubyid_end end kw'>end</span>
 </pre>
     </td>
   </tr>
@@ -360,28 +370,28 @@
   
     <li>
       
-        <span class='type'>(<tt>String</tt>, <tt>OpenSSL::OCSP::Response</tt>)</span>
-      
-      
         <span class='name'>parses</span>
+      
+      
+        <span class='type'>(<tt>String</tt>, <tt>OpenSSL::OCSP::Response</tt>)</span>
       
       
       
         &mdash;
-        <div class='inline'>
-<p>an existing response</p>
+        <div class='inline'><p>an existing response</p>
 </div>
       
     </li>
   
 </ul>
+
 <h3>Returns:</h3>
 <ul class="return">
   
     <li>
       
-        <span class='type'>(<tt><span class='object_link'><a href="" title="R509::Ocsp::Response (class)">R509::Ocsp::Response</a></span></tt>)</span>
       
+        <span class='type'>(<tt><span class='object_link'><a href="" title="R509::Ocsp::Response (class)">R509::Ocsp::Response</a></span></tt>)</span>
       
       
       
@@ -405,12 +415,12 @@
     <td>
       <pre class="code"><span class="info file"># File 'lib/r509/Ocsp.rb', line 62</span>
 
-<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='parse identifier id'>parse</span><span class='lparen token'>(</span><span class='ocsp_string identifier id'>ocsp_string</span><span class='rparen token'>)</span>
-    <span class='if if kw'>if</span> <span class='ocsp_string identifier id'>ocsp_string</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span>
-        <span class='raise identifier id'>raise</span> <span class='R509 constant id'>R509</span><span class='colon2 op'>::</span><span class='R509Error constant id'>R509Error</span><span class='comma token'>,</span> <span class='string val'>'You must pass a DER encoded OCSP response to this method'</span>
-    <span class='end end kw'>end</span>
-    <span class='R509 constant id'>R509</span><span class='colon2 op'>::</span><span class='Ocsp constant id'>Ocsp</span><span class='colon2 op'>::</span><span class='Response constant id'>Response</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='OpenSSL constant id'>OpenSSL</span><span class='colon2 op'>::</span><span class='OCSP constant id'>OCSP</span><span class='colon2 op'>::</span><span class='Response constant id'>Response</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='ocsp_string identifier id'>ocsp_string</span><span class='rparen token'>)</span><span class='rparen token'>)</span>
-<span class='end end kw'>end</span>
+<span class='rubyid_def def kw'>def</span> <span class='rubyid_self self kw'>self</span><span class='dot token'>.</span><span class='rubyid_parse identifier id'>parse</span><span class='lparen token'>(</span><span class='rubyid_ocsp_string identifier id'>ocsp_string</span><span class='rparen token'>)</span>
+    <span class='rubyid_if if kw'>if</span> <span class='rubyid_ocsp_string identifier id'>ocsp_string</span><span class='dot token'>.</span><span class='rubyid_nil? fid id'>nil?</span>
+        <span class='rubyid_raise identifier id'>raise</span> <span class='rubyid_R509 constant id'>R509</span><span class='colon2 op'>::</span><span class='rubyid_R509Error constant id'>R509Error</span><span class='comma token'>,</span> <span class='string val'>'You must pass a DER encoded OCSP response to this method'</span>
+    <span class='rubyid_end end kw'>end</span>
+    <span class='rubyid_R509 constant id'>R509</span><span class='colon2 op'>::</span><span class='rubyid_Ocsp constant id'>Ocsp</span><span class='colon2 op'>::</span><span class='rubyid_Response constant id'>Response</span><span class='dot token'>.</span><span class='rubyid_new identifier id'>new</span><span class='lparen token'>(</span><span class='rubyid_OpenSSL constant id'>OpenSSL</span><span class='colon2 op'>::</span><span class='rubyid_OCSP constant id'>OCSP</span><span class='colon2 op'>::</span><span class='rubyid_Response constant id'>Response</span><span class='dot token'>.</span><span class='rubyid_new identifier id'>new</span><span class='lparen token'>(</span><span class='rubyid_ocsp_string identifier id'>ocsp_string</span><span class='rparen token'>)</span><span class='rparen token'>)</span>
+<span class='rubyid_end end kw'>end</span>
 </pre>
     </td>
   </tr>
@@ -437,13 +447,14 @@
   </div>
 </div>
 <div class="tags">
-  <h3>Returns:</h3>
+  
+<h3>Returns:</h3>
 <ul class="return">
   
     <li>
       
-        <span class='type'>(<tt>OpenSSL::OCSP::BasicResponse</tt>)</span>
       
+        <span class='type'>(<tt>OpenSSL::OCSP::BasicResponse</tt>)</span>
       
       
       
@@ -464,9 +475,9 @@
     <td>
       <pre class="code"><span class="info file"># File 'lib/r509/Ocsp.rb', line 80</span>
 
-<span class='def def kw'>def</span> <span class='basic identifier id'>basic</span>
-    <span class='@ocsp_response ivar id'>@ocsp_response</span><span class='dot token'>.</span><span class='basic identifier id'>basic</span>
-<span class='end end kw'>end</span>
+<span class='rubyid_def def kw'>def</span> <span class='rubyid_basic identifier id'>basic</span>
+    <span class='rubyid_@ocsp_response ivar id'>@ocsp_response</span><span class='dot token'>.</span><span class='rubyid_basic identifier id'>basic</span>
+<span class='rubyid_end end kw'>end</span>
 </pre>
     </td>
   </tr>
@@ -482,8 +493,7 @@
   
 </p><div class="docstring">
   <div class="discussion">
-    
-<p>The status code of the nonce check</p>
+    <p>The status code of the nonce check</p>
 
 
   </div>
@@ -494,34 +504,33 @@
   
     <li>
       
-        <span class='type'>(<tt>OpenSSL::OCSP::Request</tt>)</span>
-      
-      
         <span class='name'>ocsp_request</span>
+      
+      
+        <span class='type'>(<tt>OpenSSL::OCSP::Request</tt>)</span>
       
       
       
         &mdash;
-        <div class='inline'>
-<p>the OCSP request whose nonce to check</p>
+        <div class='inline'><p>the OCSP request whose nonce to check</p>
 </div>
       
     </li>
   
 </ul>
+
 <h3>Returns:</h3>
 <ul class="return">
   
     <li>
       
+      
         <span class='type'>(<tt><span class='object_link'><a href="Request.html" title="R509::Ocsp::Request (module)">R509::Ocsp::Request</a></span></tt>)</span>
       
       
       
-      
         &mdash;
-        <div class='inline'>
-<p>the status code of the nonce check</p>
+        <div class='inline'><p>the status code of the nonce check</p>
 </div>
       
     </li>
@@ -541,9 +550,9 @@
     <td>
       <pre class="code"><span class="info file"># File 'lib/r509/Ocsp.rb', line 101</span>
 
-<span class='def def kw'>def</span> <span class='check_nonce identifier id'>check_nonce</span><span class='lparen token'>(</span><span class='ocsp_request identifier id'>ocsp_request</span><span class='rparen token'>)</span>
-    <span class='ocsp_request identifier id'>ocsp_request</span><span class='dot token'>.</span><span class='check_nonce identifier id'>check_nonce</span><span class='lparen token'>(</span><span class='@ocsp_response ivar id'>@ocsp_response</span><span class='dot token'>.</span><span class='basic identifier id'>basic</span><span class='rparen token'>)</span>
-<span class='end end kw'>end</span>
+<span class='rubyid_def def kw'>def</span> <span class='rubyid_check_nonce identifier id'>check_nonce</span><span class='lparen token'>(</span><span class='rubyid_ocsp_request identifier id'>ocsp_request</span><span class='rparen token'>)</span>
+    <span class='rubyid_ocsp_request identifier id'>ocsp_request</span><span class='dot token'>.</span><span class='rubyid_check_nonce identifier id'>check_nonce</span><span class='lparen token'>(</span><span class='rubyid_@ocsp_response ivar id'>@ocsp_response</span><span class='dot token'>.</span><span class='rubyid_basic identifier id'>basic</span><span class='rparen token'>)</span>
+<span class='rubyid_end end kw'>end</span>
 </pre>
     </td>
   </tr>
@@ -559,26 +568,25 @@
   
 </p><div class="docstring">
   <div class="discussion">
-    
-<p>Response status of this response</p>
+    <p>Response status of this response</p>
 
 
   </div>
 </div>
 <div class="tags">
-  <h3>Returns:</h3>
+  
+<h3>Returns:</h3>
 <ul class="return">
   
     <li>
+      
       
         <span class='type'>(<tt>OpenSSL::OCSP</tt>)</span>
       
       
       
-      
         &mdash;
-        <div class='inline'>
-<p>response status of this response</p>
+        <div class='inline'><p>response status of this response</p>
 </div>
       
     </li>
@@ -598,9 +606,9 @@
     <td>
       <pre class="code"><span class="info file"># File 'lib/r509/Ocsp.rb', line 70</span>
 
-<span class='def def kw'>def</span> <span class='status identifier id'>status</span>
-    <span class='@ocsp_response ivar id'>@ocsp_response</span><span class='dot token'>.</span><span class='status identifier id'>status</span>
-<span class='end end kw'>end</span>
+<span class='rubyid_def def kw'>def</span> <span class='rubyid_status identifier id'>status</span>
+    <span class='rubyid_@ocsp_response ivar id'>@ocsp_response</span><span class='dot token'>.</span><span class='rubyid_status identifier id'>status</span>
+<span class='rubyid_end end kw'>end</span>
 </pre>
     </td>
   </tr>
@@ -616,26 +624,25 @@
   
 </p><div class="docstring">
   <div class="discussion">
-    
-<p>Der encoded string</p>
+    <p>Der encoded string</p>
 
 
   </div>
 </div>
 <div class="tags">
-  <h3>Returns:</h3>
+  
+<h3>Returns:</h3>
 <ul class="return">
   
     <li>
+      
       
         <span class='type'>(<tt>String</tt>)</span>
       
       
       
-      
         &mdash;
-        <div class='inline'>
-<p>der encoded string</p>
+        <div class='inline'><p>der encoded string</p>
 </div>
       
     </li>
@@ -655,9 +662,9 @@
     <td>
       <pre class="code"><span class="info file"># File 'lib/r509/Ocsp.rb', line 75</span>
 
-<span class='def def kw'>def</span> <span class='to_der identifier id'>to_der</span>
-    <span class='@ocsp_response ivar id'>@ocsp_response</span><span class='dot token'>.</span><span class='to_der identifier id'>to_der</span>
-<span class='end end kw'>end</span>
+<span class='rubyid_def def kw'>def</span> <span class='rubyid_to_der identifier id'>to_der</span>
+    <span class='rubyid_@ocsp_response ivar id'>@ocsp_response</span><span class='dot token'>.</span><span class='rubyid_to_der identifier id'>to_der</span>
+<span class='rubyid_end end kw'>end</span>
 </pre>
     </td>
   </tr>
@@ -673,8 +680,7 @@
   
 </p><div class="docstring">
   <div class="discussion">
-    
-<p>True if the response is valid according to the given root</p>
+    <p>True if the response is valid according to the given root</p>
 
 
   </div>
@@ -685,34 +691,33 @@
   
     <li>
       
-        <span class='type'>(<tt>OpenSSL::X509::Certificate</tt>)</span>
-      
-      
         <span class='name'>ca_cert</span>
+      
+      
+        <span class='type'>(<tt>OpenSSL::X509::Certificate</tt>)</span>
       
       
       
         &mdash;
-        <div class='inline'>
-<p>the CA certificate to verify against</p>
+        <div class='inline'><p>the CA certificate to verify against</p>
 </div>
       
     </li>
   
 </ul>
+
 <h3>Returns:</h3>
 <ul class="return">
   
     <li>
       
+      
         <span class='type'>(<tt>Boolean</tt>)</span>
       
       
       
-      
         &mdash;
-        <div class='inline'>
-<p>true if the response is valid according to the given root</p>
+        <div class='inline'><p>true if the response is valid according to the given root</p>
 </div>
       
     </li>
@@ -741,18 +746,18 @@
     <td>
       <pre class="code"><span class="info file"># File 'lib/r509/Ocsp.rb', line 86</span>
 
-<span class='def def kw'>def</span> <span class='verify identifier id'>verify</span><span class='lparen token'>(</span><span class='ca_cert identifier id'>ca_cert</span><span class='rparen token'>)</span>
-    <span class='store identifier id'>store</span> <span class='assign token'>=</span> <span class='OpenSSL constant id'>OpenSSL</span><span class='colon2 op'>::</span><span class='X509 constant id'>X509</span><span class='colon2 op'>::</span><span class='Store constant id'>Store</span><span class='dot token'>.</span><span class='new identifier id'>new</span>
-    <span class='store identifier id'>store</span><span class='dot token'>.</span><span class='add_cert identifier id'>add_cert</span><span class='lparen token'>(</span><span class='ca_cert identifier id'>ca_cert</span><span class='rparen token'>)</span>
+<span class='rubyid_def def kw'>def</span> <span class='rubyid_verify identifier id'>verify</span><span class='lparen token'>(</span><span class='rubyid_ca_cert identifier id'>ca_cert</span><span class='rparen token'>)</span>
+    <span class='rubyid_store identifier id'>store</span> <span class='assign token'>=</span> <span class='rubyid_OpenSSL constant id'>OpenSSL</span><span class='colon2 op'>::</span><span class='rubyid_X509 constant id'>X509</span><span class='colon2 op'>::</span><span class='rubyid_Store constant id'>Store</span><span class='dot token'>.</span><span class='rubyid_new identifier id'>new</span>
+    <span class='rubyid_store identifier id'>store</span><span class='dot token'>.</span><span class='rubyid_add_cert identifier id'>add_cert</span><span class='lparen token'>(</span><span class='rubyid_ca_cert identifier id'>ca_cert</span><span class='rparen token'>)</span>
     <span class='comment val'>#suppress verbosity since #verify will output a warning if it does not match</span>
     <span class='comment val'>#as well as returning false. we just want the boolean</span>
-    <span class='original_verbosity identifier id'>original_verbosity</span> <span class='assign token'>=</span> <span class='$VERBOSE gvar id'>$VERBOSE</span>
-    <span class='$VERBOSE gvar id'>$VERBOSE</span> <span class='assign token'>=</span> <span class='nil nil kw'>nil</span>
+    <span class='rubyid_original_verbosity identifier id'>original_verbosity</span> <span class='assign token'>=</span> <span class='rubyid_$VERBOSE gvar id'>$VERBOSE</span>
+    <span class='rubyid_$VERBOSE gvar id'>$VERBOSE</span> <span class='assign token'>=</span> <span class='rubyid_nil nil kw'>nil</span>
     <span class='comment val'>#still a bit unclear on why we add to store and pass in array to verify</span>
-    <span class='result identifier id'>result</span> <span class='assign token'>=</span> <span class='@ocsp_response ivar id'>@ocsp_response</span><span class='dot token'>.</span><span class='basic identifier id'>basic</span><span class='dot token'>.</span><span class='verify identifier id'>verify</span><span class='lparen token'>(</span><span class='lbrack token'>[</span><span class='ca_cert identifier id'>ca_cert</span><span class='rbrack token'>]</span><span class='comma token'>,</span> <span class='store identifier id'>store</span><span class='rparen token'>)</span>
-    <span class='$VERBOSE gvar id'>$VERBOSE</span> <span class='assign token'>=</span> <span class='original_verbosity identifier id'>original_verbosity</span>
-    <span class='return return kw'>return</span> <span class='result identifier id'>result</span>
-<span class='end end kw'>end</span>
+    <span class='rubyid_result identifier id'>result</span> <span class='assign token'>=</span> <span class='rubyid_@ocsp_response ivar id'>@ocsp_response</span><span class='dot token'>.</span><span class='rubyid_basic identifier id'>basic</span><span class='dot token'>.</span><span class='rubyid_verify identifier id'>verify</span><span class='lparen token'>(</span><span class='lbrack token'>[</span><span class='rubyid_ca_cert identifier id'>ca_cert</span><span class='rbrack token'>]</span><span class='comma token'>,</span> <span class='rubyid_store identifier id'>store</span><span class='rparen token'>)</span>
+    <span class='rubyid_$VERBOSE gvar id'>$VERBOSE</span> <span class='assign token'>=</span> <span class='rubyid_original_verbosity identifier id'>original_verbosity</span>
+    <span class='rubyid_return return kw'>return</span> <span class='rubyid_result identifier id'>result</span>
+<span class='rubyid_end end kw'>end</span>
 </pre>
     </td>
   </tr>
@@ -764,9 +769,9 @@
 </div>
     
     <div id="footer">
-  Generated on Tue Dec 27 14:58:06 2011 by 
+  Generated on Tue Dec 27 16:08:47 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.6.4 (ruby-1.8.7).
+  0.7.4 (ruby-1.8.7).
 </div>
 
   </body>
