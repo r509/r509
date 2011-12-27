@@ -182,10 +182,7 @@ describe R509::Csr do
         end
         it "generates a matching csr when supplying raw oids" do
             csr = R509::Csr.new( :subject => [['2.5.4.3','common name'],['2.5.4.15','business category'],['2.5.4.7','locality'],['1.3.6.1.4.1.311.60.2.1.3','jurisdiction oid openssl typically does not know']], :bit_strength => 1024 )
-            # we want the subject to be able to be one of two things, depending on how old your computer is
-            # the "Be" matcher will call .include? on the array here because of be_include
-            # does anyone know of a better, less stupid way to do this?
-            ['/CN=common name/businessCategory=business category/L=locality/1.3.6.1.4.1.311.60.2.1.3=jurisdiction oid openssl typically does not know',"/CN=common name/2.5.4.15=business category/L=locality/1.3.6.1.4.1.311.60.2.1.3=jurisdiction oid openssl typically does not know"].should be_include csr.subject.to_s
+            csr.subject.to_s.should == "/CN=common name/businessCategory=business category/L=locality/jurisdictionOfIncorporationCountryName=jurisdiction oid openssl typically does not know"
         end
     end
     context "when supplying an existing csr" do
@@ -240,10 +237,10 @@ describe R509::Csr do
             csr = R509::Csr.new({ :csr => @csr_invalid_signature })
             csr.verify_signature.should == false
         end
-        it "when the CSR has unknown OIDs" do
+        it "works when the CSR has unknown OIDs" do
             csr = R509::Csr.new(:csr => @csr_unknown_oid)
-            csr.subject["1.3.6.1.4.1.311.60.2.1.3"].should == "US"
-            csr.subject["1.3.6.1.4.1.311.60.2.1.2"].should == "Texas"
+            csr.subject["1.2.3.4.5.6.7.8.9.8.7.6.5.4.3.2.1.0.0"].should == "random oid!"
+            csr.subject["1.3.3.543.567.32.43.335.1.1.1"].should == "another random oid!"
         end
     end
     context "when supplying a key with csr" do

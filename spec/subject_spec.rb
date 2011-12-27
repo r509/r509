@@ -43,10 +43,7 @@ describe R509::Subject do
     end
     it "preserves order with raw OIDs, and potentially fills in known OID names" do
         subject = R509::Subject.new([['2.5.4.3','common name'],['2.5.4.15','business category'],['2.5.4.7','locality'],['1.3.6.1.4.1.311.60.2.1.3','jurisdiction oid openssl typically does not know']])
-        # we want the subject to be able to be one of two things, depending on how old your computer is
-        # the "Be" matcher will call .include? on the array here because of be_include
-        # does anyone know of a better, less stupid way to do this?
-        ['/CN=common name/businessCategory=business category/L=locality/1.3.6.1.4.1.311.60.2.1.3=jurisdiction oid openssl typically does not know',"/CN=common name/2.5.4.15=business category/L=locality/1.3.6.1.4.1.311.60.2.1.3=jurisdiction oid openssl typically does not know"].should be_include subject.name.to_s
+        subject.to_s.should == "/CN=common name/businessCategory=business category/L=locality/jurisdictionOfIncorporationCountryName=jurisdiction oid openssl typically does not know"
     end
 
     it "edits an existing subject entry" do
@@ -90,9 +87,9 @@ describe R509::Subject do
     end
 
     it "deletes an OID" do
-        subject = R509::Subject.new([["CN", "domain.com"], ['1.3.6.1.4.1.311.60.2.1.3', 'jurisdiction oid openssl typically does not know']])
-        subject.to_s.should == "/CN=domain.com/1.3.6.1.4.1.311.60.2.1.3=jurisdiction oid openssl typically does not know"
-        subject.delete("1.3.6.1.4.1.311.60.2.1.3")
+        subject = R509::Subject.new([["CN", "domain.com"], ['1.3.6.1.4.1.38383.60.2.1.0.0', 'random oid']])
+        subject.to_s.should == "/CN=domain.com/1.3.6.1.4.1.38383.60.2.1.0.0=random oid"
+        subject.delete("1.3.6.1.4.1.38383.60.2.1.0.0")
         subject.to_s.should == "/CN=domain.com"
     end
 
@@ -108,18 +105,9 @@ describe R509::Subject do
     it "parses unknown OIDs out of a CSR" do
         csr = R509::Csr.new(:csr => @csr_unknown_oid)
         subject = R509::Subject.new(csr.subject)
-        subject["1.3.6.1.4.1.311.60.2.1.3"].should == "US"
-        subject["1.3.6.1.4.1.311.60.2.1.2"].should == "Texas"
-        subject["businessCategory"].should == "V1.0, Clause 5.(b)"
-        subject["serialNumber"].should == "123"
-        subject["C"].should == "US"
-        subject["postalCode"].should == "60602"
-        subject["ST"].should == "Illinois"
-        subject["L"].should == "Chicago"
-        subject["street"].should == "123 Fake St"
-        subject["O"].should == "Some Company, LLC"
-        subject["OU"].should == "NOC"
-        subject["CN"].should == "mydomain.com"
+        subject["1.2.3.4.5.6.7.8.9.8.7.6.5.4.3.2.1.0.0"].should == "random oid!"
+        subject["1.3.3.543.567.32.43.335.1.1.1"].should == "another random oid!"
+        subject["CN"].should == 'normaldomain.com'
     end
 
 end
