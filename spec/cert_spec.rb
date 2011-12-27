@@ -131,6 +131,17 @@ describe R509::Cert do
         cert.write_der(sio)
         sio.string.should == @cert_der
     end
+    it "writes to pkcs12 when key/cert are present" do
+        cert = R509::Cert.new(:cert => @cert3, :key => @key3)
+        sio = StringIO.new
+        sio.set_encoding("BINARY") if sio.respond_to?(:set_encoding)
+        cert.write_pkcs12(sio,'r509_password')
+        expect { R509::Cert.new(:pkcs12 => sio.string, :password => 'r509_password') }.to_not raise_error
+    end
+    it "raises error when writing to pkcs12 if key is not present" do
+        cert = R509::Cert.new(:cert => @cert3)
+        expect { cert.write_pkcs12('/dev/null','password') }.to raise_error(R509::R509Error, "Writing a PKCS12 requires both key and cert")
+    end
     it "parses san extension" do
         cert = R509::Cert.new(:cert => @cert_san)
         cert.san_names.should == ["langui.sh"]

@@ -184,6 +184,19 @@ module R509
             write_data(filename_or_io, @cert.to_der)
         end
 
+        # Writes cert and key into PKCS12 format using OpenSSL defaults for encryption (des3)
+        # @param [String, #write] filename_or_io Either a string of the path for
+        #  the file that you'd like to write, or an IO-like object.
+        # @param [String] password password
+        # @param [String] friendly_name An optional string to encode in the PKCS12 for friendlyName. defaults to "r509 pkcs12"
+        def write_pkcs12(filename_or_io,password,friendly_name='r509 pkcs12')
+            if @key.nil?
+                raise R509::R509Error, "Writing a PKCS12 requires both key and cert"
+            end
+            pkcs12 = OpenSSL::PKCS12.create(password,friendly_name,@key.key,@cert)
+            write_data(filename_or_io, pkcs12.to_der)
+        end
+
         # Return the certificate extensions
         #
         # @return [Array] an array of hashes representing the extensions in the cert
