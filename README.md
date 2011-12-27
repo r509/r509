@@ -60,7 +60,7 @@ To load an existing certificate
 
 ```ruby
 cert_pem = File.read("/path/to/cert")
-R509::Cert.new(:cert => cert_pem)
+cert = R509::Cert.new(:cert => cert_pem)
 ```
 
 Load a cert and key
@@ -68,7 +68,7 @@ Load a cert and key
 ```ruby
 cert_pem = File.read("/path/to/cert")
 key_pem = File.read("/path/to/key")
-R509::Cert.new(
+cert = R509::Cert.new(
     :cert => cert_pem,
     :key => key_pem
 )
@@ -79,12 +79,21 @@ Load an encrypted private key
 ```ruby
 cert_pem = File.read("/path/to/cert")
 key_pem = File.read("/path/to/key")
-R509::Cert.new(
+cert = R509::Cert.new(
     :cert => cert_pem,
     :key => key_pem,
     :password => "private_key_password"
 )
 ```
+
+Load a PKCS12 file
+
+```ruby
+pkcs12_der = File.read("/path/to/p12")
+cert = R509::Cert.new(
+    :pkcs12 => pkcs12_der,
+    :password => "password"
+)
 
 ###Self-Signed Certificate
 To create a self-signed certificate
@@ -228,7 +237,7 @@ csr = R509::Csr.new(
 )
 #assume config from yaml load above
 ca = R509::CertificateAuthority::Signer.new(config)
-cert = ca.sign_cert(
+cert = ca.sign(
     :profile_name => "server",
     :csr => csr
 )
@@ -252,7 +261,7 @@ data_hash[:subject]["CN"] = "newdomain.com"
 data_hash[:subejct]["O"] = "Org 2.0"
 #assume config from yaml load above
 ca = R509::CertificateAuthority::Signer.new(config)
-cert = ca.sign_cert(
+cert = ca.sign(
     :profile_name => "server",
     :csr => csr,
     :data_hash => data_hash
@@ -276,7 +285,7 @@ You can then use this key for signing.
 
 ##Documentation
 
-There is (relatively) complete documentation available for every method and class in r509 available via yardoc. If you installed via gem it should be pre-generated in the doc directory. If you cloned this repo, just type "rake yard" with the yard gem installed.
+There is (relatively) complete documentation available for every method and class in r509 available via yardoc. If you installed via gem it should be pre-generated in the doc directory. If you cloned this repo, just type ```rake yard``` with the yard gem installed.
 
 ##Thanks to...
 * [Sean Schulte](https://github.com/sirsean)
