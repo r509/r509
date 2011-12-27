@@ -135,10 +135,10 @@ profile = R509::Config::CaProfile.new(
     :basic_constraints => "CA:FALSE",
     :key_usage => ["digitalSignature","keyEncipherment"],
     :extended_key_usage => ["serverAuth"],
-    :certificate_policies => ["policyIdentifier=2.16.840.1.999999999.1.2.3.4.1", "CPS.1=http://example.com/cps"],
+    :certificate_policies => [ ["policyIdentifier=2.16.840.1.999999999.1.2.3.4.1", "CPS.1=http://example.com/cps"] ],
     :subject_item_policy => nil
 )
-#config object from above assumed
+# config object from above assumed
 config.set_profile("server",profile)
 ```
 
@@ -149,13 +149,13 @@ profile = R509::Config::CaProfile.new(
     :basic_constraints => "CA:FALSE",
     :key_usage => ["digitalSignature","keyEncipherment"],
     :extended_key_usage => ["serverAuth"],
-    :certificate_policies => ["policyIdentifier=2.16.840.1.999999999.1.2.3.4.1", "CPS.1=http://example.com/cps"],
+    :certificate_policies => [ ["policyIdentifier=2.16.840.1.999999999.1.2.3.4.1", "CPS.1=http://example.com/cps"] ],
     :subject_item_policy => {
         "CN" => "required",
         "O" => "optional"
     }
 )
-#config object from above assumed
+# config object from above assumed
 config.set_profile("server",profile)
 ```
 
@@ -184,7 +184,7 @@ test_ca: {
             basic_constraints: "CA:FALSE",
             key_usage: [digitalSignature,keyEncipherment],
             extended_key_usage: [serverAuth],
-            certificate_policies: [ "policyIdentifier=2.16.840.1.9999999999.1.2.3.4.1", "CPS.1=http://example.com/cps"],
+            certificate_policies: [ [ "policyIdentifier=2.16.840.1.9999999999.1.2.3.4.1", "CPS.1=http://example.com/cps"] ],
             subject_item_policy: {
                 "CN" : "required",
                 "O" : "optional",
@@ -235,7 +235,7 @@ csr = R509::Csr.new(
         ['C','US']
     ]
 )
-#assume config from yaml load above
+# assume config from yaml load above
 ca = R509::CertificateAuthority::Signer.new(config)
 cert = ca.sign(
     :profile_name => "server",
@@ -259,7 +259,7 @@ data_hash = csr.to_hash
 data_hash[:san_names] = ["sannames.com","domain2.com"]
 data_hash[:subject]["CN"] = "newdomain.com"
 data_hash[:subejct]["O"] = "Org 2.0"
-#assume config from yaml load above
+# assume config from yaml load above
 ca = R509::CertificateAuthority::Signer.new(config)
 cert = ca.sign(
     :profile_name => "server",
@@ -283,9 +283,27 @@ key = R509::PrivateKey(
 
 You can then use this key for signing.
 
+
+###OID Mapping
+
+Register one
+
+```ruby
+R509::OidMapper.register("1.3.5.6.7.8.3.23.3","short_name","optional_long_name")
+```
+
+Register in batch
+
+```ruby
+R509::OidMapper.batch_register([
+    {:oid => "1.3.5.6.7.8.3.23.3", :short_name => "short_name", :long_name => "optional_long_name"},
+    {:oid => "1.3.5.6.7.8.3.23.5", :short_name => "another_name"}
+])
+```
+
 ##Documentation
 
-There is (relatively) complete documentation available for every method and class in r509 available via yardoc. If you installed via gem it should be pre-generated in the doc directory. If you cloned this repo, just type ```rake yard``` with the yard gem installed.
+There is (relatively) complete documentation available for every method and class in r509 available via yardoc. If you installed via gem it should be pre-generated in the doc directory. If you cloned this repo, just type ```rake yard``` with the yard gem installed. You will also need the redcarpet and github-markup gems to properly parse the Readme.md.
 
 ##Thanks to...
 * [Sean Schulte](https://github.com/sirsean)

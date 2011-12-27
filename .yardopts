@@ -1,1 +1,4 @@
---no-private --protected - r509.yaml
+--markup-provider redcarpet
+--markup markdown
+--no-private
+--protected - r509.yaml
