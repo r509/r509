@@ -12,9 +12,9 @@ If you want to run the tests for r509 you'll need rspec. Additionally, you may w
 ##Continuous Integration
 We run continuous integration tests (using Travis-CI) against 1.8.7, 1.9.2, 1.9.3, ree, and ruby-head.
 
-##Scripts
+##Executable
 
-Inside the gem there is a script directory that contains r509\_csr.rb. You can use this in interactive mode to generate a CSR. Other scripts may be written over time.
+Inside the gem there is a bin directory that contains ```r509```. You can use this in interactive mode to generate a CSR and (optionally) self-sign it.
 
 ##Usage
 ###CSR
@@ -261,6 +261,8 @@ cert = ca.sign_cert(
 
 ###Load Hardware Engines
 
+The engine you want to load must already be available to OpenSSL. How to compile/install OpenSSL engines is outside the scope of this document.
+
 ```ruby
 OpenSSL::Engine.load("engine_name")
 engine = OpenSSL::Engine.by_id("engine_name")
@@ -270,7 +272,11 @@ key = R509::PrivateKey(
 )
 ```
 
-You can then use this key for signing
+You can then use this key for signing.
+
+##Documentation
+
+There is (relatively) complete documentation available for every method and class in r509 available via yardoc. If you installed via gem it should be pre-generated in the doc directory. If you cloned this repo, just type "rake yard" with the yard gem installed.
 
 ##Thanks to...
 * [Sean Schulte](https://github.com/sirsean)
