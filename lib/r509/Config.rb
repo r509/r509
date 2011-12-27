@@ -242,37 +242,17 @@ module R509
                 end
 
                 ca_cert_hash = conf['ca_cert']
-                ca_cert_file = ca_root_path + ca_cert_hash['cert']
-                if ca_cert_hash.has_key?('engine') and ca_cert_hash.has_key?('key')
-                    raise R509Error, "You can't specify both key and engine"
-                elsif ca_cert_hash.has_key?('engine') and not ca_cert_hash.has_key?('key_name')
-                    raise R509Error, "You must supply a key_name with an engine"
-                elsif ca_cert_hash.has_key?('engine') and ca_cert_hash.has_key?('key_name')
-                    if ca_cert_hash['engine'].responds_to?(:load_private_key)
-                        #this path is only for testing...ugh
-                        engine = ca_cert_hash['engine']
-                    else
-                        #this path can't be tested by unit tests. bah!
-                        engine = OpenSSL::Engine.by_id(ca_cert_hash['engine'])
-                    end
-                    ca_key = R509::PrivateKey.new(
-                        :engine => engine,
-                        :key_name => ca_cert_hash['key_name']
-                    )
-                    ca_cert = R509::Cert.new(
-                        :cert => read_data(ca_cert_file),
-                        :key => ca_key
-                    )
-                else
-                    ca_key_file = ca_root_path + ca_cert_hash['key']
-                    ca_key = R509::PrivateKey.new(
-                        :key => read_data(ca_key_file),
-                        :password => ca_cert_hash['password']
-                    )
-                    ca_cert = R509::Cert.new(
-                        :cert => read_data(ca_cert_file),
-                        :key => ca_key
-                    )
+
+                if ca_cert_hash.has_key?('engine')
+                    ca_cert = self.load_with_engine(ca_cert_hash,ca_root_path)
+                end
+
+                if ca_cert.nil? and ca_cert_hash.has_key?('pkcs12')
+                    ca_cert = self.load_with_pkcs12(ca_cert_hash,ca_root_path)
+                end
+
+                if ca_cert.nil? and ca_cert_hash.has_key?('cert')
+                    ca_cert = self.load_with_key(ca_cert_hash,ca_root_path)
                 end
 
                 opts = {
@@ -331,6 +311,73 @@ module R509
                 end
                 self.load_from_hash(conf[conf_name], opts)
             end
+
+            private
+
+            def self.load_with_engine(ca_cert_hash,ca_root_path)
+                if ca_cert_hash.has_key?('key')
+                    raise R509Error, "You can't specify both key and engine"
+                end
+                if ca_cert_hash.has_key?('pkcs12')
+                    raise R509Error, "You can't specify both engine and pkcs12"
+                end
+                if not ca_cert_hash.has_key?('key_name')
+                    raise R509Error, "You must supply a key_name with an engine"
+                end
+
+                if ca_cert_hash['engine'].responds_to?(:load_private_key)
+                    #this path is only for testing...ugh
+                    engine = ca_cert_hash['engine']
+                else
+                    #this path can't be tested by unit tests. bah!
+                    engine = OpenSSL::Engine.by_id(ca_cert_hash['engine'])
+                end
+                ca_key = R509::PrivateKey.new(
+                    :engine => engine,
+                    :key_name => ca_cert_hash['key_name']
+                )
+                ca_cert_file = ca_root_path + ca_cert_hash['cert']
+                ca_cert = R509::Cert.new(
+                    :cert => read_data(ca_cert_file),
+                    :key => ca_key
+                )
+                ca_cert
+            end
+
+            def self.load_with_pkcs12(ca_cert_hash,ca_root_path)
+                if ca_cert_hash.has_key?('cert')
+                    raise R509Error, "You can't specify both pkcs12 and cert"
+                end
+                if ca_cert_hash.has_key?('key')
+                    raise R509Error, "You can't specify both pkcs12 and key"
+                end
+
+                pkcs12_file = ca_root_path + ca_cert_hash['pkcs12']
+                ca_cert = R509::Cert.new(
+                    :pkcs12 => read_data(pkcs12_file),
+                    :password => ca_cert_hash['password']
+                )
+                ca_cert
+            end
+
+            def self.load_with_key(ca_cert_hash,ca_root_path)
+                if not ca_cert_hash.has_key?('key')
+                    raise R509Error, "You must provide a key (or engine) with cert"
+                end
+
+                ca_key_file = ca_root_path + ca_cert_hash['key']
+                ca_key = R509::PrivateKey.new(
+                    :key => read_data(ca_key_file),
+                    :password => ca_cert_hash['password']
+                )
+                ca_cert_file = ca_root_path + ca_cert_hash['cert']
+                ca_cert = R509::Cert.new(
+                    :cert => read_data(ca_cert_file),
+                    :key => ca_key
+                )
+                ca_cert
+            end
+
         end
     end
 end

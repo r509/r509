@@ -1,0 +1,33 @@
+pkcs12_ca: {
+    ca_cert: {
+        pkcs12: "test_ca.p12",
+        password: "r509"
+    }
+}
+pkcs12_key_ca: {
+    ca_cert: {
+        pkcs12: "test_ca.p12",
+        password: "r509",
+        key: "test_ca.cer"
+    }
+}
+pkcs12_cert_ca: {
+    ca_cert: {
+        pkcs12: "test_ca.p12",
+        password: "r509",
+        cert: "test_ca.cer"
+    }
+}
+pkcs12_engine_ca: {
+    ca_cert: {
+        pkcs12: "test_ca.p12",
+        password: "r509",
+        engine: "chil",
+        key_name: "r509_key"
+    }
+}
+cert_no_key_ca: {
+    ca_cert: {
+        cert: "test_ca.cer"
+    }
+}

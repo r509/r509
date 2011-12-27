@@ -190,6 +190,26 @@ describe R509::Config::CaConfig do
         expect { R509::Config::CaConfig.from_yaml("password_ca", File.read("#{File.dirname(__FILE__)}/fixtures/config_test_password.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"}) }.to_not raise_error
     end
 
+    it "should load YAML which has a PKCS12 with password" do
+        expect { R509::Config::CaConfig.from_yaml("pkcs12_ca", File.read("#{File.dirname(__FILE__)}/fixtures/config_test_various.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"}) }.to_not raise_error
+    end
+
+    it "raises error on YAML with pkcs12 and key" do
+        expect { R509::Config::CaConfig.from_yaml("pkcs12_key_ca", File.read("#{File.dirname(__FILE__)}/fixtures/config_test_various.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"}) }.to raise_error(R509::R509Error, "You can't specify both pkcs12 and key")
+    end
+
+    it "raises error on YAML with pkcs12 and cert" do
+        expect { R509::Config::CaConfig.from_yaml("pkcs12_cert_ca", File.read("#{File.dirname(__FILE__)}/fixtures/config_test_various.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"}) }.to raise_error(R509::R509Error, "You can't specify both pkcs12 and cert")
+    end
+
+    it "raises error on YAML with pkcs12 and engine" do
+        expect { R509::Config::CaConfig.from_yaml("pkcs12_engine_ca", File.read("#{File.dirname(__FILE__)}/fixtures/config_test_various.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"}) }.to raise_error(R509::R509Error, "You can't specify both engine and pkcs12")
+    end
+
+    it "raises error with cert and no key" do
+        expect { R509::Config::CaConfig.from_yaml("cert_no_key_ca", File.read("#{File.dirname(__FILE__)}/fixtures/config_test_various.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"}) }.to raise_error(R509::R509Error, "You must provide a key (or engine) with cert")
+    end
+
     it "should load YAML which has an engine" do
         #i can test this, it's just gonna take a whole lot of floorin' it!
         yaml = double("yaml")
