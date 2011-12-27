@@ -75,6 +75,10 @@ module TestFixtures
 
     KEY3 = read_fixture('cert3_key.pem')
 
+    KEY3_ENCRYPTED = read_fixture('cert3_key_des3.pem')
+
+    CERT3_P12 = read_fixture('cert3.p12')
+
     CSR4_MULTIPLE_ATTRS = read_fixture('csr4.pem')
 
     KEY4_ENCRYPTED_DES3 = read_fixture('key4_encrypted_des3.pem')

@@ -8,15 +8,31 @@ describe R509::Cert do
         @cert_der = TestFixtures::CERT_DER
         @cert_san = TestFixtures::CERT_SAN
         @key3 = TestFixtures::KEY3
+        @cert3_p12 = TestFixtures::CERT3_P12
         @cert4 = TestFixtures::CERT4
+        @key3_encrypted = TestFixtures::KEY3_ENCRYPTED
         @cert5 = TestFixtures::CERT5
         @cert6 = TestFixtures::CERT6
     end
-    it "raises exception when no hash supplied" do
+    it "raises error when no hash supplied" do
         expect { R509::Cert.new('no hash')}.to raise_error(ArgumentError, 'Must provide a hash of options')
     end
-    it "raises exception when no :cert supplied" do
-        expect { R509::Cert.new(:key => "random")}.to raise_error(ArgumentError, 'Must provide :cert')
+    it "raises error when no :cert supplied" do
+        expect { R509::Cert.new(:key => "random")}.to raise_error(ArgumentError, 'Must provide :cert or :pkcs12')
+    end
+    it "raises error when :cert and :pkcs12 are both provided" do
+        expect { R509::Cert.new(
+            :key => @key3,
+            :pkcs12 => @cert3_p12,
+            :password => 'whatever'
+        ) }.to raise_error(ArgumentError, 'When providing pkcs12, do not pass cert or key')
+    end
+    it "raises error when :key and :pkcs12 are both provided" do
+        expect { R509::Cert.new(
+            :cert => @cert,
+            :pkcs12 => @cert3_p12,
+            :password => 'whatever'
+        ) }.to raise_error(ArgumentError, 'When providing pkcs12, do not pass cert or key')
     end
     it "has a public_key" do
         cert = R509::Cert.new(:cert => @cert)
@@ -40,6 +56,14 @@ describe R509::Cert do
     it "returns false from has_private_key? when a key is not present" do
         cert = R509::Cert.new(:cert => @cert)
         cert.has_private_key?.should == false
+    end
+    it "loads encrypted private key with cert" do
+        expect { R509::Cert.new(:cert => @cert3, :key => @key3_encrypted, :password => "r509") }.to_not raise_error
+    end
+    it "loads pkcs12" do
+        cert = R509::Cert.new(:pkcs12 => @cert3_p12, :password => "r509")
+        cert.has_private_key?.should == true
+        cert.subject.to_s.should == '/CN=futurama.com/O=Farnsworth Enterprises'
     end
     it "has the right not_before" do
         cert = R509::Cert.new(:cert => @cert)

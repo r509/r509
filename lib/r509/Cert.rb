@@ -11,22 +11,32 @@ module R509
 
         # @option opts [String,OpenSSL::X509::Certificate] :cert a cert
         # @option opts [R509::PrivateKey,String] :key optional private key to supply. either an unencrypted PEM/DER string or an R509::PrivateKey object (use the latter if you need password/hardware support)
+        # @option opts [String] :pkcs12 a PKCS12 object containing both key and cert
+        # @option opts [String] :password password for PKCS12 or private key (if supplied)
         def initialize(opts={})
             if not opts.kind_of?(Hash)
                 raise ArgumentError, 'Must provide a hash of options'
             end
-            if not opts.has_key?(:cert)
-                raise ArgumentError, 'Must provide :cert'
+            if opts.has_key?(:pkcs12) and ( opts.has_key?(:key) or opts.has_key?(:cert) )
+                raise ArgumentError, "When providing pkcs12, do not pass cert or key"
+            elsif opts.has_key?(:pkcs12)
+                pkcs12 = OpenSSL::PKCS12.new( opts[:pkcs12], opts[:password] )
+                parse_certificate(pkcs12.certificate)
+                @key = R509::PrivateKey.new( :key => pkcs12.key )
+            elsif not opts.has_key?(:cert)
+                raise ArgumentError, 'Must provide :cert or :pkcs12'
+            else
+                parse_certificate(opts[:cert])
             end
-
-            parse_certificate(opts[:cert])
 
             if opts.has_key?(:key)
                 if opts[:key].kind_of?(R509::PrivateKey)
                     @key = opts[:key]
                 else
-                    @key = R509::PrivateKey.new(:key => opts[:key])
+                    @key = R509::PrivateKey.new( :key => opts[:key], :password => opts[:password] )
                 end
+            end
+            if not @key.nil?
                 if not @cert.public_key.to_s == @key.public_key.to_s then
                     raise R509Error, 'Key does not match cert.'
                 end
@@ -37,7 +47,7 @@ module R509
         #
         # @return [String] the Cert converted into PEM format.
         def to_pem
-            if(@cert.kind_of?(OpenSSL::X509::Certificate)) then
+            if @cert.kind_of?(OpenSSL::X509::Certificate)
                 return @cert.to_pem.chomp
             end
         end
@@ -48,7 +58,7 @@ module R509
         #
         # @return [String] the Cert converted into DER format.
         def to_der
-            if(@cert.kind_of?(OpenSSL::X509::Certificate)) then
+            if @cert.kind_of?(OpenSSL::X509::Certificate)
                 return @cert.to_der
             end
         end
