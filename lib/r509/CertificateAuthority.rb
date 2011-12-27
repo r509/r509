@@ -116,6 +116,9 @@ module R509::CertificateAuthority
         # @option options :not_after [Time] the notAfter for the certificate (defaults to 1 year)
         # @return [R509::Cert] the signed cert object
         def selfsign(options)
+            if not options.kind_of?(Hash)
+                raise ArgumentError, "You must pass a hash of options consisting of at minimum :csr"
+            end
             csr = options[:csr]
             if csr.key.nil?
                 raise ArgumentError, 'CSR must also have a private key to self sign'

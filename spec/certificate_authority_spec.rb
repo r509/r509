@@ -153,16 +153,19 @@ describe R509::CertificateAuthority::Signer do
         cert.cert.not_before.ctime.should == not_before.utc.ctime
         cert.cert.not_after.ctime.should == not_after.utc.ctime
     end
-    it "raises exception unless you provide a proper config (or nil)" do
+    it "raises error unless you provide a proper config (or nil)" do
         expect { R509::CertificateAuthority::Signer.new('invalid') }.to raise_error(R509::R509Error, 'config must be a kind of R509::Config::CaConfig or nil (for self-sign only)')
     end
-    it "raises exception when providing invalid ca profile" do
+    it "raises error when providing invalid ca profile" do
         csr = R509::Csr.new(:csr => @csr)
         expect { @ca.sign(:csr => csr, :profile_name => 'invalid') }.to raise_error(R509::R509Error)
     end
-    it "raises exception when attempting to issue CSR with invalid signature" do
+    it "raises error when attempting to issue CSR with invalid signature" do
         csr = R509::Csr.new(:csr => @csr_invalid_signature)
         expect { @ca.sign(:csr => csr, :profile_name => 'server') }.to raise_error(R509::R509Error, 'Certificate request signature is invalid.')
+    end
+    it "raises error when passing non-hash to selfsign method" do
+        expect { @ca.selfsign(@csr) }.to raise_error(ArgumentError, "You must pass a hash of options consisting of at minimum :csr")
     end
     it "properly issues a self-signed certificate with custom fields" do
         not_before = Time.now.to_i
