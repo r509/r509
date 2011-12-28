@@ -8,8 +8,8 @@ module R509::Ocsp
     # A class for signing OCSP responses
     class Signer
 
-        # @option options [Boolean] :copy_nonce
-        # @option options [Array<R509::Config>] array of configs corresponding to all
+        # @option options [Boolean] :copy_nonce copy nonce from request to response?
+        # @option options [Array<R509::Config>] :configs array of configs corresponding to all
         # possible OCSP issuance roots that we want to issue OCSP responses for
         def initialize(options)
             if options.has_key?(:validity_checker)
@@ -97,7 +97,7 @@ module R509::Ocsp
         end
 
         # @param ocsp_request [OpenSSL::OCSP::Request] the OCSP request whose nonce to check
-        # @return [R509::Ocsp::Request] the status code of the nonce check
+        # @return [R509::Ocsp::Request::Nonce::CONSTANT] the status code of the nonce check
         def check_nonce(ocsp_request)
             ocsp_request.check_nonce(@ocsp_response.basic)
         end

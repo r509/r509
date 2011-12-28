@@ -84,9 +84,9 @@ module R509
             @cert.not_after
         end
 
-        # Returns the certificate public key in PEM format
+        # Returns the certificate public key
         #
-        # @return [Object] public key object (some kind of OpenSSL thing. Just call .to_pem)
+        # @return [OpenSSL::PKey::RSA] public key object
         def public_key
             @cert.public_key
         end
@@ -153,15 +153,15 @@ module R509
         end
 
         # Returns signature algorithm
-        # #
-        # # @return [String] value of the signature algorithm. E.g. sha1WithRSAEncryption, sha256WithRSAEncryption, md5WithRSAEncryption
+        #
+        # @return [String] value of the signature algorithm. E.g. sha1WithRSAEncryption, sha256WithRSAEncryption, md5WithRSAEncryption
         def signature_algorithm
             @cert.signature_algorithm
         end
 
         # Returns key algorithm (RSA or DSA)
-        # #
-        # # @return [String] value of the key algorithm. RSA or DSA
+        #
+        # @return [String] value of the key algorithm. RSA or DSA
         def key_algorithm
             if self.rsa?
                 "RSA"

@@ -173,15 +173,15 @@ module R509
         end
 
         # Returns signature algorithm
-        # #
-        # # @return [String] value of the signature algorithm. E.g. sha1WithRSAEncryption, sha256WithRSAEncryption, md5WithRSAEncryption
+        #
+        # @return [String] value of the signature algorithm. E.g. sha1WithRSAEncryption, sha256WithRSAEncryption, md5WithRSAEncryption
         def signature_algorithm
             @req.signature_algorithm
         end
 
         # Returns key algorithm (RSA/DSA)
-        # #
-        # # @return [String] value of the key algorithm. RSA or DSA
+        #
+        # @return [String] value of the key algorithm. RSA or DSA
         def key_algorithm
             if @req.public_key.kind_of? OpenSSL::PKey::RSA then
                 'RSA'
@@ -190,7 +190,7 @@ module R509
             end
         end
 
-        # Returns a hash structure you can pass to the Ca
+        # Returns a hash structure you can pass to the Ca.
         # You will want to call this method if you intend to alter the values
         # and then pass them to the Ca class.
         #

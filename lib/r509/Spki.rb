@@ -90,8 +90,8 @@ module R509
         end
 
         # Returns key algorithm (RSA/DSA)
-        # #
-        # # @return [String] value of the key algorithm. RSA or DSA
+        #
+        # @return [String] value of the key algorithm. RSA or DSA
         def key_algorithm
             if @spki.public_key.kind_of? OpenSSL::PKey::RSA then
                 'RSA'

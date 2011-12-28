@@ -86,7 +86,7 @@ module R509
     # if it didn't throw away the OID.
     class NameSanitizer
         # @option name [OpenSSL::X509::Name]
-        # @return an array of the form [["OID", "VALUE], ["OID", "VALUE"]] with "UNDEF" replaced by the actual OID
+        # @return [Array] array of the form [["OID", "VALUE], ["OID", "VALUE"]] with "UNDEF" replaced by the actual OID
         def sanitize(name)
             line = name.to_s
             array = name.to_a.dup
@@ -117,7 +117,10 @@ module R509
 
         # get the components from #to_a that are UNDEF
         # @option array [Array<OpenSSL::X509::Name>]
-        # @return [{ :index => the index in the original array where we found an UNDEF, :value => the subject component value }]
+        # @return [Hash]
+        # @example
+        #   Return value looks like
+        #   { :index => the index in the original array where we found an UNDEF, :value => the subject component value }
         def undefined_components(array)
             components = []
             array.each_index do |index|

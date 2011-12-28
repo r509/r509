@@ -37,7 +37,7 @@ module R509
         # Indicates whether the serial number has been revoked, or not.
         #
         # @param [Integer] serial The serial number we want to check
-        # @return [Boolean True if the serial number was revoked. False, otherwise.
+        # @return [Boolean] True if the serial number was revoked. False, otherwise.
         def revoked?(serial)
           @revoked_certs.has_key?(serial)
         end
@@ -101,6 +101,7 @@ module R509
         # @param generate_and_save [Boolean] whether we want to generate the CRL and save its file (default=true)
         #
         #   reason codes defined by rfc 5280
+        #
         #   CRLReason ::= ENUMERATED {
         #         unspecified             (0),
         #         keyCompromise           (1),
@@ -198,7 +199,6 @@ module R509
         #  crl will be written to either the file (if a string), or IO. If nil,
         #  then the @crl_list_file will be used. If that is nil, then an error
         #  will be raised.
-        # @raise [R509Error] Raised if there's no @crl_list_file to save to.
         def save_crl_list(filename_or_io = @crl_list_file)
             return nil if filename_or_io.nil?
 
