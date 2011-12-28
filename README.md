@@ -94,6 +94,7 @@ cert = R509::Cert.new(
     :pkcs12 => pkcs12_der,
     :password => "password"
 )
+```
 
 ###Self-Signed Certificate
 To create a self-signed certificate
@@ -196,7 +197,7 @@ test_ca: {
 }
 ```
 
-Load Muliple CaConfigs Using a CaConfigPool
+Load multiple CaConfigs using a CaConfigPool
 
 ```ruby
 pool = R509::Config::CaConfigPool.from_yaml("certificate_authorities", "config_pool.yaml")
