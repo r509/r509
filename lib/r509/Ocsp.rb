@@ -147,7 +147,10 @@ module R509::Ocsp::Helper
         # @param validated_config [R509::Config]
         def check_status(certid, validated_config)
             if(validated_config == nil) then
-                return nil
+                return {
+                    :certid => certid,
+                    :config => nil
+                }
             else
                 validity_status = @validity_checker.check(certid.serial)
                 return {
