@@ -2,7 +2,7 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=en_us" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>
   Class: R509::Validity::Writer
   
@@ -94,7 +94,8 @@
 
 <h2>Overview</h2><div class="docstring">
   <div class="discussion">
-    <p>abstract base class for a Writer</p>
+    
+<p>abstract base class for a Writer</p>
 
 
   </div>
@@ -212,10 +213,9 @@
     <td>
       <pre class="code"><span class="info file"># File 'lib/r509/Validity.rb', line 41</span>
 
-<span class='rubyid_def def kw'>def</span> <span class='rubyid_issue identifier id'>issue</span><span class='lparen token'>(</span><span class='rubyid_serial identifier id'>serial</span><span class='rparen token'>)</span>
-    <span class='rubyid_raise identifier id'>raise</span> <span class='rubyid_NotImplementedError constant id'>NotImplementedError</span><span class='comma token'>,</span> <span class='string val'>&quot;You must call #issue on a subclass of Writer&quot;</span>
-<span class='rubyid_end end kw'>end</span>
-</pre>
+<span class='kw'>def</span> <span class='id identifier rubyid_issue'>issue</span><span class='lparen'>(</span><span class='id identifier rubyid_serial'>serial</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_raise'>raise</span> <span class='const'>NotImplementedError</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>You must call #issue on a subclass of Writer</span><span class='tstring_end'>&quot;</span></span>
+<span class='kw'>end</span></pre>
     </td>
   </tr>
 </table>
@@ -263,10 +263,9 @@
     <td>
       <pre class="code"><span class="info file"># File 'lib/r509/Validity.rb', line 45</span>
 
-<span class='rubyid_def def kw'>def</span> <span class='rubyid_revoke identifier id'>revoke</span><span class='lparen token'>(</span><span class='rubyid_serial identifier id'>serial</span><span class='comma token'>,</span> <span class='rubyid_reason identifier id'>reason</span><span class='rparen token'>)</span>
-    <span class='rubyid_raise identifier id'>raise</span> <span class='rubyid_NotImplementedError constant id'>NotImplementedError</span><span class='comma token'>,</span> <span class='string val'>&quot;You must call #revoke on a subclass of Writer&quot;</span>
-<span class='rubyid_end end kw'>end</span>
-</pre>
+<span class='kw'>def</span> <span class='id identifier rubyid_revoke'>revoke</span><span class='lparen'>(</span><span class='id identifier rubyid_serial'>serial</span><span class='comma'>,</span> <span class='id identifier rubyid_reason'>reason</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_raise'>raise</span> <span class='const'>NotImplementedError</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>You must call #revoke on a subclass of Writer</span><span class='tstring_end'>&quot;</span></span>
+<span class='kw'>end</span></pre>
     </td>
   </tr>
 </table>
@@ -277,9 +276,9 @@
 </div>
     
     <div id="footer">
-  Generated on Tue Dec 27 16:08:47 2011 by 
+  Generated on Tue Dec 27 18:22:26 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.7.4 (ruby-1.8.7).
+  0.7.4 (ruby-1.9.3).
 </div>
 
   </body>

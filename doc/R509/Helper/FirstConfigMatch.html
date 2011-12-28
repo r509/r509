@@ -2,7 +2,7 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=en_us" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>
   Class: R509::Helper::FirstConfigMatch
   
@@ -94,7 +94,8 @@
 
 <h2>Overview</h2><div class="docstring">
   <div class="discussion">
-    <p>helper class used to return the first matching config</p>
+    
+<p>helper class used to return the first matching config</p>
 
 
   </div>
@@ -194,17 +195,16 @@
     <td>
       <pre class="code"><span class="info file"># File 'lib/r509/HelperClasses.rb', line 9</span>
 
-<span class='rubyid_def def kw'>def</span> <span class='rubyid_self self kw'>self</span><span class='dot token'>.</span><span class='rubyid_match identifier id'>match</span><span class='lparen token'>(</span><span class='rubyid_certid identifier id'>certid</span><span class='comma token'>,</span><span class='rubyid_configs identifier id'>configs</span><span class='rparen token'>)</span>
-    <span class='rubyid_configs identifier id'>configs</span><span class='dot token'>.</span><span class='rubyid_each identifier id'>each</span> <span class='rubyid_do do kw'>do</span> <span class='bitor op'>|</span><span class='rubyid_config identifier id'>config</span><span class='bitor op'>|</span>
-        <span class='rubyid_root_certid identifier id'>root_certid</span> <span class='assign token'>=</span> <span class='rubyid_OpenSSL constant id'>OpenSSL</span><span class='colon2 op'>::</span><span class='rubyid_OCSP constant id'>OCSP</span><span class='colon2 op'>::</span><span class='rubyid_CertificateId constant id'>CertificateId</span><span class='dot token'>.</span><span class='rubyid_new identifier id'>new</span><span class='lparen token'>(</span><span class='rubyid_config identifier id'>config</span><span class='dot token'>.</span><span class='rubyid_ca_cert identifier id'>ca_cert</span><span class='dot token'>.</span><span class='rubyid_cert identifier id'>cert</span><span class='comma token'>,</span><span class='rubyid_config identifier id'>config</span><span class='dot token'>.</span><span class='rubyid_ca_cert identifier id'>ca_cert</span><span class='dot token'>.</span><span class='rubyid_cert identifier id'>cert</span><span class='rparen token'>)</span>
-        <span class='rubyid_if if kw'>if</span> <span class='rubyid_certid identifier id'>certid</span><span class='dot token'>.</span><span class='rubyid_cmp_issuer identifier id'>cmp_issuer</span><span class='lparen token'>(</span><span class='rubyid_root_certid identifier id'>root_certid</span><span class='rparen token'>)</span> <span class='rubyid_then then kw'>then</span>
-            <span class='rubyid_return return kw'>return</span> <span class='rubyid_config identifier id'>config</span>
-        <span class='rubyid_end end kw'>end</span>
-    <span class='rubyid_end end kw'>end</span>
-    <span class='comment val'>#if no match return nil</span>
-    <span class='rubyid_nil nil kw'>nil</span>
-<span class='rubyid_end end kw'>end</span>
-</pre>
+<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_match'>match</span><span class='lparen'>(</span><span class='id identifier rubyid_certid'>certid</span><span class='comma'>,</span><span class='id identifier rubyid_configs'>configs</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_configs'>configs</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_config'>config</span><span class='op'>|</span>
+        <span class='id identifier rubyid_root_certid'>root_certid</span> <span class='op'>=</span> <span class='const'>OpenSSL</span><span class='op'>::</span><span class='const'>OCSP</span><span class='op'>::</span><span class='const'>CertificateId</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_config'>config</span><span class='period'>.</span><span class='id identifier rubyid_ca_cert'>ca_cert</span><span class='period'>.</span><span class='id identifier rubyid_cert'>cert</span><span class='comma'>,</span><span class='id identifier rubyid_config'>config</span><span class='period'>.</span><span class='id identifier rubyid_ca_cert'>ca_cert</span><span class='period'>.</span><span class='id identifier rubyid_cert'>cert</span><span class='rparen'>)</span>
+        <span class='kw'>if</span> <span class='id identifier rubyid_certid'>certid</span><span class='period'>.</span><span class='id identifier rubyid_cmp_issuer'>cmp_issuer</span><span class='lparen'>(</span><span class='id identifier rubyid_root_certid'>root_certid</span><span class='rparen'>)</span> <span class='kw'>then</span>
+            <span class='kw'>return</span> <span class='id identifier rubyid_config'>config</span>
+        <span class='kw'>end</span>
+    <span class='kw'>end</span>
+    <span class='comment'>#if no match return nil
+</span>    <span class='kw'>nil</span>
+<span class='kw'>end</span></pre>
     </td>
   </tr>
 </table>
@@ -215,9 +215,9 @@
 </div>
     
     <div id="footer">
-  Generated on Tue Dec 27 16:08:47 2011 by 
+  Generated on Tue Dec 27 18:22:27 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.7.4 (ruby-1.8.7).
+  0.7.4 (ruby-1.9.3).
 </div>
 
   </body>

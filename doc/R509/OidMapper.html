@@ -2,7 +2,7 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=en_us" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>
   Class: R509::OidMapper
   
@@ -94,7 +94,8 @@
 
 <h2>Overview</h2><div class="docstring">
   <div class="discussion">
-    <p>Helps map raw OIDs to friendlier short names</p>
+    
+<p>Helps map raw OIDs to friendlier short names</p>
 
 
   </div>
@@ -131,8 +132,8 @@
   
 
   
-    <span class="summary_desc"><div class='inline'><p>=&gt; &quot;1.2.3.4.5&quot;, :short<em>name =&gt; &quot;sName&quot;, :long</em>name =&gt; &quot;lName&quot;
-:long_name is optional.</p>
+    <span class="summary_desc"><div class='inline'>
+<p>Register a batch of OIDs so we have friendly short names.</p>
 </div></span>
   
 </li>
@@ -154,7 +155,8 @@
   
 
   
-    <span class="summary_desc"><div class='inline'><p>Success/failure.</p>
+    <span class="summary_desc"><div class='inline'>
+<p>Register an OID so we have a friendly short name.</p>
 </div></span>
   
 </li>
@@ -178,14 +180,25 @@
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>=&gt; &quot;1.2.3.4.5&quot;, :short<em>name =&gt; &quot;sName&quot;, :long</em>name =&gt; &quot;lName&quot;
-:long_name is optional</p>
+    
+<p>Register a batch of OIDs so we have friendly short names</p>
 
 
   </div>
 </div>
 <div class="tags">
-  <h3>Parameters:</h3>
+  
+  <div class="examples">
+    <h3>Examples:</h3>
+    
+      <h4><div class='inline'></div></h4>
+      <pre class="example code">R509::OidMapper.batch_register([
+    {:oid =&gt; &quot;1.2.3.4.5&quot;, :short_name =&gt; &quot;sName&quot;, :long_name =&gt; &quot;lName&quot;},
+    {:oid =&gt; &quot;1.2.3.4.6&quot;, :short_name =&gt; &quot;oName&quot;}
+]</pre>
+    
+  </div>
+<h3>Parameters:</h3>
 <ul class="param">
   
     <li>
@@ -198,7 +211,8 @@
       
       
         &mdash;
-        <div class='inline'><p>An array of hashes</p>
+        <div class='inline'>
+<p>An array of hashes</p>
 </div>
       
     </li>
@@ -212,23 +226,22 @@
       <pre class="lines">
 
 
-24
-25
-26
-27
-28
-29</pre>
+29
+30
+31
+32
+33
+34</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/OidMapper.rb', line 24</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/OidMapper.rb', line 29</span>
 
-<span class='rubyid_def def kw'>def</span> <span class='rubyid_self self kw'>self</span><span class='dot token'>.</span><span class='rubyid_batch_register identifier id'>batch_register</span><span class='lparen token'>(</span><span class='rubyid_oids identifier id'>oids</span><span class='rparen token'>)</span>
-    <span class='rubyid_oids identifier id'>oids</span><span class='dot token'>.</span><span class='rubyid_each identifier id'>each</span> <span class='rubyid_do do kw'>do</span> <span class='bitor op'>|</span><span class='rubyid_oid_hash identifier id'>oid_hash</span><span class='bitor op'>|</span>
-        <span class='rubyid_self self kw'>self</span><span class='dot token'>.</span><span class='rubyid_register identifier id'>register</span><span class='lparen token'>(</span><span class='rubyid_oid_hash identifier id'>oid_hash</span><span class='lbrack token'>[</span><span class='symbol val'>:oid</span><span class='rbrack token'>]</span><span class='comma token'>,</span><span class='rubyid_oid_hash identifier id'>oid_hash</span><span class='lbrack token'>[</span><span class='symbol val'>:short_name</span><span class='rbrack token'>]</span><span class='comma token'>,</span><span class='rubyid_oid_hash identifier id'>oid_hash</span><span class='lbrack token'>[</span><span class='symbol val'>:long_name</span><span class='rbrack token'>]</span><span class='rparen token'>)</span>
-    <span class='rubyid_end end kw'>end</span>
-    <span class='rubyid_nil nil kw'>nil</span>
-<span class='rubyid_end end kw'>end</span>
-</pre>
+<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_batch_register'>batch_register</span><span class='lparen'>(</span><span class='id identifier rubyid_oids'>oids</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_oids'>oids</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_oid_hash'>oid_hash</span><span class='op'>|</span>
+        <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_register'>register</span><span class='lparen'>(</span><span class='id identifier rubyid_oid_hash'>oid_hash</span><span class='lbracket'>[</span><span class='symbol'>:oid</span><span class='rbracket'>]</span><span class='comma'>,</span><span class='id identifier rubyid_oid_hash'>oid_hash</span><span class='lbracket'>[</span><span class='symbol'>:short_name</span><span class='rbracket'>]</span><span class='comma'>,</span><span class='id identifier rubyid_oid_hash'>oid_hash</span><span class='lbracket'>[</span><span class='symbol'>:long_name</span><span class='rbracket'>]</span><span class='rparen'>)</span>
+    <span class='kw'>end</span>
+    <span class='kw'>nil</span>
+<span class='kw'>end</span></pre>
     </td>
   </tr>
 </table>
@@ -243,7 +256,8 @@
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>Success/failure</p>
+    
+<p>Register an OID so we have a friendly short name</p>
 
 
   </div>
@@ -262,7 +276,8 @@
       
       
         &mdash;
-        <div class='inline'><p>A string representation of the OID you want to map (e.g. &quot;1.6.2.3.55&quot;)</p>
+        <div class='inline'>
+<p>A string representation of the OID you want to map (e.g. "1.6.2.3.55")</p>
 </div>
       
     </li>
@@ -277,7 +292,8 @@
       
       
         &mdash;
-        <div class='inline'><p>The short name (e.g. CN, O, OU, emailAddress)</p>
+        <div class='inline'>
+<p>The short name (e.g. CN, O, OU, emailAddress)</p>
 </div>
       
     </li>
@@ -294,7 +310,8 @@
       
       
         &mdash;
-        <div class='inline'><p>Optional long name. Defaults to the same as short_name</p>
+        <div class='inline'>
+<p>Optional long name. Defaults to the same as short_name</p>
 </div>
       
     </li>
@@ -312,7 +329,8 @@
       
       
         &mdash;
-        <div class='inline'><p>success/failure</p>
+        <div class='inline'>
+<p>success/failure</p>
 </div>
       
     </li>
@@ -325,23 +343,22 @@
       <pre class="lines">
 
 
-14
 15
 16
 17
 18
-19</pre>
+19
+20</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/OidMapper.rb', line 14</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/OidMapper.rb', line 15</span>
 
-<span class='rubyid_def def kw'>def</span> <span class='rubyid_self self kw'>self</span><span class='dot token'>.</span><span class='rubyid_register identifier id'>register</span><span class='lparen token'>(</span><span class='rubyid_oid identifier id'>oid</span><span class='comma token'>,</span><span class='rubyid_short_name identifier id'>short_name</span><span class='comma token'>,</span><span class='rubyid_long_name identifier id'>long_name</span><span class='assign token'>=</span><span class='rubyid_nil nil kw'>nil</span><span class='rparen token'>)</span>
-    <span class='rubyid_if if kw'>if</span> <span class='rubyid_long_name identifier id'>long_name</span><span class='dot token'>.</span><span class='rubyid_nil? fid id'>nil?</span>
-        <span class='rubyid_long_name identifier id'>long_name</span> <span class='assign token'>=</span> <span class='rubyid_short_name identifier id'>short_name</span>
-    <span class='rubyid_end end kw'>end</span>
-    <span class='rubyid_OpenSSL constant id'>OpenSSL</span><span class='colon2 op'>::</span><span class='rubyid_ASN1 constant id'>ASN1</span><span class='colon2 op'>::</span><span class='rubyid_ObjectId constant id'>ObjectId</span><span class='dot token'>.</span><span class='rubyid_register identifier id'>register</span><span class='lparen token'>(</span><span class='rubyid_oid identifier id'>oid</span><span class='comma token'>,</span> <span class='rubyid_short_name identifier id'>short_name</span><span class='comma token'>,</span> <span class='rubyid_long_name identifier id'>long_name</span><span class='rparen token'>)</span>
-<span class='rubyid_end end kw'>end</span>
-</pre>
+<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_register'>register</span><span class='lparen'>(</span><span class='id identifier rubyid_oid'>oid</span><span class='comma'>,</span><span class='id identifier rubyid_short_name'>short_name</span><span class='comma'>,</span><span class='id identifier rubyid_long_name'>long_name</span><span class='op'>=</span><span class='kw'>nil</span><span class='rparen'>)</span>
+    <span class='kw'>if</span> <span class='id identifier rubyid_long_name'>long_name</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
+        <span class='id identifier rubyid_long_name'>long_name</span> <span class='op'>=</span> <span class='id identifier rubyid_short_name'>short_name</span>
+    <span class='kw'>end</span>
+    <span class='const'>OpenSSL</span><span class='op'>::</span><span class='const'>ASN1</span><span class='op'>::</span><span class='const'>ObjectId</span><span class='period'>.</span><span class='id identifier rubyid_register'>register</span><span class='lparen'>(</span><span class='id identifier rubyid_oid'>oid</span><span class='comma'>,</span> <span class='id identifier rubyid_short_name'>short_name</span><span class='comma'>,</span> <span class='id identifier rubyid_long_name'>long_name</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
     </td>
   </tr>
 </table>
@@ -352,9 +369,9 @@
 </div>
     
     <div id="footer">
-  Generated on Tue Dec 27 16:08:45 2011 by 
+  Generated on Tue Dec 27 18:22:27 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.7.4 (ruby-1.8.7).
+  0.7.4 (ruby-1.9.3).
 </div>
 
   </body>

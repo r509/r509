@@ -2,7 +2,7 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=en_us" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>
   Class: R509::CertificateAuthority::Signer
   
@@ -94,7 +94,8 @@
 
 <h2>Overview</h2><div class="docstring">
   <div class="discussion">
-    <p>Contains the certification authority signing operation methods</p>
+    
+<p>Contains the certification authority signing operation methods</p>
 
 
   </div>
@@ -133,7 +134,8 @@
   
 
   
-    <span class="summary_desc"><div class='inline'><p>A new instance of Signer.</p>
+    <span class="summary_desc"><div class='inline'>
+<p>A new instance of Signer.</p>
 </div></span>
   
 </li>
@@ -155,7 +157,8 @@
   
 
   
-    <span class="summary_desc"><div class='inline'><p>Self-signs a CSR.</p>
+    <span class="summary_desc"><div class='inline'>
+<p>Self-signs a CSR.</p>
 </div></span>
   
 </li>
@@ -177,7 +180,8 @@
   
 
   
-    <span class="summary_desc"><div class='inline'><p>Signs a CSR.</p>
+    <span class="summary_desc"><div class='inline'>
+<p>Signs a CSR.</p>
 </div></span>
   
 </li>
@@ -198,7 +202,8 @@
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>A new instance of Signer</p>
+    
+<p>A new instance of Signer</p>
 
 
   </div>
@@ -241,17 +246,16 @@
     <td>
       <pre class="code"><span class="info file"># File 'lib/r509/CertificateAuthority.rb', line 12</span>
 
-<span class='rubyid_def def kw'>def</span> <span class='rubyid_initialize identifier id'>initialize</span><span class='lparen token'>(</span><span class='rubyid_config identifier id'>config</span><span class='assign token'>=</span><span class='rubyid_nil nil kw'>nil</span><span class='rparen token'>)</span>
-    <span class='rubyid_@config ivar id'>@config</span> <span class='assign token'>=</span> <span class='rubyid_config identifier id'>config</span>
+<span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='id identifier rubyid_config'>config</span><span class='op'>=</span><span class='kw'>nil</span><span class='rparen'>)</span>
+    <span class='ivar'>@config</span> <span class='op'>=</span> <span class='id identifier rubyid_config'>config</span>
 
-    <span class='rubyid_if if kw'>if</span> <span class='rubyid_not not kw'>not</span> <span class='rubyid_@config ivar id'>@config</span><span class='dot token'>.</span><span class='rubyid_nil? fid id'>nil?</span> <span class='rubyid_and and kw'>and</span> <span class='rubyid_not not kw'>not</span> <span class='rubyid_@config ivar id'>@config</span><span class='dot token'>.</span><span class='rubyid_kind_of? fid id'>kind_of?</span><span class='lparen token'>(</span><span class='rubyid_R509 constant id'>R509</span><span class='colon2 op'>::</span><span class='rubyid_Config constant id'>Config</span><span class='colon2 op'>::</span><span class='rubyid_CaConfig constant id'>CaConfig</span><span class='rparen token'>)</span>
-        <span class='rubyid_raise identifier id'>raise</span> <span class='rubyid_R509 constant id'>R509</span><span class='colon2 op'>::</span><span class='rubyid_R509Error constant id'>R509Error</span><span class='comma token'>,</span> <span class='string val'>&quot;config must be a kind of R509::Config::CaConfig or nil (for self-sign only)&quot;</span>
-    <span class='rubyid_end end kw'>end</span>
-    <span class='rubyid_if if kw'>if</span> <span class='rubyid_not not kw'>not</span> <span class='rubyid_@config ivar id'>@config</span><span class='dot token'>.</span><span class='rubyid_nil? fid id'>nil?</span> <span class='rubyid_and and kw'>and</span> <span class='rubyid_@config ivar id'>@config</span><span class='dot token'>.</span><span class='rubyid_num_profiles identifier id'>num_profiles</span> <span class='eq op'>==</span> <span class='integer val'>0</span>
-        <span class='rubyid_raise identifier id'>raise</span> <span class='rubyid_R509 constant id'>R509</span><span class='colon2 op'>::</span><span class='rubyid_R509Error constant id'>R509Error</span><span class='comma token'>,</span> <span class='string val'>&quot;You must have at least one CaProfile on your CaConfig to issue&quot;</span>
-    <span class='rubyid_end end kw'>end</span>
-<span class='rubyid_end end kw'>end</span>
-</pre>
+    <span class='kw'>if</span> <span class='kw'>not</span> <span class='ivar'>@config</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span> <span class='kw'>and</span> <span class='kw'>not</span> <span class='ivar'>@config</span><span class='period'>.</span><span class='id identifier rubyid_kind_of?'>kind_of?</span><span class='lparen'>(</span><span class='const'>R509</span><span class='op'>::</span><span class='const'>Config</span><span class='op'>::</span><span class='const'>CaConfig</span><span class='rparen'>)</span>
+        <span class='id identifier rubyid_raise'>raise</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>R509Error</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>config must be a kind of R509::Config::CaConfig or nil (for self-sign only)</span><span class='tstring_end'>&quot;</span></span>
+    <span class='kw'>end</span>
+    <span class='kw'>if</span> <span class='kw'>not</span> <span class='ivar'>@config</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span> <span class='kw'>and</span> <span class='ivar'>@config</span><span class='period'>.</span><span class='id identifier rubyid_num_profiles'>num_profiles</span> <span class='op'>==</span> <span class='int'>0</span>
+        <span class='id identifier rubyid_raise'>raise</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>R509Error</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>You must have at least one CaProfile on your CaConfig to issue</span><span class='tstring_end'>&quot;</span></span>
+    <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
     </td>
   </tr>
 </table>
@@ -273,7 +277,8 @@
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>Self-signs a CSR</p>
+    
+<p>Self-signs a CSR</p>
 
 
   </div>
@@ -292,7 +297,8 @@
       
       
         &mdash;
-        <div class='inline'><p>a customizable set of options</p>
+        <div class='inline'>
+<p>a customizable set of options</p>
 </div>
       
     </li>
@@ -320,7 +326,8 @@
           <span class="default">
             
           </span>
-          &mdash; <div class='inline'><p>the message digest to use for this certificate (defaults to sha1)</p>
+          &mdash; <div class='inline'>
+<p>the message digest to use for this certificate (defaults to sha1)</p>
 </div>
         </li>
       
@@ -330,7 +337,9 @@
           <span class="default">
             
           </span>
-          &mdash; <div class='inline'><p>the serial number you want to issue the certificate with (defaults to random)</p>
+          &mdash; <div class='inline'>
+<p>the serial number you want to issue the certificate with (defaults to
+random)</p>
 </div>
         </li>
       
@@ -340,7 +349,8 @@
           <span class="default">
             
           </span>
-          &mdash; <div class='inline'><p>the notBefore for the certificate (defaults to now)</p>
+          &mdash; <div class='inline'>
+<p>the notBefore for the certificate (defaults to now)</p>
 </div>
         </li>
       
@@ -350,7 +360,8 @@
           <span class="default">
             
           </span>
-          &mdash; <div class='inline'><p>the notAfter for the certificate (defaults to 1 year)</p>
+          &mdash; <div class='inline'>
+<p>the notAfter for the certificate (defaults to 1 year)</p>
 </div>
         </li>
       
@@ -368,7 +379,8 @@
       
       
         &mdash;
-        <div class='inline'><p>the signed cert object</p>
+        <div class='inline'>
+<p>the signed cert object</p>
 </div>
       
     </li>
@@ -423,45 +435,44 @@
     <td>
       <pre class="code"><span class="info file"># File 'lib/r509/CertificateAuthority.rb', line 118</span>
 
-<span class='rubyid_def def kw'>def</span> <span class='rubyid_selfsign identifier id'>selfsign</span><span class='lparen token'>(</span><span class='rubyid_options identifier id'>options</span><span class='rparen token'>)</span>
-    <span class='rubyid_if if kw'>if</span> <span class='rubyid_not not kw'>not</span> <span class='rubyid_options identifier id'>options</span><span class='dot token'>.</span><span class='rubyid_kind_of? fid id'>kind_of?</span><span class='lparen token'>(</span><span class='rubyid_Hash constant id'>Hash</span><span class='rparen token'>)</span>
-        <span class='rubyid_raise identifier id'>raise</span> <span class='rubyid_ArgumentError constant id'>ArgumentError</span><span class='comma token'>,</span> <span class='string val'>&quot;You must pass a hash of options consisting of at minimum :csr&quot;</span>
-    <span class='rubyid_end end kw'>end</span>
-    <span class='rubyid_csr identifier id'>csr</span> <span class='assign token'>=</span> <span class='rubyid_options identifier id'>options</span><span class='lbrack token'>[</span><span class='symbol val'>:csr</span><span class='rbrack token'>]</span>
-    <span class='rubyid_if if kw'>if</span> <span class='rubyid_csr identifier id'>csr</span><span class='dot token'>.</span><span class='rubyid_key identifier id'>key</span><span class='dot token'>.</span><span class='rubyid_nil? fid id'>nil?</span>
-        <span class='rubyid_raise identifier id'>raise</span> <span class='rubyid_ArgumentError constant id'>ArgumentError</span><span class='comma token'>,</span> <span class='string val'>'CSR must also have a private key to self sign'</span>
-    <span class='rubyid_end end kw'>end</span>
-    <span class='rubyid_cert identifier id'>cert</span> <span class='assign token'>=</span> <span class='rubyid_build_cert identifier id'>build_cert</span><span class='lparen token'>(</span>
-        <span class='symbol val'>:subject</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='rubyid_csr identifier id'>csr</span><span class='dot token'>.</span><span class='rubyid_subject identifier id'>subject</span><span class='dot token'>.</span><span class='rubyid_name identifier id'>name</span><span class='comma token'>,</span>
-        <span class='symbol val'>:issuer</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='rubyid_csr identifier id'>csr</span><span class='dot token'>.</span><span class='rubyid_subject identifier id'>subject</span><span class='dot token'>.</span><span class='rubyid_name identifier id'>name</span><span class='comma token'>,</span>
-        <span class='symbol val'>:not_before</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='rubyid_options identifier id'>options</span><span class='lbrack token'>[</span><span class='symbol val'>:not_before</span><span class='rbrack token'>]</span><span class='comma token'>,</span>
-        <span class='symbol val'>:not_after</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='rubyid_options identifier id'>options</span><span class='lbrack token'>[</span><span class='symbol val'>:not_after</span><span class='rbrack token'>]</span><span class='comma token'>,</span>
-        <span class='symbol val'>:public_key</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='rubyid_csr identifier id'>csr</span><span class='dot token'>.</span><span class='rubyid_public_key identifier id'>public_key</span><span class='comma token'>,</span>
-        <span class='symbol val'>:serial</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='rubyid_options identifier id'>options</span><span class='lbrack token'>[</span><span class='symbol val'>:serial</span><span class='rbrack token'>]</span>
-    <span class='rparen token'>)</span>
+<span class='kw'>def</span> <span class='id identifier rubyid_selfsign'>selfsign</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span>
+    <span class='kw'>if</span> <span class='kw'>not</span> <span class='id identifier rubyid_options'>options</span><span class='period'>.</span><span class='id identifier rubyid_kind_of?'>kind_of?</span><span class='lparen'>(</span><span class='const'>Hash</span><span class='rparen'>)</span>
+        <span class='id identifier rubyid_raise'>raise</span> <span class='const'>ArgumentError</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>You must pass a hash of options consisting of at minimum :csr</span><span class='tstring_end'>&quot;</span></span>
+    <span class='kw'>end</span>
+    <span class='id identifier rubyid_csr'>csr</span> <span class='op'>=</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:csr</span><span class='rbracket'>]</span>
+    <span class='kw'>if</span> <span class='id identifier rubyid_csr'>csr</span><span class='period'>.</span><span class='id identifier rubyid_key'>key</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
+        <span class='id identifier rubyid_raise'>raise</span> <span class='const'>ArgumentError</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>CSR must also have a private key to self sign</span><span class='tstring_end'>'</span></span>
+    <span class='kw'>end</span>
+    <span class='id identifier rubyid_cert'>cert</span> <span class='op'>=</span> <span class='id identifier rubyid_build_cert'>build_cert</span><span class='lparen'>(</span>
+        <span class='symbol'>:subject</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_csr'>csr</span><span class='period'>.</span><span class='id identifier rubyid_subject'>subject</span><span class='period'>.</span><span class='id identifier rubyid_name'>name</span><span class='comma'>,</span>
+        <span class='symbol'>:issuer</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_csr'>csr</span><span class='period'>.</span><span class='id identifier rubyid_subject'>subject</span><span class='period'>.</span><span class='id identifier rubyid_name'>name</span><span class='comma'>,</span>
+        <span class='symbol'>:not_before</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:not_before</span><span class='rbracket'>]</span><span class='comma'>,</span>
+        <span class='symbol'>:not_after</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:not_after</span><span class='rbracket'>]</span><span class='comma'>,</span>
+        <span class='symbol'>:public_key</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_csr'>csr</span><span class='period'>.</span><span class='id identifier rubyid_public_key'>public_key</span><span class='comma'>,</span>
+        <span class='symbol'>:serial</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:serial</span><span class='rbracket'>]</span>
+    <span class='rparen'>)</span>
 
-    <span class='rubyid_build_extensions identifier id'>build_extensions</span><span class='lparen token'>(</span>
-        <span class='symbol val'>:subject_certificate</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='rubyid_cert identifier id'>cert</span><span class='comma token'>,</span>
-        <span class='symbol val'>:issuer_certificate</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='rubyid_cert identifier id'>cert</span><span class='comma token'>,</span>
-        <span class='symbol val'>:basic_constraints</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>&quot;CA:TRUE&quot;</span>
-        <span class='comment val'>#:key_usage =&gt; key_usage,</span>
-        <span class='comment val'>#:extended_key_usage =&gt; extended_key_usage,</span>
-        <span class='comment val'>#:certificate_policies =&gt; certificate_policies,</span>
-        <span class='comment val'>#:san_names =&gt; san_names</span>
-    <span class='rparen token'>)</span>
+    <span class='id identifier rubyid_build_extensions'>build_extensions</span><span class='lparen'>(</span>
+        <span class='symbol'>:subject_certificate</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_cert'>cert</span><span class='comma'>,</span>
+        <span class='symbol'>:issuer_certificate</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_cert'>cert</span><span class='comma'>,</span>
+        <span class='symbol'>:basic_constraints</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>CA:TRUE</span><span class='tstring_end'>&quot;</span></span>
+        <span class='comment'>#:key_usage =&gt; key_usage,
+</span>        <span class='comment'>#:extended_key_usage =&gt; extended_key_usage,
+</span>        <span class='comment'>#:certificate_policies =&gt; certificate_policies,
+</span>        <span class='comment'>#:san_names =&gt; san_names
+</span>    <span class='rparen'>)</span>
 
 
-    <span class='rubyid_if if kw'>if</span> <span class='rubyid_options identifier id'>options</span><span class='dot token'>.</span><span class='rubyid_has_key? fid id'>has_key?</span><span class='lparen token'>(</span><span class='symbol val'>:message_digest</span><span class='rparen token'>)</span>
-        <span class='rubyid_message_digest identifier id'>message_digest</span> <span class='assign token'>=</span> <span class='rubyid_R509 constant id'>R509</span><span class='colon2 op'>::</span><span class='rubyid_MessageDigest constant id'>MessageDigest</span><span class='dot token'>.</span><span class='rubyid_new identifier id'>new</span><span class='lparen token'>(</span><span class='rubyid_options identifier id'>options</span><span class='lbrack token'>[</span><span class='symbol val'>:message_digest</span><span class='rbrack token'>]</span><span class='rparen token'>)</span>
-    <span class='rubyid_else else kw'>else</span>
-        <span class='rubyid_message_digest identifier id'>message_digest</span> <span class='assign token'>=</span> <span class='rubyid_R509 constant id'>R509</span><span class='colon2 op'>::</span><span class='rubyid_MessageDigest constant id'>MessageDigest</span><span class='dot token'>.</span><span class='rubyid_new identifier id'>new</span><span class='lparen token'>(</span><span class='string val'>'sha1'</span><span class='rparen token'>)</span>
-    <span class='rubyid_end end kw'>end</span>
+    <span class='kw'>if</span> <span class='id identifier rubyid_options'>options</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span><span class='lparen'>(</span><span class='symbol'>:message_digest</span><span class='rparen'>)</span>
+        <span class='id identifier rubyid_message_digest'>message_digest</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>MessageDigest</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:message_digest</span><span class='rbracket'>]</span><span class='rparen'>)</span>
+    <span class='kw'>else</span>
+        <span class='id identifier rubyid_message_digest'>message_digest</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>MessageDigest</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>sha1</span><span class='tstring_end'>'</span></span><span class='rparen'>)</span>
+    <span class='kw'>end</span>
 
-    <span class='comment val'># Csr#key returns R509::PrivateKey and #key on that returns OpenSSL object we need</span>
-    <span class='rubyid_cert identifier id'>cert</span><span class='dot token'>.</span><span class='rubyid_sign identifier id'>sign</span><span class='lparen token'>(</span> <span class='rubyid_csr identifier id'>csr</span><span class='dot token'>.</span><span class='rubyid_key identifier id'>key</span><span class='dot token'>.</span><span class='rubyid_key identifier id'>key</span><span class='comma token'>,</span> <span class='rubyid_message_digest identifier id'>message_digest</span><span class='dot token'>.</span><span class='rubyid_digest identifier id'>digest</span> <span class='rparen token'>)</span>
-    <span class='rubyid_R509 constant id'>R509</span><span class='colon2 op'>::</span><span class='rubyid_Cert constant id'>Cert</span><span class='dot token'>.</span><span class='rubyid_new identifier id'>new</span><span class='lparen token'>(</span><span class='symbol val'>:cert</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='rubyid_cert identifier id'>cert</span><span class='rparen token'>)</span>
-<span class='rubyid_end end kw'>end</span>
-</pre>
+    <span class='comment'># Csr#key returns R509::PrivateKey and #key on that returns OpenSSL object we need
+</span>    <span class='id identifier rubyid_cert'>cert</span><span class='period'>.</span><span class='id identifier rubyid_sign'>sign</span><span class='lparen'>(</span> <span class='id identifier rubyid_csr'>csr</span><span class='period'>.</span><span class='id identifier rubyid_key'>key</span><span class='period'>.</span><span class='id identifier rubyid_key'>key</span><span class='comma'>,</span> <span class='id identifier rubyid_message_digest'>message_digest</span><span class='period'>.</span><span class='id identifier rubyid_digest'>digest</span> <span class='rparen'>)</span>
+    <span class='const'>R509</span><span class='op'>::</span><span class='const'>Cert</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='symbol'>:cert</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_cert'>cert</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
     </td>
   </tr>
 </table>
@@ -476,7 +487,8 @@
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>Signs a CSR</p>
+    
+<p>Signs a CSR</p>
 
 
   </div>
@@ -495,7 +507,8 @@
       
       
         &mdash;
-        <div class='inline'><p>a customizable set of options</p>
+        <div class='inline'>
+<p>a customizable set of options</p>
 </div>
       
     </li>
@@ -532,7 +545,8 @@
           <span class="default">
             
           </span>
-          &mdash; <div class='inline'><p>The CA profile you want to use (eg &quot;server in your config)</p>
+          &mdash; <div class='inline'>
+<p>The CA profile you want to use (eg "server in your config)</p>
 </div>
         </li>
       
@@ -542,7 +556,9 @@
           <span class="default">
             
           </span>
-          &mdash; <div class='inline'><p>a hash containing the subject and SAN names you want encoded for this cert. Generate by calling Csr#to<em>hash or Spki#to</em>hash</p>
+          &mdash; <div class='inline'>
+<p>a hash containing the subject and SAN names you want encoded for this cert.
+Generate by calling Csr#to_hash or Spki#to_hash</p>
 </div>
         </li>
       
@@ -552,7 +568,9 @@
           <span class="default">
             
           </span>
-          &mdash; <div class='inline'><p>the message digest to use for this certificate instead of the config&#39;s default</p>
+          &mdash; <div class='inline'>
+<p>the message digest to use for this certificate instead of the config's
+default</p>
 </div>
         </li>
       
@@ -562,7 +580,8 @@
           <span class="default">
             
           </span>
-          &mdash; <div class='inline'><p>the serial number you want to issue the certificate with</p>
+          &mdash; <div class='inline'>
+<p>the serial number you want to issue the certificate with</p>
 </div>
         </li>
       
@@ -572,7 +591,8 @@
           <span class="default">
             
           </span>
-          &mdash; <div class='inline'><p>the notBefore for the certificate</p>
+          &mdash; <div class='inline'>
+<p>the notBefore for the certificate</p>
 </div>
         </li>
       
@@ -582,7 +602,8 @@
           <span class="default">
             
           </span>
-          &mdash; <div class='inline'><p>the notAfter for the certificate</p>
+          &mdash; <div class='inline'>
+<p>the notAfter for the certificate</p>
 </div>
         </li>
       
@@ -600,7 +621,8 @@
       
       
         &mdash;
-        <div class='inline'><p>the signed cert object</p>
+        <div class='inline'>
+<p>the signed cert object</p>
 </div>
       
     </li>
@@ -694,84 +716,83 @@
     <td>
       <pre class="code"><span class="info file"># File 'lib/r509/CertificateAuthority.rb', line 33</span>
 
-<span class='rubyid_def def kw'>def</span> <span class='rubyid_sign identifier id'>sign</span><span class='lparen token'>(</span><span class='rubyid_options identifier id'>options</span><span class='rparen token'>)</span>
-    <span class='rubyid_if if kw'>if</span> <span class='rubyid_@config ivar id'>@config</span><span class='dot token'>.</span><span class='rubyid_nil? fid id'>nil?</span>
-        <span class='rubyid_raise identifier id'>raise</span> <span class='rubyid_R509 constant id'>R509</span><span class='colon2 op'>::</span><span class='rubyid_R509Error constant id'>R509Error</span><span class='comma token'>,</span> <span class='string val'>&quot;When instantiating the signer without a config you can only call #selfsign&quot;</span>
-    <span class='rubyid_end end kw'>end</span>
-    <span class='rubyid_if if kw'>if</span> <span class='rubyid_options identifier id'>options</span><span class='dot token'>.</span><span class='rubyid_has_key? fid id'>has_key?</span><span class='lparen token'>(</span><span class='symbol val'>:csr</span><span class='rparen token'>)</span> <span class='rubyid_and and kw'>and</span> <span class='rubyid_options identifier id'>options</span><span class='dot token'>.</span><span class='rubyid_has_key? fid id'>has_key?</span><span class='lparen token'>(</span><span class='symbol val'>:spki</span><span class='rparen token'>)</span>
-        <span class='rubyid_raise identifier id'>raise</span> <span class='rubyid_ArgumentError constant id'>ArgumentError</span><span class='comma token'>,</span> <span class='string val'>&quot;You can't pass both :csr and :spki&quot;</span>
-    <span class='rubyid_elsif elsif kw'>elsif</span> <span class='rubyid_not not kw'>not</span> <span class='rubyid_options identifier id'>options</span><span class='dot token'>.</span><span class='rubyid_has_key? fid id'>has_key?</span><span class='lparen token'>(</span><span class='symbol val'>:csr</span><span class='rparen token'>)</span> <span class='rubyid_and and kw'>and</span> <span class='rubyid_not not kw'>not</span> <span class='rubyid_options identifier id'>options</span><span class='dot token'>.</span><span class='rubyid_has_key? fid id'>has_key?</span><span class='lparen token'>(</span><span class='symbol val'>:spki</span><span class='rparen token'>)</span>
-        <span class='rubyid_raise identifier id'>raise</span> <span class='rubyid_ArgumentError constant id'>ArgumentError</span><span class='comma token'>,</span> <span class='string val'>&quot;You must supply either :csr or :spki&quot;</span>
-    <span class='rubyid_elsif elsif kw'>elsif</span> <span class='rubyid_options identifier id'>options</span><span class='dot token'>.</span><span class='rubyid_has_key? fid id'>has_key?</span><span class='lparen token'>(</span><span class='symbol val'>:csr</span><span class='rparen token'>)</span>
-        <span class='rubyid_if if kw'>if</span> <span class='rubyid_not not kw'>not</span> <span class='rubyid_options identifier id'>options</span><span class='lbrack token'>[</span><span class='symbol val'>:csr</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='rubyid_kind_of? fid id'>kind_of?</span><span class='lparen token'>(</span><span class='rubyid_R509 constant id'>R509</span><span class='colon2 op'>::</span><span class='rubyid_Csr constant id'>Csr</span><span class='rparen token'>)</span>
-            <span class='rubyid_raise identifier id'>raise</span> <span class='rubyid_ArgumentError constant id'>ArgumentError</span><span class='comma token'>,</span> <span class='string val'>&quot;You must pass an R509::Csr object for :csr&quot;</span>
-        <span class='rubyid_else else kw'>else</span>
-            <span class='rubyid_signable_object identifier id'>signable_object</span> <span class='assign token'>=</span> <span class='rubyid_options identifier id'>options</span><span class='lbrack token'>[</span><span class='symbol val'>:csr</span><span class='rbrack token'>]</span>
-        <span class='rubyid_end end kw'>end</span>
-    <span class='rubyid_elsif elsif kw'>elsif</span> <span class='rubyid_not not kw'>not</span> <span class='rubyid_options identifier id'>options</span><span class='dot token'>.</span><span class='rubyid_has_key? fid id'>has_key?</span><span class='lparen token'>(</span><span class='symbol val'>:csr</span><span class='rparen token'>)</span> <span class='rubyid_and and kw'>and</span> <span class='rubyid_options identifier id'>options</span><span class='dot token'>.</span><span class='rubyid_has_key? fid id'>has_key?</span><span class='lparen token'>(</span><span class='symbol val'>:spki</span><span class='rparen token'>)</span>
-        <span class='rubyid_if if kw'>if</span> <span class='rubyid_not not kw'>not</span> <span class='rubyid_options identifier id'>options</span><span class='lbrack token'>[</span><span class='symbol val'>:spki</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='rubyid_kind_of? fid id'>kind_of?</span><span class='lparen token'>(</span><span class='rubyid_R509 constant id'>R509</span><span class='colon2 op'>::</span><span class='rubyid_Spki constant id'>Spki</span><span class='rparen token'>)</span>
-            <span class='rubyid_raise identifier id'>raise</span> <span class='rubyid_ArgumentError constant id'>ArgumentError</span><span class='comma token'>,</span> <span class='string val'>&quot;You must pass an R509::Spki object for :spki&quot;</span>
-        <span class='rubyid_else else kw'>else</span>
-            <span class='rubyid_signable_object identifier id'>signable_object</span> <span class='assign token'>=</span> <span class='rubyid_options identifier id'>options</span><span class='lbrack token'>[</span><span class='symbol val'>:spki</span><span class='rbrack token'>]</span>
-        <span class='rubyid_end end kw'>end</span>
-    <span class='rubyid_end end kw'>end</span>
+<span class='kw'>def</span> <span class='id identifier rubyid_sign'>sign</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span>
+    <span class='kw'>if</span> <span class='ivar'>@config</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
+        <span class='id identifier rubyid_raise'>raise</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>R509Error</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>When instantiating the signer without a config you can only call #selfsign</span><span class='tstring_end'>&quot;</span></span>
+    <span class='kw'>end</span>
+    <span class='kw'>if</span> <span class='id identifier rubyid_options'>options</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span><span class='lparen'>(</span><span class='symbol'>:csr</span><span class='rparen'>)</span> <span class='kw'>and</span> <span class='id identifier rubyid_options'>options</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span><span class='lparen'>(</span><span class='symbol'>:spki</span><span class='rparen'>)</span>
+        <span class='id identifier rubyid_raise'>raise</span> <span class='const'>ArgumentError</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>You can't pass both :csr and :spki</span><span class='tstring_end'>&quot;</span></span>
+    <span class='kw'>elsif</span> <span class='kw'>not</span> <span class='id identifier rubyid_options'>options</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span><span class='lparen'>(</span><span class='symbol'>:csr</span><span class='rparen'>)</span> <span class='kw'>and</span> <span class='kw'>not</span> <span class='id identifier rubyid_options'>options</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span><span class='lparen'>(</span><span class='symbol'>:spki</span><span class='rparen'>)</span>
+        <span class='id identifier rubyid_raise'>raise</span> <span class='const'>ArgumentError</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>You must supply either :csr or :spki</span><span class='tstring_end'>&quot;</span></span>
+    <span class='kw'>elsif</span> <span class='id identifier rubyid_options'>options</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span><span class='lparen'>(</span><span class='symbol'>:csr</span><span class='rparen'>)</span>
+        <span class='kw'>if</span> <span class='kw'>not</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:csr</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_kind_of?'>kind_of?</span><span class='lparen'>(</span><span class='const'>R509</span><span class='op'>::</span><span class='const'>Csr</span><span class='rparen'>)</span>
+            <span class='id identifier rubyid_raise'>raise</span> <span class='const'>ArgumentError</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>You must pass an R509::Csr object for :csr</span><span class='tstring_end'>&quot;</span></span>
+        <span class='kw'>else</span>
+            <span class='id identifier rubyid_signable_object'>signable_object</span> <span class='op'>=</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:csr</span><span class='rbracket'>]</span>
+        <span class='kw'>end</span>
+    <span class='kw'>elsif</span> <span class='kw'>not</span> <span class='id identifier rubyid_options'>options</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span><span class='lparen'>(</span><span class='symbol'>:csr</span><span class='rparen'>)</span> <span class='kw'>and</span> <span class='id identifier rubyid_options'>options</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span><span class='lparen'>(</span><span class='symbol'>:spki</span><span class='rparen'>)</span>
+        <span class='kw'>if</span> <span class='kw'>not</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:spki</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_kind_of?'>kind_of?</span><span class='lparen'>(</span><span class='const'>R509</span><span class='op'>::</span><span class='const'>Spki</span><span class='rparen'>)</span>
+            <span class='id identifier rubyid_raise'>raise</span> <span class='const'>ArgumentError</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>You must pass an R509::Spki object for :spki</span><span class='tstring_end'>&quot;</span></span>
+        <span class='kw'>else</span>
+            <span class='id identifier rubyid_signable_object'>signable_object</span> <span class='op'>=</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:spki</span><span class='rbracket'>]</span>
+        <span class='kw'>end</span>
+    <span class='kw'>end</span>
 
-    <span class='rubyid_if if kw'>if</span> <span class='rubyid_options identifier id'>options</span><span class='dot token'>.</span><span class='rubyid_has_key? fid id'>has_key?</span><span class='lparen token'>(</span><span class='symbol val'>:data_hash</span><span class='rparen token'>)</span>
-        <span class='rubyid_san_names identifier id'>san_names</span> <span class='assign token'>=</span> <span class='rubyid_options identifier id'>options</span><span class='lbrack token'>[</span><span class='symbol val'>:data_hash</span><span class='rbrack token'>]</span><span class='lbrack token'>[</span><span class='symbol val'>:san_names</span><span class='rbrack token'>]</span>
-        <span class='rubyid_subject identifier id'>subject</span> <span class='assign token'>=</span> <span class='rubyid_options identifier id'>options</span><span class='lbrack token'>[</span><span class='symbol val'>:data_hash</span><span class='rbrack token'>]</span><span class='lbrack token'>[</span><span class='symbol val'>:subject</span><span class='rbrack token'>]</span>
-    <span class='rubyid_else else kw'>else</span>
-        <span class='rubyid_san_names identifier id'>san_names</span> <span class='assign token'>=</span> <span class='rubyid_signable_object identifier id'>signable_object</span><span class='dot token'>.</span><span class='rubyid_to_hash identifier id'>to_hash</span><span class='lbrack token'>[</span><span class='symbol val'>:san_names</span><span class='rbrack token'>]</span>
-        <span class='rubyid_subject identifier id'>subject</span> <span class='assign token'>=</span> <span class='rubyid_signable_object identifier id'>signable_object</span><span class='dot token'>.</span><span class='rubyid_to_hash identifier id'>to_hash</span><span class='lbrack token'>[</span><span class='symbol val'>:subject</span><span class='rbrack token'>]</span>
-    <span class='rubyid_end end kw'>end</span>
-
-
-
-    <span class='rubyid_if if kw'>if</span> <span class='rubyid_options identifier id'>options</span><span class='dot token'>.</span><span class='rubyid_has_key? fid id'>has_key?</span><span class='lparen token'>(</span><span class='symbol val'>:csr</span><span class='rparen token'>)</span> <span class='rubyid_and and kw'>and</span> <span class='rubyid_not not kw'>not</span> <span class='rubyid_options identifier id'>options</span><span class='lbrack token'>[</span><span class='symbol val'>:csr</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='rubyid_verify_signature identifier id'>verify_signature</span>
-        <span class='rubyid_raise identifier id'>raise</span> <span class='rubyid_R509 constant id'>R509</span><span class='colon2 op'>::</span><span class='rubyid_R509Error constant id'>R509Error</span><span class='comma token'>,</span> <span class='string val'>&quot;Certificate request signature is invalid.&quot;</span>
-    <span class='rubyid_end end kw'>end</span>
-
-    <span class='comment val'>#handle DSA here</span>
-    <span class='rubyid_if if kw'>if</span> <span class='rubyid_options identifier id'>options</span><span class='dot token'>.</span><span class='rubyid_has_key? fid id'>has_key?</span><span class='lparen token'>(</span><span class='symbol val'>:message_digest</span><span class='rparen token'>)</span>
-        <span class='rubyid_message_digest identifier id'>message_digest</span> <span class='assign token'>=</span> <span class='rubyid_R509 constant id'>R509</span><span class='colon2 op'>::</span><span class='rubyid_MessageDigest constant id'>MessageDigest</span><span class='dot token'>.</span><span class='rubyid_new identifier id'>new</span><span class='lparen token'>(</span><span class='rubyid_options identifier id'>options</span><span class='lbrack token'>[</span><span class='symbol val'>:message_digest</span><span class='rbrack token'>]</span><span class='rparen token'>)</span>
-    <span class='rubyid_else else kw'>else</span>
-        <span class='rubyid_message_digest identifier id'>message_digest</span> <span class='assign token'>=</span> <span class='rubyid_R509 constant id'>R509</span><span class='colon2 op'>::</span><span class='rubyid_MessageDigest constant id'>MessageDigest</span><span class='dot token'>.</span><span class='rubyid_new identifier id'>new</span><span class='lparen token'>(</span><span class='rubyid_@config ivar id'>@config</span><span class='dot token'>.</span><span class='rubyid_message_digest identifier id'>message_digest</span><span class='rparen token'>)</span>
-    <span class='rubyid_end end kw'>end</span>
-
-    <span class='rubyid_profile identifier id'>profile</span> <span class='assign token'>=</span> <span class='rubyid_@config ivar id'>@config</span><span class='dot token'>.</span><span class='rubyid_profile identifier id'>profile</span><span class='lparen token'>(</span><span class='rubyid_options identifier id'>options</span><span class='lbrack token'>[</span><span class='symbol val'>:profile_name</span><span class='rbrack token'>]</span><span class='rparen token'>)</span>
-
-    <span class='rubyid_validated_subject identifier id'>validated_subject</span> <span class='assign token'>=</span> <span class='rubyid_validate_subject identifier id'>validate_subject</span><span class='lparen token'>(</span><span class='rubyid_subject identifier id'>subject</span><span class='comma token'>,</span><span class='rubyid_profile identifier id'>profile</span><span class='rparen token'>)</span>
-
-    <span class='rubyid_cert identifier id'>cert</span> <span class='assign token'>=</span> <span class='rubyid_build_cert identifier id'>build_cert</span><span class='lparen token'>(</span>
-        <span class='symbol val'>:subject</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='rubyid_validated_subject identifier id'>validated_subject</span><span class='dot token'>.</span><span class='rubyid_name identifier id'>name</span><span class='comma token'>,</span>
-        <span class='symbol val'>:issuer</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='rubyid_@config ivar id'>@config</span><span class='dot token'>.</span><span class='rubyid_ca_cert identifier id'>ca_cert</span><span class='dot token'>.</span><span class='rubyid_subject identifier id'>subject</span><span class='comma token'>,</span>
-        <span class='symbol val'>:not_before</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='rubyid_options identifier id'>options</span><span class='lbrack token'>[</span><span class='symbol val'>:not_before</span><span class='rbrack token'>]</span><span class='comma token'>,</span>
-        <span class='symbol val'>:not_after</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='rubyid_options identifier id'>options</span><span class='lbrack token'>[</span><span class='symbol val'>:not_after</span><span class='rbrack token'>]</span><span class='comma token'>,</span>
-        <span class='symbol val'>:public_key</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='rubyid_signable_object identifier id'>signable_object</span><span class='dot token'>.</span><span class='rubyid_public_key identifier id'>public_key</span><span class='comma token'>,</span>
-        <span class='symbol val'>:serial</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='rubyid_options identifier id'>options</span><span class='lbrack token'>[</span><span class='symbol val'>:serial</span><span class='rbrack token'>]</span>
-    <span class='rparen token'>)</span>
-
-    <span class='rubyid_basic_constraints identifier id'>basic_constraints</span> <span class='assign token'>=</span> <span class='rubyid_profile identifier id'>profile</span><span class='dot token'>.</span><span class='rubyid_basic_constraints identifier id'>basic_constraints</span>
-    <span class='rubyid_key_usage identifier id'>key_usage</span> <span class='assign token'>=</span> <span class='rubyid_profile identifier id'>profile</span><span class='dot token'>.</span><span class='rubyid_key_usage identifier id'>key_usage</span>
-    <span class='rubyid_extended_key_usage identifier id'>extended_key_usage</span> <span class='assign token'>=</span> <span class='rubyid_profile identifier id'>profile</span><span class='dot token'>.</span><span class='rubyid_extended_key_usage identifier id'>extended_key_usage</span>
-    <span class='rubyid_certificate_policies identifier id'>certificate_policies</span> <span class='assign token'>=</span> <span class='rubyid_profile identifier id'>profile</span><span class='dot token'>.</span><span class='rubyid_certificate_policies identifier id'>certificate_policies</span>
-
-    <span class='rubyid_build_extensions identifier id'>build_extensions</span><span class='lparen token'>(</span>
-        <span class='symbol val'>:subject_certificate</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='rubyid_cert identifier id'>cert</span><span class='comma token'>,</span>
-        <span class='symbol val'>:issuer_certificate</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='rubyid_@config ivar id'>@config</span><span class='dot token'>.</span><span class='rubyid_ca_cert identifier id'>ca_cert</span><span class='dot token'>.</span><span class='rubyid_cert identifier id'>cert</span><span class='comma token'>,</span>
-        <span class='symbol val'>:basic_constraints</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='rubyid_basic_constraints identifier id'>basic_constraints</span><span class='comma token'>,</span>
-        <span class='symbol val'>:key_usage</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='rubyid_key_usage identifier id'>key_usage</span><span class='comma token'>,</span>
-        <span class='symbol val'>:extended_key_usage</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='rubyid_extended_key_usage identifier id'>extended_key_usage</span><span class='comma token'>,</span>
-        <span class='symbol val'>:certificate_policies</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='rubyid_certificate_policies identifier id'>certificate_policies</span><span class='comma token'>,</span>
-        <span class='symbol val'>:san_names</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='rubyid_san_names identifier id'>san_names</span>
-    <span class='rparen token'>)</span>
+    <span class='kw'>if</span> <span class='id identifier rubyid_options'>options</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span><span class='lparen'>(</span><span class='symbol'>:data_hash</span><span class='rparen'>)</span>
+        <span class='id identifier rubyid_san_names'>san_names</span> <span class='op'>=</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:data_hash</span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='symbol'>:san_names</span><span class='rbracket'>]</span>
+        <span class='id identifier rubyid_subject'>subject</span> <span class='op'>=</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:data_hash</span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='symbol'>:subject</span><span class='rbracket'>]</span>
+    <span class='kw'>else</span>
+        <span class='id identifier rubyid_san_names'>san_names</span> <span class='op'>=</span> <span class='id identifier rubyid_signable_object'>signable_object</span><span class='period'>.</span><span class='id identifier rubyid_to_hash'>to_hash</span><span class='lbracket'>[</span><span class='symbol'>:san_names</span><span class='rbracket'>]</span>
+        <span class='id identifier rubyid_subject'>subject</span> <span class='op'>=</span> <span class='id identifier rubyid_signable_object'>signable_object</span><span class='period'>.</span><span class='id identifier rubyid_to_hash'>to_hash</span><span class='lbracket'>[</span><span class='symbol'>:subject</span><span class='rbracket'>]</span>
+    <span class='kw'>end</span>
 
 
-    <span class='comment val'>#@config.ca_cert.key.key ... ugly. ca_cert returns R509::Cert</span>
-    <span class='comment val'># #key returns R509::PrivateKey and #key on that returns OpenSSL object we need</span>
-    <span class='rubyid_cert identifier id'>cert</span><span class='dot token'>.</span><span class='rubyid_sign identifier id'>sign</span><span class='lparen token'>(</span> <span class='rubyid_@config ivar id'>@config</span><span class='dot token'>.</span><span class='rubyid_ca_cert identifier id'>ca_cert</span><span class='dot token'>.</span><span class='rubyid_key identifier id'>key</span><span class='dot token'>.</span><span class='rubyid_key identifier id'>key</span><span class='comma token'>,</span> <span class='rubyid_message_digest identifier id'>message_digest</span><span class='dot token'>.</span><span class='rubyid_digest identifier id'>digest</span> <span class='rparen token'>)</span>
-    <span class='rubyid_R509 constant id'>R509</span><span class='colon2 op'>::</span><span class='rubyid_Cert constant id'>Cert</span><span class='dot token'>.</span><span class='rubyid_new identifier id'>new</span><span class='lparen token'>(</span><span class='symbol val'>:cert</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='rubyid_cert identifier id'>cert</span><span class='rparen token'>)</span>
-<span class='rubyid_end end kw'>end</span>
-</pre>
+
+    <span class='kw'>if</span> <span class='id identifier rubyid_options'>options</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span><span class='lparen'>(</span><span class='symbol'>:csr</span><span class='rparen'>)</span> <span class='kw'>and</span> <span class='kw'>not</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:csr</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_verify_signature'>verify_signature</span>
+        <span class='id identifier rubyid_raise'>raise</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>R509Error</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Certificate request signature is invalid.</span><span class='tstring_end'>&quot;</span></span>
+    <span class='kw'>end</span>
+
+    <span class='comment'>#handle DSA here
+</span>    <span class='kw'>if</span> <span class='id identifier rubyid_options'>options</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span><span class='lparen'>(</span><span class='symbol'>:message_digest</span><span class='rparen'>)</span>
+        <span class='id identifier rubyid_message_digest'>message_digest</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>MessageDigest</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:message_digest</span><span class='rbracket'>]</span><span class='rparen'>)</span>
+    <span class='kw'>else</span>
+        <span class='id identifier rubyid_message_digest'>message_digest</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>MessageDigest</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='ivar'>@config</span><span class='period'>.</span><span class='id identifier rubyid_message_digest'>message_digest</span><span class='rparen'>)</span>
+    <span class='kw'>end</span>
+
+    <span class='id identifier rubyid_profile'>profile</span> <span class='op'>=</span> <span class='ivar'>@config</span><span class='period'>.</span><span class='id identifier rubyid_profile'>profile</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:profile_name</span><span class='rbracket'>]</span><span class='rparen'>)</span>
+
+    <span class='id identifier rubyid_validated_subject'>validated_subject</span> <span class='op'>=</span> <span class='id identifier rubyid_validate_subject'>validate_subject</span><span class='lparen'>(</span><span class='id identifier rubyid_subject'>subject</span><span class='comma'>,</span><span class='id identifier rubyid_profile'>profile</span><span class='rparen'>)</span>
+
+    <span class='id identifier rubyid_cert'>cert</span> <span class='op'>=</span> <span class='id identifier rubyid_build_cert'>build_cert</span><span class='lparen'>(</span>
+        <span class='symbol'>:subject</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_validated_subject'>validated_subject</span><span class='period'>.</span><span class='id identifier rubyid_name'>name</span><span class='comma'>,</span>
+        <span class='symbol'>:issuer</span> <span class='op'>=&gt;</span> <span class='ivar'>@config</span><span class='period'>.</span><span class='id identifier rubyid_ca_cert'>ca_cert</span><span class='period'>.</span><span class='id identifier rubyid_subject'>subject</span><span class='comma'>,</span>
+        <span class='symbol'>:not_before</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:not_before</span><span class='rbracket'>]</span><span class='comma'>,</span>
+        <span class='symbol'>:not_after</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:not_after</span><span class='rbracket'>]</span><span class='comma'>,</span>
+        <span class='symbol'>:public_key</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_signable_object'>signable_object</span><span class='period'>.</span><span class='id identifier rubyid_public_key'>public_key</span><span class='comma'>,</span>
+        <span class='symbol'>:serial</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:serial</span><span class='rbracket'>]</span>
+    <span class='rparen'>)</span>
+
+    <span class='id identifier rubyid_basic_constraints'>basic_constraints</span> <span class='op'>=</span> <span class='id identifier rubyid_profile'>profile</span><span class='period'>.</span><span class='id identifier rubyid_basic_constraints'>basic_constraints</span>
+    <span class='id identifier rubyid_key_usage'>key_usage</span> <span class='op'>=</span> <span class='id identifier rubyid_profile'>profile</span><span class='period'>.</span><span class='id identifier rubyid_key_usage'>key_usage</span>
+    <span class='id identifier rubyid_extended_key_usage'>extended_key_usage</span> <span class='op'>=</span> <span class='id identifier rubyid_profile'>profile</span><span class='period'>.</span><span class='id identifier rubyid_extended_key_usage'>extended_key_usage</span>
+    <span class='id identifier rubyid_certificate_policies'>certificate_policies</span> <span class='op'>=</span> <span class='id identifier rubyid_profile'>profile</span><span class='period'>.</span><span class='id identifier rubyid_certificate_policies'>certificate_policies</span>
+
+    <span class='id identifier rubyid_build_extensions'>build_extensions</span><span class='lparen'>(</span>
+        <span class='symbol'>:subject_certificate</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_cert'>cert</span><span class='comma'>,</span>
+        <span class='symbol'>:issuer_certificate</span> <span class='op'>=&gt;</span> <span class='ivar'>@config</span><span class='period'>.</span><span class='id identifier rubyid_ca_cert'>ca_cert</span><span class='period'>.</span><span class='id identifier rubyid_cert'>cert</span><span class='comma'>,</span>
+        <span class='symbol'>:basic_constraints</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_basic_constraints'>basic_constraints</span><span class='comma'>,</span>
+        <span class='symbol'>:key_usage</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_key_usage'>key_usage</span><span class='comma'>,</span>
+        <span class='symbol'>:extended_key_usage</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_extended_key_usage'>extended_key_usage</span><span class='comma'>,</span>
+        <span class='symbol'>:certificate_policies</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_certificate_policies'>certificate_policies</span><span class='comma'>,</span>
+        <span class='symbol'>:san_names</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_san_names'>san_names</span>
+    <span class='rparen'>)</span>
+
+
+    <span class='comment'>#@config.ca_cert.key.key ... ugly. ca_cert returns R509::Cert
+</span>    <span class='comment'># #key returns R509::PrivateKey and #key on that returns OpenSSL object we need
+</span>    <span class='id identifier rubyid_cert'>cert</span><span class='period'>.</span><span class='id identifier rubyid_sign'>sign</span><span class='lparen'>(</span> <span class='ivar'>@config</span><span class='period'>.</span><span class='id identifier rubyid_ca_cert'>ca_cert</span><span class='period'>.</span><span class='id identifier rubyid_key'>key</span><span class='period'>.</span><span class='id identifier rubyid_key'>key</span><span class='comma'>,</span> <span class='id identifier rubyid_message_digest'>message_digest</span><span class='period'>.</span><span class='id identifier rubyid_digest'>digest</span> <span class='rparen'>)</span>
+    <span class='const'>R509</span><span class='op'>::</span><span class='const'>Cert</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='symbol'>:cert</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_cert'>cert</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
     </td>
   </tr>
 </table>
@@ -782,9 +803,9 @@
 </div>
     
     <div id="footer">
-  Generated on Tue Dec 27 16:08:50 2011 by 
+  Generated on Tue Dec 27 18:22:27 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.7.4 (ruby-1.8.7).
+  0.7.4 (ruby-1.9.3).
 </div>
 
   </body>

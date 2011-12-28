@@ -2,7 +2,7 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=en_us" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>
   Class: R509::Config::CaProfile
   
@@ -94,7 +94,8 @@
 
 <h2>Overview</h2><div class="docstring">
   <div class="discussion">
-    <p>Provides access to configuration profiles</p>
+    
+<p>Provides access to configuration profiles</p>
 
 
   </div>
@@ -126,7 +127,8 @@
   
 
   
-    <span class="summary_desc"><div class='inline'><p>Returns the value of attribute basic_constraints.</p>
+    <span class="summary_desc"><div class='inline'>
+<p>Returns the value of attribute basic_constraints.</p>
 </div></span>
   
 </li>
@@ -151,7 +153,8 @@
   
 
   
-    <span class="summary_desc"><div class='inline'><p>Returns the value of attribute certificate_policies.</p>
+    <span class="summary_desc"><div class='inline'>
+<p>Returns the value of attribute certificate_policies.</p>
 </div></span>
   
 </li>
@@ -176,7 +179,8 @@
   
 
   
-    <span class="summary_desc"><div class='inline'><p>Returns the value of attribute extended<em>key</em>usage.</p>
+    <span class="summary_desc"><div class='inline'>
+<p>Returns the value of attribute extended_key_usage.</p>
 </div></span>
   
 </li>
@@ -201,7 +205,8 @@
   
 
   
-    <span class="summary_desc"><div class='inline'><p>Returns the value of attribute key_usage.</p>
+    <span class="summary_desc"><div class='inline'>
+<p>Returns the value of attribute key_usage.</p>
 </div></span>
   
 </li>
@@ -226,7 +231,8 @@
   
 
   
-    <span class="summary_desc"><div class='inline'><p>Returns the value of attribute subject<em>item</em>policy.</p>
+    <span class="summary_desc"><div class='inline'>
+<p>Returns the value of attribute subject_item_policy.</p>
 </div></span>
   
 </li>
@@ -263,7 +269,8 @@
   
 
   
-    <span class="summary_desc"><div class='inline'><p>A new instance of CaProfile.</p>
+    <span class="summary_desc"><div class='inline'>
+<p>A new instance of CaProfile.</p>
 </div></span>
   
 </li>
@@ -284,7 +291,8 @@
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>A new instance of CaProfile</p>
+    
+<p>A new instance of CaProfile</p>
 
 
   </div>
@@ -303,7 +311,8 @@
       
       
         &mdash;
-        <div class='inline'><p>a customizable set of options</p>
+        <div class='inline'>
+<p>a customizable set of options</p>
 </div>
       
     </li>
@@ -318,7 +327,8 @@
       
       
         &mdash;
-        <div class='inline'><p>a customizable set of options</p>
+        <div class='inline'>
+<p>a customizable set of options</p>
 </div>
       
     </li>
@@ -333,7 +343,8 @@
       
       
         &mdash;
-        <div class='inline'><p>a customizable set of options</p>
+        <div class='inline'>
+<p>a customizable set of options</p>
 </div>
       
     </li>
@@ -364,16 +375,15 @@
     <td>
       <pre class="code"><span class="info file"># File 'lib/r509/Config.rb', line 23</span>
 
-<span class='rubyid_def def kw'>def</span> <span class='rubyid_initialize identifier id'>initialize</span><span class='lparen token'>(</span><span class='rubyid_opts identifier id'>opts</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span><span class='rparen token'>)</span>
-    <span class='rubyid_@basic_constraints ivar id'>@basic_constraints</span> <span class='assign token'>=</span> <span class='rubyid_opts identifier id'>opts</span><span class='lbrack token'>[</span><span class='symbol val'>:basic_constraints</span><span class='rbrack token'>]</span>
-    <span class='rubyid_@key_usage ivar id'>@key_usage</span> <span class='assign token'>=</span> <span class='rubyid_opts identifier id'>opts</span><span class='lbrack token'>[</span><span class='symbol val'>:key_usage</span><span class='rbrack token'>]</span>
-    <span class='rubyid_@extended_key_usage ivar id'>@extended_key_usage</span> <span class='assign token'>=</span> <span class='rubyid_opts identifier id'>opts</span><span class='lbrack token'>[</span><span class='symbol val'>:extended_key_usage</span><span class='rbrack token'>]</span>
-    <span class='rubyid_@certificate_policies ivar id'>@certificate_policies</span> <span class='assign token'>=</span> <span class='rubyid_opts identifier id'>opts</span><span class='lbrack token'>[</span><span class='symbol val'>:certificate_policies</span><span class='rbrack token'>]</span>
-    <span class='rubyid_if if kw'>if</span> <span class='rubyid_opts identifier id'>opts</span><span class='dot token'>.</span><span class='rubyid_has_key? fid id'>has_key?</span><span class='lparen token'>(</span><span class='symbol val'>:subject_item_policy</span><span class='rparen token'>)</span> <span class='rubyid_and and kw'>and</span> <span class='rubyid_not not kw'>not</span> <span class='rubyid_opts identifier id'>opts</span><span class='lbrack token'>[</span><span class='symbol val'>:subject_item_policy</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='rubyid_kind_of? fid id'>kind_of?</span><span class='lparen token'>(</span><span class='rubyid_R509 constant id'>R509</span><span class='colon2 op'>::</span><span class='rubyid_Config constant id'>Config</span><span class='colon2 op'>::</span><span class='rubyid_SubjectItemPolicy constant id'>SubjectItemPolicy</span><span class='rparen token'>)</span>
-    <span class='rubyid_end end kw'>end</span>
-    <span class='rubyid_@subject_item_policy ivar id'>@subject_item_policy</span> <span class='assign token'>=</span> <span class='rubyid_opts identifier id'>opts</span><span class='lbrack token'>[</span><span class='symbol val'>:subject_item_policy</span><span class='rbrack token'>]</span> <span class='orop op'>||</span> <span class='rubyid_nil nil kw'>nil</span>
-<span class='rubyid_end end kw'>end</span>
-</pre>
+<span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='id identifier rubyid_opts'>opts</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
+    <span class='ivar'>@basic_constraints</span> <span class='op'>=</span> <span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:basic_constraints</span><span class='rbracket'>]</span>
+    <span class='ivar'>@key_usage</span> <span class='op'>=</span> <span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:key_usage</span><span class='rbracket'>]</span>
+    <span class='ivar'>@extended_key_usage</span> <span class='op'>=</span> <span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:extended_key_usage</span><span class='rbracket'>]</span>
+    <span class='ivar'>@certificate_policies</span> <span class='op'>=</span> <span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:certificate_policies</span><span class='rbracket'>]</span>
+    <span class='kw'>if</span> <span class='id identifier rubyid_opts'>opts</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span><span class='lparen'>(</span><span class='symbol'>:subject_item_policy</span><span class='rparen'>)</span> <span class='kw'>and</span> <span class='kw'>not</span> <span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:subject_item_policy</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_kind_of?'>kind_of?</span><span class='lparen'>(</span><span class='const'>R509</span><span class='op'>::</span><span class='const'>Config</span><span class='op'>::</span><span class='const'>SubjectItemPolicy</span><span class='rparen'>)</span>
+    <span class='kw'>end</span>
+    <span class='ivar'>@subject_item_policy</span> <span class='op'>=</span> <span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:subject_item_policy</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='kw'>nil</span>
+<span class='kw'>end</span></pre>
     </td>
   </tr>
 </table>
@@ -396,7 +406,8 @@
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>Returns the value of attribute basic_constraints</p>
+    
+<p>Returns the value of attribute basic_constraints</p>
 
 
   </div>
@@ -417,10 +428,9 @@
     <td>
       <pre class="code"><span class="info file"># File 'lib/r509/Config.rb', line 15</span>
 
-<span class='rubyid_def def kw'>def</span> <span class='rubyid_basic_constraints identifier id'>basic_constraints</span>
-  <span class='rubyid_@basic_constraints ivar id'>@basic_constraints</span>
-<span class='rubyid_end end kw'>end</span>
-</pre>
+<span class='kw'>def</span> <span class='id identifier rubyid_basic_constraints'>basic_constraints</span>
+  <span class='ivar'>@basic_constraints</span>
+<span class='kw'>end</span></pre>
     </td>
   </tr>
 </table>
@@ -438,7 +448,8 @@
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>Returns the value of attribute certificate_policies</p>
+    
+<p>Returns the value of attribute certificate_policies</p>
 
 
   </div>
@@ -459,10 +470,9 @@
     <td>
       <pre class="code"><span class="info file"># File 'lib/r509/Config.rb', line 15</span>
 
-<span class='rubyid_def def kw'>def</span> <span class='rubyid_certificate_policies identifier id'>certificate_policies</span>
-  <span class='rubyid_@certificate_policies ivar id'>@certificate_policies</span>
-<span class='rubyid_end end kw'>end</span>
-</pre>
+<span class='kw'>def</span> <span class='id identifier rubyid_certificate_policies'>certificate_policies</span>
+  <span class='ivar'>@certificate_policies</span>
+<span class='kw'>end</span></pre>
     </td>
   </tr>
 </table>
@@ -480,7 +490,8 @@
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>Returns the value of attribute extended<em>key</em>usage</p>
+    
+<p>Returns the value of attribute extended_key_usage</p>
 
 
   </div>
@@ -501,10 +512,9 @@
     <td>
       <pre class="code"><span class="info file"># File 'lib/r509/Config.rb', line 15</span>
 
-<span class='rubyid_def def kw'>def</span> <span class='rubyid_extended_key_usage identifier id'>extended_key_usage</span>
-  <span class='rubyid_@extended_key_usage ivar id'>@extended_key_usage</span>
-<span class='rubyid_end end kw'>end</span>
-</pre>
+<span class='kw'>def</span> <span class='id identifier rubyid_extended_key_usage'>extended_key_usage</span>
+  <span class='ivar'>@extended_key_usage</span>
+<span class='kw'>end</span></pre>
     </td>
   </tr>
 </table>
@@ -522,7 +532,8 @@
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>Returns the value of attribute key_usage</p>
+    
+<p>Returns the value of attribute key_usage</p>
 
 
   </div>
@@ -543,10 +554,9 @@
     <td>
       <pre class="code"><span class="info file"># File 'lib/r509/Config.rb', line 15</span>
 
-<span class='rubyid_def def kw'>def</span> <span class='rubyid_key_usage identifier id'>key_usage</span>
-  <span class='rubyid_@key_usage ivar id'>@key_usage</span>
-<span class='rubyid_end end kw'>end</span>
-</pre>
+<span class='kw'>def</span> <span class='id identifier rubyid_key_usage'>key_usage</span>
+  <span class='ivar'>@key_usage</span>
+<span class='kw'>end</span></pre>
     </td>
   </tr>
 </table>
@@ -564,7 +574,8 @@
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>Returns the value of attribute subject<em>item</em>policy</p>
+    
+<p>Returns the value of attribute subject_item_policy</p>
 
 
   </div>
@@ -585,10 +596,9 @@
     <td>
       <pre class="code"><span class="info file"># File 'lib/r509/Config.rb', line 15</span>
 
-<span class='rubyid_def def kw'>def</span> <span class='rubyid_subject_item_policy identifier id'>subject_item_policy</span>
-  <span class='rubyid_@subject_item_policy ivar id'>@subject_item_policy</span>
-<span class='rubyid_end end kw'>end</span>
-</pre>
+<span class='kw'>def</span> <span class='id identifier rubyid_subject_item_policy'>subject_item_policy</span>
+  <span class='ivar'>@subject_item_policy</span>
+<span class='kw'>end</span></pre>
     </td>
   </tr>
 </table>
@@ -600,9 +610,9 @@
 </div>
     
     <div id="footer">
-  Generated on Tue Dec 27 16:08:50 2011 by 
+  Generated on Tue Dec 27 18:22:26 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.7.4 (ruby-1.8.7).
+  0.7.4 (ruby-1.9.3).
 </div>
 
   </body>

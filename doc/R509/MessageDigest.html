@@ -2,7 +2,7 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=en_us" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>
   Class: R509::MessageDigest
   
@@ -94,7 +94,8 @@
 
 <h2>Overview</h2><div class="docstring">
   <div class="discussion">
-    <p>MessageDigest allows you to specify MDs in a more friendly fashion</p>
+    
+<p>MessageDigest allows you to specify MDs in a more friendly fashion</p>
 
 
   </div>
@@ -126,7 +127,8 @@
   
 
   
-    <span class="summary_desc"><div class='inline'><p>Returns the value of attribute digest.</p>
+    <span class="summary_desc"><div class='inline'>
+<p>Returns the value of attribute digest.</p>
 </div></span>
   
 </li>
@@ -151,7 +153,8 @@
   
 
   
-    <span class="summary_desc"><div class='inline'><p>Returns the value of attribute name.</p>
+    <span class="summary_desc"><div class='inline'>
+<p>Returns the value of attribute name.</p>
 </div></span>
   
 </li>
@@ -188,7 +191,8 @@
   
 
   
-    <span class="summary_desc"><div class='inline'><p>A new instance of MessageDigest.</p>
+    <span class="summary_desc"><div class='inline'>
+<p>A new instance of MessageDigest.</p>
 </div></span>
   
 </li>
@@ -209,7 +213,8 @@
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>A new instance of MessageDigest</p>
+    
+<p>A new instance of MessageDigest</p>
 
 
   </div>
@@ -251,16 +256,15 @@
     <td>
       <pre class="code"><span class="info file"># File 'lib/r509/MessageDigest.rb', line 9</span>
 
-<span class='rubyid_def def kw'>def</span> <span class='rubyid_initialize identifier id'>initialize</span><span class='lparen token'>(</span><span class='rubyid_arg identifier id'>arg</span><span class='rparen token'>)</span>
-    <span class='rubyid_if if kw'>if</span> <span class='rubyid_arg identifier id'>arg</span><span class='dot token'>.</span><span class='rubyid_kind_of? fid id'>kind_of?</span><span class='lparen token'>(</span><span class='rubyid_String constant id'>String</span><span class='rparen token'>)</span>
-        <span class='rubyid_@name ivar id'>@name</span> <span class='assign token'>=</span> <span class='rubyid_arg identifier id'>arg</span><span class='dot token'>.</span><span class='rubyid_downcase identifier id'>downcase</span>
-        <span class='rubyid_@digest ivar id'>@digest</span> <span class='assign token'>=</span> <span class='rubyid_translate_name_to_digest identifier id'>translate_name_to_digest</span>
-    <span class='rubyid_else else kw'>else</span>
-        <span class='rubyid_@digest ivar id'>@digest</span> <span class='assign token'>=</span> <span class='rubyid_arg identifier id'>arg</span>
-        <span class='rubyid_@name ivar id'>@name</span> <span class='assign token'>=</span> <span class='rubyid_translate_digest_to_name identifier id'>translate_digest_to_name</span>
-    <span class='rubyid_end end kw'>end</span>
-<span class='rubyid_end end kw'>end</span>
-</pre>
+<span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='id identifier rubyid_arg'>arg</span><span class='rparen'>)</span>
+    <span class='kw'>if</span> <span class='id identifier rubyid_arg'>arg</span><span class='period'>.</span><span class='id identifier rubyid_kind_of?'>kind_of?</span><span class='lparen'>(</span><span class='const'>String</span><span class='rparen'>)</span>
+        <span class='ivar'>@name</span> <span class='op'>=</span> <span class='id identifier rubyid_arg'>arg</span><span class='period'>.</span><span class='id identifier rubyid_downcase'>downcase</span>
+        <span class='ivar'>@digest</span> <span class='op'>=</span> <span class='id identifier rubyid_translate_name_to_digest'>translate_name_to_digest</span>
+    <span class='kw'>else</span>
+        <span class='ivar'>@digest</span> <span class='op'>=</span> <span class='id identifier rubyid_arg'>arg</span>
+        <span class='ivar'>@name</span> <span class='op'>=</span> <span class='id identifier rubyid_translate_digest_to_name'>translate_digest_to_name</span>
+    <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
     </td>
   </tr>
 </table>
@@ -283,7 +287,8 @@
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>Returns the value of attribute digest</p>
+    
+<p>Returns the value of attribute digest</p>
 
 
   </div>
@@ -304,10 +309,9 @@
     <td>
       <pre class="code"><span class="info file"># File 'lib/r509/MessageDigest.rb', line 6</span>
 
-<span class='rubyid_def def kw'>def</span> <span class='rubyid_digest identifier id'>digest</span>
-  <span class='rubyid_@digest ivar id'>@digest</span>
-<span class='rubyid_end end kw'>end</span>
-</pre>
+<span class='kw'>def</span> <span class='id identifier rubyid_digest'>digest</span>
+  <span class='ivar'>@digest</span>
+<span class='kw'>end</span></pre>
     </td>
   </tr>
 </table>
@@ -325,7 +329,8 @@
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>Returns the value of attribute name</p>
+    
+<p>Returns the value of attribute name</p>
 
 
   </div>
@@ -346,10 +351,9 @@
     <td>
       <pre class="code"><span class="info file"># File 'lib/r509/MessageDigest.rb', line 6</span>
 
-<span class='rubyid_def def kw'>def</span> <span class='rubyid_name identifier id'>name</span>
-  <span class='rubyid_@name ivar id'>@name</span>
-<span class='rubyid_end end kw'>end</span>
-</pre>
+<span class='kw'>def</span> <span class='id identifier rubyid_name'>name</span>
+  <span class='ivar'>@name</span>
+<span class='kw'>end</span></pre>
     </td>
   </tr>
 </table>
@@ -361,9 +365,9 @@
 </div>
     
     <div id="footer">
-  Generated on Tue Dec 27 16:08:45 2011 by 
+  Generated on Tue Dec 27 18:22:27 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.7.4 (ruby-1.8.7).
+  0.7.4 (ruby-1.9.3).
 </div>
 
   </body>

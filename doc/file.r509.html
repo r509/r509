@@ -2,7 +2,7 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=en_us" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>
   File: r509
   
@@ -54,72 +54,75 @@
     
     <iframe id="search_frame"></iframe>
     
-    <div id="content"><div id='filecontents'><p>test<em>ca: {
-    ca</em>cert: {
-        cert: &#39;spec/fixtures/test<em>ca.cer&#39;,
-        key: &#39;spec/fixtures/test</em>ca.key&#39;
+    <div id="content"><div id='filecontents'>
+<p>test_ca: {</p>
+
+<pre class="code">ca_cert: {
+    cert: 'spec/fixtures/test_ca.cer',
+    key: 'spec/fixtures/test_ca.key'
+},
+#ocsp_cert: {
+#    :cert: 'spec/fixtures/test_ca.cer',
+#    :key: 'spec/fixtures/test_ca.key',
+#},
+cdp_location: 'URI:http://crl.domain.com/test_ca.crl',
+crl_list: 'spec/fixtures/test_ca_crl_list.txt',
+crl_number: 'spec/fixtures/test_ca_crl_number.txt',
+crl_validity_hours: 168, #7 days
+ocsp_location: 'URI:http://ocsp.domain.com',
+message_digest: 'SHA1', #SHA1, SHA256, SHA512 supported. MD5 too, but you really shouldn't use that unless you have a good reason
+profiles: {
+    server: {
+        basic_constraints: &quot;CA:FALSE&quot;,
+        key_usage: [digitalSignature,keyEncipherment],
+        extended_key_usage: [serverAuth],
+        certificate_policies: [ [ &quot;policyIdentifier=2.16.840.1.9999999999.1.2.3.4.1&quot;, &quot;CPS.1=http://example.com/cps&quot;] ]
     },
-    #ocsp<em>cert: {
-    #    :cert: &#39;spec/fixtures/test</em>ca.cer&#39;,
-    #    :key: &#39;spec/fixtures/test<em>ca.key&#39;,
-    #},
-    cdp</em>location: &#39;URI:http://crl.domain.com/test<em>ca.crl&#39;,
-    crl</em>list: &#39;spec/fixtures/test<em>ca</em>crl<em>list.txt&#39;,
-    crl</em>number: &#39;spec/fixtures/test<em>ca</em>crl<em>number.txt&#39;,
-    crl</em>validity<em>hours: 168, #7 days
-    ocsp</em>location: &#39;URI:http://ocsp.domain.com&#39;,
-    message<em>digest: &#39;SHA1&#39;, #SHA1, SHA256, SHA512 supported. MD5 too, but you really shouldn&#39;t use that unless you have a good reason
-    profiles: {
-        server: {
-            basic</em>constraints: &quot;CA:FALSE&quot;,
-            key<em>usage: [digitalSignature,keyEncipherment],
-            extended</em>key<em>usage: [serverAuth],
-            certificate</em>policies: [ [ &quot;policyIdentifier=2.16.840.1.9999999999.1.2.3.4.1&quot;, &quot;CPS.1=http://example.com/cps&quot;] ]
-        },
-        client: {
-            basic<em>constraints: &quot;CA:FALSE&quot;,
-            key</em>usage: [digitalSignature,keyEncipherment],
-            extended<em>key</em>usage: [clientAuth],
-            certificate<em>policies: [ [ &quot;policyIdentifier=2.16.840.1.9999999999.1.2.3.4.2&quot;, &quot;CPS.1=http://example.com/cps&quot;] ]
-        },
-        email: {
-            basic</em>constraints: &quot;CA:FALSE&quot;,
-            key<em>usage: [digitalSignature,keyEncipherment],
-            extended</em>key<em>usage: [emailProtection],
-            certificate</em>policies: [ [ &quot;policyIdentifier=2.16.840.1.9999999999.1.2.3.4.3&quot;, &quot;CPS.1=http://example.com/cps&quot;] ]
-        },
-        clientserver: {
-            basic<em>constraints:  &quot;CA:FALSE&quot;,
-            key</em>usage: [digitalSignature,keyEncipherment],
-            extended<em>key</em>usage: [serverAuth,clientAuth],
-            certificate<em>policies: [ [ &quot;policyIdentifier=2.16.840.1.9999999999.1.2.3.4.4&quot;, &quot;CPS.1=http://example.com/cps&quot;] ]
-        },
-        codesigning: {
-            basic</em>constraints:  &quot;CA:FALSE&quot;,
-            key<em>usage: [digitalSignature],
-            extended</em>key<em>usage: [codeSigning],
-            certificate</em>policies: [ [ &quot;policyIdentifier=2.16.840.1.9999999999.1.2.3.4.5&quot;, &quot;CPS.1=http://example.com/cps&quot;] ]
-        },
-        timestamping: {
-            basic<em>constraints:  &quot;CA:FALSE&quot;,
-            key</em>usage: [digitalSignature],
-            extended<em>key</em>usage: [timeStamping],
-            certificate<em>policies: [ [ &quot;policyIdentifier=2.16.840.1.9999999999.1.2.3.4.6&quot;, &quot;CPS.1=http://example.com/cps&quot;] ]
-        },
-        subroot: {
-            basic</em>constraints:  &quot;CA:TRUE,pathlen:0&quot;,
-            key<em>usage: [keyCertSign,cRLSign],
-            extended</em>key<em>usage: [],
-            certificate</em>policies: [ ]
-        }
+    client: {
+        basic_constraints: &quot;CA:FALSE&quot;,
+        key_usage: [digitalSignature,keyEncipherment],
+        extended_key_usage: [clientAuth],
+        certificate_policies: [ [ &quot;policyIdentifier=2.16.840.1.9999999999.1.2.3.4.2&quot;, &quot;CPS.1=http://example.com/cps&quot;] ]
+    },
+    email: {
+        basic_constraints: &quot;CA:FALSE&quot;,
+        key_usage: [digitalSignature,keyEncipherment],
+        extended_key_usage: [emailProtection],
+        certificate_policies: [ [ &quot;policyIdentifier=2.16.840.1.9999999999.1.2.3.4.3&quot;, &quot;CPS.1=http://example.com/cps&quot;] ]
+    },
+    clientserver: {
+        basic_constraints:  &quot;CA:FALSE&quot;,
+        key_usage: [digitalSignature,keyEncipherment],
+        extended_key_usage: [serverAuth,clientAuth],
+        certificate_policies: [ [ &quot;policyIdentifier=2.16.840.1.9999999999.1.2.3.4.4&quot;, &quot;CPS.1=http://example.com/cps&quot;] ]
+    },
+    codesigning: {
+        basic_constraints:  &quot;CA:FALSE&quot;,
+        key_usage: [digitalSignature],
+        extended_key_usage: [codeSigning],
+        certificate_policies: [ [ &quot;policyIdentifier=2.16.840.1.9999999999.1.2.3.4.5&quot;, &quot;CPS.1=http://example.com/cps&quot;] ]
+    },
+    timestamping: {
+        basic_constraints:  &quot;CA:FALSE&quot;,
+        key_usage: [digitalSignature],
+        extended_key_usage: [timeStamping],
+        certificate_policies: [ [ &quot;policyIdentifier=2.16.840.1.9999999999.1.2.3.4.6&quot;, &quot;CPS.1=http://example.com/cps&quot;] ]
+    },
+    subroot: {
+        basic_constraints:  &quot;CA:TRUE,pathlen:0&quot;,
+        key_usage: [keyCertSign,cRLSign],
+        extended_key_usage: [],
+        certificate_policies: [ ]
     }
-}</p>
+}</pre>
+
+<p>}</p>
 </div></div>
     
     <div id="footer">
-  Generated on Tue Dec 27 16:08:45 2011 by 
+  Generated on Tue Dec 27 18:22:26 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.7.4 (ruby-1.8.7).
+  0.7.4 (ruby-1.9.3).
 </div>
 
   </body>

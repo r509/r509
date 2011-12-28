@@ -2,7 +2,7 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=en_us" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>
   Class: R509::Subject
   
@@ -94,7 +94,9 @@
 
 <h2>Overview</h2><div class="docstring">
   <div class="discussion">
-    <p>subject class. Used for building OpenSSL::X509::Name objects in a sane fashion</p>
+    
+<p>subject class. Used for building OpenSSL::X509::Name objects in a sane
+fashion</p>
 
 
   </div>
@@ -131,7 +133,8 @@
   
 
   
-    <span class="summary_desc"><div class='inline'><p>get value for key.</p>
+    <span class="summary_desc"><div class='inline'>
+<p>get value for key.</p>
 </div></span>
   
 </li>
@@ -153,7 +156,8 @@
   
 
   
-    <span class="summary_desc"><div class='inline'><p>set key and value.</p>
+    <span class="summary_desc"><div class='inline'>
+<p>set key and value.</p>
 </div></span>
   
 </li>
@@ -219,7 +223,8 @@
   
 
   
-    <span class="summary_desc"><div class='inline'><p>A new instance of Subject.</p>
+    <span class="summary_desc"><div class='inline'>
+<p>A new instance of Subject.</p>
 </div></span>
   
 </li>
@@ -262,7 +267,8 @@
   
 
   
-    <span class="summary_desc"><div class='inline'><p>Array of form [[&#39;CN&#39;,&#39;langui.sh&#39;],[&#39;O&#39;,&#39;Org&#39;]].</p>
+    <span class="summary_desc"><div class='inline'>
+<p>Array of form [['<a href="http://'O','Org'">CN','langui.sh'],</a>].</p>
 </div></span>
   
 </li>
@@ -284,7 +290,8 @@
   
 
   
-    <span class="summary_desc"><div class='inline'><p>String of form /CN=something.com/O=whatever/L=Locality.</p>
+    <span class="summary_desc"><div class='inline'>
+<p>String of form /CN=something.com/O=whatever/L=Locality.</p>
 </div></span>
   
 </li>
@@ -305,7 +312,8 @@
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>A new instance of Subject</p>
+    
+<p>A new instance of Subject</p>
 
 
   </div>
@@ -354,23 +362,22 @@
     <td>
       <pre class="code"><span class="info file"># File 'lib/r509/Subject.rb', line 7</span>
 
-<span class='rubyid_def def kw'>def</span> <span class='rubyid_initialize identifier id'>initialize</span><span class='lparen token'>(</span><span class='rubyid_arg identifier id'>arg</span><span class='assign token'>=</span><span class='rubyid_nil nil kw'>nil</span><span class='rparen token'>)</span>
-    <span class='rubyid_case case kw'>case</span> <span class='rubyid_arg identifier id'>arg</span>
-    <span class='rubyid_when when kw'>when</span> <span class='rubyid_Array constant id'>Array</span>
-        <span class='rubyid_@array ivar id'>@array</span> <span class='assign token'>=</span> <span class='rubyid_arg identifier id'>arg</span>
-    <span class='rubyid_when when kw'>when</span> <span class='rubyid_OpenSSL constant id'>OpenSSL</span><span class='colon2 op'>::</span><span class='rubyid_X509 constant id'>X509</span><span class='colon2 op'>::</span><span class='rubyid_Name constant id'>Name</span>
-        <span class='rubyid_sanitizer identifier id'>sanitizer</span> <span class='assign token'>=</span> <span class='rubyid_R509 constant id'>R509</span><span class='colon2 op'>::</span><span class='rubyid_NameSanitizer constant id'>NameSanitizer</span><span class='dot token'>.</span><span class='rubyid_new identifier id'>new</span>
-        <span class='rubyid_@array ivar id'>@array</span> <span class='assign token'>=</span> <span class='rubyid_sanitizer identifier id'>sanitizer</span><span class='dot token'>.</span><span class='rubyid_sanitize identifier id'>sanitize</span><span class='lparen token'>(</span><span class='rubyid_arg identifier id'>arg</span><span class='rparen token'>)</span>
-    <span class='rubyid_when when kw'>when</span> <span class='rubyid_R509 constant id'>R509</span><span class='colon2 op'>::</span><span class='rubyid_Subject constant id'>Subject</span>
-        <span class='rubyid_@array ivar id'>@array</span> <span class='assign token'>=</span> <span class='rubyid_arg identifier id'>arg</span><span class='dot token'>.</span><span class='rubyid_to_a identifier id'>to_a</span>
-    <span class='rubyid_else else kw'>else</span>
-        <span class='rubyid_@array ivar id'>@array</span> <span class='assign token'>=</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span>
-    <span class='rubyid_end end kw'>end</span>
+<span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='id identifier rubyid_arg'>arg</span><span class='op'>=</span><span class='kw'>nil</span><span class='rparen'>)</span>
+    <span class='kw'>case</span> <span class='id identifier rubyid_arg'>arg</span>
+    <span class='kw'>when</span> <span class='const'>Array</span>
+        <span class='ivar'>@array</span> <span class='op'>=</span> <span class='id identifier rubyid_arg'>arg</span>
+    <span class='kw'>when</span> <span class='const'>OpenSSL</span><span class='op'>::</span><span class='const'>X509</span><span class='op'>::</span><span class='const'>Name</span>
+        <span class='id identifier rubyid_sanitizer'>sanitizer</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>NameSanitizer</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span>
+        <span class='ivar'>@array</span> <span class='op'>=</span> <span class='id identifier rubyid_sanitizer'>sanitizer</span><span class='period'>.</span><span class='id identifier rubyid_sanitize'>sanitize</span><span class='lparen'>(</span><span class='id identifier rubyid_arg'>arg</span><span class='rparen'>)</span>
+    <span class='kw'>when</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>Subject</span>
+        <span class='ivar'>@array</span> <span class='op'>=</span> <span class='id identifier rubyid_arg'>arg</span><span class='period'>.</span><span class='id identifier rubyid_to_a'>to_a</span>
+    <span class='kw'>else</span>
+        <span class='ivar'>@array</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
+    <span class='kw'>end</span>
 
-    <span class='comment val'># see if X509 thinks this is okay</span>
-    <span class='rubyid_name identifier id'>name</span>
-<span class='rubyid_end end kw'>end</span>
-</pre>
+    <span class='comment'># see if X509 thinks this is okay
+</span>    <span class='id identifier rubyid_name'>name</span>
+<span class='kw'>end</span></pre>
     </td>
   </tr>
 </table>
@@ -392,7 +399,8 @@
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>get value for key</p>
+    
+<p>get value for key</p>
 
 
   </div>
@@ -418,15 +426,14 @@
     <td>
       <pre class="code"><span class="info file"># File 'lib/r509/Subject.rb', line 35</span>
 
-<span class='rubyid_def def kw'>def</span> <span class='aref op'>[]</span><span class='lparen token'>(</span><span class='rubyid_key identifier id'>key</span><span class='rparen token'>)</span>
-    <span class='rubyid_@array ivar id'>@array</span><span class='dot token'>.</span><span class='rubyid_each identifier id'>each</span> <span class='rubyid_do do kw'>do</span> <span class='bitor op'>|</span><span class='rubyid_item identifier id'>item</span><span class='bitor op'>|</span>
-        <span class='rubyid_if if kw'>if</span> <span class='rubyid_key identifier id'>key</span> <span class='eq op'>==</span> <span class='rubyid_item identifier id'>item</span><span class='lbrack token'>[</span><span class='integer val'>0</span><span class='rbrack token'>]</span>
-            <span class='rubyid_return return kw'>return</span> <span class='rubyid_item identifier id'>item</span><span class='lbrack token'>[</span><span class='integer val'>1</span><span class='rbrack token'>]</span>
-        <span class='rubyid_end end kw'>end</span>
-    <span class='rubyid_end end kw'>end</span>
-    <span class='rubyid_return return kw'>return</span> <span class='rubyid_nil nil kw'>nil</span>
-<span class='rubyid_end end kw'>end</span>
-</pre>
+<span class='kw'>def</span> <span class='op'>[]</span><span class='lparen'>(</span><span class='id identifier rubyid_key'>key</span><span class='rparen'>)</span>
+    <span class='ivar'>@array</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_item'>item</span><span class='op'>|</span>
+        <span class='kw'>if</span> <span class='id identifier rubyid_key'>key</span> <span class='op'>==</span> <span class='id identifier rubyid_item'>item</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span>
+            <span class='kw'>return</span> <span class='id identifier rubyid_item'>item</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span>
+        <span class='kw'>end</span>
+    <span class='kw'>end</span>
+    <span class='kw'>return</span> <span class='kw'>nil</span>
+<span class='kw'>end</span></pre>
     </td>
   </tr>
 </table>
@@ -441,7 +448,8 @@
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>set key and value</p>
+    
+<p>set key and value</p>
 
 
   </div>
@@ -479,27 +487,26 @@
     <td>
       <pre class="code"><span class="info file"># File 'lib/r509/Subject.rb', line 45</span>
 
-<span class='rubyid_def def kw'>def</span> <span class='aset op'>[]=</span><span class='lparen token'>(</span><span class='rubyid_key identifier id'>key</span><span class='comma token'>,</span> <span class='rubyid_value identifier id'>value</span><span class='rparen token'>)</span>
-    <span class='rubyid_added identifier id'>added</span> <span class='assign token'>=</span> <span class='rubyid_false false kw'>false</span>
-    <span class='rubyid_@array ivar id'>@array</span> <span class='assign token'>=</span> <span class='rubyid_@array ivar id'>@array</span><span class='dot token'>.</span><span class='rubyid_map identifier id'>map</span><span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='rubyid_item identifier id'>item</span><span class='bitor op'>|</span>
-        <span class='rubyid_if if kw'>if</span> <span class='rubyid_key identifier id'>key</span> <span class='eq op'>==</span> <span class='rubyid_item identifier id'>item</span><span class='lbrack token'>[</span><span class='integer val'>0</span><span class='rbrack token'>]</span>
-            <span class='rubyid_added identifier id'>added</span> <span class='assign token'>=</span> <span class='rubyid_true true kw'>true</span>
-            <span class='lbrack token'>[</span><span class='rubyid_key identifier id'>key</span><span class='comma token'>,</span> <span class='rubyid_value identifier id'>value</span><span class='rbrack token'>]</span>
-        <span class='rubyid_else else kw'>else</span>
-            <span class='rubyid_item identifier id'>item</span>
-        <span class='rubyid_end end kw'>end</span>
-    <span class='rbrace token'>}</span>
+<span class='kw'>def</span> <span class='op'>[]=</span><span class='lparen'>(</span><span class='id identifier rubyid_key'>key</span><span class='comma'>,</span> <span class='id identifier rubyid_value'>value</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_added'>added</span> <span class='op'>=</span> <span class='kw'>false</span>
+    <span class='ivar'>@array</span> <span class='op'>=</span> <span class='ivar'>@array</span><span class='period'>.</span><span class='id identifier rubyid_map'>map</span><span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_item'>item</span><span class='op'>|</span>
+        <span class='kw'>if</span> <span class='id identifier rubyid_key'>key</span> <span class='op'>==</span> <span class='id identifier rubyid_item'>item</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span>
+            <span class='id identifier rubyid_added'>added</span> <span class='op'>=</span> <span class='kw'>true</span>
+            <span class='lbracket'>[</span><span class='id identifier rubyid_key'>key</span><span class='comma'>,</span> <span class='id identifier rubyid_value'>value</span><span class='rbracket'>]</span>
+        <span class='kw'>else</span>
+            <span class='id identifier rubyid_item'>item</span>
+        <span class='kw'>end</span>
+    <span class='rbrace'>}</span>
 
-    <span class='rubyid_if if kw'>if</span> <span class='rubyid_not not kw'>not</span> <span class='rubyid_added identifier id'>added</span>
-        <span class='rubyid_@array ivar id'>@array</span> <span class='lshft op'>&lt;&lt;</span> <span class='lbrack token'>[</span><span class='rubyid_key identifier id'>key</span><span class='comma token'>,</span> <span class='rubyid_value identifier id'>value</span><span class='rbrack token'>]</span>
-    <span class='rubyid_end end kw'>end</span>
+    <span class='kw'>if</span> <span class='kw'>not</span> <span class='id identifier rubyid_added'>added</span>
+        <span class='ivar'>@array</span> <span class='op'>&lt;&lt;</span> <span class='lbracket'>[</span><span class='id identifier rubyid_key'>key</span><span class='comma'>,</span> <span class='id identifier rubyid_value'>value</span><span class='rbracket'>]</span>
+    <span class='kw'>end</span>
 
-    <span class='comment val'># see if X509 thinks this is okay</span>
-    <span class='rubyid_name identifier id'>name</span>
+    <span class='comment'># see if X509 thinks this is okay
+</span>    <span class='id identifier rubyid_name'>name</span>
 
-    <span class='rubyid_@array ivar id'>@array</span>
-<span class='rubyid_end end kw'>end</span>
-</pre>
+    <span class='ivar'>@array</span>
+<span class='kw'>end</span></pre>
     </td>
   </tr>
 </table>
@@ -532,7 +539,8 @@
       
       
         &mdash;
-        <div class='inline'><p>item you want deleted</p>
+        <div class='inline'>
+<p>item you want deleted</p>
 </div>
       
     </li>
@@ -555,12 +563,11 @@
     <td>
       <pre class="code"><span class="info file"># File 'lib/r509/Subject.rb', line 67</span>
 
-<span class='rubyid_def def kw'>def</span> <span class='rubyid_delete identifier id'>delete</span><span class='lparen token'>(</span><span class='rubyid_key identifier id'>key</span><span class='rparen token'>)</span>
-    <span class='rubyid_@array ivar id'>@array</span> <span class='assign token'>=</span> <span class='rubyid_@array ivar id'>@array</span><span class='dot token'>.</span><span class='rubyid_select identifier id'>select</span> <span class='rubyid_do do kw'>do</span> <span class='bitor op'>|</span><span class='rubyid_item identifier id'>item</span><span class='bitor op'>|</span>
-        <span class='rubyid_item identifier id'>item</span><span class='lbrack token'>[</span><span class='integer val'>0</span><span class='rbrack token'>]</span> <span class='neq op'>!=</span> <span class='rubyid_key identifier id'>key</span>
-    <span class='rubyid_end end kw'>end</span>
-<span class='rubyid_end end kw'>end</span>
-</pre>
+<span class='kw'>def</span> <span class='id identifier rubyid_delete'>delete</span><span class='lparen'>(</span><span class='id identifier rubyid_key'>key</span><span class='rparen'>)</span>
+    <span class='ivar'>@array</span> <span class='op'>=</span> <span class='ivar'>@array</span><span class='period'>.</span><span class='id identifier rubyid_select'>select</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_item'>item</span><span class='op'>|</span>
+        <span class='id identifier rubyid_item'>item</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span> <span class='op'>!=</span> <span class='id identifier rubyid_key'>key</span>
+    <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
     </td>
   </tr>
 </table>
@@ -608,10 +615,9 @@
     <td>
       <pre class="code"><span class="info file"># File 'lib/r509/Subject.rb', line 30</span>
 
-<span class='rubyid_def def kw'>def</span> <span class='rubyid_empty? fid id'>empty?</span>
-    <span class='rubyid_@array ivar id'>@array</span><span class='dot token'>.</span><span class='rubyid_empty? fid id'>empty?</span>
-<span class='rubyid_end end kw'>end</span>
-</pre>
+<span class='kw'>def</span> <span class='id identifier rubyid_empty?'>empty?</span>
+    <span class='ivar'>@array</span><span class='period'>.</span><span class='id identifier rubyid_empty?'>empty?</span>
+<span class='kw'>end</span></pre>
     </td>
   </tr>
 </table>
@@ -659,10 +665,9 @@
     <td>
       <pre class="code"><span class="info file"># File 'lib/r509/Subject.rb', line 25</span>
 
-<span class='rubyid_def def kw'>def</span> <span class='rubyid_name identifier id'>name</span>
-    <span class='rubyid_OpenSSL constant id'>OpenSSL</span><span class='colon2 op'>::</span><span class='rubyid_X509 constant id'>X509</span><span class='colon2 op'>::</span><span class='rubyid_Name constant id'>Name</span><span class='dot token'>.</span><span class='rubyid_new identifier id'>new</span><span class='lparen token'>(</span><span class='rubyid_@array ivar id'>@array</span><span class='rparen token'>)</span>
-<span class='rubyid_end end kw'>end</span>
-</pre>
+<span class='kw'>def</span> <span class='id identifier rubyid_name'>name</span>
+    <span class='const'>OpenSSL</span><span class='op'>::</span><span class='const'>X509</span><span class='op'>::</span><span class='const'>Name</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='ivar'>@array</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
     </td>
   </tr>
 </table>
@@ -677,7 +682,8 @@
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>Array of form [[&#39;CN&#39;,&#39;langui.sh&#39;],[&#39;O&#39;,&#39;Org&#39;]]</p>
+    
+<p>Array of form [['<a href="http://'O','Org'">CN','langui.sh'],</a>]</p>
 
 
   </div>
@@ -695,7 +701,8 @@
       
       
         &mdash;
-        <div class='inline'><p>Array of form [[&#39;CN&#39;,&#39;langui.sh&#39;],[&#39;O&#39;,&#39;Org&#39;]]</p>
+        <div class='inline'>
+<p>Array of form [['<a href="http://'O','Org'">CN','langui.sh'],</a>]</p>
 </div>
       
     </li>
@@ -715,10 +722,9 @@
     <td>
       <pre class="code"><span class="info file"># File 'lib/r509/Subject.rb', line 79</span>
 
-<span class='rubyid_def def kw'>def</span> <span class='rubyid_to_a identifier id'>to_a</span>
-    <span class='rubyid_@array ivar id'>@array</span>
-<span class='rubyid_end end kw'>end</span>
-</pre>
+<span class='kw'>def</span> <span class='id identifier rubyid_to_a'>to_a</span>
+    <span class='ivar'>@array</span>
+<span class='kw'>end</span></pre>
     </td>
   </tr>
 </table>
@@ -733,7 +739,8 @@
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>String of form /CN=something.com/O=whatever/L=Locality</p>
+    
+<p>String of form /CN=something.com/O=whatever/L=Locality</p>
 
 
   </div>
@@ -751,7 +758,8 @@
       
       
         &mdash;
-        <div class='inline'><p>string of form /CN=something.com/O=whatever/L=Locality</p>
+        <div class='inline'>
+<p>string of form /CN=something.com/O=whatever/L=Locality</p>
 </div>
       
     </li>
@@ -771,10 +779,9 @@
     <td>
       <pre class="code"><span class="info file"># File 'lib/r509/Subject.rb', line 74</span>
 
-<span class='rubyid_def def kw'>def</span> <span class='rubyid_to_s identifier id'>to_s</span>
-    <span class='rubyid_name identifier id'>name</span><span class='dot token'>.</span><span class='rubyid_to_s identifier id'>to_s</span>
-<span class='rubyid_end end kw'>end</span>
-</pre>
+<span class='kw'>def</span> <span class='id identifier rubyid_to_s'>to_s</span>
+    <span class='id identifier rubyid_name'>name</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span>
+<span class='kw'>end</span></pre>
     </td>
   </tr>
 </table>
@@ -785,9 +792,9 @@
 </div>
     
     <div id="footer">
-  Generated on Tue Dec 27 16:08:48 2011 by 
+  Generated on Tue Dec 27 18:22:26 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.7.4 (ruby-1.8.7).
+  0.7.4 (ruby-1.9.3).
 </div>
 
   </body>
