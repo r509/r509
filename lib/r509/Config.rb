@@ -305,11 +305,7 @@ module R509
             #  that a single yaml file can contain more than one configuration.
             # @param [String] yaml_file The filename to load yaml config data from.
             def self.from_yaml(conf_name, yaml_data, opts = {})
-                if not yaml_data.kind_of?(Hash)
-                    conf = YAML.load(yaml_data)
-                else
-                    conf = yaml_data
-                end
+                conf = YAML.load(yaml_data)
                 self.load_from_hash(conf[conf_name], opts)
             end
 
