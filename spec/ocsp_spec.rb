@@ -17,6 +17,12 @@ describe R509::Ocsp::Signer do
         response = ocsp_handler.sign_response(statuses)
         response.status.should == OpenSSL::OCSP::RESPONSE_STATUS_UNAUTHORIZED
     end
+    it "rejects malformed OCSP requests" do
+        ocsp_handler = R509::Ocsp::Signer.new({ :configs => [@test_ca_config] })
+        statuses = ocsp_handler.check_request("notreallyanocsprequest")
+        response = ocsp_handler.sign_response(statuses)
+        response.status.should == OpenSSL::OCSP::RESPONSE_STATUS_MALFORMEDREQUEST
+    end
     it "responds successfully from the test_ca" do
         csr = R509::Csr.new( :subject => [['CN','ocsptest.r509.local']], :bit_strength => 1024 )
         ca = R509::CertificateAuthority::Signer.new(@test_ca_config)

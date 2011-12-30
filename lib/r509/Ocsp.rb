@@ -131,7 +131,12 @@ module R509::Ocsp::Helper
         # @param request [String] DER encoded OCSP request string
         # @return [Hash] hash from the check_status method
         def check_request(request)
-            parsed_request = OpenSSL::OCSP::Request.new request
+            begin
+                parsed_request = OpenSSL::OCSP::Request.new request
+            rescue
+                #malformed request returns nil
+                return nil
+            end
             { :parsed_request => parsed_request,
                 :statuses => parsed_request.certid.map { |certid|
                     validated_config = R509::Helper::FirstConfigMatch::match(certid,@configs)
@@ -191,7 +196,9 @@ module R509::Ocsp::Helper
         def sign_response(request_data)
             basic_response = OpenSSL::OCSP::BasicResponse.new
 
-            basic_response.copy_nonce(request_data[:parsed_request]) if @copy_nonce
+            if not request_data.nil?
+                basic_response.copy_nonce(request_data[:parsed_request]) if @copy_nonce
+            end
 
             has_invalid = false
             config = nil
@@ -216,17 +223,18 @@ module R509::Ocsp::Helper
                                             [] #array of OpenSSL::X509::Extensions
                                             )
                 end
-            end
+            end unless request_data.nil?
             if has_invalid
                 response_status = OpenSSL::OCSP::RESPONSE_STATUS_UNAUTHORIZED
+            elsif request_data.nil?
+                response_status = OpenSSL::OCSP::RESPONSE_STATUS_MALFORMEDREQUEST
             else
                 response_status = OpenSSL::OCSP::RESPONSE_STATUS_SUCCESSFUL
             end
-            if config.nil?
-                config = @default_config
-            end
             #confusing, but R509::Cert contains R509::PrivateKey under #key. PrivateKey#key gives the OpenSSL object
-            basic_response.sign(config.ocsp_cert.cert,config.ocsp_cert.key.key,config.ocsp_chain)
+            if basic_response.status.size > 0
+                basic_response.sign(config.ocsp_cert.cert,config.ocsp_cert.key.key,config.ocsp_chain)
+            end
 
             #turns out BasicResponse#sign can take up to 4 params
             #cert
