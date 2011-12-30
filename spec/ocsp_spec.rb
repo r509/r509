@@ -13,14 +13,12 @@ describe R509::Ocsp::Signer do
     end
     it "rejects ocsp requests from an unknown CA" do
         ocsp_handler = R509::Ocsp::Signer.new({ :configs => [@test_ca_config] })
-        statuses = ocsp_handler.check_request(@stca_ocsp_request)
-        response = ocsp_handler.sign_response(statuses)
+        response = ocsp_handler.handle_request(@stca_ocsp_request)
         response.status.should == OpenSSL::OCSP::RESPONSE_STATUS_UNAUTHORIZED
     end
     it "rejects malformed OCSP requests" do
         ocsp_handler = R509::Ocsp::Signer.new({ :configs => [@test_ca_config] })
-        statuses = ocsp_handler.check_request("notreallyanocsprequest")
-        response = ocsp_handler.sign_response(statuses)
+        response = ocsp_handler.handle_request("notreallyanocsprequest")
         response.status.should == OpenSSL::OCSP::RESPONSE_STATUS_MALFORMEDREQUEST
     end
     it "responds successfully from the test_ca" do
@@ -31,8 +29,7 @@ describe R509::Ocsp::Signer do
         certid = OpenSSL::OCSP::CertificateId.new(cert.cert,@test_ca_config.ca_cert.cert)
         ocsp_request.add_certid(certid)
         ocsp_handler = R509::Ocsp::Signer.new({ :configs => [@test_ca_config] })
-        statuses = ocsp_handler.check_request(ocsp_request)
-        response = ocsp_handler.sign_response(statuses)
+        response = ocsp_handler.handle_request(ocsp_request)
         response.status.should == OpenSSL::OCSP::RESPONSE_STATUS_SUCCESSFUL
     end
     it "rejects request with 2 certs from different known CAs" do
@@ -53,8 +50,7 @@ describe R509::Ocsp::Signer do
         ocsp_request.add_certid(certid2)
 
         ocsp_handler = R509::Ocsp::Signer.new({ :configs => [@test_ca_config,@second_ca_config] })
-        statuses = ocsp_handler.check_request(ocsp_request)
-        response = ocsp_handler.sign_response(statuses)
+        response = ocsp_handler.handle_request(ocsp_request)
         response.status.should == OpenSSL::OCSP::RESPONSE_STATUS_UNAUTHORIZED
     end
     it "rejects request with 1 cert from known CA and 1 cert from unknown CA" do
@@ -70,8 +66,7 @@ describe R509::Ocsp::Signer do
         ocsp_request.add_certid(certid2)
 
         ocsp_handler = R509::Ocsp::Signer.new({ :configs => [@test_ca_config] })
-        statuses = ocsp_handler.check_request(ocsp_request)
-        response = ocsp_handler.sign_response(statuses)
+        response = ocsp_handler.handle_request(ocsp_request)
         response.status.should == OpenSSL::OCSP::RESPONSE_STATUS_UNAUTHORIZED
     end
     it "responds successfully with 2 certs from 1 known CA" do
@@ -90,8 +85,7 @@ describe R509::Ocsp::Signer do
         ocsp_request.add_certid(certid2)
 
         ocsp_handler = R509::Ocsp::Signer.new({ :configs => [@test_ca_config] })
-        statuses = ocsp_handler.check_request(ocsp_request)
-        response = ocsp_handler.sign_response(statuses)
+        response = ocsp_handler.handle_request(ocsp_request)
         response.status.should == OpenSSL::OCSP::RESPONSE_STATUS_SUCCESSFUL
     end
     it "signs an OCSP response properly" do
@@ -100,8 +94,7 @@ describe R509::Ocsp::Signer do
         certid = OpenSSL::OCSP::CertificateId.new(cert,@test_ca_config.ca_cert.cert)
         ocsp_request.add_certid(certid)
         ocsp_handler = R509::Ocsp::Signer.new({ :configs => [@test_ca_config] })
-        statuses = ocsp_handler.check_request(ocsp_request)
-        response = ocsp_handler.sign_response(statuses)
+        response = ocsp_handler.handle_request(ocsp_request)
         response.verify(@test_ca_config.ca_cert.cert).should == true
         response.verify(@second_ca_config.ca_cert.cert).should == false
         response.basic.status[0][1].should == OpenSSL::OCSP::V_CERTSTATUS_GOOD
@@ -117,8 +110,7 @@ describe R509::Ocsp::Signer do
         certid = OpenSSL::OCSP::CertificateId.new(cert,@test_ca_config.ca_cert.cert)
         ocsp_request.add_certid(certid)
         ocsp_handler = R509::Ocsp::Signer.new({ :configs => [@test_ca_config], :validity_checker => R509::Validity::BogusTestChecker.new })
-        statuses = ocsp_handler.check_request(ocsp_request)
-        response = ocsp_handler.sign_response(statuses)
+        response = ocsp_handler.handle_request(ocsp_request)
         response.verify(@test_ca_config.ca_cert.cert).should == true
         response.basic.status[0][1].should == OpenSSL::OCSP::V_CERTSTATUS_REVOKED
     end
@@ -129,8 +121,7 @@ describe R509::Ocsp::Signer do
         ocsp_request.add_certid(certid)
         ocsp_request.add_nonce
         ocsp_handler = R509::Ocsp::Signer.new({ :copy_nonce => true, :configs => [@test_ca_config] })
-        statuses = ocsp_handler.check_request(ocsp_request)
-        response = ocsp_handler.sign_response(statuses)
+        response = ocsp_handler.handle_request(ocsp_request)
         response.check_nonce(ocsp_request).should == R509::Ocsp::Request::Nonce::PRESENT_AND_EQUAL
     end
     it "doesn't copy nonce if request doesn't have one" do
@@ -139,8 +130,7 @@ describe R509::Ocsp::Signer do
         certid = OpenSSL::OCSP::CertificateId.new(cert,@test_ca_config.ca_cert.cert)
         ocsp_request.add_certid(certid)
         ocsp_handler = R509::Ocsp::Signer.new({ :copy_nonce => true, :configs => [@test_ca_config] })
-        statuses = ocsp_handler.check_request(ocsp_request)
-        response = ocsp_handler.sign_response(statuses)
+        response = ocsp_handler.handle_request(ocsp_request)
         response.check_nonce(ocsp_request).should == R509::Ocsp::Request::Nonce::BOTH_ABSENT
     end
     it "has a nonce in the response only" do
@@ -151,8 +141,7 @@ describe R509::Ocsp::Signer do
         ocsp_request.add_certid(certid)
         ocsp_request.add_nonce
         ocsp_handler = R509::Ocsp::Signer.new({ :copy_nonce => true, :configs => [@test_ca_config] })
-        statuses = ocsp_handler.check_request(ocsp_request)
-        response = ocsp_handler.sign_response(statuses)
+        response = ocsp_handler.handle_request(ocsp_request)
         response.check_nonce(bogus_ocsp_request).should == R509::Ocsp::Request::Nonce::RESPONSE_ONLY
     end
     it "nonce in request and response is not equal" do
@@ -164,8 +153,7 @@ describe R509::Ocsp::Signer do
         ocsp_request.add_certid(certid)
         ocsp_request.add_nonce
         ocsp_handler = R509::Ocsp::Signer.new({ :copy_nonce => true, :configs => [@test_ca_config] })
-        statuses = ocsp_handler.check_request(ocsp_request)
-        response = ocsp_handler.sign_response(statuses)
+        response = ocsp_handler.handle_request(ocsp_request)
         response.check_nonce(bogus_ocsp_request).should == R509::Ocsp::Request::Nonce::NOT_EQUAL
     end
     it "nonce in request only" do
@@ -175,8 +163,7 @@ describe R509::Ocsp::Signer do
         ocsp_request.add_certid(certid)
         ocsp_request.add_nonce
         ocsp_handler = R509::Ocsp::Signer.new({ :copy_nonce => false, :configs => [@test_ca_config] })
-        statuses = ocsp_handler.check_request(ocsp_request)
-        response = ocsp_handler.sign_response(statuses)
+        response = ocsp_handler.handle_request(ocsp_request)
         response.check_nonce(ocsp_request).should == R509::Ocsp::Request::Nonce::REQUEST_ONLY
     end
 end
@@ -184,8 +171,6 @@ end
 describe R509::Ocsp::Helper::RequestChecker do
     before :all do
         @cert = TestFixtures::CERT
-        @stca_cert = TestFixtures::STCA_CERT
-        @stca_ocsp_request = TestFixtures::STCA_OCSP_REQUEST
         @test_ca_config = TestFixtures.test_ca_config
         @second_ca_config = TestFixtures.second_ca_config
     end
@@ -209,8 +194,6 @@ end
 describe R509::Ocsp::Helper::ResponseSigner do
     before :all do
         @cert = TestFixtures::CERT
-        @stca_cert = TestFixtures::STCA_CERT
-        @stca_ocsp_request = TestFixtures::STCA_OCSP_REQUEST
         @test_ca_config = TestFixtures.test_ca_config
         @second_ca_config = TestFixtures.second_ca_config
     end
@@ -229,7 +212,7 @@ describe R509::Ocsp::Response do
         @ocsp_response_der = TestFixtures::STCA_OCSP_RESPONSE
     end
     it "raises an exception if you try to pass the wrong type to the constructor" do
-        expect { R509::Ocsp::Response.new(@ocsp_response_der) }.to raise_error(R509::R509Error, 'You must pass an OpenSSL::OCSP::Response object to the constructor. See R509::Ocsp::Response#parse if you are trying to parse')
+        expect { R509::Ocsp::Response.new(@ocsp_response_der) }.to raise_error(R509::R509Error, 'You must pass an OpenSSL::OCSP::Response object to the constructor. See R509::Ocsp::Response.parse if you are trying to parse')
     end
     it "raises an exception if you pass nil to #parse" do
         expect { R509::Ocsp::Response.parse(nil) }.to raise_error(R509::R509Error, 'You must pass a DER encoded OCSP response to this method')
@@ -245,8 +228,7 @@ describe R509::Ocsp::Response do
         certid = OpenSSL::OCSP::CertificateId.new(cert,@test_ca_config.ca_cert.cert)
         ocsp_request.add_certid(certid)
         ocsp_handler = R509::Ocsp::Signer.new({ :configs => [@test_ca_config] })
-        statuses = ocsp_handler.check_request(ocsp_request)
-        response = ocsp_handler.sign_response(statuses)
+        response = ocsp_handler.handle_request(ocsp_request)
         response.to_der.should_not == nil
     end
     it "returns a BasicResponse object on #basic" do
@@ -255,8 +237,7 @@ describe R509::Ocsp::Response do
         certid = OpenSSL::OCSP::CertificateId.new(cert,@test_ca_config.ca_cert.cert)
         ocsp_request.add_certid(certid)
         ocsp_handler = R509::Ocsp::Signer.new({ :configs => [@test_ca_config] })
-        statuses = ocsp_handler.check_request(ocsp_request)
-        response = ocsp_handler.sign_response(statuses)
+        response = ocsp_handler.handle_request(ocsp_request)
         response.basic.kind_of?(OpenSSL::OCSP::BasicResponse).should == true
     end
 end

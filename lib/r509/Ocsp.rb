@@ -21,15 +21,29 @@ module R509::Ocsp
             @response_signer = Helper::ResponseSigner.new(options)
         end
 
-        # passes request on to the request_checker
-        def check_request(request)
-            @request_checker.check_request(request)
+
+        # @param request [String,OpenSSL::OCSP::Request] OCSP request (string or parsed object)
+        # @return [OpenSSL::OCSP::Request] full response object
+        def handle_request(request)
+            begin
+                parsed_request = OpenSSL::OCSP::Request.new request
+            rescue
+                return @response_signer.create_response(OpenSSL::OCSP::RESPONSE_STATUS_MALFORMEDREQUEST)
+            end
+
+            statuses = @request_checker.check_statuses(parsed_request)
+            if not @request_checker.validate_statuses(statuses)
+                return @response_signer.create_response(OpenSSL::OCSP::RESPONSE_STATUS_UNAUTHORIZED)
+            end
+
+            basic_response = @response_signer.create_basic_response(parsed_request,statuses)
+
+            return @response_signer.create_response(
+                OpenSSL::OCSP::RESPONSE_STATUS_SUCCESSFUL,
+                basic_response
+            )
         end
 
-        #passes the status result obtained from the request_checker to the response signer
-        def sign_response(statuses)
-            @response_signer.sign_response(statuses)
-        end
     end
 end
 
@@ -53,7 +67,7 @@ module R509::Ocsp
         # @param ocsp_response [OpenSSL::OCSP::Response]
         def initialize(ocsp_response)
             if not ocsp_response.kind_of?(OpenSSL::OCSP::Response)
-                raise R509::R509Error, 'You must pass an OpenSSL::OCSP::Response object to the constructor. See R509::Ocsp::Response#parse if you are trying to parse'
+                raise R509::R509Error, 'You must pass an OpenSSL::OCSP::Response object to the constructor. See R509::Ocsp::Response.parse if you are trying to parse'
             end
             @ocsp_response = ocsp_response
         end
@@ -126,29 +140,47 @@ module R509::Ocsp::Helper
                 raise R509::R509Error, "The validity checker must have a check method"
             end
         end
+
         # Loads and checks a raw OCSP request
         #
-        # @param request [String] DER encoded OCSP request string
+        # @param request [OpenSSL::OCSP::Request] OpenSSL OCSP Request object
         # @return [Hash] hash from the check_status method
-        def check_request(request)
-            begin
-                parsed_request = OpenSSL::OCSP::Request.new request
-            rescue
-                #malformed request returns nil
-                return nil
-            end
-            { :parsed_request => parsed_request,
-                :statuses => parsed_request.certid.map { |certid|
-                    validated_config = R509::Helper::FirstConfigMatch::match(certid,@configs)
-                    check_status(certid, validated_config)
-                }
+        def check_statuses(request)
+            request.certid.map { |certid|
+                validated_config = R509::Helper::FirstConfigMatch::match(certid,@configs)
+                check_status(certid, validated_config)
             }
+        end
+
+        # Determines whether the statuses constitute a request that is compliant.
+        # No config means we don't know the CA, different configs means there are
+        # requests from two different CAs in there. Both are invalid.
+        #
+        # @param statuses [Hash] hash from check_request
+        # @return [Boolean]
+        def validate_statuses(statuses)
+            validity = true
+            config = nil
+
+            statuses.each do |status|
+                if status[:config].nil?
+                    validity = false
+                end
+                if config.nil?
+                    config = status[:config]
+                end
+                if config != status[:config]
+                    validity = false
+                end
+            end
+
+            validity
         end
 
         private
 
         # Checks the status of a certificate with the corresponding CA
-        # @param certid [OpenSSL::OCSP::CertificateId] The certId object from check_request
+        # @param certid [OpenSSL::OCSP::CertificateId] The certId object from check_statuses
         # @param validated_config [R509::Config]
         def check_status(certid, validated_config)
             if(validated_config == nil) then
@@ -189,58 +221,46 @@ module R509::Ocsp::Helper
             @default_config = @configs[0]
         end
 
-        # Signs response. Only call this after loading a request or adding your own status
+        # It is UNWISE to call this method directly because it assumes that the request is
+        # validated. You probably want to take a look at R509::Ocsp::Signer#handle_request
         #
-        # @param request_data [Hash] of { :parsed_request, :statuses }
-        # @return [OpenSSL::OCSP::OCSPResponse]
-        def sign_response(request_data)
+        # @param request [OpenSSL::OCSP::Request]
+        # @param statuses [Hash] hash from R509::Ocsp::Helper::RequestChecker#check_statuses
+        # @return [OpenSSL::OCSP::BasicResponse]
+        def create_basic_response(request,statuses)
             basic_response = OpenSSL::OCSP::BasicResponse.new
 
-            if not request_data.nil?
-                basic_response.copy_nonce(request_data[:parsed_request]) if @copy_nonce
+            basic_response.copy_nonce(request) if @copy_nonce
+
+            statuses.each do |status|
+                basic_response.add_status(status[:certid],
+                                        status[:status],
+                                        status[:revocation_reason],
+                #TODO: WHY IN THE HELL IS REVOCATION TIME RELATIVE TO NOW? THAT CAN'T BE RIGHT!
+                                        status[:revocation_time],
+                                        -1*status[:config].ocsp_start_skew_seconds,
+                                        status[:config].ocsp_validity_hours*3600,
+                                        [] #array of OpenSSL::X509::Extensions
+                                        )
             end
 
-            has_invalid = false
-            config = nil
-            request_data[:statuses].each do |status|
-                if status.nil? or status[:config].nil?
-                    has_invalid = true
-                else
-                    if config.nil?
-                        config = status[:config]
-                    end
-                    if config != status[:config]
-                        has_invalid = true
-                    end
+            #this method assumes the request data is validated by validate_request so all configs will be the same and
+            #we can choose to use the first one safely
+            config = statuses[0][:config]
 
-                    basic_response.add_status(status[:certid],
-                                            status[:status],
-                                            status[:revocation_reason],
-                    #TODO: WHY IN THE HELL IS REVOCATION TIME RELATIVE TO NOW? THAT CAN'T BE RIGHT!
-                                            status[:revocation_time],
-                                            -1*status[:config].ocsp_start_skew_seconds,
-                                            status[:config].ocsp_validity_hours*3600,
-                                            [] #array of OpenSSL::X509::Extensions
-                                            )
-                end
-            end unless request_data.nil?
-            if has_invalid
-                response_status = OpenSSL::OCSP::RESPONSE_STATUS_UNAUTHORIZED
-            elsif request_data.nil?
-                response_status = OpenSSL::OCSP::RESPONSE_STATUS_MALFORMEDREQUEST
-            else
-                response_status = OpenSSL::OCSP::RESPONSE_STATUS_SUCCESSFUL
-            end
             #confusing, but R509::Cert contains R509::PrivateKey under #key. PrivateKey#key gives the OpenSSL object
-            if basic_response.status.size > 0
-                basic_response.sign(config.ocsp_cert.cert,config.ocsp_cert.key.key,config.ocsp_chain)
-            end
-
             #turns out BasicResponse#sign can take up to 4 params
-            #cert
-            #key
-            #array of OpenSSL::X509::Certificates
-            #flags (not sure what the enumeration of those are)
+            #cert, key, array of OpenSSL::X509::Certificates, flags (not sure what the enumeration of those are)
+            basic_response.sign(config.ocsp_cert.cert,config.ocsp_cert.key.key,config.ocsp_chain)
+        end
+
+        # Builds final response.
+        #
+        # @param response_status [OpenSSL::OCSP::RESPONSE_STATUS_*] the primary response status
+        # @param basic_response [OpenSSL::OCSP::BasicResponse] an optional basic response object
+        # generated by create_basic_response
+        # @return [OpenSSL::OCSP::OCSPResponse]
+        def create_response(response_status,basic_response=nil)
 
             # first arg is the response status code, comes from this list
             # these can also be enumerated via OpenSSL::OCSP::RESPONSE_STATUS_*
@@ -254,7 +274,11 @@ module R509::Ocsp::Helper
             #    unauthorized          (6)       --Request unauthorized
             #}
             #
-            R509::Ocsp::Response.new(OpenSSL::OCSP::Response.create(response_status,basic_response))
+            R509::Ocsp::Response.new(
+                OpenSSL::OCSP::Response.create(
+                    response_status, basic_response
+                )
+            )
         end
     end
 end
