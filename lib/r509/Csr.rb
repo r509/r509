@@ -12,7 +12,7 @@ module R509
         # @option opts [String,OpenSSL::X509::Request] :csr a csr
         # @option opts [Symbol] :type :rsa/:dsa
         # @option opts [Integer] :bit_strength
-        # @option opts [Array] :domains List of domains to encode as subjectAltNames
+        # @option opts [Array] :san_names List of domains to encode as subjectAltNames
         # @option opts [R509::Subject,Array,OpenSSL::X509::Name] :subject array of subject items
         # @example [['CN','langui.sh'],['ST','Illinois'],['L','Chicago'],['C','US'],['emailAddress','ca@langui.sh']]
         # you can also pass OIDs (see tests)
@@ -43,17 +43,17 @@ module R509
             end
 
             if opts.has_key?(:cert)
-                domains = opts[:domains] || []
+                domains = opts[:san_names] || []
                 parsed_domains = prefix_domains(domains)
                 cert_data = parse_cert(opts[:cert])
                 merged_domains = cert_data[:subjectAltName].concat(parsed_domains)
                 create_request(cert_data[:subject],merged_domains) #sets @req
             elsif opts.has_key?(:subject)
-                domains = opts[:domains] || []
+                domains = opts[:san_names] || []
                 parsed_domains = prefix_domains(domains)
                 create_request(opts[:subject], parsed_domains) #sets @req
             elsif opts.has_key?(:csr)
-                if opts.has_key?(:domains)
+                if opts.has_key?(:san_names)
                     raise ArgumentError, "You can't add domains to an existing CSR"
                 end
                 parse_csr(opts[:csr])

@@ -82,7 +82,7 @@ describe R509::Csr do
         expect { R509::Csr.new(:bit_strength => 1024) }.to raise_error(ArgumentError,'Must provide one of cert, subject, or csr')
     end
     it "raises an exception if you provide a list of domains with an existing CSR" do
-        expect { R509::Csr.new(:csr => @csr, :domains => ['moredomainsiwanttoadd.com']) }.to raise_error(ArgumentError,'You can\'t add domains to an existing CSR')
+        expect { R509::Csr.new(:csr => @csr, :san_names => ['moredomainsiwanttoadd.com']) }.to raise_error(ArgumentError,'You can\'t add domains to an existing CSR')
     end
     it "changes the message_digest to DSS1 when passed a DSA key" do
         csr = R509::Csr.new(:subject => [["CN","dsasigned.com"]], :key => @dsa_key)
@@ -123,7 +123,7 @@ describe R509::Csr do
         sio.string.should == @csr_der
     end
     it "duplicate SAN names should be removed" do
-        csr = R509::Csr.new( :bit_strength => 512, :subject => [['CN','test2345.com']], :domains => ["test2.local","test.local","test.local"] )
+        csr = R509::Csr.new( :bit_strength => 512, :subject => [['CN','test2345.com']], :san_names => ["test2.local","test.local","test.local"] )
         csr.san_names.should == ["test2.local", "test.local"]
     end
     it "creates a valid hash object with to_hash" do
@@ -162,11 +162,11 @@ describe R509::Csr do
             csr.san_names.should == ["langui.sh"]
         end
         it "duplicate SAN names should be removed" do
-            csr = R509::Csr.new( :cert => @cert, :domains => ["test2.local","test.local","test.local"] )
+            csr = R509::Csr.new( :cert => @cert, :san_names => ["test2.local","test.local","test.local"] )
             csr.san_names.should == ["test2.local", "test.local"]
         end
         it "SAN names added in addition to those present in the cert should be merged" do
-            csr = R509::Csr.new( :cert => @cert_san, :domains => ["test2.local","test.local","test.local"] )
+            csr = R509::Csr.new( :cert => @cert_san, :san_names => ["test2.local","test.local","test.local"] )
             csr.san_names.should == ["langui.sh","test2.local", "test.local"]
         end
     end
@@ -176,7 +176,7 @@ describe R509::Csr do
             csr.subject.to_s.should == '/CN=langui.sh/ST=Illinois/L=Chicago/C=US/emailAddress=ca@langui.sh'
         end
         it "adds SAN domains to a generated CSR" do
-            csr = R509::Csr.new( :subject => [['CN','langui.sh'],['emailAddress','ca@langui.sh']], :bit_strength => 1024, :domains => ['domain2.com','domain3.com'])
+            csr = R509::Csr.new( :subject => [['CN','langui.sh'],['emailAddress','ca@langui.sh']], :bit_strength => 1024, :san_names => ['domain2.com','domain3.com'])
             csr.subject.to_s.should == '/CN=langui.sh/emailAddress=ca@langui.sh'
             csr.san_names.should == ["domain2.com", "domain3.com"]
         end

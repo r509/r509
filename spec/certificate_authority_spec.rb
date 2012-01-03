@@ -210,7 +210,7 @@ describe R509::CertificateAuthority::Signer do
     it "issues self-signed certificate with SAN in CSR" do
         csr = R509::Csr.new(
             :subject => [['CN','My Self Sign']],
-            :domains => ['sanname1','sanname2'],
+            :san_names => ['sanname1','sanname2'],
             :bit_strength => 1024
         )
         cert = @ca.selfsign(
