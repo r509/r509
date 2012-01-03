@@ -1,8 +1,4 @@
 require 'openssl'
-require 'r509/Exceptions'
-require 'r509/io_helpers'
-require 'r509/PrivateKey'
-require 'r509/HelperClasses'
 
 module R509
     # Helps map raw OIDs to friendlier short names

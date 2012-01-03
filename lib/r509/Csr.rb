@@ -2,7 +2,6 @@ require 'openssl'
 require 'r509/Exceptions'
 require 'r509/io_helpers'
 require 'r509/PrivateKey'
-require 'r509/HelperClasses'
 
 module R509
     # The primary certificate signing request object
@@ -225,7 +224,7 @@ module R509
                 @req = OpenSSL::X509::Request.new csr
             end
             @subject = R509::Subject.new(@req.subject)
-            @attributes = parse_attributes_from_csr(@req) #method from HelperClasses
+            @attributes = parse_attributes_from_csr(@req)
             @san_names = @attributes['subjectAltName'] || []
         end
 
@@ -241,7 +240,7 @@ module R509
             end
             @req.public_key = @key.public_key
             add_san_extension(domains)
-            @attributes = parse_attributes_from_csr(@req) #method from HelperClasses
+            @attributes = parse_attributes_from_csr(@req)
             @san_names = @attributes['subjectAltName'] || []
         end
 

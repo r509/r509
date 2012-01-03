@@ -1,7 +1,6 @@
 require 'openssl'
 require 'r509/Exceptions'
 require 'r509/Config'
-require 'r509/HelperClasses'
 
 # OCSP related classes (signing, response, request)
 module R509::Ocsp
@@ -147,7 +146,12 @@ module R509::Ocsp::Helper
         # @return [Hash] hash from the check_status method
         def check_statuses(request)
             request.certid.map { |certid|
-                validated_config = R509::Helper::FirstConfigMatch::match(certid,@configs)
+                validated_config = @configs.find do |config|
+                    root_certid = OpenSSL::OCSP::CertificateId.new(config.ca_cert.cert,config.ca_cert.cert)
+                    if certid.cmp_issuer(root_certid) then
+                        config
+                    end
+                end
                 check_status(certid, validated_config)
             }
         end
