@@ -114,6 +114,7 @@ module R509::CertificateAuthority
         # @option options :serial [String] the serial number you want to issue the certificate with (defaults to random)
         # @option options :not_before [Time] the notBefore for the certificate (defaults to now)
         # @option options :not_after [Time] the notAfter for the certificate (defaults to 1 year)
+        # @option options :san_names [Array] Optional array of subject alternative names
         # @return [R509::Cert] the signed cert object
         def selfsign(options)
             if not options.kind_of?(Hash)
@@ -132,14 +133,13 @@ module R509::CertificateAuthority
                 :serial => options[:serial]
             )
 
+            san_names = options[:san_names] || []
+
             build_extensions(
                 :subject_certificate => cert,
                 :issuer_certificate => cert,
-                :basic_constraints => "CA:TRUE"
-                #:key_usage => key_usage,
-                #:extended_key_usage => extended_key_usage,
-                #:certificate_policies => certificate_policies,
-                #:san_names => san_names
+                :basic_constraints => "CA:TRUE",
+                :san_names => san_names
             )
 
 

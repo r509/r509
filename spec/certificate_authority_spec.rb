@@ -194,7 +194,8 @@ describe R509::CertificateAuthority::Signer do
             :serial => 3,
             :not_before => not_before,
             :not_after => not_after,
-            :message_digest => 'sha256'
+            :message_digest => 'sha256',
+            :san_names => ['sanname1','sanname2']
         )
         cert.signature_algorithm.should == 'sha256WithRSAEncryption'
         cert.serial.should == 3
@@ -203,6 +204,7 @@ describe R509::CertificateAuthority::Signer do
         cert.subject.to_s.should == '/C=US/O=r509 LLC/CN=r509 Self-Signed CA Test'
         cert.issuer.to_s.should == '/C=US/O=r509 LLC/CN=r509 Self-Signed CA Test'
         cert.extensions['basicConstraints'][0]['value'].should == 'CA:TRUE'
+        cert.san_names.should include('sanname1','sanname2')
     end
     it "properly issues a self-signed certificate with defaults" do
         csr = R509::Csr.new(
