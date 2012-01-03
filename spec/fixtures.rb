@@ -36,6 +36,10 @@ module TestFixtures
 
     #san cert from self-signed CA for langui.sh
     CERT_SAN = read_fixture('cert_san.pem')
+    
+    #Another san cert for langui.sh, but differentiating between the CN and 
+    # SANs.
+    CERT_SAN2 = read_fixture('cert_san2.pem')
 
     CERT_DER = read_fixture('cert1.der')
 
