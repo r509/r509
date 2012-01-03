@@ -14,7 +14,7 @@ spec = Gem::Specification.new do |s|
   s.add_development_dependency 'simplecov' if RUBY_VERSION.split('.')[1].to_i == 9
   s.author = "Paul Kehrer"
   s.email = "paul.l.kehrer@gmail.com"
-  s.homepage = "http://langui.sh"
+  s.homepage = "http://r509.org"
   s.required_ruby_version = ">= 1.8.6"
   s.files = %w(README.md r509.yaml Rakefile) + Dir["{lib,bin,spec,doc}/**/*"]
   s.executables = ["r509"]
