@@ -98,6 +98,16 @@ module R509
             @cert.issuer
         end
 
+        # Returns the certificate fingerprint with the specified algorithm (default sha1)
+        #
+        # @return [String] hex digest of the certificate
+        def fingerprint(algorithm='sha1')
+            message_digest = R509::MessageDigest.new(algorithm)
+            md = message_digest.digest
+            md.update(@cert.to_der)
+            md.to_s
+        end
+
         # Returns the subject
         #
         # @return [OpenSSL::X509::Name] subject object. Can be parsed as string easily

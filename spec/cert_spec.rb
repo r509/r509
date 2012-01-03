@@ -49,6 +49,13 @@ describe R509::Cert do
         cert = R509::Cert.new(:cert => @cert)
         cert.issuer.to_s.should == "/C=US/O=SecureTrust Corporation/CN=SecureTrust CA"
     end
+    it "generates certificate fingerprints" do
+        cert = R509::Cert.new(:cert => @cert)
+        cert.fingerprint.should == '863bbb58877b426eb10ccfd34d3056b8c961f627'
+        cert.fingerprint('sha256').should == '65d624f5a6937c3005d78b3f4ff09164649dd5aeb3fd8a93d6fd420e8b587fa2'
+        cert.fingerprint('sha512').should == 'a07d87f04161f52ef671c9d616530d07ebadef9c93c0470091617363c9ce8618dcb7931414e599d25cb032d68597111719e76d7de4bb7a92bf5ca7c08c36cf12'
+        cert.fingerprint('md5').should == 'aa78501c41b19252dfbe8ba509cc21f4'
+    end
     it "returns true from has_private_key? when a key is present" do
         cert = R509::Cert.new(:cert => @cert3, :key => @key3)
         cert.has_private_key?.should == true

@@ -156,7 +156,7 @@ module R509::Ocsp::Helper
         # No config means we don't know the CA, different configs means there are
         # requests from two different CAs in there. Both are invalid.
         #
-        # @param statuses [Hash] hash from check_request
+        # @param statuses [Array<Hash>] array of hashes from check_statuses
         # @return [Boolean]
         def validate_statuses(statuses)
             validity = true
