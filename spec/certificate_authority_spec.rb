@@ -182,7 +182,7 @@ describe R509::CertificateAuthority::Signer do
     it "raises error when passing non-hash to selfsign method" do
         expect { @ca.selfsign(@csr) }.to raise_error(ArgumentError, "You must pass a hash of options consisting of at minimum :csr")
     end
-    it "properly issues a self-signed certificate with custom fields" do
+    it "issues a self-signed certificate with custom fields" do
         not_before = Time.now.to_i
         not_after = Time.now.to_i+3600*24*7300
         csr = R509::Csr.new(
@@ -197,6 +197,7 @@ describe R509::CertificateAuthority::Signer do
             :message_digest => 'sha256',
             :san_names => ['sanname1','sanname2']
         )
+        cert.public_key.to_s.should == csr.public_key.to_s
         cert.signature_algorithm.should == 'sha256WithRSAEncryption'
         cert.serial.should == 3
         cert.not_before.to_i.should == not_before
@@ -206,7 +207,21 @@ describe R509::CertificateAuthority::Signer do
         cert.extensions['basicConstraints'][0]['value'].should == 'CA:TRUE'
         cert.san_names.should include('sanname1','sanname2')
     end
-    it "properly issues a self-signed certificate with defaults" do
+    it "issues self-signed certificate with SAN in CSR" do
+        csr = R509::Csr.new(
+            :subject => [['CN','My Self Sign']],
+            :domains => ['sanname1','sanname2'],
+            :bit_strength => 1024
+        )
+        cert = @ca.selfsign(
+            :csr => csr
+        )
+        cert.san_names.should include('sanname1','sanname2')
+        cert.subject.to_s.should == '/CN=My Self Sign'
+        cert.issuer.to_s.should == '/CN=My Self Sign'
+        cert.public_key.to_s.should == csr.public_key.to_s
+    end
+    it "issues a self-signed certificate with defaults" do
         csr = R509::Csr.new(
             :subject => [['C','US'],['O','r509 LLC'],['CN','r509 Self-Signed CA Test']],
             :bit_strength => 1024
@@ -214,6 +229,7 @@ describe R509::CertificateAuthority::Signer do
         cert = @ca.selfsign(
             :csr => csr
         )
+        cert.public_key.to_s.should == csr.public_key.to_s
         cert.signature_algorithm.should == 'sha1WithRSAEncryption'
         (cert.not_after.to_i-cert.not_before.to_i).should == 31536000
         cert.subject.to_s.should == '/C=US/O=r509 LLC/CN=r509 Self-Signed CA Test'

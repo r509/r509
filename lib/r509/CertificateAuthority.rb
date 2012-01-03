@@ -133,7 +133,11 @@ module R509::CertificateAuthority
                 :serial => options[:serial]
             )
 
-            san_names = options[:san_names] || []
+            if options.has_key?(:san_names)
+                san_names = options[:san_names]
+            else
+                san_names = csr.san_names
+            end
 
             build_extensions(
                 :subject_certificate => cert,
