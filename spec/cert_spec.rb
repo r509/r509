@@ -106,7 +106,7 @@ describe R509::Cert do
     end
     it "returns an empty list when it is not a san cert" do
         cert = R509::Cert.new(:cert => @cert)
-        cert.san_names.should == nil
+        cert.san_names.should == []
     end
     it "raises exception when providing invalid cert" do
         expect { R509::Cert.new(:cert => "invalid cert") }.to raise_error(OpenSSL::X509::CertificateError)

@@ -7,7 +7,7 @@ module R509
     class Cert
     include R509::IOHelpers
 
-        attr_reader :cert, :san_names, :key
+        attr_reader :cert, :key
 
         # @option opts [String,OpenSSL::X509::Certificate] :cert a cert
         # @option opts [R509::PrivateKey,String] :key optional private key to supply. either an unencrypted PEM/DER string or an R509::PrivateKey object (use the latter if you need password/hardware support)
@@ -113,6 +113,12 @@ module R509
                 false
             end
         end
+
+        # @return [Array] list of SAN names
+        def san_names
+            @san_names || []
+        end
+
 
         # Returns subject component
         #
