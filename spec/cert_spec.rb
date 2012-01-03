@@ -7,6 +7,7 @@ describe R509::Cert do
         @cert3 = TestFixtures::CERT3
         @cert_der = TestFixtures::CERT_DER
         @cert_san = TestFixtures::CERT_SAN
+        @cert_san2 = TestFixtures::CERT_SAN2
         @key3 = TestFixtures::KEY3
         @cert3_p12 = TestFixtures::CERT3_P12
         @cert4 = TestFixtures::CERT4
@@ -114,6 +115,19 @@ describe R509::Cert do
     it "returns an empty list when it is not a san cert" do
         cert = R509::Cert.new(:cert => @cert)
         cert.san_names.should == []
+    end
+    it "#subject_names should return a list of san_names in addition to the CN" do
+        cert = R509::Cert.new(:cert => @cert_san2)
+        cert.subject_names.should == ["cn.langui.sh", "san1.langui.sh",
+                                      "san2.langui.sh", "san3.langui.sh"]
+    end
+    it "#subject_names should not have duplicates" do
+        cert = R509::Cert.new(:cert => @cert_san)
+        cert.subject_names.should == ["langui.sh"]
+    end
+    it "#subject_names should return the CN in the array, if there are no SANs" do
+        cert = R509::Cert.new(:cert => @cert)
+        cert.subject_names.should == ["langui.sh"]
     end
     it "raises exception when providing invalid cert" do
         expect { R509::Cert.new(:cert => "invalid cert") }.to raise_error(OpenSSL::X509::CertificateError)

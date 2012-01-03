@@ -139,6 +139,23 @@ module R509
             return match[1]
         end
 
+        # Return the CN, as well as all the subject alternative names (SANs).
+        #
+        # @return [Array] the array of names. Returns an empty array if 
+        #  there are no names, at all.
+        def subject_names
+            ret = []
+            if cn = self.subject_component('CN')
+                ret << cn
+            end
+            # Merge in san_names if we got anything.
+            if sn = self.san_names
+                ret.concat(sn)
+            end
+
+            return ret.sort.uniq
+        end
+
         # Returns whether the public key is RSA
         #
         # @return [Boolean] true if the public key is RSA, false otherwise
