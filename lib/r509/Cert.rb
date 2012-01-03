@@ -118,12 +118,9 @@ module R509
         #
         # @return [String] value of the subject component requested
         def subject_component short_name
-            @cert.subject.to_a.each do |element|
-                if element[0] == short_name.upcase then
-                    return element[1]
-                end
-            end
-            nil
+            match = @cert.subject.to_a.find { |x| x[0] == short_name }
+            return nil if match.nil?
+            return match[1]
         end
 
         # Returns whether the public key is RSA
