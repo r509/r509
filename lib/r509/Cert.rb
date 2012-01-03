@@ -147,7 +147,6 @@ module R509
         #
         # @return [Integer] integer value of bit strength
         def bit_strength
-            #cast to int, convert to binary, count size
             if self.rsa?
                 return @cert.public_key.n.num_bits
             elsif self.dsa?
