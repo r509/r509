@@ -38,35 +38,35 @@ module R509::Validity
 
     #abstract base class for a Writer
     class Writer
-        def issue(issuer_fingerprint, serial)
+        def issue(issuer, serial)
             raise NotImplementedError, "You must call #issue on a subclass of Writer"
         end
 
-        def revoke(issuer_fingerprint, serial, reason)
+        def revoke(issuer, serial, reason)
             raise NotImplementedError, "You must call #revoke on a subclass of Writer"
         end
     end
 
     #abstract base class for a Checker
     class Checker
-        def check(issuer_fingerprint, serial)
+        def check(issuer, serial)
             raise NotImplementedError, "You must call #check on a subclass of Checker"
         end
     end
 
     #default implementaton of the Checker class. Used for tests. DO NOT USE OTHERWISE
     class DefaultChecker < R509::Validity::Checker
-        def check(issuer_fingerprint, serial)
+        def check(issuer, serial)
             R509::Validity::Status.new(:status => R509::Validity::VALID)
         end
     end
 
     #default implementaton of the Writer class. Does nothing (obviously)
     class DefaultWriter < R509::Validity::Writer
-        def issue(issuer_fingerprint, serial)
+        def issue(issuer, serial)
         end
 
-        def revoke(issuer_fingerprint, serial, reason)
+        def revoke(issuer, serial, reason)
         end
     end
 end

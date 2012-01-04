@@ -193,8 +193,7 @@ module R509::Ocsp::Helper
                     :config => nil
                 }
             else
-                issuer_fingerprint = validated_config.ca_cert.fingerprint("sha1")
-                validity_status = @validity_checker.check(issuer_fingerprint,certid.serial)
+                validity_status = @validity_checker.check(validated_config.ca_cert.issuer.to_s,certid.serial)
                 return {
                     :certid => certid,
                     :status => validity_status.ocsp_status,
