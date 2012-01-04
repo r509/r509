@@ -17,6 +17,9 @@ module R509::CertificateAuthority
             if not @config.nil? and @config.num_profiles == 0
                 raise R509::R509Error, "You must have at least one CaProfile on your CaConfig to issue"
             end
+            if not @config.nil? and not @config.ca_cert.has_private_key?
+                raise R509::R509Error, "You must have a private key associated with your CA certificate to issue"
+            end
         end
 
         # Signs a CSR

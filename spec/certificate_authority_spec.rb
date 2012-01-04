@@ -14,6 +14,12 @@ describe R509::CertificateAuthority::Signer do
     it "raises an error if you don't pass csr or spki" do
         expect { @ca.sign({ :profile_name => 'server' }) }.to raise_error(ArgumentError, "You must supply either :csr or :spki")
     end
+    it "raises an error if you pass a config that has no private key for ca_cert" do
+        config = R509::Config::CaConfig.new( :ca_cert => R509::Cert.new( :cert => TestFixtures::TEST_CA_CERT) )
+        profile = R509::Config::CaProfile.new
+        config.set_profile("some_profile",profile)
+        expect { R509::CertificateAuthority::Signer.new(config) }.to raise_error(R509::R509Error, "You must have a private key associated with your CA certificate to issue")
+    end
     it "raises an error if you pass both csr and spki" do
         csr = R509::Csr.new(:csr => @csr)
         spki = R509::Spki.new(:spki => @spki, :subject=>[['CN','test']])

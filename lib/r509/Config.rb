@@ -157,9 +157,6 @@ module R509
                 if not @ca_cert.kind_of?(R509::Cert) then
                     raise ArgumentError, ':ca_cert must be of type R509::Cert'
                 end
-                if not @ca_cert.has_private_key?
-                    raise ArgumentError, ':ca_cert object must contain a private key, not just a certificate'
-                end
 
                 #ocsp data
                 if opts.has_key?(:ocsp_cert) and not opts[:ocsp_cert].kind_of?(R509::Cert) then
@@ -358,20 +355,23 @@ module R509
             end
 
             def self.load_with_key(ca_cert_hash,ca_root_path)
-                if not ca_cert_hash.has_key?('key')
-                    raise R509Error, "You must provide a key (or engine) with cert"
-                end
-
-                ca_key_file = ca_root_path + ca_cert_hash['key']
-                ca_key = R509::PrivateKey.new(
-                    :key => read_data(ca_key_file),
-                    :password => ca_cert_hash['password']
-                )
                 ca_cert_file = ca_root_path + ca_cert_hash['cert']
-                ca_cert = R509::Cert.new(
-                    :cert => read_data(ca_cert_file),
-                    :key => ca_key
-                )
+
+                if ca_cert_hash.has_key?('key')
+                    ca_key_file = ca_root_path + ca_cert_hash['key']
+                    ca_key = R509::PrivateKey.new(
+                        :key => read_data(ca_key_file),
+                        :password => ca_cert_hash['password']
+                    )
+                    ca_cert = R509::Cert.new(
+                        :cert => read_data(ca_cert_file),
+                        :key => ca_key
+                    )
+                else
+                    # in certain cases (OCSP responders for example) we may want
+                    # to load a ca_cert with no private key
+                    ca_cert = R509::Cert.new(:cert => read_data(ca_cert_file))
+                end
                 ca_cert
             end
 

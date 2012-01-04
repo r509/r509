@@ -101,7 +101,7 @@ describe R509::Ocsp::Signer do
     end
     it "passes in a specific validity checker" do
         class R509::Validity::BogusTestChecker < R509::Validity::Checker
-            def check(serial)
+            def check(issuer_fingerprint, serial)
                 R509::Validity::Status.new(:status => R509::Validity::REVOKED, :revocation_time => Time.now.to_i)
             end
         end

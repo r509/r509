@@ -107,8 +107,9 @@ describe R509::Config::CaConfig do
     it "raises an error if :ca_cert is not of type R509::Cert" do
         expect { R509::Config::CaConfig.new(:ca_cert => 'not a cert, and not right type') }.to raise_error ArgumentError, ':ca_cert must be of type R509::Cert'
     end
-    it "raises an error if :ca_cert does not contain a private key" do
-        expect { R509::Config::CaConfig.new( :ca_cert => R509::Cert.new( :cert => TestFixtures::TEST_CA_CERT) ) }.to raise_error ArgumentError, ':ca_cert object must contain a private key, not just a certificate'
+    it "loads the config even if :ca_cert does not contain a private key" do
+        config = R509::Config::CaConfig.new( :ca_cert => R509::Cert.new( :cert => TestFixtures::TEST_CA_CERT) )
+        config.ca_cert.subject.to_s.should_not be_nil
     end
     it "raises an error if :ocsp_cert that is not R509::Cert" do
         expect { R509::Config::CaConfig.new(:ca_cert => TestFixtures.test_ca_cert, :ocsp_cert => "not a cert") }.to raise_error ArgumentError, ':ocsp_cert, if provided, must be of type R509::Cert'
@@ -206,8 +207,9 @@ describe R509::Config::CaConfig do
         expect { R509::Config::CaConfig.from_yaml("pkcs12_engine_ca", File.read("#{File.dirname(__FILE__)}/fixtures/config_test_various.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"}) }.to raise_error(R509::R509Error, "You can't specify both engine and pkcs12")
     end
 
-    it "raises error with cert and no key" do
-        expect { R509::Config::CaConfig.from_yaml("cert_no_key_ca", File.read("#{File.dirname(__FILE__)}/fixtures/config_test_various.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"}) }.to raise_error(R509::R509Error, "You must provide a key (or engine) with cert")
+    it "loads config with cert and no key (useful in certain cases)" do
+        config = R509::Config::CaConfig.from_yaml("cert_no_key_ca", File.read("#{File.dirname(__FILE__)}/fixtures/config_test_various.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"})
+        config.ca_cert.subject.to_s.should_not be_nil
     end
 
     it "should load YAML which has an engine" do
