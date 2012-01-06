@@ -1,1 +1,1 @@
---color -f doc -f h -o rspec_results.html
+--color -f doc
