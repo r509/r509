@@ -175,6 +175,19 @@ describe R509::Config::CaConfig do
         config.message_digest.should == "SHA1"
         config.num_profiles.should == 3
     end
+    it "loads OCSP cert/key from yaml" do
+        config = R509::Config::CaConfig.from_yaml("ocsp_delegate_ca", File.read("#{File.dirname(__FILE__)}/fixtures/config_test_various.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"})
+        config.ocsp_cert.has_private_key?.should == true
+        config.ocsp_cert.subject.to_s.should == "/CN=r509 OCSP Signer"
+    end
+    it "loads OCSP pkcs12 from yaml"
+    it "loads OCSP cert/key in engine from yaml"
+    it "loads OCSP chain from yaml" do
+        config = R509::Config::CaConfig.from_yaml("ocsp_chain_ca", File.read("#{File.dirname(__FILE__)}/fixtures/config_test_various.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"})
+        config.ocsp_chain.size.should == 2
+        config.ocsp_chain[0].kind_of?(OpenSSL::X509::Certificate).should == true
+        config.ocsp_chain[1].kind_of?(OpenSSL::X509::Certificate).should == true
+    end
     it "should load subject_item_policy from yaml (if present)" do
         config = R509::Config::CaConfig.from_yaml("test_ca", File.read("#{File.dirname(__FILE__)}/fixtures/config_test.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"})
         config.profile("server").subject_item_policy.should be_nil

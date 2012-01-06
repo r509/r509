@@ -36,8 +36,8 @@ module TestFixtures
 
     #san cert from self-signed CA for langui.sh
     CERT_SAN = read_fixture('cert_san.pem')
-    
-    #Another san cert for langui.sh, but differentiating between the CN and 
+
+    #Another san cert for langui.sh, but differentiating between the CN and
     # SANs.
     CERT_SAN2 = read_fixture('cert_san2.pem')
 
@@ -94,6 +94,12 @@ module TestFixtures
 
     TEST_CA_OCSP_CERT = read_fixture('test_ca_ocsp.cer')
     TEST_CA_OCSP_KEY  = read_fixture('test_ca_ocsp.key')
+
+    #this chain contains 2 certs. root and OCSP delegate
+    #in a prod environment you'd really only need the delegate
+    #since the root would be present in the root store of the
+    #client, but I wanted to test > 1
+    TEST_CA_OCSP_CHAIN  = read_fixture('test_ca_ocsp_chain.txt')
 
     SECOND_CA_CERT = read_fixture('second_ca.cer')
     SECOND_CA_KEY  = read_fixture('second_ca.key')

@@ -159,13 +159,13 @@ module R509
                 end
 
                 #ocsp data
-                if opts.has_key?(:ocsp_cert) and not opts[:ocsp_cert].kind_of?(R509::Cert) then
+                if opts.has_key?(:ocsp_cert) and not opts[:ocsp_cert].kind_of?(R509::Cert) and not opts[:ocsp_cert].nil?
                     raise ArgumentError, ':ocsp_cert, if provided, must be of type R509::Cert'
                 end
-                if opts.has_key?(:ocsp_cert) and not opts[:ocsp_cert].has_private_key?
+                if opts.has_key?(:ocsp_cert) and not opts[:ocsp_cert].nil? and not opts[:ocsp_cert].has_private_key?
                     raise ArgumentError, ':ocsp_cert must contain a private key, not just a certificate'
                 end
-                @ocsp_cert = opts[:ocsp_cert]
+                @ocsp_cert = opts[:ocsp_cert] unless opts[:ocsp_cert].nil?
                 @ocsp_location = opts[:ocsp_location]
                 @ocsp_chain = opts[:ocsp_chain] if opts[:ocsp_chain].kind_of?(Array)
                 @ocsp_validity_hours = opts[:ocsp_validity_hours] || 168
@@ -253,8 +253,33 @@ module R509
                     ca_cert = self.load_with_key(ca_cert_hash,ca_root_path)
                 end
 
+                if conf.has_key?("ocsp_cert")
+                    if conf["ocsp_cert"].has_key?('engine')
+                        ocsp_cert = self.load_with_engine(conf["ocsp_cert"],ca_root_path)
+                    end
+
+                    if ocsp_cert.nil? and conf["ocsp_cert"].has_key?('pkcs12')
+                        ocsp_cert = self.load_with_pkcs12(conf["ocsp_cert"],ca_root_path)
+                    end
+
+                    if ocsp_cert.nil? and conf["ocsp_cert"].has_key?('cert')
+                        ocsp_cert = self.load_with_key(conf["ocsp_cert"],ca_root_path)
+                    end
+                end
+
+                ocsp_chain = []
+                if conf.has_key?("ocsp_chain")
+                    ocsp_chain_data = read_data("#{ca_root_path}/#{conf["ocsp_chain"]}")
+                    cert_regex = /-----BEGIN CERTIFICATE-----.+?-----END CERTIFICATE-----/m
+                    ocsp_chain_data.scan(cert_regex) do |cert|
+                        ocsp_chain.push(OpenSSL::X509::Certificate.new(cert))
+                    end
+                end
+
                 opts = {
                     :ca_cert => ca_cert,
+                    :ocsp_cert => ocsp_cert,
+                    :ocsp_chain => ocsp_chain,
                     :crl_validity_hours => conf['crl_validity_hours'],
                     :ocsp_location => conf['ocsp_location'],
                     :cdp_location => conf['cdp_location'],

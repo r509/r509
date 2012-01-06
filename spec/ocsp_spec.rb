@@ -10,16 +10,47 @@ describe R509::Ocsp::Signer do
         @ocsp_test_cert = TestFixtures::OCSP_TEST_CERT
         @test_ca_config = TestFixtures.test_ca_config
         @second_ca_config = TestFixtures.second_ca_config
+        @ocsp_delegate_config = R509::Config::CaConfig.from_yaml("ocsp_delegate_ca", File.read("#{File.dirname(__FILE__)}/fixtures/config_test_various.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"})
+        @ocsp_chain_config = R509::Config::CaConfig.from_yaml("ocsp_chain_ca", File.read("#{File.dirname(__FILE__)}/fixtures/config_test_various.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"})
+
     end
     it "rejects ocsp requests from an unknown CA" do
-        ocsp_handler = R509::Ocsp::Signer.new({ :configs => [@test_ca_config] })
+        ocsp_handler = R509::Ocsp::Signer.new( :configs => [@test_ca_config] )
         response = ocsp_handler.handle_request(@stca_ocsp_request)
         response.status.should == OpenSSL::OCSP::RESPONSE_STATUS_UNAUTHORIZED
     end
     it "rejects malformed OCSP requests" do
-        ocsp_handler = R509::Ocsp::Signer.new({ :configs => [@test_ca_config] })
+        ocsp_handler = R509::Ocsp::Signer.new( :configs => [@test_ca_config] )
         response = ocsp_handler.handle_request("notreallyanocsprequest")
         response.status.should == OpenSSL::OCSP::RESPONSE_STATUS_MALFORMEDREQUEST
+    end
+    it "responds successfully with an OCSP delegate" do
+        ocsp_handler = R509::Ocsp::Signer.new( :configs => [@ocsp_delegate_config] )
+        csr = R509::Csr.new( :subject => [['CN','ocsptest.r509.local']], :bit_strength => 1024 )
+        ca = R509::CertificateAuthority::Signer.new(@test_ca_config)
+        cert = ca.sign(:csr => csr, :profile_name => 'server')
+        ocsp_request = OpenSSL::OCSP::Request.new
+        certid = OpenSSL::OCSP::CertificateId.new(cert.cert,@test_ca_config.ca_cert.cert)
+        ocsp_request.add_certid(certid)
+        response = ocsp_handler.handle_request(ocsp_request)
+        response.status.should == OpenSSL::OCSP::RESPONSE_STATUS_SUCCESSFUL
+        response.verify(@ocsp_delegate_config.ca_cert.cert).should == true
+        #TODO Better way to check whether we're adding the certs when signing the basic_response than response size...
+        response.to_der.size.should == 1623
+    end
+    it "responds successfully with an OCSP chain" do
+        ocsp_handler = R509::Ocsp::Signer.new( :configs => [@ocsp_chain_config] )
+        csr = R509::Csr.new( :subject => [['CN','ocsptest.r509.local']], :bit_strength => 1024 )
+        ca = R509::CertificateAuthority::Signer.new(@test_ca_config)
+        cert = ca.sign(:csr => csr, :profile_name => 'server')
+        ocsp_request = OpenSSL::OCSP::Request.new
+        certid = OpenSSL::OCSP::CertificateId.new(cert.cert,@test_ca_config.ca_cert.cert)
+        ocsp_request.add_certid(certid)
+        response = ocsp_handler.handle_request(ocsp_request)
+        response.status.should == OpenSSL::OCSP::RESPONSE_STATUS_SUCCESSFUL
+        response.verify(@ocsp_chain_config.ca_cert.cert).should == true
+        #TODO Better way to check whether we're adding the certs when signing the basic_response than response size...
+        response.to_der.size.should == 3670
     end
     it "responds successfully from the test_ca" do
         csr = R509::Csr.new( :subject => [['CN','ocsptest.r509.local']], :bit_strength => 1024 )

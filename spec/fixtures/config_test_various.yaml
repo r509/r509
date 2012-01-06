@@ -61,3 +61,22 @@ multi_policy_ca: {
         }
     }
 }
+ocsp_delegate_ca: {
+    ca_cert: {
+        cert: 'test_ca.cer'
+    },
+    ocsp_cert: {
+        cert: 'test_ca_ocsp.cer',
+        key: 'test_ca_ocsp.key'
+    }
+}
+ocsp_chain_ca: {
+    ca_cert: {
+        cert: 'test_ca.cer'
+    },
+    ocsp_cert: {
+        cert: 'test_ca_ocsp.cer',
+        key: 'test_ca_ocsp.key'
+    },
+    ocsp_chain: 'test_ca_ocsp_chain.txt'
+}
