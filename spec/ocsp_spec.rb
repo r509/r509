@@ -38,6 +38,8 @@ describe R509::Ocsp::Signer do
         #TODO Better way to check whether we're adding the certs when signing the basic_response than response size...
         response.to_der.size.should == 1678
     end
+    it "responds successfully for a subroot (signing via subroot)"
+    it "responds successfully for a subroot (signing via delegate)"
     it "responds successfully with an OCSP chain" do
         ocsp_handler = R509::Ocsp::Signer.new( :configs => [@ocsp_chain_config] )
         csr = R509::Csr.new( :subject => [['CN','ocsptest.r509.local']], :bit_strength => 1024 )
