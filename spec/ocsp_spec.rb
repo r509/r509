@@ -36,7 +36,7 @@ describe R509::Ocsp::Signer do
         response.status.should == OpenSSL::OCSP::RESPONSE_STATUS_SUCCESSFUL
         response.verify(@ocsp_delegate_config.ca_cert.cert).should == true
         #TODO Better way to check whether we're adding the certs when signing the basic_response than response size...
-        response.to_der.size.should == 1623
+        response.to_der.size.should == 1678
     end
     it "responds successfully with an OCSP chain" do
         ocsp_handler = R509::Ocsp::Signer.new( :configs => [@ocsp_chain_config] )
@@ -50,7 +50,7 @@ describe R509::Ocsp::Signer do
         response.status.should == OpenSSL::OCSP::RESPONSE_STATUS_SUCCESSFUL
         response.verify(@ocsp_chain_config.ca_cert.cert).should == true
         #TODO Better way to check whether we're adding the certs when signing the basic_response than response size...
-        response.to_der.size.should == 3670
+        response.to_der.size.should == 3725
     end
     it "responds successfully from the test_ca" do
         csr = R509::Csr.new( :subject => [['CN','ocsptest.r509.local']], :bit_strength => 1024 )
@@ -146,18 +146,22 @@ describe R509::Ocsp::Signer do
         response.basic.status[0][1].should == OpenSSL::OCSP::V_CERTSTATUS_REVOKED
     end
     it "encodes the proper revocation time in the response" do
+        time = Time.now.to_i-3600
         class R509::Validity::BogusTestChecker < R509::Validity::Checker
+            def initialize(time)
+                @time = time
+            end
             def check(issuer_fingerprint, serial)
-                R509::Validity::Status.new(:status => R509::Validity::REVOKED, :revocation_time => Time.now.to_i - 3600)
+                R509::Validity::Status.new(:status => R509::Validity::REVOKED, :revocation_time => @time)
             end
         end
         cert = OpenSSL::X509::Certificate.new(@ocsp_test_cert)
         ocsp_request = OpenSSL::OCSP::Request.new
         certid = OpenSSL::OCSP::CertificateId.new(cert,@test_ca_config.ca_cert.cert)
         ocsp_request.add_certid(certid)
-        ocsp_handler = R509::Ocsp::Signer.new({ :configs => [@test_ca_config], :validity_checker => R509::Validity::BogusTestChecker.new })
+        ocsp_handler = R509::Ocsp::Signer.new({ :configs => [@test_ca_config], :validity_checker => R509::Validity::BogusTestChecker.new(time) })
         response = ocsp_handler.handle_request(ocsp_request)
-        response.basic.status[0][3].to_i.should == Time.now.to_i - 3600
+        response.basic.status[0][3].to_i.should == time
     end
     it "copies nonce from request to response present and equal" do
         cert = OpenSSL::X509::Certificate.new(@ocsp_test_cert)

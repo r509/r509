@@ -269,7 +269,7 @@ module R509
 
                 ocsp_chain = []
                 if conf.has_key?("ocsp_chain")
-                    ocsp_chain_data = read_data("#{ca_root_path}/#{conf["ocsp_chain"]}")
+                    ocsp_chain_data = read_data(ca_root_path+conf["ocsp_chain"])
                     cert_regex = /-----BEGIN CERTIFICATE-----.+?-----END CERTIFICATE-----/m
                     ocsp_chain_data.scan(cert_regex) do |cert|
                         ocsp_chain.push(OpenSSL::X509::Certificate.new(cert))

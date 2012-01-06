@@ -178,12 +178,12 @@ describe R509::Config::CaConfig do
     it "loads OCSP cert/key from yaml" do
         config = R509::Config::CaConfig.from_yaml("ocsp_delegate_ca", File.read("#{File.dirname(__FILE__)}/fixtures/config_test_various.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"})
         config.ocsp_cert.has_private_key?.should == true
-        config.ocsp_cert.subject.to_s.should == "/CN=r509 OCSP Signer"
+        config.ocsp_cert.subject.to_s.should == "/C=US/ST=Illinois/L=Chicago/O=r509 LLC/CN=r509 OCSP Signer"
     end
     it "loads OCSP pkcs12 from yaml" do
         config = R509::Config::CaConfig.from_yaml("ocsp_pkcs12_ca", File.read("#{File.dirname(__FILE__)}/fixtures/config_test_various.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"})
         config.ocsp_cert.has_private_key?.should == true
-        config.ocsp_cert.subject.to_s.should == "/CN=r509 OCSP Signer"
+        config.ocsp_cert.subject.to_s.should == "/C=US/ST=Illinois/L=Chicago/O=r509 LLC/CN=r509 OCSP Signer"
     end
     it "loads OCSP cert/key in engine from yaml" do
         #most of this code path is tested by loading ca_cert engine.
