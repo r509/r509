@@ -145,6 +145,20 @@ describe R509::Ocsp::Signer do
         response.verify(@test_ca_config.ca_cert.cert).should == true
         response.basic.status[0][1].should == OpenSSL::OCSP::V_CERTSTATUS_REVOKED
     end
+    it "encodes the proper revocation time in the response" do
+        class R509::Validity::BogusTestChecker < R509::Validity::Checker
+            def check(issuer_fingerprint, serial)
+                R509::Validity::Status.new(:status => R509::Validity::REVOKED, :revocation_time => Time.now.to_i - 3600)
+            end
+        end
+        cert = OpenSSL::X509::Certificate.new(@ocsp_test_cert)
+        ocsp_request = OpenSSL::OCSP::Request.new
+        certid = OpenSSL::OCSP::CertificateId.new(cert,@test_ca_config.ca_cert.cert)
+        ocsp_request.add_certid(certid)
+        ocsp_handler = R509::Ocsp::Signer.new({ :configs => [@test_ca_config], :validity_checker => R509::Validity::BogusTestChecker.new })
+        response = ocsp_handler.handle_request(ocsp_request)
+        response.basic.status[0][3].to_i.should == Time.now.to_i - 3600
+    end
     it "copies nonce from request to response present and equal" do
         cert = OpenSSL::X509::Certificate.new(@ocsp_test_cert)
         ocsp_request = OpenSSL::OCSP::Request.new

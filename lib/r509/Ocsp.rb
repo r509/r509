@@ -237,11 +237,15 @@ module R509::Ocsp::Helper
             basic_response.copy_nonce(request) if @copy_nonce
 
             statuses.each do |status|
+                #revocation time is retarded and is relative to now, so
+                #let's figure out what that is.
+                if status[:status] == OpenSSL::OCSP::V_CERTSTATUS_REVOKED
+                    revocation_time = status[:revocation_time].to_i - Time.now.to_i
+                end
                 basic_response.add_status(status[:certid],
                                         status[:status],
                                         status[:revocation_reason],
-                #TODO: WHY IN THE HELL IS REVOCATION TIME RELATIVE TO NOW? THAT CAN'T BE RIGHT!
-                                        status[:revocation_time],
+                                        revocation_time,
                                         -1*status[:config].ocsp_start_skew_seconds,
                                         status[:config].ocsp_validity_hours*3600,
                                         [] #array of OpenSSL::X509::Extensions
