@@ -68,7 +68,7 @@ describe R509::Config::CaConfigPool do
         it "should load two configs" do
             pool = R509::Config::CaConfigPool.from_yaml("certificate_authorities", File.read("#{File.dirname(__FILE__)}/fixtures/config_pool_test_minimal.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"})
 
-            pool.names.should == ["test_ca", "second_ca"]
+            pool.names.should include("test_ca", "second_ca")
 
             pool["test_ca"].should_not == nil
             pool["test_ca"].num_profiles.should == 0
