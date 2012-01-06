@@ -147,8 +147,15 @@ module R509::Ocsp::Helper
         def check_statuses(request)
             request.certid.map { |certid|
                 validated_config = @configs.find do |config|
-                    root_certid = OpenSSL::OCSP::CertificateId.new(config.ca_cert.cert,config.ca_cert.cert)
-                    if certid.cmp_issuer(root_certid) then
+                    #we need to create an OCSP::CertificateId object that has the right
+                    #issuer so we can pass it to #cmp_issuer. This is annoying because
+                    #CertificateId wants a cert and its issuer, but we don't want to
+                    #force users to provide an end entity cert just to make this comparison
+                    #work. So, we create a fake new cert and pass it in.
+                    ee_cert = OpenSSL::X509::Certificate.new
+                    ee_cert.issuer = config.ca_cert.cert.subject
+                    issuer_certid = OpenSSL::OCSP::CertificateId.new(ee_cert,config.ca_cert.cert)
+                    if certid.cmp_issuer(issuer_certid) then
                         config
                     end
                 end
