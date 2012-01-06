@@ -180,7 +180,7 @@ describe R509::Ocsp::Signer do
         ocsp_request = OpenSSL::OCSP::Request.new
         certid = OpenSSL::OCSP::CertificateId.new(cert,@test_ca_config.ca_cert.cert)
         ocsp_request.add_certid(certid)
-        ocsp_handler = R509::Ocsp::Signer.new({ :copy_nonce => true, :configs => [@test_ca_config] })
+        ocsp_handler = R509::Ocsp::Signer.new( :copy_nonce => true, :configs => [@test_ca_config] )
         response = ocsp_handler.handle_request(ocsp_request)
         response.check_nonce(ocsp_request).should == R509::Ocsp::Request::Nonce::BOTH_ABSENT
     end
@@ -191,7 +191,7 @@ describe R509::Ocsp::Signer do
         certid = OpenSSL::OCSP::CertificateId.new(cert,@test_ca_config.ca_cert.cert)
         ocsp_request.add_certid(certid)
         ocsp_request.add_nonce
-        ocsp_handler = R509::Ocsp::Signer.new({ :copy_nonce => true, :configs => [@test_ca_config] })
+        ocsp_handler = R509::Ocsp::Signer.new( :copy_nonce => true, :configs => [@test_ca_config] )
         response = ocsp_handler.handle_request(ocsp_request)
         response.check_nonce(bogus_ocsp_request).should == R509::Ocsp::Request::Nonce::RESPONSE_ONLY
     end
@@ -203,7 +203,7 @@ describe R509::Ocsp::Signer do
         certid = OpenSSL::OCSP::CertificateId.new(cert,@test_ca_config.ca_cert.cert)
         ocsp_request.add_certid(certid)
         ocsp_request.add_nonce
-        ocsp_handler = R509::Ocsp::Signer.new({ :copy_nonce => true, :configs => [@test_ca_config] })
+        ocsp_handler = R509::Ocsp::Signer.new( :copy_nonce => true, :configs => [@test_ca_config] )
         response = ocsp_handler.handle_request(ocsp_request)
         response.check_nonce(bogus_ocsp_request).should == R509::Ocsp::Request::Nonce::NOT_EQUAL
     end
@@ -213,9 +213,20 @@ describe R509::Ocsp::Signer do
         certid = OpenSSL::OCSP::CertificateId.new(cert,@test_ca_config.ca_cert.cert)
         ocsp_request.add_certid(certid)
         ocsp_request.add_nonce
-        ocsp_handler = R509::Ocsp::Signer.new({ :copy_nonce => false, :configs => [@test_ca_config] })
+        ocsp_handler = R509::Ocsp::Signer.new( :copy_nonce => false, :configs => [@test_ca_config] )
         response = ocsp_handler.handle_request(ocsp_request)
         response.check_nonce(ocsp_request).should == R509::Ocsp::Request::Nonce::REQUEST_ONLY
+    end
+    it "encodes thisUpdate/nextUpdate time properly" do
+        cert = OpenSSL::X509::Certificate.new(@ocsp_test_cert)
+        ocsp_request = OpenSSL::OCSP::Request.new
+        certid = OpenSSL::OCSP::CertificateId.new(cert,@test_ca_config.ca_cert.cert)
+        ocsp_request.add_certid(certid)
+        now = Time.now
+        ocsp_handler = R509::Ocsp::Signer.new( :configs => [@test_ca_config] )
+        response = ocsp_handler.handle_request(ocsp_request)
+        response.basic.status[0][4].to_i.should == now.to_i - @test_ca_config.ocsp_start_skew_seconds
+        response.basic.status[0][5].to_i.should == now.to_i + @test_ca_config.ocsp_validity_hours*3600
     end
 end
 
