@@ -180,8 +180,16 @@ describe R509::Config::CaConfig do
         config.ocsp_cert.has_private_key?.should == true
         config.ocsp_cert.subject.to_s.should == "/CN=r509 OCSP Signer"
     end
-    it "loads OCSP pkcs12 from yaml"
-    it "loads OCSP cert/key in engine from yaml"
+    it "loads OCSP pkcs12 from yaml" do
+        config = R509::Config::CaConfig.from_yaml("ocsp_pkcs12_ca", File.read("#{File.dirname(__FILE__)}/fixtures/config_test_various.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"})
+        config.ocsp_cert.has_private_key?.should == true
+        config.ocsp_cert.subject.to_s.should == "/CN=r509 OCSP Signer"
+    end
+    it "loads OCSP cert/key in engine from yaml" do
+        #most of this code path is tested by loading ca_cert engine.
+        #look there for the extensive doubling
+        expect { R509::Config::CaConfig.from_yaml("ocsp_engine_ca", File.read("#{File.dirname(__FILE__)}/fixtures/config_test_various.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"}) }.to raise_error(R509::R509Error,"You must supply a key_name with an engine")
+    end
     it "loads OCSP chain from yaml" do
         config = R509::Config::CaConfig.from_yaml("ocsp_chain_ca", File.read("#{File.dirname(__FILE__)}/fixtures/config_test_various.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"})
         config.ocsp_chain.size.should == 2

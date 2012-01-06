@@ -80,3 +80,21 @@ ocsp_chain_ca: {
     },
     ocsp_chain: 'test_ca_ocsp_chain.txt'
 }
+ocsp_pkcs12_ca: {
+    ca_cert: {
+        cert: 'test_ca.cer'
+    },
+    ocsp_cert: {
+        pkcs12: 'test_ca_ocsp.p12',
+        password: 'r509'
+    }
+}
+ocsp_engine_ca: {
+    ca_cert: {
+        cert: 'test_ca.cer'
+    },
+    ocsp_cert: {
+        cert: 'test_ca_ocsp.cer',
+        engine: 'chil'
+    }
+}
