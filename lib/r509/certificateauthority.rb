@@ -1,7 +1,7 @@
 require 'openssl'
-require 'r509/Config'
-require 'r509/Cert'
-require 'r509/Exceptions'
+require 'r509/config'
+require 'r509/cert'
+require 'r509/exceptions'
 
 # CertificateAuthority related classes
 module R509::CertificateAuthority

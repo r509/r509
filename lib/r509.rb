@@ -1,17 +1,17 @@
 # A module for building an easy to use CA. Includes CSR, Certificate, and CRL support.
 module R509
-    autoload :CertificateAuthority, 'r509/CertificateAuthority.rb'
-    autoload :Csr, 'r509/Csr.rb'
-    autoload :Spki, 'r509/Spki.rb'
-    autoload :Cert, 'r509/Cert.rb'
-    autoload :Crl, 'r509/Crl.rb'
-    autoload :OidMapper, 'r509/OidMapper.rb'
-    autoload :Ocsp, 'r509/Ocsp.rb'
-    autoload :Config, 'r509/Config.rb'
-    autoload :PrivateKey, 'r509/PrivateKey.rb'
-    autoload :MessageDigest, 'r509/MessageDigest.rb'
-    autoload :Subject, 'r509/Subject.rb'
-    autoload :Validity, 'r509/Validity.rb'
+    autoload :CertificateAuthority, 'r509/certificateauthority.rb'
+    autoload :Csr, 'r509/csr.rb'
+    autoload :Spki, 'r509/spki.rb'
+    autoload :Cert, 'r509/cert.rb'
+    autoload :Crl, 'r509/crl.rb'
+    autoload :OidMapper, 'r509/oidmapper.rb'
+    autoload :Ocsp, 'r509/ocsp.rb'
+    autoload :Config, 'r509/config.rb'
+    autoload :PrivateKey, 'r509/privatekey.rb'
+    autoload :MessageDigest, 'r509/messagedigest.rb'
+    autoload :Subject, 'r509/subject.rb'
+    autoload :Validity, 'r509/validity.rb'
 end
 
 #add some global mappings we want available throughout r509

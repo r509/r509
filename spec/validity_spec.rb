@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'r509/Validity'
+require 'r509/validity'
 require 'openssl'
 
 describe R509::Validity do

@@ -1,6 +1,6 @@
 require 'spec_helper'
 require 'stringio'
-require 'r509/Spki'
+require 'r509/spki'
 
 
 describe R509::Spki do

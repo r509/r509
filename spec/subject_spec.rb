@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'r509/Subject'
+require 'r509/subject'
 require 'openssl'
 
 describe R509::Subject do

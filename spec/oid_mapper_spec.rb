@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'r509/OidMapper'
+require 'r509/oidmapper'
 
 
 # NOTE

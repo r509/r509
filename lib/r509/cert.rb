@@ -1,5 +1,5 @@
 require 'openssl'
-require 'r509/Exceptions'
+require 'r509/exceptions'
 require 'r509/io_helpers'
 
 module R509
@@ -141,7 +141,7 @@ module R509
 
         # Return the CN, as well as all the subject alternative names (SANs).
         #
-        # @return [Array] the array of names. Returns an empty array if 
+        # @return [Array] the array of names. Returns an empty array if
         #  there are no names, at all.
         def subject_names
             ret = []

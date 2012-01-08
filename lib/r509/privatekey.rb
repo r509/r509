@@ -1,6 +1,6 @@
 require 'openssl'
 require 'r509/io_helpers'
-require 'r509/Exceptions'
+require 'r509/exceptions'
 
 module R509
     #private key management

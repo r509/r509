@@ -1,6 +1,6 @@
 require 'spec_helper'
 require 'stringio'
-require 'r509/Csr'
+require 'r509/csr'
 
 
 describe R509::Csr do

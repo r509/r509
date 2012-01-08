@@ -1,9 +1,9 @@
 require 'yaml'
 require 'openssl'
-require 'r509/Exceptions'
+require 'r509/exceptions'
 require 'r509/io_helpers'
-require 'r509/Subject'
-require 'r509/PrivateKey'
+require 'r509/subject'
+require 'r509/privatekey'
 require 'fileutils'
 require 'pathname'
 

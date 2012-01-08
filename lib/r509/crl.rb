@@ -1,6 +1,6 @@
 require 'openssl'
-require 'r509/Config'
-require 'r509/Exceptions'
+require 'r509/config'
+require 'r509/exceptions'
 require 'r509/io_helpers'
 
 module R509

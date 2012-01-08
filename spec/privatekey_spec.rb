@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'r509/PrivateKey'
+require 'r509/privatekey'
 require 'stringio'
 
 describe R509::PrivateKey do

@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'r509/Ocsp'
+require 'r509/ocsp'
 require 'openssl'
 
 describe R509::Ocsp::Signer do

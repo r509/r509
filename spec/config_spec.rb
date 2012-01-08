@@ -1,6 +1,6 @@
 require 'spec_helper'
-require 'r509/Config'
-require 'r509/Exceptions'
+require 'r509/config'
+require 'r509/exceptions'
 
 describe R509::Config::CaConfigPool do
     context "defined manually" do
