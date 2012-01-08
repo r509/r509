@@ -108,6 +108,18 @@ module R509
             md.to_s
         end
 
+        # Returns whether the current time is between the notBefore and notAfter times in
+        # the certificate.
+        #
+        # @return [Boolean]
+        def in_validity_range?
+            if (self.not_after > Time.now) and (self.not_before <= Time.now)
+                true
+            else
+                false
+            end
+        end
+
         # Returns the subject
         #
         # @return [OpenSSL::X509::Name] subject object. Can be parsed as string easily

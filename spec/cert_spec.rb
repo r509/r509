@@ -14,6 +14,9 @@ describe R509::Cert do
         @key3_encrypted = TestFixtures::KEY3_ENCRYPTED
         @cert5 = TestFixtures::CERT5
         @cert6 = TestFixtures::CERT6
+        @test_ca_cert = TestFixtures::TEST_CA_CERT
+        @cert_expired = TestFixtures::CERT_EXPIRED
+        @cert_not_yet_valid = TestFixtures::CERT_NOT_YET_VALID
     end
     it "raises error when no hash supplied" do
         expect { R509::Cert.new('no hash')}.to raise_error(ArgumentError, 'Must provide a hash of options')
@@ -257,5 +260,17 @@ describe R509::Cert do
     it "gets serial of cert" do
         cert = R509::Cert.new(:cert => @cert6)
         cert.serial.should == 951504
+    end
+    it "checks a cert that is not yet valid" do
+        cert = R509::Cert.new(:cert => @cert_not_yet_valid)
+        cert.in_validity_range?.should == false
+    end
+    it "checks a cert that is in validity range" do
+        cert = R509::Cert.new(:cert => @test_ca_cert)
+        cert.in_validity_range?.should == true
+    end
+    it "checks a cert that is expired" do
+        cert = R509::Cert.new(:cert => @cert_expired)
+        cert.in_validity_range?.should == false
     end
 end

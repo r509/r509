@@ -28,6 +28,10 @@ module TestFixtures
     # cert with DSA public key
     CERT6 = read_fixture('cert6.pem')
 
+    CERT_EXPIRED = read_fixture("cert_expired.pem")
+
+    CERT_NOT_YET_VALID = read_fixture("cert_not_yet_valid.pem")
+
     DSA_KEY = read_fixture('dsa_key.pem')
 
     # this CSR has unknown OIDs, which we should successfully parse out into Subject
