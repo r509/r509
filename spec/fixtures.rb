@@ -105,6 +105,8 @@ module TestFixtures
     #client, but I wanted to test > 1
     TEST_CA_OCSP_CHAIN  = read_fixture('test_ca_ocsp_chain.txt')
 
+    TEST_CA_OCSP_RESPONSE = read_fixture('test_ca_ocsp_response.der')
+
     SECOND_CA_CERT = read_fixture('second_ca.cer')
     SECOND_CA_KEY  = read_fixture('second_ca.key')
 
