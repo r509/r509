@@ -175,34 +175,6 @@ module TestFixtures
                   :certificate_policies => nil)
     end
 
-    def self.second_ca_cert
-        R509::Cert.new(:cert => SECOND_CA_CERT, :key => SECOND_CA_KEY)
-    end
-
-    def self.second_ca_server_profile
-        R509::Config::CaProfile.new(
-              :basic_constraints => "CA:FALSE",
-              :key_usage => ["digitalSignature","keyEncipherment"],
-              :extended_key_usage => ["serverAuth"],
-              :certificate_policies => [
-                    [
-                        "policyIdentifier=2.16.840.1.12345.1.2.3.4.1",
-                        "CPS.1=http://example.com/cps"
-                    ]
-                ]
-        )
-
-    end
-
-    def self.second_ca_subroot_profile
-        R509::Config::CaProfile.new(
-                  :basic_constraints => "CA:TRUE,pathlen:0",
-                  :key_usage => ["keyCertSign","cRLSign"],
-                  :extended_key_usage => [],
-                  :certificate_policies => nil)
-    end
-
-
     # @return [R509::Config::CaConfig]
     def self.test_ca_config
         crl_list_sio = StringIO.new
@@ -225,21 +197,6 @@ module TestFixtures
         ret.set_profile("subroot", self.test_ca_subroot_profile)
         ret.set_profile("ocspsigner", self.test_ca_ocspsigner_profile)
         ret.set_profile("server_with_subject_item_policy", self.test_ca_server_profile_with_subject_item_policy)
-
-        ret
-    end
-
-    # @return [R509::Config::CaConfig] secondary config
-    def self.second_ca_config
-        opts = {
-          :ca_cert => second_ca_cert(),
-          :cdp_location => 'URI:http://crl.domain.com/test_ca.crl',
-          :ocsp_location => 'URI:http://ocsp.domain.com'
-        }
-        ret = R509::Config::CaConfig.new(opts)
-
-        ret.set_profile("server", self.second_ca_server_profile)
-        ret.set_profile("subroot", self.second_ca_subroot_profile)
 
         ret
     end
