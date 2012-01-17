@@ -87,7 +87,7 @@
   
   
     <dt class="r2 last">Defined in:</dt>
-    <dd class="r2 last">lib/r509/OidMapper.rb</dd>
+    <dd class="r2 last">lib/r509/oidmapper.rb</dd>
   
 </dl>
 <div class="clear"></div>
@@ -226,15 +226,15 @@
       <pre class="lines">
 
 
+25
+26
+27
+28
 29
-30
-31
-32
-33
-34</pre>
+30</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/OidMapper.rb', line 29</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/oidmapper.rb', line 25</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_batch_register'>batch_register</span><span class='lparen'>(</span><span class='id identifier rubyid_oids'>oids</span><span class='rparen'>)</span>
     <span class='id identifier rubyid_oids'>oids</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_oid_hash'>oid_hash</span><span class='op'>|</span>
@@ -343,15 +343,15 @@
       <pre class="lines">
 
 
+11
+12
+13
+14
 15
-16
-17
-18
-19
-20</pre>
+16</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/OidMapper.rb', line 15</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/oidmapper.rb', line 11</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_register'>register</span><span class='lparen'>(</span><span class='id identifier rubyid_oid'>oid</span><span class='comma'>,</span><span class='id identifier rubyid_short_name'>short_name</span><span class='comma'>,</span><span class='id identifier rubyid_long_name'>long_name</span><span class='op'>=</span><span class='kw'>nil</span><span class='rparen'>)</span>
     <span class='kw'>if</span> <span class='id identifier rubyid_long_name'>long_name</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
@@ -369,7 +369,7 @@
 </div>
     
     <div id="footer">
-  Generated on Tue Dec 27 21:02:14 2011 by 
+  Generated on Tue Jan 17 14:14:53 2012 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.7.4 (ruby-1.9.3).
 </div>

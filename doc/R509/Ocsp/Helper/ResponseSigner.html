@@ -87,7 +87,7 @@
   
   
     <dt class="r2 last">Defined in:</dt>
-    <dd class="r2 last">lib/r509/Ocsp.rb</dd>
+    <dd class="r2 last">lib/r509/ocsp.rb</dd>
   
 </dl>
 <div class="clear"></div>
@@ -119,6 +119,53 @@
         <li class="public ">
   <span class="summary_signature">
     
+      <a href="#create_basic_response-instance_method" title="#create_basic_response (instance method)">- (OpenSSL::OCSP::BasicResponse) <strong>create_basic_response</strong>(request, statuses) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>It is UNWISE to call this method directly because it assumes that the
+request is validated.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#create_response-instance_method" title="#create_response (instance method)">- (OpenSSL::OCSP::OCSPResponse) <strong>create_response</strong>(response_status, basic_response = nil) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Builds final response.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
       <a href="#initialize-instance_method" title="#initialize (instance method)">- (ResponseSigner) <strong>initialize</strong>(options) </a>
     
 
@@ -136,29 +183,6 @@
   
     <span class="summary_desc"><div class='inline'>
 <p>A new instance of ResponseSigner.</p>
-</div></span>
-  
-</li>
-
-      
-        <li class="public ">
-  <span class="summary_signature">
-    
-      <a href="#sign_response-instance_method" title="#sign_response (instance method)">- (OpenSSL::OCSP::OCSPResponse) <strong>sign_response</strong>(request_data) </a>
-    
-
-    
-  </span>
-  
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'>
-<p>Signs response.</p>
 </div></span>
   
 </li>
@@ -241,24 +265,24 @@
       <pre class="lines">
 
 
-168
-169
-170
-171
-172
-173
-174
-175
-176
-177
-178
-179
-180
-181
-182</pre>
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/Ocsp.rb', line 168</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/ocsp.rb', line 219</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span>
     <span class='kw'>if</span> <span class='id identifier rubyid_options'>options</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span><span class='lparen'>(</span><span class='symbol'>:copy_nonce</span><span class='rparen'>)</span>
@@ -288,17 +312,18 @@
     
     
       <div class="method_details first">
-  <p class="signature first" id="sign_response-instance_method">
+  <p class="signature first" id="create_basic_response-instance_method">
   
-    - (<tt>OpenSSL::OCSP::OCSPResponse</tt>) <strong>sign_response</strong>(request_data) 
+    - (<tt>OpenSSL::OCSP::BasicResponse</tt>) <strong>create_basic_response</strong>(request, statuses) 
   
 
   
 </p><div class="docstring">
   <div class="discussion">
     
-<p>Signs response. Only call this after loading a request or adding your own
-status</p>
+<p>It is UNWISE to call this method directly because it assumes that the
+request is validated. You probably want to take a look at
+R509::Ocsp::Signer#handle_request</p>
 
 
   </div>
@@ -309,7 +334,18 @@ status</p>
   
     <li>
       
-        <span class='name'>request_data</span>
+        <span class='name'>request</span>
+      
+      
+        <span class='type'>(<tt>OpenSSL::OCSP::Request</tt>)</span>
+      
+      
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>statuses</span>
       
       
         <span class='type'>(<tt>Hash</tt>)</span>
@@ -318,7 +354,153 @@ status</p>
       
         &mdash;
         <div class='inline'>
-<p>of { :parsed_request, :statuses }</p>
+<p>hash from R509::Ocsp::Helper::RequestChecker#check_statuses</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>OpenSSL::OCSP::BasicResponse</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/r509/ocsp.rb', line 241</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_create_basic_response'>create_basic_response</span><span class='lparen'>(</span><span class='id identifier rubyid_request'>request</span><span class='comma'>,</span><span class='id identifier rubyid_statuses'>statuses</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_basic_response'>basic_response</span> <span class='op'>=</span> <span class='const'>OpenSSL</span><span class='op'>::</span><span class='const'>OCSP</span><span class='op'>::</span><span class='const'>BasicResponse</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span>
+
+    <span class='id identifier rubyid_basic_response'>basic_response</span><span class='period'>.</span><span class='id identifier rubyid_copy_nonce'>copy_nonce</span><span class='lparen'>(</span><span class='id identifier rubyid_request'>request</span><span class='rparen'>)</span> <span class='kw'>if</span> <span class='ivar'>@copy_nonce</span>
+
+    <span class='id identifier rubyid_statuses'>statuses</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_status'>status</span><span class='op'>|</span>
+        <span class='comment'>#revocation time is retarded and is relative to now, so
+</span>        <span class='comment'>#let's figure out what that is.
+</span>        <span class='kw'>if</span> <span class='id identifier rubyid_status'>status</span><span class='lbracket'>[</span><span class='symbol'>:status</span><span class='rbracket'>]</span> <span class='op'>==</span> <span class='const'>OpenSSL</span><span class='op'>::</span><span class='const'>OCSP</span><span class='op'>::</span><span class='const'>V_CERTSTATUS_REVOKED</span>
+            <span class='id identifier rubyid_revocation_time'>revocation_time</span> <span class='op'>=</span> <span class='id identifier rubyid_status'>status</span><span class='lbracket'>[</span><span class='symbol'>:revocation_time</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_to_i'>to_i</span> <span class='op'>-</span> <span class='const'>Time</span><span class='period'>.</span><span class='id identifier rubyid_now'>now</span><span class='period'>.</span><span class='id identifier rubyid_to_i'>to_i</span>
+        <span class='kw'>end</span>
+        <span class='id identifier rubyid_basic_response'>basic_response</span><span class='period'>.</span><span class='id identifier rubyid_add_status'>add_status</span><span class='lparen'>(</span><span class='id identifier rubyid_status'>status</span><span class='lbracket'>[</span><span class='symbol'>:certid</span><span class='rbracket'>]</span><span class='comma'>,</span>
+                                <span class='id identifier rubyid_status'>status</span><span class='lbracket'>[</span><span class='symbol'>:status</span><span class='rbracket'>]</span><span class='comma'>,</span>
+                                <span class='id identifier rubyid_status'>status</span><span class='lbracket'>[</span><span class='symbol'>:revocation_reason</span><span class='rbracket'>]</span><span class='comma'>,</span>
+                                <span class='id identifier rubyid_revocation_time'>revocation_time</span><span class='comma'>,</span>
+                                <span class='op'>-</span><span class='int'>1</span><span class='op'>*</span><span class='id identifier rubyid_status'>status</span><span class='lbracket'>[</span><span class='symbol'>:config</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_ocsp_start_skew_seconds'>ocsp_start_skew_seconds</span><span class='comma'>,</span>
+                                <span class='id identifier rubyid_status'>status</span><span class='lbracket'>[</span><span class='symbol'>:config</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_ocsp_validity_hours'>ocsp_validity_hours</span><span class='op'>*</span><span class='int'>3600</span><span class='comma'>,</span>
+                                <span class='lbracket'>[</span><span class='rbracket'>]</span> <span class='comment'>#array of OpenSSL::X509::Extensions
+</span>                                <span class='rparen'>)</span>
+    <span class='kw'>end</span>
+
+    <span class='comment'>#this method assumes the request data is validated by validate_request so all configs will be the same and
+</span>    <span class='comment'>#we can choose to use the first one safely
+</span>    <span class='id identifier rubyid_config'>config</span> <span class='op'>=</span> <span class='id identifier rubyid_statuses'>statuses</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='symbol'>:config</span><span class='rbracket'>]</span>
+
+    <span class='comment'>#confusing, but R509::Cert contains R509::PrivateKey under #key. PrivateKey#key gives the OpenSSL object
+</span>    <span class='comment'>#turns out BasicResponse#sign can take up to 4 params
+</span>    <span class='comment'>#cert, key, array of OpenSSL::X509::Certificates, flags (not sure what the enumeration of those are)
+</span>    <span class='id identifier rubyid_basic_response'>basic_response</span><span class='period'>.</span><span class='id identifier rubyid_sign'>sign</span><span class='lparen'>(</span><span class='id identifier rubyid_config'>config</span><span class='period'>.</span><span class='id identifier rubyid_ocsp_cert'>ocsp_cert</span><span class='period'>.</span><span class='id identifier rubyid_cert'>cert</span><span class='comma'>,</span><span class='id identifier rubyid_config'>config</span><span class='period'>.</span><span class='id identifier rubyid_ocsp_cert'>ocsp_cert</span><span class='period'>.</span><span class='id identifier rubyid_key'>key</span><span class='period'>.</span><span class='id identifier rubyid_key'>key</span><span class='comma'>,</span><span class='id identifier rubyid_config'>config</span><span class='period'>.</span><span class='id identifier rubyid_ocsp_chain'>ocsp_chain</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="create_response-instance_method">
+  
+    - (<tt>OpenSSL::OCSP::OCSPResponse</tt>) <strong>create_response</strong>(response_status, basic_response = nil) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    
+<p>Builds final response.</p>
+
+<p>generated by create_basic_response</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>response_status</span>
+      
+      
+        <span class='type'>(<tt>OpenSSL::OCSP::RESPONSE_STATUS_*</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the primary response status</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>basic_response</span>
+      
+      
+        <span class='type'>(<tt>OpenSSL::OCSP::BasicResponse</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>nil</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>an optional basic response object</p>
 </div>
       
     </li>
@@ -345,116 +527,32 @@ status</p>
       <pre class="lines">
 
 
-188
-189
-190
-191
-192
-193
-194
-195
-196
-197
-198
-199
-200
-201
-202
-203
-204
-205
-206
-207
-208
-209
-210
-211
-212
-213
-214
-215
-216
-217
-218
-219
-220
-221
-222
-223
-224
-225
-226
-227
-228
-229
-230
-231
-232
-233
-234
-235
-236
-237
-238
-239
-240
-241
-242
-243
-244
-245
-246
-247</pre>
+278
+279
+280
+281
+282
+283
+284
+285
+286
+287
+288
+289
+290
+291
+292
+293
+294
+295
+296
+297</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/Ocsp.rb', line 188</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/ocsp.rb', line 278</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_sign_response'>sign_response</span><span class='lparen'>(</span><span class='id identifier rubyid_request_data'>request_data</span><span class='rparen'>)</span>
-    <span class='id identifier rubyid_basic_response'>basic_response</span> <span class='op'>=</span> <span class='const'>OpenSSL</span><span class='op'>::</span><span class='const'>OCSP</span><span class='op'>::</span><span class='const'>BasicResponse</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span>
+<span class='kw'>def</span> <span class='id identifier rubyid_create_response'>create_response</span><span class='lparen'>(</span><span class='id identifier rubyid_response_status'>response_status</span><span class='comma'>,</span><span class='id identifier rubyid_basic_response'>basic_response</span><span class='op'>=</span><span class='kw'>nil</span><span class='rparen'>)</span>
 
-    <span class='id identifier rubyid_basic_response'>basic_response</span><span class='period'>.</span><span class='id identifier rubyid_copy_nonce'>copy_nonce</span><span class='lparen'>(</span><span class='id identifier rubyid_request_data'>request_data</span><span class='lbracket'>[</span><span class='symbol'>:parsed_request</span><span class='rbracket'>]</span><span class='rparen'>)</span> <span class='kw'>if</span> <span class='ivar'>@copy_nonce</span>
-
-    <span class='id identifier rubyid_has_invalid'>has_invalid</span> <span class='op'>=</span> <span class='kw'>false</span>
-    <span class='id identifier rubyid_config'>config</span> <span class='op'>=</span> <span class='kw'>nil</span>
-    <span class='id identifier rubyid_request_data'>request_data</span><span class='lbracket'>[</span><span class='symbol'>:statuses</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_status'>status</span><span class='op'>|</span>
-        <span class='kw'>if</span> <span class='id identifier rubyid_status'>status</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span> <span class='kw'>or</span> <span class='id identifier rubyid_status'>status</span><span class='lbracket'>[</span><span class='symbol'>:config</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
-            <span class='id identifier rubyid_has_invalid'>has_invalid</span> <span class='op'>=</span> <span class='kw'>true</span>
-        <span class='kw'>else</span>
-            <span class='kw'>if</span> <span class='id identifier rubyid_config'>config</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
-                <span class='id identifier rubyid_config'>config</span> <span class='op'>=</span> <span class='id identifier rubyid_status'>status</span><span class='lbracket'>[</span><span class='symbol'>:config</span><span class='rbracket'>]</span>
-            <span class='kw'>end</span>
-            <span class='kw'>if</span> <span class='id identifier rubyid_config'>config</span> <span class='op'>!=</span> <span class='id identifier rubyid_status'>status</span><span class='lbracket'>[</span><span class='symbol'>:config</span><span class='rbracket'>]</span>
-                <span class='id identifier rubyid_has_invalid'>has_invalid</span> <span class='op'>=</span> <span class='kw'>true</span>
-            <span class='kw'>end</span>
-
-            <span class='id identifier rubyid_basic_response'>basic_response</span><span class='period'>.</span><span class='id identifier rubyid_add_status'>add_status</span><span class='lparen'>(</span><span class='id identifier rubyid_status'>status</span><span class='lbracket'>[</span><span class='symbol'>:certid</span><span class='rbracket'>]</span><span class='comma'>,</span>
-                                    <span class='id identifier rubyid_status'>status</span><span class='lbracket'>[</span><span class='symbol'>:status</span><span class='rbracket'>]</span><span class='comma'>,</span>
-                                    <span class='id identifier rubyid_status'>status</span><span class='lbracket'>[</span><span class='symbol'>:revocation_reason</span><span class='rbracket'>]</span><span class='comma'>,</span>
-            <span class='comment'>#TODO: WHY IN THE HELL IS REVOCATION TIME RELATIVE TO NOW? THAT CAN'T BE RIGHT!
-</span>                                    <span class='id identifier rubyid_status'>status</span><span class='lbracket'>[</span><span class='symbol'>:revocation_time</span><span class='rbracket'>]</span><span class='comma'>,</span>
-                                    <span class='op'>-</span><span class='int'>1</span><span class='op'>*</span><span class='id identifier rubyid_status'>status</span><span class='lbracket'>[</span><span class='symbol'>:config</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_ocsp_start_skew_seconds'>ocsp_start_skew_seconds</span><span class='comma'>,</span>
-                                    <span class='id identifier rubyid_status'>status</span><span class='lbracket'>[</span><span class='symbol'>:config</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_ocsp_validity_hours'>ocsp_validity_hours</span><span class='op'>*</span><span class='int'>3600</span><span class='comma'>,</span>
-                                    <span class='lbracket'>[</span><span class='rbracket'>]</span> <span class='comment'>#array of OpenSSL::X509::Extensions
-</span>                                    <span class='rparen'>)</span>
-        <span class='kw'>end</span>
-    <span class='kw'>end</span>
-    <span class='kw'>if</span> <span class='id identifier rubyid_has_invalid'>has_invalid</span>
-        <span class='id identifier rubyid_response_status'>response_status</span> <span class='op'>=</span> <span class='const'>OpenSSL</span><span class='op'>::</span><span class='const'>OCSP</span><span class='op'>::</span><span class='const'>RESPONSE_STATUS_UNAUTHORIZED</span>
-    <span class='kw'>else</span>
-        <span class='id identifier rubyid_response_status'>response_status</span> <span class='op'>=</span> <span class='const'>OpenSSL</span><span class='op'>::</span><span class='const'>OCSP</span><span class='op'>::</span><span class='const'>RESPONSE_STATUS_SUCCESSFUL</span>
-    <span class='kw'>end</span>
-    <span class='kw'>if</span> <span class='id identifier rubyid_config'>config</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
-        <span class='id identifier rubyid_config'>config</span> <span class='op'>=</span> <span class='ivar'>@default_config</span>
-    <span class='kw'>end</span>
-    <span class='comment'>#confusing, but R509::Cert contains R509::PrivateKey under #key. PrivateKey#key gives the OpenSSL object
-</span>    <span class='id identifier rubyid_basic_response'>basic_response</span><span class='period'>.</span><span class='id identifier rubyid_sign'>sign</span><span class='lparen'>(</span><span class='id identifier rubyid_config'>config</span><span class='period'>.</span><span class='id identifier rubyid_ocsp_cert'>ocsp_cert</span><span class='period'>.</span><span class='id identifier rubyid_cert'>cert</span><span class='comma'>,</span><span class='id identifier rubyid_config'>config</span><span class='period'>.</span><span class='id identifier rubyid_ocsp_cert'>ocsp_cert</span><span class='period'>.</span><span class='id identifier rubyid_key'>key</span><span class='period'>.</span><span class='id identifier rubyid_key'>key</span><span class='comma'>,</span><span class='id identifier rubyid_config'>config</span><span class='period'>.</span><span class='id identifier rubyid_ocsp_chain'>ocsp_chain</span><span class='rparen'>)</span>
-
-    <span class='comment'>#turns out BasicResponse#sign can take up to 4 params
-</span>    <span class='comment'>#cert
-</span>    <span class='comment'>#key
-</span>    <span class='comment'>#array of OpenSSL::X509::Certificates
-</span>    <span class='comment'>#flags (not sure what the enumeration of those are)
-</span>
     <span class='comment'># first arg is the response status code, comes from this list
 </span>    <span class='comment'># these can also be enumerated via OpenSSL::OCSP::RESPONSE_STATUS_*
 </span>    <span class='comment'>#OCSPResponseStatus ::= ENUMERATED {
@@ -467,7 +565,11 @@ status</p>
 </span>    <span class='comment'>#    unauthorized          (6)       --Request unauthorized
 </span>    <span class='comment'>#}
 </span>    <span class='comment'>#
-</span>    <span class='const'>R509</span><span class='op'>::</span><span class='const'>Ocsp</span><span class='op'>::</span><span class='const'>Response</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='const'>OpenSSL</span><span class='op'>::</span><span class='const'>OCSP</span><span class='op'>::</span><span class='const'>Response</span><span class='period'>.</span><span class='id identifier rubyid_create'>create</span><span class='lparen'>(</span><span class='id identifier rubyid_response_status'>response_status</span><span class='comma'>,</span><span class='id identifier rubyid_basic_response'>basic_response</span><span class='rparen'>)</span><span class='rparen'>)</span>
+</span>    <span class='const'>R509</span><span class='op'>::</span><span class='const'>Ocsp</span><span class='op'>::</span><span class='const'>Response</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span>
+        <span class='const'>OpenSSL</span><span class='op'>::</span><span class='const'>OCSP</span><span class='op'>::</span><span class='const'>Response</span><span class='period'>.</span><span class='id identifier rubyid_create'>create</span><span class='lparen'>(</span>
+            <span class='id identifier rubyid_response_status'>response_status</span><span class='comma'>,</span> <span class='id identifier rubyid_basic_response'>basic_response</span>
+        <span class='rparen'>)</span>
+    <span class='rparen'>)</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -479,7 +581,7 @@ status</p>
 </div>
     
     <div id="footer">
-  Generated on Tue Dec 27 21:02:13 2011 by 
+  Generated on Mon Jan  9 12:45:54 2012 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.7.4 (ruby-1.9.3).
 </div>

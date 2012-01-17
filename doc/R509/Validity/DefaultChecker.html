@@ -89,7 +89,7 @@
   
   
     <dt class="r2 last">Defined in:</dt>
-    <dd class="r2 last">lib/r509/Validity.rb</dd>
+    <dd class="r2 last">lib/r509/validity.rb</dd>
   
 </dl>
 <div class="clear"></div>
@@ -129,7 +129,7 @@ OTHERWISE</p>
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#check-instance_method" title="#check (instance method)">- (Object) <strong>check</strong>(serial) </a>
+      <a href="#check-instance_method" title="#check (instance method)">- (Object) <strong>check</strong>(issuer, serial) </a>
     
 
     
@@ -164,7 +164,7 @@ OTHERWISE</p>
       <div class="method_details first">
   <p class="signature first" id="check-instance_method">
   
-    - (<tt>Object</tt>) <strong>check</strong>(serial) 
+    - (<tt>Object</tt>) <strong>check</strong>(issuer, serial) 
   
 
   
@@ -179,9 +179,9 @@ OTHERWISE</p>
 61</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/Validity.rb', line 59</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/validity.rb', line 59</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_check'>check</span><span class='lparen'>(</span><span class='id identifier rubyid_serial'>serial</span><span class='rparen'>)</span>
+<span class='kw'>def</span> <span class='id identifier rubyid_check'>check</span><span class='lparen'>(</span><span class='id identifier rubyid_issuer'>issuer</span><span class='comma'>,</span> <span class='id identifier rubyid_serial'>serial</span><span class='rparen'>)</span>
     <span class='const'>R509</span><span class='op'>::</span><span class='const'>Validity</span><span class='op'>::</span><span class='const'>Status</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='symbol'>:status</span> <span class='op'>=&gt;</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>Validity</span><span class='op'>::</span><span class='const'>VALID</span><span class='rparen'>)</span>
 <span class='kw'>end</span></pre>
     </td>
@@ -194,7 +194,7 @@ OTHERWISE</p>
 </div>
     
     <div id="footer">
-  Generated on Tue Dec 27 21:02:14 2011 by 
+  Generated on Tue Jan 17 14:14:52 2012 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.7.4 (ruby-1.9.3).
 </div>

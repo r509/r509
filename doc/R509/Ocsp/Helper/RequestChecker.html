@@ -87,7 +87,7 @@
   
   
     <dt class="r2 last">Defined in:</dt>
-    <dd class="r2 last">lib/r509/Ocsp.rb</dd>
+    <dd class="r2 last">lib/r509/ocsp.rb</dd>
   
 </dl>
 <div class="clear"></div>
@@ -119,7 +119,7 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#check_request-instance_method" title="#check_request (instance method)">- (Hash) <strong>check_request</strong>(request) </a>
+      <a href="#check_statuses-instance_method" title="#check_statuses (instance method)">- (Hash) <strong>check_statuses</strong>(request) </a>
     
 
     
@@ -159,6 +159,29 @@
   
     <span class="summary_desc"><div class='inline'>
 <p>A new instance of RequestChecker.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#validate_statuses-instance_method" title="#validate_statuses (instance method)">- (Boolean) <strong>validate_statuses</strong>(statuses) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Determines whether the statuses constitute a request that is compliant.</p>
 </div></span>
   
 </li>
@@ -225,25 +248,25 @@
       <pre class="lines">
 
 
-113
-114
-115
-116
-117
-118
-119
-120
-121
-122
-123
-124
-125
 126
 127
-128</pre>
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/Ocsp.rb', line 113</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/ocsp.rb', line 126</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='id identifier rubyid_configs'>configs</span><span class='comma'>,</span> <span class='id identifier rubyid_validity_checker'>validity_checker</span><span class='rparen'>)</span>
     <span class='ivar'>@configs</span> <span class='op'>=</span> <span class='id identifier rubyid_configs'>configs</span>
@@ -274,9 +297,9 @@
     
     
       <div class="method_details first">
-  <p class="signature first" id="check_request-instance_method">
+  <p class="signature first" id="check_statuses-instance_method">
   
-    - (<tt>Hash</tt>) <strong>check_request</strong>(request) 
+    - (<tt>Hash</tt>) <strong>check_statuses</strong>(request) 
   
 
   
@@ -297,13 +320,13 @@
         <span class='name'>request</span>
       
       
-        <span class='type'>(<tt>String</tt>)</span>
+        <span class='type'>(<tt>OpenSSL::OCSP::Request</tt>)</span>
       
       
       
         &mdash;
         <div class='inline'>
-<p>DER encoded OCSP request string</p>
+<p>OpenSSL OCSP Request object</p>
 </div>
       
     </li>
@@ -335,27 +358,149 @@
       <pre class="lines">
 
 
-133
-134
-135
-136
-137
-138
-139
-140
-141</pre>
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/Ocsp.rb', line 133</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/ocsp.rb', line 147</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_check_request'>check_request</span><span class='lparen'>(</span><span class='id identifier rubyid_request'>request</span><span class='rparen'>)</span>
-    <span class='id identifier rubyid_parsed_request'>parsed_request</span> <span class='op'>=</span> <span class='const'>OpenSSL</span><span class='op'>::</span><span class='const'>OCSP</span><span class='op'>::</span><span class='const'>Request</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span> <span class='id identifier rubyid_request'>request</span>
-    <span class='lbrace'>{</span> <span class='symbol'>:parsed_request</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_parsed_request'>parsed_request</span><span class='comma'>,</span>
-        <span class='symbol'>:statuses</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_parsed_request'>parsed_request</span><span class='period'>.</span><span class='id identifier rubyid_certid'>certid</span><span class='period'>.</span><span class='id identifier rubyid_map'>map</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_certid'>certid</span><span class='op'>|</span>
-            <span class='id identifier rubyid_validated_config'>validated_config</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>Helper</span><span class='op'>::</span><span class='const'>FirstConfigMatch</span><span class='op'>::</span><span class='id identifier rubyid_match'>match</span><span class='lparen'>(</span><span class='id identifier rubyid_certid'>certid</span><span class='comma'>,</span><span class='ivar'>@configs</span><span class='rparen'>)</span>
-            <span class='id identifier rubyid_check_status'>check_status</span><span class='lparen'>(</span><span class='id identifier rubyid_certid'>certid</span><span class='comma'>,</span> <span class='id identifier rubyid_validated_config'>validated_config</span><span class='rparen'>)</span>
-        <span class='rbrace'>}</span>
+<span class='kw'>def</span> <span class='id identifier rubyid_check_statuses'>check_statuses</span><span class='lparen'>(</span><span class='id identifier rubyid_request'>request</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_request'>request</span><span class='period'>.</span><span class='id identifier rubyid_certid'>certid</span><span class='period'>.</span><span class='id identifier rubyid_map'>map</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_certid'>certid</span><span class='op'>|</span>
+        <span class='id identifier rubyid_validated_config'>validated_config</span> <span class='op'>=</span> <span class='ivar'>@configs</span><span class='period'>.</span><span class='id identifier rubyid_find'>find</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_config'>config</span><span class='op'>|</span>
+            <span class='comment'>#we need to create an OCSP::CertificateId object that has the right
+</span>            <span class='comment'>#issuer so we can pass it to #cmp_issuer. This is annoying because
+</span>            <span class='comment'>#CertificateId wants a cert and its issuer, but we don't want to
+</span>            <span class='comment'>#force users to provide an end entity cert just to make this comparison
+</span>            <span class='comment'>#work. So, we create a fake new cert and pass it in.
+</span>            <span class='id identifier rubyid_ee_cert'>ee_cert</span> <span class='op'>=</span> <span class='const'>OpenSSL</span><span class='op'>::</span><span class='const'>X509</span><span class='op'>::</span><span class='const'>Certificate</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span>
+            <span class='id identifier rubyid_ee_cert'>ee_cert</span><span class='period'>.</span><span class='id identifier rubyid_issuer'>issuer</span> <span class='op'>=</span> <span class='id identifier rubyid_config'>config</span><span class='period'>.</span><span class='id identifier rubyid_ca_cert'>ca_cert</span><span class='period'>.</span><span class='id identifier rubyid_cert'>cert</span><span class='period'>.</span><span class='id identifier rubyid_subject'>subject</span>
+            <span class='id identifier rubyid_issuer_certid'>issuer_certid</span> <span class='op'>=</span> <span class='const'>OpenSSL</span><span class='op'>::</span><span class='const'>OCSP</span><span class='op'>::</span><span class='const'>CertificateId</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_ee_cert'>ee_cert</span><span class='comma'>,</span><span class='id identifier rubyid_config'>config</span><span class='period'>.</span><span class='id identifier rubyid_ca_cert'>ca_cert</span><span class='period'>.</span><span class='id identifier rubyid_cert'>cert</span><span class='rparen'>)</span>
+            <span class='kw'>if</span> <span class='id identifier rubyid_certid'>certid</span><span class='period'>.</span><span class='id identifier rubyid_cmp_issuer'>cmp_issuer</span><span class='lparen'>(</span><span class='id identifier rubyid_issuer_certid'>issuer_certid</span><span class='rparen'>)</span> <span class='kw'>then</span>
+                <span class='id identifier rubyid_config'>config</span>
+            <span class='kw'>end</span>
+        <span class='kw'>end</span>
+        <span class='id identifier rubyid_check_status'>check_status</span><span class='lparen'>(</span><span class='id identifier rubyid_certid'>certid</span><span class='comma'>,</span> <span class='id identifier rubyid_validated_config'>validated_config</span><span class='rparen'>)</span>
     <span class='rbrace'>}</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="validate_statuses-instance_method">
+  
+    - (<tt>Boolean</tt>) <strong>validate_statuses</strong>(statuses) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    
+<p>Determines whether the statuses constitute a request that is compliant. No
+config means we don't know the CA, different configs means there are
+requests from two different CAs in there. Both are invalid.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Parameters:</h3>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>statuses</span>
+      
+      
+        <span class='type'>(<tt>Array&lt;Hash&gt;</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>array of hashes from check_statuses</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/r509/ocsp.rb', line 172</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_validate_statuses'>validate_statuses</span><span class='lparen'>(</span><span class='id identifier rubyid_statuses'>statuses</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_validity'>validity</span> <span class='op'>=</span> <span class='kw'>true</span>
+    <span class='id identifier rubyid_config'>config</span> <span class='op'>=</span> <span class='kw'>nil</span>
+
+    <span class='id identifier rubyid_statuses'>statuses</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_status'>status</span><span class='op'>|</span>
+        <span class='kw'>if</span> <span class='id identifier rubyid_status'>status</span><span class='lbracket'>[</span><span class='symbol'>:config</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
+            <span class='id identifier rubyid_validity'>validity</span> <span class='op'>=</span> <span class='kw'>false</span>
+        <span class='kw'>end</span>
+        <span class='kw'>if</span> <span class='id identifier rubyid_config'>config</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
+            <span class='id identifier rubyid_config'>config</span> <span class='op'>=</span> <span class='id identifier rubyid_status'>status</span><span class='lbracket'>[</span><span class='symbol'>:config</span><span class='rbracket'>]</span>
+        <span class='kw'>end</span>
+        <span class='kw'>if</span> <span class='id identifier rubyid_config'>config</span> <span class='op'>!=</span> <span class='id identifier rubyid_status'>status</span><span class='lbracket'>[</span><span class='symbol'>:config</span><span class='rbracket'>]</span>
+            <span class='id identifier rubyid_validity'>validity</span> <span class='op'>=</span> <span class='kw'>false</span>
+        <span class='kw'>end</span>
+    <span class='kw'>end</span>
+
+    <span class='id identifier rubyid_validity'>validity</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -367,7 +512,7 @@
 </div>
     
     <div id="footer">
-  Generated on Tue Dec 27 21:02:13 2011 by 
+  Generated on Mon Jan  9 12:45:54 2012 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.7.4 (ruby-1.9.3).
 </div>

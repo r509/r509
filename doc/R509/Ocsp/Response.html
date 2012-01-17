@@ -87,7 +87,7 @@
   
   
     <dt class="r2 last">Defined in:</dt>
-    <dd class="r2 last">lib/r509/Ocsp.rb</dd>
+    <dd class="r2 last">lib/r509/ocsp.rb</dd>
   
 </dl>
 <div class="clear"></div>
@@ -329,19 +329,19 @@
       <pre class="lines">
 
 
-54
-55
-56
-57
-58
-59</pre>
+11
+12
+13
+14
+15
+16</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/Ocsp.rb', line 54</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/ocsp.rb', line 11</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='id identifier rubyid_ocsp_response'>ocsp_response</span><span class='rparen'>)</span>
     <span class='kw'>if</span> <span class='kw'>not</span> <span class='id identifier rubyid_ocsp_response'>ocsp_response</span><span class='period'>.</span><span class='id identifier rubyid_kind_of?'>kind_of?</span><span class='lparen'>(</span><span class='const'>OpenSSL</span><span class='op'>::</span><span class='const'>OCSP</span><span class='op'>::</span><span class='const'>Response</span><span class='rparen'>)</span>
-        <span class='id identifier rubyid_raise'>raise</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>R509Error</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>You must pass an OpenSSL::OCSP::Response object to the constructor. See R509::Ocsp::Response#parse if you are trying to parse</span><span class='tstring_end'>'</span></span>
+        <span class='id identifier rubyid_raise'>raise</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>R509Error</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>You must pass an OpenSSL::OCSP::Response object to the constructor. See R509::Ocsp::Response.parse if you are trying to parse</span><span class='tstring_end'>'</span></span>
     <span class='kw'>end</span>
     <span class='ivar'>@ocsp_response</span> <span class='op'>=</span> <span class='id identifier rubyid_ocsp_response'>ocsp_response</span>
 <span class='kw'>end</span></pre>
@@ -412,15 +412,15 @@
       <pre class="lines">
 
 
-62
-63
-64
-65
-66
-67</pre>
+19
+20
+21
+22
+23
+24</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/Ocsp.rb', line 62</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/ocsp.rb', line 19</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_parse'>parse</span><span class='lparen'>(</span><span class='id identifier rubyid_ocsp_string'>ocsp_string</span><span class='rparen'>)</span>
     <span class='kw'>if</span> <span class='id identifier rubyid_ocsp_string'>ocsp_string</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
@@ -474,12 +474,12 @@
       <pre class="lines">
 
 
-80
-81
-82</pre>
+37
+38
+39</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/Ocsp.rb', line 80</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/ocsp.rb', line 37</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_basic'>basic</span>
     <span class='ivar'>@ocsp_response</span><span class='period'>.</span><span class='id identifier rubyid_basic'>basic</span>
@@ -551,12 +551,12 @@
       <pre class="lines">
 
 
-101
-102
-103</pre>
+58
+59
+60</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/Ocsp.rb', line 101</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/ocsp.rb', line 58</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_check_nonce'>check_nonce</span><span class='lparen'>(</span><span class='id identifier rubyid_ocsp_request'>ocsp_request</span><span class='rparen'>)</span>
     <span class='id identifier rubyid_ocsp_request'>ocsp_request</span><span class='period'>.</span><span class='id identifier rubyid_check_nonce'>check_nonce</span><span class='lparen'>(</span><span class='ivar'>@ocsp_response</span><span class='period'>.</span><span class='id identifier rubyid_basic'>basic</span><span class='rparen'>)</span>
@@ -608,12 +608,12 @@
       <pre class="lines">
 
 
-70
-71
-72</pre>
+27
+28
+29</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/Ocsp.rb', line 70</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/ocsp.rb', line 27</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_status'>status</span>
     <span class='ivar'>@ocsp_response</span><span class='period'>.</span><span class='id identifier rubyid_status'>status</span>
@@ -665,12 +665,12 @@
       <pre class="lines">
 
 
-75
-76
-77</pre>
+32
+33
+34</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/Ocsp.rb', line 75</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/ocsp.rb', line 32</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_to_der'>to_der</span>
     <span class='ivar'>@ocsp_response</span><span class='period'>.</span><span class='id identifier rubyid_to_der'>to_der</span>
@@ -742,21 +742,21 @@
       <pre class="lines">
 
 
-86
-87
-88
-89
-90
-91
-92
-93
-94
-95
-96
-97</pre>
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/Ocsp.rb', line 86</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/ocsp.rb', line 43</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_verify'>verify</span><span class='lparen'>(</span><span class='id identifier rubyid_ca_cert'>ca_cert</span><span class='rparen'>)</span>
     <span class='id identifier rubyid_store'>store</span> <span class='op'>=</span> <span class='const'>OpenSSL</span><span class='op'>::</span><span class='const'>X509</span><span class='op'>::</span><span class='const'>Store</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span>
@@ -780,7 +780,7 @@
 </div>
     
     <div id="footer">
-  Generated on Tue Dec 27 21:02:13 2011 by 
+  Generated on Tue Jan 17 14:14:51 2012 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.7.4 (ruby-1.9.3).
 </div>

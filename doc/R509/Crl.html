@@ -91,7 +91,7 @@
   
   
     <dt class="r1 last">Defined in:</dt>
-    <dd class="r1 last">lib/r509/Crl.rb</dd>
+    <dd class="r1 last">lib/r509/crl.rb</dd>
   
 </dl>
 <div class="clear"></div>
@@ -664,7 +664,7 @@
 35</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/Crl.rb', line 14</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/crl.rb', line 14</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='id identifier rubyid_config'>config</span><span class='rparen'>)</span>
     <span class='ivar'>@config</span> <span class='op'>=</span> <span class='id identifier rubyid_config'>config</span>
@@ -730,7 +730,7 @@
 13</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/Crl.rb', line 11</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/crl.rb', line 11</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_crl_list_file'>crl_list_file</span>
   <span class='ivar'>@crl_list_file</span>
@@ -772,7 +772,7 @@
 13</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/Crl.rb', line 11</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/crl.rb', line 11</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_crl_number'>crl_number</span>
   <span class='ivar'>@crl_number</span>
@@ -814,7 +814,7 @@
 13</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/Crl.rb', line 11</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/crl.rb', line 11</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_crl_number_file'>crl_number_file</span>
   <span class='ivar'>@crl_number_file</span>
@@ -856,7 +856,7 @@
 13</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/Crl.rb', line 11</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/crl.rb', line 11</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_validity_hours'>validity_hours</span>
   <span class='ivar'>@validity_hours</span>
@@ -954,7 +954,7 @@
 183</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/Crl.rb', line 147</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/crl.rb', line 147</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_generate_crl'>generate_crl</span>
     <span class='id identifier rubyid_crl'>crl</span> <span class='op'>=</span> <span class='const'>OpenSSL</span><span class='op'>::</span><span class='const'>X509</span><span class='op'>::</span><span class='const'>CRL</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span>
@@ -1045,7 +1045,7 @@
 87</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/Crl.rb', line 85</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/crl.rb', line 85</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_last_update'>last_update</span>
     <span class='ivar'>@crl</span><span class='period'>.</span><span class='id identifier rubyid_last_update'>last_update</span>
@@ -1102,7 +1102,7 @@
 94</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/Crl.rb', line 92</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/crl.rb', line 92</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_next_update'>next_update</span>
     <span class='ivar'>@crl</span><span class='period'>.</span><span class='id identifier rubyid_next_update'>next_update</span>
@@ -1240,7 +1240,7 @@ aACompromise           (10) }</pre>
 132</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/Crl.rb', line 116</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/crl.rb', line 116</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_revoke_cert'>revoke_cert</span><span class='lparen'>(</span><span class='id identifier rubyid_serial'>serial</span><span class='comma'>,</span><span class='id identifier rubyid_reason'>reason</span><span class='op'>=</span><span class='kw'>nil</span><span class='comma'>,</span> <span class='id identifier rubyid_revoke_time'>revoke_time</span><span class='op'>=</span><span class='const'>Time</span><span class='period'>.</span><span class='id identifier rubyid_now'>now</span><span class='period'>.</span><span class='id identifier rubyid_to_i'>to_i</span><span class='comma'>,</span> <span class='id identifier rubyid_generate_and_save'>generate_and_save</span><span class='op'>=</span><span class='kw'>true</span><span class='rparen'>)</span>
     <span class='kw'>if</span> <span class='kw'>not</span> <span class='id identifier rubyid_reason'>reason</span><span class='period'>.</span><span class='id identifier rubyid_to_i'>to_i</span><span class='period'>.</span><span class='id identifier rubyid_between?'>between?</span><span class='lparen'>(</span><span class='int'>0</span><span class='comma'>,</span><span class='int'>10</span><span class='rparen'>)</span>
@@ -1331,7 +1331,7 @@ aACompromise           (10) }</pre>
 43</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/Crl.rb', line 41</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/crl.rb', line 41</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_revoked?'>revoked?</span><span class='lparen'>(</span><span class='id identifier rubyid_serial'>serial</span><span class='rparen'>)</span>
   <span class='ivar'>@revoked_certs</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span><span class='lparen'>(</span><span class='id identifier rubyid_serial'>serial</span><span class='rparen'>)</span>
@@ -1388,7 +1388,7 @@ aACompromise           (10) }</pre>
 48</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/Crl.rb', line 46</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/crl.rb', line 46</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_revoked_cert'>revoked_cert</span><span class='lparen'>(</span><span class='id identifier rubyid_serial'>serial</span><span class='rparen'>)</span>
     <span class='ivar'>@revoked_certs</span><span class='lbracket'>[</span><span class='id identifier rubyid_serial'>serial</span><span class='rbracket'>]</span>
@@ -1449,7 +1449,7 @@ aACompromise           (10) }</pre>
 193</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/Crl.rb', line 187</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/crl.rb', line 187</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_revoked_certs'>revoked_certs</span>
     <span class='id identifier rubyid_ret'>ret</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
@@ -1525,7 +1525,7 @@ nil, then an error will be raised.</p>
 211</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/Crl.rb', line 202</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/crl.rb', line 202</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_save_crl_list'>save_crl_list</span><span class='lparen'>(</span><span class='id identifier rubyid_filename_or_io'>filename_or_io</span> <span class='op'>=</span> <span class='ivar'>@crl_list_file</span><span class='rparen'>)</span>
     <span class='kw'>return</span> <span class='kw'>nil</span> <span class='kw'>if</span> <span class='id identifier rubyid_filename_or_io'>filename_or_io</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
@@ -1601,7 +1601,7 @@ is nil, then an error will be raised.</p>
 226</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/Crl.rb', line 220</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/crl.rb', line 220</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_save_crl_number'>save_crl_number</span><span class='lparen'>(</span><span class='id identifier rubyid_filename_or_io'>filename_or_io</span> <span class='op'>=</span> <span class='ivar'>@crl_number_file</span><span class='rparen'>)</span>
     <span class='kw'>return</span> <span class='kw'>nil</span> <span class='kw'>if</span> <span class='id identifier rubyid_filename_or_io'>filename_or_io</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
@@ -1662,7 +1662,7 @@ is nil, then an error will be raised.</p>
 64</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/Crl.rb', line 62</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/crl.rb', line 62</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_to_der'>to_der</span>
     <span class='ivar'>@crl</span><span class='period'>.</span><span class='id identifier rubyid_to_der'>to_der</span>
@@ -1723,7 +1723,7 @@ is nil, then an error will be raised.</p>
 55</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/Crl.rb', line 53</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/crl.rb', line 53</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_to_pem'>to_pem</span>
     <span class='ivar'>@crl</span><span class='period'>.</span><span class='id identifier rubyid_to_pem'>to_pem</span>
@@ -1786,7 +1786,7 @@ generate_crl to sign a new CRL</p>
 142</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/Crl.rb', line 137</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/crl.rb', line 137</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_unrevoke_cert'>unrevoke_cert</span><span class='lparen'>(</span><span class='id identifier rubyid_serial'>serial</span><span class='rparen'>)</span>
     <span class='ivar'>@revoked_certs</span><span class='period'>.</span><span class='id identifier rubyid_delete'>delete</span><span class='lparen'>(</span><span class='id identifier rubyid_serial'>serial</span><span class='rparen'>)</span>
@@ -1849,7 +1849,7 @@ IO-like object.</p>
 80</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/Crl.rb', line 78</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/crl.rb', line 78</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_write_der'>write_der</span><span class='lparen'>(</span><span class='id identifier rubyid_filename_or_io'>filename_or_io</span><span class='rparen'>)</span>
     <span class='id identifier rubyid_write_data'>write_data</span><span class='lparen'>(</span><span class='id identifier rubyid_filename_or_io'>filename_or_io</span><span class='comma'>,</span> <span class='ivar'>@crl</span><span class='period'>.</span><span class='id identifier rubyid_to_der'>to_der</span><span class='rparen'>)</span>
@@ -1909,7 +1909,7 @@ IO-like object.</p>
 72</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/Crl.rb', line 70</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/crl.rb', line 70</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_write_pem'>write_pem</span><span class='lparen'>(</span><span class='id identifier rubyid_filename_or_io'>filename_or_io</span><span class='rparen'>)</span>
     <span class='id identifier rubyid_write_data'>write_data</span><span class='lparen'>(</span><span class='id identifier rubyid_filename_or_io'>filename_or_io</span><span class='comma'>,</span> <span class='ivar'>@crl</span><span class='period'>.</span><span class='id identifier rubyid_to_pem'>to_pem</span><span class='rparen'>)</span>
@@ -1924,7 +1924,7 @@ IO-like object.</p>
 </div>
     
     <div id="footer">
-  Generated on Tue Dec 27 21:02:13 2011 by 
+  Generated on Tue Jan 17 14:14:51 2012 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.7.4 (ruby-1.9.3).
 </div>

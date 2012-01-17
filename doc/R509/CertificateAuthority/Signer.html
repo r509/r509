@@ -87,7 +87,7 @@
   
   
     <dt class="r2 last">Defined in:</dt>
-    <dd class="r2 last">lib/r509/CertificateAuthority.rb</dd>
+    <dd class="r2 last">lib/r509/certificateauthority.rb</dd>
   
 </dl>
 <div class="clear"></div>
@@ -232,6 +232,7 @@
       <pre class="lines">
 
 
+11
 12
 13
 14
@@ -241,10 +242,12 @@
 18
 19
 20
-21</pre>
+21
+22
+23</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/CertificateAuthority.rb', line 12</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/certificateauthority.rb', line 11</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='id identifier rubyid_config'>config</span><span class='op'>=</span><span class='kw'>nil</span><span class='rparen'>)</span>
     <span class='ivar'>@config</span> <span class='op'>=</span> <span class='id identifier rubyid_config'>config</span>
@@ -254,6 +257,9 @@
     <span class='kw'>end</span>
     <span class='kw'>if</span> <span class='kw'>not</span> <span class='ivar'>@config</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span> <span class='kw'>and</span> <span class='ivar'>@config</span><span class='period'>.</span><span class='id identifier rubyid_num_profiles'>num_profiles</span> <span class='op'>==</span> <span class='int'>0</span>
         <span class='id identifier rubyid_raise'>raise</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>R509Error</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>You must have at least one CaProfile on your CaConfig to issue</span><span class='tstring_end'>&quot;</span></span>
+    <span class='kw'>end</span>
+    <span class='kw'>if</span> <span class='kw'>not</span> <span class='ivar'>@config</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span> <span class='kw'>and</span> <span class='kw'>not</span> <span class='ivar'>@config</span><span class='period'>.</span><span class='id identifier rubyid_ca_cert'>ca_cert</span><span class='period'>.</span><span class='id identifier rubyid_has_private_key?'>has_private_key?</span>
+        <span class='id identifier rubyid_raise'>raise</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>R509Error</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>You must have a private key associated with your CA certificate to issue</span><span class='tstring_end'>&quot;</span></span>
     <span class='kw'>end</span>
 <span class='kw'>end</span></pre>
     </td>
@@ -365,6 +371,17 @@ random)</p>
 </div>
         </li>
       
+        <li>
+          <span class="name">:san_names</span>
+          <span class="type">(<tt>Array</tt>)</span>
+          <span class="default">
+            
+          </span>
+          &mdash; <div class='inline'>
+<p>Optional array of subject alternative names</p>
+</div>
+        </li>
+      
     </ul>
   
 
@@ -393,9 +410,6 @@ random)</p>
       <pre class="lines">
 
 
-118
-119
-120
 121
 122
 123
@@ -430,10 +444,16 @@ random)</p>
 152
 153
 154
-155</pre>
+155
+156
+157
+158
+159
+160
+161</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/CertificateAuthority.rb', line 118</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/certificateauthority.rb', line 121</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_selfsign'>selfsign</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span>
     <span class='kw'>if</span> <span class='kw'>not</span> <span class='id identifier rubyid_options'>options</span><span class='period'>.</span><span class='id identifier rubyid_kind_of?'>kind_of?</span><span class='lparen'>(</span><span class='const'>Hash</span><span class='rparen'>)</span>
@@ -452,15 +472,18 @@ random)</p>
         <span class='symbol'>:serial</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:serial</span><span class='rbracket'>]</span>
     <span class='rparen'>)</span>
 
+    <span class='kw'>if</span> <span class='id identifier rubyid_options'>options</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span><span class='lparen'>(</span><span class='symbol'>:san_names</span><span class='rparen'>)</span>
+        <span class='id identifier rubyid_san_names'>san_names</span> <span class='op'>=</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:san_names</span><span class='rbracket'>]</span>
+    <span class='kw'>else</span>
+        <span class='id identifier rubyid_san_names'>san_names</span> <span class='op'>=</span> <span class='id identifier rubyid_csr'>csr</span><span class='period'>.</span><span class='id identifier rubyid_san_names'>san_names</span>
+    <span class='kw'>end</span>
+
     <span class='id identifier rubyid_build_extensions'>build_extensions</span><span class='lparen'>(</span>
         <span class='symbol'>:subject_certificate</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_cert'>cert</span><span class='comma'>,</span>
         <span class='symbol'>:issuer_certificate</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_cert'>cert</span><span class='comma'>,</span>
-        <span class='symbol'>:basic_constraints</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>CA:TRUE</span><span class='tstring_end'>&quot;</span></span>
-        <span class='comment'>#:key_usage =&gt; key_usage,
-</span>        <span class='comment'>#:extended_key_usage =&gt; extended_key_usage,
-</span>        <span class='comment'>#:certificate_policies =&gt; certificate_policies,
-</span>        <span class='comment'>#:san_names =&gt; san_names
-</span>    <span class='rparen'>)</span>
+        <span class='symbol'>:basic_constraints</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>CA:TRUE</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span>
+        <span class='symbol'>:san_names</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_san_names'>san_names</span>
+    <span class='rparen'>)</span>
 
 
     <span class='kw'>if</span> <span class='id identifier rubyid_options'>options</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span><span class='lparen'>(</span><span class='symbol'>:message_digest</span><span class='rparen'>)</span>
@@ -635,8 +658,6 @@ default</p>
       <pre class="lines">
 
 
-33
-34
 35
 36
 37
@@ -711,10 +732,12 @@ default</p>
 106
 107
 108
-109</pre>
+109
+110
+111</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/CertificateAuthority.rb', line 33</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/certificateauthority.rb', line 35</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_sign'>sign</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span>
     <span class='kw'>if</span> <span class='ivar'>@config</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
@@ -803,7 +826,7 @@ default</p>
 </div>
     
     <div id="footer">
-  Generated on Tue Dec 27 21:02:14 2011 by 
+  Generated on Tue Jan 17 14:14:53 2012 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.7.4 (ruby-1.9.3).
 </div>

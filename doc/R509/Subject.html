@@ -87,7 +87,7 @@
   
   
     <dt class="r2 last">Defined in:</dt>
-    <dd class="r2 last">lib/r509/Subject.rb</dd>
+    <dd class="r2 last">lib/r509/subject.rb</dd>
   
 </dl>
 <div class="clear"></div>
@@ -360,7 +360,7 @@ fashion</p>
 22</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/Subject.rb', line 7</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/subject.rb', line 7</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='id identifier rubyid_arg'>arg</span><span class='op'>=</span><span class='kw'>nil</span><span class='rparen'>)</span>
     <span class='kw'>case</span> <span class='id identifier rubyid_arg'>arg</span>
@@ -424,7 +424,7 @@ fashion</p>
 42</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/Subject.rb', line 35</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/subject.rb', line 35</span>
 
 <span class='kw'>def</span> <span class='op'>[]</span><span class='lparen'>(</span><span class='id identifier rubyid_key'>key</span><span class='rparen'>)</span>
     <span class='ivar'>@array</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_item'>item</span><span class='op'>|</span>
@@ -485,7 +485,7 @@ fashion</p>
 64</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/Subject.rb', line 45</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/subject.rb', line 45</span>
 
 <span class='kw'>def</span> <span class='op'>[]=</span><span class='lparen'>(</span><span class='id identifier rubyid_key'>key</span><span class='comma'>,</span> <span class='id identifier rubyid_value'>value</span><span class='rparen'>)</span>
     <span class='id identifier rubyid_added'>added</span> <span class='op'>=</span> <span class='kw'>false</span>
@@ -561,7 +561,7 @@ fashion</p>
 71</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/Subject.rb', line 67</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/subject.rb', line 67</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_delete'>delete</span><span class='lparen'>(</span><span class='id identifier rubyid_key'>key</span><span class='rparen'>)</span>
     <span class='ivar'>@array</span> <span class='op'>=</span> <span class='ivar'>@array</span><span class='period'>.</span><span class='id identifier rubyid_select'>select</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_item'>item</span><span class='op'>|</span>
@@ -613,7 +613,7 @@ fashion</p>
 32</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/Subject.rb', line 30</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/subject.rb', line 30</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_empty?'>empty?</span>
     <span class='ivar'>@array</span><span class='period'>.</span><span class='id identifier rubyid_empty?'>empty?</span>
@@ -663,7 +663,7 @@ fashion</p>
 27</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/Subject.rb', line 25</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/subject.rb', line 25</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_name'>name</span>
     <span class='const'>OpenSSL</span><span class='op'>::</span><span class='const'>X509</span><span class='op'>::</span><span class='const'>Name</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='ivar'>@array</span><span class='rparen'>)</span>
@@ -720,7 +720,7 @@ fashion</p>
 81</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/Subject.rb', line 79</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/subject.rb', line 79</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_to_a'>to_a</span>
     <span class='ivar'>@array</span>
@@ -777,7 +777,7 @@ fashion</p>
 76</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/Subject.rb', line 74</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/subject.rb', line 74</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_to_s'>to_s</span>
     <span class='id identifier rubyid_name'>name</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span>
@@ -792,7 +792,7 @@ fashion</p>
 </div>
     
     <div id="footer">
-  Generated on Tue Dec 27 21:02:14 2011 by 
+  Generated on Tue Jan 17 14:14:52 2012 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.7.4 (ruby-1.9.3).
 </div>

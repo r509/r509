@@ -91,7 +91,7 @@
   
   
     <dt class="r1 last">Defined in:</dt>
-    <dd class="r1 last">lib/r509/PrivateKey.rb</dd>
+    <dd class="r1 last">lib/r509/privatekey.rb</dd>
   
 </dl>
 <div class="clear"></div>
@@ -604,7 +604,7 @@ key in the HSM (which will not show the private key, just public).</p>
 60</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/PrivateKey.rb', line 16</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/privatekey.rb', line 16</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='id identifier rubyid_opts'>opts</span><span class='rparen'>)</span>
     <span class='kw'>if</span> <span class='kw'>not</span> <span class='id identifier rubyid_opts'>opts</span><span class='period'>.</span><span class='id identifier rubyid_kind_of?'>kind_of?</span><span class='lparen'>(</span><span class='const'>Hash</span><span class='rparen'>)</span>
@@ -707,7 +707,7 @@ key in the HSM (which will not show the private key, just public).</p>
 69</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/PrivateKey.rb', line 63</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/privatekey.rb', line 63</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_bit_strength'>bit_strength</span>
     <span class='kw'>if</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_rsa?'>rsa?</span>
@@ -768,7 +768,7 @@ key in the HSM (which will not show the private key, just public).</p>
 174</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/PrivateKey.rb', line 172</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/privatekey.rb', line 172</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_dsa?'>dsa?</span>
     <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_key'>key</span><span class='period'>.</span><span class='id identifier rubyid_kind_of?'>kind_of?</span><span class='lparen'>(</span><span class='const'>OpenSSL</span><span class='op'>::</span><span class='const'>PKey</span><span class='op'>::</span><span class='const'>DSA</span><span class='rparen'>)</span>
@@ -829,7 +829,7 @@ key in the HSM (which will not show the private key, just public).</p>
 87</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/PrivateKey.rb', line 81</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/privatekey.rb', line 81</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_in_hardware?'>in_hardware?</span>
     <span class='kw'>if</span> <span class='kw'>not</span> <span class='ivar'>@engine</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
@@ -896,7 +896,7 @@ key in the HSM (which will not show the private key, just public)</p>
 78</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/PrivateKey.rb', line 72</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/privatekey.rb', line 72</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_key'>key</span>
     <span class='kw'>if</span> <span class='id identifier rubyid_in_hardware?'>in_hardware?</span>
@@ -961,7 +961,7 @@ key in the HSM (which will not show the private key, just public)</p>
 92</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/PrivateKey.rb', line 90</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/privatekey.rb', line 90</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_public_key'>public_key</span>
     <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_key'>key</span><span class='period'>.</span><span class='id identifier rubyid_public_key'>public_key</span>
@@ -1018,7 +1018,7 @@ key in the HSM (which will not show the private key, just public)</p>
 167</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/PrivateKey.rb', line 165</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/privatekey.rb', line 165</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_rsa?'>rsa?</span>
     <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_key'>key</span><span class='period'>.</span><span class='id identifier rubyid_kind_of?'>kind_of?</span><span class='lparen'>(</span><span class='const'>OpenSSL</span><span class='op'>::</span><span class='const'>PKey</span><span class='op'>::</span><span class='const'>RSA</span><span class='rparen'>)</span>
@@ -1078,7 +1078,7 @@ key in the HSM (which will not show the private key, just public)</p>
 130</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/PrivateKey.rb', line 125</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/privatekey.rb', line 125</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_to_der'>to_der</span>
     <span class='kw'>if</span> <span class='id identifier rubyid_in_hardware?'>in_hardware?</span>
@@ -1181,7 +1181,7 @@ key in the HSM (which will not show the private key, just public)</p>
 119</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/PrivateKey.rb', line 113</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/privatekey.rb', line 113</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_to_encrypted_pem'>to_encrypted_pem</span><span class='lparen'>(</span><span class='id identifier rubyid_cipher'>cipher</span><span class='comma'>,</span><span class='id identifier rubyid_password'>password</span><span class='rparen'>)</span>
     <span class='kw'>if</span> <span class='id identifier rubyid_in_hardware?'>in_hardware?</span>
@@ -1245,7 +1245,7 @@ key in the HSM (which will not show the private key, just public)</p>
 104</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/PrivateKey.rb', line 99</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/privatekey.rb', line 99</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_to_pem'>to_pem</span>
     <span class='kw'>if</span> <span class='id identifier rubyid_in_hardware?'>in_hardware?</span>
@@ -1308,7 +1308,7 @@ IO-like object.</p>
 159</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/PrivateKey.rb', line 157</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/privatekey.rb', line 157</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_write_der'>write_der</span><span class='lparen'>(</span><span class='id identifier rubyid_filename_or_io'>filename_or_io</span><span class='rparen'>)</span>
     <span class='id identifier rubyid_write_data'>write_data</span><span class='lparen'>(</span><span class='id identifier rubyid_filename_or_io'>filename_or_io</span><span class='comma'>,</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_to_der'>to_der</span><span class='rparen'>)</span>
@@ -1403,7 +1403,7 @@ IO-like object.</p>
 151</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/PrivateKey.rb', line 149</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/privatekey.rb', line 149</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_write_encrypted_pem'>write_encrypted_pem</span><span class='lparen'>(</span><span class='id identifier rubyid_filename_or_io'>filename_or_io</span><span class='comma'>,</span><span class='id identifier rubyid_cipher'>cipher</span><span class='comma'>,</span><span class='id identifier rubyid_password'>password</span><span class='rparen'>)</span>
     <span class='id identifier rubyid_write_data'>write_data</span><span class='lparen'>(</span><span class='id identifier rubyid_filename_or_io'>filename_or_io</span><span class='comma'>,</span> <span class='id identifier rubyid_to_encrypted_pem'>to_encrypted_pem</span><span class='lparen'>(</span><span class='id identifier rubyid_cipher'>cipher</span><span class='comma'>,</span><span class='id identifier rubyid_password'>password</span><span class='rparen'>)</span><span class='rparen'>)</span>
@@ -1463,7 +1463,7 @@ IO-like object.</p>
 138</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/PrivateKey.rb', line 136</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/privatekey.rb', line 136</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_write_pem'>write_pem</span><span class='lparen'>(</span><span class='id identifier rubyid_filename_or_io'>filename_or_io</span><span class='rparen'>)</span>
     <span class='id identifier rubyid_write_data'>write_data</span><span class='lparen'>(</span><span class='id identifier rubyid_filename_or_io'>filename_or_io</span><span class='comma'>,</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_to_pem'>to_pem</span><span class='rparen'>)</span>
@@ -1478,7 +1478,7 @@ IO-like object.</p>
 </div>
     
     <div id="footer">
-  Generated on Tue Dec 27 21:02:14 2011 by 
+  Generated on Tue Jan 17 14:14:53 2012 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.7.4 (ruby-1.9.3).
 </div>

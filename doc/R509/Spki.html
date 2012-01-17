@@ -91,7 +91,7 @@
   
   
     <dt class="r1 last">Defined in:</dt>
-    <dd class="r1 last">lib/r509/Spki.rb</dd>
+    <dd class="r1 last">lib/r509/spki.rb</dd>
   
 </dl>
 <div class="clear"></div>
@@ -600,7 +600,7 @@ class.</p>
 29</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/Spki.rb', line 16</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/spki.rb', line 16</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='id identifier rubyid_opts'>opts</span><span class='op'>=</span><span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
     <span class='kw'>if</span> <span class='kw'>not</span> <span class='id identifier rubyid_opts'>opts</span><span class='period'>.</span><span class='id identifier rubyid_kind_of?'>kind_of?</span><span class='lparen'>(</span><span class='const'>Hash</span><span class='rparen'>)</span>
@@ -658,7 +658,7 @@ class.</p>
 12</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/Spki.rb', line 10</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/spki.rb', line 10</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_san_names'>san_names</span>
   <span class='ivar'>@san_names</span>
@@ -700,7 +700,7 @@ class.</p>
 12</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/Spki.rb', line 10</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/spki.rb', line 10</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_spki'>spki</span>
   <span class='ivar'>@spki</span>
@@ -742,7 +742,7 @@ class.</p>
 12</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/Spki.rb', line 10</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/spki.rb', line 10</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_subject'>subject</span>
   <span class='ivar'>@subject</span>
@@ -810,7 +810,7 @@ class.</p>
 90</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/Spki.rb', line 84</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/spki.rb', line 84</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_bit_strength'>bit_strength</span>
     <span class='kw'>if</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_rsa?'>rsa?</span>
@@ -871,7 +871,7 @@ class.</p>
 80</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/Spki.rb', line 78</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/spki.rb', line 78</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_dsa?'>dsa?</span>
     <span class='ivar'>@spki</span><span class='period'>.</span><span class='id identifier rubyid_public_key'>public_key</span><span class='period'>.</span><span class='id identifier rubyid_kind_of?'>kind_of?</span><span class='lparen'>(</span><span class='const'>OpenSSL</span><span class='op'>::</span><span class='const'>PKey</span><span class='op'>::</span><span class='const'>DSA</span><span class='rparen'>)</span>
@@ -932,7 +932,7 @@ class.</p>
 101</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/Spki.rb', line 95</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/spki.rb', line 95</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_key_algorithm'>key_algorithm</span>
     <span class='kw'>if</span> <span class='ivar'>@spki</span><span class='period'>.</span><span class='id identifier rubyid_public_key'>public_key</span><span class='period'>.</span><span class='id identifier rubyid_kind_of?'>kind_of?</span> <span class='const'>OpenSSL</span><span class='op'>::</span><span class='const'>PKey</span><span class='op'>::</span><span class='const'>RSA</span> <span class='kw'>then</span>
@@ -993,7 +993,7 @@ class.</p>
 34</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/Spki.rb', line 32</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/spki.rb', line 32</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_public_key'>public_key</span>
     <span class='ivar'>@spki</span><span class='period'>.</span><span class='id identifier rubyid_public_key'>public_key</span>
@@ -1050,7 +1050,7 @@ class.</p>
 73</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/Spki.rb', line 71</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/spki.rb', line 71</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_rsa?'>rsa?</span>
     <span class='ivar'>@spki</span><span class='period'>.</span><span class='id identifier rubyid_public_key'>public_key</span><span class='period'>.</span><span class='id identifier rubyid_kind_of?'>kind_of?</span><span class='lparen'>(</span><span class='const'>OpenSSL</span><span class='op'>::</span><span class='const'>PKey</span><span class='op'>::</span><span class='const'>RSA</span><span class='rparen'>)</span>
@@ -1107,7 +1107,7 @@ class.</p>
 50</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/Spki.rb', line 48</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/spki.rb', line 48</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_to_der'>to_der</span>
     <span class='ivar'>@spki</span><span class='period'>.</span><span class='id identifier rubyid_to_der'>to_der</span>
@@ -1166,7 +1166,7 @@ class.</p>
 110</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/Spki.rb', line 108</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/spki.rb', line 108</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_to_hash'>to_hash</span>
     <span class='lbrace'>{</span> <span class='symbol'>:subject</span> <span class='op'>=&gt;</span> <span class='ivar'>@subject</span><span class='period'>.</span><span class='id identifier rubyid_dup'>dup</span> <span class='comma'>,</span> <span class='symbol'>:san_names</span> <span class='op'>=&gt;</span> <span class='ivar'>@san_names</span><span class='period'>.</span><span class='id identifier rubyid_dup'>dup</span> <span class='rbrace'>}</span>
@@ -1227,7 +1227,7 @@ class.</p>
 41</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/Spki.rb', line 39</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/spki.rb', line 39</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_to_pem'>to_pem</span>
     <span class='ivar'>@spki</span><span class='period'>.</span><span class='id identifier rubyid_to_pem'>to_pem</span>
@@ -1287,7 +1287,7 @@ IO-like object.</p>
 66</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/Spki.rb', line 64</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/spki.rb', line 64</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_write_der'>write_der</span><span class='lparen'>(</span><span class='id identifier rubyid_filename_or_io'>filename_or_io</span><span class='rparen'>)</span>
     <span class='id identifier rubyid_write_data'>write_data</span><span class='lparen'>(</span><span class='id identifier rubyid_filename_or_io'>filename_or_io</span><span class='comma'>,</span> <span class='ivar'>@spki</span><span class='period'>.</span><span class='id identifier rubyid_to_der'>to_der</span><span class='rparen'>)</span>
@@ -1347,7 +1347,7 @@ IO-like object.</p>
 58</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/Spki.rb', line 56</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/spki.rb', line 56</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_write_pem'>write_pem</span><span class='lparen'>(</span><span class='id identifier rubyid_filename_or_io'>filename_or_io</span><span class='rparen'>)</span>
     <span class='id identifier rubyid_write_data'>write_data</span><span class='lparen'>(</span><span class='id identifier rubyid_filename_or_io'>filename_or_io</span><span class='comma'>,</span> <span class='ivar'>@spki</span><span class='period'>.</span><span class='id identifier rubyid_to_pem'>to_pem</span><span class='rparen'>)</span>
@@ -1362,7 +1362,7 @@ IO-like object.</p>
 </div>
     
     <div id="footer">
-  Generated on Tue Dec 27 21:02:13 2011 by 
+  Generated on Tue Jan 17 14:14:52 2012 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.7.4 (ruby-1.9.3).
 </div>
