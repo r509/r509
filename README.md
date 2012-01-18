@@ -311,4 +311,4 @@ There is (relatively) complete documentation available for every method and clas
 * [Mike Ryan](https://github.com/justfalter)
 
 ##License
-See the LICENSE file. Licensed under the Apache 2.0 License
+See the LICENSE file. Licensed under the Apache 2.0 License.
