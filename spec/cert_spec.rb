@@ -263,14 +263,21 @@ describe R509::Cert do
     end
     it "checks a cert that is not yet valid" do
         cert = R509::Cert.new(:cert => @cert_not_yet_valid)
-        cert.in_validity_range?.should == false
+        cert.valid?.should == false
     end
     it "checks a cert that is in validity range" do
         cert = R509::Cert.new(:cert => @test_ca_cert)
-        cert.in_validity_range?.should == true
+        cert.valid?.should == true
     end
     it "checks a cert that is expired" do
         cert = R509::Cert.new(:cert => @cert_expired)
-        cert.in_validity_range?.should == false
+        cert.valid?.should == false
+    end
+    it "checks expired_at?" do
+        cert = R509::Cert.new(:cert => @cert_expired)
+        cert.valid_at?(Time.new(2009,1,1)).should == false
+        cert.valid_at?(Time.new(2011,3,1)).should == true
+        cert.valid_at?(1298959200).should == true
+        cert.valid_at?(Time.new(2012,1,1)).should == false
     end
 end

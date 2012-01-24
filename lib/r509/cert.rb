@@ -112,11 +112,23 @@ module R509
         # the certificate.
         #
         # @return [Boolean]
-        def in_validity_range?
-            if (self.not_after > Time.now) and (self.not_before <= Time.now)
-                true
-            else
+        def valid?
+            valid_at?(Time.now)
+        end
+
+        # Returns whether the certificate was between its notBefore and notAfter at the time provided
+        #
+        # @param [Time,Integer] time Time object or integer timestamp
+        # @return [Boolean]
+        def valid_at?(time)
+            if time.kind_of?(Integer)
+                time = Time.at(time)
+            end
+
+            if (self.not_after < time) or (self.not_before > time)
                 false
+            else
+                true
             end
         end
 
