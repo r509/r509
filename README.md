@@ -10,7 +10,7 @@ To install the gem: ```gem install r509-(version).gem```
 If you want to run the tests for r509 you'll need rspec. Additionally, you may want to install rcov/simplecov (ruby 1.8/1.9 respectively) and yard for running the code coverage and documentation tasks in the Rakefile. ```rake -T``` for a complete list of rake tasks available.
 
 ##Continuous Integration
-We run continuous integration tests (using Travis-CI) against 1.8.7, 1.9.2, 1.9.3, ree, and ruby-head.
+We run continuous integration tests (using Travis-CI) against 1.8.7, 1.9.2, 1.9.3, ree, ruby-head, and rubinius(rbx) 2.0 in 1.9 mode.
 
 ##Executable
 

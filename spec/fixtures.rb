@@ -118,6 +118,8 @@ module TestFixtures
 
     CRL_LIST_FILE = (FIXTURES_PATH+'crl_list_file.txt').to_s
 
+    CRL_REASON = read_fixture("crl_with_reason.pem")
+
     def self.test_ca_cert
         R509::Cert.new(:cert => TEST_CA_CERT, :key => TEST_CA_KEY)
     end
