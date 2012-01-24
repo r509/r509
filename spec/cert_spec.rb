@@ -275,9 +275,9 @@ describe R509::Cert do
     end
     it "checks expired_at?" do
         cert = R509::Cert.new(:cert => @cert_expired)
-        cert.valid_at?(Time.new(2009,1,1)).should == false
-        cert.valid_at?(Time.new(2011,3,1)).should == true
+        cert.valid_at?(Time.utc(2009,1,1)).should == false
+        cert.valid_at?(Time.utc(2011,3,1)).should == true
         cert.valid_at?(1298959200).should == true
-        cert.valid_at?(Time.new(2012,1,1)).should == false
+        cert.valid_at?(Time.utc(2012,1,1)).should == false
     end
 end
