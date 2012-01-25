@@ -13,11 +13,11 @@ describe R509::Crl::Parser do
     end
 
     it "returns last_update" do
-        @crl.last_update.should == Time.at(1327440392)
+        @crl.last_update.should == Time.at(1327446093)
     end
 
     it "returns next_update" do
-        @crl.next_update.should == Time.at(1328048792)
+        @crl.next_update.should == Time.at(1328054493)
     end
 
     it "returns signature_algorithm" do
@@ -34,10 +34,20 @@ describe R509::Crl::Parser do
         @crl.revoked?(12345).should == true
     end
 
+    it "returns a hash of all revoked certs" do
+        @crl.revoked[12345][:time].should == Time.at(1327449693)
+        @crl.revoked[12345][:reason].should == "Key Compromise"
+        @crl.revoked[123456][:time].should == Time.at(1327449693)
+        @crl.revoked[123456][:reason].should == "Unspecified"
+        @crl.revoked[1234567][:time].should == Time.at(1327449693)
+        @crl.revoked[1234567][:reason].should == "Unspecified"
+        @crl.revoked[12345678].should == nil
+    end
+
     it "returns revocation information for a serial" do
         @crl.revoked_cert(11111).should == nil
         revoked_info = @crl.revoked_cert(12345)
-        revoked_info[:time].should == Time.at(1327443992)
+        revoked_info[:time].should == Time.at(1327449693)
         revoked_info[:reason].should == "Key Compromise"
     end
 end

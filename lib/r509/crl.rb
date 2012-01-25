@@ -53,21 +53,39 @@ module R509
                 end
             end
 
+            # @return [Hash] hash of serial => { :time, :reason } hashes
+            def revoked
+                revoked_list = {}
+                @crl.revoked.each do |revoked|
+                    reason = get_reason(revoked)
+                    revoked_list[revoked.serial.to_i] = { :time => revoked.time, :reason => reason }
+                end
+
+                revoked_list
+            end
+
             # @param [Integer] serial number
             # @return [Hash] hash with :time and :reason
             def revoked_cert(serial)
                 revoked = @crl.revoked.find { |revoked| revoked.serial == serial }
                 if revoked
-                    reason = nil
-                    revoked.extensions.each do |extension|
-                        if extension.oid == "CRLReason"
-                            reason = extension.value
-                        end
-                    end
+                    reason = get_reason(revoked)
                     { :time => revoked.time, :reason => reason }
                 else
                     nil
                 end
+            end
+
+            private
+            def get_reason(revocation_object)
+                reason = nil
+                revocation_object.extensions.each do |extension|
+                    if extension.oid == "CRLReason"
+                        reason = extension.value
+                    end
+                end
+
+                reason
             end
         end
 
