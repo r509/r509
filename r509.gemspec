@@ -5,7 +5,6 @@ spec = Gem::Specification.new do |s|
   s.name = 'r509'
   s.version = R509::VERSION
   s.platform = Gem::Platform::RUBY
-  s.has_rdoc = false
   s.summary = "A (relatively) simple X.509 certification authority"
   s.description = 'A module that allows you to create CSRs, issue certs off a CA, view the certs, create CRLs, run an OCSP responder, and much more'
   s.add_development_dependency 'rspec'
