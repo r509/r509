@@ -257,9 +257,7 @@ module R509
             if @extensions.nil?
                 @extensions = Hash.new
                 @cert.extensions.each { |extension|
-                    #@extensions[extension.oid] ||= []
                     hash = {'value' => extension.value, 'critical' => extension.critical?}
-                    #@extensions[extension.oid].push hash
                     @extensions[extension.oid] = hash
                 }
             end
