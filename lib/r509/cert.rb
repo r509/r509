@@ -42,6 +42,12 @@ module R509
                 end
             end
         end
+        
+        def self.load_from_pem( filename )
+          return R509::Cert.new(:cert => IOHelpers.read_data(filename) )
+        end
+        
+        
 
         # Converts the Cert into the PEM format
         #
