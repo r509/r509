@@ -256,13 +256,11 @@ module R509
         def extensions
             if @extensions.nil?
                 @extensions = Hash.new
-                @cert.extensions.to_a.each { |extension|
-                    extension = extension.to_a
-                    if(!@extensions[extension[0]].kind_of?(Array)) then
-                        @extensions[extension[0]] = []
-                    end
-                    hash = {'value' => extension[1], 'critical' => extension[2]}
-                    @extensions[extension[0]].push hash
+                @cert.extensions.each { |extension|
+                    #@extensions[extension.oid] ||= []
+                    hash = {'value' => extension.value, 'critical' => extension.critical?}
+                    #@extensions[extension.oid].push hash
+                    @extensions[extension.oid] = hash
                 }
             end
             @extensions
@@ -272,10 +270,12 @@ module R509
         #
         # @return [Array] an array containing each KU as a separate string
         def key_usage
-            if self.extensions.has_key?("keyUsage") and self.extensions["keyUsage"].count > 0 and self.extensions["keyUsage"][0].has_key?("value")
-                self.extensions["keyUsage"][0]["value"].split(",").map{|v| v.strip}
+            ku_extensions = self.extensions["keyUsage"]
+            
+            unless ( ku_extensions.nil? or ku_extensions["value"].nil? )
+              return ku_extensions["value"].split(",").map {|ext| ext.strip}
             else
-                []
+              return []
             end
         end
 
@@ -283,25 +283,27 @@ module R509
         #
         # @return [Array] an array containing each EKU as a separate string
         def extended_key_usage
-            if self.extensions.has_key?("extendedKeyUsage") and self.extensions["extendedKeyUsage"].count > 0 and self.extensions["extendedKeyUsage"][0].has_key?("value")
-                self.extensions["extendedKeyUsage"][0]["value"].split(",").map{|v| v.strip}
+            eku_extensions = self.extensions["extendedKeyUsage"]
+            
+            unless ( eku_extensions.nil? or eku_extensions["value"].nil? )
+              return eku_extensions["value"].split(",").map {|ext| ext.strip}
             else
-                []
+              return []
             end
         end
 
         private
         #takes OpenSSL::X509::Extension object
         def parse_san_extension(extension)
-            san_string = extension.to_a[1]
+            san_string = extension.value
             stripped = san_string.split(',').map{ |name| name.gsub(/DNS:/,'').strip }
             @san_names = stripped
         end
 
         def parse_certificate(cert)
             @cert = OpenSSL::X509::Certificate.new cert
-            @cert.extensions.to_a.each { |extension|
-                if (extension.to_a[0] == 'subjectAltName') then
+            @cert.extensions.each { |extension|
+                if (extension.oid == 'subjectAltName') then
                     parse_san_extension(extension)
                 end
             }

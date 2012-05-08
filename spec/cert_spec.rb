@@ -210,8 +210,8 @@ describe R509::Cert do
     end
     it "gets key usage from the extensions array" do
         cert = R509::Cert.new(:cert => @cert)
-        cert.extensions["keyUsage"].count.should == 1
-        cert.extensions["keyUsage"][0]["value"].should == "Digital Signature, Key Encipherment"
+        cert.extensions["keyUsage"].nil?.should == false
+        cert.extensions["keyUsage"]["value"].should == "Digital Signature, Key Encipherment"
     end
     it "gets key usage from #key_usage" do
         cert = R509::Cert.new(:cert => @cert)
@@ -223,8 +223,8 @@ describe R509::Cert do
     end
     it "gets extended key usage from the extensions array" do
         cert = R509::Cert.new(:cert => @cert)
-        cert.extensions["extendedKeyUsage"].count.should == 1
-        cert.extensions["extendedKeyUsage"][0]["value"].should == "TLS Web Server Authentication"
+        cert.extensions["extendedKeyUsage"].nil?.should == false
+        cert.extensions["extendedKeyUsage"]["value"].should == "TLS Web Server Authentication"
     end
     it "get extended key usage from #extended_key_usage" do
         cert = R509::Cert.new(:cert => @cert)
