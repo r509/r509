@@ -30,7 +30,7 @@ module R509
                     file = File.open(filename_or_io, 'rb:ascii-8bit')
                     return file.read()
                 ensure
-                    file.close()
+                    file.close() unless file.nil?
                 end
             end
         end
