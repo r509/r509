@@ -269,6 +269,29 @@ module R509
             end
             @extensions
         end
+        
+        # Returns the certificate extensions as a hash of R509::Cert::Extensions
+        # specific objects.
+        #
+        # @return [Hash] A hash, in which the values are classes from the
+        # R509::Cert::Extensions module, each specific to the extension. The hash
+        # is keyed with the R509 extension class. Extensions without an R509
+        # implementation are ignored (see #get_unknown_extensions).
+        def r509_extensions
+            if @r509_extensions.nil?
+                @r509_extensions = Extensions.wrap_openssl_extensions( self.cert.extensions )
+            end
+            
+            return @r509_extensions
+        end
+        
+        # Returns an array of OpenSSL::X509::Extension objects representing the
+        # extensions that do not have R509 implementations.
+        #
+        # @return [Array] An array of OpenSSL::X509::Extension objects.
+        def unknown_extensions
+          return Extensions.get_unknown_extensions( self.cert.extensions )
+        end
 
         # Return the key usage extensions
         #
