@@ -238,6 +238,22 @@ describe R509::Cert do
         cert = R509::Cert.new(:cert => @cert5)
         cert.extended_key_usage.should include("TLS Web Server Authentication","TLS Web Client Authentication","Microsoft Server Gated Crypto")
     end
+    it "gets the CRL URI" do
+        cert = R509::Cert.new(:cert => @cert)
+        cert.crl_uri.should == "http://crl.securetrust.com/STCA.crl"
+    end
+    it "handles a missing CRL URI" do
+        cert = R509::Cert.new(:cert => @cert4)
+        cert.crl_uri.should == nil
+    end
+    it "gets the OCSP URI" do
+        cert = R509::Cert.new(:cert => @cert5)
+        cert.ocsp_uri.should == "http://secure.globalsign.net/cacert/orgv1.crt"
+    end
+    it "handles a missing OCSP URI" do
+        cert = R509::Cert.new(:cert => @cert4)
+        cert.ocsp_uri.should == nil
+    end
 
     it "checks rsa?" do
         cert = R509::Cert.new(:cert => @cert)

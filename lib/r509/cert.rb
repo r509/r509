@@ -1,6 +1,7 @@
 require 'openssl'
 require 'r509/exceptions'
 require 'r509/io_helpers'
+require 'r509/cert/extensions'
 
 module R509
     # The primary certificate object.
@@ -290,32 +291,42 @@ module R509
         #
         # @return [Array] An array of OpenSSL::X509::Extension objects.
         def unknown_extensions
-          return Extensions.get_unknown_extensions( self.cert.extensions )
+            return Extensions.get_unknown_extensions( self.cert.extensions )
         end
 
         # Return the key usage extensions
         #
         # @return [Array] an array containing each KU as a separate string
         def key_usage
-            ku_extensions = self.extensions["keyUsage"]
-            
-            unless ( ku_extensions.nil? or ku_extensions["value"].nil? )
-              return ku_extensions["value"].split(",").map {|ext| ext.strip}
-            else
-              return []
-            end
+            ku_extension = r509_extensions[R509::Cert::Extensions::KeyUsage]
+            return [] if ku_extension.nil?
+            return ku_extension.allowed_uses
         end
 
         # Return the extended key usage extensions
         #
         # @return [Array] an array containing each EKU as a separate string
         def extended_key_usage
-            eku_extensions = self.extensions["extendedKeyUsage"]
-            
-            unless ( eku_extensions.nil? or eku_extensions["value"].nil? )
-              return eku_extensions["value"].split(",").map {|ext| ext.strip}
+            eku_extension = r509_extensions[R509::Cert::Extensions::ExtendedKeyUsage]
+            return [] if eku_extension.nil?
+            return eku_extension.allowed_uses
+        end
+        
+        def crl_uri
+            crl_extension = r509_extensions[R509::Cert::Extensions::CrlDistributionPoints]
+            if ( crl_extension.nil? or crl_extension.crl_uri.nil? )
+                return nil
             else
-              return []
+                return crl_extension.crl_uri
+            end
+        end
+        
+        def ocsp_uri
+            aia_extension = r509_extensions[R509::Cert::Extensions::AuthorityInfoAccess]
+            if ( aia_extension.nil? or aia_extension.ocsp_uri.nil? )
+                return nil
+            else
+                return aia_extension.ocsp_uri
             end
         end
 
