@@ -246,13 +246,33 @@ describe R509::Cert do
         cert = R509::Cert.new(:cert => @cert4)
         cert.crl_uri.should == nil
     end
-    it "gets the OCSP URI" do
-        cert = R509::Cert.new(:cert => @cert5)
-        cert.ocsp_uri.should == "http://secure.globalsign.net/cacert/orgv1.crt"
+    context "when getting the OCSP URI" do
+      it "handles a cert with an AIA extension with a OCSP URI" do
+          cert = R509::Cert.new(:cert => @cert3)
+          cert.ocsp_uri.should == "http://ocsp.domain.com"
+      end
+      it "handles a cert with an AIA extension but no OCSP URI" do
+          cert = R509::Cert.new(:cert => @cert5)
+          cert.ocsp_uri.should == nil
+      end
+      it "handles a cert with no AIA extension" do
+          cert = R509::Cert.new(:cert => @cert4)
+          cert.ocsp_uri.should == nil
+      end
     end
-    it "handles a missing OCSP URI" do
-        cert = R509::Cert.new(:cert => @cert4)
-        cert.ocsp_uri.should == nil
+    context "when getting the CA issuer URI" do
+      it "handles a cert with an AIA extension with a CA issuer URI" do
+          cert = R509::Cert.new(:cert => @cert5)
+          cert.ca_issuers_uri.should == "http://secure.globalsign.net/cacert/orgv1.crt"
+      end
+      it "handles a cert with an AIA extension but no CA issuer URI" do
+          cert = R509::Cert.new(:cert => @cert3)
+          cert.ca_issuers_uri.should == nil
+      end
+      it "handles a cert with no AIA extension" do
+          cert = R509::Cert.new(:cert => @cert4)
+          cert.ca_issuers_uri.should == nil
+      end
     end
 
     it "checks rsa?" do

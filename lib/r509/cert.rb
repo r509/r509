@@ -329,6 +329,15 @@ module R509
                 return aia_extension.ocsp_uri
             end
         end
+        
+        def ca_issuers_uri
+            aia_extension = r509_extensions[R509::Cert::Extensions::AuthorityInfoAccess]
+            if ( aia_extension.nil? or aia_extension.ca_issuers_uri.nil? )
+                return nil
+            else
+                return aia_extension.ca_issuers_uri
+            end
+        end
 
         private
         #takes OpenSSL::X509::Extension object
