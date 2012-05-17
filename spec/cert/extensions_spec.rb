@@ -1,0 +1,397 @@
+require 'spec_helper'
+
+shared_examples_for "a correct R509 BasicConstraints object" do
+    before :all do
+        extension_name = "basicConstraints"
+        klass = BasicConstraints
+        openssl_ext = OpenSSL::X509::Extension.new( extension_name, @extension_value )
+        @r509_ext = klass.new( openssl_ext )
+    end
+    
+    it "is_ca? should correctly report whether it's a CA certificate" do
+        @r509_ext.is_ca?.should == @is_ca
+    end
+    
+    it "the path length should be correct" do
+        @r509_ext.path_length.should == @pathlen
+    end
+    
+    it "allows_sub_ca? should correctly report whether its path length allows it to issue CA certs" do
+        @r509_ext.allows_sub_ca?.should == @allows_sub_ca
+    end
+end
+
+shared_examples_for "a correct R509 KeyUsage object" do
+    before :all do
+        extension_name = "keyUsage"
+        klass = KeyUsage
+        openssl_ext = OpenSSL::X509::Extension.new( extension_name, @extension_value )
+        @r509_ext = klass.new( openssl_ext )
+    end
+    
+    it "allowed_uses should be non-nil" do
+        @r509_ext.allowed_uses.should_not == nil
+    end
+    
+    it "allowed_uses should be correct" do
+        @r509_ext.allowed_uses.should == @allowed_uses
+    end
+    
+    it "the individual allowed-use functions should be correct" do
+        @r509_ext.digital_signature?.should == @allowed_uses.include?( KeyUsage::AU_DIGITAL_SIGNATURE )
+        @r509_ext.non_repudiation?.should == @allowed_uses.include?( KeyUsage::AU_NON_REPUDIATION )
+        @r509_ext.key_encipherment?.should == @allowed_uses.include?( KeyUsage::AU_KEY_ENCIPHERMENT )
+        @r509_ext.data_encipherment?.should == @allowed_uses.include?( KeyUsage::AU_DATA_ENCIPHERMENT )
+        @r509_ext.key_agreement?.should == @allowed_uses.include?( KeyUsage::AU_KEY_AGREEMENT )
+        @r509_ext.certificate_sign?.should == @allowed_uses.include?( KeyUsage::AU_CERTIFICATE_SIGN )
+        @r509_ext.crl_sign?.should == @allowed_uses.include?( KeyUsage::AU_CRL_SIGN )
+        @r509_ext.encipher_only?.should == @allowed_uses.include?( KeyUsage::AU_ENCIPHER_ONLY )
+        @r509_ext.decipher_only?.should == @allowed_uses.include?( KeyUsage::AU_DECIPHER_ONLY )
+    end
+end
+
+shared_examples_for "a correct R509 ExtendedKeyUsage object" do
+    before :all do
+        extension_name = "extendedKeyUsage"
+        klass = ExtendedKeyUsage
+        openssl_ext = OpenSSL::X509::Extension.new( extension_name, @extension_value )
+        @r509_ext = klass.new( openssl_ext )
+    end
+    
+    it "allowed_uses should be non-nil" do
+        @r509_ext.allowed_uses.should_not == nil
+    end
+    
+    it "allowed_uses should be correct" do
+        @r509_ext.allowed_uses.should == @allowed_uses
+    end
+    
+    it "the individual allowed-use functions should be correct" do
+        @r509_ext.web_server_authentication?.should == @allowed_uses.include?( ExtendedKeyUsage::AU_WEB_SERVER_AUTH )
+        @r509_ext.web_client_authentication?.should == @allowed_uses.include?( ExtendedKeyUsage::AU_WEB_CLIENT_AUTH )
+        @r509_ext.code_signing?.should == @allowed_uses.include?( ExtendedKeyUsage::AU_CODE_SIGNING )
+        @r509_ext.email_protection?.should == @allowed_uses.include?( ExtendedKeyUsage::AU_EMAIL_PROTECTION )
+    end
+end
+
+shared_examples_for "a correct R509 SubjectKeyIdentifier object" do
+    before :all do
+        extension_name = "subjectKeyIdentifier"
+        klass = SubjectKeyIdentifier
+        openssl_ext = OpenSSL::X509::Extension.new( extension_name, @extension_value )
+        @r509_ext = klass.new( openssl_ext )
+    end
+    
+    it "key should be correct" do
+        @r509_ext.key.should == @key
+    end
+end
+
+shared_examples_for "a correct R509 AuthorityKeyIdentifier object" do
+    before :all do
+        extension_name = "authorityKeyIdentifier"
+        klass = AuthorityKeyIdentifier
+        openssl_ext = OpenSSL::X509::Extension.new( extension_name, @extension_value )
+        @r509_ext = klass.new( openssl_ext )
+    end
+    
+    #TODO
+end
+
+shared_examples_for "a correct R509 SubjectAlternativeName object" do
+    before :all do
+        extension_name = "subjectAltName"
+        klass = SubjectAlternativeName
+        openssl_ext = OpenSSL::X509::Extension.new( extension_name, @extension_value )
+        @r509_ext = klass.new( openssl_ext )
+    end
+    
+    it "dns_names should be correct" do
+        @r509_ext.dns_names.should == @dns_names
+    end
+    
+    it "ip_addresses should be correct" do
+        @r509_ext.ip_addresses.should == @ip_addresses
+    end
+    
+    it "uris should be correct" do
+        @r509_ext.uris.should == @uris
+    end
+end
+
+shared_examples_for "a correct R509 AuthorityInfoAccess object" do
+    before :all do
+        extension_name = "authorityInfoAccess"
+        klass = AuthorityInfoAccess
+        openssl_ext = OpenSSL::X509::Extension.new( extension_name, @extension_value )
+        @r509_ext = klass.new( openssl_ext )
+    end
+    
+    it "ca_issuers_uri should be correct" do
+        @r509_ext.ca_issuers_uri.should == @ca_issuers_uri
+    end
+    
+    it "ocsp_uri should be correct" do
+        @r509_ext.ocsp_uri.should == @ocsp_uri
+    end
+end
+
+shared_examples_for "a correct R509 CrlDistributionPoints object" do
+    before :all do
+        extension_name = "crlDistributionPoints"
+        klass = CrlDistributionPoints
+        openssl_ext = OpenSSL::X509::Extension.new( extension_name, @extension_value )
+        @r509_ext = klass.new( openssl_ext )
+    end
+    
+    it "crl_uri should be correct" do
+        @r509_ext.crl_uri.should == @crl_uri
+    end
+end
+
+
+describe R509::Cert::Extensions do
+    include R509::Cert::Extensions
+    
+    context "BasicConstraints" do
+        context "with constraints for a CA certificate" do
+            before :all do
+                @extension_value = "CA:TRUE;pathlen:1"
+                @is_ca = true
+                @pathlen = 1
+                @allows_sub_ca = true
+            end
+            
+            it_should_behave_like "a correct R509 BasicConstraints object"
+        end
+        
+        context "with constraints for a sub-CA certificate" do
+            before :all do
+                @extension_value = "CA:TRUE;pathlen:0"
+                @is_ca = true
+                @pathlen = 0
+                @allows_sub_ca = false
+            end
+            
+            it_should_behave_like "a correct R509 BasicConstraints object"
+        end
+        
+        context "with constraints for a non-CA certificate" do
+            before :all do
+                @extension_value = "CA:FALSE"
+                @is_ca = false
+                @pathlen = nil
+                @allows_sub_ca = false
+            end
+            
+            it_should_behave_like "a correct R509 BasicConstraints object"
+        end
+    end
+    
+    context "KeyUsage" do
+        context "with one allowed use" do
+            before :all do
+                @allowed_uses = [ KeyUsage::AU_DIGITAL_SIGNATURE ]
+                @extension_value = @allowed_uses.join( ", " )
+            end
+            
+            it_should_behave_like "a correct R509 KeyUsage object"
+        end
+        
+        context "with some allowed uses" do
+            before :all do
+                # this spec and the one below alternate the uses
+                @allowed_uses = [ KeyUsage::AU_DIGITAL_SIGNATURE, KeyUsage::AU_KEY_ENCIPHERMENT, KeyUsage::AU_KEY_AGREEMENT, KeyUsage::AU_CRL_SIGN, KeyUsage::AU_DECIPHER_ONLY ]
+                @extension_value = @allowed_uses.join( ", " )
+            end
+            
+            it_should_behave_like "a correct R509 KeyUsage object"
+        end
+        
+        context "with some different allowed uses" do
+            before :all do
+                @allowed_uses = [ KeyUsage::AU_NON_REPUDIATION, KeyUsage::AU_DATA_ENCIPHERMENT, KeyUsage::AU_CERTIFICATE_SIGN, KeyUsage::AU_ENCIPHER_ONLY ]
+                @extension_value = @allowed_uses.join( ", " )
+            end
+            
+            it_should_behave_like "a correct R509 KeyUsage object"
+        end
+        
+        context "with all allowed uses" do
+            before :all do
+                @allowed_uses = [ KeyUsage::AU_DIGITAL_SIGNATURE, KeyUsage::AU_KEY_ENCIPHERMENT,
+                                 KeyUsage::AU_KEY_AGREEMENT, KeyUsage::AU_CRL_SIGN, KeyUsage::AU_DECIPHER_ONLY,
+                                 KeyUsage::AU_NON_REPUDIATION, KeyUsage::AU_DATA_ENCIPHERMENT,
+                                 KeyUsage::AU_CERTIFICATE_SIGN, KeyUsage::AU_ENCIPHER_ONLY ]
+                @extension_value = @allowed_uses.join( ", " )
+            end
+            
+            it_should_behave_like "a correct R509 KeyUsage object"
+        end
+    end
+    
+    context "ExtendedKeyUsage" do
+        context "with one allowed use" do
+            before :all do
+                @allowed_uses = [ ExtendedKeyUsage::AU_WEB_SERVER_AUTH ]
+                @extension_value = @allowed_uses.join( ", " )
+            end
+            
+            it_should_behave_like "a correct R509 ExtendedKeyUsage object"
+        end
+        
+        context "with some allowed uses" do
+            before :all do
+                # this spec and the one below alternate the uses
+                @allowed_uses = [ ExtendedKeyUsage::AU_WEB_SERVER_AUTH, ExtendedKeyUsage::AU_CODE_SIGNING ]
+                @extension_value = @allowed_uses.join( ", " )
+            end
+            
+            it_should_behave_like "a correct R509 ExtendedKeyUsage object"
+        end
+        
+        context "with some different allowed uses" do
+            before :all do
+                @allowed_uses = [ ExtendedKeyUsage::AU_WEB_CLIENT_AUTH, ExtendedKeyUsage::AU_EMAIL_PROTECTION ]
+                @extension_value = @allowed_uses.join( ", " )
+            end
+            
+            it_should_behave_like "a correct R509 ExtendedKeyUsage object"
+        end
+        
+        context "with all allowed uses" do
+            before :all do
+                @allowed_uses = [ ExtendedKeyUsage::AU_WEB_SERVER_AUTH, ExtendedKeyUsage::AU_CODE_SIGNING,
+                                  ExtendedKeyUsage::AU_WEB_CLIENT_AUTH, ExtendedKeyUsage::AU_EMAIL_PROTECTION ]
+                @extension_value = @allowed_uses.join( ", " )
+            end
+            
+            it_should_behave_like "a correct R509 ExtendedKeyUsage object"
+        end
+    end
+    
+    context "SubjectKeyIdentifier" do
+        before :all do
+            @extension_value = "00:11:22:33:44:55:66:77:88:99:00:AA:BB:CC:DD:EE:FF:00:11:22"
+            @key = @extension_value
+        end
+        
+        it_should_behave_like "a correct R509 SubjectKeyIdentifier object"
+    end
+    
+    context "AuthorityKeyIdentifier" do
+        before :all do
+            @extension_value = "keyid:always"
+        end
+        
+        it_should_behave_like "a correct R509 AuthorityKeyIdentifier object"
+    end
+    
+    context "SubjectAlternativeName" do
+        context "with a DNS alternative name only" do
+            before :all do
+                @dns_names = ["www.test.local"]
+                @ip_addresses = []
+                @uris = []
+                @extension_value = "DNS:#{@dns_names.join(",DNS:")}"
+            end
+            
+            it_should_behave_like "a correct R509 SubjectAlternativeName object"
+        end
+        
+        context "with multiple DNS alternative names only" do
+            before :all do
+                @dns_names = ["www.test.local", "www2.test.local"]
+                @ip_addresses = []
+                @uris = []
+                @extension_value = "DNS:#{@dns_names.join(",DNS:")}"
+            end
+            
+            it_should_behave_like "a correct R509 SubjectAlternativeName object"
+        end
+        
+        context "with an IP address alternative name only" do
+            before :all do
+                @dns_names = []
+                @ip_addresses = ["10.1.2.3"]
+                @uris = []
+                @extension_value = "IP:#{@ip_addresses.join(",IP:")}"
+            end
+            
+            it_should_behave_like "a correct R509 SubjectAlternativeName object"
+        end
+        
+        context "with multiple IP address alternative names only" do
+            before :all do
+                @dns_names = []
+                @ip_addresses = ["10.1.2.3", "10.1.2.4"]
+                @uris = []
+                @extension_value = "IP:#{@ip_addresses.join(",IP:")}"
+            end
+            
+            it_should_behave_like "a correct R509 SubjectAlternativeName object"
+        end
+        
+        context "with a URI alternative name only" do
+            before :all do
+                @dns_names = []
+                @ip_addresses = []
+                @uris = ["http://www.test.local"]
+                @extension_value = "URI:#{@uris.join(",URI:")}"
+            end
+            
+            it_should_behave_like "a correct R509 SubjectAlternativeName object"
+        end
+        
+        context "with multiple URI alternative names only" do
+            before :all do
+                @dns_names = []
+                @ip_addresses = []
+                @uris = ["http://www.test.local","http://www2.test.local"]
+                @extension_value = "URI:#{@uris.join(",URI:")}"
+            end
+            
+            it_should_behave_like "a correct R509 SubjectAlternativeName object"
+        end
+        
+        context "with multiple different alternative names" do
+            before :all do
+                @dns_names = ["www.test.local"]
+                @ip_addresses = ["10.1.2.3"]
+                @uris = ["http://www.test.local"]
+                @extension_value = "DNS:#{@dns_names.join(",DNS:")},IP:#{@ip_addresses.join(",IP:")},URI:#{@uris.join(",URI:")}"
+            end
+            
+            it_should_behave_like "a correct R509 SubjectAlternativeName object"
+        end
+    end
+    context "AuthorityInfoAccess" do
+        context "with only a CA Issuers URI" do
+            before :all do
+                @ca_issuers_uri = "http://www.test.local/ca.cert"
+                @extension_value = "CA Issuers - URI:#{@ca_issuers_uri}"
+            end
+            
+            it_should_behave_like "a correct R509 AuthorityInfoAccess object"
+        end
+        
+        context "with only an OCSP URI" do
+            before :all do
+                @ocsp_uri = "http://www.test.local"
+                @extension_value = "OCSP - URI:#{@ocsp_uri}"
+            end
+            
+            it_should_behave_like "a correct R509 AuthorityInfoAccess object"
+        end
+    end
+    
+    context "CrlDistributionPoints" do
+        before :all do
+            @crl_uri = "http://www.test.local/ca.crl"
+            @extension_value = "URI:#{@crl_uri}"
+        end
+        
+        it_should_behave_like "a correct R509 CrlDistributionPoints object"
+    end
+    
+end

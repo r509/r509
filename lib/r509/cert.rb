@@ -256,6 +256,13 @@ module R509
             pkcs12 = OpenSSL::PKCS12.create(password,friendly_name,@key.key,@cert)
             write_data(filename_or_io, pkcs12.to_der)
         end
+        
+        # Checks the given CRL for this certificate's serial number
+        #
+        # @param [R509::Crl] A CRL from the CA that issued this certificate.
+        def is_revoked_by_crl?( r509_crl )
+            return r509_crl.revoked?( self.serial )
+        end
 
         # Return the certificate extensions
         #
@@ -312,31 +319,32 @@ module R509
             return eku_extension.allowed_uses
         end
         
-        def crl_uri
-            crl_extension = r509_extensions[R509::Cert::Extensions::CrlDistributionPoints]
-            if ( crl_extension.nil? or crl_extension.crl_uri.nil? )
-                return nil
-            else
-                return crl_extension.crl_uri
-            end
+        #
+        # Shortcuts to extensions
+        #
+        
+        def basic_constraints
+            return r509_extensions[R509::Cert::Extensions::BasicConstraints]
         end
         
-        def ocsp_uri
-            aia_extension = r509_extensions[R509::Cert::Extensions::AuthorityInfoAccess]
-            if ( aia_extension.nil? or aia_extension.ocsp_uri.nil? )
-                return nil
-            else
-                return aia_extension.ocsp_uri
-            end
+        def subject_key_identifier
+            return r509_extensions[R509::Cert::Extensions::SubjectKeyIdentifier]
         end
         
-        def ca_issuers_uri
-            aia_extension = r509_extensions[R509::Cert::Extensions::AuthorityInfoAccess]
-            if ( aia_extension.nil? or aia_extension.ca_issuers_uri.nil? )
-                return nil
-            else
-                return aia_extension.ca_issuers_uri
-            end
+        def authority_key_identifier
+            return r509_extensions[R509::Cert::Extensions::AuthorityKeyIdentifier]
+        end
+        
+        def subject_alternative_name
+            return r509_extensions[R509::Cert::Extensions::SubjectAlternativeName]
+        end
+        
+        def authority_info_access
+            return r509_extensions[R509::Cert::Extensions::AuthorityInfoAccess]
+        end
+        
+        def crl_distribution_points
+            return r509_extensions[R509::Cert::Extensions::CrlDistributionPoints]
         end
 
         private
