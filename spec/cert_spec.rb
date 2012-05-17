@@ -238,41 +238,29 @@ describe R509::Cert do
         cert = R509::Cert.new(:cert => @cert5)
         cert.extended_key_usage.should include("TLS Web Server Authentication","TLS Web Client Authentication","Microsoft Server Gated Crypto")
     end
-    it "gets the CRL URI" do
+    it "gets the right object from #basic_constraints" do
         cert = R509::Cert.new(:cert => @cert)
-        cert.crl_uri.should == "http://crl.securetrust.com/STCA.crl"
+        cert.basic_constraints.class.should == R509::Cert::Extensions::BasicConstraints
     end
-    it "handles a missing CRL URI" do
-        cert = R509::Cert.new(:cert => @cert4)
-        cert.crl_uri.should == nil
+    it "gets the right object from #subject_key_identifier" do
+        cert = R509::Cert.new(:cert => @cert)
+        cert.subject_key_identifier.class.should == R509::Cert::Extensions::SubjectKeyIdentifier
     end
-    context "when getting the OCSP URI" do
-      it "handles a cert with an AIA extension with a OCSP URI" do
-          cert = R509::Cert.new(:cert => @cert3)
-          cert.ocsp_uri.should == "http://ocsp.domain.com"
-      end
-      it "handles a cert with an AIA extension but no OCSP URI" do
-          cert = R509::Cert.new(:cert => @cert5)
-          cert.ocsp_uri.should == nil
-      end
-      it "handles a cert with no AIA extension" do
-          cert = R509::Cert.new(:cert => @cert4)
-          cert.ocsp_uri.should == nil
-      end
+    it "gets the right object from #authority_key_identifier" do
+        cert = R509::Cert.new(:cert => @cert)
+        cert.authority_key_identifier.class.should == R509::Cert::Extensions::AuthorityKeyIdentifier
     end
-    context "when getting the CA issuer URI" do
-      it "handles a cert with an AIA extension with a CA issuer URI" do
-          cert = R509::Cert.new(:cert => @cert5)
-          cert.ca_issuers_uri.should == "http://secure.globalsign.net/cacert/orgv1.crt"
-      end
-      it "handles a cert with an AIA extension but no CA issuer URI" do
-          cert = R509::Cert.new(:cert => @cert3)
-          cert.ca_issuers_uri.should == nil
-      end
-      it "handles a cert with no AIA extension" do
-          cert = R509::Cert.new(:cert => @cert4)
-          cert.ca_issuers_uri.should == nil
-      end
+    it "gets the right object from #subject_alternative_name" do
+        cert = R509::Cert.new(:cert => @cert5)
+        cert.subject_alternative_name.class.should == R509::Cert::Extensions::SubjectAlternativeName
+    end
+    it "gets the right object from #authority_info_access" do
+        cert = R509::Cert.new(:cert => @cert5)
+        cert.authority_info_access.class.should == R509::Cert::Extensions::AuthorityInfoAccess
+    end
+    it "gets the right object from #crl_distribution_points" do
+        cert = R509::Cert.new(:cert => @cert)
+        cert.crl_distribution_points.class.should == R509::Cert::Extensions::CrlDistributionPoints
     end
 
     it "checks rsa?" do
