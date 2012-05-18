@@ -213,34 +213,23 @@ describe R509::Cert do
         cert.extensions["keyUsage"].nil?.should == false
         cert.extensions["keyUsage"]["value"].should == "Digital Signature, Key Encipherment"
     end
-    it "gets key usage from #key_usage" do
-        cert = R509::Cert.new(:cert => @cert)
-        cert.key_usage.should == ["Digital Signature", "Key Encipherment"]
-    end
-    it "handles lack of key usage" do
-        cert = R509::Cert.new(:cert => @cert4)
-        cert.key_usage.should == []
-    end
     it "gets extended key usage from the extensions array" do
         cert = R509::Cert.new(:cert => @cert)
         cert.extensions["extendedKeyUsage"].nil?.should == false
         cert.extensions["extendedKeyUsage"]["value"].should == "TLS Web Server Authentication"
     end
-    it "get extended key usage from #extended_key_usage" do
-        cert = R509::Cert.new(:cert => @cert)
-        cert.extended_key_usage.should == ["TLS Web Server Authentication"]
-    end
-    it "handles lack of extended key usage" do
-        cert = R509::Cert.new(:cert => @cert4)
-        cert.extended_key_usage.should == []
-    end
-    it "handles multiple extended key usages" do
-        cert = R509::Cert.new(:cert => @cert5)
-        cert.extended_key_usage.should include("TLS Web Server Authentication","TLS Web Client Authentication","Microsoft Server Gated Crypto")
-    end
+    
     it "gets the right object from #basic_constraints" do
         cert = R509::Cert.new(:cert => @cert)
         cert.basic_constraints.class.should == R509::Cert::Extensions::BasicConstraints
+    end
+    it "gets the right object from #key_usage" do
+        cert = R509::Cert.new(:cert => @cert)
+        cert.key_usage.class.should == R509::Cert::Extensions::KeyUsage
+    end
+    it "gets the right object from #key_usage" do
+        cert = R509::Cert.new(:cert => @cert)
+        cert.extended_key_usage.class.should == R509::Cert::Extensions::ExtendedKeyUsage
     end
     it "gets the right object from #subject_key_identifier" do
         cert = R509::Cert.new(:cert => @cert)

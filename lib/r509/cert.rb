@@ -300,49 +300,71 @@ module R509
         def unknown_extensions
             return Extensions.get_unknown_extensions( self.cert.extensions )
         end
-
-        # Return the key usage extensions
-        #
-        # @return [Array] an array containing each KU as a separate string
-        def key_usage
-            ku_extension = r509_extensions[R509::Cert::Extensions::KeyUsage]
-            return [] if ku_extension.nil?
-            return ku_extension.allowed_uses
-        end
-
-        # Return the extended key usage extensions
-        #
-        # @return [Array] an array containing each EKU as a separate string
-        def extended_key_usage
-            eku_extension = r509_extensions[R509::Cert::Extensions::ExtendedKeyUsage]
-            return [] if eku_extension.nil?
-            return eku_extension.allowed_uses
-        end
         
         #
         # Shortcuts to extensions
         #
         
+        # Returns this object's BasicConstraints extension as an R509 extension
+        #
+        # @return [R509::Cert::Extensions::BasicConstraints] The object, or nil
+        #   if this cert does not have a BasicConstraints extension.
         def basic_constraints
             return r509_extensions[R509::Cert::Extensions::BasicConstraints]
         end
         
+        # Returns this object's KeyUsage extension as an R509 extension
+        #
+        # @return [R509::Cert::Extensions::KeyUsage] The object, or nil
+        #   if this cert does not have a KeyUsage extension.
+        def key_usage
+            return r509_extensions[R509::Cert::Extensions::KeyUsage]
+        end
+        
+        # Returns this object's ExtendedKeyUsage extension as an R509 extension
+        #
+        # @return [R509::Cert::Extensions::ExtendedKeyUsage] The object, or nil
+        #   if this cert does not have a ExtendedKeyUsage extension.
+        def extended_key_usage
+            return r509_extensions[R509::Cert::Extensions::ExtendedKeyUsage]
+        end
+        
+        # Returns this object's SubjectKeyIdentifier extension as an R509 extension
+        #
+        # @return [R509::Cert::Extensions::SubjectKeyIdentifier] The object, or nil
+        #   if this cert does not have a SubjectKeyIdentifier extension.
         def subject_key_identifier
             return r509_extensions[R509::Cert::Extensions::SubjectKeyIdentifier]
         end
         
+        # Returns this object's AuthorityKeyIdentifier extension as an R509 extension
+        #
+        # @return [R509::Cert::Extensions::AuthorityKeyIdentifier] The object, or nil
+        #   if this cert does not have a AuthorityKeyIdentifier extension.
         def authority_key_identifier
             return r509_extensions[R509::Cert::Extensions::AuthorityKeyIdentifier]
         end
         
+        # Returns this object's SubjectAlternativeName extension as an R509 extension
+        #
+        # @return [R509::Cert::Extensions::SubjectAlternativeName] The object, or nil
+        #   if this cert does not have a SubjectAlternativeName extension.
         def subject_alternative_name
             return r509_extensions[R509::Cert::Extensions::SubjectAlternativeName]
         end
         
+        # Returns this object's AuthorityInfoAccess extension as an R509 extension
+        #
+        # @return [R509::Cert::Extensions::AuthorityInfoAccess] The object, or nil
+        #   if this cert does not have a AuthorityInfoAccess extension.
         def authority_info_access
             return r509_extensions[R509::Cert::Extensions::AuthorityInfoAccess]
         end
         
+        # Returns this object's CrlDistributionPoints extension as an R509 extension
+        #
+        # @return [R509::Cert::Extensions::CrlDistributionPoints] The object, or nil
+        #   if this cert does not have a CrlDistributionPoints extension.
         def crl_distribution_points
             return r509_extensions[R509::Cert::Extensions::CrlDistributionPoints]
         end
