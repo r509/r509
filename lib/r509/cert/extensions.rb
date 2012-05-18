@@ -12,7 +12,7 @@ module R509
       # classes are used by #wrap_openssl_extensions to wrap OpenSSL extensions
       # in R509 extensions, based on the OID.
       def self.register_class( r509_ext_class )
-        raise ArgumentError.new("R509 certificate extensions must have an OID") if r509_ext_class.OID.nil?
+        raise ArgumentError.new("R509 certificate extensions must have an OID") if r509_ext_class::OID.nil?
         R509_EXTENSION_CLASSES << r509_ext_class
       end
       
