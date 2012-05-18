@@ -222,19 +222,17 @@ module R509
         OID = "authorityInfoAccess"
         Extensions.register_class(self)
         
-        # The OCSP URI, or nil if none was present
-        attr_reader :ocsp_uri
-        # The CA issuers URI, or nil if none was present
-        attr_reader :ca_issuers_uri
+        # An array of the OCSP URIs, if any
+        attr_reader :ocsp_uris
+        # An array of the CA issuers URIs, if any
+        attr_reader :ca_issuers_uris
         
         # See OpenSSL::X509::Extension#initialize
         def initialize(*args)
           super(*args)
           
-          uri_match = self.value.match( /OCSP - URI:(http[^\n ]*)/ )
-          @ocsp_uri = uri_match[1] unless uri_match.nil?
-          uri_match = self.value.match( /CA Issuers - URI:(http[^\n ]*)/ )
-          @ca_issuers_uri = uri_match[1] unless uri_match.nil?
+          @ocsp_uris = self.value.scan( /OCSP - URI:([^,]+)/ ).map { |match| match[0] }
+          @ca_issuers_uris = self.value.scan( /CA Issuers - URI:([^,]+)/ ).map { |match| match[0] }
         end
       end
       
@@ -244,15 +242,14 @@ module R509
         OID = "crlDistributionPoints"
         Extensions.register_class(self)
         
-        # The CRL URI, or nil if none was present
-        attr_reader :crl_uri
+        # An array of the CRL URIs, if any
+        attr_reader :crl_uris
         
         # See OpenSSL::X509::Extension#initialize
         def initialize(*args)
           super(*args)
           
-          uri_match = self.value.match( /URI:(http[^\n ]*)/ )
-          @crl_uri = uri_match[1] unless uri_match.nil?
+          @crl_uris = self.value.scan( /URI:([^,]+)/ ).map { |match| match[0] }
         end
       end
       

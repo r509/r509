@@ -128,11 +128,11 @@ shared_examples_for "a correct R509 AuthorityInfoAccess object" do
     end
     
     it "ca_issuers_uri should be correct" do
-        @r509_ext.ca_issuers_uri.should == @ca_issuers_uri
+        @r509_ext.ca_issuers_uris.should == @ca_issuers_uris
     end
     
     it "ocsp_uri should be correct" do
-        @r509_ext.ocsp_uri.should == @ocsp_uri
+        @r509_ext.ocsp_uris.should == @ocsp_uris
     end
 end
 
@@ -145,7 +145,7 @@ shared_examples_for "a correct R509 CrlDistributionPoints object" do
     end
     
     it "crl_uri should be correct" do
-        @r509_ext.crl_uri.should == @crl_uri
+        @r509_ext.crl_uris.should == @crl_uris
     end
 end
 
@@ -366,19 +366,51 @@ describe R509::Cert::Extensions do
         end
     end
     context "AuthorityInfoAccess" do
-        context "with only a CA Issuers URI" do
+        context "with a CA Issuers URI only" do
             before :all do
-                @ca_issuers_uri = "http://www.test.local/ca.cert"
-                @extension_value = "CA Issuers - URI:#{@ca_issuers_uri}"
+                @ca_issuers_uris = ["http://www.test.local/ca.cert"]
+                @ocsp_uris = []
+                @extension_value = "CA Issuers - URI:#{@ca_issuers_uris.join(",URI:")}"
             end
             
             it_should_behave_like "a correct R509 AuthorityInfoAccess object"
         end
         
-        context "with only an OCSP URI" do
+        context "with multiple CA Issuers URIs only" do
             before :all do
-                @ocsp_uri = "http://www.test.local"
-                @extension_value = "OCSP - URI:#{@ocsp_uri}"
+                @ca_issuers_uris = ["http://www.test.local/ca.cert", "http://www.test.local/subca.cert"]
+                @ocsp_uris = []
+                @extension_value = "CA Issuers - URI:#{@ca_issuers_uris.join(",CA Issuers - URI:")}"
+            end
+            
+            it_should_behave_like "a correct R509 AuthorityInfoAccess object"
+        end
+        
+        context "with an OCSP URI only" do
+            before :all do
+                @ca_issuers_uris = []
+                @ocsp_uris = ["http://www.test.local"]
+                @extension_value = "OCSP - URI:#{@ocsp_uris.join(",URI:")}"
+            end
+            
+            it_should_behave_like "a correct R509 AuthorityInfoAccess object"
+        end
+        
+        context "with multiple OCSP URIs only" do
+            before :all do
+                @ca_issuers_uris = []
+                @ocsp_uris = ["http://www.test.local", "http://www2.test.local"]
+                @extension_value = "OCSP - URI:#{@ocsp_uris.join(",OCSP - URI:")}"
+            end
+            
+            it_should_behave_like "a correct R509 AuthorityInfoAccess object"
+        end
+        
+        context "with both a CA Issuers URI and an OCSP URI" do
+            before :all do
+                @ca_issuers_uris = ["http://www.test.local/ca.cert"]
+                @ocsp_uris = ["http://www.test.local"]
+                @extension_value = "CA Issuers - URI:#{@ca_issuers_uris.join(",CA Issuers - URI:")},OCSP - URI:#{@ocsp_uris.join(",URI:")}"
             end
             
             it_should_behave_like "a correct R509 AuthorityInfoAccess object"
@@ -386,12 +418,23 @@ describe R509::Cert::Extensions do
     end
     
     context "CrlDistributionPoints" do
-        before :all do
-            @crl_uri = "http://www.test.local/ca.crl"
-            @extension_value = "URI:#{@crl_uri}"
+        context "wtih a single CRL URI" do
+            before :all do
+                @crl_uris = ["http://www.test.local/ca.crl"]
+                @extension_value = "URI:#{@crl_uris.join(",URI:")}"
+            end
+            
+            it_should_behave_like "a correct R509 CrlDistributionPoints object"
         end
         
-        it_should_behave_like "a correct R509 CrlDistributionPoints object"
+        context "wtih multiple CRL URIs" do
+            before :all do
+                @crl_uris = ["http://www.test.local/ca.crl", "http://www.test.local/subca.crl"]
+                @extension_value = "URI:#{@crl_uris.join(",URI:")}"
+            end
+            
+            it_should_behave_like "a correct R509 CrlDistributionPoints object"
+        end
     end
     
 end
