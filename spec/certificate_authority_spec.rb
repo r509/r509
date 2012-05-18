@@ -172,7 +172,7 @@ describe R509::CertificateAuthority::Signer do
         csr = R509::Csr.new(:csr => @csr3)
         cert = ca.sign(:csr => csr, :profile_name => "server")
         cert.extensions['authorityKeyIdentifier'].should == nil
-        cert.extended_key_usage.should include("TLS Web Server Authentication")
+        cert.extended_key_usage.web_server_authentication?.should == true
     end
     it "raises error unless you provide a proper config (or nil)" do
         expect { R509::CertificateAuthority::Signer.new('invalid') }.to raise_error(R509::R509Error, 'config must be a kind of R509::Config::CaConfig or nil (for self-sign only)')
