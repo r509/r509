@@ -8,17 +8,24 @@ module R509
       private
       R509_EXTENSION_CLASSES = Set.new
       
+      # Registers a class as being an R509 certificate extension class. Registered
+      # classes are used by #wrap_openssl_extensions to wrap OpenSSL extensions
+      # in R509 extensions, based on the OID.
       def self.register_class( r509_ext_class )
+        raise ArgumentError.new("R509 certificate extensions must have an OID") if r509_ext_class.OID.nil?
         R509_EXTENSION_CLASSES << r509_ext_class
       end
       
       public
+      # Implements the BasicConstraints certificate extension, with methods to
+      # provide access to the components and meaning of the extension's contents.
       class BasicConstraints < OpenSSL::X509::Extension
         OID = "basicConstraints"
         Extensions.register_class(self)
         
         attr_reader :path_length
         
+        # See OpenSSL::X509::Extension#initialize
         def initialize(*args)
           super(*args)
           
@@ -31,34 +38,51 @@ module R509
           return @is_ca == true
         end
         
+        # Returns true if the path length allows this certificate to be used to
+        # sign CA certificates.
         def allows_sub_ca?()
           return false if @path_length.nil?
           return @path_length > 0
         end
       end
       
+      # Implements the KeyUsage certificate extension, with methods to
+      # provide access to the components and meaning of the extension's contents.
       class KeyUsage < OpenSSL::X509::Extension
         OID = "keyUsage"
         Extensions.register_class(self)
         
+        # The OpenSSL friendly name for the "digitalSignature" key use.
         AU_DIGITAL_SIGNATURE = "Digital Signature"
+        # The OpenSSL friendly name for the "nonRepudiation" key use.
         AU_NON_REPUDIATION = "Non Repudiation"
+        # The OpenSSL friendly name for the "keyEncipherment" key use.
         AU_KEY_ENCIPHERMENT = "Key Encipherment"
+        # The OpenSSL friendly name for the "dataEncipherment" key use.
         AU_DATA_ENCIPHERMENT = "Data Encipherment"
+        # The OpenSSL friendly name for the "keyAgreement" key use.
         AU_KEY_AGREEMENT = "Key Agreement"
+        # The OpenSSL friendly name for the "keyCertSign" key use.
         AU_CERTIFICATE_SIGN = "Certificate Sign"
+        # The OpenSSL friendly name for the "cRLSign" key use.
         AU_CRL_SIGN = "CRL Sign"
+        # The OpenSSL friendly name for the "encipherOnly" key use.
         AU_ENCIPHER_ONLY = "Encipher Only"
+        # The OpenSSL friendly name for the "decipherOnly" key use.
         AU_DECIPHER_ONLY = "Decipher Only"
         
+        # An array of the key uses allowed. See the AU_* constants in this class.
         attr_reader :allowed_uses
         
+        # See OpenSSL::X509::Extension#initialize
         def initialize(*args)
           super(*args)
           
           @allowed_uses = self.value.split(",").map {|use| use.strip}
         end
         
+        # Returns true if the given use is allowed by this extension.
+        # @param [string] One of the AU_* constants in this class.
         def allows?( friendly_use_name )
           @allowed_uses.include?( friendly_use_name )
         end
@@ -100,23 +124,33 @@ module R509
         end
       end
       
+      # Implements the ExtendedKeyUsage certificate extension, with methods to
+      # provide access to the components and meaning of the extension's contents.
       class ExtendedKeyUsage < OpenSSL::X509::Extension
         OID = "extendedKeyUsage"
         Extensions.register_class(self)
         
+        # The OpenSSL friendly name for the "serverAuth" extended key use.
         AU_WEB_SERVER_AUTH = "TLS Web Server Authentication"
+        # The OpenSSL friendly name for the "clientAuth" extended key use.
         AU_WEB_CLIENT_AUTH = "TLS Web Client Authentication"
+        # The OpenSSL friendly name for the "codeSigning" extended key use.
         AU_CODE_SIGNING = "Code Signing"
+        # The OpenSSL friendly name for the "emailProtection" extended key use.
         AU_EMAIL_PROTECTION = "E-mail Protection"
         
+        # An array of the key uses allowed. See the AU_* constants in this class.
         attr_reader :allowed_uses
         
+        # See OpenSSL::X509::Extension#initialize
         def initialize(*args)
           super(*args)
           
           @allowed_uses = self.value.split(",").map {|use| use.strip}
         end
         
+        # Returns true if the given use is allowed by this extension.
+        # @param [string] One of the AU_* constants in this class.
         def allows?( friendly_use_name )
           @allowed_uses.include?( friendly_use_name )
         end
@@ -140,6 +174,8 @@ module R509
         # ...
       end
       
+      # Implements the SubjectKeyIdentifier certificate extension, with methods to
+      # provide access to the components and meaning of the extension's contents.
       class SubjectKeyIdentifier < OpenSSL::X509::Extension
         OID = "subjectKeyIdentifier"
         Extensions.register_class(self)
@@ -149,20 +185,28 @@ module R509
         end
       end
       
+      # Implements the AuthorityKeyIdentifier certificate extension, with methods to
+      # provide access to the components and meaning of the extension's contents.
       class AuthorityKeyIdentifier < OpenSSL::X509::Extension
         OID = "authorityKeyIdentifier"
         Extensions.register_class(self)
         
       end
       
+      # Implements the SubjectAlternativeName certificate extension, with methods to
+      # provide access to the components and meaning of the extension's contents.
       class SubjectAlternativeName < OpenSSL::X509::Extension
         OID = "subjectAltName"
         Extensions.register_class(self)
         
+        # An array of the DNS alternative names, if any
         attr_reader :dns_names
+        # An array of the IP-address alternative names, if any
         attr_reader :ip_addresses
+        # An array of the URI alternative names, if any
         attr_reader :uris
         
+        # See OpenSSL::X509::Extension#initialize
         def initialize(*args)
           super(*args)
           
@@ -172,13 +216,18 @@ module R509
         end
       end
       
+      # Implements the AuthorityInfoAccess certificate extension, with methods to
+      # provide access to the components and meaning of the extension's contents.
       class AuthorityInfoAccess < OpenSSL::X509::Extension
         OID = "authorityInfoAccess"
         Extensions.register_class(self)
         
+        # The OCSP URI, or nil if none was present
         attr_reader :ocsp_uri
+        # The CA issuers URI, or nil if none was present
         attr_reader :ca_issuers_uri
         
+        # See OpenSSL::X509::Extension#initialize
         def initialize(*args)
           super(*args)
           
@@ -189,12 +238,16 @@ module R509
         end
       end
       
+      # Implements the CrlDistributionPoints certificate extension, with methods to
+      # provide access to the components and meaning of the extension's contents.
       class CrlDistributionPoints < OpenSSL::X509::Extension
         OID = "crlDistributionPoints"
         Extensions.register_class(self)
         
+        # The CRL URI, or nil if none was present
         attr_reader :crl_uri
         
+        # See OpenSSL::X509::Extension#initialize
         def initialize(*args)
           super(*args)
           
