@@ -364,6 +364,17 @@ describe R509::Cert::Extensions do
             
             it_should_behave_like "a correct R509 SubjectAlternativeName object"
         end
+        
+        context "with multiple different alternative names with trailing newlines" do
+            before :all do
+                @dns_names = ["www.test.local"]
+                @ip_addresses = ["10.1.2.3"]
+                @uris = ["http://www.test.local"]
+                @extension_value = "DNS:#{@dns_names.join("\n,DNS:")}\n,IP:#{@ip_addresses.join("\n,IP:")}\n,URI:#{@uris.join("\n,URI:")}\n"
+            end
+            
+            it_should_behave_like "a correct R509 SubjectAlternativeName object"
+        end
     end
     context "AuthorityInfoAccess" do
         context "with a CA Issuers URI only" do
@@ -415,6 +426,16 @@ describe R509::Cert::Extensions do
             
             it_should_behave_like "a correct R509 AuthorityInfoAccess object"
         end
+        
+        context "with both a CA Issuers URI and an OCSP URI with trailing newlines" do
+            before :all do
+                @ca_issuers_uris = ["http://www.test.local/ca.cert"]
+                @ocsp_uris = ["http://www.test.local"]
+                @extension_value = "CA Issuers - URI:#{@ca_issuers_uris.join("\n,CA Issuers - URI:")}\n,OCSP - URI:#{@ocsp_uris.join("\n,URI:")}\n"
+            end
+            
+            it_should_behave_like "a correct R509 AuthorityInfoAccess object"
+        end
     end
     
     context "CrlDistributionPoints" do
@@ -431,6 +452,15 @@ describe R509::Cert::Extensions do
             before :all do
                 @crl_uris = ["http://www.test.local/ca.crl", "http://www.test.local/subca.crl"]
                 @extension_value = "URI:#{@crl_uris.join(",URI:")}"
+            end
+            
+            it_should_behave_like "a correct R509 CrlDistributionPoints object"
+        end
+        
+        context "wtih multiple CRL URIs and trailing newlines" do
+            before :all do
+                @crl_uris = ["http://www.test.local/ca.crl", "http://www.test.local/subca.crl"]
+                @extension_value = "URI:#{@crl_uris.join("\n,URI:")}\n"
             end
             
             it_should_behave_like "a correct R509 CrlDistributionPoints object"

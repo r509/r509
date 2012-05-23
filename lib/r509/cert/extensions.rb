@@ -6,6 +6,11 @@ module R509
     module Extensions
       
       private
+      # Regexes for OpenSSL's parsed values
+      DNS_REGEX = /DNS:([^,\n]+)/
+      IP_ADDRESS_REGEX = /IP:([^,\n]+)/
+      URI_REGEX = /URI:([^,\n]+)/
+      
       R509_EXTENSION_CLASSES = Set.new
       
       # Registers a class as being an R509 certificate extension class. Registered
@@ -210,9 +215,9 @@ module R509
         def initialize(*args)
           super(*args)
           
-          @dns_names = self.value.scan( /DNS:([^,]+)/ ).map { |match| match[0] }
-          @ip_addresses = self.value.scan( /IP:([^,]+)/ ).map { |match| match[0] }
-          @uris = self.value.scan( /URI:([^,]+)/ ).map { |match| match[0] }
+          @dns_names = self.value.scan( DNS_REGEX ).map { |match| match[0] }
+          @ip_addresses = self.value.scan( IP_ADDRESS_REGEX ).map { |match| match[0] }
+          @uris = self.value.scan( URI_REGEX ).map { |match| match[0] }
         end
       end
       
@@ -231,8 +236,8 @@ module R509
         def initialize(*args)
           super(*args)
           
-          @ocsp_uris = self.value.scan( /OCSP - URI:([^,]+)/ ).map { |match| match[0] }
-          @ca_issuers_uris = self.value.scan( /CA Issuers - URI:([^,]+)/ ).map { |match| match[0] }
+          @ocsp_uris = self.value.scan( /OCSP - #{URI_REGEX}/ ).map { |match| match[0] }
+          @ca_issuers_uris = self.value.scan( /CA Issuers - #{URI_REGEX}/ ).map { |match| match[0] }
         end
       end
       
@@ -249,7 +254,7 @@ module R509
         def initialize(*args)
           super(*args)
           
-          @crl_uris = self.value.scan( /URI:([^,]+)/ ).map { |match| match[0] }
+          @crl_uris = self.value.scan( URI_REGEX ).map { |match| match[0] }
         end
       end
       
