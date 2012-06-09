@@ -104,6 +104,18 @@ module R509
         def issuer
             @cert.issuer
         end
+        
+        # @return [String] The common name (CN) component of the issuer
+        def issuer_cn
+            return nil if self.issuer.nil?
+            
+            self.issuer.to_a.each do |part, value, length|
+                return value if part.upcase == 'CN'
+            end
+            
+            # return nil if we didn't find a CN part
+            return nil
+        end
 
         # Returns the certificate fingerprint with the specified algorithm (default sha1)
         #
