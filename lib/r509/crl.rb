@@ -159,6 +159,12 @@ module R509
             def to_der
                 @crl.to_der
             end
+            
+            # @return [R509::Crl::Parser]
+            def to_crl
+              return nil if @crl.nil?
+              return R509::Crl::Parser.new(@crl)
+            end
 
             # Writes the CRL into the PEM format
             #
@@ -247,7 +253,7 @@ module R509
                 now = Time.at Time.now.to_i
                 crl.last_update = now-@start_skew_seconds
                 crl.next_update = now+@validity_hours*3600
-                crl.issuer = @config.ca_cert.issuer
+                crl.issuer = @config.ca_cert.subject
 
                 self.revoked_certs.each do |serial, reason, revoke_time|
                     revoked = OpenSSL::X509::Revoked.new
