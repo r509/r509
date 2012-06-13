@@ -44,7 +44,7 @@ module R509
             end
         end
         
-        def self.load_from_pem( filename )
+        def self.load_from_file( filename )
           return R509::Cert.new(:cert => IOHelpers.read_data(filename) )
         end
         
