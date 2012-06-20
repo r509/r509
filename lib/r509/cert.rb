@@ -167,11 +167,21 @@ module R509
             end
         end
 
-        # @return [Array] list of SAN names
+        # @return [Array] list of SAN DNS names
         def san_names
-            @san_names || []
+            if self.subject_alternative_name.nil?
+                return []
+            else
+                return self.subject_alternative_name.dns_names
+            end
         end
-
+        
+        # Returns the CN component, if any, of the subject
+        #
+        # @return [String]
+        def subject_cn()
+            return self.subject_component('CN')
+        end
 
         # Returns subject component
         #
@@ -188,13 +198,8 @@ module R509
         #  there are no names, at all.
         def subject_names
             ret = []
-            if cn = self.subject_component('CN')
-                ret << cn
-            end
-            # Merge in san_names if we got anything.
-            if sn = self.san_names
-                ret.concat(sn)
-            end
+            ret << subject_cn unless subject_cn.nil?
+            ret.concat( self.san_names )
 
             return ret.sort.uniq
         end
@@ -382,20 +387,8 @@ module R509
         end
 
         private
-        #takes OpenSSL::X509::Extension object
-        def parse_san_extension(extension)
-            san_string = extension.value
-            stripped = san_string.split(',').map{ |name| name.gsub(/DNS:/,'').strip }
-            @san_names = stripped
-        end
-
         def parse_certificate(cert)
             @cert = OpenSSL::X509::Certificate.new cert
-            @cert.extensions.each { |extension|
-                if (extension.oid == 'subjectAltName') then
-                    parse_san_extension(extension)
-                end
-            }
         end
 
     end
