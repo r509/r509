@@ -1,5 +1,7 @@
 require 'spec_helper'
 
+include R509::Cert::Extensions
+
 shared_examples_for "a correct R509 BasicConstraints object" do
     before :all do
         extension_name = "basicConstraints"
