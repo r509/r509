@@ -1,6 +1,7 @@
 require 'openssl'
 require 'r509/exceptions'
 require 'r509/io_helpers'
+require 'r509/cert/extensions'
 
 module R509
     # The primary certificate object.
@@ -42,6 +43,12 @@ module R509
                 end
             end
         end
+        
+        def self.load_from_file( filename )
+          return R509::Cert.new(:cert => IOHelpers.read_data(filename) )
+        end
+        
+        
 
         # Converts the Cert into the PEM format
         #
@@ -97,6 +104,18 @@ module R509
         def issuer
             @cert.issuer
         end
+        
+        # @return [String] The common name (CN) component of the issuer
+        def issuer_cn
+            return nil if self.issuer.nil?
+            
+            self.issuer.to_a.each do |part, value, length|
+                return value if part.upcase == 'CN'
+            end
+            
+            # return nil if we didn't find a CN part
+            return nil
+        end
 
         # Returns the certificate fingerprint with the specified algorithm (default sha1)
         #
@@ -148,11 +167,21 @@ module R509
             end
         end
 
-        # @return [Array] list of SAN names
+        # @return [Array] list of SAN DNS names
         def san_names
-            @san_names || []
+            if self.subject_alternative_name.nil?
+                return []
+            else
+                return self.subject_alternative_name.dns_names
+            end
         end
-
+        
+        # Returns the CN component, if any, of the subject
+        #
+        # @return [String]
+        def subject_cn()
+            return self.subject_component('CN')
+        end
 
         # Returns subject component
         #
@@ -169,13 +198,8 @@ module R509
         #  there are no names, at all.
         def subject_names
             ret = []
-            if cn = self.subject_component('CN')
-                ret << cn
-            end
-            # Merge in san_names if we got anything.
-            if sn = self.san_names
-                ret.concat(sn)
-            end
+            ret << subject_cn unless subject_cn.nil?
+            ret.concat( self.san_names )
 
             return ret.sort.uniq
         end
@@ -249,6 +273,13 @@ module R509
             pkcs12 = OpenSSL::PKCS12.create(password,friendly_name,@key.key,@cert)
             write_data(filename_or_io, pkcs12.to_der)
         end
+        
+        # Checks the given CRL for this certificate's serial number
+        #
+        # @param [R509::Crl] A CRL from the CA that issued this certificate.
+        def is_revoked_by_crl?( r509_crl )
+            return r509_crl.revoked?( self.serial )
+        end
 
         # Return the certificate extensions
         #
@@ -256,55 +287,108 @@ module R509
         def extensions
             if @extensions.nil?
                 @extensions = Hash.new
-                @cert.extensions.to_a.each { |extension|
-                    extension = extension.to_a
-                    if(!@extensions[extension[0]].kind_of?(Array)) then
-                        @extensions[extension[0]] = []
-                    end
-                    hash = {'value' => extension[1], 'critical' => extension[2]}
-                    @extensions[extension[0]].push hash
+                @cert.extensions.each { |extension|
+                    hash = {'value' => extension.value, 'critical' => extension.critical?}
+                    @extensions[extension.oid] = hash
                 }
             end
             @extensions
         end
-
-        # Return the key usage extensions
+        
+        # Returns the certificate extensions as a hash of R509::Cert::Extensions
+        # specific objects.
         #
-        # @return [Array] an array containing each KU as a separate string
-        def key_usage
-            if self.extensions.has_key?("keyUsage") and self.extensions["keyUsage"].count > 0 and self.extensions["keyUsage"][0].has_key?("value")
-                self.extensions["keyUsage"][0]["value"].split(",").map{|v| v.strip}
-            else
-                []
+        # @return [Hash] A hash, in which the values are classes from the
+        # R509::Cert::Extensions module, each specific to the extension. The hash
+        # is keyed with the R509 extension class. Extensions without an R509
+        # implementation are ignored (see #get_unknown_extensions).
+        def r509_extensions
+            if @r509_extensions.nil?
+                @r509_extensions = Extensions.wrap_openssl_extensions( self.cert.extensions )
             end
+            
+            return @r509_extensions
         end
-
-        # Return the extended key usage extensions
+        
+        # Returns an array of OpenSSL::X509::Extension objects representing the
+        # extensions that do not have R509 implementations.
         #
-        # @return [Array] an array containing each EKU as a separate string
+        # @return [Array] An array of OpenSSL::X509::Extension objects.
+        def unknown_extensions
+            return Extensions.get_unknown_extensions( self.cert.extensions )
+        end
+        
+        #
+        # Shortcuts to extensions
+        #
+        
+        # Returns this object's BasicConstraints extension as an R509 extension
+        #
+        # @return [R509::Cert::Extensions::BasicConstraints] The object, or nil
+        #   if this cert does not have a BasicConstraints extension.
+        def basic_constraints
+            return r509_extensions[R509::Cert::Extensions::BasicConstraints]
+        end
+        
+        # Returns this object's KeyUsage extension as an R509 extension
+        #
+        # @return [R509::Cert::Extensions::KeyUsage] The object, or nil
+        #   if this cert does not have a KeyUsage extension.
+        def key_usage
+            return r509_extensions[R509::Cert::Extensions::KeyUsage]
+        end
+        
+        # Returns this object's ExtendedKeyUsage extension as an R509 extension
+        #
+        # @return [R509::Cert::Extensions::ExtendedKeyUsage] The object, or nil
+        #   if this cert does not have a ExtendedKeyUsage extension.
         def extended_key_usage
-            if self.extensions.has_key?("extendedKeyUsage") and self.extensions["extendedKeyUsage"].count > 0 and self.extensions["extendedKeyUsage"][0].has_key?("value")
-                self.extensions["extendedKeyUsage"][0]["value"].split(",").map{|v| v.strip}
-            else
-                []
-            end
+            return r509_extensions[R509::Cert::Extensions::ExtendedKeyUsage]
+        end
+        
+        # Returns this object's SubjectKeyIdentifier extension as an R509 extension
+        #
+        # @return [R509::Cert::Extensions::SubjectKeyIdentifier] The object, or nil
+        #   if this cert does not have a SubjectKeyIdentifier extension.
+        def subject_key_identifier
+            return r509_extensions[R509::Cert::Extensions::SubjectKeyIdentifier]
+        end
+        
+        # Returns this object's AuthorityKeyIdentifier extension as an R509 extension
+        #
+        # @return [R509::Cert::Extensions::AuthorityKeyIdentifier] The object, or nil
+        #   if this cert does not have a AuthorityKeyIdentifier extension.
+        def authority_key_identifier
+            return r509_extensions[R509::Cert::Extensions::AuthorityKeyIdentifier]
+        end
+        
+        # Returns this object's SubjectAlternativeName extension as an R509 extension
+        #
+        # @return [R509::Cert::Extensions::SubjectAlternativeName] The object, or nil
+        #   if this cert does not have a SubjectAlternativeName extension.
+        def subject_alternative_name
+            return r509_extensions[R509::Cert::Extensions::SubjectAlternativeName]
+        end
+        
+        # Returns this object's AuthorityInfoAccess extension as an R509 extension
+        #
+        # @return [R509::Cert::Extensions::AuthorityInfoAccess] The object, or nil
+        #   if this cert does not have a AuthorityInfoAccess extension.
+        def authority_info_access
+            return r509_extensions[R509::Cert::Extensions::AuthorityInfoAccess]
+        end
+        
+        # Returns this object's CrlDistributionPoints extension as an R509 extension
+        #
+        # @return [R509::Cert::Extensions::CrlDistributionPoints] The object, or nil
+        #   if this cert does not have a CrlDistributionPoints extension.
+        def crl_distribution_points
+            return r509_extensions[R509::Cert::Extensions::CrlDistributionPoints]
         end
 
         private
-        #takes OpenSSL::X509::Extension object
-        def parse_san_extension(extension)
-            san_string = extension.to_a[1]
-            stripped = san_string.split(',').map{ |name| name.gsub(/DNS:/,'').strip }
-            @san_names = stripped
-        end
-
         def parse_certificate(cert)
             @cert = OpenSSL::X509::Certificate.new cert
-            @cert.extensions.to_a.each { |extension|
-                if (extension.to_a[0] == 'subjectAltName') then
-                    parse_san_extension(extension)
-                end
-            }
         end
 
     end

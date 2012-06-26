@@ -249,8 +249,8 @@ module R509
             domains_to_add = []
             san_extension = nil
             parsed_cert = OpenSSL::X509::Certificate.new(cert)
-            parsed_cert.extensions.to_a.each { |extension|
-                if (extension.to_a[0] == 'subjectAltName') then
+            parsed_cert.extensions.each { |extension|
+                if (extension.oid == 'subjectAltName') then
                     domains_to_add = parse_san_extension(extension)
                 end
             }
@@ -270,14 +270,13 @@ module R509
             if !set.nil? then
                 set.value.each { |set_value|
                     @seq = set_value
-                    extensions = @seq.value.collect{|asn1ext| OpenSSL::X509::Extension.new(asn1ext).to_a }
+                    extensions = @seq.value.collect{|asn1ext| OpenSSL::X509::Extension.new(asn1ext) }
                     extensions.each { |ext|
-                        hash = {'value' => ext[1], 'critical'=> ext[2] }
-                        attributes[ext[0]] = hash
-                        if ext[0] == 'subjectAltName' then
-                            domains_from_csr = ext[1].gsub(/DNS:/,'').split(',')
+                        attributes[ext.oid] = {'value' => ext.value, 'critical'=> ext.critical? }
+                        if ext.oid == 'subjectAltName' then
+                            domains_from_csr = ext.value.gsub(/DNS:/,'').split(',')
                             domains_from_csr = domains_from_csr.collect {|x| x.strip }
-                            attributes[ext[0]] = domains_from_csr
+                            attributes[ext.oid] = domains_from_csr
                         end
                     }
                 }
@@ -287,7 +286,7 @@ module R509
 
         #takes OpenSSL::X509::Extension object
         def parse_san_extension(extension)
-            san_string = extension.to_a[1]
+            san_string = extension.value
             stripped = []
             san_string.split(',').each{ |name|
                 stripped.push name.strip

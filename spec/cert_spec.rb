@@ -210,33 +210,46 @@ describe R509::Cert do
     end
     it "gets key usage from the extensions array" do
         cert = R509::Cert.new(:cert => @cert)
-        cert.extensions["keyUsage"].count.should == 1
-        cert.extensions["keyUsage"][0]["value"].should == "Digital Signature, Key Encipherment"
-    end
-    it "gets key usage from #key_usage" do
-        cert = R509::Cert.new(:cert => @cert)
-        cert.key_usage.should == ["Digital Signature", "Key Encipherment"]
-    end
-    it "handles lack of key usage" do
-        cert = R509::Cert.new(:cert => @cert4)
-        cert.key_usage.should == []
+        cert.extensions["keyUsage"].nil?.should == false
+        cert.extensions["keyUsage"]["value"].should == "Digital Signature, Key Encipherment"
     end
     it "gets extended key usage from the extensions array" do
         cert = R509::Cert.new(:cert => @cert)
-        cert.extensions["extendedKeyUsage"].count.should == 1
-        cert.extensions["extendedKeyUsage"][0]["value"].should == "TLS Web Server Authentication"
+        cert.extensions["extendedKeyUsage"].nil?.should == false
+        cert.extensions["extendedKeyUsage"]["value"].should == "TLS Web Server Authentication"
     end
-    it "get extended key usage from #extended_key_usage" do
+    
+    it "gets the right object from #basic_constraints" do
         cert = R509::Cert.new(:cert => @cert)
-        cert.extended_key_usage.should == ["TLS Web Server Authentication"]
+        cert.basic_constraints.class.should == R509::Cert::Extensions::BasicConstraints
     end
-    it "handles lack of extended key usage" do
-        cert = R509::Cert.new(:cert => @cert4)
-        cert.extended_key_usage.should == []
+    it "gets the right object from #key_usage" do
+        cert = R509::Cert.new(:cert => @cert)
+        cert.key_usage.class.should == R509::Cert::Extensions::KeyUsage
     end
-    it "handles multiple extended key usages" do
+    it "gets the right object from #key_usage" do
+        cert = R509::Cert.new(:cert => @cert)
+        cert.extended_key_usage.class.should == R509::Cert::Extensions::ExtendedKeyUsage
+    end
+    it "gets the right object from #subject_key_identifier" do
+        cert = R509::Cert.new(:cert => @cert)
+        cert.subject_key_identifier.class.should == R509::Cert::Extensions::SubjectKeyIdentifier
+    end
+    it "gets the right object from #authority_key_identifier" do
+        cert = R509::Cert.new(:cert => @cert)
+        cert.authority_key_identifier.class.should == R509::Cert::Extensions::AuthorityKeyIdentifier
+    end
+    it "gets the right object from #subject_alternative_name" do
         cert = R509::Cert.new(:cert => @cert5)
-        cert.extended_key_usage.should include("TLS Web Server Authentication","TLS Web Client Authentication","Microsoft Server Gated Crypto")
+        cert.subject_alternative_name.class.should == R509::Cert::Extensions::SubjectAlternativeName
+    end
+    it "gets the right object from #authority_info_access" do
+        cert = R509::Cert.new(:cert => @cert5)
+        cert.authority_info_access.class.should == R509::Cert::Extensions::AuthorityInfoAccess
+    end
+    it "gets the right object from #crl_distribution_points" do
+        cert = R509::Cert.new(:cert => @cert)
+        cert.crl_distribution_points.class.should == R509::Cert::Extensions::CrlDistributionPoints
     end
 
     it "checks rsa?" do
