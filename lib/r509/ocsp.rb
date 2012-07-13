@@ -14,7 +14,7 @@ module R509::Ocsp
             end
             @ocsp_response = ocsp_response
         end
-        # @param [String, OpenSSL::OCSP::Response] parses an existing response
+        # @param [String,OpenSSL::OCSP::Response] ocsp_string parses an existing response
         # @return [R509::Ocsp::Response]
         def self.parse(ocsp_string)
             if ocsp_string.nil?

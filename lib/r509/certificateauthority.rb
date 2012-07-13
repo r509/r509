@@ -7,7 +7,7 @@ require 'r509/exceptions'
 module R509::CertificateAuthority
     # Contains the certification authority signing operation methods
     class Signer
-        # @param [R509::Config] @config
+        # @param [R509::Config] config
         def initialize(config=nil)
             @config = config
 

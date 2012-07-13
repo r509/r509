@@ -43,12 +43,12 @@ module R509
                 end
             end
         end
-        
+
         def self.load_from_file( filename )
           return R509::Cert.new(:cert => IOHelpers.read_data(filename) )
         end
-        
-        
+
+
 
         # Converts the Cert into the PEM format
         #
@@ -104,15 +104,15 @@ module R509
         def issuer
             @cert.issuer
         end
-        
+
         # @return [String] The common name (CN) component of the issuer
         def issuer_cn
             return nil if self.issuer.nil?
-            
+
             self.issuer.to_a.each do |part, value, length|
                 return value if part.upcase == 'CN'
             end
-            
+
             # return nil if we didn't find a CN part
             return nil
         end
@@ -175,7 +175,7 @@ module R509
                 return self.subject_alternative_name.dns_names
             end
         end
-        
+
         # Returns the CN component, if any, of the subject
         #
         # @return [String]
@@ -273,10 +273,10 @@ module R509
             pkcs12 = OpenSSL::PKCS12.create(password,friendly_name,@key.key,@cert)
             write_data(filename_or_io, pkcs12.to_der)
         end
-        
+
         # Checks the given CRL for this certificate's serial number
         #
-        # @param [R509::Crl] A CRL from the CA that issued this certificate.
+        # @param [R509::Crl] r509_crl A CRL from the CA that issued this certificate.
         def is_revoked_by_crl?( r509_crl )
             return r509_crl.revoked?( self.serial )
         end
@@ -294,7 +294,7 @@ module R509
             end
             @extensions
         end
-        
+
         # Returns the certificate extensions as a hash of R509::Cert::Extensions
         # specific objects.
         #
@@ -306,10 +306,10 @@ module R509
             if @r509_extensions.nil?
                 @r509_extensions = Extensions.wrap_openssl_extensions( self.cert.extensions )
             end
-            
+
             return @r509_extensions
         end
-        
+
         # Returns an array of OpenSSL::X509::Extension objects representing the
         # extensions that do not have R509 implementations.
         #
@@ -317,11 +317,11 @@ module R509
         def unknown_extensions
             return Extensions.get_unknown_extensions( self.cert.extensions )
         end
-        
+
         #
         # Shortcuts to extensions
         #
-        
+
         # Returns this object's BasicConstraints extension as an R509 extension
         #
         # @return [R509::Cert::Extensions::BasicConstraints] The object, or nil
@@ -329,7 +329,7 @@ module R509
         def basic_constraints
             return r509_extensions[R509::Cert::Extensions::BasicConstraints]
         end
-        
+
         # Returns this object's KeyUsage extension as an R509 extension
         #
         # @return [R509::Cert::Extensions::KeyUsage] The object, or nil
@@ -337,7 +337,7 @@ module R509
         def key_usage
             return r509_extensions[R509::Cert::Extensions::KeyUsage]
         end
-        
+
         # Returns this object's ExtendedKeyUsage extension as an R509 extension
         #
         # @return [R509::Cert::Extensions::ExtendedKeyUsage] The object, or nil
@@ -345,7 +345,7 @@ module R509
         def extended_key_usage
             return r509_extensions[R509::Cert::Extensions::ExtendedKeyUsage]
         end
-        
+
         # Returns this object's SubjectKeyIdentifier extension as an R509 extension
         #
         # @return [R509::Cert::Extensions::SubjectKeyIdentifier] The object, or nil
@@ -353,7 +353,7 @@ module R509
         def subject_key_identifier
             return r509_extensions[R509::Cert::Extensions::SubjectKeyIdentifier]
         end
-        
+
         # Returns this object's AuthorityKeyIdentifier extension as an R509 extension
         #
         # @return [R509::Cert::Extensions::AuthorityKeyIdentifier] The object, or nil
@@ -361,7 +361,7 @@ module R509
         def authority_key_identifier
             return r509_extensions[R509::Cert::Extensions::AuthorityKeyIdentifier]
         end
-        
+
         # Returns this object's SubjectAlternativeName extension as an R509 extension
         #
         # @return [R509::Cert::Extensions::SubjectAlternativeName] The object, or nil
@@ -369,7 +369,7 @@ module R509
         def subject_alternative_name
             return r509_extensions[R509::Cert::Extensions::SubjectAlternativeName]
         end
-        
+
         # Returns this object's AuthorityInfoAccess extension as an R509 extension
         #
         # @return [R509::Cert::Extensions::AuthorityInfoAccess] The object, or nil
@@ -377,7 +377,7 @@ module R509
         def authority_info_access
             return r509_extensions[R509::Cert::Extensions::AuthorityInfoAccess]
         end
-        
+
         # Returns this object's CrlDistributionPoints extension as an R509 extension
         #
         # @return [R509::Cert::Extensions::CrlDistributionPoints] The object, or nil

@@ -5,7 +5,7 @@ module R509
     class MessageDigest
         attr_reader :name, :digest
 
-        # @param [String,OpenSSL::Digest]
+        # @param [String,OpenSSL::Digest] arg
         def initialize(arg)
             if arg.kind_of?(String)
                 @name = arg.downcase

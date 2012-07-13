@@ -1,6 +1,6 @@
 source "http://rubygems.org"
 
 gemspec
-gem "yard", ">=0.7.4"
-gem "redcarpet", "~>1.17.2"
-gem "github-markup", ">=0.7.0"
+gem "yard", "~>0.8.2"
+gem "redcarpet", "~>2.1.1"
+gem "github-markup", ">=0.7.2"

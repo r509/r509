@@ -10,7 +10,7 @@ module R509
         class Parser
             attr_reader :crl
 
-            # @param [String,OpenSSL::X509::CRL] crl to load
+            # @param [String,OpenSSL::X509::CRL] crl
             def initialize(crl)
                 @crl = OpenSSL::X509::CRL.new(crl)
             end
@@ -19,15 +19,15 @@ module R509
             def issuer
                 @crl.issuer
             end
-            
+
             # @return [String] The common name (CN) component of the issuer
             def issuer_cn
                 return nil if self.issuer.nil?
-                
+
                 self.issuer.to_a.each do |part, value, length|
                     return value if part.upcase == 'CN'
                 end
-                
+
                 # return nil if we didn't find a CN part
                 return nil
             end
@@ -49,7 +49,7 @@ module R509
 
             # Pass a public key to verify that the CRL is signed by a specific certificate (call cert.public_key on that object)
             #
-            # @param [OpenSSL::PKey::PKey]
+            # @param [OpenSSL::PKey::PKey] public_key
             # @return [Boolean]
             def verify(public_key)
                 @crl.verify(public_key)
@@ -107,7 +107,7 @@ module R509
 
             attr_reader :crl_number,:crl_list_file,:crl_number_file, :validity_hours
 
-            # @param [R509::Config::CaConfig]
+            # @param [R509::Config::CaConfig] config
             def initialize(config)
                 @config = config
 
@@ -159,7 +159,7 @@ module R509
             def to_der
                 @crl.to_der
             end
-            
+
             # @return [R509::Crl::Parser]
             def to_crl
               return nil if @crl.nil?

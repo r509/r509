@@ -3,7 +3,7 @@ require "openssl"
 module R509
     #subject class. Used for building OpenSSL::X509::Name objects in a sane fashion
     class Subject
-        # @param [Array, OpenSSL::X509::Name, R509::Subject]
+        # @param [Array, OpenSSL::X509::Name, R509::Subject] arg
         def initialize(arg=nil)
             case arg
             when Array

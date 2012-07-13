@@ -110,9 +110,9 @@ module R509
             end
 
             # Loads the named configuration config from a yaml string.
-            # @param [String] conf_name The name of the config within the file. Note
+            # @param [String] name The name of the config within the file. Note
             #  that a single yaml file can contain more than one configuration.
-            # @param [String] yaml_file The filename to load yaml config data from.
+            # @param [String] yaml_data The filename to load yaml config data from.
             def self.from_yaml(name, yaml_data, opts = {})
                 conf = YAML.load(yaml_data)
                 configs = {}
@@ -325,7 +325,7 @@ module R509
             # Loads the named configuration config from a yaml string.
             # @param [String] conf_name The name of the config within the file. Note
             #  that a single yaml file can contain more than one configuration.
-            # @param [String] yaml_file The filename to load yaml config data from.
+            # @param [String] yaml_data The filename to load yaml config data from.
             def self.from_yaml(conf_name, yaml_data, opts = {})
                 conf = YAML.load(yaml_data)
                 self.load_from_hash(conf[conf_name], opts)
