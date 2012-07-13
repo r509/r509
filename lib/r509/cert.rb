@@ -274,7 +274,9 @@ module R509
             write_data(filename_or_io, pkcs12.to_der)
         end
 
-        # Checks the given CRL for this certificate's serial number
+        # Checks the given CRL for this certificate's serial number. Note that this does NOT
+        # check to verify that the CRL you're checking is signed by the same CA as the cert
+        # so do that check yourself
         #
         # @param [R509::Crl] r509_crl A CRL from the CA that issued this certificate.
         def is_revoked_by_crl?( r509_crl )

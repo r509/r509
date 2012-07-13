@@ -79,7 +79,7 @@ describe R509::Crl::Administrator do
         crl.revoked?(383834832).should == false
         crl.revoke_cert(383834832)
         crl.revoked?(383834832).should == true
-        parsed_crl = OpenSSL::X509::CRL.new(crl.to_pem)
+        parsed_crl = OpenSSL::X509::CRL.new(crl.to_der)
         parsed_crl.revoked[0].serial.should == 383834832
     end
     it "can revoke (with reason)" do
@@ -155,14 +155,16 @@ describe R509::Crl::Administrator do
     it "returns der" do
         crl = R509::Crl::Administrator.new(@test_ca_config)
         crl.generate_crl
-        parsed_crl = OpenSSL::X509::CRL.new(crl.to_der)
+        parsed_crl = crl.to_crl
         parsed_crl.issuer.to_s.should == '/C=US/ST=Illinois/L=Chicago/O=Ruby CA Project/CN=Test CA'
+        parsed_crl.issuer_cn.should == 'Test CA'
     end
     it "returns pem" do
         crl = R509::Crl::Administrator.new(@test_ca_config)
         crl.generate_crl
-        parsed_crl = OpenSSL::X509::CRL.new(crl.to_pem)
+        parsed_crl = crl.to_crl
         parsed_crl.issuer.to_s.should == '/C=US/ST=Illinois/L=Chicago/O=Ruby CA Project/CN=Test CA'
+        parsed_crl.issuer_cn.should == 'Test CA'
     end
     it "writes to pem" do
         crl = R509::Crl::Administrator.new(@test_ca_config)
@@ -170,8 +172,9 @@ describe R509::Crl::Administrator do
         sio = StringIO.new
         sio.set_encoding("BINARY") if sio.respond_to?(:set_encoding)
         crl.write_pem(sio)
-        parsed_crl = OpenSSL::X509::CRL.new(sio.string)
+        parsed_crl = R509::Crl::Parser.new(sio.string)
         parsed_crl.issuer.to_s.should == '/C=US/ST=Illinois/L=Chicago/O=Ruby CA Project/CN=Test CA'
+        parsed_crl.issuer_cn.should == 'Test CA'
     end
     it "writes to der" do
         crl = R509::Crl::Administrator.new(@test_ca_config)
@@ -179,8 +182,9 @@ describe R509::Crl::Administrator do
         sio = StringIO.new
         sio.set_encoding("BINARY") if sio.respond_to?(:set_encoding)
         crl.write_der(sio)
-        parsed_crl = OpenSSL::X509::CRL.new(sio.string)
+        parsed_crl = R509::Crl::Parser.new(sio.string)
         parsed_crl.issuer.to_s.should == '/C=US/ST=Illinois/L=Chicago/O=Ruby CA Project/CN=Test CA'
+        parsed_crl.issuer_cn.should == 'Test CA'
     end
     it "writes crl list" do
         crl = R509::Crl::Administrator.new(@test_ca_config)

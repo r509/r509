@@ -53,6 +53,10 @@ describe R509::Cert do
         cert = R509::Cert.new(:cert => @cert)
         cert.issuer.to_s.should == "/C=US/O=SecureTrust Corporation/CN=SecureTrust CA"
     end
+    it "has the right issuer CN" do
+        cert = R509::Cert.new(:cert => @cert)
+        cert.issuer_cn.to_s.should == "SecureTrust CA"
+    end
     it "generates certificate fingerprints" do
         cert = R509::Cert.new(:cert => @cert)
         cert.fingerprint.should == '863bbb58877b426eb10ccfd34d3056b8c961f627'
@@ -218,7 +222,7 @@ describe R509::Cert do
         cert.extensions["extendedKeyUsage"].nil?.should == false
         cert.extensions["extendedKeyUsage"]["value"].should == "TLS Web Server Authentication"
     end
-    
+
     it "gets the right object from #basic_constraints" do
         cert = R509::Cert.new(:cert => @cert)
         cert.basic_constraints.class.should == R509::Cert::Extensions::BasicConstraints
@@ -292,5 +296,18 @@ describe R509::Cert do
         cert.valid_at?(Time.utc(2011,3,1)).should == true
         cert.valid_at?(1298959200).should == true
         cert.valid_at?(Time.utc(2012,1,1)).should == false
+    end
+    it "is revoked by crl" do
+        cert = R509::Cert.new(:cert => @cert3)
+        crl_admin = R509::Crl::Administrator.new(TestFixtures.test_ca_config)
+        crl_admin.revoke_cert(1425751142578902223005775172931960716533532010870)
+        crl = crl_admin.to_crl
+        cert.is_revoked_by_crl?(crl).should == true
+    end
+    it "is not revoked by crl" do
+        cert = R509::Cert.new(:cert => @cert3)
+        crl_admin = R509::Crl::Administrator.new(TestFixtures.test_ca_config)
+        crl = crl_admin.to_crl
+        cert.is_revoked_by_crl?(crl).should == false
     end
 end
