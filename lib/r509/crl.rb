@@ -19,6 +19,18 @@ module R509
             def issuer
                 @crl.issuer
             end
+            
+            # @return [String] The common name (CN) component of the issuer
+            def issuer_cn
+                return nil if self.issuer.nil?
+                
+                self.issuer.to_a.each do |part, value, length|
+                    return value if part.upcase == 'CN'
+                end
+                
+                # return nil if we didn't find a CN part
+                return nil
+            end
 
             # @return [Time]
             def last_update
@@ -147,6 +159,12 @@ module R509
             def to_der
                 @crl.to_der
             end
+            
+            # @return [R509::Crl::Parser]
+            def to_crl
+              return nil if @crl.nil?
+              return R509::Crl::Parser.new(@crl)
+            end
 
             # Writes the CRL into the PEM format
             #
@@ -235,7 +253,7 @@ module R509
                 now = Time.at Time.now.to_i
                 crl.last_update = now-@start_skew_seconds
                 crl.next_update = now+@validity_hours*3600
-                crl.issuer = @config.ca_cert.issuer
+                crl.issuer = @config.ca_cert.subject
 
                 self.revoked_certs.each do |serial, reason, revoke_time|
                     revoked = OpenSSL::X509::Revoked.new

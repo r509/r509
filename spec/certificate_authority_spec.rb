@@ -45,7 +45,7 @@ describe R509::CertificateAuthority::Signer do
         cert.to_pem.should match(/BEGIN CERTIFICATE/)
         cert.subject.to_s.should == '/CN=test.local'
         extended_key_usage = cert.extensions['extendedKeyUsage']
-        extended_key_usage[0]['value'].should == 'TLS Web Server Authentication'
+        extended_key_usage['value'].should == 'TLS Web Server Authentication'
     end
     it "properly issues server cert" do
         csr = R509::Csr.new(:cert => @cert, :bit_strength => 1024)
@@ -53,7 +53,7 @@ describe R509::CertificateAuthority::Signer do
         cert.to_pem.should match(/BEGIN CERTIFICATE/)
         cert.subject.to_s.should == '/C=US/ST=Illinois/L=Chicago/O=Paul Kehrer/CN=langui.sh'
         extended_key_usage = cert.extensions['extendedKeyUsage']
-        extended_key_usage[0]['value'].should == 'TLS Web Server Authentication'
+        extended_key_usage['value'].should == 'TLS Web Server Authentication'
     end
     it "when supplied, uses subject_item_policy to determine allowed subject" do
         csr = R509::Csr.new(:cert => @cert, :bit_strength => 512)
@@ -93,19 +93,19 @@ describe R509::CertificateAuthority::Signer do
     it "tests that policy identifiers are properly encoded" do
         csr = R509::Csr.new(:csr => @csr)
         cert = @ca.sign(:csr => csr, :profile_name => 'server')
-        cert.extensions['certificatePolicies'][0]['value'].should == "Policy: 2.16.840.1.12345.1.2.3.4.1\n  CPS: http://example.com/cps\n"
+        cert.extensions['certificatePolicies']['value'].should == "Policy: 2.16.840.1.12345.1.2.3.4.1\n  CPS: http://example.com/cps\n"
     end
     it "multiple policy identifiers are properly encoded" do
         csr = R509::Csr.new(:csr => @csr)
         config = R509::Config::CaConfig.from_yaml("multi_policy_ca", File.read("#{File.dirname(__FILE__)}/fixtures/config_test_various.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"})
         ca = R509::CertificateAuthority::Signer.new(config)
         cert = ca.sign(:csr => csr, :profile_name => 'server')
-        cert.extensions['certificatePolicies'][0]['value'].should == "Policy: 2.16.840.1.9999999999.3.0\nPolicy: 2.16.840.1.9999999999.1.2.3.4.1\n  CPS: http://example.com/cps\n"
+        cert.extensions['certificatePolicies']['value'].should == "Policy: 2.16.840.1.9999999999.3.0\nPolicy: 2.16.840.1.9999999999.1.2.3.4.1\n  CPS: http://example.com/cps\n"
     end
     it "tests basic constraints CA:TRUE and pathlen:0 on a subroot" do
         csr = R509::Csr.new(:csr => @csr)
         cert = @ca.sign(:csr => csr, :profile_name => 'subroot')
-        cert.extensions['basicConstraints'][0]['value'].should == 'CA:TRUE, pathlen:0'
+        cert.extensions['basicConstraints']['value'].should == 'CA:TRUE, pathlen:0'
     end
     it "issues with md5" do
         csr = R509::Csr.new(:csr => @csr3)
@@ -172,7 +172,7 @@ describe R509::CertificateAuthority::Signer do
         csr = R509::Csr.new(:csr => @csr3)
         cert = ca.sign(:csr => csr, :profile_name => "server")
         cert.extensions['authorityKeyIdentifier'].should == nil
-        cert.extended_key_usage.should include("TLS Web Server Authentication")
+        cert.extended_key_usage.web_server_authentication?.should == true
     end
     it "raises error unless you provide a proper config (or nil)" do
         expect { R509::CertificateAuthority::Signer.new('invalid') }.to raise_error(R509::R509Error, 'config must be a kind of R509::Config::CaConfig or nil (for self-sign only)')
@@ -210,7 +210,7 @@ describe R509::CertificateAuthority::Signer do
         cert.not_after.to_i.should == not_after
         cert.subject.to_s.should == '/C=US/O=r509 LLC/CN=r509 Self-Signed CA Test'
         cert.issuer.to_s.should == '/C=US/O=r509 LLC/CN=r509 Self-Signed CA Test'
-        cert.extensions['basicConstraints'][0]['value'].should == 'CA:TRUE'
+        cert.extensions['basicConstraints']['value'].should == 'CA:TRUE'
         cert.san_names.should include('sanname1','sanname2')
     end
     it "issues self-signed certificate with SAN in CSR" do
@@ -240,7 +240,7 @@ describe R509::CertificateAuthority::Signer do
         (cert.not_after.to_i-cert.not_before.to_i).should == 31536000
         cert.subject.to_s.should == '/C=US/O=r509 LLC/CN=r509 Self-Signed CA Test'
         cert.issuer.to_s.should == '/C=US/O=r509 LLC/CN=r509 Self-Signed CA Test'
-        cert.extensions['basicConstraints'][0]['value'].should == 'CA:TRUE'
+        cert.extensions['basicConstraints']['value'].should == 'CA:TRUE'
     end
     it "raises an error if attempting to self-sign without a key" do
         csr = R509::Csr.new(:csr => @csr3)
