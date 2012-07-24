@@ -8,6 +8,7 @@ test_ca: {
     cdp_location: 'URI:http://crl.domain.com/test_ca.crl',
     crl_validity_hours: 72,
     ocsp_validity_hours: 96,
+    ocsp_start_skew_seconds: 1800,
     ocsp_location: 'URI:http://ocsp.domain.com',
     message_digest: 'SHA1', #SHA1, SHA256, SHA512 supported. MD5 too, but you really shouldn't use that unless you have a good reason
     profiles: {

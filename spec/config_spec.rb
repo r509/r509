@@ -89,6 +89,8 @@ describe R509::Config::CaConfig do
 
     its(:message_digest) {should == "SHA1"}
     its(:crl_validity_hours) {should == 168}
+    its(:ocsp_validity_hours) {should == 168}
+    its(:ocsp_start_skew_seconds) {should == 3600}
     its(:cdp_location) {should be_nil}
     its(:ocsp_location) {should be_nil}
     its(:num_profiles) {should == 0}
