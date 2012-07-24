@@ -171,7 +171,8 @@ describe R509::Config::CaConfig do
 
     it "should load YAML" do
         config = R509::Config::CaConfig.from_yaml("test_ca", File.read("#{File.dirname(__FILE__)}/fixtures/config_test.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"})
-        config.crl_validity_hours.should == 168
+        config.crl_validity_hours.should == 72
+        config.ocsp_validity_hours.should == 96
         config.message_digest.should == "SHA1"
         config.num_profiles.should == 3
     end
@@ -280,7 +281,8 @@ describe R509::Config::CaConfig do
 
     it "should load YAML from filename" do
         config = R509::Config::CaConfig.load_yaml("test_ca", "#{File.dirname(__FILE__)}/fixtures/config_test.yaml", {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"})
-        config.crl_validity_hours.should == 168
+        config.crl_validity_hours.should == 72
+        config.ocsp_validity_hours.should == 96
         config.message_digest.should == "SHA1"
     end
 

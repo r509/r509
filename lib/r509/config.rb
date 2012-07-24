@@ -281,6 +281,7 @@ module R509
                     :ocsp_cert => ocsp_cert,
                     :ocsp_chain => ocsp_chain,
                     :crl_validity_hours => conf['crl_validity_hours'],
+                    :ocsp_validity_hours => conf['ocsp_validity_hours'],
                     :ocsp_location => conf['ocsp_location'],
                     :cdp_location => conf['cdp_location'],
                     :message_digest => conf['message_digest'],
