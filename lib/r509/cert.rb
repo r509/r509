@@ -27,6 +27,7 @@ module R509
             elsif not opts.has_key?(:cert)
                 raise ArgumentError, 'Must provide :cert or :pkcs12'
             else
+                csr_check(opts[:cert])
                 parse_certificate(opts[:cert])
             end
 
@@ -389,6 +390,17 @@ module R509
         end
 
         private
+        # This method exists only to provide a friendlier error msg if you attempt to
+        # parse a CSR as a certificate. All for Sean
+        def csr_check(cert)
+            begin
+                csr = OpenSSL::X509::Request.new cert
+                raise R509Error, 'Cert provided is actually a certificate signing request.'
+            rescue OpenSSL::X509::RequestError
+                # do nothing, it shouldn't be a CSR anyway!
+            end
+        end
+
         def parse_certificate(cert)
             @cert = OpenSSL::X509::Certificate.new cert
         end

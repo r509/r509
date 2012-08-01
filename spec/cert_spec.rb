@@ -24,6 +24,9 @@ describe R509::Cert do
     it "raises error when no :cert supplied" do
         expect { R509::Cert.new(:key => "random")}.to raise_error(ArgumentError, 'Must provide :cert or :pkcs12')
     end
+    it "raises error when a csr is supplied to :cert" do
+        expect { R509::Cert.new(:cert => TestFixtures::CSR)}.to raise_error(R509::R509Error, "Cert provided is actually a certificate signing request.")
+    end
     it "raises error when :cert and :pkcs12 are both provided" do
         expect { R509::Cert.new(
             :key => @key3,
