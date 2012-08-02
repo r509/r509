@@ -8,6 +8,7 @@ describe R509::CertificateAuthority::Signer do
         @csr3 = TestFixtures::CSR3
         @test_ca_config = TestFixtures.test_ca_config
         @ca = R509::CertificateAuthority::Signer.new(@test_ca_config)
+        @ca_no_profile = R509::CertificateAuthority::Signer.new(TestFixtures.test_ca_no_profile_config)
         @spki = TestFixtures::SPKI
     end
 
@@ -33,11 +34,12 @@ describe R509::CertificateAuthority::Signer do
         csr = OpenSSL::X509::Request.new(@csr)
         expect { @ca.sign({ :csr => csr, :profile_name => 'server' }) }.to raise_error(ArgumentError, 'You must pass an R509::Csr object for :csr')
     end
-    it "raises an error if you have no CaProfiles with your CaConfig" do
+    it "raises an error if you have no CaProfiles with your CaConfig when attempting to issue a cert" do
         config = R509::Config::CaConfig.new(
             :ca_cert => TestFixtures.test_ca_cert
         )
-        expect { R509::CertificateAuthority::Signer.new(config) }.to raise_error(R509::R509Error, 'You must have at least one CaProfile on your CaConfig to issue')
+        ca = R509::CertificateAuthority::Signer.new(config)
+        expect { ca.sign(:csr => @csr)  }.to raise_error(R509::R509Error, 'You must have at least one CaProfile on your CaConfig to issue')
     end
     it "properly issues server cert using spki" do
         spki = R509::Spki.new(:spki => @spki, :subject=>[['CN','test.local']])
@@ -179,7 +181,7 @@ describe R509::CertificateAuthority::Signer do
     end
     it "raises error when providing invalid ca profile" do
         csr = R509::Csr.new(:csr => @csr)
-        expect { @ca.sign(:csr => csr, :profile_name => 'invalid') }.to raise_error(R509::R509Error)
+        expect { @ca.sign(:csr => csr, :profile_name => 'invalid') }.to raise_error(R509::R509Error, "unknown profile 'invalid'")
     end
     it "raises error when attempting to issue CSR with invalid signature" do
         csr = R509::Csr.new(:csr => @csr_invalid_signature)

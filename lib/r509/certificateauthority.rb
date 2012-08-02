@@ -14,9 +14,6 @@ module R509::CertificateAuthority
             if not @config.nil? and not @config.kind_of?(R509::Config::CaConfig)
                 raise R509::R509Error, "config must be a kind of R509::Config::CaConfig or nil (for self-sign only)"
             end
-            if not @config.nil? and @config.num_profiles == 0
-                raise R509::R509Error, "You must have at least one CaProfile on your CaConfig to issue"
-            end
             if not @config.nil? and not @config.ca_cert.has_private_key?
                 raise R509::R509Error, "You must have a private key associated with your CA certificate to issue"
             end
@@ -35,7 +32,10 @@ module R509::CertificateAuthority
         def sign(options)
             if @config.nil?
                 raise R509::R509Error, "When instantiating the signer without a config you can only call #selfsign"
+            elsif @config.num_profiles == 0
+                raise R509::R509Error, "You must have at least one CaProfile on your CaConfig to issue"
             end
+
             if options.has_key?(:csr) and options.has_key?(:spki)
                 raise ArgumentError, "You can't pass both :csr and :spki"
             elsif not options.has_key?(:csr) and not options.has_key?(:spki)

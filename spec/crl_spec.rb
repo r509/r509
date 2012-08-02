@@ -57,7 +57,7 @@ describe R509::Crl::Administrator do
         @cert = TestFixtures::CERT
         @csr = TestFixtures::CSR
         @csr3 = TestFixtures::CSR3
-        @test_ca_config = TestFixtures.test_ca_config
+        @test_ca_config = TestFixtures.test_ca_no_profile_config
     end
     it "generates CRL with no entries in revocation list" do
         crl = R509::Crl::Administrator.new(@test_ca_config)

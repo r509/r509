@@ -202,4 +202,23 @@ module TestFixtures
 
         ret
     end
+
+    # @return [R509::Config::CaConfig]
+    def self.test_ca_no_profile_config
+        crl_list_sio = StringIO.new
+        crl_list_sio.set_encoding("BINARY") if crl_list_sio.respond_to?(:set_encoding)
+        crl_number_sio = StringIO.new
+        crl_number_sio.set_encoding("BINARY") if crl_number_sio.respond_to?(:set_encoding)
+
+        opts = {
+          :ca_cert => test_ca_cert(),
+          :cdp_location => 'URI:http://crl.domain.com/test_ca.crl',
+          :ocsp_location => 'URI:http://ocsp.domain.com',
+          :ocsp_start_skew_seconds => 3600,
+          :ocsp_validity_hours => 48,
+          :crl_list_file => crl_list_sio,
+          :crl_number_file => crl_number_sio
+        }
+        R509::Config::CaConfig.new(opts)
+    end
 end
