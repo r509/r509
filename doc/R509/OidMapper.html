@@ -6,7 +6,7 @@
 <title>
   Class: R509::OidMapper
   
-    &mdash; Documentation by YARD 0.7.4
+    &mdash; Documentation by YARD 0.8.2.1
   
 </title>
 
@@ -15,9 +15,11 @@
   <link rel="stylesheet" href="../css/common.css" type="text/css" media="screen" charset="utf-8" />
 
 <script type="text/javascript" charset="utf-8">
-  relpath = '..';
-  if (relpath != '') relpath += '/';
+  hasFrames = window.top.frames.main ? true : false;
+  relpath = '../';
+  framesUrl = "../frames.html#!" + escape(window.location.href);
 </script>
+
 
   <script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
 
@@ -26,36 +28,41 @@
 
   </head>
   <body>
-    <script type="text/javascript" charset="utf-8">
-      if (window.top.frames.main) document.body.className = 'frames';
-    </script>
-    
     <div id="header">
       <div id="menu">
   
-    <a href="../_index.html">Index (O)</a> &raquo; 
+    <a href="../_index.html">Index (O)</a> &raquo;
     <span class='title'><span class='object_link'><a href="../R509.html" title="R509 (module)">R509</a></span></span>
      &raquo; 
     <span class="title">OidMapper</span>
   
-  
+
   <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
 </div>
 
       <div id="search">
   
-    <a id="class_list_link" href="#">Class List</a>
+    <a class="full_list_link" id="class_list_link"
+        href="../class_list.html">
+      Class List
+    </a>
   
-    <a id="method_list_link" href="#">Method List</a>
+    <a class="full_list_link" id="method_list_link"
+        href="../method_list.html">
+      Method List
+    </a>
   
-    <a id="file_list_link" href="#">File List</a>
+    <a class="full_list_link" id="file_list_link"
+        href="../file_list.html">
+      File List
+    </a>
   
 </div>
       <div class="clear"></div>
     </div>
-    
+
     <iframe id="search_frame"></iframe>
-    
+
     <div id="content"><h1>Class: R509::OidMapper
   
   
@@ -108,6 +115,8 @@
 
 
 
+
+
   
     <h2>
       Class Method Summary
@@ -124,6 +133,7 @@
 
     
   </span>
+  
   
   
   
@@ -153,6 +163,7 @@
   
   
   
+  
 
   
     <span class="summary_desc"><div class='inline'>
@@ -169,16 +180,18 @@
 
   <div id="class_method_details" class="method_details_list">
     <h2>Class Method Details</h2>
-    
+
     
       <div class="method_details first">
-  <p class="signature first" id="batch_register-class_method">
+  <h3 class="signature first" id="batch_register-class_method">
   
     + (<tt>Object</tt>) <strong>batch_register</strong>(oids) 
   
 
   
-</p><div class="docstring">
+
+  
+</h3><div class="docstring">
   <div class="discussion">
     
 <p>Register a batch of OIDs so we have friendly short names</p>
@@ -189,16 +202,16 @@
 <div class="tags">
   
   <div class="examples">
-    <h3>Examples:</h3>
+    <p class="tag_title">Examples:</p>
     
-      <h4><div class='inline'></div></h4>
+      
       <pre class="example code">R509::OidMapper.batch_register([
     {:oid =&gt; &quot;1.2.3.4.5&quot;, :short_name =&gt; &quot;sName&quot;, :long_name =&gt; &quot;lName&quot;},
     {:oid =&gt; &quot;1.2.3.4.6&quot;, :short_name =&gt; &quot;oName&quot;}
 ]</pre>
     
   </div>
-<h3>Parameters:</h3>
+<p class="tag_title">Parameters:</p>
 <ul class="param">
   
     <li>
@@ -248,13 +261,15 @@
 </div>
     
       <div class="method_details ">
-  <p class="signature " id="register-class_method">
+  <h3 class="signature " id="register-class_method">
   
     + (<tt>Boolean</tt>) <strong>register</strong>(oid, short_name, long_name = nil) 
   
 
   
-</p><div class="docstring">
+
+  
+</h3><div class="docstring">
   <div class="discussion">
     
 <p>Register an OID so we have a friendly short name</p>
@@ -263,7 +278,7 @@
   </div>
 </div>
 <div class="tags">
-  <h3>Parameters:</h3>
+  <p class="tag_title">Parameters:</p>
 <ul class="param">
   
     <li>
@@ -318,7 +333,7 @@
   
 </ul>
 
-<h3>Returns:</h3>
+<p class="tag_title">Returns:</p>
 <ul class="return">
   
     <li>
@@ -367,11 +382,11 @@
   </div>
 
 </div>
-    
+
     <div id="footer">
-  Generated on Tue Jan 17 14:14:53 2012 by 
+  Generated on Wed Aug  8 10:13:46 2012 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.7.4 (ruby-1.9.3).
+  0.8.2.1 (ruby-1.9.3).
 </div>
 
   </body>

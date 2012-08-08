@@ -6,7 +6,7 @@
 <title>
   Class: R509::Config::CaConfigPool
   
-    &mdash; Documentation by YARD 0.7.4
+    &mdash; Documentation by YARD 0.8.2.1
   
 </title>
 
@@ -15,9 +15,11 @@
   <link rel="stylesheet" href="../../css/common.css" type="text/css" media="screen" charset="utf-8" />
 
 <script type="text/javascript" charset="utf-8">
-  relpath = '../..';
-  if (relpath != '') relpath += '/';
+  hasFrames = window.top.frames.main ? true : false;
+  relpath = '../../';
+  framesUrl = "../../frames.html#!" + escape(window.location.href);
 </script>
+
 
   <script type="text/javascript" charset="utf-8" src="../../js/jquery.js"></script>
 
@@ -26,36 +28,41 @@
 
   </head>
   <body>
-    <script type="text/javascript" charset="utf-8">
-      if (window.top.frames.main) document.body.className = 'frames';
-    </script>
-    
     <div id="header">
       <div id="menu">
   
-    <a href="../../_index.html">Index (C)</a> &raquo; 
+    <a href="../../_index.html">Index (C)</a> &raquo;
     <span class='title'><span class='object_link'><a href="../../R509.html" title="R509 (module)">R509</a></span></span> &raquo; <span class='title'><span class='object_link'><a href="../Config.html" title="R509::Config (module)">Config</a></span></span>
      &raquo; 
     <span class="title">CaConfigPool</span>
   
-  
+
   <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
 </div>
 
       <div id="search">
   
-    <a id="class_list_link" href="#">Class List</a>
+    <a class="full_list_link" id="class_list_link"
+        href="../../class_list.html">
+      Class List
+    </a>
   
-    <a id="method_list_link" href="#">Method List</a>
+    <a class="full_list_link" id="method_list_link"
+        href="../../method_list.html">
+      Method List
+    </a>
   
-    <a id="file_list_link" href="#">File List</a>
+    <a class="full_list_link" id="file_list_link"
+        href="../../file_list.html">
+      File List
+    </a>
   
 </div>
       <div class="clear"></div>
     </div>
-    
+
     <iframe id="search_frame"></iframe>
-    
+
     <div id="content"><h1>Class: R509::Config::CaConfigPool
   
   
@@ -108,6 +115,8 @@
 
 
 
+
+
   
     <h2>
       Class Method Summary
@@ -124,6 +133,7 @@
 
     
   </span>
+  
   
   
   
@@ -162,6 +172,7 @@
   
   
   
+  
 
   
     <span class="summary_desc"><div class='inline'>
@@ -185,6 +196,7 @@
   
   
   
+  
 
   
     <span class="summary_desc"><div class='inline'>
@@ -202,6 +214,7 @@
 
     
   </span>
+  
   
     <span class="note title constructor">constructor</span>
   
@@ -233,6 +246,7 @@
   
   
   
+  
 
   
     <span class="summary_desc"><div class='inline'>
@@ -249,13 +263,15 @@
   <h2>Constructor Details</h2>
   
     <div class="method_details first">
-  <p class="signature first" id="initialize-instance_method">
+  <h3 class="signature first" id="initialize-instance_method">
   
     - (<tt><span class='object_link'><a href="" title="R509::Config::CaConfigPool (class)">CaConfigPool</a></span></tt>) <strong>initialize</strong>(configs) 
   
 
   
-</p><div class="docstring">
+
+  
+</h3><div class="docstring">
   <div class="discussion">
     
 <p>A new instance of CaConfigPool</p>
@@ -264,7 +280,7 @@
   </div>
 </div>
 <div class="tags">
-  <h3>Parameters:</h3>
+  <p class="tag_title">Parameters:</p>
 <ul class="param">
   
     <li>
@@ -288,7 +304,7 @@
   
     
     
-    <h3>Options Hash (<tt>configs</tt>):</h3>
+    <p class="tag_title">Options Hash (<tt>configs</tt>):</p>
     <ul class="option">
       
         <li>
@@ -297,9 +313,11 @@
           <span class="default">
             
           </span>
-          &mdash; <div class='inline'>
+          
+            &mdash; <div class='inline'>
 <p>configs to add to the pool</p>
 </div>
+          
         </li>
       
     </ul>
@@ -332,16 +350,18 @@
 
   <div id="class_method_details" class="method_details_list">
     <h2>Class Method Details</h2>
-    
+
     
       <div class="method_details first">
-  <p class="signature first" id="from_yaml-class_method">
+  <h3 class="signature first" id="from_yaml-class_method">
   
     + (<tt>Object</tt>) <strong>from_yaml</strong>(name, yaml_data, opts = {}) 
   
 
   
-</p><div class="docstring">
+
+  
+</h3><div class="docstring">
   <div class="discussion">
     
 <p>Loads the named configuration config from a yaml string.</p>
@@ -350,12 +370,12 @@
   </div>
 </div>
 <div class="tags">
-  <h3>Parameters:</h3>
+  <p class="tag_title">Parameters:</p>
 <ul class="param">
   
     <li>
       
-        <span class='name'>conf_name</span>
+        <span class='name'>name</span>
       
       
         <span class='type'>(<tt>String</tt>)</span>
@@ -372,7 +392,7 @@ contain more than one configuration.</p>
   
     <li>
       
-        <span class='name'>yaml_file</span>
+        <span class='name'>yaml_data</span>
       
       
         <span class='type'>(<tt>String</tt>)</span>
@@ -424,16 +444,18 @@ contain more than one configuration.</p>
 
   <div id="instance_method_details" class="method_details_list">
     <h2>Instance Method Details</h2>
-    
+
     
       <div class="method_details first">
-  <p class="signature first" id="[]-instance_method">
+  <h3 class="signature first" id="[]-instance_method">
   
     - (<tt>Object</tt>) <strong>[]</strong>(name) 
   
 
   
-</p><div class="docstring">
+
+  
+</h3><div class="docstring">
   <div class="discussion">
     
 <p>retrieve a particular config by its name</p>
@@ -466,13 +488,15 @@ contain more than one configuration.</p>
 </div>
     
       <div class="method_details ">
-  <p class="signature " id="all-instance_method">
+  <h3 class="signature " id="all-instance_method">
   
     - (<tt>Object</tt>) <strong>all</strong> 
   
 
   
-</p><div class="docstring">
+
+  
+</h3><div class="docstring">
   <div class="discussion">
     
 <p>A list of all the configs in this pool</p>
@@ -482,7 +506,7 @@ contain more than one configuration.</p>
 </div>
 <div class="tags">
   
-<h3>Returns:</h3>
+<p class="tag_title">Returns:</p>
 <ul class="return">
   
     <li>
@@ -523,13 +547,15 @@ contain more than one configuration.</p>
 </div>
     
       <div class="method_details ">
-  <p class="signature " id="names-instance_method">
+  <h3 class="signature " id="names-instance_method">
   
     - (<tt>Object</tt>) <strong>names</strong> 
   
 
   
-</p><div class="docstring">
+
+  
+</h3><div class="docstring">
   <div class="discussion">
     
 <p>get all the config names</p>
@@ -564,11 +590,11 @@ contain more than one configuration.</p>
   </div>
 
 </div>
-    
+
     <div id="footer">
-  Generated on Tue Jan 17 14:14:52 2012 by 
+  Generated on Wed Aug  8 10:13:45 2012 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.7.4 (ruby-1.9.3).
+  0.8.2.1 (ruby-1.9.3).
 </div>
 
   </body>

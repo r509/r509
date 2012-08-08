@@ -6,7 +6,7 @@
 <title>
   Class: R509::Subject
   
-    &mdash; Documentation by YARD 0.7.4
+    &mdash; Documentation by YARD 0.8.2.1
   
 </title>
 
@@ -15,9 +15,11 @@
   <link rel="stylesheet" href="../css/common.css" type="text/css" media="screen" charset="utf-8" />
 
 <script type="text/javascript" charset="utf-8">
-  relpath = '..';
-  if (relpath != '') relpath += '/';
+  hasFrames = window.top.frames.main ? true : false;
+  relpath = '../';
+  framesUrl = "../frames.html#!" + escape(window.location.href);
 </script>
+
 
   <script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
 
@@ -26,36 +28,41 @@
 
   </head>
   <body>
-    <script type="text/javascript" charset="utf-8">
-      if (window.top.frames.main) document.body.className = 'frames';
-    </script>
-    
     <div id="header">
       <div id="menu">
   
-    <a href="../_index.html">Index (S)</a> &raquo; 
+    <a href="../_index.html">Index (S)</a> &raquo;
     <span class='title'><span class='object_link'><a href="../R509.html" title="R509 (module)">R509</a></span></span>
      &raquo; 
     <span class="title">Subject</span>
   
-  
+
   <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
 </div>
 
       <div id="search">
   
-    <a id="class_list_link" href="#">Class List</a>
+    <a class="full_list_link" id="class_list_link"
+        href="../class_list.html">
+      Class List
+    </a>
   
-    <a id="method_list_link" href="#">Method List</a>
+    <a class="full_list_link" id="method_list_link"
+        href="../method_list.html">
+      Method List
+    </a>
   
-    <a id="file_list_link" href="#">File List</a>
+    <a class="full_list_link" id="file_list_link"
+        href="../file_list.html">
+      File List
+    </a>
   
 </div>
       <div class="clear"></div>
     </div>
-    
+
     <iframe id="search_frame"></iframe>
-    
+
     <div id="content"><h1>Class: R509::Subject
   
   
@@ -109,6 +116,8 @@ fashion</p>
 
 
 
+
+
   
     <h2>
       Instance Method Summary
@@ -125,6 +134,7 @@ fashion</p>
 
     
   </span>
+  
   
   
   
@@ -154,6 +164,7 @@ fashion</p>
   
   
   
+  
 
   
     <span class="summary_desc"><div class='inline'>
@@ -171,6 +182,7 @@ fashion</p>
 
     
   </span>
+  
   
   
   
@@ -198,6 +210,7 @@ fashion</p>
   
   
   
+  
 
   
     <span class="summary_desc"><div class='inline'></div></span>
@@ -213,6 +226,7 @@ fashion</p>
 
     
   </span>
+  
   
     <span class="note title constructor">constructor</span>
   
@@ -244,6 +258,7 @@ fashion</p>
   
   
   
+  
 
   
     <span class="summary_desc"><div class='inline'></div></span>
@@ -259,6 +274,7 @@ fashion</p>
 
     
   </span>
+  
   
   
   
@@ -288,6 +304,7 @@ fashion</p>
   
   
   
+  
 
   
     <span class="summary_desc"><div class='inline'>
@@ -304,13 +321,15 @@ fashion</p>
   <h2>Constructor Details</h2>
   
     <div class="method_details first">
-  <p class="signature first" id="initialize-instance_method">
+  <h3 class="signature first" id="initialize-instance_method">
   
     - (<tt><span class='object_link'><a href="" title="R509::Subject (class)">Subject</a></span></tt>) <strong>initialize</strong>(arg = nil) 
   
 
   
-</p><div class="docstring">
+
+  
+</h3><div class="docstring">
   <div class="discussion">
     
 <p>A new instance of Subject</p>
@@ -319,16 +338,18 @@ fashion</p>
   </div>
 </div>
 <div class="tags">
-  <h3>Parameters:</h3>
+  <p class="tag_title">Parameters:</p>
 <ul class="param">
   
     <li>
       
-        <span class='name'></span>
+        <span class='name'>arg</span>
       
       
         <span class='type'>(<tt>Array</tt>, <tt>OpenSSL::X509::Name</tt>, <tt><span class='object_link'><a href="" title="R509::Subject (class)">R509::Subject</a></span></tt>)</span>
       
+      
+        <em class="default">(defaults to: <tt>nil</tt>)</em>
       
       
     </li>
@@ -388,16 +409,18 @@ fashion</p>
 
   <div id="instance_method_details" class="method_details_list">
     <h2>Instance Method Details</h2>
-    
+
     
       <div class="method_details first">
-  <p class="signature first" id="[]-instance_method">
+  <h3 class="signature first" id="[]-instance_method">
   
     - (<tt>Object</tt>) <strong>[]</strong>(key) 
   
 
   
-</p><div class="docstring">
+
+  
+</h3><div class="docstring">
   <div class="discussion">
     
 <p>get value for key</p>
@@ -440,13 +463,15 @@ fashion</p>
 </div>
     
       <div class="method_details ">
-  <p class="signature " id="[]=-instance_method">
+  <h3 class="signature " id="[]=-instance_method">
   
     - (<tt>Object</tt>) <strong>[]=</strong>(key, value) 
   
 
   
-</p><div class="docstring">
+
+  
+</h3><div class="docstring">
   <div class="discussion">
     
 <p>set key and value</p>
@@ -513,20 +538,22 @@ fashion</p>
 </div>
     
       <div class="method_details ">
-  <p class="signature " id="delete-instance_method">
+  <h3 class="signature " id="delete-instance_method">
   
     - (<tt>Object</tt>) <strong>delete</strong>(key) 
   
 
   
-</p><div class="docstring">
+
+  
+</h3><div class="docstring">
   <div class="discussion">
     
 
   </div>
 </div>
 <div class="tags">
-  <h3>Parameters:</h3>
+  <p class="tag_title">Parameters:</p>
 <ul class="param">
   
     <li>
@@ -574,13 +601,15 @@ fashion</p>
 </div>
     
       <div class="method_details ">
-  <p class="signature " id="empty?-instance_method">
+  <h3 class="signature " id="empty?-instance_method">
   
     - (<tt>Boolean</tt>) <strong>empty?</strong> 
   
 
   
-</p><div class="docstring">
+
+  
+</h3><div class="docstring">
   <div class="discussion">
     
 
@@ -588,7 +617,7 @@ fashion</p>
 </div>
 <div class="tags">
   
-<h3>Returns:</h3>
+<p class="tag_title">Returns:</p>
 <ul class="return">
   
     <li>
@@ -624,13 +653,15 @@ fashion</p>
 </div>
     
       <div class="method_details ">
-  <p class="signature " id="name-instance_method">
+  <h3 class="signature " id="name-instance_method">
   
     - (<tt>OpenSSL::X509::Name</tt>) <strong>name</strong> 
   
 
   
-</p><div class="docstring">
+
+  
+</h3><div class="docstring">
   <div class="discussion">
     
 
@@ -638,7 +669,7 @@ fashion</p>
 </div>
 <div class="tags">
   
-<h3>Returns:</h3>
+<p class="tag_title">Returns:</p>
 <ul class="return">
   
     <li>
@@ -674,13 +705,15 @@ fashion</p>
 </div>
     
       <div class="method_details ">
-  <p class="signature " id="to_a-instance_method">
+  <h3 class="signature " id="to_a-instance_method">
   
     - (<tt>Array</tt>) <strong>to_a</strong> 
   
 
   
-</p><div class="docstring">
+
+  
+</h3><div class="docstring">
   <div class="discussion">
     
 <p>Array of form [['<a href="http://'O','Org'">CN','langui.sh'],</a>]</p>
@@ -690,7 +723,7 @@ fashion</p>
 </div>
 <div class="tags">
   
-<h3>Returns:</h3>
+<p class="tag_title">Returns:</p>
 <ul class="return">
   
     <li>
@@ -731,13 +764,15 @@ fashion</p>
 </div>
     
       <div class="method_details ">
-  <p class="signature " id="to_s-instance_method">
+  <h3 class="signature " id="to_s-instance_method">
   
     - (<tt>String</tt>) <strong>to_s</strong> 
   
 
   
-</p><div class="docstring">
+
+  
+</h3><div class="docstring">
   <div class="discussion">
     
 <p>String of form /CN=something.com/O=whatever/L=Locality</p>
@@ -747,7 +782,7 @@ fashion</p>
 </div>
 <div class="tags">
   
-<h3>Returns:</h3>
+<p class="tag_title">Returns:</p>
 <ul class="return">
   
     <li>
@@ -790,11 +825,11 @@ fashion</p>
   </div>
 
 </div>
-    
+
     <div id="footer">
-  Generated on Tue Jan 17 14:14:52 2012 by 
+  Generated on Wed Aug  8 10:13:46 2012 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.7.4 (ruby-1.9.3).
+  0.8.2.1 (ruby-1.9.3).
 </div>
 
   </body>

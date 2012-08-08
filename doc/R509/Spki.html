@@ -6,7 +6,7 @@
 <title>
   Class: R509::Spki
   
-    &mdash; Documentation by YARD 0.7.4
+    &mdash; Documentation by YARD 0.8.2.1
   
 </title>
 
@@ -15,9 +15,11 @@
   <link rel="stylesheet" href="../css/common.css" type="text/css" media="screen" charset="utf-8" />
 
 <script type="text/javascript" charset="utf-8">
-  relpath = '..';
-  if (relpath != '') relpath += '/';
+  hasFrames = window.top.frames.main ? true : false;
+  relpath = '../';
+  framesUrl = "../frames.html#!" + escape(window.location.href);
 </script>
+
 
   <script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
 
@@ -26,36 +28,41 @@
 
   </head>
   <body>
-    <script type="text/javascript" charset="utf-8">
-      if (window.top.frames.main) document.body.className = 'frames';
-    </script>
-    
     <div id="header">
       <div id="menu">
   
-    <a href="../_index.html">Index (S)</a> &raquo; 
+    <a href="../_index.html">Index (S)</a> &raquo;
     <span class='title'><span class='object_link'><a href="../R509.html" title="R509 (module)">R509</a></span></span>
      &raquo; 
     <span class="title">Spki</span>
   
-  
+
   <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
 </div>
 
       <div id="search">
   
-    <a id="class_list_link" href="#">Class List</a>
+    <a class="full_list_link" id="class_list_link"
+        href="../class_list.html">
+      Class List
+    </a>
   
-    <a id="method_list_link" href="#">Method List</a>
+    <a class="full_list_link" id="method_list_link"
+        href="../method_list.html">
+      Method List
+    </a>
   
-    <a id="file_list_link" href="#">File List</a>
+    <a class="full_list_link" id="file_list_link"
+        href="../file_list.html">
+      File List
+    </a>
   
 </div>
       <div class="clear"></div>
     </div>
-    
+
     <iframe id="search_frame"></iframe>
-    
+
     <div id="content"><h1>Class: R509::Spki
   
   
@@ -110,10 +117,8 @@
 
 </div>
 
-  
-  
-  
-  
+
+
   <h2>Instance Attribute Summary <small>(<a href="#" class="summary_toggle">collapse</a>)</small></h2>
   <ul class="summary">
     
@@ -127,7 +132,10 @@
   </span>
   
   
-    <span class="note title readonly">readonly</span>
+  
+    
+      <span class="note title readonly">readonly</span>
+    
     
   
   
@@ -153,7 +161,10 @@
   </span>
   
   
-    <span class="note title readonly">readonly</span>
+  
+    
+      <span class="note title readonly">readonly</span>
+    
     
   
   
@@ -179,7 +190,10 @@
   </span>
   
   
-    <span class="note title readonly">readonly</span>
+  
+    
+      <span class="note title readonly">readonly</span>
+    
     
   
   
@@ -199,9 +213,6 @@
 
 
 
-  
-  
-  
 
   
     <h2>
@@ -219,6 +230,7 @@
 
     
   </span>
+  
   
   
   
@@ -248,6 +260,7 @@
   
   
   
+  
 
   
     <span class="summary_desc"><div class='inline'>
@@ -265,6 +278,7 @@
 
     
   </span>
+  
   
     <span class="note title constructor">constructor</span>
   
@@ -296,6 +310,7 @@
   
   
   
+  
 
   
     <span class="summary_desc"><div class='inline'>
@@ -313,6 +328,7 @@
 
     
   </span>
+  
   
   
   
@@ -342,6 +358,7 @@
   
   
   
+  
 
   
     <span class="summary_desc"><div class='inline'>
@@ -365,6 +382,7 @@
   
   
   
+  
 
   
     <span class="summary_desc"><div class='inline'>
@@ -382,6 +400,7 @@
 
     
   </span>
+  
   
   
   
@@ -415,6 +434,7 @@ class.</p>
   
   
   
+  
 
   
     <span class="summary_desc"><div class='inline'>
@@ -432,6 +452,7 @@ class.</p>
 
     
   </span>
+  
   
   
   
@@ -461,6 +482,7 @@ class.</p>
   
   
   
+  
 
   
     <span class="summary_desc"><div class='inline'>
@@ -481,19 +503,22 @@ class.</p>
   
   
   
+  
   <h3 class="inherited">Methods included from <span class='object_link'><a href="IOHelpers.html" title="R509::IOHelpers (module)">IOHelpers</a></span></h3>
-  <p class="inherited"><span class='object_link'><a href="IOHelpers.html#read_data-instance_method" title="R509::IOHelpers#read_data (method)">#read_data</a></span>, <span class='object_link'><a href="IOHelpers.html#write_data-instance_method" title="R509::IOHelpers#write_data (method)">#write_data</a></span></p>
+  <p class="inherited"><span class='object_link'><a href="IOHelpers.html#read_data-instance_method" title="R509::IOHelpers#read_data (method)">#read_data</a></span>, <span class='object_link'><a href="IOHelpers.html#read_data-class_method" title="R509::IOHelpers.read_data (method)">read_data</a></span>, <span class='object_link'><a href="IOHelpers.html#write_data-instance_method" title="R509::IOHelpers#write_data (method)">#write_data</a></span>, <span class='object_link'><a href="IOHelpers.html#write_data-class_method" title="R509::IOHelpers.write_data (method)">write_data</a></span></p>
 <div id="constructor_details" class="method_details_list">
   <h2>Constructor Details</h2>
   
     <div class="method_details first">
-  <p class="signature first" id="initialize-instance_method">
+  <h3 class="signature first" id="initialize-instance_method">
   
     - (<tt><span class='object_link'><a href="" title="R509::Spki (class)">Spki</a></span></tt>) <strong>initialize</strong>(opts = {}) 
   
 
   
-</p><div class="docstring">
+
+  
+</h3><div class="docstring">
   <div class="discussion">
     
 <p>you can also pass OIDs (see tests)</p>
@@ -504,15 +529,17 @@ class.</p>
 <div class="tags">
   
   <div class="examples">
-    <h3>Examples:</h3>
+    <p class="tag_title">Examples:</p>
     
-      <h4><div class='inline'><dl class="rdoc-list"><dt>['<a href="http://'ST','Illinois'">CN','langui.sh'],</a>,['<a href="http://'C','US'">L','Chicago'],</a>,['emailAddress','ca@langui.sh']</dt>
+      
+        <p class="example_title"><div class='inline'><dl class="rdoc-list"><dt>['<a href="http://'ST','Illinois'">CN','langui.sh'],</a>,['<a href="http://'C','US'">L','Chicago'],</a>,['emailAddress','ca@langui.sh']</dt>
 <dd></dd></dl>
-</div></h4>
+</div></p>
+      
       <pre class="example code"></pre>
     
   </div>
-<h3>Parameters:</h3>
+<p class="tag_title">Parameters:</p>
 <ul class="param">
   
     <li>
@@ -538,7 +565,7 @@ class.</p>
   
     
     
-    <h3>Options Hash (<tt>opts</tt>):</h3>
+    <p class="tag_title">Options Hash (<tt>opts</tt>):</p>
     <ul class="option">
       
         <li>
@@ -547,9 +574,11 @@ class.</p>
           <span class="default">
             
           </span>
-          &mdash; <div class='inline'>
+          
+            &mdash; <div class='inline'>
 <p>the spki you want to parse</p>
 </div>
+          
         </li>
       
         <li>
@@ -558,9 +587,11 @@ class.</p>
           <span class="default">
             
           </span>
-          &mdash; <div class='inline'>
+          
+            &mdash; <div class='inline'>
 <p>array of subject items</p>
 </div>
+          
         </li>
       
         <li>
@@ -569,9 +600,11 @@ class.</p>
           <span class="default">
             
           </span>
-          &mdash; <div class='inline'>
+          
+            &mdash; <div class='inline'>
 <p>array of SAN names</p>
 </div>
+          
         </li>
       
     </ul>
@@ -628,15 +661,16 @@ class.</p>
     
       
       <span id=""></span>
-      <span id="san_names-instance_method"></span>
       <div class="method_details first">
-  <p class="signature first" id="san_names-instance_method">
+  <h3 class="signature first" id="san_names-instance_method">
   
     - (<tt>Object</tt>) <strong>san_names</strong>  <span class="extras">(readonly)</span>
   
 
   
-</p><div class="docstring">
+
+  
+</h3><div class="docstring">
   <div class="discussion">
     
 <p>Returns the value of attribute san_names</p>
@@ -670,15 +704,16 @@ class.</p>
     
       
       <span id=""></span>
-      <span id="spki-instance_method"></span>
       <div class="method_details ">
-  <p class="signature " id="spki-instance_method">
+  <h3 class="signature " id="spki-instance_method">
   
     - (<tt>Object</tt>) <strong>spki</strong>  <span class="extras">(readonly)</span>
   
 
   
-</p><div class="docstring">
+
+  
+</h3><div class="docstring">
   <div class="discussion">
     
 <p>Returns the value of attribute spki</p>
@@ -712,15 +747,16 @@ class.</p>
     
       
       <span id=""></span>
-      <span id="subject-instance_method"></span>
       <div class="method_details ">
-  <p class="signature " id="subject-instance_method">
+  <h3 class="signature " id="subject-instance_method">
   
     - (<tt>Object</tt>) <strong>subject</strong>  <span class="extras">(readonly)</span>
   
 
   
-</p><div class="docstring">
+
+  
+</h3><div class="docstring">
   <div class="discussion">
     
 <p>Returns the value of attribute subject</p>
@@ -757,16 +793,18 @@ class.</p>
 
   <div id="instance_method_details" class="method_details_list">
     <h2>Instance Method Details</h2>
-    
+
     
       <div class="method_details first">
-  <p class="signature first" id="bit_strength-instance_method">
+  <h3 class="signature first" id="bit_strength-instance_method">
   
     - (<tt>Integer</tt>) <strong>bit_strength</strong> 
   
 
   
-</p><div class="docstring">
+
+  
+</h3><div class="docstring">
   <div class="discussion">
     
 <p>Returns the bit strength of the key used to create the SPKI</p>
@@ -776,7 +814,7 @@ class.</p>
 </div>
 <div class="tags">
   
-<h3>Returns:</h3>
+<p class="tag_title">Returns:</p>
 <ul class="return">
   
     <li>
@@ -825,13 +863,15 @@ class.</p>
 </div>
     
       <div class="method_details ">
-  <p class="signature " id="dsa?-instance_method">
+  <h3 class="signature " id="dsa?-instance_method">
   
     - (<tt>Boolean</tt>) <strong>dsa?</strong> 
   
 
   
-</p><div class="docstring">
+
+  
+</h3><div class="docstring">
   <div class="discussion">
     
 <p>Returns whether the public key is DSA</p>
@@ -841,7 +881,7 @@ class.</p>
 </div>
 <div class="tags">
   
-<h3>Returns:</h3>
+<p class="tag_title">Returns:</p>
 <ul class="return">
   
     <li>
@@ -882,13 +922,15 @@ class.</p>
 </div>
     
       <div class="method_details ">
-  <p class="signature " id="key_algorithm-instance_method">
+  <h3 class="signature " id="key_algorithm-instance_method">
   
     - (<tt>String</tt>) <strong>key_algorithm</strong> 
   
 
   
-</p><div class="docstring">
+
+  
+</h3><div class="docstring">
   <div class="discussion">
     
 <p>Returns key algorithm (RSA/DSA)</p>
@@ -898,7 +940,7 @@ class.</p>
 </div>
 <div class="tags">
   
-<h3>Returns:</h3>
+<p class="tag_title">Returns:</p>
 <ul class="return">
   
     <li>
@@ -947,13 +989,15 @@ class.</p>
 </div>
     
       <div class="method_details ">
-  <p class="signature " id="public_key-instance_method">
+  <h3 class="signature " id="public_key-instance_method">
   
     - (<tt>OpenSSL::PKey::RSA</tt>) <strong>public_key</strong> 
   
 
   
-</p><div class="docstring">
+
+  
+</h3><div class="docstring">
   <div class="discussion">
     
 <p>Public key</p>
@@ -963,7 +1007,7 @@ class.</p>
 </div>
 <div class="tags">
   
-<h3>Returns:</h3>
+<p class="tag_title">Returns:</p>
 <ul class="return">
   
     <li>
@@ -1004,13 +1048,15 @@ class.</p>
 </div>
     
       <div class="method_details ">
-  <p class="signature " id="rsa?-instance_method">
+  <h3 class="signature " id="rsa?-instance_method">
   
     - (<tt>Boolean</tt>) <strong>rsa?</strong> 
   
 
   
-</p><div class="docstring">
+
+  
+</h3><div class="docstring">
   <div class="discussion">
     
 <p>Returns whether the public key is RSA</p>
@@ -1020,7 +1066,7 @@ class.</p>
 </div>
 <div class="tags">
   
-<h3>Returns:</h3>
+<p class="tag_title">Returns:</p>
 <ul class="return">
   
     <li>
@@ -1061,13 +1107,15 @@ class.</p>
 </div>
     
       <div class="method_details ">
-  <p class="signature " id="to_der-instance_method">
+  <h3 class="signature " id="to_der-instance_method">
   
     - (<tt>String</tt>) <strong>to_der</strong> 
   
 
   
-</p><div class="docstring">
+
+  
+</h3><div class="docstring">
   <div class="discussion">
     
 <p>Converts the SPKI into the DER format</p>
@@ -1077,7 +1125,7 @@ class.</p>
 </div>
 <div class="tags">
   
-<h3>Returns:</h3>
+<p class="tag_title">Returns:</p>
 <ul class="return">
   
     <li>
@@ -1118,13 +1166,15 @@ class.</p>
 </div>
     
       <div class="method_details ">
-  <p class="signature " id="to_hash-instance_method">
+  <h3 class="signature " id="to_hash-instance_method">
   
     - (<tt>Hash</tt>) <strong>to_hash</strong> 
   
 
   
-</p><div class="docstring">
+
+  
+</h3><div class="docstring">
   <div class="discussion">
     
 <p>Returns a hash structure you can pass to the Ca You will want to call this
@@ -1136,7 +1186,7 @@ class.</p>
 </div>
 <div class="tags">
   
-<h3>Returns:</h3>
+<p class="tag_title">Returns:</p>
 <ul class="return">
   
     <li>
@@ -1177,7 +1227,7 @@ class.</p>
 </div>
     
       <div class="method_details ">
-  <p class="signature " id="to_pem-instance_method">
+  <h3 class="signature " id="to_pem-instance_method">
   
     - (<tt>String</tt>) <strong>to_pem</strong> 
   
@@ -1187,7 +1237,9 @@ class.</p>
     <span class="names"><span id='to_s-instance_method'>to_s</span></span>
     </span>
   
-</p><div class="docstring">
+
+  
+</h3><div class="docstring">
   <div class="discussion">
     
 <p>Converts the SPKI into the PEM format</p>
@@ -1197,7 +1249,7 @@ class.</p>
 </div>
 <div class="tags">
   
-<h3>Returns:</h3>
+<p class="tag_title">Returns:</p>
 <ul class="return">
   
     <li>
@@ -1238,13 +1290,15 @@ class.</p>
 </div>
     
       <div class="method_details ">
-  <p class="signature " id="write_der-instance_method">
+  <h3 class="signature " id="write_der-instance_method">
   
     - (<tt>Object</tt>) <strong>write_der</strong>(filename_or_io) 
   
 
   
-</p><div class="docstring">
+
+  
+</h3><div class="docstring">
   <div class="discussion">
     
 <p>Writes the SPKI into the DER format</p>
@@ -1253,7 +1307,7 @@ class.</p>
   </div>
 </div>
 <div class="tags">
-  <h3>Parameters:</h3>
+  <p class="tag_title">Parameters:</p>
 <ul class="param">
   
     <li>
@@ -1298,13 +1352,15 @@ IO-like object.</p>
 </div>
     
       <div class="method_details ">
-  <p class="signature " id="write_pem-instance_method">
+  <h3 class="signature " id="write_pem-instance_method">
   
     - (<tt>Object</tt>) <strong>write_pem</strong>(filename_or_io) 
   
 
   
-</p><div class="docstring">
+
+  
+</h3><div class="docstring">
   <div class="discussion">
     
 <p>Writes the SPKI into the PEM format</p>
@@ -1313,7 +1369,7 @@ IO-like object.</p>
   </div>
 </div>
 <div class="tags">
-  <h3>Parameters:</h3>
+  <p class="tag_title">Parameters:</p>
 <ul class="param">
   
     <li>
@@ -1360,11 +1416,11 @@ IO-like object.</p>
   </div>
 
 </div>
-    
+
     <div id="footer">
-  Generated on Tue Jan 17 14:14:52 2012 by 
+  Generated on Wed Aug  8 10:13:45 2012 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.7.4 (ruby-1.9.3).
+  0.8.2.1 (ruby-1.9.3).
 </div>
 
   </body>

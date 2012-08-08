@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>
-  Documentation by YARD 0.7.4
+  Documentation by YARD 0.8.2.1
   
 </title>
 
@@ -13,9 +13,11 @@
   <link rel="stylesheet" href="css/common.css" type="text/css" media="screen" charset="utf-8" />
 
 <script type="text/javascript" charset="utf-8">
+  hasFrames = window.top.frames.main ? true : false;
   relpath = '';
-  if (relpath != '') relpath += '/';
+  framesUrl = "frames.html#!" + escape(window.location.href);
 </script>
+
 
   <script type="text/javascript" charset="utf-8" src="js/jquery.js"></script>
 
@@ -24,40 +26,42 @@
 
   </head>
   <body>
-    <script type="text/javascript" charset="utf-8">
-      if (window.top.frames.main) document.body.className = 'frames';
-    </script>
-    
     <div id="header">
       <div id="menu">
   
-    
-    <span class="title"></span>
-  
-  
+
   <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
 </div>
 
       <div id="search">
   
-    <a id="class_list_link" href="#">Class List</a>
+    <a class="full_list_link" id="class_list_link"
+        href="class_list.html">
+      Class List
+    </a>
   
-    <a id="method_list_link" href="#">Method List</a>
+    <a class="full_list_link" id="method_list_link"
+        href="method_list.html">
+      Method List
+    </a>
   
-    <a id="file_list_link" href="#">File List</a>
+    <a class="full_list_link" id="file_list_link"
+        href="file_list.html">
+      File List
+    </a>
   
 </div>
       <div class="clear"></div>
     </div>
-    
+
     <iframe id="search_frame"></iframe>
-    
-    <div id="content"><h1 class="noborder title">Documentation by YARD 0.7.4</h1>
+
+    <div id="content"><h1 class="noborder title">Documentation by YARD 0.8.2.1</h1>
 <div id="listing">
   <h1 class="alphaindex">Alphabetic Index</h1>
   
   <h2>File Listing</h2>
-  <ul id="files">
+  <ul id="files" class="index_inline_list">
   
   
     <li class="r1"><a href="index.html" title="README">README</a></li>
@@ -79,68 +83,119 @@
     <td valign='top' width="33%">
       
         
+        <ul id="alpha_A" class="alpha">
+          <li class="letter">A</li>
+          <ul>
+            
+              <li>
+                <span class='object_link'><a href="R509/Crl/Administrator.html" title="R509::Crl::Administrator (class)">Administrator</a></span>
+                
+                  <small>(R509::Crl)</small>
+                
+              </li>
+            
+              <li>
+                <span class='object_link'><a href="R509/Cert/Extensions/AuthorityInfoAccess.html" title="R509::Cert::Extensions::AuthorityInfoAccess (class)">AuthorityInfoAccess</a></span>
+                
+                  <small>(R509::Cert::Extensions)</small>
+                
+              </li>
+            
+              <li>
+                <span class='object_link'><a href="R509/Cert/Extensions/AuthorityKeyIdentifier.html" title="R509::Cert::Extensions::AuthorityKeyIdentifier (class)">AuthorityKeyIdentifier</a></span>
+                
+                  <small>(R509::Cert::Extensions)</small>
+                
+              </li>
+            
+          </ul>
+        </ul>
+      
+        
+        <ul id="alpha_B" class="alpha">
+          <li class="letter">B</li>
+          <ul>
+            
+              <li>
+                <span class='object_link'><a href="R509/Cert/Extensions/BasicConstraints.html" title="R509::Cert::Extensions::BasicConstraints (class)">BasicConstraints</a></span>
+                
+                  <small>(R509::Cert::Extensions)</small>
+                
+              </li>
+            
+          </ul>
+        </ul>
+      
+        
         <ul id="alpha_C" class="alpha">
           <li class="letter">C</li>
           <ul>
             
               <li>
-                <span class='object_link'><a href="R509/Config/CaConfig.html" title="R509::Config::CaConfig (class)">CaConfig</a></span> 
+                <span class='object_link'><a href="R509/Config/CaConfig.html" title="R509::Config::CaConfig (class)">CaConfig</a></span>
                 
                   <small>(R509::Config)</small>
                 
               </li>
             
               <li>
-                <span class='object_link'><a href="R509/Config/CaConfigPool.html" title="R509::Config::CaConfigPool (class)">CaConfigPool</a></span> 
+                <span class='object_link'><a href="R509/Config/CaConfigPool.html" title="R509::Config::CaConfigPool (class)">CaConfigPool</a></span>
                 
                   <small>(R509::Config)</small>
                 
               </li>
             
               <li>
-                <span class='object_link'><a href="R509/Config/CaProfile.html" title="R509::Config::CaProfile (class)">CaProfile</a></span> 
+                <span class='object_link'><a href="R509/Config/CaProfile.html" title="R509::Config::CaProfile (class)">CaProfile</a></span>
                 
                   <small>(R509::Config)</small>
                 
               </li>
             
               <li>
-                <span class='object_link'><a href="R509/Cert.html" title="R509::Cert (class)">Cert</a></span> 
+                <span class='object_link'><a href="R509/Cert.html" title="R509::Cert (class)">Cert</a></span>
                 
                   <small>(R509)</small>
                 
               </li>
             
               <li>
-                <span class='object_link'><a href="R509/CertificateAuthority.html" title="R509::CertificateAuthority (module)">CertificateAuthority</a></span> 
+                <span class='object_link'><a href="R509/CertificateAuthority.html" title="R509::CertificateAuthority (module)">CertificateAuthority</a></span>
                 
                   <small>(R509)</small>
                 
               </li>
             
               <li>
-                <span class='object_link'><a href="R509/Validity/Checker.html" title="R509::Validity::Checker (class)">Checker</a></span> 
+                <span class='object_link'><a href="R509/Validity/Checker.html" title="R509::Validity::Checker (class)">Checker</a></span>
                 
                   <small>(R509::Validity)</small>
                 
               </li>
             
               <li>
-                <span class='object_link'><a href="R509/Config.html" title="R509::Config (module)">Config</a></span> 
+                <span class='object_link'><a href="R509/Config.html" title="R509::Config (module)">Config</a></span>
                 
                   <small>(R509)</small>
                 
               </li>
             
               <li>
-                <span class='object_link'><a href="R509/Crl.html" title="R509::Crl (class)">Crl</a></span> 
+                <span class='object_link'><a href="R509/Crl.html" title="R509::Crl (module)">Crl</a></span>
                 
                   <small>(R509)</small>
                 
               </li>
             
               <li>
-                <span class='object_link'><a href="R509/Csr.html" title="R509::Csr (class)">Csr</a></span> 
+                <span class='object_link'><a href="R509/Cert/Extensions/CrlDistributionPoints.html" title="R509::Cert::Extensions::CrlDistributionPoints (class)">CrlDistributionPoints</a></span>
+                
+                  <small>(R509::Cert::Extensions)</small>
+                
+              </li>
+            
+              <li>
+                <span class='object_link'><a href="R509/Csr.html" title="R509::Csr (class)">Csr</a></span>
                 
                   <small>(R509)</small>
                 
@@ -155,16 +210,38 @@
           <ul>
             
               <li>
-                <span class='object_link'><a href="R509/Validity/DefaultChecker.html" title="R509::Validity::DefaultChecker (class)">DefaultChecker</a></span> 
+                <span class='object_link'><a href="R509/Validity/DefaultChecker.html" title="R509::Validity::DefaultChecker (class)">DefaultChecker</a></span>
                 
                   <small>(R509::Validity)</small>
                 
               </li>
             
               <li>
-                <span class='object_link'><a href="R509/Validity/DefaultWriter.html" title="R509::Validity::DefaultWriter (class)">DefaultWriter</a></span> 
+                <span class='object_link'><a href="R509/Validity/DefaultWriter.html" title="R509::Validity::DefaultWriter (class)">DefaultWriter</a></span>
                 
                   <small>(R509::Validity)</small>
+                
+              </li>
+            
+          </ul>
+        </ul>
+      
+        
+        <ul id="alpha_E" class="alpha">
+          <li class="letter">E</li>
+          <ul>
+            
+              <li>
+                <span class='object_link'><a href="R509/Cert/Extensions/ExtendedKeyUsage.html" title="R509::Cert::Extensions::ExtendedKeyUsage (class)">ExtendedKeyUsage</a></span>
+                
+                  <small>(R509::Cert::Extensions)</small>
+                
+              </li>
+            
+              <li>
+                <span class='object_link'><a href="R509/Cert/Extensions.html" title="R509::Cert::Extensions (module)">Extensions</a></span>
+                
+                  <small>(R509::Cert)</small>
                 
               </li>
             
@@ -177,7 +254,7 @@
           <ul>
             
               <li>
-                <span class='object_link'><a href="R509/IOHelpers.html" title="R509::IOHelpers (module)">IOHelpers</a></span> 
+                <span class='object_link'><a href="R509/IOHelpers.html" title="R509::IOHelpers (module)">IOHelpers</a></span>
                 
                   <small>(R509)</small>
                 
@@ -187,12 +264,30 @@
         </ul>
       
         
+        <ul id="alpha_K" class="alpha">
+          <li class="letter">K</li>
+          <ul>
+            
+              <li>
+                <span class='object_link'><a href="R509/Cert/Extensions/KeyUsage.html" title="R509::Cert::Extensions::KeyUsage (class)">KeyUsage</a></span>
+                
+                  <small>(R509::Cert::Extensions)</small>
+                
+              </li>
+            
+          </ul>
+        </ul>
+      
+        
+          </td><td valign='top' width="33%">
+          
+        
         <ul id="alpha_M" class="alpha">
           <li class="letter">M</li>
           <ul>
             
               <li>
-                <span class='object_link'><a href="R509/MessageDigest.html" title="R509::MessageDigest (class)">MessageDigest</a></span> 
+                <span class='object_link'><a href="R509/MessageDigest.html" title="R509::MessageDigest (class)">MessageDigest</a></span>
                 
                   <small>(R509)</small>
                 
@@ -207,14 +302,14 @@
           <ul>
             
               <li>
-                <span class='object_link'><a href="R509/NameSanitizer.html" title="R509::NameSanitizer (class)">NameSanitizer</a></span> 
+                <span class='object_link'><a href="R509/NameSanitizer.html" title="R509::NameSanitizer (class)">NameSanitizer</a></span>
                 
                   <small>(R509)</small>
                 
               </li>
             
               <li>
-                <span class='object_link'><a href="R509/Ocsp/Request/Nonce.html" title="R509::Ocsp::Request::Nonce (module)">Nonce</a></span> 
+                <span class='object_link'><a href="R509/Ocsp/Request/Nonce.html" title="R509::Ocsp::Request::Nonce (module)">Nonce</a></span>
                 
                   <small>(R509::Ocsp::Request)</small>
                 
@@ -229,14 +324,14 @@
           <ul>
             
               <li>
-                <span class='object_link'><a href="R509/Ocsp.html" title="R509::Ocsp (module)">Ocsp</a></span> 
+                <span class='object_link'><a href="R509/Ocsp.html" title="R509::Ocsp (module)">Ocsp</a></span>
                 
                   <small>(R509)</small>
                 
               </li>
             
               <li>
-                <span class='object_link'><a href="R509/OidMapper.html" title="R509::OidMapper (class)">OidMapper</a></span> 
+                <span class='object_link'><a href="R509/OidMapper.html" title="R509::OidMapper (class)">OidMapper</a></span>
                 
                   <small>(R509)</small>
                 
@@ -251,7 +346,14 @@
           <ul>
             
               <li>
-                <span class='object_link'><a href="R509/PrivateKey.html" title="R509::PrivateKey (class)">PrivateKey</a></span> 
+                <span class='object_link'><a href="R509/Crl/Parser.html" title="R509::Crl::Parser (class)">Parser</a></span>
+                
+                  <small>(R509::Crl)</small>
+                
+              </li>
+            
+              <li>
+                <span class='object_link'><a href="R509/PrivateKey.html" title="R509::PrivateKey (class)">PrivateKey</a></span>
                 
                   <small>(R509)</small>
                 
@@ -261,34 +363,31 @@
         </ul>
       
         
-          </td><td valign='top' width="33%">
-          
-        
         <ul id="alpha_R" class="alpha">
           <li class="letter">R</li>
           <ul>
             
               <li>
-                <span class='object_link'><a href="R509.html" title="R509 (module)">R509</a></span> 
+                <span class='object_link'><a href="R509.html" title="R509 (module)">R509</a></span>
                 
               </li>
             
               <li>
-                <span class='object_link'><a href="R509/R509Error.html" title="R509::R509Error (class)">R509Error</a></span> 
+                <span class='object_link'><a href="R509/R509Error.html" title="R509::R509Error (class)">R509Error</a></span>
                 
                   <small>(R509)</small>
                 
               </li>
             
               <li>
-                <span class='object_link'><a href="R509/Ocsp/Request.html" title="R509::Ocsp::Request (module)">Request</a></span> 
+                <span class='object_link'><a href="R509/Ocsp/Request.html" title="R509::Ocsp::Request (module)">Request</a></span>
                 
                   <small>(R509::Ocsp)</small>
                 
               </li>
             
               <li>
-                <span class='object_link'><a href="R509/Ocsp/Response.html" title="R509::Ocsp::Response (class)">Response</a></span> 
+                <span class='object_link'><a href="R509/Ocsp/Response.html" title="R509::Ocsp::Response (class)">Response</a></span>
                 
                   <small>(R509::Ocsp)</small>
                 
@@ -303,59 +402,51 @@
           <ul>
             
               <li>
-                <span class='object_link'><a href="R509/Scep.html" title="R509::Scep (module)">Scep</a></span> 
-                
-                  <small>(R509)</small>
-                
-              </li>
-            
-              <li>
-                <span class='object_link'><a href="R509/CertificateAuthority/Signer.html" title="R509::CertificateAuthority::Signer (class)">Signer</a></span> 
+                <span class='object_link'><a href="R509/CertificateAuthority/Signer.html" title="R509::CertificateAuthority::Signer (class)">Signer</a></span>
                 
                   <small>(R509::CertificateAuthority)</small>
                 
               </li>
             
               <li>
-                <span class='object_link'><a href="R509/Spki.html" title="R509::Spki (class)">Spki</a></span> 
+                <span class='object_link'><a href="R509/Spki.html" title="R509::Spki (class)">Spki</a></span>
                 
                   <small>(R509)</small>
                 
               </li>
             
               <li>
-                <span class='object_link'><a href="R509/Validity/Status.html" title="R509::Validity::Status (class)">Status</a></span> 
+                <span class='object_link'><a href="R509/Validity/Status.html" title="R509::Validity::Status (class)">Status</a></span>
                 
                   <small>(R509::Validity)</small>
                 
               </li>
             
               <li>
-                <span class='object_link'><a href="R509/Subject.html" title="R509::Subject (class)">Subject</a></span> 
+                <span class='object_link'><a href="R509/Subject.html" title="R509::Subject (class)">Subject</a></span>
                 
                   <small>(R509)</small>
                 
               </li>
             
               <li>
-                <span class='object_link'><a href="R509/Config/SubjectItemPolicy.html" title="R509::Config::SubjectItemPolicy (class)">SubjectItemPolicy</a></span> 
+                <span class='object_link'><a href="R509/Cert/Extensions/SubjectAlternativeName.html" title="R509::Cert::Extensions::SubjectAlternativeName (class)">SubjectAlternativeName</a></span>
+                
+                  <small>(R509::Cert::Extensions)</small>
+                
+              </li>
+            
+              <li>
+                <span class='object_link'><a href="R509/Config/SubjectItemPolicy.html" title="R509::Config::SubjectItemPolicy (class)">SubjectItemPolicy</a></span>
                 
                   <small>(R509::Config)</small>
                 
               </li>
             
-          </ul>
-        </ul>
-      
-        
-        <ul id="alpha_T" class="alpha">
-          <li class="letter">T</li>
-          <ul>
-            
               <li>
-                <span class='object_link'><a href="R509/Scep/Transaction.html" title="R509::Scep::Transaction (class)">Transaction</a></span> 
+                <span class='object_link'><a href="R509/Cert/Extensions/SubjectKeyIdentifier.html" title="R509::Cert::Extensions::SubjectKeyIdentifier (class)">SubjectKeyIdentifier</a></span>
                 
-                  <small>(R509::Scep)</small>
+                  <small>(R509::Cert::Extensions)</small>
                 
               </li>
             
@@ -368,7 +459,7 @@
           <ul>
             
               <li>
-                <span class='object_link'><a href="R509/Validity.html" title="R509::Validity (module)">Validity</a></span> 
+                <span class='object_link'><a href="R509/Validity.html" title="R509::Validity (module)">Validity</a></span>
                 
                   <small>(R509)</small>
                 
@@ -383,7 +474,7 @@
           <ul>
             
               <li>
-                <span class='object_link'><a href="R509/Validity/Writer.html" title="R509::Validity::Writer (class)">Writer</a></span> 
+                <span class='object_link'><a href="R509/Validity/Writer.html" title="R509::Validity::Writer (class)">Writer</a></span>
                 
                   <small>(R509::Validity)</small>
                 
@@ -399,11 +490,11 @@
 </div>
 
 </div>
-    
+
     <div id="footer">
-  Generated on Tue Jan 17 14:14:51 2012 by 
+  Generated on Wed Aug  8 10:13:43 2012 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.7.4 (ruby-1.9.3).
+  0.8.2.1 (ruby-1.9.3).
 </div>
 
   </body>

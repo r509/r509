@@ -6,7 +6,7 @@
 <title>
   Class: R509::CertificateAuthority::Signer
   
-    &mdash; Documentation by YARD 0.7.4
+    &mdash; Documentation by YARD 0.8.2.1
   
 </title>
 
@@ -15,9 +15,11 @@
   <link rel="stylesheet" href="../../css/common.css" type="text/css" media="screen" charset="utf-8" />
 
 <script type="text/javascript" charset="utf-8">
-  relpath = '../..';
-  if (relpath != '') relpath += '/';
+  hasFrames = window.top.frames.main ? true : false;
+  relpath = '../../';
+  framesUrl = "../../frames.html#!" + escape(window.location.href);
 </script>
+
 
   <script type="text/javascript" charset="utf-8" src="../../js/jquery.js"></script>
 
@@ -26,36 +28,41 @@
 
   </head>
   <body>
-    <script type="text/javascript" charset="utf-8">
-      if (window.top.frames.main) document.body.className = 'frames';
-    </script>
-    
     <div id="header">
       <div id="menu">
   
-    <a href="../../_index.html">Index (S)</a> &raquo; 
+    <a href="../../_index.html">Index (S)</a> &raquo;
     <span class='title'><span class='object_link'><a href="../../R509.html" title="R509 (module)">R509</a></span></span> &raquo; <span class='title'><span class='object_link'><a href="../CertificateAuthority.html" title="R509::CertificateAuthority (module)">CertificateAuthority</a></span></span>
      &raquo; 
     <span class="title">Signer</span>
   
-  
+
   <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
 </div>
 
       <div id="search">
   
-    <a id="class_list_link" href="#">Class List</a>
+    <a class="full_list_link" id="class_list_link"
+        href="../../class_list.html">
+      Class List
+    </a>
   
-    <a id="method_list_link" href="#">Method List</a>
+    <a class="full_list_link" id="method_list_link"
+        href="../../method_list.html">
+      Method List
+    </a>
   
-    <a id="file_list_link" href="#">File List</a>
+    <a class="full_list_link" id="file_list_link"
+        href="../../file_list.html">
+      File List
+    </a>
   
 </div>
       <div class="clear"></div>
     </div>
-    
+
     <iframe id="search_frame"></iframe>
-    
+
     <div id="content"><h1>Class: R509::CertificateAuthority::Signer
   
   
@@ -108,6 +115,8 @@
 
 
 
+
+
   
     <h2>
       Instance Method Summary
@@ -124,6 +133,7 @@
 
     
   </span>
+  
   
     <span class="note title constructor">constructor</span>
   
@@ -155,6 +165,7 @@
   
   
   
+  
 
   
     <span class="summary_desc"><div class='inline'>
@@ -178,6 +189,7 @@
   
   
   
+  
 
   
     <span class="summary_desc"><div class='inline'>
@@ -194,13 +206,15 @@
   <h2>Constructor Details</h2>
   
     <div class="method_details first">
-  <p class="signature first" id="initialize-instance_method">
+  <h3 class="signature first" id="initialize-instance_method">
   
     - (<tt><span class='object_link'><a href="" title="R509::CertificateAuthority::Signer (class)">Signer</a></span></tt>) <strong>initialize</strong>(config = nil) 
   
 
   
-</p><div class="docstring">
+
+  
+</h3><div class="docstring">
   <div class="discussion">
     
 <p>A new instance of Signer</p>
@@ -209,16 +223,18 @@
   </div>
 </div>
 <div class="tags">
-  <h3>Parameters:</h3>
+  <p class="tag_title">Parameters:</p>
 <ul class="param">
   
     <li>
       
-        <span class='name'>@config</span>
+        <span class='name'>config</span>
       
       
         <span class='type'>(<tt><span class='object_link'><a href="../Config.html" title="R509::Config (module)">R509::Config</a></span></tt>)</span>
       
+      
+        <em class="default">(defaults to: <tt>nil</tt>)</em>
       
       
     </li>
@@ -241,10 +257,7 @@
 17
 18
 19
-20
-21
-22
-23</pre>
+20</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'lib/r509/certificateauthority.rb', line 11</span>
@@ -254,9 +267,6 @@
 
     <span class='kw'>if</span> <span class='kw'>not</span> <span class='ivar'>@config</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span> <span class='kw'>and</span> <span class='kw'>not</span> <span class='ivar'>@config</span><span class='period'>.</span><span class='id identifier rubyid_kind_of?'>kind_of?</span><span class='lparen'>(</span><span class='const'>R509</span><span class='op'>::</span><span class='const'>Config</span><span class='op'>::</span><span class='const'>CaConfig</span><span class='rparen'>)</span>
         <span class='id identifier rubyid_raise'>raise</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>R509Error</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>config must be a kind of R509::Config::CaConfig or nil (for self-sign only)</span><span class='tstring_end'>&quot;</span></span>
-    <span class='kw'>end</span>
-    <span class='kw'>if</span> <span class='kw'>not</span> <span class='ivar'>@config</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span> <span class='kw'>and</span> <span class='ivar'>@config</span><span class='period'>.</span><span class='id identifier rubyid_num_profiles'>num_profiles</span> <span class='op'>==</span> <span class='int'>0</span>
-        <span class='id identifier rubyid_raise'>raise</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>R509Error</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>You must have at least one CaProfile on your CaConfig to issue</span><span class='tstring_end'>&quot;</span></span>
     <span class='kw'>end</span>
     <span class='kw'>if</span> <span class='kw'>not</span> <span class='ivar'>@config</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span> <span class='kw'>and</span> <span class='kw'>not</span> <span class='ivar'>@config</span><span class='period'>.</span><span class='id identifier rubyid_ca_cert'>ca_cert</span><span class='period'>.</span><span class='id identifier rubyid_has_private_key?'>has_private_key?</span>
         <span class='id identifier rubyid_raise'>raise</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>R509Error</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>You must have a private key associated with your CA certificate to issue</span><span class='tstring_end'>&quot;</span></span>
@@ -272,16 +282,18 @@
 
   <div id="instance_method_details" class="method_details_list">
     <h2>Instance Method Details</h2>
-    
+
     
       <div class="method_details first">
-  <p class="signature first" id="selfsign-instance_method">
+  <h3 class="signature first" id="selfsign-instance_method">
   
     - (<tt><span class='object_link'><a href="../Cert.html" title="R509::Cert (class)">R509::Cert</a></span></tt>) <strong>selfsign</strong>(options) 
   
 
   
-</p><div class="docstring">
+
+  
+</h3><div class="docstring">
   <div class="discussion">
     
 <p>Self-signs a CSR</p>
@@ -290,7 +302,7 @@
   </div>
 </div>
 <div class="tags">
-  <h3>Parameters:</h3>
+  <p class="tag_title">Parameters:</p>
 <ul class="param">
   
     <li>
@@ -314,7 +326,7 @@
   
     
     
-    <h3>Options Hash (<tt>options</tt>):</h3>
+    <p class="tag_title">Options Hash (<tt>options</tt>):</p>
     <ul class="option">
       
         <li>
@@ -323,7 +335,7 @@
           <span class="default">
             
           </span>
-          &mdash; <div class='inline'></div>
+          
         </li>
       
         <li>
@@ -332,9 +344,11 @@
           <span class="default">
             
           </span>
-          &mdash; <div class='inline'>
+          
+            &mdash; <div class='inline'>
 <p>the message digest to use for this certificate (defaults to sha1)</p>
 </div>
+          
         </li>
       
         <li>
@@ -343,10 +357,12 @@
           <span class="default">
             
           </span>
-          &mdash; <div class='inline'>
+          
+            &mdash; <div class='inline'>
 <p>the serial number you want to issue the certificate with (defaults to
 random)</p>
 </div>
+          
         </li>
       
         <li>
@@ -355,9 +371,11 @@ random)</p>
           <span class="default">
             
           </span>
-          &mdash; <div class='inline'>
+          
+            &mdash; <div class='inline'>
 <p>the notBefore for the certificate (defaults to now)</p>
 </div>
+          
         </li>
       
         <li>
@@ -366,9 +384,11 @@ random)</p>
           <span class="default">
             
           </span>
-          &mdash; <div class='inline'>
+          
+            &mdash; <div class='inline'>
 <p>the notAfter for the certificate (defaults to 1 year)</p>
 </div>
+          
         </li>
       
         <li>
@@ -377,15 +397,17 @@ random)</p>
           <span class="default">
             
           </span>
-          &mdash; <div class='inline'>
+          
+            &mdash; <div class='inline'>
 <p>Optional array of subject alternative names</p>
 </div>
+          
         </li>
       
     </ul>
   
 
-<h3>Returns:</h3>
+<p class="tag_title">Returns:</p>
 <ul class="return">
   
     <li>
@@ -502,13 +524,15 @@ random)</p>
 </div>
     
       <div class="method_details ">
-  <p class="signature " id="sign-instance_method">
+  <h3 class="signature " id="sign-instance_method">
   
     - (<tt><span class='object_link'><a href="../Cert.html" title="R509::Cert (class)">R509::Cert</a></span></tt>) <strong>sign</strong>(options) 
   
 
   
-</p><div class="docstring">
+
+  
+</h3><div class="docstring">
   <div class="discussion">
     
 <p>Signs a CSR</p>
@@ -517,7 +541,7 @@ random)</p>
   </div>
 </div>
 <div class="tags">
-  <h3>Parameters:</h3>
+  <p class="tag_title">Parameters:</p>
 <ul class="param">
   
     <li>
@@ -541,7 +565,7 @@ random)</p>
   
     
     
-    <h3>Options Hash (<tt>options</tt>):</h3>
+    <p class="tag_title">Options Hash (<tt>options</tt>):</p>
     <ul class="option">
       
         <li>
@@ -550,7 +574,7 @@ random)</p>
           <span class="default">
             
           </span>
-          &mdash; <div class='inline'></div>
+          
         </li>
       
         <li>
@@ -559,7 +583,7 @@ random)</p>
           <span class="default">
             
           </span>
-          &mdash; <div class='inline'></div>
+          
         </li>
       
         <li>
@@ -568,9 +592,11 @@ random)</p>
           <span class="default">
             
           </span>
-          &mdash; <div class='inline'>
+          
+            &mdash; <div class='inline'>
 <p>The CA profile you want to use (eg "server in your config)</p>
 </div>
+          
         </li>
       
         <li>
@@ -579,10 +605,12 @@ random)</p>
           <span class="default">
             
           </span>
-          &mdash; <div class='inline'>
+          
+            &mdash; <div class='inline'>
 <p>a hash containing the subject and SAN names you want encoded for this cert.
 Generate by calling Csr#to_hash or Spki#to_hash</p>
 </div>
+          
         </li>
       
         <li>
@@ -591,10 +619,12 @@ Generate by calling Csr#to_hash or Spki#to_hash</p>
           <span class="default">
             
           </span>
-          &mdash; <div class='inline'>
+          
+            &mdash; <div class='inline'>
 <p>the message digest to use for this certificate instead of the config's
 default</p>
 </div>
+          
         </li>
       
         <li>
@@ -603,9 +633,11 @@ default</p>
           <span class="default">
             
           </span>
-          &mdash; <div class='inline'>
+          
+            &mdash; <div class='inline'>
 <p>the serial number you want to issue the certificate with</p>
 </div>
+          
         </li>
       
         <li>
@@ -614,9 +646,11 @@ default</p>
           <span class="default">
             
           </span>
-          &mdash; <div class='inline'>
+          
+            &mdash; <div class='inline'>
 <p>the notBefore for the certificate</p>
 </div>
+          
         </li>
       
         <li>
@@ -625,15 +659,17 @@ default</p>
           <span class="default">
             
           </span>
-          &mdash; <div class='inline'>
+          
+            &mdash; <div class='inline'>
 <p>the notAfter for the certificate</p>
 </div>
+          
         </li>
       
     </ul>
   
 
-<h3>Returns:</h3>
+<p class="tag_title">Returns:</p>
 <ul class="return">
   
     <li>
@@ -658,6 +694,9 @@ default</p>
       <pre class="lines">
 
 
+32
+33
+34
 35
 36
 37
@@ -737,12 +776,15 @@ default</p>
 111</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/certificateauthority.rb', line 35</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/certificateauthority.rb', line 32</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_sign'>sign</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span>
     <span class='kw'>if</span> <span class='ivar'>@config</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
         <span class='id identifier rubyid_raise'>raise</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>R509Error</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>When instantiating the signer without a config you can only call #selfsign</span><span class='tstring_end'>&quot;</span></span>
+    <span class='kw'>elsif</span> <span class='ivar'>@config</span><span class='period'>.</span><span class='id identifier rubyid_num_profiles'>num_profiles</span> <span class='op'>==</span> <span class='int'>0</span>
+        <span class='id identifier rubyid_raise'>raise</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>R509Error</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>You must have at least one CaProfile on your CaConfig to issue</span><span class='tstring_end'>&quot;</span></span>
     <span class='kw'>end</span>
+
     <span class='kw'>if</span> <span class='id identifier rubyid_options'>options</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span><span class='lparen'>(</span><span class='symbol'>:csr</span><span class='rparen'>)</span> <span class='kw'>and</span> <span class='id identifier rubyid_options'>options</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span><span class='lparen'>(</span><span class='symbol'>:spki</span><span class='rparen'>)</span>
         <span class='id identifier rubyid_raise'>raise</span> <span class='const'>ArgumentError</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>You can't pass both :csr and :spki</span><span class='tstring_end'>&quot;</span></span>
     <span class='kw'>elsif</span> <span class='kw'>not</span> <span class='id identifier rubyid_options'>options</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span><span class='lparen'>(</span><span class='symbol'>:csr</span><span class='rparen'>)</span> <span class='kw'>and</span> <span class='kw'>not</span> <span class='id identifier rubyid_options'>options</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span><span class='lparen'>(</span><span class='symbol'>:spki</span><span class='rparen'>)</span>
@@ -824,11 +866,11 @@ default</p>
   </div>
 
 </div>
-    
+
     <div id="footer">
-  Generated on Tue Jan 17 14:14:53 2012 by 
+  Generated on Wed Aug  8 10:13:48 2012 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.7.4 (ruby-1.9.3).
+  0.8.2.1 (ruby-1.9.3).
 </div>
 
   </body>

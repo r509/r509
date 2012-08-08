@@ -6,7 +6,7 @@
 <title>
   Class: R509::PrivateKey
   
-    &mdash; Documentation by YARD 0.7.4
+    &mdash; Documentation by YARD 0.8.2.1
   
 </title>
 
@@ -15,9 +15,11 @@
   <link rel="stylesheet" href="../css/common.css" type="text/css" media="screen" charset="utf-8" />
 
 <script type="text/javascript" charset="utf-8">
-  relpath = '..';
-  if (relpath != '') relpath += '/';
+  hasFrames = window.top.frames.main ? true : false;
+  relpath = '../';
+  framesUrl = "../frames.html#!" + escape(window.location.href);
 </script>
+
 
   <script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
 
@@ -26,36 +28,41 @@
 
   </head>
   <body>
-    <script type="text/javascript" charset="utf-8">
-      if (window.top.frames.main) document.body.className = 'frames';
-    </script>
-    
     <div id="header">
       <div id="menu">
   
-    <a href="../_index.html">Index (P)</a> &raquo; 
+    <a href="../_index.html">Index (P)</a> &raquo;
     <span class='title'><span class='object_link'><a href="../R509.html" title="R509 (module)">R509</a></span></span>
      &raquo; 
     <span class="title">PrivateKey</span>
   
-  
+
   <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
 </div>
 
       <div id="search">
   
-    <a id="class_list_link" href="#">Class List</a>
+    <a class="full_list_link" id="class_list_link"
+        href="../class_list.html">
+      Class List
+    </a>
   
-    <a id="method_list_link" href="#">Method List</a>
+    <a class="full_list_link" id="method_list_link"
+        href="../method_list.html">
+      Method List
+    </a>
   
-    <a id="file_list_link" href="#">File List</a>
+    <a class="full_list_link" id="file_list_link"
+        href="../file_list.html">
+      File List
+    </a>
   
 </div>
       <div class="clear"></div>
     </div>
-    
+
     <iframe id="search_frame"></iframe>
-    
+
     <div id="content"><h1>Class: R509::PrivateKey
   
   
@@ -109,15 +116,10 @@
 
 </div>
 
-  
-  
-  
-  
 
 
-  
-  
-  
+
+
 
   
     <h2>
@@ -141,6 +143,7 @@
   
   
   
+  
 
   
     <span class="summary_desc"><div class='inline'></div></span>
@@ -156,6 +159,7 @@
 
     
   </span>
+  
   
   
   
@@ -185,6 +189,7 @@
   
   
   
+  
 
   
     <span class="summary_desc"><div class='inline'>
@@ -202,6 +207,7 @@
 
     
   </span>
+  
   
     <span class="note title constructor">constructor</span>
   
@@ -227,6 +233,7 @@
 
     
   </span>
+  
   
   
   
@@ -259,6 +266,7 @@ key in the HSM (which will not show the private key, just public).</p>
   
   
   
+  
 
   
     <span class="summary_desc"><div class='inline'>
@@ -276,6 +284,7 @@ key in the HSM (which will not show the private key, just public).</p>
 
     
   </span>
+  
   
   
   
@@ -305,6 +314,7 @@ key in the HSM (which will not show the private key, just public).</p>
   
   
   
+  
 
   
     <span class="summary_desc"><div class='inline'>
@@ -322,6 +332,7 @@ key in the HSM (which will not show the private key, just public).</p>
 
     
   </span>
+  
   
   
   
@@ -351,6 +362,7 @@ key in the HSM (which will not show the private key, just public).</p>
   
   
   
+  
 
   
     <span class="summary_desc"><div class='inline'>
@@ -368,6 +380,7 @@ key in the HSM (which will not show the private key, just public).</p>
 
     
   </span>
+  
   
   
   
@@ -397,6 +410,7 @@ key in the HSM (which will not show the private key, just public).</p>
   
   
   
+  
 
   
     <span class="summary_desc"><div class='inline'>
@@ -414,6 +428,7 @@ key in the HSM (which will not show the private key, just public).</p>
 
     
   </span>
+  
   
   
   
@@ -440,19 +455,22 @@ key in the HSM (which will not show the private key, just public).</p>
   
   
   
+  
   <h3 class="inherited">Methods included from <span class='object_link'><a href="IOHelpers.html" title="R509::IOHelpers (module)">IOHelpers</a></span></h3>
-  <p class="inherited"><span class='object_link'><a href="IOHelpers.html#read_data-instance_method" title="R509::IOHelpers#read_data (method)">#read_data</a></span>, <span class='object_link'><a href="IOHelpers.html#write_data-instance_method" title="R509::IOHelpers#write_data (method)">#write_data</a></span></p>
+  <p class="inherited"><span class='object_link'><a href="IOHelpers.html#read_data-instance_method" title="R509::IOHelpers#read_data (method)">#read_data</a></span>, <span class='object_link'><a href="IOHelpers.html#read_data-class_method" title="R509::IOHelpers.read_data (method)">read_data</a></span>, <span class='object_link'><a href="IOHelpers.html#write_data-instance_method" title="R509::IOHelpers#write_data (method)">#write_data</a></span>, <span class='object_link'><a href="IOHelpers.html#write_data-class_method" title="R509::IOHelpers.write_data (method)">write_data</a></span></p>
 <div id="constructor_details" class="method_details_list">
   <h2>Constructor Details</h2>
   
     <div class="method_details first">
-  <p class="signature first" id="initialize-instance_method">
+  <h3 class="signature first" id="initialize-instance_method">
   
     - (<tt><span class='object_link'><a href="" title="R509::PrivateKey (class)">PrivateKey</a></span></tt>) <strong>initialize</strong>(opts) 
   
 
   
-</p><div class="docstring">
+
+  
+</h3><div class="docstring">
   <div class="discussion">
     
 <p>A new instance of PrivateKey</p>
@@ -461,7 +479,7 @@ key in the HSM (which will not show the private key, just public).</p>
   </div>
 </div>
 <div class="tags">
-  <h3>Parameters:</h3>
+  <p class="tag_title">Parameters:</p>
 <ul class="param">
   
     <li>
@@ -485,7 +503,7 @@ key in the HSM (which will not show the private key, just public).</p>
   
     
     
-    <h3>Options Hash (<tt>opts</tt>):</h3>
+    <p class="tag_title">Options Hash (<tt>opts</tt>):</p>
     <ul class="option">
       
         <li>
@@ -494,9 +512,11 @@ key in the HSM (which will not show the private key, just public).</p>
           <span class="default">
             
           </span>
-          &mdash; <div class='inline'>
+          
+            &mdash; <div class='inline'>
 <p>:rsa/:dsa</p>
 </div>
+          
         </li>
       
         <li>
@@ -544,7 +564,7 @@ key in the HSM (which will not show the private key, just public).</p>
               <tt>used with engine</tt>
             
           </span>
-          &mdash; <div class='inline'></div>
+          
         </li>
       
     </ul>
@@ -661,16 +681,18 @@ key in the HSM (which will not show the private key, just public).</p>
 
   <div id="instance_method_details" class="method_details_list">
     <h2>Instance Method Details</h2>
-    
+
     
       <div class="method_details first">
-  <p class="signature first" id="bit_strength-instance_method">
+  <h3 class="signature first" id="bit_strength-instance_method">
   
     - (<tt>Integer</tt>) <strong>bit_strength</strong> 
   
 
   
-</p><div class="docstring">
+
+  
+</h3><div class="docstring">
   <div class="discussion">
     
 
@@ -678,7 +700,7 @@ key in the HSM (which will not show the private key, just public).</p>
 </div>
 <div class="tags">
   
-<h3>Returns:</h3>
+<p class="tag_title">Returns:</p>
 <ul class="return">
   
     <li>
@@ -722,13 +744,15 @@ key in the HSM (which will not show the private key, just public).</p>
 </div>
     
       <div class="method_details ">
-  <p class="signature " id="dsa?-instance_method">
+  <h3 class="signature " id="dsa?-instance_method">
   
     - (<tt>Boolean</tt>) <strong>dsa?</strong> 
   
 
   
-</p><div class="docstring">
+
+  
+</h3><div class="docstring">
   <div class="discussion">
     
 <p>Returns whether the public key is DSA</p>
@@ -738,7 +762,7 @@ key in the HSM (which will not show the private key, just public).</p>
 </div>
 <div class="tags">
   
-<h3>Returns:</h3>
+<p class="tag_title">Returns:</p>
 <ul class="return">
   
     <li>
@@ -779,13 +803,15 @@ key in the HSM (which will not show the private key, just public).</p>
 </div>
     
       <div class="method_details ">
-  <p class="signature " id="in_hardware?-instance_method">
+  <h3 class="signature " id="in_hardware?-instance_method">
   
     - (<tt>Boolean</tt>) <strong>in_hardware?</strong> 
   
 
   
-</p><div class="docstring">
+
+  
+</h3><div class="docstring">
   <div class="discussion">
     
 <p>Whether the key is resident in hardware or not</p>
@@ -795,7 +821,7 @@ key in the HSM (which will not show the private key, just public).</p>
 </div>
 <div class="tags">
   
-<h3>Returns:</h3>
+<p class="tag_title">Returns:</p>
 <ul class="return">
   
     <li>
@@ -844,13 +870,15 @@ key in the HSM (which will not show the private key, just public).</p>
 </div>
     
       <div class="method_details ">
-  <p class="signature " id="key-instance_method">
+  <h3 class="signature " id="key-instance_method">
   
     - (<tt>OpenSSL::PKey::RSA</tt>, ...) <strong>key</strong> 
   
 
   
-</p><div class="docstring">
+
+  
+</h3><div class="docstring">
   <div class="discussion">
     
 <p>This method may return the PKey object itself or a handle to the private
@@ -861,7 +889,7 @@ key in the HSM (which will not show the private key, just public)</p>
 </div>
 <div class="tags">
   
-<h3>Returns:</h3>
+<p class="tag_title">Returns:</p>
 <ul class="return">
   
     <li>
@@ -911,7 +939,7 @@ key in the HSM (which will not show the private key, just public)</p>
 </div>
     
       <div class="method_details ">
-  <p class="signature " id="public_key-instance_method">
+  <h3 class="signature " id="public_key-instance_method">
   
     - (<tt>OpenSSL::PKey::RSA</tt>, <tt>OpenSSL::PKey::DSA</tt>) <strong>public_key</strong> 
   
@@ -921,7 +949,9 @@ key in the HSM (which will not show the private key, just public)</p>
     <span class="names"><span id='to_s-instance_method'>to_s</span></span>
     </span>
   
-</p><div class="docstring">
+
+  
+</h3><div class="docstring">
   <div class="discussion">
     
 <p>Public key</p>
@@ -931,7 +961,7 @@ key in the HSM (which will not show the private key, just public)</p>
 </div>
 <div class="tags">
   
-<h3>Returns:</h3>
+<p class="tag_title">Returns:</p>
 <ul class="return">
   
     <li>
@@ -972,13 +1002,15 @@ key in the HSM (which will not show the private key, just public)</p>
 </div>
     
       <div class="method_details ">
-  <p class="signature " id="rsa?-instance_method">
+  <h3 class="signature " id="rsa?-instance_method">
   
     - (<tt>Boolean</tt>) <strong>rsa?</strong> 
   
 
   
-</p><div class="docstring">
+
+  
+</h3><div class="docstring">
   <div class="discussion">
     
 <p>Returns whether the public key is RSA</p>
@@ -988,7 +1020,7 @@ key in the HSM (which will not show the private key, just public)</p>
 </div>
 <div class="tags">
   
-<h3>Returns:</h3>
+<p class="tag_title">Returns:</p>
 <ul class="return">
   
     <li>
@@ -1029,13 +1061,15 @@ key in the HSM (which will not show the private key, just public)</p>
 </div>
     
       <div class="method_details ">
-  <p class="signature " id="to_der-instance_method">
+  <h3 class="signature " id="to_der-instance_method">
   
     - (<tt>String</tt>) <strong>to_der</strong> 
   
 
   
-</p><div class="docstring">
+
+  
+</h3><div class="docstring">
   <div class="discussion">
     
 <p>Converts the key into the DER format</p>
@@ -1045,7 +1079,7 @@ key in the HSM (which will not show the private key, just public)</p>
 </div>
 <div class="tags">
   
-<h3>Returns:</h3>
+<p class="tag_title">Returns:</p>
 <ul class="return">
   
     <li>
@@ -1092,13 +1126,15 @@ key in the HSM (which will not show the private key, just public)</p>
 </div>
     
       <div class="method_details ">
-  <p class="signature " id="to_encrypted_pem-instance_method">
+  <h3 class="signature " id="to_encrypted_pem-instance_method">
   
     - (<tt>String</tt>) <strong>to_encrypted_pem</strong>(cipher, password) 
   
 
   
-</p><div class="docstring">
+
+  
+</h3><div class="docstring">
   <div class="discussion">
     
 <p>Converts the key into encrypted PEM format</p>
@@ -1110,7 +1146,7 @@ key in the HSM (which will not show the private key, just public)</p>
   </div>
 </div>
 <div class="tags">
-  <h3>Parameters:</h3>
+  <p class="tag_title">Parameters:</p>
 <ul class="param">
   
     <li>
@@ -1147,7 +1183,7 @@ key in the HSM (which will not show the private key, just public)</p>
   
 </ul>
 
-<h3>Returns:</h3>
+<p class="tag_title">Returns:</p>
 <ul class="return">
   
     <li>
@@ -1196,13 +1232,15 @@ key in the HSM (which will not show the private key, just public)</p>
 </div>
     
       <div class="method_details ">
-  <p class="signature " id="to_pem-instance_method">
+  <h3 class="signature " id="to_pem-instance_method">
   
     - (<tt>String</tt>) <strong>to_pem</strong> 
   
 
   
-</p><div class="docstring">
+
+  
+</h3><div class="docstring">
   <div class="discussion">
     
 <p>Converts the key into the PEM format</p>
@@ -1212,7 +1250,7 @@ key in the HSM (which will not show the private key, just public)</p>
 </div>
 <div class="tags">
   
-<h3>Returns:</h3>
+<p class="tag_title">Returns:</p>
 <ul class="return">
   
     <li>
@@ -1259,13 +1297,15 @@ key in the HSM (which will not show the private key, just public)</p>
 </div>
     
       <div class="method_details ">
-  <p class="signature " id="write_der-instance_method">
+  <h3 class="signature " id="write_der-instance_method">
   
     - (<tt>Object</tt>) <strong>write_der</strong>(filename_or_io) 
   
 
   
-</p><div class="docstring">
+
+  
+</h3><div class="docstring">
   <div class="discussion">
     
 <p>Writes the key into the DER format</p>
@@ -1274,7 +1314,7 @@ key in the HSM (which will not show the private key, just public)</p>
   </div>
 </div>
 <div class="tags">
-  <h3>Parameters:</h3>
+  <p class="tag_title">Parameters:</p>
 <ul class="param">
   
     <li>
@@ -1319,13 +1359,15 @@ IO-like object.</p>
 </div>
     
       <div class="method_details ">
-  <p class="signature " id="write_encrypted_pem-instance_method">
+  <h3 class="signature " id="write_encrypted_pem-instance_method">
   
     - (<tt>Object</tt>) <strong>write_encrypted_pem</strong>(filename_or_io, cipher, password) 
   
 
   
-</p><div class="docstring">
+
+  
+</h3><div class="docstring">
   <div class="discussion">
     
 <p>Writes the key into encrypted PEM format with specified cipher</p>
@@ -1337,7 +1379,7 @@ IO-like object.</p>
   </div>
 </div>
 <div class="tags">
-  <h3>Parameters:</h3>
+  <p class="tag_title">Parameters:</p>
 <ul class="param">
   
     <li>
@@ -1414,13 +1456,15 @@ IO-like object.</p>
 </div>
     
       <div class="method_details ">
-  <p class="signature " id="write_pem-instance_method">
+  <h3 class="signature " id="write_pem-instance_method">
   
     - (<tt>Object</tt>) <strong>write_pem</strong>(filename_or_io) 
   
 
   
-</p><div class="docstring">
+
+  
+</h3><div class="docstring">
   <div class="discussion">
     
 <p>Writes the key into the PEM format</p>
@@ -1429,7 +1473,7 @@ IO-like object.</p>
   </div>
 </div>
 <div class="tags">
-  <h3>Parameters:</h3>
+  <p class="tag_title">Parameters:</p>
 <ul class="param">
   
     <li>
@@ -1476,11 +1520,11 @@ IO-like object.</p>
   </div>
 
 </div>
-    
+
     <div id="footer">
-  Generated on Tue Jan 17 14:14:53 2012 by 
+  Generated on Wed Aug  8 10:13:46 2012 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.7.4 (ruby-1.9.3).
+  0.8.2.1 (ruby-1.9.3).
 </div>
 
   </body>

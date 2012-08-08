@@ -6,7 +6,7 @@
 <title>
   Class: R509::Cert
   
-    &mdash; Documentation by YARD 0.7.4
+    &mdash; Documentation by YARD 0.8.2.1
   
 </title>
 
@@ -15,9 +15,11 @@
   <link rel="stylesheet" href="../css/common.css" type="text/css" media="screen" charset="utf-8" />
 
 <script type="text/javascript" charset="utf-8">
-  relpath = '..';
-  if (relpath != '') relpath += '/';
+  hasFrames = window.top.frames.main ? true : false;
+  relpath = '../';
+  framesUrl = "../frames.html#!" + escape(window.location.href);
 </script>
+
 
   <script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
 
@@ -26,36 +28,41 @@
 
   </head>
   <body>
-    <script type="text/javascript" charset="utf-8">
-      if (window.top.frames.main) document.body.className = 'frames';
-    </script>
-    
     <div id="header">
       <div id="menu">
   
-    <a href="../_index.html">Index (C)</a> &raquo; 
+    <a href="../_index.html">Index (C)</a> &raquo;
     <span class='title'><span class='object_link'><a href="../R509.html" title="R509 (module)">R509</a></span></span>
      &raquo; 
     <span class="title">Cert</span>
   
-  
+
   <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
 </div>
 
       <div id="search">
   
-    <a id="class_list_link" href="#">Class List</a>
+    <a class="full_list_link" id="class_list_link"
+        href="../class_list.html">
+      Class List
+    </a>
   
-    <a id="method_list_link" href="#">Method List</a>
+    <a class="full_list_link" id="method_list_link"
+        href="../method_list.html">
+      Method List
+    </a>
   
-    <a id="file_list_link" href="#">File List</a>
+    <a class="full_list_link" id="file_list_link"
+        href="../file_list.html">
+      File List
+    </a>
   
 </div>
       <div class="clear"></div>
     </div>
-    
+
     <iframe id="search_frame"></iframe>
-    
+
     <div id="content"><h1>Class: R509::Cert
   
   
@@ -91,7 +98,9 @@
   
   
     <dt class="r1 last">Defined in:</dt>
-    <dd class="r1 last">lib/r509/cert.rb</dd>
+    <dd class="r1 last">lib/r509/cert.rb<span class="defines">,<br />
+  lib/r509/cert/extensions.rb</span>
+</dd>
   
 </dl>
 <div class="clear"></div>
@@ -107,12 +116,20 @@
 <div class="tags">
   
 
-</div>
+</div><h2>Defined Under Namespace</h2>
+<p class="children">
+  
+    
+      <strong class="modules">Modules:</strong> <span class='object_link'><a href="Cert/Extensions.html" title="R509::Cert::Extensions (module)">Extensions</a></span>
+    
+  
+    
+  
+</p>
 
-  
-  
-  
-  
+
+
+
   <h2>Instance Attribute Summary <small>(<a href="#" class="summary_toggle">collapse</a>)</small></h2>
   <ul class="summary">
     
@@ -126,7 +143,10 @@
   </span>
   
   
-    <span class="note title readonly">readonly</span>
+  
+    
+      <span class="note title readonly">readonly</span>
+    
     
   
   
@@ -152,7 +172,10 @@
   </span>
   
   
-    <span class="note title readonly">readonly</span>
+  
+    
+      <span class="note title readonly">readonly</span>
+    
     
   
   
@@ -172,10 +195,38 @@
 
 
 
+
+  
+    <h2>
+      Class Method Summary
+      <small>(<a href="#" class="summary_toggle">collapse</a>)</small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#load_from_file-class_method" title="load_from_file (class method)">+ (Object) <strong>load_from_file</strong>(filename) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
   
   
   
 
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+    </ul>
   
     <h2>
       Instance Method Summary
@@ -183,6 +234,79 @@
     </h2>
 
     <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#authority_info_access-instance_method" title="#authority_info_access (instance method)">- (R509::Cert::Extensions::AuthorityInfoAccess) <strong>authority_info_access</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Returns this object's AuthorityInfoAccess extension as an R509 extension.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#authority_key_identifier-instance_method" title="#authority_key_identifier (instance method)">- (R509::Cert::Extensions::AuthorityKeyIdentifier) <strong>authority_key_identifier</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Returns this object's AuthorityKeyIdentifier extension as an R509
+extension.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#basic_constraints-instance_method" title="#basic_constraints (instance method)">- (R509::Cert::Extensions::BasicConstraints) <strong>basic_constraints</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Returns this object's BasicConstraints extension as an R509 extension.</p>
+</div></span>
+  
+</li>
+
       
         <li class="public ">
   <span class="summary_signature">
@@ -198,10 +322,35 @@
   
   
   
+  
 
   
     <span class="summary_desc"><div class='inline'>
 <p>Returns the bit strength of the key used to create the certificate.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#crl_distribution_points-instance_method" title="#crl_distribution_points (instance method)">- (R509::Cert::Extensions::CrlDistributionPoints) <strong>crl_distribution_points</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Returns this object's CrlDistributionPoints extension as an R509 extension.</p>
 </div></span>
   
 </li>
@@ -221,6 +370,7 @@
   
   
   
+  
 
   
     <span class="summary_desc"><div class='inline'>
@@ -233,7 +383,7 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#extended_key_usage-instance_method" title="#extended_key_usage (instance method)">- (Array) <strong>extended_key_usage</strong> </a>
+      <a href="#extended_key_usage-instance_method" title="#extended_key_usage (instance method)">- (R509::Cert::Extensions::ExtendedKeyUsage) <strong>extended_key_usage</strong> </a>
     
 
     
@@ -244,10 +394,11 @@
   
   
   
+  
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Return the extended key usage extensions.</p>
+<p>Returns this object's ExtendedKeyUsage extension as an R509 extension.</p>
 </div></span>
   
 </li>
@@ -261,6 +412,7 @@
 
     
   </span>
+  
   
   
   
@@ -284,6 +436,7 @@
 
     
   </span>
+  
   
   
   
@@ -314,34 +467,11 @@ sha1).</p>
   
   
   
+  
 
   
     <span class="summary_desc"><div class='inline'>
 <p>Boolean of whether the object contains a private key.</p>
-</div></span>
-  
-</li>
-
-      
-        <li class="public ">
-  <span class="summary_signature">
-    
-      <a href="#in_validity_range%3F-instance_method" title="#in_validity_range? (instance method)">- (Boolean) <strong>in_validity_range?</strong> </a>
-    
-
-    
-  </span>
-  
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'>
-<p>Returns whether the current time is between the notBefore and notAfter
-times in the certificate.</p>
 </div></span>
   
 </li>
@@ -355,6 +485,7 @@ times in the certificate.</p>
 
     
   </span>
+  
   
     <span class="note title constructor">constructor</span>
   
@@ -375,6 +506,30 @@ times in the certificate.</p>
         <li class="public ">
   <span class="summary_signature">
     
+      <a href="#is_revoked_by_crl%3F-instance_method" title="#is_revoked_by_crl? (instance method)">- (Boolean) <strong>is_revoked_by_crl?</strong>(r509_crl) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Checks the given CRL for this certificate's serial number.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
       <a href="#issuer-instance_method" title="#issuer (instance method)">- (OpenSSL::X509::Name) <strong>issuer</strong> </a>
     
 
@@ -386,10 +541,35 @@ times in the certificate.</p>
   
   
   
+  
 
   
     <span class="summary_desc"><div class='inline'>
 <p>Returns the issuer.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#issuer_cn-instance_method" title="#issuer_cn (instance method)">- (String) <strong>issuer_cn</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>The common name (CN) component of the issuer.</p>
 </div></span>
   
 </li>
@@ -409,6 +589,7 @@ times in the certificate.</p>
   
   
   
+  
 
   
     <span class="summary_desc"><div class='inline'>
@@ -421,7 +602,7 @@ times in the certificate.</p>
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#key_usage-instance_method" title="#key_usage (instance method)">- (Array) <strong>key_usage</strong> </a>
+      <a href="#key_usage-instance_method" title="#key_usage (instance method)">- (R509::Cert::Extensions::KeyUsage) <strong>key_usage</strong> </a>
     
 
     
@@ -432,10 +613,11 @@ times in the certificate.</p>
   
   
   
+  
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Return the key usage extensions.</p>
+<p>Returns this object's KeyUsage extension as an R509 extension.</p>
 </div></span>
   
 </li>
@@ -449,6 +631,7 @@ times in the certificate.</p>
 
     
   </span>
+  
   
   
   
@@ -478,6 +661,7 @@ times in the certificate.</p>
   
   
   
+  
 
   
     <span class="summary_desc"><div class='inline'>
@@ -501,10 +685,36 @@ times in the certificate.</p>
   
   
   
+  
 
   
     <span class="summary_desc"><div class='inline'>
 <p>Returns the certificate public key.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#r509_extensions-instance_method" title="#r509_extensions (instance method)">- (Hash) <strong>r509_extensions</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Returns the certificate extensions as a hash of R509::Cert::Extensions
+specific objects.</p>
 </div></span>
   
 </li>
@@ -518,6 +728,7 @@ times in the certificate.</p>
 
     
   </span>
+  
   
   
   
@@ -547,10 +758,11 @@ times in the certificate.</p>
   
   
   
+  
 
   
     <span class="summary_desc"><div class='inline'>
-<p>List of SAN names.</p>
+<p>List of SAN DNS names.</p>
 </div></span>
   
 </li>
@@ -564,6 +776,7 @@ times in the certificate.</p>
 
     
   </span>
+  
   
   
   
@@ -593,6 +806,7 @@ times in the certificate.</p>
   
   
   
+  
 
   
     <span class="summary_desc"><div class='inline'>
@@ -616,10 +830,60 @@ times in the certificate.</p>
   
   
   
+  
 
   
     <span class="summary_desc"><div class='inline'>
 <p>Returns the subject.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#subject_alternative_name-instance_method" title="#subject_alternative_name (instance method)">- (R509::Cert::Extensions::SubjectAlternativeName) <strong>subject_alternative_name</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Returns this object's SubjectAlternativeName extension as an R509
+extension.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#subject_cn-instance_method" title="#subject_cn (instance method)">- (String) <strong>subject_cn</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Returns the CN component, if any, of the subject.</p>
 </div></span>
   
 </li>
@@ -639,10 +903,35 @@ times in the certificate.</p>
   
   
   
+  
 
   
     <span class="summary_desc"><div class='inline'>
 <p>Returns subject component.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#subject_key_identifier-instance_method" title="#subject_key_identifier (instance method)">- (R509::Cert::Extensions::SubjectKeyIdentifier) <strong>subject_key_identifier</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Returns this object's SubjectKeyIdentifier extension as an R509 extension.</p>
 </div></span>
   
 </li>
@@ -656,6 +945,7 @@ times in the certificate.</p>
 
     
   </span>
+  
   
   
   
@@ -679,6 +969,7 @@ times in the certificate.</p>
 
     
   </span>
+  
   
   
   
@@ -710,10 +1001,86 @@ times in the certificate.</p>
   
   
   
+  
 
   
     <span class="summary_desc"><div class='inline'>
 <p>Converts the Cert into the PEM format.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#unknown_extensions-instance_method" title="#unknown_extensions (instance method)">- (Array) <strong>unknown_extensions</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Returns an array of OpenSSL::X509::Extension objects representing the
+extensions that do not have R509 implementations.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#valid%3F-instance_method" title="#valid? (instance method)">- (Boolean) <strong>valid?</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Returns whether the current time is between the notBefore and notAfter
+times in the certificate.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#valid_at%3F-instance_method" title="#valid_at? (instance method)">- (Boolean) <strong>valid_at?</strong>(time) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Returns whether the certificate was between its notBefore and notAfter at
+the time provided.</p>
 </div></span>
   
 </li>
@@ -727,6 +1094,7 @@ times in the certificate.</p>
 
     
   </span>
+  
   
   
   
@@ -756,6 +1124,7 @@ times in the certificate.</p>
   
   
   
+  
 
   
     <span class="summary_desc"><div class='inline'>
@@ -773,6 +1142,7 @@ times in the certificate.</p>
 
     
   </span>
+  
   
   
   
@@ -800,19 +1170,22 @@ encryption (des3).</p>
   
   
   
+  
   <h3 class="inherited">Methods included from <span class='object_link'><a href="IOHelpers.html" title="R509::IOHelpers (module)">IOHelpers</a></span></h3>
-  <p class="inherited"><span class='object_link'><a href="IOHelpers.html#read_data-instance_method" title="R509::IOHelpers#read_data (method)">#read_data</a></span>, <span class='object_link'><a href="IOHelpers.html#write_data-instance_method" title="R509::IOHelpers#write_data (method)">#write_data</a></span></p>
+  <p class="inherited"><span class='object_link'><a href="IOHelpers.html#read_data-instance_method" title="R509::IOHelpers#read_data (method)">#read_data</a></span>, <span class='object_link'><a href="IOHelpers.html#read_data-class_method" title="R509::IOHelpers.read_data (method)">read_data</a></span>, <span class='object_link'><a href="IOHelpers.html#write_data-instance_method" title="R509::IOHelpers#write_data (method)">#write_data</a></span>, <span class='object_link'><a href="IOHelpers.html#write_data-class_method" title="R509::IOHelpers.write_data (method)">write_data</a></span></p>
 <div id="constructor_details" class="method_details_list">
   <h2>Constructor Details</h2>
   
     <div class="method_details first">
-  <p class="signature first" id="initialize-instance_method">
+  <h3 class="signature first" id="initialize-instance_method">
   
     - (<tt><span class='object_link'><a href="" title="R509::Cert (class)">Cert</a></span></tt>) <strong>initialize</strong>(opts = {}) 
   
 
   
-</p><div class="docstring">
+
+  
+</h3><div class="docstring">
   <div class="discussion">
     
 <p>A new instance of Cert</p>
@@ -821,7 +1194,7 @@ encryption (des3).</p>
   </div>
 </div>
 <div class="tags">
-  <h3>Parameters:</h3>
+  <p class="tag_title">Parameters:</p>
 <ul class="param">
   
     <li>
@@ -847,7 +1220,7 @@ encryption (des3).</p>
   
     
     
-    <h3>Options Hash (<tt>opts</tt>):</h3>
+    <p class="tag_title">Options Hash (<tt>opts</tt>):</p>
     <ul class="option">
       
         <li>
@@ -856,9 +1229,11 @@ encryption (des3).</p>
           <span class="default">
             
           </span>
-          &mdash; <div class='inline'>
+          
+            &mdash; <div class='inline'>
 <p>a cert</p>
 </div>
+          
         </li>
       
         <li>
@@ -867,11 +1242,13 @@ encryption (des3).</p>
           <span class="default">
             
           </span>
-          &mdash; <div class='inline'>
+          
+            &mdash; <div class='inline'>
 <p>optional private key to supply. either an unencrypted PEM/DER string or an
 R509::PrivateKey object (use the latter if you need password/hardware
 support)</p>
 </div>
+          
         </li>
       
         <li>
@@ -880,9 +1257,11 @@ support)</p>
           <span class="default">
             
           </span>
-          &mdash; <div class='inline'>
+          
+            &mdash; <div class='inline'>
 <p>a PKCS12 object containing both key and cert</p>
 </div>
+          
         </li>
       
         <li>
@@ -891,9 +1270,11 @@ support)</p>
           <span class="default">
             
           </span>
-          &mdash; <div class='inline'>
+          
+            &mdash; <div class='inline'>
 <p>password for PKCS12 or private key (if supplied)</p>
 </div>
+          
         </li>
       
     </ul>
@@ -906,7 +1287,6 @@ support)</p>
       <pre class="lines">
 
 
-16
 17
 18
 19
@@ -934,10 +1314,12 @@ support)</p>
 41
 42
 43
-44</pre>
+44
+45
+46</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/cert.rb', line 16</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert.rb', line 17</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='id identifier rubyid_opts'>opts</span><span class='op'>=</span><span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
     <span class='kw'>if</span> <span class='kw'>not</span> <span class='id identifier rubyid_opts'>opts</span><span class='period'>.</span><span class='id identifier rubyid_kind_of?'>kind_of?</span><span class='lparen'>(</span><span class='const'>Hash</span><span class='rparen'>)</span>
@@ -952,6 +1334,7 @@ support)</p>
     <span class='kw'>elsif</span> <span class='kw'>not</span> <span class='id identifier rubyid_opts'>opts</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span><span class='lparen'>(</span><span class='symbol'>:cert</span><span class='rparen'>)</span>
         <span class='id identifier rubyid_raise'>raise</span> <span class='const'>ArgumentError</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>Must provide :cert or :pkcs12</span><span class='tstring_end'>'</span></span>
     <span class='kw'>else</span>
+        <span class='id identifier rubyid_csr_check'>csr_check</span><span class='lparen'>(</span><span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:cert</span><span class='rbracket'>]</span><span class='rparen'>)</span>
         <span class='id identifier rubyid_parse_certificate'>parse_certificate</span><span class='lparen'>(</span><span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:cert</span><span class='rbracket'>]</span><span class='rparen'>)</span>
     <span class='kw'>end</span>
 
@@ -980,15 +1363,16 @@ support)</p>
     
       
       <span id=""></span>
-      <span id="cert-instance_method"></span>
       <div class="method_details first">
-  <p class="signature first" id="cert-instance_method">
+  <h3 class="signature first" id="cert-instance_method">
   
     - (<tt>Object</tt>) <strong>cert</strong>  <span class="extras">(readonly)</span>
   
 
   
-</p><div class="docstring">
+
+  
+</h3><div class="docstring">
   <div class="discussion">
     
 <p>Returns the value of attribute cert</p>
@@ -1005,12 +1389,12 @@ support)</p>
       <pre class="lines">
 
 
-10
 11
-12</pre>
+12
+13</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/cert.rb', line 10</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert.rb', line 11</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_cert'>cert</span>
   <span class='ivar'>@cert</span>
@@ -1022,15 +1406,16 @@ support)</p>
     
       
       <span id=""></span>
-      <span id="key-instance_method"></span>
       <div class="method_details ">
-  <p class="signature " id="key-instance_method">
+  <h3 class="signature " id="key-instance_method">
   
     - (<tt>Object</tt>) <strong>key</strong>  <span class="extras">(readonly)</span>
   
 
   
-</p><div class="docstring">
+
+  
+</h3><div class="docstring">
   <div class="discussion">
     
 <p>Returns the value of attribute key</p>
@@ -1047,12 +1432,12 @@ support)</p>
       <pre class="lines">
 
 
-10
 11
-12</pre>
+12
+13</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/cert.rb', line 10</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert.rb', line 11</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_key'>key</span>
   <span class='ivar'>@key</span>
@@ -1065,18 +1450,235 @@ support)</p>
   </div>
 
 
-  <div id="instance_method_details" class="method_details_list">
-    <h2>Instance Method Details</h2>
-    
+  <div id="class_method_details" class="method_details_list">
+    <h2>Class Method Details</h2>
+
     
       <div class="method_details first">
-  <p class="signature first" id="bit_strength-instance_method">
+  <h3 class="signature first" id="load_from_file-class_method">
+  
+    + (<tt>Object</tt>) <strong>load_from_file</strong>(filename) 
+  
+
+  
+
+  
+</h3><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+48
+49
+50</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert.rb', line 48</span>
+
+<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_load_from_file'>load_from_file</span><span class='lparen'>(</span> <span class='id identifier rubyid_filename'>filename</span> <span class='rparen'>)</span>
+  <span class='kw'>return</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>Cert</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='symbol'>:cert</span> <span class='op'>=&gt;</span> <span class='const'>IOHelpers</span><span class='period'>.</span><span class='id identifier rubyid_read_data'>read_data</span><span class='lparen'>(</span><span class='id identifier rubyid_filename'>filename</span><span class='rparen'>)</span> <span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+  <div id="instance_method_details" class="method_details_list">
+    <h2>Instance Method Details</h2>
+
+    
+      <div class="method_details first">
+  <h3 class="signature first" id="authority_info_access-instance_method">
+  
+    - (<tt><span class='object_link'><a href="Cert/Extensions/AuthorityInfoAccess.html" title="R509::Cert::Extensions::AuthorityInfoAccess (class)">R509::Cert::Extensions::AuthorityInfoAccess</a></span></tt>) <strong>authority_info_access</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns this object's AuthorityInfoAccess extension as an R509 extension</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="Cert/Extensions/AuthorityInfoAccess.html" title="R509::Cert::Extensions::AuthorityInfoAccess (class)">R509::Cert::Extensions::AuthorityInfoAccess</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The object, or nil if this cert does not have a AuthorityInfoAccess
+extension.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+380
+381
+382</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert.rb', line 380</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_authority_info_access'>authority_info_access</span>
+    <span class='kw'>return</span> <span class='id identifier rubyid_r509_extensions'>r509_extensions</span><span class='lbracket'>[</span><span class='const'>R509</span><span class='op'>::</span><span class='const'>Cert</span><span class='op'>::</span><span class='const'>Extensions</span><span class='op'>::</span><span class='const'>AuthorityInfoAccess</span><span class='rbracket'>]</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="authority_key_identifier-instance_method">
+  
+    - (<tt><span class='object_link'><a href="Cert/Extensions/AuthorityKeyIdentifier.html" title="R509::Cert::Extensions::AuthorityKeyIdentifier (class)">R509::Cert::Extensions::AuthorityKeyIdentifier</a></span></tt>) <strong>authority_key_identifier</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns this object's AuthorityKeyIdentifier extension as an R509 extension</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="Cert/Extensions/AuthorityKeyIdentifier.html" title="R509::Cert::Extensions::AuthorityKeyIdentifier (class)">R509::Cert::Extensions::AuthorityKeyIdentifier</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The object, or nil if this cert does not have a AuthorityKeyIdentifier
+extension.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+364
+365
+366</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert.rb', line 364</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_authority_key_identifier'>authority_key_identifier</span>
+    <span class='kw'>return</span> <span class='id identifier rubyid_r509_extensions'>r509_extensions</span><span class='lbracket'>[</span><span class='const'>R509</span><span class='op'>::</span><span class='const'>Cert</span><span class='op'>::</span><span class='const'>Extensions</span><span class='op'>::</span><span class='const'>AuthorityKeyIdentifier</span><span class='rbracket'>]</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="basic_constraints-instance_method">
+  
+    - (<tt><span class='object_link'><a href="Cert/Extensions/BasicConstraints.html" title="R509::Cert::Extensions::BasicConstraints (class)">R509::Cert::Extensions::BasicConstraints</a></span></tt>) <strong>basic_constraints</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns this object's BasicConstraints extension as an R509 extension</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="Cert/Extensions/BasicConstraints.html" title="R509::Cert::Extensions::BasicConstraints (class)">R509::Cert::Extensions::BasicConstraints</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The object, or nil if this cert does not have a BasicConstraints extension.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+332
+333
+334</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert.rb', line 332</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_basic_constraints'>basic_constraints</span>
+    <span class='kw'>return</span> <span class='id identifier rubyid_r509_extensions'>r509_extensions</span><span class='lbracket'>[</span><span class='const'>R509</span><span class='op'>::</span><span class='const'>Cert</span><span class='op'>::</span><span class='const'>Extensions</span><span class='op'>::</span><span class='const'>BasicConstraints</span><span class='rbracket'>]</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="bit_strength-instance_method">
   
     - (<tt>Integer</tt>) <strong>bit_strength</strong> 
   
 
   
-</p><div class="docstring">
+
+  
+</h3><div class="docstring">
   <div class="discussion">
     
 <p>Returns the bit strength of the key used to create the certificate</p>
@@ -1086,7 +1688,7 @@ support)</p>
 </div>
 <div class="tags">
   
-<h3>Returns:</h3>
+<p class="tag_title">Returns:</p>
 <ul class="return">
   
     <li>
@@ -1111,16 +1713,16 @@ support)</p>
       <pre class="lines">
 
 
-188
-189
-190
-191
-192
-193
-194</pre>
+225
+226
+227
+228
+229
+230
+231</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/cert.rb', line 188</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert.rb', line 225</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_bit_strength'>bit_strength</span>
     <span class='kw'>if</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_rsa?'>rsa?</span>
@@ -1135,13 +1737,75 @@ support)</p>
 </div>
     
       <div class="method_details ">
-  <p class="signature " id="dsa?-instance_method">
+  <h3 class="signature " id="crl_distribution_points-instance_method">
+  
+    - (<tt><span class='object_link'><a href="Cert/Extensions/CrlDistributionPoints.html" title="R509::Cert::Extensions::CrlDistributionPoints (class)">R509::Cert::Extensions::CrlDistributionPoints</a></span></tt>) <strong>crl_distribution_points</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns this object's CrlDistributionPoints extension as an R509 extension</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="Cert/Extensions/CrlDistributionPoints.html" title="R509::Cert::Extensions::CrlDistributionPoints (class)">R509::Cert::Extensions::CrlDistributionPoints</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The object, or nil if this cert does not have a CrlDistributionPoints
+extension.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+388
+389
+390</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert.rb', line 388</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_crl_distribution_points'>crl_distribution_points</span>
+    <span class='kw'>return</span> <span class='id identifier rubyid_r509_extensions'>r509_extensions</span><span class='lbracket'>[</span><span class='const'>R509</span><span class='op'>::</span><span class='const'>Cert</span><span class='op'>::</span><span class='const'>Extensions</span><span class='op'>::</span><span class='const'>CrlDistributionPoints</span><span class='rbracket'>]</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="dsa?-instance_method">
   
     - (<tt>Boolean</tt>) <strong>dsa?</strong> 
   
 
   
-</p><div class="docstring">
+
+  
+</h3><div class="docstring">
   <div class="discussion">
     
 <p>Returns whether the public key is DSA</p>
@@ -1151,7 +1815,7 @@ support)</p>
 </div>
 <div class="tags">
   
-<h3>Returns:</h3>
+<p class="tag_title">Returns:</p>
 <ul class="return">
   
     <li>
@@ -1176,12 +1840,12 @@ support)</p>
       <pre class="lines">
 
 
-181
-182
-183</pre>
+218
+219
+220</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/cert.rb', line 181</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert.rb', line 218</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_dsa?'>dsa?</span>
     <span class='ivar'>@cert</span><span class='period'>.</span><span class='id identifier rubyid_public_key'>public_key</span><span class='period'>.</span><span class='id identifier rubyid_kind_of?'>kind_of?</span><span class='lparen'>(</span><span class='const'>OpenSSL</span><span class='op'>::</span><span class='const'>PKey</span><span class='op'>::</span><span class='const'>DSA</span><span class='rparen'>)</span>
@@ -1192,35 +1856,37 @@ support)</p>
 </div>
     
       <div class="method_details ">
-  <p class="signature " id="extended_key_usage-instance_method">
+  <h3 class="signature " id="extended_key_usage-instance_method">
   
-    - (<tt>Array</tt>) <strong>extended_key_usage</strong> 
+    - (<tt><span class='object_link'><a href="Cert/Extensions/ExtendedKeyUsage.html" title="R509::Cert::Extensions::ExtendedKeyUsage (class)">R509::Cert::Extensions::ExtendedKeyUsage</a></span></tt>) <strong>extended_key_usage</strong> 
   
 
   
-</p><div class="docstring">
+
+  
+</h3><div class="docstring">
   <div class="discussion">
     
-<p>Return the extended key usage extensions</p>
+<p>Returns this object's ExtendedKeyUsage extension as an R509 extension</p>
 
 
   </div>
 </div>
 <div class="tags">
   
-<h3>Returns:</h3>
+<p class="tag_title">Returns:</p>
 <ul class="return">
   
     <li>
       
       
-        <span class='type'>(<tt>Array</tt>)</span>
+        <span class='type'>(<tt><span class='object_link'><a href="Cert/Extensions/ExtendedKeyUsage.html" title="R509::Cert::Extensions::ExtendedKeyUsage (class)">R509::Cert::Extensions::ExtendedKeyUsage</a></span></tt>)</span>
       
       
       
         &mdash;
         <div class='inline'>
-<p>an array containing each EKU as a separate string</p>
+<p>The object, or nil if this cert does not have a ExtendedKeyUsage extension.</p>
 </div>
       
     </li>
@@ -1233,23 +1899,15 @@ support)</p>
       <pre class="lines">
 
 
-273
-274
-275
-276
-277
-278
-279</pre>
+348
+349
+350</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/cert.rb', line 273</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert.rb', line 348</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_extended_key_usage'>extended_key_usage</span>
-    <span class='kw'>if</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_extensions'>extensions</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>extendedKeyUsage</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span> <span class='kw'>and</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_extensions'>extensions</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>extendedKeyUsage</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_count'>count</span> <span class='op'>&gt;</span> <span class='int'>0</span> <span class='kw'>and</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_extensions'>extensions</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>extendedKeyUsage</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>value</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
-        <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_extensions'>extensions</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>extendedKeyUsage</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>value</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_split'>split</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>,</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_map'>map</span><span class='lbrace'>{</span><span class='op'>|</span><span class='id identifier rubyid_v'>v</span><span class='op'>|</span> <span class='id identifier rubyid_v'>v</span><span class='period'>.</span><span class='id identifier rubyid_strip'>strip</span><span class='rbrace'>}</span>
-    <span class='kw'>else</span>
-        <span class='lbracket'>[</span><span class='rbracket'>]</span>
-    <span class='kw'>end</span>
+    <span class='kw'>return</span> <span class='id identifier rubyid_r509_extensions'>r509_extensions</span><span class='lbracket'>[</span><span class='const'>R509</span><span class='op'>::</span><span class='const'>Cert</span><span class='op'>::</span><span class='const'>Extensions</span><span class='op'>::</span><span class='const'>ExtendedKeyUsage</span><span class='rbracket'>]</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -1257,13 +1915,15 @@ support)</p>
 </div>
     
       <div class="method_details ">
-  <p class="signature " id="extensions-instance_method">
+  <h3 class="signature " id="extensions-instance_method">
   
     - (<tt>Array</tt>) <strong>extensions</strong> 
   
 
   
-</p><div class="docstring">
+
+  
+</h3><div class="docstring">
   <div class="discussion">
     
 <p>Return the certificate extensions</p>
@@ -1273,7 +1933,7 @@ support)</p>
 </div>
 <div class="tags">
   
-<h3>Returns:</h3>
+<p class="tag_title">Returns:</p>
 <ul class="return">
   
     <li>
@@ -1298,34 +1958,26 @@ support)</p>
       <pre class="lines">
 
 
-244
-245
-246
-247
-248
-249
-250
-251
-252
-253
-254
-255
-256
-257</pre>
+290
+291
+292
+293
+294
+295
+296
+297
+298
+299</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/cert.rb', line 244</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert.rb', line 290</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_extensions'>extensions</span>
     <span class='kw'>if</span> <span class='ivar'>@extensions</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
         <span class='ivar'>@extensions</span> <span class='op'>=</span> <span class='const'>Hash</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span>
-        <span class='ivar'>@cert</span><span class='period'>.</span><span class='id identifier rubyid_extensions'>extensions</span><span class='period'>.</span><span class='id identifier rubyid_to_a'>to_a</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_extension'>extension</span><span class='op'>|</span>
-            <span class='id identifier rubyid_extension'>extension</span> <span class='op'>=</span> <span class='id identifier rubyid_extension'>extension</span><span class='period'>.</span><span class='id identifier rubyid_to_a'>to_a</span>
-            <span class='kw'>if</span><span class='lparen'>(</span><span class='op'>!</span><span class='ivar'>@extensions</span><span class='lbracket'>[</span><span class='id identifier rubyid_extension'>extension</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_kind_of?'>kind_of?</span><span class='lparen'>(</span><span class='const'>Array</span><span class='rparen'>)</span><span class='rparen'>)</span> <span class='kw'>then</span>
-                <span class='ivar'>@extensions</span><span class='lbracket'>[</span><span class='id identifier rubyid_extension'>extension</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
-            <span class='kw'>end</span>
-            <span class='id identifier rubyid_hash'>hash</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>value</span><span class='tstring_end'>'</span></span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_extension'>extension</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>critical</span><span class='tstring_end'>'</span></span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_extension'>extension</span><span class='lbracket'>[</span><span class='int'>2</span><span class='rbracket'>]</span><span class='rbrace'>}</span>
-            <span class='ivar'>@extensions</span><span class='lbracket'>[</span><span class='id identifier rubyid_extension'>extension</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_push'>push</span> <span class='id identifier rubyid_hash'>hash</span>
+        <span class='ivar'>@cert</span><span class='period'>.</span><span class='id identifier rubyid_extensions'>extensions</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_extension'>extension</span><span class='op'>|</span>
+            <span class='id identifier rubyid_hash'>hash</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>value</span><span class='tstring_end'>'</span></span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_extension'>extension</span><span class='period'>.</span><span class='id identifier rubyid_value'>value</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>critical</span><span class='tstring_end'>'</span></span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_extension'>extension</span><span class='period'>.</span><span class='id identifier rubyid_critical?'>critical?</span><span class='rbrace'>}</span>
+            <span class='ivar'>@extensions</span><span class='lbracket'>[</span><span class='id identifier rubyid_extension'>extension</span><span class='period'>.</span><span class='id identifier rubyid_oid'>oid</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_hash'>hash</span>
         <span class='rbrace'>}</span>
     <span class='kw'>end</span>
     <span class='ivar'>@extensions</span>
@@ -1336,13 +1988,15 @@ support)</p>
 </div>
     
       <div class="method_details ">
-  <p class="signature " id="fingerprint-instance_method">
+  <h3 class="signature " id="fingerprint-instance_method">
   
     - (<tt>String</tt>) <strong>fingerprint</strong>(algorithm = 'sha1') 
   
 
   
-</p><div class="docstring">
+
+  
+</h3><div class="docstring">
   <div class="discussion">
     
 <p>Returns the certificate fingerprint with the specified algorithm (default
@@ -1353,7 +2007,7 @@ sha1)</p>
 </div>
 <div class="tags">
   
-<h3>Returns:</h3>
+<p class="tag_title">Returns:</p>
 <ul class="return">
   
     <li>
@@ -1378,15 +2032,15 @@ sha1)</p>
       <pre class="lines">
 
 
-104
-105
-106
-107
-108
-109</pre>
+124
+125
+126
+127
+128
+129</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/cert.rb', line 104</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert.rb', line 124</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_fingerprint'>fingerprint</span><span class='lparen'>(</span><span class='id identifier rubyid_algorithm'>algorithm</span><span class='op'>=</span><span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>sha1</span><span class='tstring_end'>'</span></span><span class='rparen'>)</span>
     <span class='id identifier rubyid_message_digest'>message_digest</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>MessageDigest</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_algorithm'>algorithm</span><span class='rparen'>)</span>
@@ -1400,13 +2054,15 @@ sha1)</p>
 </div>
     
       <div class="method_details ">
-  <p class="signature " id="has_private_key?-instance_method">
+  <h3 class="signature " id="has_private_key?-instance_method">
   
     - (<tt>Boolean</tt>) <strong>has_private_key?</strong> 
   
 
   
-</p><div class="docstring">
+
+  
+</h3><div class="docstring">
   <div class="discussion">
     
 <p>Boolean of whether the object contains a private key</p>
@@ -1416,7 +2072,7 @@ sha1)</p>
 </div>
 <div class="tags">
   
-<h3>Returns:</h3>
+<p class="tag_title">Returns:</p>
 <ul class="return">
   
     <li>
@@ -1441,16 +2097,16 @@ sha1)</p>
       <pre class="lines">
 
 
-131
-132
-133
-134
-135
-136
-137</pre>
+163
+164
+165
+166
+167
+168
+169</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/cert.rb', line 131</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert.rb', line 163</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_has_private_key?'>has_private_key?</span>
     <span class='kw'>if</span> <span class='kw'>not</span> <span class='ivar'>@key</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
@@ -1465,24 +2121,47 @@ sha1)</p>
 </div>
     
       <div class="method_details ">
-  <p class="signature " id="in_validity_range?-instance_method">
+  <h3 class="signature " id="is_revoked_by_crl?-instance_method">
   
-    - (<tt>Boolean</tt>) <strong>in_validity_range?</strong> 
+    - (<tt>Boolean</tt>) <strong>is_revoked_by_crl?</strong>(r509_crl) 
   
 
   
-</p><div class="docstring">
+
+  
+</h3><div class="docstring">
   <div class="discussion">
     
-<p>Returns whether the current time is between the notBefore and notAfter
-times in the certificate.</p>
+<p>Checks the given CRL for this certificate's serial number. Note that this
+does NOT check to verify that the CRL you're checking is signed by the same
+CA as the cert so do that check yourself</p>
 
 
   </div>
 </div>
 <div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
   
-<h3>Returns:</h3>
+    <li>
+      
+        <span class='name'>r509_crl</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="Crl.html" title="R509::Crl (module)">R509::Crl</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>A CRL from the CA that issued this certificate.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
 <ul class="return">
   
     <li>
@@ -1502,23 +2181,15 @@ times in the certificate.</p>
       <pre class="lines">
 
 
-115
-116
-117
-118
-119
-120
-121</pre>
+283
+284
+285</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/cert.rb', line 115</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert.rb', line 283</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_in_validity_range?'>in_validity_range?</span>
-    <span class='kw'>if</span> <span class='lparen'>(</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_not_after'>not_after</span> <span class='op'>&gt;</span> <span class='const'>Time</span><span class='period'>.</span><span class='id identifier rubyid_now'>now</span><span class='rparen'>)</span> <span class='kw'>and</span> <span class='lparen'>(</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_not_before'>not_before</span> <span class='op'>&lt;=</span> <span class='const'>Time</span><span class='period'>.</span><span class='id identifier rubyid_now'>now</span><span class='rparen'>)</span>
-        <span class='kw'>true</span>
-    <span class='kw'>else</span>
-        <span class='kw'>false</span>
-    <span class='kw'>end</span>
+<span class='kw'>def</span> <span class='id identifier rubyid_is_revoked_by_crl?'>is_revoked_by_crl?</span><span class='lparen'>(</span> <span class='id identifier rubyid_r509_crl'>r509_crl</span> <span class='rparen'>)</span>
+    <span class='kw'>return</span> <span class='id identifier rubyid_r509_crl'>r509_crl</span><span class='period'>.</span><span class='id identifier rubyid_revoked?'>revoked?</span><span class='lparen'>(</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_serial'>serial</span> <span class='rparen'>)</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -1526,13 +2197,15 @@ times in the certificate.</p>
 </div>
     
       <div class="method_details ">
-  <p class="signature " id="issuer-instance_method">
+  <h3 class="signature " id="issuer-instance_method">
   
     - (<tt>OpenSSL::X509::Name</tt>) <strong>issuer</strong> 
   
 
   
-</p><div class="docstring">
+
+  
+</h3><div class="docstring">
   <div class="discussion">
     
 <p>Returns the issuer</p>
@@ -1542,7 +2215,7 @@ times in the certificate.</p>
 </div>
 <div class="tags">
   
-<h3>Returns:</h3>
+<p class="tag_title">Returns:</p>
 <ul class="return">
   
     <li>
@@ -1567,12 +2240,12 @@ times in the certificate.</p>
       <pre class="lines">
 
 
-97
-98
-99</pre>
+105
+106
+107</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/cert.rb', line 97</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert.rb', line 105</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_issuer'>issuer</span>
     <span class='ivar'>@cert</span><span class='period'>.</span><span class='id identifier rubyid_issuer'>issuer</span>
@@ -1583,13 +2256,88 @@ times in the certificate.</p>
 </div>
     
       <div class="method_details ">
-  <p class="signature " id="key_algorithm-instance_method">
+  <h3 class="signature " id="issuer_cn-instance_method">
+  
+    - (<tt>String</tt>) <strong>issuer_cn</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>The common name (CN) component of the issuer</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The common name (CN) component of the issuer</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert.rb', line 110</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_issuer_cn'>issuer_cn</span>
+    <span class='kw'>return</span> <span class='kw'>nil</span> <span class='kw'>if</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_issuer'>issuer</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
+
+    <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_issuer'>issuer</span><span class='period'>.</span><span class='id identifier rubyid_to_a'>to_a</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_part'>part</span><span class='comma'>,</span> <span class='id identifier rubyid_value'>value</span><span class='comma'>,</span> <span class='id identifier rubyid_length'>length</span><span class='op'>|</span>
+        <span class='kw'>return</span> <span class='id identifier rubyid_value'>value</span> <span class='kw'>if</span> <span class='id identifier rubyid_part'>part</span><span class='period'>.</span><span class='id identifier rubyid_upcase'>upcase</span> <span class='op'>==</span> <span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>CN</span><span class='tstring_end'>'</span></span>
+    <span class='kw'>end</span>
+
+    <span class='comment'># return nil if we didn't find a CN part
+</span>    <span class='kw'>return</span> <span class='kw'>nil</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="key_algorithm-instance_method">
   
     - (<tt>String</tt>) <strong>key_algorithm</strong> 
   
 
   
-</p><div class="docstring">
+
+  
+</h3><div class="docstring">
   <div class="discussion">
     
 <p>Returns key algorithm (RSA or DSA)</p>
@@ -1599,7 +2347,7 @@ times in the certificate.</p>
 </div>
 <div class="tags">
   
-<h3>Returns:</h3>
+<p class="tag_title">Returns:</p>
 <ul class="return">
   
     <li>
@@ -1624,16 +2372,16 @@ times in the certificate.</p>
       <pre class="lines">
 
 
-206
-207
-208
-209
-210
-211
-212</pre>
+243
+244
+245
+246
+247
+248
+249</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/cert.rb', line 206</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert.rb', line 243</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_key_algorithm'>key_algorithm</span>
     <span class='kw'>if</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_rsa?'>rsa?</span>
@@ -1648,35 +2396,37 @@ times in the certificate.</p>
 </div>
     
       <div class="method_details ">
-  <p class="signature " id="key_usage-instance_method">
+  <h3 class="signature " id="key_usage-instance_method">
   
-    - (<tt>Array</tt>) <strong>key_usage</strong> 
+    - (<tt><span class='object_link'><a href="Cert/Extensions/KeyUsage.html" title="R509::Cert::Extensions::KeyUsage (class)">R509::Cert::Extensions::KeyUsage</a></span></tt>) <strong>key_usage</strong> 
   
 
   
-</p><div class="docstring">
+
+  
+</h3><div class="docstring">
   <div class="discussion">
     
-<p>Return the key usage extensions</p>
+<p>Returns this object's KeyUsage extension as an R509 extension</p>
 
 
   </div>
 </div>
 <div class="tags">
   
-<h3>Returns:</h3>
+<p class="tag_title">Returns:</p>
 <ul class="return">
   
     <li>
       
       
-        <span class='type'>(<tt>Array</tt>)</span>
+        <span class='type'>(<tt><span class='object_link'><a href="Cert/Extensions/KeyUsage.html" title="R509::Cert::Extensions::KeyUsage (class)">R509::Cert::Extensions::KeyUsage</a></span></tt>)</span>
       
       
       
         &mdash;
         <div class='inline'>
-<p>an array containing each KU as a separate string</p>
+<p>The object, or nil if this cert does not have a KeyUsage extension.</p>
 </div>
       
     </li>
@@ -1689,23 +2439,15 @@ times in the certificate.</p>
       <pre class="lines">
 
 
-262
-263
-264
-265
-266
-267
-268</pre>
+340
+341
+342</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/cert.rb', line 262</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert.rb', line 340</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_key_usage'>key_usage</span>
-    <span class='kw'>if</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_extensions'>extensions</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>keyUsage</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span> <span class='kw'>and</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_extensions'>extensions</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>keyUsage</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_count'>count</span> <span class='op'>&gt;</span> <span class='int'>0</span> <span class='kw'>and</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_extensions'>extensions</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>keyUsage</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>value</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
-        <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_extensions'>extensions</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>keyUsage</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>value</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_split'>split</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>,</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_map'>map</span><span class='lbrace'>{</span><span class='op'>|</span><span class='id identifier rubyid_v'>v</span><span class='op'>|</span> <span class='id identifier rubyid_v'>v</span><span class='period'>.</span><span class='id identifier rubyid_strip'>strip</span><span class='rbrace'>}</span>
-    <span class='kw'>else</span>
-        <span class='lbracket'>[</span><span class='rbracket'>]</span>
-    <span class='kw'>end</span>
+    <span class='kw'>return</span> <span class='id identifier rubyid_r509_extensions'>r509_extensions</span><span class='lbracket'>[</span><span class='const'>R509</span><span class='op'>::</span><span class='const'>Cert</span><span class='op'>::</span><span class='const'>Extensions</span><span class='op'>::</span><span class='const'>KeyUsage</span><span class='rbracket'>]</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -1713,13 +2455,15 @@ times in the certificate.</p>
 </div>
     
       <div class="method_details ">
-  <p class="signature " id="not_after-instance_method">
+  <h3 class="signature " id="not_after-instance_method">
   
     - (<tt>Time</tt>) <strong>not_after</strong> 
   
 
   
-</p><div class="docstring">
+
+  
+</h3><div class="docstring">
   <div class="discussion">
     
 <p>Returns ending (notAfter) of certificate validity period</p>
@@ -1729,7 +2473,7 @@ times in the certificate.</p>
 </div>
 <div class="tags">
   
-<h3>Returns:</h3>
+<p class="tag_title">Returns:</p>
 <ul class="return">
   
     <li>
@@ -1754,12 +2498,12 @@ times in the certificate.</p>
       <pre class="lines">
 
 
-83
-84
-85</pre>
+91
+92
+93</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/cert.rb', line 83</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert.rb', line 91</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_not_after'>not_after</span>
     <span class='ivar'>@cert</span><span class='period'>.</span><span class='id identifier rubyid_not_after'>not_after</span>
@@ -1770,13 +2514,15 @@ times in the certificate.</p>
 </div>
     
       <div class="method_details ">
-  <p class="signature " id="not_before-instance_method">
+  <h3 class="signature " id="not_before-instance_method">
   
     - (<tt>Time</tt>) <strong>not_before</strong> 
   
 
   
-</p><div class="docstring">
+
+  
+</h3><div class="docstring">
   <div class="discussion">
     
 <p>Returns beginning (notBefore) of certificate validity period</p>
@@ -1786,7 +2532,7 @@ times in the certificate.</p>
 </div>
 <div class="tags">
   
-<h3>Returns:</h3>
+<p class="tag_title">Returns:</p>
 <ul class="return">
   
     <li>
@@ -1811,12 +2557,12 @@ times in the certificate.</p>
       <pre class="lines">
 
 
-69
-70
-71</pre>
+77
+78
+79</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/cert.rb', line 69</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert.rb', line 77</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_not_before'>not_before</span>
     <span class='ivar'>@cert</span><span class='period'>.</span><span class='id identifier rubyid_not_before'>not_before</span>
@@ -1827,13 +2573,15 @@ times in the certificate.</p>
 </div>
     
       <div class="method_details ">
-  <p class="signature " id="public_key-instance_method">
+  <h3 class="signature " id="public_key-instance_method">
   
     - (<tt>OpenSSL::PKey::RSA</tt>) <strong>public_key</strong> 
   
 
   
-</p><div class="docstring">
+
+  
+</h3><div class="docstring">
   <div class="discussion">
     
 <p>Returns the certificate public key</p>
@@ -1843,7 +2591,7 @@ times in the certificate.</p>
 </div>
 <div class="tags">
   
-<h3>Returns:</h3>
+<p class="tag_title">Returns:</p>
 <ul class="return">
   
     <li>
@@ -1868,12 +2616,12 @@ times in the certificate.</p>
       <pre class="lines">
 
 
-90
-91
-92</pre>
+98
+99
+100</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/cert.rb', line 90</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert.rb', line 98</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_public_key'>public_key</span>
     <span class='ivar'>@cert</span><span class='period'>.</span><span class='id identifier rubyid_public_key'>public_key</span>
@@ -1884,13 +2632,87 @@ times in the certificate.</p>
 </div>
     
       <div class="method_details ">
-  <p class="signature " id="rsa?-instance_method">
+  <h3 class="signature " id="r509_extensions-instance_method">
+  
+    - (<tt>Hash</tt>) <strong>r509_extensions</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns the certificate extensions as a hash of R509::Cert::Extensions
+specific objects.</p>
+
+<p>R509::Cert::Extensions module, each specific to the extension. The hash is
+keyed with the R509 extension class. Extensions without an R509
+implementation are ignored (see #get_unknown_extensions).</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Hash</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>A hash, in which the values are classes from the</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+308
+309
+310
+311
+312
+313
+314</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert.rb', line 308</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_r509_extensions'>r509_extensions</span>
+    <span class='kw'>if</span> <span class='ivar'>@r509_extensions</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
+        <span class='ivar'>@r509_extensions</span> <span class='op'>=</span> <span class='const'>Extensions</span><span class='period'>.</span><span class='id identifier rubyid_wrap_openssl_extensions'>wrap_openssl_extensions</span><span class='lparen'>(</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_cert'>cert</span><span class='period'>.</span><span class='id identifier rubyid_extensions'>extensions</span> <span class='rparen'>)</span>
+    <span class='kw'>end</span>
+
+    <span class='kw'>return</span> <span class='ivar'>@r509_extensions</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="rsa?-instance_method">
   
     - (<tt>Boolean</tt>) <strong>rsa?</strong> 
   
 
   
-</p><div class="docstring">
+
+  
+</h3><div class="docstring">
   <div class="discussion">
     
 <p>Returns whether the public key is RSA</p>
@@ -1900,7 +2722,7 @@ times in the certificate.</p>
 </div>
 <div class="tags">
   
-<h3>Returns:</h3>
+<p class="tag_title">Returns:</p>
 <ul class="return">
   
     <li>
@@ -1925,12 +2747,12 @@ times in the certificate.</p>
       <pre class="lines">
 
 
-174
-175
-176</pre>
+211
+212
+213</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/cert.rb', line 174</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert.rb', line 211</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_rsa?'>rsa?</span>
     <span class='ivar'>@cert</span><span class='period'>.</span><span class='id identifier rubyid_public_key'>public_key</span><span class='period'>.</span><span class='id identifier rubyid_kind_of?'>kind_of?</span><span class='lparen'>(</span><span class='const'>OpenSSL</span><span class='op'>::</span><span class='const'>PKey</span><span class='op'>::</span><span class='const'>RSA</span><span class='rparen'>)</span>
@@ -1941,23 +2763,25 @@ times in the certificate.</p>
 </div>
     
       <div class="method_details ">
-  <p class="signature " id="san_names-instance_method">
+  <h3 class="signature " id="san_names-instance_method">
   
     - (<tt>Array</tt>) <strong>san_names</strong> 
   
 
   
-</p><div class="docstring">
+
+  
+</h3><div class="docstring">
   <div class="discussion">
     
-<p>List of SAN names</p>
+<p>List of SAN DNS names</p>
 
 
   </div>
 </div>
 <div class="tags">
   
-<h3>Returns:</h3>
+<p class="tag_title">Returns:</p>
 <ul class="return">
   
     <li>
@@ -1969,7 +2793,7 @@ times in the certificate.</p>
       
         &mdash;
         <div class='inline'>
-<p>list of SAN names</p>
+<p>list of SAN DNS names</p>
 </div>
       
     </li>
@@ -1982,15 +2806,23 @@ times in the certificate.</p>
       <pre class="lines">
 
 
-140
-141
-142</pre>
+172
+173
+174
+175
+176
+177
+178</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/cert.rb', line 140</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert.rb', line 172</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_san_names'>san_names</span>
-    <span class='ivar'>@san_names</span> <span class='op'>||</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
+    <span class='kw'>if</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_subject_alternative_name'>subject_alternative_name</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
+        <span class='kw'>return</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
+    <span class='kw'>else</span>
+        <span class='kw'>return</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_subject_alternative_name'>subject_alternative_name</span><span class='period'>.</span><span class='id identifier rubyid_dns_names'>dns_names</span>
+    <span class='kw'>end</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -1998,13 +2830,15 @@ times in the certificate.</p>
 </div>
     
       <div class="method_details ">
-  <p class="signature " id="serial-instance_method">
+  <h3 class="signature " id="serial-instance_method">
   
     - (<tt>Integer</tt>) <strong>serial</strong> 
   
 
   
-</p><div class="docstring">
+
+  
+</h3><div class="docstring">
   <div class="discussion">
     
 <p>Returns the serial number of the certificate in decimal form</p>
@@ -2014,7 +2848,7 @@ times in the certificate.</p>
 </div>
 <div class="tags">
   
-<h3>Returns:</h3>
+<p class="tag_title">Returns:</p>
 <ul class="return">
   
     <li>
@@ -2034,12 +2868,12 @@ times in the certificate.</p>
       <pre class="lines">
 
 
-76
-77
-78</pre>
+84
+85
+86</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/cert.rb', line 76</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert.rb', line 84</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_serial'>serial</span>
     <span class='ivar'>@cert</span><span class='period'>.</span><span class='id identifier rubyid_serial'>serial</span><span class='period'>.</span><span class='id identifier rubyid_to_i'>to_i</span>
@@ -2050,13 +2884,15 @@ times in the certificate.</p>
 </div>
     
       <div class="method_details ">
-  <p class="signature " id="signature_algorithm-instance_method">
+  <h3 class="signature " id="signature_algorithm-instance_method">
   
     - (<tt>String</tt>) <strong>signature_algorithm</strong> 
   
 
   
-</p><div class="docstring">
+
+  
+</h3><div class="docstring">
   <div class="discussion">
     
 <p>Returns signature algorithm</p>
@@ -2066,7 +2902,7 @@ times in the certificate.</p>
 </div>
 <div class="tags">
   
-<h3>Returns:</h3>
+<p class="tag_title">Returns:</p>
 <ul class="return">
   
     <li>
@@ -2092,12 +2928,12 @@ sha256WithRSAEncryption, md5WithRSAEncryption</p>
       <pre class="lines">
 
 
-199
-200
-201</pre>
+236
+237
+238</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/cert.rb', line 199</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert.rb', line 236</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_signature_algorithm'>signature_algorithm</span>
     <span class='ivar'>@cert</span><span class='period'>.</span><span class='id identifier rubyid_signature_algorithm'>signature_algorithm</span>
@@ -2108,13 +2944,15 @@ sha256WithRSAEncryption, md5WithRSAEncryption</p>
 </div>
     
       <div class="method_details ">
-  <p class="signature " id="subject-instance_method">
+  <h3 class="signature " id="subject-instance_method">
   
     - (<tt>OpenSSL::X509::Name</tt>) <strong>subject</strong> 
   
 
   
-</p><div class="docstring">
+
+  
+</h3><div class="docstring">
   <div class="discussion">
     
 <p>Returns the subject</p>
@@ -2124,7 +2962,7 @@ sha256WithRSAEncryption, md5WithRSAEncryption</p>
 </div>
 <div class="tags">
   
-<h3>Returns:</h3>
+<p class="tag_title">Returns:</p>
 <ul class="return">
   
     <li>
@@ -2149,12 +2987,12 @@ sha256WithRSAEncryption, md5WithRSAEncryption</p>
       <pre class="lines">
 
 
-126
-127
-128</pre>
+158
+159
+160</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/cert.rb', line 126</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert.rb', line 158</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_subject'>subject</span>
     <span class='ivar'>@cert</span><span class='period'>.</span><span class='id identifier rubyid_subject'>subject</span>
@@ -2165,13 +3003,129 @@ sha256WithRSAEncryption, md5WithRSAEncryption</p>
 </div>
     
       <div class="method_details ">
-  <p class="signature " id="subject_component-instance_method">
+  <h3 class="signature " id="subject_alternative_name-instance_method">
+  
+    - (<tt><span class='object_link'><a href="Cert/Extensions/SubjectAlternativeName.html" title="R509::Cert::Extensions::SubjectAlternativeName (class)">R509::Cert::Extensions::SubjectAlternativeName</a></span></tt>) <strong>subject_alternative_name</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns this object's SubjectAlternativeName extension as an R509 extension</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="Cert/Extensions/SubjectAlternativeName.html" title="R509::Cert::Extensions::SubjectAlternativeName (class)">R509::Cert::Extensions::SubjectAlternativeName</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The object, or nil if this cert does not have a SubjectAlternativeName
+extension.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+372
+373
+374</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert.rb', line 372</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_subject_alternative_name'>subject_alternative_name</span>
+    <span class='kw'>return</span> <span class='id identifier rubyid_r509_extensions'>r509_extensions</span><span class='lbracket'>[</span><span class='const'>R509</span><span class='op'>::</span><span class='const'>Cert</span><span class='op'>::</span><span class='const'>Extensions</span><span class='op'>::</span><span class='const'>SubjectAlternativeName</span><span class='rbracket'>]</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="subject_cn-instance_method">
+  
+    - (<tt>String</tt>) <strong>subject_cn</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns the CN component, if any, of the subject</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+183
+184
+185</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert.rb', line 183</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_subject_cn'>subject_cn</span><span class='lparen'>(</span><span class='rparen'>)</span>
+    <span class='kw'>return</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_subject_component'>subject_component</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>CN</span><span class='tstring_end'>'</span></span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="subject_component-instance_method">
   
     - (<tt>String</tt>) <strong>subject_component</strong>(short_name) 
   
 
   
-</p><div class="docstring">
+
+  
+</h3><div class="docstring">
   <div class="discussion">
     
 <p>Returns subject component</p>
@@ -2181,7 +3135,7 @@ sha256WithRSAEncryption, md5WithRSAEncryption</p>
 </div>
 <div class="tags">
   
-<h3>Returns:</h3>
+<p class="tag_title">Returns:</p>
 <ul class="return">
   
     <li>
@@ -2206,14 +3160,14 @@ sha256WithRSAEncryption, md5WithRSAEncryption</p>
       <pre class="lines">
 
 
-148
-149
-150
-151
-152</pre>
+190
+191
+192
+193
+194</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/cert.rb', line 148</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert.rb', line 190</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_subject_component'>subject_component</span> <span class='id identifier rubyid_short_name'>short_name</span>
     <span class='id identifier rubyid_match'>match</span> <span class='op'>=</span> <span class='ivar'>@cert</span><span class='period'>.</span><span class='id identifier rubyid_subject'>subject</span><span class='period'>.</span><span class='id identifier rubyid_to_a'>to_a</span><span class='period'>.</span><span class='id identifier rubyid_find'>find</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_x'>x</span><span class='op'>|</span> <span class='id identifier rubyid_x'>x</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span> <span class='op'>==</span> <span class='id identifier rubyid_short_name'>short_name</span> <span class='rbrace'>}</span>
@@ -2226,13 +3180,75 @@ sha256WithRSAEncryption, md5WithRSAEncryption</p>
 </div>
     
       <div class="method_details ">
-  <p class="signature " id="subject_names-instance_method">
+  <h3 class="signature " id="subject_key_identifier-instance_method">
+  
+    - (<tt><span class='object_link'><a href="Cert/Extensions/SubjectKeyIdentifier.html" title="R509::Cert::Extensions::SubjectKeyIdentifier (class)">R509::Cert::Extensions::SubjectKeyIdentifier</a></span></tt>) <strong>subject_key_identifier</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns this object's SubjectKeyIdentifier extension as an R509 extension</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="Cert/Extensions/SubjectKeyIdentifier.html" title="R509::Cert::Extensions::SubjectKeyIdentifier (class)">R509::Cert::Extensions::SubjectKeyIdentifier</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The object, or nil if this cert does not have a SubjectKeyIdentifier
+extension.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+356
+357
+358</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert.rb', line 356</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_subject_key_identifier'>subject_key_identifier</span>
+    <span class='kw'>return</span> <span class='id identifier rubyid_r509_extensions'>r509_extensions</span><span class='lbracket'>[</span><span class='const'>R509</span><span class='op'>::</span><span class='const'>Cert</span><span class='op'>::</span><span class='const'>Extensions</span><span class='op'>::</span><span class='const'>SubjectKeyIdentifier</span><span class='rbracket'>]</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="subject_names-instance_method">
   
     - (<tt>Array</tt>) <strong>subject_names</strong> 
   
 
   
-</p><div class="docstring">
+
+  
+</h3><div class="docstring">
   <div class="discussion">
     
 <p>Return the CN, as well as all the subject alternative names (SANs).</p>
@@ -2242,7 +3258,7 @@ sha256WithRSAEncryption, md5WithRSAEncryption</p>
 </div>
 <div class="tags">
   
-<h3>Returns:</h3>
+<p class="tag_title">Returns:</p>
 <ul class="return">
   
     <li>
@@ -2267,31 +3283,21 @@ sha256WithRSAEncryption, md5WithRSAEncryption</p>
       <pre class="lines">
 
 
-158
-159
-160
-161
-162
-163
-164
-165
-166
-167
-168
-169</pre>
+200
+201
+202
+203
+204
+205
+206</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/cert.rb', line 158</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert.rb', line 200</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_subject_names'>subject_names</span>
     <span class='id identifier rubyid_ret'>ret</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
-    <span class='kw'>if</span> <span class='id identifier rubyid_cn'>cn</span> <span class='op'>=</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_subject_component'>subject_component</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>CN</span><span class='tstring_end'>'</span></span><span class='rparen'>)</span>
-        <span class='id identifier rubyid_ret'>ret</span> <span class='op'>&lt;&lt;</span> <span class='id identifier rubyid_cn'>cn</span>
-    <span class='kw'>end</span>
-    <span class='comment'># Merge in san_names if we got anything.
-</span>    <span class='kw'>if</span> <span class='id identifier rubyid_sn'>sn</span> <span class='op'>=</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_san_names'>san_names</span>
-        <span class='id identifier rubyid_ret'>ret</span><span class='period'>.</span><span class='id identifier rubyid_concat'>concat</span><span class='lparen'>(</span><span class='id identifier rubyid_sn'>sn</span><span class='rparen'>)</span>
-    <span class='kw'>end</span>
+    <span class='id identifier rubyid_ret'>ret</span> <span class='op'>&lt;&lt;</span> <span class='id identifier rubyid_subject_cn'>subject_cn</span> <span class='kw'>unless</span> <span class='id identifier rubyid_subject_cn'>subject_cn</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
+    <span class='id identifier rubyid_ret'>ret</span><span class='period'>.</span><span class='id identifier rubyid_concat'>concat</span><span class='lparen'>(</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_san_names'>san_names</span> <span class='rparen'>)</span>
 
     <span class='kw'>return</span> <span class='id identifier rubyid_ret'>ret</span><span class='period'>.</span><span class='id identifier rubyid_sort'>sort</span><span class='period'>.</span><span class='id identifier rubyid_uniq'>uniq</span>
 <span class='kw'>end</span></pre>
@@ -2301,13 +3307,15 @@ sha256WithRSAEncryption, md5WithRSAEncryption</p>
 </div>
     
       <div class="method_details ">
-  <p class="signature " id="to_der-instance_method">
+  <h3 class="signature " id="to_der-instance_method">
   
     - (<tt>String</tt>) <strong>to_der</strong> 
   
 
   
-</p><div class="docstring">
+
+  
+</h3><div class="docstring">
   <div class="discussion">
     
 <p>Converts the Cert into the DER format</p>
@@ -2317,7 +3325,7 @@ sha256WithRSAEncryption, md5WithRSAEncryption</p>
 </div>
 <div class="tags">
   
-<h3>Returns:</h3>
+<p class="tag_title">Returns:</p>
 <ul class="return">
   
     <li>
@@ -2342,14 +3350,14 @@ sha256WithRSAEncryption, md5WithRSAEncryption</p>
       <pre class="lines">
 
 
-60
-61
-62
-63
-64</pre>
+68
+69
+70
+71
+72</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/cert.rb', line 60</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert.rb', line 68</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_to_der'>to_der</span>
     <span class='kw'>if</span> <span class='ivar'>@cert</span><span class='period'>.</span><span class='id identifier rubyid_kind_of?'>kind_of?</span><span class='lparen'>(</span><span class='const'>OpenSSL</span><span class='op'>::</span><span class='const'>X509</span><span class='op'>::</span><span class='const'>Certificate</span><span class='rparen'>)</span>
@@ -2362,7 +3370,7 @@ sha256WithRSAEncryption, md5WithRSAEncryption</p>
 </div>
     
       <div class="method_details ">
-  <p class="signature " id="to_pem-instance_method">
+  <h3 class="signature " id="to_pem-instance_method">
   
     - (<tt>String</tt>) <strong>to_pem</strong> 
   
@@ -2372,7 +3380,9 @@ sha256WithRSAEncryption, md5WithRSAEncryption</p>
     <span class="names"><span id='to_s-instance_method'>to_s</span></span>
     </span>
   
-</p><div class="docstring">
+
+  
+</h3><div class="docstring">
   <div class="discussion">
     
 <p>Converts the Cert into the PEM format</p>
@@ -2382,7 +3392,7 @@ sha256WithRSAEncryption, md5WithRSAEncryption</p>
 </div>
 <div class="tags">
   
-<h3>Returns:</h3>
+<p class="tag_title">Returns:</p>
 <ul class="return">
   
     <li>
@@ -2407,14 +3417,14 @@ sha256WithRSAEncryption, md5WithRSAEncryption</p>
       <pre class="lines">
 
 
-49
-50
-51
-52
-53</pre>
+57
+58
+59
+60
+61</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/cert.rb', line 49</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert.rb', line 57</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_to_pem'>to_pem</span>
     <span class='kw'>if</span> <span class='ivar'>@cert</span><span class='period'>.</span><span class='id identifier rubyid_kind_of?'>kind_of?</span><span class='lparen'>(</span><span class='const'>OpenSSL</span><span class='op'>::</span><span class='const'>X509</span><span class='op'>::</span><span class='const'>Certificate</span><span class='rparen'>)</span>
@@ -2427,13 +3437,221 @@ sha256WithRSAEncryption, md5WithRSAEncryption</p>
 </div>
     
       <div class="method_details ">
-  <p class="signature " id="write_der-instance_method">
+  <h3 class="signature " id="unknown_extensions-instance_method">
+  
+    - (<tt>Array</tt>) <strong>unknown_extensions</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns an array of OpenSSL::X509::Extension objects representing the
+extensions that do not have R509 implementations.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Array</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>An array of OpenSSL::X509::Extension objects.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+320
+321
+322</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert.rb', line 320</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_unknown_extensions'>unknown_extensions</span>
+    <span class='kw'>return</span> <span class='const'>Extensions</span><span class='period'>.</span><span class='id identifier rubyid_get_unknown_extensions'>get_unknown_extensions</span><span class='lparen'>(</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_cert'>cert</span><span class='period'>.</span><span class='id identifier rubyid_extensions'>extensions</span> <span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="valid?-instance_method">
+  
+    - (<tt>Boolean</tt>) <strong>valid?</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns whether the current time is between the notBefore and notAfter
+times in the certificate.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+135
+136
+137</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert.rb', line 135</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_valid?'>valid?</span>
+    <span class='id identifier rubyid_valid_at?'>valid_at?</span><span class='lparen'>(</span><span class='const'>Time</span><span class='period'>.</span><span class='id identifier rubyid_now'>now</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="valid_at?-instance_method">
+  
+    - (<tt>Boolean</tt>) <strong>valid_at?</strong>(time) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns whether the certificate was between its notBefore and notAfter at
+the time provided</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>time</span>
+      
+      
+        <span class='type'>(<tt>Time</tt>, <tt>Integer</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Time object or integer timestamp</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert.rb', line 143</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_valid_at?'>valid_at?</span><span class='lparen'>(</span><span class='id identifier rubyid_time'>time</span><span class='rparen'>)</span>
+    <span class='kw'>if</span> <span class='id identifier rubyid_time'>time</span><span class='period'>.</span><span class='id identifier rubyid_kind_of?'>kind_of?</span><span class='lparen'>(</span><span class='const'>Integer</span><span class='rparen'>)</span>
+        <span class='id identifier rubyid_time'>time</span> <span class='op'>=</span> <span class='const'>Time</span><span class='period'>.</span><span class='id identifier rubyid_at'>at</span><span class='lparen'>(</span><span class='id identifier rubyid_time'>time</span><span class='rparen'>)</span>
+    <span class='kw'>end</span>
+
+    <span class='kw'>if</span> <span class='lparen'>(</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_not_after'>not_after</span> <span class='op'>&lt;</span> <span class='id identifier rubyid_time'>time</span><span class='rparen'>)</span> <span class='kw'>or</span> <span class='lparen'>(</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_not_before'>not_before</span> <span class='op'>&gt;</span> <span class='id identifier rubyid_time'>time</span><span class='rparen'>)</span>
+        <span class='kw'>false</span>
+    <span class='kw'>else</span>
+        <span class='kw'>true</span>
+    <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="write_der-instance_method">
   
     - (<tt>Object</tt>) <strong>write_der</strong>(filename_or_io) 
   
 
   
-</p><div class="docstring">
+
+  
+</h3><div class="docstring">
   <div class="discussion">
     
 <p>Writes the Cert into the DER format</p>
@@ -2442,7 +3660,7 @@ sha256WithRSAEncryption, md5WithRSAEncryption</p>
   </div>
 </div>
 <div class="tags">
-  <h3>Parameters:</h3>
+  <p class="tag_title">Parameters:</p>
 <ul class="param">
   
     <li>
@@ -2471,12 +3689,12 @@ IO-like object.</p>
       <pre class="lines">
 
 
-224
-225
-226</pre>
+261
+262
+263</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/cert.rb', line 224</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert.rb', line 261</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_write_der'>write_der</span><span class='lparen'>(</span><span class='id identifier rubyid_filename_or_io'>filename_or_io</span><span class='rparen'>)</span>
     <span class='id identifier rubyid_write_data'>write_data</span><span class='lparen'>(</span><span class='id identifier rubyid_filename_or_io'>filename_or_io</span><span class='comma'>,</span> <span class='ivar'>@cert</span><span class='period'>.</span><span class='id identifier rubyid_to_der'>to_der</span><span class='rparen'>)</span>
@@ -2487,13 +3705,15 @@ IO-like object.</p>
 </div>
     
       <div class="method_details ">
-  <p class="signature " id="write_pem-instance_method">
+  <h3 class="signature " id="write_pem-instance_method">
   
     - (<tt>Object</tt>) <strong>write_pem</strong>(filename_or_io) 
   
 
   
-</p><div class="docstring">
+
+  
+</h3><div class="docstring">
   <div class="discussion">
     
 <p>Writes the Cert into the PEM format</p>
@@ -2502,7 +3722,7 @@ IO-like object.</p>
   </div>
 </div>
 <div class="tags">
-  <h3>Parameters:</h3>
+  <p class="tag_title">Parameters:</p>
 <ul class="param">
   
     <li>
@@ -2531,12 +3751,12 @@ IO-like object.</p>
       <pre class="lines">
 
 
-217
-218
-219</pre>
+254
+255
+256</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/cert.rb', line 217</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert.rb', line 254</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_write_pem'>write_pem</span><span class='lparen'>(</span><span class='id identifier rubyid_filename_or_io'>filename_or_io</span><span class='rparen'>)</span>
     <span class='id identifier rubyid_write_data'>write_data</span><span class='lparen'>(</span><span class='id identifier rubyid_filename_or_io'>filename_or_io</span><span class='comma'>,</span> <span class='ivar'>@cert</span><span class='period'>.</span><span class='id identifier rubyid_to_pem'>to_pem</span><span class='rparen'>)</span>
@@ -2547,13 +3767,15 @@ IO-like object.</p>
 </div>
     
       <div class="method_details ">
-  <p class="signature " id="write_pkcs12-instance_method">
+  <h3 class="signature " id="write_pkcs12-instance_method">
   
     - (<tt>Object</tt>) <strong>write_pkcs12</strong>(filename_or_io, password, friendly_name = 'r509 pkcs12') 
   
 
   
-</p><div class="docstring">
+
+  
+</h3><div class="docstring">
   <div class="discussion">
     
 <p>Writes cert and key into PKCS12 format using OpenSSL defaults for
@@ -2563,7 +3785,7 @@ encryption (des3)</p>
   </div>
 </div>
 <div class="tags">
-  <h3>Parameters:</h3>
+  <p class="tag_title">Parameters:</p>
 <ul class="param">
   
     <li>
@@ -2627,16 +3849,16 @@ IO-like object.</p>
       <pre class="lines">
 
 
-233
-234
-235
-236
-237
-238
-239</pre>
+270
+271
+272
+273
+274
+275
+276</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/cert.rb', line 233</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert.rb', line 270</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_write_pkcs12'>write_pkcs12</span><span class='lparen'>(</span><span class='id identifier rubyid_filename_or_io'>filename_or_io</span><span class='comma'>,</span><span class='id identifier rubyid_password'>password</span><span class='comma'>,</span><span class='id identifier rubyid_friendly_name'>friendly_name</span><span class='op'>=</span><span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>r509 pkcs12</span><span class='tstring_end'>'</span></span><span class='rparen'>)</span>
     <span class='kw'>if</span> <span class='ivar'>@key</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
@@ -2653,11 +3875,11 @@ IO-like object.</p>
   </div>
 
 </div>
-    
+
     <div id="footer">
-  Generated on Tue Jan 17 14:14:52 2012 by 
+  Generated on Wed Aug  8 10:13:45 2012 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.7.4 (ruby-1.9.3).
+  0.8.2.1 (ruby-1.9.3).
 </div>
 
   </body>
