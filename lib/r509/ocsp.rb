@@ -38,17 +38,26 @@ module R509::Ocsp
             @ocsp_response.basic
         end
 
-        # @param ca_cert [OpenSSL::X509::Certificate] the CA certificate to verify against
+        # @param ca_cert [Array<OpenSSL::X509::Certificate>,OpenSSL::X509::Certificate] a single cert to verify against or an array of certs
         # @return [Boolean] true if the response is valid according to the given root
-        def verify(ca_cert)
+        def verify(certs)
             store = OpenSSL::X509::Store.new
-            store.add_cert(ca_cert)
+            if certs.kind_of?(Array)
+                stack = certs
+                certs.each do |cert|
+                    store.add_cert(cert)
+                end
+            else
+                stack = [certs]
+                store.add_cert(certs)
+            end
+
             #suppress verbosity since #verify will output a warning if it does not match
             #as well as returning false. we just want the boolean
             original_verbosity = $VERBOSE
             $VERBOSE = nil
             #still a bit unclear on why we add to store and pass in array to verify
-            result = @ocsp_response.basic.verify([ca_cert], store)
+            result = @ocsp_response.basic.verify(stack, store)
             $VERBOSE = original_verbosity
             return result
         end

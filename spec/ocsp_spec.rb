@@ -7,6 +7,7 @@ describe R509::Ocsp::Response do
         @ocsp_test_cert = TestFixtures::OCSP_TEST_CERT
         @test_ca_config = TestFixtures.test_ca_config
         @test_ca_ocsp_response = TestFixtures::TEST_CA_OCSP_RESPONSE
+        @test_ca_subroot_ocsp_response = TestFixtures::TEST_CA_SUBROOT_OCSP_RESPONSE
         @ocsp_response_der = TestFixtures::STCA_OCSP_RESPONSE
         @stca_cert = TestFixtures::STCA_CERT
     end
@@ -32,6 +33,18 @@ describe R509::Ocsp::Response do
     it "returns true if response verifies (in validity period, chain builds to trusted root that's provided)" do
         ocsp_response = R509::Ocsp::Response.parse(@test_ca_ocsp_response)
         ocsp_response.verify(TestFixtures.test_ca_config.ca_cert.cert).should == true
+    end
+    it "verify supports an single certificate and uses it to validate" do
+        ocsp_response = R509::Ocsp::Response.parse(@test_ca_ocsp_response)
+        ocsp_response.verify(TestFixtures.test_ca_config.ca_cert.cert).should == true
+    end
+    it "verify supports an array of certificates and uses all of them to validate a chain" do
+        ocsp_response = R509::Ocsp::Response.parse(@test_ca_subroot_ocsp_response)
+        ocsp_response.verify([TestFixtures.test_ca_config.ca_cert.cert,TestFixtures.test_ca_subroot_cert.cert]).should == true
+    end
+    it "verify returns false if you don't give it enough certs to build a chain to a trusted root" do
+        ocsp_response = R509::Ocsp::Response.parse(@test_ca_subroot_ocsp_response)
+        ocsp_response.verify([TestFixtures.test_ca_config.ca_cert.cert]).should == false
     end
     it "returns false if response does not verify" do
         #expired response

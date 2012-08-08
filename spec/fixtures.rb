@@ -99,6 +99,9 @@ module TestFixtures
     TEST_CA_OCSP_CERT = read_fixture('test_ca_ocsp.cer')
     TEST_CA_OCSP_KEY  = read_fixture('test_ca_ocsp.key')
 
+    TEST_CA_SUBROOT_CERT = read_fixture('test_ca_subroot.cer')
+    TEST_CA_SUBROOT_KEY  = read_fixture('test_ca_subroot.key')
+
     #this chain contains 2 certs. root and OCSP delegate
     #in a prod environment you'd really only need the delegate
     #since the root would be present in the root store of the
@@ -106,6 +109,8 @@ module TestFixtures
     TEST_CA_OCSP_CHAIN  = read_fixture('test_ca_ocsp_chain.txt')
 
     TEST_CA_OCSP_RESPONSE = read_fixture('test_ca_ocsp_response.der')
+
+    TEST_CA_SUBROOT_OCSP_RESPONSE = read_fixture('test_ca_subroot_ocsp_response.der')
 
     SECOND_CA_CERT = read_fixture('second_ca.cer')
     SECOND_CA_KEY  = read_fixture('second_ca.key')
@@ -122,6 +127,10 @@ module TestFixtures
 
     def self.test_ca_cert
         R509::Cert.new(:cert => TEST_CA_CERT, :key => TEST_CA_KEY)
+    end
+
+    def self.test_ca_subroot_cert
+        R509::Cert.new(:cert => TEST_CA_SUBROOT_CERT, :key => TEST_CA_SUBROOT_KEY)
     end
 
     def self.test_ca_server_profile
