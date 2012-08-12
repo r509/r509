@@ -315,7 +315,7 @@ There is (relatively) complete documentation available for every method and clas
 See the LICENSE file. Licensed under the Apache 2.0 License.
 
 #YAML Config Options
-r509 configs are nested hashes of key:values that define the behavior of each CA. Each ca\_name is a key inside the parent certificate\_authorities hash (see r509.yaml for a full config example)
+r509 configs are nested hashes of key:values that define the behavior of each CA. See r509.yaml for a full example config.
 
 ##ca\_name
 ###ca\_cert
@@ -324,6 +324,7 @@ This hash defines the certificate + key that will be used to sign for the ca\_na
 * cert (cannot use with pkcs12)
 * key (cannot use with key)
 * engine (optional, cannot be used with key or pkcs12)
+* key\_name (required when using engine)
 * pkcs12 (optional, cannot be used with key or cert)
 * password (optional, used for pkcs12 or passworded private key)
 
@@ -333,6 +334,7 @@ This hash defines the certificate + key that will be used to sign for OCSP respo
 * cert (cannot use with pkcs12)
 * key (cannot use with key)
 * engine (optional, cannot be used with key or pkcs12)
+* key\_name (required when using engine)
 * pkcs12 (optional, cannot be used with key or cert)
 * password (optional, used for pkcs12 or passworded private key)
 
@@ -424,7 +426,7 @@ or
 ```
 
 ####subject\_item\_policy
-Hash of required/optional subject items. These must be in OpenSSL shortname format.
+Hash of required/optional subject items. These must be in OpenSSL shortname format. If subject\_item\_policy is excluded from the profile then all subject items will be used. If it is included, __only items listed in the policy will be copied to the certificate__.
 Example:
 
 ```yaml
