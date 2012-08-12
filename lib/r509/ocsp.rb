@@ -38,7 +38,7 @@ module R509::Ocsp
             @ocsp_response.basic
         end
 
-        # @param ca_cert [Array<OpenSSL::X509::Certificate>,OpenSSL::X509::Certificate] a single cert to verify against or an array of certs
+        # @param [Array<OpenSSL::X509::Certificate>,OpenSSL::X509::Certificate] certs A cert or array of certs to verify against
         # @return [Boolean] true if the response is valid according to the given root
         def verify(certs)
             store = OpenSSL::X509::Store.new
@@ -62,7 +62,7 @@ module R509::Ocsp
             return result
         end
 
-        # @param ocsp_request [OpenSSL::OCSP::Request] the OCSP request whose nonce to check
+        # @param [OpenSSL::OCSP::Request] ocsp_request the OCSP request whose nonce to check
         # @return [R509::Ocsp::Request::Nonce::CONSTANT] the status code of the nonce check
         def check_nonce(ocsp_request)
             ocsp_request.check_nonce(@ocsp_response.basic)

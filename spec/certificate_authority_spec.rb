@@ -134,15 +134,19 @@ describe R509::CertificateAuthority::Signer do
         cert = @ca.sign(:csr => csr, :profile_name => 'server', :message_digest => 'invalid')
         cert.cert.signature_algorithm.should == 'sha1WithRSAEncryption'
     end
-    it "generates random serial when serial is not specified" do
+    it "generates random serial when serial is not specified and uses microtime as part of the serial to prevent collision" do
+        now = Time.now
+        Time.stub!(:now).and_return(now)
+        time = now.to_i.to_s
         csr = R509::Csr.new(:csr => @csr3)
         cert = @ca.sign(:csr => csr, :profile_name => "server")
-        cert.cert.serial.to_s.size.should >= 48
+        cert.serial.to_s.size.should >= 45
+        cert.serial.to_s.index(time).should_not be_nil
     end
     it "accepts specified serial number" do
         csr = R509::Csr.new(:csr => @csr3)
         cert = @ca.sign(:csr => csr, :profile_name => "server", :serial => 12345)
-        cert.cert.serial.should == 12345
+        cert.serial.should == 12345
     end
     it "has default notBefore/notAfter dates" do
         not_before = (Time.now - (6 * 60 * 60)).utc

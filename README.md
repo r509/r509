@@ -1,5 +1,5 @@
 #r509 [![Build Status](https://secure.travis-ci.org/reaperhulk/r509.png)](http://travis-ci.org/reaperhulk/r509)
-r509 is a wrapper for various OpenSSL functions to allow easy creation of CSRs, signing of certificates, and revocation via CRL.
+r509 is a wrapper for various OpenSSL functions to allow easy creation of CSRs, signing of certificates, and revocation via CRL. Together with projects like [r509-ocsp-responder](https://github.com/reaperhulk/r509-ocsp-responder) and [r509-ca-http](https://github.com/sirsean/r509-ca-http) it is intended to be a complete certificate authority for use in production environments.
 
 ##Requirements/Installation
 
@@ -259,7 +259,7 @@ csr = R509::Csr.new(
 data_hash = csr.to_hash
 data_hash[:san_names] = ["sannames.com","domain2.com"]
 data_hash[:subject]["CN"] = "newdomain.com"
-data_hash[:subejct]["O"] = "Org 2.0"
+data_hash[:subject]["O"] = "Org 2.0"
 # assume config from yaml load above
 ca = R509::CertificateAuthority::Signer.new(config)
 cert = ca.sign(
@@ -306,9 +306,135 @@ R509::OidMapper.batch_register([
 
 There is (relatively) complete documentation available for every method and class in r509 available via yardoc. If you installed via gem it should be pre-generated in the doc directory. If you cloned this repo, just type ```rake yard``` with the yard gem installed. You will also need the redcarpet and github-markup gems to properly parse the Readme.md.
 
+
 ##Thanks to...
 * [Sean Schulte](https://github.com/sirsean)
 * [Mike Ryan](https://github.com/justfalter)
 
 ##License
 See the LICENSE file. Licensed under the Apache 2.0 License.
+
+#YAML Config Options
+r509 configs are nested hashes of key:values that define the behavior of each CA. Each ca\_name is a key inside the parent certificate\_authorities hash (see r509.yaml for a full config example)
+
+##ca\_name
+###ca\_cert
+This hash defines the certificate + key that will be used to sign for the ca\_name. Depending on desired configuration various elements are optional. You can even supply just __cert__ (for example, if you are using an ocsp\_cert hash and only using the configured CA for OCSP responses)
+
+* cert (cannot use with pkcs12)
+* key (cannot use with key)
+* engine (optional, cannot be used with key or pkcs12)
+* pkcs12 (optional, cannot be used with key or cert)
+* password (optional, used for pkcs12 or passworded private key)
+
+###ocsp\_cert
+This hash defines the certificate + key that will be used to sign for OCSP responses. OCSP responses cannot be directly created with r509, but require the ancillary gem [r509-ocsp-responder](https://github.com/reaperhulk/r509-ocsp-responder). This hash is optional and if not provided r509 will automatically use the ca\_cert as the OCSP certificate.
+
+* cert (cannot use with pkcs12)
+* key (cannot use with key)
+* engine (optional, cannot be used with key or pkcs12)
+* pkcs12 (optional, cannot be used with key or cert)
+* password (optional, used for pkcs12 or passworded private key)
+
+###cdp\_location
+The CRL distribution point for certificates issued from this CA.
+
+Example: 'URI:http://crl.r509.org/myca.crl'
+
+###crl\_list
+The path on the filesystem of the list of revoked certificates for this CA.
+
+Example: '/path/to/my\_ca\_crl\_list.txt'
+
+###crl\_number
+The path on the filesystem of the current CRL number for this CA.
+
+Example: '/path/to/my\_ca\_crl\_number.txt'
+
+###crl\_validity\_hours
+Integer hours for CRL validity.
+
+###ocsp\_location
+The OCSP AIA extension value for certificates issued from this CA.
+
+Example: 'URI:http://ocsp.r509.org'
+
+###ocsp\_chain
+An optional path to a concatenated text file of PEMs that should be attached to OCSP responses
+
+###ocsp\_validity\_hours
+Integer hours for OCSP response validity.
+
+###ocsp\_start\_skew\_seconds
+Integer seconds to skew back the "thisUpdate" field. This prevents issues where the OCSP responder signs a response and the client rejects it because the response is "not yet valid" due to slight clock synchronization problems.
+
+###message\_digest
+String value of the message digest to use for signing (both CRL and certificates). Allowed values are:
+
+* SHA1 (default)
+* SHA256
+* SHA512
+* MD5 (Don't use this unless you have a really, really good reason. Even then, you shouldn't)
+
+###profiles
+Each CA can have an arbitrary number of issuance profiles (with arbitrary names). For example, a CA named __test\_ca__ might have 3 issuance profiles: server, email, clientserver. Each of these profiles then has a set of options that define the encoded data in the certificate for that profile.
+
+####basic\_constraints
+All basic constraints are encoded with the critical bit set to true. In general you should only pass "CA:TRUE" (for an issuing CA) or "CA:FALSE" for everything else with this flag.
+
+####key\_usage
+An array of strings that conform to the OpenSSL naming scheme for available key usage OIDs. TODO: Document whether arbitrary OIDs can be passed here.
+
+* digitalSignature
+* nonRepudiation
+* keyEncipherment
+* dataEncipherment
+* keyAgreement
+* keyCertSign
+* cRLSign
+* encipherOnly
+* decipherOnly
+
+####extended\_key\_usage
+An array of strings that conform to the OpenSSL naming scheme for available EKU OIDs. The following list of allowed shortnames is taken from the OpenSSL docs.
+
+* serverAuth
+* clientAuth
+* codeSigning
+* emailProtection
+* timeStamping
+* msCodeInd
+* msCodeCom
+* msCTLSign
+* msSGC
+* msEFS
+* nsSGC
+
+####certificate\_policies
+An array of arrays containing policy identifiers and CPS URIs. For example:
+
+```yaml
+[ [ "policyIdentifier=2.16.840.1.9999999.1.2.3.4.2","CPS.1=http://r509.org/cps" ] ]
+```
+
+or
+
+```yaml
+[ ["policyIdentifier=2.16.840.1.999999.0"], [ "policyIdentifier=2.16.840.1.9999999.1.2.3.4.2","CPS.1=http://r509.org/cps" ] ]
+```
+
+####subject\_item\_policy
+Hash of required/optional subject items. These must be in OpenSSL shortname format.
+Example:
+
+```yaml
+CN : "required",
+O: "required",
+OU: "optional",
+ST: "required",
+C: "required",
+L: "required",
+emailAddress: "optional"
+```
+
+If you use the R509::OidMapper you can create new shortnames that are allowed within this directive.
