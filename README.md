@@ -379,7 +379,7 @@ String value of the message digest to use for signing (both CRL and certificates
 * MD5 (Don't use this unless you have a really, really good reason. Even then, you shouldn't)
 
 ###profiles
-Each CA can have an arbitrary number of issuance profiles (with arbitrary names). For example, a CA named __test\_ca__ might have 3 issuance profiles: server, email, clientserver. Each of these profiles then has a set of options that define the encoded data in the certificate for that profile.
+Each CA can have an arbitrary number of issuance profiles (with arbitrary names). For example, a CA named __test\_ca__ might have 3 issuance profiles: server, email, clientserver. Each of these profiles then has a set of options that define the encoded data in the certificate for that profile. If no profiles are defined the root cannot issue certs, but can still issue CRLs.
 
 ####basic\_constraints
 All basic constraints are encoded with the critical bit set to true. In general you should only pass "CA:TRUE" (for an issuing CA) or "CA:FALSE" for everything else with this flag.
