@@ -39,6 +39,12 @@ shared_examples_for "a correctly implemented wrap_openssl_extensions" do
   end
 end
 
+shared_examples_for "a correctly implemented get_unknown_extensions" do
+  it "should not have returned values that are R509 extensions" do
+      R509::Cert::Extensions.get_unknown_extensions( @openssl_extensions ).should == @unknown_extensions
+  end
+end
+
 shared_examples_for "a correct R509 BasicConstraints object" do
     before :all do
         extension_name = "basicConstraints"
@@ -193,72 +199,117 @@ describe R509::Cert::Extensions do
     include R509::Cert::Extensions
     
     context "Class functions" do
-        context "wrap_openssl_extensions" do
+        context "#wrap_openssl_extensions and #get_unknown_extensions" do
             context "with no extensions" do
                 before :each do
-                    @openssl_extensions = []
-                    @wrappable_extensions = @openssl_extensions
+                    @wrappable_extensions = []
+                    @unknown_extensions = []
+                    
+                    @openssl_extensions = @wrappable_extensions + @unknown_extensions
                 end
                 
                 it_should_behave_like "a correctly implemented wrap_openssl_extensions"
+                it_should_behave_like "a correctly implemented get_unknown_extensions"
             end
             
             context "with one implemented extension" do
                 before :each do
-                    @openssl_extensions = []
-                    @openssl_extensions << OpenSSL::X509::Extension.new( "basicConstraints", "CA:TRUE;pathlen:0" )
-                    @wrappable_extensions = @openssl_extensions
+                    @wrappable_extensions = []
+                    @wrappable_extensions << OpenSSL::X509::Extension.new( "basicConstraints", "CA:TRUE;pathlen:0" )
+                    
+                    @unknown_extensions = []
+                    
+                    @openssl_extensions = @wrappable_extensions + @unknown_extensions
                 end
                 
                 it_should_behave_like "a correctly implemented wrap_openssl_extensions"
+                it_should_behave_like "a correctly implemented get_unknown_extensions"
             end
             
             context "with all implemented extensions" do
                 before :each do
-                    @openssl_extensions = []
-                    @openssl_extensions << OpenSSL::X509::Extension.new( "basicConstraints", "CA:TRUE;pathlen:0" )
-                    @openssl_extensions << OpenSSL::X509::Extension.new( "keyUsage", KeyUsage::AU_DIGITAL_SIGNATURE )
-                    @openssl_extensions << OpenSSL::X509::Extension.new( "extendedKeyUsage", ExtendedKeyUsage::AU_WEB_SERVER_AUTH )
-                    @openssl_extensions << OpenSSL::X509::Extension.new( "subjectKeyIdentifier", "00:11:22:33:44:55:66:77:88:99:00:AA:BB:CC:DD:EE:FF:00:11:22" )
-                    @openssl_extensions << OpenSSL::X509::Extension.new( "authorityKeyIdentifier", "keyid:always" )
-                    @openssl_extensions << OpenSSL::X509::Extension.new( "subjectAltName", "DNS:www.test.local" )
-                    @openssl_extensions << OpenSSL::X509::Extension.new( "authorityInfoAccess", "CA Issuers - URI:http://www.test.local" )
-                    @openssl_extensions << OpenSSL::X509::Extension.new( "crlDistributionPoints", "URI:http://www.test.local" )
-                    @wrappable_extensions = @openssl_extensions
+                    @wrappable_extensions = []
+                    @wrappable_extensions << OpenSSL::X509::Extension.new( "basicConstraints", "CA:TRUE;pathlen:0" )
+                    @wrappable_extensions << OpenSSL::X509::Extension.new( "keyUsage", KeyUsage::AU_DIGITAL_SIGNATURE )
+                    @wrappable_extensions << OpenSSL::X509::Extension.new( "extendedKeyUsage", ExtendedKeyUsage::AU_WEB_SERVER_AUTH )
+                    @wrappable_extensions << OpenSSL::X509::Extension.new( "subjectKeyIdentifier", "00:11:22:33:44:55:66:77:88:99:00:AA:BB:CC:DD:EE:FF:00:11:22" )
+                    @wrappable_extensions << OpenSSL::X509::Extension.new( "authorityKeyIdentifier", "keyid:always" )
+                    @wrappable_extensions << OpenSSL::X509::Extension.new( "subjectAltName", "DNS:www.test.local" )
+                    @wrappable_extensions << OpenSSL::X509::Extension.new( "authorityInfoAccess", "CA Issuers - URI:http://www.test.local" )
+                    @wrappable_extensions << OpenSSL::X509::Extension.new( "crlDistributionPoints", "URI:http://www.test.local" )
+                    
+                    @unknown_extensions = []
+                    
+                    @openssl_extensions = @wrappable_extensions + @unknown_extensions
                 end
                 
                 it_should_behave_like "a correctly implemented wrap_openssl_extensions"
+                it_should_behave_like "a correctly implemented get_unknown_extensions"
             end
             
             context "with an unimplemented extension" do
                 before :each do
-                    @openssl_extensions = []
-                    @openssl_extensions << OpenSSL::X509::Extension.new( "issuerAltName", "DNS:www.test.local" )
                     @wrappable_extensions = []
+                    
+                    @unknown_extensions = []
+                    @unknown_extensions << OpenSSL::X509::Extension.new( "issuerAltName", "DNS:www.test.local" )
+                    
+                    @openssl_extensions = @wrappable_extensions + @unknown_extensions
                 end
                 
                 it_should_behave_like "a correctly implemented wrap_openssl_extensions"
+                it_should_behave_like "a correctly implemented get_unknown_extensions"
             end
             
-            context "with multiple extensions of one type" do
+            context "with implemented and unimplemented extensions" do
                 before :each do
-                    @openssl_extensions = []
-                    @openssl_extensions << OpenSSL::X509::Extension.new( "basicConstraints", "CA:TRUE;pathlen:0" )
-                    @openssl_extensions << OpenSSL::X509::Extension.new( "basicConstraints", "CA:TRUE;pathlen:1" )
-                    @wrappable_extensions = @openssl_extensions
+                    @wrappable_extensions = []
+                    @wrappable_extensions << OpenSSL::X509::Extension.new( "basicConstraints", "CA:TRUE;pathlen:0" )
+                    
+                    @unknown_extensions = []
+                    @unknown_extensions << OpenSSL::X509::Extension.new( "issuerAltName", "DNS:www.test.local" )
+                    
+                    @openssl_extensions = @wrappable_extensions + @unknown_extensions
                 end
                 
-                it "should raise an ArgumentError" do
+                it_should_behave_like "a correctly implemented wrap_openssl_extensions"
+                it_should_behave_like "a correctly implemented get_unknown_extensions"
+            end
+            
+            context "with multiple extensions of an implemented type" do
+                before :each do
+                    @wrappable_extensions = []
+                    @wrappable_extensions << OpenSSL::X509::Extension.new( "basicConstraints", "CA:TRUE;pathlen:0" )
+                    @wrappable_extensions << OpenSSL::X509::Extension.new( "basicConstraints", "CA:TRUE;pathlen:1" )
+                    
+                    @unknown_extensions = []
+                    @unknown_extensions << OpenSSL::X509::Extension.new( "issuerAltName", "DNS:www.test.local" )
+                    
+                    @openssl_extensions = @wrappable_extensions + @unknown_extensions
+                end
+                
+                it "should raise an ArgumentError for #wrap_openssl_extensions" do
                     expect {
                         R509::Cert::Extensions.wrap_openssl_extensions( @openssl_extensions )
                     }.to raise_error(ArgumentError)
                 end
+                it_should_behave_like "a correctly implemented get_unknown_extensions"
             end
-        end
-        
-        context "get_unknown_extensions" do
-            context "" do
+            
+            context "with multiple extensions of an unimplemented type" do
+                before :each do
+                    @wrappable_extensions = []
+                    @wrappable_extensions << OpenSSL::X509::Extension.new( "basicConstraints", "CA:TRUE;pathlen:0" )
+                    
+                    @unknown_extensions = []
+                    @unknown_extensions << OpenSSL::X509::Extension.new( "issuerAltName", "DNS:www.test.local" )
+                    @unknown_extensions << OpenSSL::X509::Extension.new( "issuerAltName", "DNS:www2.test.local" )
+                    
+                    @openssl_extensions = @wrappable_extensions + @unknown_extensions
+                end
                 
+                it_should_behave_like "a correctly implemented wrap_openssl_extensions"
+                it_should_behave_like "a correctly implemented get_unknown_extensions"
             end
         end
     end
