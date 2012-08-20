@@ -24,6 +24,7 @@ shared_examples_for "a correctly implemented wrap_openssl_extensions" do
   
   it "should not have returned keys improperly mapped to values" do
       incorrect_mappings = @r509_extensions.select { |key_class,ext| ext.class != key_class }
+      incorrect_mappings = {} if incorrect_mappings == [] # compatibility for old versions of Ruby
       incorrect_mappings.should == {}
   end
   
