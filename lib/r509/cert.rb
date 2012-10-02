@@ -45,6 +45,10 @@ module R509
             end
         end
 
+        # Helper method to quickly load a cert from the filesystem
+        #
+        # @param [String] filename Path to file you want to load
+        # @return [R509::Cert] cert object
         def self.load_from_file( filename )
             return R509::Cert.new(:cert => IOHelpers.read_data(filename) )
         end
@@ -120,6 +124,7 @@ module R509
 
         # Returns the certificate fingerprint with the specified algorithm (default sha1)
         #
+        # @param [String] algorithm Which algorithm to use for the fingerprint. See R509::MessageDigest for supported algorithm names
         # @return [String] hex digest of the certificate
         def fingerprint(algorithm='sha1')
             message_digest = R509::MessageDigest.new(algorithm)

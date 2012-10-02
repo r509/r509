@@ -81,6 +81,10 @@ module R509
 
         end
 
+        # Helper method to quickly load a CSR from the filesystem
+        #
+        # @param [String] filename Path to file you want to load
+        # @return [R509::Csr] Csr object
         def self.load_from_file( filename )
             return R509::Csr.new(:csr => IOHelpers.read_data(filename) )
         end
