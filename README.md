@@ -37,6 +37,8 @@ To load an existing CSR (without private key)
 ```ruby
 csr_pem = File.read("/path/to/csr")
 csr = R509::Csr.new(:csr => csr_pem)
+# or
+csr = R509::Csr.load_from_file("/path/to/csr")
 ```
 
 To create a new CSR from the subject of a certificate
@@ -61,6 +63,8 @@ To load an existing certificate
 ```ruby
 cert_pem = File.read("/path/to/cert")
 cert = R509::Cert.new(:cert => cert_pem)
+# or
+cert = R509::Cert.load_from_file("/path/to/cert")
 ```
 
 Load a cert and key
