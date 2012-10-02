@@ -293,4 +293,10 @@ describe R509::Csr do
         csr.bit_strength.should == 1024
     end
 
+    it "loads a csr with load_from_file" do
+        path = File.dirname(__FILE__) + '/fixtures/csr1.pem'
+        csr = R509::Csr.load_from_file path
+        csr.message_digest.name.should == 'sha1'
+    end
+
 end

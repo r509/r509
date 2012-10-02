@@ -8,6 +8,12 @@ describe R509::Crl::Parser do
         @test_ca_cert = TestFixtures::TEST_CA_CERT
     end
 
+    it "loads a crl with load_from_file" do
+        path = File.dirname(__FILE__) + '/fixtures/crl_with_reason.pem'
+        crl = R509::Crl::Parser.load_from_file path
+        crl.revoked[12345].should_not be_nil
+    end
+
     it "returns issuer" do
         @crl.issuer.to_s.should == "/C=US/ST=Illinois/L=Chicago/O=Ruby CA Project/CN=Test CA"
     end

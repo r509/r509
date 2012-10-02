@@ -81,6 +81,10 @@ module R509
 
         end
 
+        def self.load_from_file( filename )
+            return R509::Csr.new(:csr => IOHelpers.read_data(filename) )
+        end
+
         # @return [OpenSSL::PKey::RSA] public key
         def public_key
             if(@req.kind_of?(OpenSSL::X509::Request)) then

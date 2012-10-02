@@ -184,5 +184,15 @@ describe R509::PrivateKey do
         key.kind_of?(R509::PrivateKey).should == true
         key.public_key.should == "returning public key"
     end
+    it "loads a private key with load_from_file" do
+        path = File.dirname(__FILE__) + '/fixtures/key4.pem'
+        key = R509::PrivateKey.load_from_file path
+        key.rsa?.should == true
+    end
+    it "loads a private key with load_from_file with password" do
+        path = File.dirname(__FILE__) + '/fixtures/key4_encrypted_des3.pem'
+        key = R509::PrivateKey.load_from_file( path, 'r509')
+        key.rsa?.should == true
+    end
 end
 

@@ -15,6 +15,10 @@ module R509
                 @crl = OpenSSL::X509::CRL.new(crl)
             end
 
+            def self.load_from_file( filename )
+                return R509::Crl::Parser.new( IOHelpers.read_data(filename) )
+            end
+
             # @return [OpenSSL::X509::Name]
             def issuer
                 @crl.issuer

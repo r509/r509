@@ -59,6 +59,11 @@ module R509
             end
         end
 
+        def self.load_from_file( filename, password = nil )
+          return R509::PrivateKey.new(:key => IOHelpers.read_data(filename), :password => password )
+        end
+
+
         # @return [Integer]
         def bit_strength
             if self.rsa?

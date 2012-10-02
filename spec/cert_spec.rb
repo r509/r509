@@ -313,4 +313,9 @@ describe R509::Cert do
         crl = crl_admin.to_crl
         cert.is_revoked_by_crl?(crl).should == false
     end
+    it "loads a cert with load_from_file" do
+        path = File.dirname(__FILE__) + '/fixtures/cert1.pem'
+        cert = R509::Cert.load_from_file path
+        cert.serial.to_i.should == 211653423715
+    end
 end
