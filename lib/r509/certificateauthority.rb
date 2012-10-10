@@ -204,7 +204,7 @@ module R509::CertificateAuthority
                 # to prevent even the incredibly remote possibility of collision we'll
                 # concatenate current time (to the microsecond) with a random num
                 rand = OpenSSL::BN.rand(96,0) # 96 bits is 12 bytes (octets).
-                serial = OpenSSL::BN.new ((Time.now.to_f*1000000).to_i.to_s + rand.to_s)
+                serial = OpenSSL::BN.new((Time.now.to_f*1000000).to_i.to_s + rand.to_s)
                 # since second param is 0 the most significant bit must always be 1
                 # this theoretically gives us 95 bits of entropy + microtime, which
                 # adds a non-zero quantity of entropy. depending upon how predictable
