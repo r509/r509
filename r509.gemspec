@@ -16,7 +16,7 @@ spec = Gem::Specification.new do |s|
   s.homepage = "http://r509.org"
   s.required_ruby_version = ">= 1.8.6"
   s.files = %w(README.md r509.yaml Rakefile) + Dir["{lib,bin,spec,doc}/**/*"]
-  s.executables = ["r509"]
+  s.executables = ["r509","r509-parse"]
   s.test_files= Dir.glob('test/*_spec.rb')
   s.require_path = "lib"
 end
