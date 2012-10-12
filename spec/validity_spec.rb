@@ -55,11 +55,19 @@ describe R509::Validity do
             writer = R509::Validity::Writer.new
             expect { writer.revoke("a",1, 1) }.to raise_error(NotImplementedError, "You must call #revoke on a subclass of Writer")
         end
+        it "calls is_available?" do
+            writer = R509::Validity::Writer.new
+            expect { writer.is_available? }.to raise_error(NotImplementedError, "You must call #is_available? on a subclass of Writer")
+        end
     end
     context "checker base" do
         it "calls check" do
             checker = R509::Validity::Checker.new
             expect { checker.check("a",1) }.to raise_error(NotImplementedError, "You must call #check on a subclass of Checker")
+        end
+        it "calls is_available?" do
+            checker = R509::Validity::Checker.new
+            expect { checker.is_available? }.to raise_error(NotImplementedError, "You must call #is_available? on a subclass of Checker")
         end
     end
     context "writer default" do
@@ -71,12 +79,20 @@ describe R509::Validity do
             writer = R509::Validity::DefaultWriter.new
             writer.revoke("a",1, 1)
         end
+        it "calls is_available?" do
+            writer = R509::Validity::DefaultWriter.new
+            writer.is_available?.should == true
+        end
     end
     context "checker default" do
         it "calls check" do
             checker = R509::Validity::DefaultChecker.new
             status = checker.check("a",1)
             status.status.should == R509::Validity::VALID
+        end
+        it "calls is_available?" do
+            checker = R509::Validity::DefaultChecker.new
+            checker.is_available?.should == true
         end
     end
 end

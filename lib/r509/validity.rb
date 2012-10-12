@@ -45,6 +45,12 @@ module R509::Validity
         def revoke(issuer, serial, reason)
             raise NotImplementedError, "You must call #revoke on a subclass of Writer"
         end
+
+        # is_available? is meant to be implemented to check if the backend store you choose to implement is currently working.
+        # see r509-ocsp-responder and r509-validity-redis for an example of use
+        def is_available?
+            raise NotImplementedError, "You must call #is_available? on a subclass of Writer"
+        end
     end
 
     #abstract base class for a Checker
@@ -52,12 +58,22 @@ module R509::Validity
         def check(issuer, serial)
             raise NotImplementedError, "You must call #check on a subclass of Checker"
         end
+
+        # is_available? is meant to be implemented to check if the backend store you choose to implement is currently working.
+        # see r509-ocsp-responder and r509-validity-redis for an example of use
+        def is_available?
+            raise NotImplementedError, "You must call #is_available? on a subclass of Checker"
+        end
     end
 
     #default implementaton of the Checker class. Used for tests. DO NOT USE OTHERWISE
     class DefaultChecker < R509::Validity::Checker
         def check(issuer, serial)
             R509::Validity::Status.new(:status => R509::Validity::VALID)
+        end
+
+        def is_available?
+            true
         end
     end
 
@@ -67,6 +83,10 @@ module R509::Validity
         end
 
         def revoke(issuer, serial, reason)
+        end
+
+        def is_available?
+            true
         end
     end
 end
