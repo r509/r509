@@ -402,12 +402,13 @@ An array of strings that conform to the OpenSSL naming scheme for available key 
 * decipherOnly
 
 ####extended\_key\_usage
-An array of strings that conform to the OpenSSL naming scheme for available EKU OIDs. The following list of allowed shortnames is taken from the OpenSSL docs.
+An array of strings that conform to the OpenSSL naming scheme for available EKU OIDs. The following list of allowed shortnames is taken from the OpenSSL docs. Depending on your OpenSSL version there may be more than this list.
 
 * serverAuth
 * clientAuth
 * codeSigning
 * emailProtection
+* OCSPSigning
 * timeStamping
 * msCodeInd
 * msCodeCom
