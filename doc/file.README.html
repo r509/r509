@@ -6,7 +6,7 @@
 <title>
   File: README
   
-    &mdash; Documentation by YARD 0.8.2.1
+    &mdash; Documentation by YARD 0.8.0
   
 </title>
 
@@ -63,7 +63,7 @@
 
     <div id="content"><div id='filecontents'><h1>r509 <a href="http://travis-ci.org/reaperhulk/r509"><img src="https://secure.travis-ci.org/reaperhulk/r509.png" alt="Build Status"></a></h1>
 
-<p>r509 is a wrapper for various OpenSSL functions to allow easy creation of CSRs, signing of certificates, and revocation via CRL.</p>
+<p>r509 is a wrapper for various OpenSSL functions to allow easy creation of CSRs, signing of certificates, and revocation via CRL. Together with projects like <a href="https://github.com/reaperhulk/r509-ocsp-responder">r509-ocsp-responder</a> and <a href="https://github.com/sirsean/r509-ca-http">r509-ca-http</a> it is intended to be a complete certificate authority for use in production environments.</p>
 
 <h2>Requirements/Installation</h2>
 
@@ -103,6 +103,8 @@ To install the gem: <code>gem install r509-(version).gem</code></p>
 
 <pre class="code ruby"><code><span class='id identifier rubyid_csr_pem'>csr_pem</span> <span class='op'>=</span> <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_read'>read</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>/path/to/csr</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
 <span class='id identifier rubyid_csr'>csr</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>Csr</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='symbol'>:csr</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_csr_pem'>csr_pem</span><span class='rparen'>)</span>
+<span class='comment'># or
+</span><span class='id identifier rubyid_csr'>csr</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>Csr</span><span class='period'>.</span><span class='id identifier rubyid_load_from_file'>load_from_file</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>/path/to/csr</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
 </code></pre>
 
 <p>To create a new CSR from the subject of a certificate</p>
@@ -125,6 +127,8 @@ To install the gem: <code>gem install r509-(version).gem</code></p>
 
 <pre class="code ruby"><code><span class='id identifier rubyid_cert_pem'>cert_pem</span> <span class='op'>=</span> <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_read'>read</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>/path/to/cert</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
 <span class='id identifier rubyid_cert'>cert</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>Cert</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='symbol'>:cert</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_cert_pem'>cert_pem</span><span class='rparen'>)</span>
+<span class='comment'># or
+</span><span class='id identifier rubyid_cert'>cert</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>Cert</span><span class='period'>.</span><span class='id identifier rubyid_load_from_file'>load_from_file</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>/path/to/cert</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
 </code></pre>
 
 <p>Load a cert and key</p>
@@ -311,7 +315,7 @@ To install the gem: <code>gem install r509-(version).gem</code></p>
 <span class='id identifier rubyid_data_hash'>data_hash</span> <span class='op'>=</span> <span class='id identifier rubyid_csr'>csr</span><span class='period'>.</span><span class='id identifier rubyid_to_hash'>to_hash</span>
 <span class='id identifier rubyid_data_hash'>data_hash</span><span class='lbracket'>[</span><span class='symbol'>:san_names</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>sannames.com</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>domain2.com</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span>
 <span class='id identifier rubyid_data_hash'>data_hash</span><span class='lbracket'>[</span><span class='symbol'>:subject</span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>CN</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>newdomain.com</span><span class='tstring_end'>&quot;</span></span>
-<span class='id identifier rubyid_data_hash'>data_hash</span><span class='lbracket'>[</span><span class='symbol'>:subejct</span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>O</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Org 2.0</span><span class='tstring_end'>&quot;</span></span>
+<span class='id identifier rubyid_data_hash'>data_hash</span><span class='lbracket'>[</span><span class='symbol'>:subject</span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>O</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Org 2.0</span><span class='tstring_end'>&quot;</span></span>
 <span class='comment'># assume config from yaml load above
 </span><span class='id identifier rubyid_ca'>ca</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>CertificateAuthority</span><span class='op'>::</span><span class='const'>Signer</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_config'>config</span><span class='rparen'>)</span>
 <span class='id identifier rubyid_cert'>cert</span> <span class='op'>=</span> <span class='id identifier rubyid_ca'>ca</span><span class='period'>.</span><span class='id identifier rubyid_sign'>sign</span><span class='lparen'>(</span>
@@ -364,12 +368,166 @@ To install the gem: <code>gem install r509-(version).gem</code></p>
 <h2>License</h2>
 
 <p>See the LICENSE file. Licensed under the Apache 2.0 License.</p>
+
+<h1>YAML Config Options</h1>
+
+<p>r509 configs are nested hashes of key:values that define the behavior of each CA. See r509.yaml for a full example config.</p>
+
+<h2>ca_name</h2>
+
+<h3>ca_cert</h3>
+
+<p>This hash defines the certificate + key that will be used to sign for the ca_name. Depending on desired configuration various elements are optional. You can even supply just <strong>cert</strong> (for example, if you are using an ocsp_cert hash and only using the configured CA for OCSP responses)</p>
+
+<ul>
+<li>cert (cannot use with pkcs12)</li>
+<li>key (cannot use with key)</li>
+<li>engine (optional, cannot be used with key or pkcs12)</li>
+<li>key_name (required when using engine)</li>
+<li>pkcs12 (optional, cannot be used with key or cert)</li>
+<li>password (optional, used for pkcs12 or passworded private key)</li>
+</ul>
+
+<h3>ocsp_cert</h3>
+
+<p>This hash defines the certificate + key that will be used to sign for OCSP responses. OCSP responses cannot be directly created with r509, but require the ancillary gem <a href="https://github.com/reaperhulk/r509-ocsp-responder">r509-ocsp-responder</a>. This hash is optional and if not provided r509 will automatically use the ca_cert as the OCSP certificate.</p>
+
+<ul>
+<li>cert (cannot use with pkcs12)</li>
+<li>key (cannot use with key)</li>
+<li>engine (optional, cannot be used with key or pkcs12)</li>
+<li>key_name (required when using engine)</li>
+<li>pkcs12 (optional, cannot be used with key or cert)</li>
+<li>password (optional, used for pkcs12 or passworded private key)</li>
+</ul>
+
+<h3>cdp_location</h3>
+
+<p>The CRL distribution point for certificates issued from this CA.</p>
+
+<p>Example: &#39;URI:<a href="http://crl.r509.org/myca.crl">http://crl.r509.org/myca.crl</a>&#39;</p>
+
+<h3>crl_list</h3>
+
+<p>The path on the filesystem of the list of revoked certificates for this CA.</p>
+
+<p>Example: &#39;/path/to/my_ca_crl_list.txt&#39;</p>
+
+<h3>crl_number</h3>
+
+<p>The path on the filesystem of the current CRL number for this CA.</p>
+
+<p>Example: &#39;/path/to/my_ca_crl_number.txt&#39;</p>
+
+<h3>crl_validity_hours</h3>
+
+<p>Integer hours for CRL validity.</p>
+
+<h3>ocsp_location</h3>
+
+<p>The OCSP AIA extension value for certificates issued from this CA.</p>
+
+<p>Example: &#39;URI:<a href="http://ocsp.r509.org">http://ocsp.r509.org</a>&#39;</p>
+
+<h3>ocsp_chain</h3>
+
+<p>An optional path to a concatenated text file of PEMs that should be attached to OCSP responses</p>
+
+<h3>ocsp_validity_hours</h3>
+
+<p>Integer hours for OCSP response validity.</p>
+
+<h3>ocsp_start_skew_seconds</h3>
+
+<p>Integer seconds to skew back the &quot;thisUpdate&quot; field. This prevents issues where the OCSP responder signs a response and the client rejects it because the response is &quot;not yet valid&quot; due to slight clock synchronization problems.</p>
+
+<h3>message_digest</h3>
+
+<p>String value of the message digest to use for signing (both CRL and certificates). Allowed values are:</p>
+
+<ul>
+<li>SHA1 (default)</li>
+<li>SHA256</li>
+<li>SHA512</li>
+<li>MD5 (Don&#39;t use this unless you have a really, really good reason. Even then, you shouldn&#39;t)</li>
+</ul>
+
+<h3>profiles</h3>
+
+<p>Each CA can have an arbitrary number of issuance profiles (with arbitrary names). For example, a CA named <strong>test_ca</strong> might have 3 issuance profiles: server, email, clientserver. Each of these profiles then has a set of options that define the encoded data in the certificate for that profile. If no profiles are defined the root cannot issue certs, but can still issue CRLs.</p>
+
+<h4>basic_constraints</h4>
+
+<p>All basic constraints are encoded with the critical bit set to true. In general you should only pass &quot;CA:TRUE&quot; (for an issuing CA) or &quot;CA:FALSE&quot; for everything else with this flag.</p>
+
+<h4>key_usage</h4>
+
+<p>An array of strings that conform to the OpenSSL naming scheme for available key usage OIDs. TODO: Document whether arbitrary OIDs can be passed here.</p>
+
+<ul>
+<li>digitalSignature</li>
+<li>nonRepudiation</li>
+<li>keyEncipherment</li>
+<li>dataEncipherment</li>
+<li>keyAgreement</li>
+<li>keyCertSign</li>
+<li>cRLSign</li>
+<li>encipherOnly</li>
+<li>decipherOnly</li>
+</ul>
+
+<h4>extended_key_usage</h4>
+
+<p>An array of strings that conform to the OpenSSL naming scheme for available EKU OIDs. The following list of allowed shortnames is taken from the OpenSSL docs. Depending on your OpenSSL version there may be more than this list.</p>
+
+<ul>
+<li>serverAuth</li>
+<li>clientAuth</li>
+<li>codeSigning</li>
+<li>emailProtection</li>
+<li>OCSPSigning</li>
+<li>timeStamping</li>
+<li>msCodeInd</li>
+<li>msCodeCom</li>
+<li>msCTLSign</li>
+<li>msSGC</li>
+<li>msEFS</li>
+<li>nsSGC</li>
+</ul>
+
+<h4>certificate_policies</h4>
+
+<p>An array of arrays containing policy identifiers and CPS URIs. For example:</p>
+
+<pre class="code yaml"><code>[ [ &quot;policyIdentifier=2.16.840.1.9999999.1.2.3.4.2&quot;,&quot;CPS.1=http://r509.org/cps&quot; ] ]
+</code></pre>
+
+<p>or</p>
+
+<pre class="code yaml"><code>[ [&quot;policyIdentifier=2.16.840.1.999999.0&quot;], [ &quot;policyIdentifier=2.16.840.1.9999999.1.2.3.4.2&quot;,&quot;CPS.1=http://r509.org/cps&quot; ] ]
+</code></pre>
+
+<h4>subject_item_policy</h4>
+
+<p>Hash of required/optional subject items. These must be in OpenSSL shortname format. If subject_item_policy is excluded from the profile then all subject items will be used. If it is included, <strong>only items listed in the policy will be copied to the certificate</strong>.
+Example:</p>
+
+<pre class="code yaml"><code>CN : &quot;required&quot;,
+O: &quot;required&quot;,
+OU: &quot;optional&quot;,
+ST: &quot;required&quot;,
+C: &quot;required&quot;,
+L: &quot;required&quot;,
+emailAddress: &quot;optional&quot;
+</code></pre>
+
+<p>If you use the R509::OidMapper you can create new shortnames that are allowed within this directive.</p>
 </div></div>
 
     <div id="footer">
-  Generated on Wed Aug  8 10:13:43 2012 by
+  Generated on Tue Oct 23 22:52:00 2012 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.8.2.1 (ruby-1.9.3).
+  0.8.0 (ruby-1.9.3).
 </div>
 
   </body>

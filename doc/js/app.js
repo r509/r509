@@ -103,34 +103,28 @@ function keyboardShortcuts() {
 
 function summaryToggle() {
   $('.summary_toggle').click(function() {
-    if (localStorage) {
-      localStorage.summaryCollapsed = $(this).text();
+    localStorage.summaryCollapsed = $(this).text();
+    $(this).text($(this).text() == "collapse" ? "expand" : "collapse");
+    var next = $(this).parent().parent().nextAll('ul.summary').first();
+    if (next.hasClass('compact')) {
+      next.toggle();
+      next.nextAll('ul.summary').first().toggle();
     }
-    $('.summary_toggle').each(function() {
-      $(this).text($(this).text() == "collapse" ? "expand" : "collapse");
-      var next = $(this).parent().parent().nextAll('ul.summary').first();
-      if (next.hasClass('compact')) {
-        next.toggle();
-        next.nextAll('ul.summary').first().toggle();
-      }
-      else if (next.hasClass('summary')) {
-        var list = $('<ul class="summary compact" />');
-        list.html(next.html());
-        list.find('.summary_desc, .note').remove();
-        list.find('a').each(function() {
-          $(this).html($(this).find('strong').html());
-          $(this).parent().html($(this)[0].outerHTML);
-        });
-        next.before(list);
-        next.toggle();
-      }
-    });
+    else if (next.hasClass('summary')) {
+      var list = $('<ul class="summary compact" />');
+      list.html(next.html());
+      list.find('.summary_desc, .note').remove();
+      list.find('a').each(function() {
+        $(this).html($(this).find('strong').html());
+        $(this).parent().html($(this)[0].outerHTML);
+      });
+      next.before(list);
+      next.toggle();
+    }
     return false;
   });
   if (localStorage) {
-    if (localStorage.summaryCollapsed == "collapse") {
-      $('.summary_toggle').first().click();
-    }
+    if (localStorage.summaryCollapsed == "collapse") $('.summary_toggle').click();
     else localStorage.summaryCollapsed = "expand";
   }
 }

@@ -6,7 +6,7 @@
 <title>
   File: r509
   
-    &mdash; Documentation by YARD 0.8.2.1
+    &mdash; Documentation by YARD 0.8.0
   
 </title>
 
@@ -62,64 +62,77 @@
     <iframe id="search_frame"></iframe>
 
     <div id="content"><div id='filecontents'>
-<p>test_ca: {</p>
+<p>certificate_authorities: {</p>
 
-<pre class="code ruby"><code>ca_cert: {
-    cert: 'spec/fixtures/test_ca.cer',
-    key: 'spec/fixtures/test_ca.key'
-},
-#ocsp_cert: {
-#    :cert: 'spec/fixtures/test_ca.cer',
-#    :key: 'spec/fixtures/test_ca.key',
-#},
-cdp_location: 'URI:http://crl.domain.com/test_ca.crl',
-crl_list: 'spec/fixtures/test_ca_crl_list.txt',
-crl_number: 'spec/fixtures/test_ca_crl_number.txt',
-crl_validity_hours: 168, #7 days
-ocsp_location: 'URI:http://ocsp.domain.com',
-message_digest: 'SHA1', #SHA1, SHA256, SHA512 supported. MD5 too, but you really shouldn't use that unless you have a good reason
-profiles: {
-    server: {
-        basic_constraints: &quot;CA:FALSE&quot;,
-        key_usage: [digitalSignature,keyEncipherment],
-        extended_key_usage: [serverAuth],
-        certificate_policies: [ [ &quot;policyIdentifier=2.16.840.1.9999999999.1.2.3.4.1&quot;, &quot;CPS.1=http://example.com/cps&quot;] ]
+<pre class="code ruby"><code>test_ca: {
+    ca_cert: {
+        cert: 'spec/fixtures/test_ca.cer',
+        key: 'spec/fixtures/test_ca.key'
     },
-    client: {
-        basic_constraints: &quot;CA:FALSE&quot;,
-        key_usage: [digitalSignature,keyEncipherment],
-        extended_key_usage: [clientAuth],
-        certificate_policies: [ [ &quot;policyIdentifier=2.16.840.1.9999999999.1.2.3.4.2&quot;, &quot;CPS.1=http://example.com/cps&quot;] ]
+    ocsp_cert: {
+        :pkcs12: 'spec/fixtures/test_ca_ocsp.p12',
+        :password: 'r509'
     },
-    email: {
-        basic_constraints: &quot;CA:FALSE&quot;,
-        key_usage: [digitalSignature,keyEncipherment],
-        extended_key_usage: [emailProtection],
-        certificate_policies: [ [ &quot;policyIdentifier=2.16.840.1.9999999999.1.2.3.4.3&quot;, &quot;CPS.1=http://example.com/cps&quot;] ]
-    },
-    clientserver: {
-        basic_constraints:  &quot;CA:FALSE&quot;,
-        key_usage: [digitalSignature,keyEncipherment],
-        extended_key_usage: [serverAuth,clientAuth],
-        certificate_policies: [ [ &quot;policyIdentifier=2.16.840.1.9999999999.1.2.3.4.4&quot;, &quot;CPS.1=http://example.com/cps&quot;] ]
-    },
-    codesigning: {
-        basic_constraints:  &quot;CA:FALSE&quot;,
-        key_usage: [digitalSignature],
-        extended_key_usage: [codeSigning],
-        certificate_policies: [ [ &quot;policyIdentifier=2.16.840.1.9999999999.1.2.3.4.5&quot;, &quot;CPS.1=http://example.com/cps&quot;] ]
-    },
-    timestamping: {
-        basic_constraints:  &quot;CA:FALSE&quot;,
-        key_usage: [digitalSignature],
-        extended_key_usage: [timeStamping],
-        certificate_policies: [ [ &quot;policyIdentifier=2.16.840.1.9999999999.1.2.3.4.6&quot;, &quot;CPS.1=http://example.com/cps&quot;] ]
-    },
-    subroot: {
-        basic_constraints:  &quot;CA:TRUE,pathlen:0&quot;,
-        key_usage: [keyCertSign,cRLSign],
-        extended_key_usage: [],
-        certificate_policies: [ ]
+    ocsp_location: 'URI:http://ocsp.domain.com',
+    ocsp_chain: 'spec/fixtures/test_ca_ocsp_chain.txt',
+    ocsp_start_skew_seconds: 3600,
+    ocsp_validity_hours: 168,
+    cdp_location: 'URI:http://crl.domain.com/test_ca.crl',
+    crl_list: 'spec/fixtures/test_ca_crl_list.txt',
+    crl_number: 'spec/fixtures/test_ca_crl_number.txt',
+    crl_validity_hours: 168, #7 days
+    message_digest: 'SHA1', #SHA1, SHA256, SHA512 supported. MD5 too, but you really shouldn't use that unless you have a good reason
+    profiles: {
+        server: {
+            basic_constraints: &quot;CA:FALSE&quot;,
+            key_usage: [digitalSignature,keyEncipherment],
+            extended_key_usage: [serverAuth],
+            certificate_policies: [ [ &quot;policyIdentifier=2.16.840.1.9999999999.1.2.3.4.1&quot;, &quot;CPS.1=http://example.com/cps&quot;] ],
+            subject_item_policy: {
+                CN: &quot;required&quot;,
+                O:  &quot;required&quot;,
+                OU: &quot;optional&quot;,
+                ST: &quot;required&quot;,
+                C:  &quot;required&quot;,
+                L:  &quot;required&quot;
+            }
+        },
+        client: {
+            basic_constraints: &quot;CA:FALSE&quot;,
+            key_usage: [digitalSignature,keyEncipherment],
+            extended_key_usage: [clientAuth],
+            certificate_policies: [ [ &quot;policyIdentifier=2.16.840.1.9999999999.1.2.3.4.2&quot;, &quot;CPS.1=http://example.com/cps&quot;] ]
+        },
+        email: {
+            basic_constraints: &quot;CA:FALSE&quot;,
+            key_usage: [digitalSignature,keyEncipherment],
+            extended_key_usage: [emailProtection],
+            certificate_policies: [ [ &quot;policyIdentifier=2.16.840.1.9999999999.1.2.3.4.3&quot;, &quot;CPS.1=http://example.com/cps&quot;] ]
+        },
+        clientserver: {
+            basic_constraints:  &quot;CA:FALSE&quot;,
+            key_usage: [digitalSignature,keyEncipherment],
+            extended_key_usage: [serverAuth,clientAuth],
+            certificate_policies: [ [ &quot;policyIdentifier=2.16.840.1.9999999999.1.2.3.4.4&quot;, &quot;CPS.1=http://example.com/cps&quot;] ]
+        },
+        codesigning: {
+            basic_constraints:  &quot;CA:FALSE&quot;,
+            key_usage: [digitalSignature],
+            extended_key_usage: [codeSigning],
+            certificate_policies: [ [ &quot;policyIdentifier=2.16.840.1.9999999999.1.2.3.4.5&quot;, &quot;CPS.1=http://example.com/cps&quot;] ]
+        },
+        timestamping: {
+            basic_constraints:  &quot;CA:FALSE&quot;,
+            key_usage: [digitalSignature],
+            extended_key_usage: [timeStamping],
+            certificate_policies: [ [ &quot;policyIdentifier=2.16.840.1.9999999999.1.2.3.4.6&quot;, &quot;CPS.1=http://example.com/cps&quot;] ]
+        },
+        subroot: {
+            basic_constraints:  &quot;CA:TRUE,pathlen:0&quot;,
+            key_usage: [keyCertSign,cRLSign],
+            extended_key_usage: [],
+            certificate_policies: [ ]
+        }
     }
 }</code></pre>
 
@@ -127,9 +140,9 @@ profiles: {
 </div></div>
 
     <div id="footer">
-  Generated on Wed Aug  8 10:13:43 2012 by
+  Generated on Tue Oct 23 22:52:00 2012 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.8.2.1 (ruby-1.9.3).
+  0.8.0 (ruby-1.9.3).
 </div>
 
   </body>

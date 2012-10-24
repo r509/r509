@@ -4,7 +4,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>
-  Class: R509::Validity::DefaultChecker
+  Class: R509::Validity::DBStatus
   
     &mdash; Documentation by YARD 0.8.0
   
@@ -34,7 +34,7 @@
     <a href="../../_index.html">Index (D)</a> &raquo;
     <span class='title'><span class='object_link'><a href="../../R509.html" title="R509 (module)">R509</a></span></span> &raquo; <span class='title'><span class='object_link'><a href="../Validity.html" title="R509::Validity (module)">Validity</a></span></span>
      &raquo; 
-    <span class="title">DefaultChecker</span>
+    <span class="title">DBStatus</span>
   
 
   <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
@@ -63,7 +63,7 @@
 
     <iframe id="search_frame"></iframe>
 
-    <div id="content"><h1>Class: R509::Validity::DefaultChecker
+    <div id="content"><h1>Class: R509::Validity::DBStatus
   
   
   
@@ -73,14 +73,12 @@
   
     <dt class="r1">Inherits:</dt>
     <dd class="r1">
-      <span class="inheritName"><span class='object_link'><a href="Checker.html" title="R509::Validity::Checker (class)">Checker</a></span></span>
+      <span class="inheritName">Object</span>
       
         <ul class="fullTree">
           <li>Object</li>
           
-            <li class="next"><span class='object_link'><a href="Checker.html" title="R509::Validity::Checker (class)">Checker</a></span></li>
-          
-            <li class="next">R509::Validity::DefaultChecker</li>
+            <li class="next">R509::Validity::DBStatus</li>
           
         </ul>
         <a href="#" class="inheritanceTree">show all</a>
@@ -104,8 +102,7 @@
 <h2>Overview</h2><div class="docstring">
   <div class="discussion">
     
-<p>default implementaton of the Checker class. Used for tests. DO NOT USE
-OTHERWISE</p>
+<p>abstract base class for a backend DB status (used with r509-ocsp-responder)</p>
 
 
   </div>
@@ -131,29 +128,7 @@ OTHERWISE</p>
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#check-instance_method" title="#check (instance method)">- (Object) <strong>check</strong>(issuer, serial) </a>
-    
-
-    
-  </span>
-  
-  
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'></div></span>
-  
-</li>
-
-      
-        <li class="public ">
-  <span class="summary_signature">
-    
-      <a href="#is_available%3F-instance_method" title="#is_available? (instance method)">- (Boolean) <strong>is_available?</strong> </a>
+      <a href="#status-instance_method" title="#status (instance method)">- (Object) <strong>status</strong> </a>
     
 
     
@@ -176,51 +151,15 @@ OTHERWISE</p>
   
 
 
-  
-  
-  
-  
-  
-  
 
   <div id="instance_method_details" class="method_details_list">
     <h2>Instance Method Details</h2>
 
     
       <div class="method_details first">
-  <h3 class="signature first" id="check-instance_method">
+  <h3 class="signature first" id="status-instance_method">
   
-    - (<tt>Object</tt>) <strong>check</strong>(issuer, serial) 
-  
-
-  
-
-  
-</h3><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-71
-72
-73</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/validity.rb', line 71</span>
-
-<span class='kw'>def</span> <span class='id identifier rubyid_check'>check</span><span class='lparen'>(</span><span class='id identifier rubyid_issuer'>issuer</span><span class='comma'>,</span> <span class='id identifier rubyid_serial'>serial</span><span class='rparen'>)</span>
-    <span class='const'>R509</span><span class='op'>::</span><span class='const'>Validity</span><span class='op'>::</span><span class='const'>Status</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='symbol'>:status</span> <span class='op'>=&gt;</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>Validity</span><span class='op'>::</span><span class='const'>VALID</span><span class='rparen'>)</span>
-<span class='kw'>end</span></pre>
-    </td>
-  </tr>
-</table>
-</div>
-    
-      <div class="method_details ">
-  <h3 class="signature " id="is_available?-instance_method">
-  
-    - (<tt>Boolean</tt>) <strong>is_available?</strong> 
+    - (<tt>Object</tt>) <strong>status</strong> 
   
 
   
@@ -234,13 +173,13 @@ OTHERWISE</p>
 </div>
 <div class="tags">
   
-<p class="tag_title">Returns:</p>
-<ul class="return">
+<p class="tag_title">Raises:</p>
+<ul class="raise">
   
     <li>
       
       
-        <span class='type'>(<tt>Boolean</tt>)</span>
+        <span class='type'>(<tt>NotImplementedError</tt>)</span>
       
       
       
@@ -254,15 +193,15 @@ OTHERWISE</p>
       <pre class="lines">
 
 
-75
-76
-77</pre>
+59
+60
+61</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/validity.rb', line 75</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/validity.rb', line 59</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_is_available?'>is_available?</span>
-    <span class='kw'>true</span>
+<span class='kw'>def</span> <span class='id identifier rubyid_status'>status</span>
+    <span class='id identifier rubyid_raise'>raise</span> <span class='const'>NotImplementedError</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>You must call #status on a subclass of DBStatus</span><span class='tstring_end'>&quot;</span></span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -274,7 +213,7 @@ OTHERWISE</p>
 </div>
 
     <div id="footer">
-  Generated on Tue Oct 23 22:52:01 2012 by
+  Generated on Mon Oct 15 22:46:12 2012 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.0 (ruby-1.9.3).
 </div>

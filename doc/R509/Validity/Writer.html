@@ -6,7 +6,7 @@
 <title>
   Class: R509::Validity::Writer
   
-    &mdash; Documentation by YARD 0.8.2.1
+    &mdash; Documentation by YARD 0.8.0
   
 </title>
 
@@ -132,6 +132,31 @@
         <li class="public ">
   <span class="summary_signature">
     
+      <a href="#is_available%3F-instance_method" title="#is_available? (instance method)">- (Boolean) <strong>is_available?</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>is_available? is meant to be implemented to check if the backend store you
+choose to implement is currently working.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
       <a href="#issue-instance_method" title="#issue (instance method)">- (Object) <strong>issue</strong>(issuer, serial) </a>
     
 
@@ -183,7 +208,76 @@
 
     
       <div class="method_details first">
-  <h3 class="signature first" id="issue-instance_method">
+  <h3 class="signature first" id="is_available?-instance_method">
+  
+    - (<tt>Boolean</tt>) <strong>is_available?</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>is_available? is meant to be implemented to check if the backend store you
+choose to implement is currently working. see r509-ocsp-responder and
+r509-validity-redis for an example of use</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+<p class="tag_title">Raises:</p>
+<ul class="raise">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>NotImplementedError</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+51
+52
+53</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/r509/validity.rb', line 51</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_is_available?'>is_available?</span>
+    <span class='id identifier rubyid_raise'>raise</span> <span class='const'>NotImplementedError</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>You must call #is_available? on a subclass of Writer</span><span class='tstring_end'>&quot;</span></span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="issue-instance_method">
   
     - (<tt>Object</tt>) <strong>issue</strong>(issuer, serial) 
   
@@ -291,9 +385,9 @@
 </div>
 
     <div id="footer">
-  Generated on Wed Aug  8 10:13:46 2012 by
+  Generated on Tue Oct 23 22:52:01 2012 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.8.2.1 (ruby-1.9.3).
+  0.8.0 (ruby-1.9.3).
 </div>
 
   </body>
