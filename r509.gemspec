@@ -7,6 +7,7 @@ spec = Gem::Specification.new do |s|
   s.platform = Gem::Platform::RUBY
   s.summary = "A (relatively) simple X.509 certification authority"
   s.description = 'A module that allows you to create CSRs, issue certs off a CA, view the certs, create CRLs, run an OCSP responder, and much more'
+  s.add_dependency 'trollop'
   s.add_development_dependency 'rspec'
   s.add_development_dependency 'rake'
   s.add_development_dependency 'rcov' if RUBY_VERSION.split('.')[1].to_i == 8

@@ -12,6 +12,7 @@ module R509
         # @option opts [String,OpenSSL::X509::Request] :csr a csr
         # @option opts [Symbol] :type :rsa/:dsa
         # @option opts [Integer] :bit_strength
+        # @option opts [String] :message_digest Optional digest. sha1, sha256, sha512, md5. Defaults to sha1
         # @option opts [Array] :san_names List of domains to encode as subjectAltNames
         # @option opts [R509::Subject,Array,OpenSSL::X509::Name] :subject array of subject items
         # @example [['CN','langui.sh'],['ST','Illinois'],['L','Chicago'],['C','US'],['emailAddress','ca@langui.sh']]
