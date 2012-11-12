@@ -14,6 +14,7 @@ else
     end
     if not csr.nil?
         puts "Subject: #{csr.subject}"
+        puts "Algorithm: #{csr.signature_algorithm}"
         puts "SAN Names: #{csr.san_names.join(" , ")}"
     else
         begin
@@ -23,6 +24,7 @@ else
         if not cert.nil?
             puts "Subject: #{cert.subject}"
             puts "Issuer: #{cert.issuer}"
+            puts "Algorithm: #{cert.signature_algorithm}"
             puts "SAN Names: #{cert.san_names.join(" , ")}"
             puts "Not Before: #{cert.not_before}"
             puts "Not After: #{cert.not_after}"

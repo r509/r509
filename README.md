@@ -14,7 +14,7 @@ We run continuous integration tests (using Travis-CI) against 1.8.7, 1.9.2, 1.9.
 
 ##Executable
 
-Inside the gem there is a bin directory that contains ```r509```. You can use this in interactive mode to generate a CSR and (optionally) self-sign it.
+Inside the gem there is a binary named ```r509```. Type ```r509 -h``` to see a list of options.
 
 ##Usage
 ###CSR
