@@ -6,138 +6,138 @@ require 'openssl'
 require 'trollop'
 
 opts = Trollop::options do
-    opt :interactive, "Interactive CSR/self-signed certificate generation. Overrides all flags other than keyout and out."
-    opt :subject, "X509 subject / delimited. Example: /CN=test.com/O=Org/C=US/ST=Illinois/L=Chicago", :type => :string
-    opt :message_digest, "Message digest to use. sha1, sha256, sha512, md5", :type => :string, :default => 'sha1'
-    opt :duration, "Self-sign the certificate with the duration (in days) specified.", :type => :integer
-    opt :bits, "Bit length of generated key.", :type => :integer, :default => 2048
-    opt :keyout, "File name to save generated key.", :type => :string
-    opt :out, "File name to save generated CSR or self-signed certificate", :type => :string
-    version "r509 #{R509::VERSION}"
+  opt :interactive, "Interactive CSR/self-signed certificate generation. Overrides all flags other than keyout and out."
+  opt :subject, "X509 subject / delimited. Example: /CN=test.com/O=Org/C=US/ST=Illinois/L=Chicago", :type => :string
+  opt :message_digest, "Message digest to use. sha1, sha256, sha512, md5", :type => :string, :default => 'sha1'
+  opt :duration, "Self-sign the certificate with the duration (in days) specified.", :type => :integer
+  opt :bits, "Bit length of generated key.", :type => :integer, :default => 2048
+  opt :keyout, "File name to save generated key.", :type => :string
+  opt :out, "File name to save generated CSR or self-signed certificate", :type => :string
+  version "r509 #{R509::VERSION}"
 end
 
 if opts[:interactive] == true or opts[:subject].nil? then
-    print "CSR Bit Strength (2048):"
-    bit_strength = gets.chomp
-    bit_strength = (bit_strength.to_i > 0)? bit_strength.to_i : 2048
+  print "CSR Bit Strength (2048):"
+  bit_strength = gets.chomp
+  bit_strength = (bit_strength.to_i > 0)? bit_strength.to_i : 2048
 
-    print "Message Digest (sha1):"
-    md = gets.chomp
-    md = case md
-        when 'sha1' then 'sha1'
-        when 'sha256' then 'sha256'
-        when 'sha512' then 'sha512'
-        when 'md5' then 'md5'
-        else 'sha1'
-    end
+  print "Message Digest (sha1):"
+  md = gets.chomp
+  md = case md
+    when 'sha1' then 'sha1'
+    when 'sha256' then 'sha256'
+    when 'sha512' then 'sha512'
+    when 'md5' then 'md5'
+    else 'sha1'
+  end
 
-    subject = []
-    print "C (US): "
-    c = gets.chomp
-    c = c.empty? ? 'US':c;
-    subject.push ['C',c]
+  subject = []
+  print "C (US): "
+  c = gets.chomp
+  c = c.empty? ? 'US':c;
+  subject.push ['C',c]
 
-    print "ST (Illinois): "
-    st = gets.chomp
-    st = st.empty? ? 'Illinois':st;
-    subject.push ['ST',st]
+  print "ST (Illinois): "
+  st = gets.chomp
+  st = st.empty? ? 'Illinois':st;
+  subject.push ['ST',st]
 
-    print "L (Chicago): "
-    l = gets.chomp
-    l = l.empty? ? 'Chicago':l;
-    subject.push ['L',l]
+  print "L (Chicago): "
+  l = gets.chomp
+  l = l.empty? ? 'Chicago':l;
+  subject.push ['L',l]
 
-    print "O (r509 LLC): "
-    o = gets.chomp
-    o = o.empty? ? 'r509 LLC':o;
-    subject.push ['O',o]
+  print "O (r509 LLC): "
+  o = gets.chomp
+  o = o.empty? ? 'r509 LLC':o;
+  subject.push ['O',o]
 
-    print "OU (null by default): "
-    ou = gets.chomp
-    if(!ou.empty?) then
-        subject.push ['OU',ou]
-    end
+  print "OU (null by default): "
+  ou = gets.chomp
+  if(!ou.empty?) then
+    subject.push ['OU',ou]
+  end
 
-    print "CN: "
-    subject.push ['CN',gets.chomp]
-    print "SAN Domains (comma separated):"
-    san_domains = []
-    san_domains = gets.chomp.split(',').collect { |domain| domain.strip }
-    csr = R509::Csr.new(
-        :subject => subject,
-        :bit_strength => bit_strength,
-        :san_names => san_domains,
-        :message_digest => md
-    )
+  print "CN: "
+  subject.push ['CN',gets.chomp]
+  print "SAN Domains (comma separated):"
+  san_domains = []
+  san_domains = gets.chomp.split(',').collect { |domain| domain.strip }
+  csr = R509::Csr.new(
+    :subject => subject,
+    :bit_strength => bit_strength,
+    :san_names => san_domains,
+    :message_digest => md
+  )
 
-    selfsign = 0
-    print "Self-signed cert duration in days (null disables self-sign):"
-    selfsign_input = gets.chomp
-    if selfsign_input.to_i > 0
-        selfsign = selfsign_input.to_i
-    end
+  selfsign = 0
+  print "Self-signed cert duration in days (null disables self-sign):"
+  selfsign_input = gets.chomp
+  if selfsign_input.to_i > 0
+    selfsign = selfsign_input.to_i
+  end
 elsif not opts[:subject].nil?
-    subject = OpenSSL::X509::Name.new
-    opts[:subject].chomp.split('/').each { |item|
-        if item != '' then
-            value = item.split('=')
-            subject.add_entry(value[0],value[1])
-        end
-    }
-    bit_strength = opts[:bits]
-    csr = R509::Csr.new(
-        :subject => subject,
-        :bit_strength => bit_strength,
-        :message_digest => opts[:message_digest]
-    )
-    selfsign = opts[:duration] || 0
+  subject = OpenSSL::X509::Name.new
+  opts[:subject].chomp.split('/').each { |item|
+    if item != '' then
+      value = item.split('=')
+      subject.add_entry(value[0],value[1])
+    end
+  }
+  bit_strength = opts[:bits]
+  csr = R509::Csr.new(
+    :subject => subject,
+    :bit_strength => bit_strength,
+    :message_digest => opts[:message_digest]
+  )
+  selfsign = opts[:duration] || 0
 end
 
 if selfsign > 0
-    ca = R509::CertificateAuthority::Signer.new
-    cert = ca.selfsign(
-        :csr => csr,
-        :not_after => Time.now.to_i+86400*selfsign,
-        :message_digest => opts[:message_digest]
-    )
-    if opts[:keyout].nil?
-        puts csr.key.to_pem
-    else
-        File.open(opts[:keyout], 'w') {|f| f.write(csr.key.to_pem) }
-    end
-    if opts[:out].nil?
-        puts cert.to_pem
-    else
-        File.open(opts[:out], 'w') {|f| f.write(cert.to_pem) }
-    end
+  ca = R509::CertificateAuthority::Signer.new
+  cert = ca.selfsign(
+    :csr => csr,
+    :not_after => Time.now.to_i+86400*selfsign,
+    :message_digest => opts[:message_digest]
+  )
+  if opts[:keyout].nil?
+    puts csr.key.to_pem
+  else
+    File.open(opts[:keyout], 'w') {|f| f.write(csr.key.to_pem) }
+  end
+  if opts[:out].nil?
+    puts cert.to_pem
+  else
+    File.open(opts[:out], 'w') {|f| f.write(cert.to_pem) }
+  end
 
-    puts cert.subject
-    if not cert.san_names.empty?
-        puts "SAN(s): "+cert.san_names.join(", ")
-    end
+  puts cert.subject
+  if not cert.san_names.empty?
+    puts "SAN(s): "+cert.san_names.join(", ")
+  end
 else
-    if opts[:keyout].nil?
-        puts csr.key.to_pem
-    else
-        File.open(opts[:keyout], 'w') {|f| f.write(csr.key.to_pem) }
-    end
+  if opts[:keyout].nil?
+    puts csr.key.to_pem
+  else
+    File.open(opts[:keyout], 'w') {|f| f.write(csr.key.to_pem) }
+  end
 
-    if opts[:out].nil?
-        puts csr.to_pem
-    else
-        File.open(opts[:out], 'w') {|f| f.write(csr.to_pem) }
-    end
+  if opts[:out].nil?
+    puts csr.to_pem
+  else
+    File.open(opts[:out], 'w') {|f| f.write(csr.to_pem) }
+  end
 
-    puts csr.subject
-    if not csr.san_names.empty?
-        puts "SAN(s): "+csr.san_names.join(", ")
-    end
+  puts csr.subject
+  if not csr.san_names.empty?
+    puts "SAN(s): "+csr.san_names.join(", ")
+  end
 end
 
 if RUBY_PLATFORM.match('darwin') != nil then
-    if selfsign > 0
-        IO.popen('pbcopy','w').puts cert
-    else
-        IO.popen('pbcopy','w').puts csr
-    end
+  if selfsign > 0
+    IO.popen('pbcopy','w').puts cert
+  else
+    IO.popen('pbcopy','w').puts csr
+  end
 end

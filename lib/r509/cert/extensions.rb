@@ -275,7 +275,7 @@ module R509
               if r509_extensions.has_key?(r509_class)
                 raise ArgumentError.new("Only one extension object allowed per OID")
               end
-              
+
               r509_extensions[r509_class] = r509_class.new( openssl_extension )
               break
             end

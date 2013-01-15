@@ -5,33 +5,33 @@ require 'r509/version'
 require 'openssl'
 
 if ARGV[0].nil? then
-    puts "CSR and certificate parsing using r509 v#{R509::VERSION}."
-    puts "Usage: r509-parse <cert or csr>"
+  puts "CSR and certificate parsing using r509 v#{R509::VERSION}."
+  puts "Usage: r509-parse <cert or csr>"
 else
+  begin
+    csr = R509::Csr.load_from_file ARGV[0]
+  rescue
+  end
+  if not csr.nil?
+    puts "Subject: #{csr.subject}"
+    puts "Algorithm: #{csr.signature_algorithm}"
+    puts "SAN Names: #{csr.san_names.join(" , ")}"
+  else
     begin
-        csr = R509::Csr.load_from_file ARGV[0]
+      cert = R509::Cert.load_from_file ARGV[0]
     rescue
     end
-    if not csr.nil?
-        puts "Subject: #{csr.subject}"
-        puts "Algorithm: #{csr.signature_algorithm}"
-        puts "SAN Names: #{csr.san_names.join(" , ")}"
+    if not cert.nil?
+      puts "Subject: #{cert.subject}"
+      puts "Issuer: #{cert.issuer}"
+      puts "Algorithm: #{cert.signature_algorithm}"
+      puts "SAN Names: #{cert.san_names.join(" , ")}"
+      puts "Not Before: #{cert.not_before}"
+      puts "Not After: #{cert.not_after}"
+      puts "Serial (Hex): #{cert.serial.to_s(16).upcase}"
+      puts "Serial (Decimal): #{cert.serial}"
     else
-        begin
-            cert = R509::Cert.load_from_file ARGV[0]
-        rescue
-        end
-        if not cert.nil?
-            puts "Subject: #{cert.subject}"
-            puts "Issuer: #{cert.issuer}"
-            puts "Algorithm: #{cert.signature_algorithm}"
-            puts "SAN Names: #{cert.san_names.join(" , ")}"
-            puts "Not Before: #{cert.not_before}"
-            puts "Not After: #{cert.not_after}"
-            puts "Serial (Hex): #{cert.serial.to_s(16).upcase}"
-            puts "Serial (Decimal): #{cert.serial}"
-        else
-            puts "Failed to parse CSR or certificate"
-        end
+      puts "Failed to parse CSR or certificate"
     end
+  end
 end

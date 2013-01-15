@@ -22,13 +22,13 @@ To generate a 2048-bit RSA CSR
 
 ```ruby
 csr = R509::Csr.new(
-    :subject => [
-        ['CN','somedomain.com'],
-        ['O','My Org'],
-        ['L','City'],
-        ['ST','State'],
-        ['C','US']
-    ]
+  :subject => [
+    ['CN','somedomain.com'],
+    ['O','My Org'],
+    ['L','City'],
+    ['ST','State'],
+    ['C','US']
+  ]
 )
 ```
 
@@ -52,8 +52,8 @@ To create a CSR with SAN names
 
 ```ruby
 csr = R509::Csr.new(
-    :subject => [['CN','something.com']],
-    :san_names => ["something2.com","something3.com"]
+  :subject => [['CN','something.com']],
+  :san_names => ["something2.com","something3.com"]
 )
 ```
 
@@ -73,8 +73,8 @@ Load a cert and key
 cert_pem = File.read("/path/to/cert")
 key_pem = File.read("/path/to/key")
 cert = R509::Cert.new(
-    :cert => cert_pem,
-    :key => key_pem
+  :cert => cert_pem,
+  :key => key_pem
 )
 ```
 
@@ -84,9 +84,9 @@ Load an encrypted private key
 cert_pem = File.read("/path/to/cert")
 key_pem = File.read("/path/to/key")
 cert = R509::Cert.new(
-    :cert => cert_pem,
-    :key => key_pem,
-    :password => "private_key_password"
+  :cert => cert_pem,
+  :key => key_pem,
+  :password => "private_key_password"
 )
 ```
 
@@ -95,8 +95,8 @@ Load a PKCS12 file
 ```ruby
 pkcs12_der = File.read("/path/to/p12")
 cert = R509::Cert.new(
-    :pkcs12 => pkcs12_der,
-    :password => "password"
+  :pkcs12 => pkcs12_der,
+  :password => "password"
 )
 ```
 
@@ -107,13 +107,13 @@ To create a self-signed certificate
 not_before = Time.now.to_i
 not_after = Time.now.to_i+3600*24*7300
 csr = R509::Csr.new(
-    :subject => [['C','US'],['O','r509 LLC'],['CN','r509 Self-Signed CA Test']]
+  :subject => [['C','US'],['O','r509 LLC'],['CN','r509 Self-Signed CA Test']]
 )
 ca = R509::CertificateAuthority::Signer.new
 cert = ca.selfsign(
-    :csr => csr,
-    :not_before => not_before,
-    :not_after => not_after
+  :csr => csr,
+  :not_before => not_before,
+  :not_after => not_after
 )
 ```
 
@@ -125,11 +125,11 @@ Create a basic CaConfig object
 cert_pem = File.read("/path/to/cert")
 key_pem = File.read("/path/to/key")
 cert = R509::Cert.new(
-    :cert => cert_pem,
-    :key => key_pem
+  :cert => cert_pem,
+  :key => key_pem
 )
 config = R509::Config::CaConfig.new(
-    :ca_cert => cert
+  :ca_cert => cert
 )
 ```
 
@@ -137,11 +137,11 @@ Add a signing profile named "server" (CaProfile) to a config object
 
 ```ruby
 profile = R509::Config::CaProfile.new(
-    :basic_constraints => "CA:FALSE",
-    :key_usage => ["digitalSignature","keyEncipherment"],
-    :extended_key_usage => ["serverAuth"],
-    :certificate_policies => [ ["policyIdentifier=2.16.840.1.999999999.1.2.3.4.1", "CPS.1=http://example.com/cps"] ],
-    :subject_item_policy => nil
+  :basic_constraints => "CA:FALSE",
+  :key_usage => ["digitalSignature","keyEncipherment"],
+  :extended_key_usage => ["serverAuth"],
+  :certificate_policies => [ ["policyIdentifier=2.16.840.1.999999999.1.2.3.4.1", "CPS.1=http://example.com/cps"] ],
+  :subject_item_policy => nil
 )
 # config object from above assumed
 config.set_profile("server",profile)
@@ -151,14 +151,14 @@ Set up a subject item policy (required/optional). The keys must match OpenSSL's 
 
 ```ruby
 profile = R509::Config::CaProfile.new(
-    :basic_constraints => "CA:FALSE",
-    :key_usage => ["digitalSignature","keyEncipherment"],
-    :extended_key_usage => ["serverAuth"],
-    :certificate_policies => [ ["policyIdentifier=2.16.840.1.999999999.1.2.3.4.1", "CPS.1=http://example.com/cps"] ],
-    :subject_item_policy => {
-        "CN" => "required",
-        "O" => "optional"
-    }
+  :basic_constraints => "CA:FALSE",
+  :key_usage => ["digitalSignature","keyEncipherment"],
+  :extended_key_usage => ["serverAuth"],
+  :certificate_policies => [ ["policyIdentifier=2.16.840.1.999999999.1.2.3.4.1", "CPS.1=http://example.com/cps"] ],
+  :subject_item_policy => {
+    "CN" => "required",
+    "O" => "optional"
+  }
 )
 # config object from above assumed
 config.set_profile("server",profile)
@@ -174,30 +174,30 @@ Example YAML (more options are supported than this example)
 
 ```yaml
 test_ca: {
-    ca_cert: {
-        cert: '/path/to/test_ca.cer',
-        key: '/path/to/test_ca.key'
-    },
-    crl_list: "crl_list_file.txt",
-    crl_number: "crl_number_file.txt",
-    cdp_location: 'URI:http://crl.domain.com/test_ca.crl',
-    crl_validity_hours: 168, #7 days
-    ocsp_location: 'URI:http://ocsp.domain.com',
-    message_digest: 'SHA1', #SHA1, SHA256, SHA512 supported. MD5 too, but you really shouldn't use that unless you have a good reason
-    profiles: {
-        server: {
-            basic_constraints: "CA:FALSE",
-            key_usage: [digitalSignature,keyEncipherment],
-            extended_key_usage: [serverAuth],
-            certificate_policies: [ [ "policyIdentifier=2.16.840.1.9999999999.1.2.3.4.1", "CPS.1=http://example.com/cps"] ],
-            subject_item_policy: {
-                "CN" : "required",
-                "O" : "optional",
-                "ST" : "required",
-                "C" : "required",
-                "OU" : "optional" }
-        }
+  ca_cert: {
+    cert: '/path/to/test_ca.cer',
+    key: '/path/to/test_ca.key'
+  },
+  crl_list: "crl_list_file.txt",
+  crl_number: "crl_number_file.txt",
+  cdp_location: 'URI:http://crl.domain.com/test_ca.crl',
+  crl_validity_hours: 168, #7 days
+  ocsp_location: 'URI:http://ocsp.domain.com',
+  message_digest: 'SHA1', #SHA1, SHA256, SHA512 supported. MD5 too, but you really shouldn't use that unless you have a good reason
+  profiles: {
+    server: {
+      basic_constraints: "CA:FALSE",
+      key_usage: [digitalSignature,keyEncipherment],
+      extended_key_usage: [serverAuth],
+      certificate_policies: [ [ "policyIdentifier=2.16.840.1.9999999999.1.2.3.4.1", "CPS.1=http://example.com/cps"] ],
+      subject_item_policy: {
+        "CN" : "required",
+        "O" : "optional",
+        "ST" : "required",
+        "C" : "required",
+        "OU" : "optional" }
     }
+  }
 }
 ```
 
@@ -211,18 +211,18 @@ Example (Minimal) Config Pool YAML
 
 ```yaml
 certificate_authorities: {
-    test_ca: {
-        ca_cert: {
-            cert: 'test_ca.cer',
-            key: 'test_ca.key'
-        }
-    },
-    second_ca: {
-        ca_cert: {
-            cert: 'second_ca.cer',
-            key: 'second_ca.key'
-        }
+  test_ca: {
+    ca_cert: {
+      cert: 'test_ca.cer',
+      key: 'test_ca.key'
     }
+  },
+  second_ca: {
+    ca_cert: {
+      cert: 'second_ca.cer',
+      key: 'second_ca.key'
+    }
+  }
 }
 ```
 
@@ -232,19 +232,19 @@ Sign a CSR
 
 ```ruby
 csr = R509::Csr.new(
-    :subject => [
-        ['CN','somedomain.com'],
-        ['O','My Org'],
-        ['L','City'],
-        ['ST','State'],
-        ['C','US']
-    ]
+  :subject => [
+    ['CN','somedomain.com'],
+    ['O','My Org'],
+    ['L','City'],
+    ['ST','State'],
+    ['C','US']
+  ]
 )
 # assume config from yaml load above
 ca = R509::CertificateAuthority::Signer.new(config)
 cert = ca.sign(
-    :profile_name => "server",
-    :csr => csr
+  :profile_name => "server",
+  :csr => csr
 )
 ```
 
@@ -252,13 +252,13 @@ Override a CSR's subject or SAN names when signing
 
 ```ruby
 csr = R509::Csr.new(
-    :subject => [
-        ['CN','somedomain.com'],
-        ['O','My Org'],
-        ['L','City'],
-        ['ST','State'],
-        ['C','US']
-    ]
+  :subject => [
+    ['CN','somedomain.com'],
+    ['O','My Org'],
+    ['L','City'],
+    ['ST','State'],
+    ['C','US']
+  ]
 )
 data_hash = csr.to_hash
 data_hash[:san_names] = ["sannames.com","domain2.com"]
@@ -267,9 +267,9 @@ data_hash[:subject]["O"] = "Org 2.0"
 # assume config from yaml load above
 ca = R509::CertificateAuthority::Signer.new(config)
 cert = ca.sign(
-    :profile_name => "server",
-    :csr => csr,
-    :data_hash => data_hash
+  :profile_name => "server",
+  :csr => csr,
+  :data_hash => data_hash
 )
 ```
 
@@ -281,8 +281,8 @@ The engine you want to load must already be available to OpenSSL. How to compile
 OpenSSL::Engine.load("engine_name")
 engine = OpenSSL::Engine.by_id("engine_name")
 key = R509::PrivateKey(
-    :engine => engine,
-    :key_name => "my_key_name"
+  :engine => engine,
+  :key_name => "my_key_name"
 )
 ```
 
@@ -301,8 +301,8 @@ Register in batch
 
 ```ruby
 R509::OidMapper.batch_register([
-    {:oid => "1.3.5.6.7.8.3.23.3", :short_name => "short_name", :long_name => "optional_long_name"},
-    {:oid => "1.3.5.6.7.8.3.23.5", :short_name => "another_name"}
+  {:oid => "1.3.5.6.7.8.3.23.3", :short_name => "short_name", :long_name => "optional_long_name"},
+  {:oid => "1.3.5.6.7.8.3.23.5", :short_name => "another_name"}
 ])
 ```
 
