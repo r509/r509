@@ -77,6 +77,8 @@ module R509
     end
 
 
+    # Returns the bit strength of the key
+    #
     # @return [Integer]
     def bit_strength
       if self.rsa?

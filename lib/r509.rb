@@ -12,6 +12,7 @@ module R509
   require('r509/messagedigest.rb')
   require('r509/subject.rb')
   require('r509/validity.rb')
+  require('r509/ec-hack.rb')
 end
 
 #add some global mappings we want available throughout r509

@@ -22,6 +22,8 @@ describe R509::Csr do
     @key_csr2 = TestFixtures::KEY_CSR2
     @dsa_key = TestFixtures::DSA_KEY
     @csr_unknown_oid = TestFixtures::CSR_UNKNOWN_OID
+    @ec_csr2_pem = TestFixtures::EC_CSR2_PEM
+    @ec_csr2_der = TestFixtures::EC_CSR2_DER
   end
 
   it "raises an exception when passing non-hash" do
@@ -76,7 +78,7 @@ describe R509::Csr do
     expect { R509::Csr.new(:subject => [['CN','error.com']], :csr => @csr) }.to raise_error(ArgumentError,'Can only provide one of cert, subject, or csr')
   end
   it "raises an exception for not providing valid type when key is nil" do
-    expect { R509::Csr.new(:subject => [['CN','error.com']], :type => :invalid_symbol) }.to raise_error(ArgumentError,'Must provide :rsa or :dsa as type when key is nil')
+    expect { R509::Csr.new(:subject => [['CN','error.com']], :type => :invalid_symbol) }.to raise_error(ArgumentError,'Must provide :rsa, :dsa, or :ec as type when key is nil')
   end
   it "raises an exception when you don't provide cert, subject, or CSR" do
     expect { R509::Csr.new(:bit_strength => 1024) }.to raise_error(ArgumentError,'Must provide one of cert, subject, or csr')
@@ -258,10 +260,20 @@ describe R509::Csr do
       csr.message_digest.name.should == 'sha1'
       csr.signature_algorithm.should == "sha1WithRSAEncryption"
     end
+    it "sets sha224 properly" do
+      csr = R509::Csr.new(:message_digest => 'sha224', :bit_strength => 512, :subject => [['CN','sha224-signature-alg.test']])
+      csr.message_digest.name.should == 'sha224'
+      csr.signature_algorithm.should == "sha224WithRSAEncryption"
+    end
     it "sets sha256 properly" do
       csr = R509::Csr.new(:message_digest => 'sha256', :bit_strength => 512, :subject => [['CN','sha256-signature-alg.test']])
       csr.message_digest.name.should == 'sha256'
       csr.signature_algorithm.should == "sha256WithRSAEncryption"
+    end
+    it "sets sha384 properly" do
+      csr = R509::Csr.new(:message_digest => 'sha384', :bit_strength => 768, :subject => [['CN','sha384-signature-alg.test']])
+      csr.message_digest.name.should == 'sha384'
+      csr.signature_algorithm.should == "sha384WithRSAEncryption"
     end
     it "sets sha512 properly" do
       csr = R509::Csr.new(:message_digest => 'sha512', :bit_strength => 1024, :subject => [['CN','sha512-signature-alg.test']])
@@ -273,19 +285,30 @@ describe R509::Csr do
       csr.message_digest.name.should == 'md5'
       csr.signature_algorithm.should == "md5WithRSAEncryption"
     end
+    it "sets alternate signature properly for EC" do
+      csr = R509::Csr.new(:message_digest => 'sha256', :type => :ec, :subject => [["CN","ec-signature-alg.test"]])
+      csr.message_digest.name.should == 'sha256'
+      csr.signature_algorithm.should == 'ecdsa-with-SHA256'
+    end
   end
   it "checks rsa?" do
     csr = R509::Csr.new({:csr => @csr})
     csr.rsa?.should == true
+    csr.ec?.should == false
     csr.dsa?.should == false
   end
   it "gets RSA bit strength" do
     csr = R509::Csr.new({:csr => @csr})
     csr.bit_strength.should == 2048
   end
+  it "returns an error for curve_name for dsa/rsa CSRs" do
+    csr = R509::Csr.new(:csr => @csr)
+    expect { csr.curve_name }.to raise_error(R509::R509Error, 'Curve name is only available with EC CSRs')
+  end
   it "checks dsa?" do
     csr = R509::Csr.new({:csr => @csr_dsa})
     csr.rsa?.should == false
+    csr.ec?.should == false
     csr.dsa?.should == true
   end
   it "gets DSA bit strength" do
@@ -297,6 +320,42 @@ describe R509::Csr do
     path = File.dirname(__FILE__) + '/fixtures/csr1.pem'
     csr = R509::Csr.load_from_file path
     csr.message_digest.name.should == 'sha1'
+  end
+
+  context "when using elliptic curves" do
+    it "loads a pre-existing EC CSR" do
+      csr = R509::Csr.new(:csr => @ec_csr2_pem)
+      csr.to_der.should == @ec_csr2_der
+    end
+    it "returns the curve name" do
+      csr = R509::Csr.new(:csr => @ec_csr2_pem)
+      csr.curve_name.should == "secp384r1"
+    end
+    it "generates a CSR with default curve" do
+      csr = R509::Csr.new(:type => :ec, :subject => [["CN","ec-test.local"]])
+      csr.curve_name.should == "secp384r1"
+    end
+    it "generates a CSR with explicit curve" do
+      csr = R509::Csr.new(:type => :ec, :curve_name => "sect283r1", :subject => [["CN","ec-test.local"]])
+      csr.curve_name.should == "sect283r1"
+    end
+    it "raises error on bit strength" do
+      csr = R509::Csr.new(:csr => @ec_csr2_der)
+      expect { csr.bit_strength }.to raise_error(R509::R509Error,'Bit strength is not available for EC at this time.')
+    end
+    it "returns the key algorithm" do
+      csr = R509::Csr.new(:csr => @ec_csr2_pem)
+      csr.key_algorithm.should == 'EC'
+    end
+    it "returns the public key" do
+      csr = R509::Csr.new(:csr => @ec_csr2_pem)
+      csr.public_key.private_key?.should == false
+      csr.public_key.public_key?.should == true
+    end
+    it "checks ec?" do
+      csr = R509::Csr.new(:csr => @ec_csr2_pem)
+      csr.ec?.should == true
+    end
   end
 
 end

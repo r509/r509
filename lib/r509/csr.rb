@@ -2,6 +2,7 @@ require 'openssl'
 require 'r509/exceptions'
 require 'r509/io_helpers'
 require 'r509/privatekey'
+require 'r509/ec-hack'
 
 module R509
   # The primary certificate signing request object
@@ -10,9 +11,10 @@ module R509
 
     attr_reader :san_names, :key, :subject, :req, :attributes, :message_digest
     # @option opts [String,OpenSSL::X509::Request] :csr a csr
-    # @option opts [Symbol] :type :rsa/:dsa
-    # @option opts [Integer] :bit_strength
-    # @option opts [String] :message_digest Optional digest. sha1, sha256, sha512, md5. Defaults to sha1
+    # @option opts [Symbol] :type :rsa/:dsa/:ec
+    # @option opts [String] :curve_name ("secp384r1") Only used if :type is :ec
+    # @option opts [Integer] :bit_strength (2048) Only used if :type is :rsa or :dsa
+    # @option opts [String] :message_digest Optional digest. sha1, sha224, sha256, sha384, sha512, md5. Defaults to sha1
     # @option opts [Array] :san_names List of domains to encode as subjectAltNames
     # @option opts [R509::Subject,Array,OpenSSL::X509::Name] :subject array of subject items
     # @example [['CN','langui.sh'],['ST','Illinois'],['L','Chicago'],['C','US'],['emailAddress','ca@langui.sh']]
@@ -29,6 +31,7 @@ module R509
         raise ArgumentError, "Can only provide one of cert, subject, or csr"
       end
       @bit_strength = opts[:bit_strength] || 2048
+      @curve_name = opts[:curve_name] || "secp384r1"
 
       if opts.has_key?(:key)
         if opts[:key].kind_of?(R509::PrivateKey)
@@ -39,8 +42,8 @@ module R509
       end
 
       @type = opts[:type] || :rsa
-      if @type != :rsa and @type != :dsa and @key.nil?
-        raise ArgumentError, 'Must provide :rsa or :dsa as type when key is nil'
+      if not [:rsa,:dsa,:ec].include?(@type) and @key.nil?
+        raise ArgumentError, 'Must provide :rsa, :dsa, or :ec as type when key is nil'
       end
 
       if opts.has_key?(:cert)
@@ -90,7 +93,7 @@ module R509
       return R509::Csr.new(:csr => IOHelpers.read_data(filename) )
     end
 
-    # @return [OpenSSL::PKey::RSA] public key
+    # @return [OpenSSL::PKey::RSA,OpenSSL::PKey::DSA,OpenSSL::PKey::EC] public key
     def public_key
       if(@req.kind_of?(OpenSSL::X509::Request)) then
         @req.public_key
@@ -158,6 +161,13 @@ module R509
       @req.public_key.kind_of?(OpenSSL::PKey::DSA)
     end
 
+    # Returns whether the public key is EC
+    #
+    # @return [Boolean] true if the public key is EC, false otherwise
+    def ec?
+      @req.public_key.kind_of?(OpenSSL::PKey::EC)
+    end
+
     # Returns the bit strength of the key used to create the CSR
     # @return [Integer] the integer bit strength.
     def bit_strength
@@ -165,6 +175,20 @@ module R509
         return @req.public_key.n.num_bits
       elsif self.dsa?
         return @req.public_key.p.num_bits
+      elsif self.ec?
+        raise R509::R509Error, 'Bit strength is not available for EC at this time.'
+      end
+    end
+
+    # Returns the short name of the elliptic curve used to generate the public key
+    # if the key is EC. If not, raises an error.
+    #
+    # @return [String] elliptic curve name
+    def curve_name
+      if self.ec?
+        self.public_key.group.curve_name
+      else
+        raise R509::R509Error, 'Curve name is only available with EC CSRs'
       end
     end
 
@@ -187,14 +211,16 @@ module R509
       @req.signature_algorithm
     end
 
-    # Returns key algorithm (RSA/DSA)
+    # Returns key algorithm (RSA/DSA/EC)
     #
-    # @return [String] value of the key algorithm. RSA or DSA
+    # @return [String] value of the key algorithm. RSA, DSA, EC
     def key_algorithm
       if @req.public_key.kind_of? OpenSSL::PKey::RSA then
         'RSA'
       elsif @req.public_key.kind_of? OpenSSL::PKey::DSA then
         'DSA'
+      elsif @req.public_key.kind_of? OpenSSL::PKey::EC then
+        'EC'
       end
     end
 
@@ -244,8 +270,7 @@ module R509
       @subject = R509::Subject.new(subject)
       @req.subject = @subject.name
       if @key.nil?
-        @key = R509::PrivateKey.new(:type => @type,
-                      :bit_strength => @bit_strength)
+        @key = R509::PrivateKey.new(:type => @type, :bit_strength => @bit_strength, :curve_name => @curve_name)
       end
       @req.public_key = @key.public_key
       add_san_extension(domains)
