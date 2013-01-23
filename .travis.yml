@@ -1,9 +1,7 @@
 bundler_args: --without documentation
 language: ruby
 rvm:
- - 1.8.7
  - 1.9.3
  - 2.0.0
  - ruby-head
- - ree
  - rbx-19mode
