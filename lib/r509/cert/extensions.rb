@@ -3,6 +3,7 @@ require 'set'
 
 module R509
   class Cert
+    # module to contain extension classes for R509::Cert
     module Extensions
 
       private
@@ -25,6 +26,7 @@ module R509
       # Implements the BasicConstraints certificate extension, with methods to
       # provide access to the components and meaning of the extension's contents.
       class BasicConstraints < OpenSSL::X509::Extension
+        # friendly name for BasicConstraints OID
         OID = "basicConstraints"
         Extensions.register_class(self)
 
@@ -54,6 +56,7 @@ module R509
       # Implements the KeyUsage certificate extension, with methods to
       # provide access to the components and meaning of the extension's contents.
       class KeyUsage < OpenSSL::X509::Extension
+        # friendly name for KeyUsage OID
         OID = "keyUsage"
         Extensions.register_class(self)
 
@@ -132,6 +135,7 @@ module R509
       # Implements the ExtendedKeyUsage certificate extension, with methods to
       # provide access to the components and meaning of the extension's contents.
       class ExtendedKeyUsage < OpenSSL::X509::Extension
+        # friendly name for EKU OID
         OID = "extendedKeyUsage"
         Extensions.register_class(self)
 
@@ -182,9 +186,11 @@ module R509
       # Implements the SubjectKeyIdentifier certificate extension, with methods to
       # provide access to the components and meaning of the extension's contents.
       class SubjectKeyIdentifier < OpenSSL::X509::Extension
+        # friendly name for Subject Key Identifier OID
         OID = "subjectKeyIdentifier"
         Extensions.register_class(self)
 
+        # @return value of key
         def key()
           return self.value
         end
@@ -193,6 +199,7 @@ module R509
       # Implements the AuthorityKeyIdentifier certificate extension, with methods to
       # provide access to the components and meaning of the extension's contents.
       class AuthorityKeyIdentifier < OpenSSL::X509::Extension
+        # friendly name for Authority Key Identifier OID
         OID = "authorityKeyIdentifier"
         Extensions.register_class(self)
 
@@ -201,6 +208,7 @@ module R509
       # Implements the SubjectAlternativeName certificate extension, with methods to
       # provide access to the components and meaning of the extension's contents.
       class SubjectAlternativeName < OpenSSL::X509::Extension
+        # friendly name for SAN OID
         OID = "subjectAltName"
         Extensions.register_class(self)
 
@@ -224,6 +232,7 @@ module R509
       # Implements the AuthorityInfoAccess certificate extension, with methods to
       # provide access to the components and meaning of the extension's contents.
       class AuthorityInfoAccess < OpenSSL::X509::Extension
+        # friendly name for AIA OID
         OID = "authorityInfoAccess"
         Extensions.register_class(self)
 
@@ -244,6 +253,7 @@ module R509
       # Implements the CrlDistributionPoints certificate extension, with methods to
       # provide access to the components and meaning of the extension's contents.
       class CrlDistributionPoints < OpenSSL::X509::Extension
+        # friendly name for CDP OID
         OID = "crlDistributionPoints"
         Extensions.register_class(self)
 

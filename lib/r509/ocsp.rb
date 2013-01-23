@@ -75,11 +75,21 @@ module R509::Ocsp
     module Nonce
       #these values are defined at
       #http://www.ruby-doc.org/stdlib-1.9.3/libdoc/openssl/rdoc/OpenSSL/OCSP/Request.html
+      # nonce is present and matches
       PRESENT_AND_EQUAL = 1
+
+      # nonce is missing in request and response
       BOTH_ABSENT = 2
+
+      # nonce is present in response only
       RESPONSE_ONLY = 3
+
+      # nonce is in both request and response, but does not match
       NOT_EQUAL = 0
+
+      # nonce is present in request only
       REQUEST_ONLY = -1
+
     end
   end
 end
