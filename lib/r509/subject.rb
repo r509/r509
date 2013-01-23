@@ -120,8 +120,8 @@ module R509
     # @option array [Array<OpenSSL::X509::Name>]
     # @return [Hash]
     # @example
-    # Return value looks like
-    # { :index => the index in the original array where we found an UNDEF, :value => the subject component value }
+    #  Return value looks like
+    #  { :index => the index in the original array where we found an UNDEF, :value => the subject component value }
     def undefined_components(array)
       components = []
       array.each_index do |index|

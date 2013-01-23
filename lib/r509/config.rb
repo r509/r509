@@ -37,13 +37,13 @@ module R509
 
       # @param [Hash] hash of required/optional subject items. These must be in OpenSSL shortname format.
       # @example sample hash
-      # {"CN" => "required",
-      # "O" => "required",
-      # "OU" => "optional",
-      # "ST" => "required",
-      # "C" => "required",
-      # "L" => "required",
-      # "emailAddress" => "optional"}
+      #  {"CN" => "required",
+      #  "O" => "required",
+      #  "OU" => "optional",
+      #  "ST" => "required",
+      #  "C" => "required",
+      #  "L" => "required",
+      #  "emailAddress" => "optional"}
       def initialize(hash={})
         if not hash.kind_of?(Hash)
           raise ArgumentError, "Must supply a hash in form 'shortname'=>'required/optional'"

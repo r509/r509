@@ -6,7 +6,7 @@ require 'r509/io_helpers'
 module R509
   # contains CRL related classes (generator and a pre-existing list loader)
   module Crl
-
+    # Parses CRLs
     class Parser
       attr_reader :crl
 

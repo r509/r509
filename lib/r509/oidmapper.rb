@@ -18,7 +18,7 @@ module R509
     # Register a batch of OIDs so we have friendly short names
     # @param [Array] oids An array of hashes
     # @example
-    # R509::OidMapper.batch_register([
+    #  R509::OidMapper.batch_register([
     #   {:oid => "1.2.3.4.5", :short_name => "sName", :long_name => "lName"},
     #   {:oid => "1.2.3.4.6", :short_name => "oName"}
     # ]
