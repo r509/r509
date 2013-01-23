@@ -8,24 +8,37 @@ require 'trollop'
 opts = Trollop::options do
   opt :interactive, "Interactive CSR/self-signed certificate generation. Overrides all flags other than keyout and out."
   opt :subject, "X509 subject / delimited. Example: /CN=test.com/O=Org/C=US/ST=Illinois/L=Chicago", :type => :string
-  opt :message_digest, "Message digest to use. sha1, sha256, sha512, md5", :type => :string, :default => 'sha1'
+  opt :message_digest, "Message digest to use. sha1, sha224, sha256, sha384, sha512, md5", :type => :string, :default => 'sha1'
   opt :duration, "Self-sign the certificate with the duration (in days) specified.", :type => :integer
-  opt :bits, "Bit length of generated key.", :type => :integer, :default => 2048
+  opt :bits, "Bit length of generated key. Ignored for EC.", :type => :integer, :default => 2048
+  opt :curve_name, "Name of elliptic curve to use. Only used for EC.", :type => :string, :default => 'secp384r1'
   opt :keyout, "File name to save generated key.", :type => :string
   opt :out, "File name to save generated CSR or self-signed certificate", :type => :string
+  opt :type, "Type of key to generate. RSA/DSA/EC", :type => :string, :default => "RSA"
   version "r509 #{R509::VERSION}"
 end
 
 if opts[:interactive] == true or opts[:subject].nil? then
-  print "CSR Bit Strength (2048):"
-  bit_strength = gets.chomp
-  bit_strength = (bit_strength.to_i > 0)? bit_strength.to_i : 2048
+  if opts[:type].upcase == "RSA" or opts[:type].upcase == "DSA"
+    print "CSR Bit Strength (2048):"
+    bit_strength = gets.chomp
+    bit_strength = (bit_strength.to_i > 0)? bit_strength.to_i : 2048
+  elsif opts[:type].upcase == "EC"
+    print "Curve Name (secp384r1):"
+    curve_name = gets.chomp
+    curve_name = (not curve_name.empty?)? curve_name : 'secp384r1'
+  else
+    puts "Invalid key type specified. RSA/DSA/EC"
+    exit
+  end
 
   print "Message Digest (sha1):"
   md = gets.chomp
-  md = case md
+  opts[:message_digest] = case md
     when 'sha1' then 'sha1'
+    when 'sha224' then 'sha224'
     when 'sha256' then 'sha256'
+    when 'sha384' then 'sha384'
     when 'sha512' then 'sha512'
     when 'md5' then 'md5'
     else 'sha1'
@@ -66,8 +79,10 @@ if opts[:interactive] == true or opts[:subject].nil? then
   csr = R509::Csr.new(
     :subject => subject,
     :bit_strength => bit_strength,
+    :type => opts[:type].downcase.to_sym,
+    :curve_name => curve_name,
     :san_names => san_domains,
-    :message_digest => md
+    :message_digest => opts[:message_digest]
   )
 
   selfsign = 0
@@ -84,10 +99,11 @@ elsif not opts[:subject].nil?
       subject.add_entry(value[0],value[1])
     end
   }
-  bit_strength = opts[:bits]
   csr = R509::Csr.new(
     :subject => subject,
-    :bit_strength => bit_strength,
+    :bit_strength => opts[:bits],
+    :type => opts[:type].downcase.to_sym,
+    :curve_name => opts[:curve_name],
     :message_digest => opts[:message_digest]
   )
   selfsign = opts[:duration] || 0
