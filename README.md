@@ -306,10 +306,33 @@ R509::OidMapper.batch_register([
 ])
 ```
 
+###Alternate Key Algorithms
+In addition to the default RSA objects that are created above, r509 supports DSA and elliptic curve (EC). EC support is present only if Ruby has been linked against a version of OpenSSL compiled with EC enabled. This excludes Red Hat-based distributions at this time (unless you build it yourself). Take a look at the documentation for R509::PrivateKey, R509::Cert, and R509::Csr to see how to create DSA and EC types.
+
+####NIST Recommended Elliptic Curves
+These curves are set via ```:curve_name```. The system defaults to using ```secp384r1```
+
+ * secp224r1 -- NIST/SECG curve over a 224 bit prime field
+ * secp384r1 -- NIST/SECG curve over a 384 bit prime field
+ * secp521r1 -- NIST/SECG curve over a 521 bit prime field
+ * prime192v1 -- NIST/X9.62/SECG curve over a 192 bit prime field
+ * sect163k1 -- NIST/SECG/WTLS curve over a 163 bit binary field
+ * sect163r2 -- NIST/SECG curve over a 163 bit binary field
+ * sect233k1 -- NIST/SECG/WTLS curve over a 233 bit binary field
+ * sect233r1 -- NIST/SECG/WTLS curve over a 233 bit binary field
+ * sect283k1 -- NIST/SECG curve over a 283 bit binary field
+ * sect283r1 -- NIST/SECG curve over a 283 bit binary field
+ * sect409k1 -- NIST/SECG curve over a 409 bit binary field
+ * sect409r1 -- NIST/SECG curve over a 409 bit binary field
+ * sect571k1 -- NIST/SECG curve over a 571 bit binary field
+ * sect571r1 -- NIST/SECG curve over a 571 bit binary field
+
 ##Documentation
 
 There is (relatively) complete documentation available for every method and class in r509 available via yardoc. If you installed via gem it should be pre-generated in the doc directory. If you cloned this repo, just type ```rake yard``` with the yard gem installed. You will also need the redcarpet and github-markup gems to properly parse the Readme.md.
 
+##Created by...
+[Paul Kehrer](https://github.com/reaperhulk)
 
 ##Thanks to...
 * [Sean Schulte](https://github.com/sirsean)
