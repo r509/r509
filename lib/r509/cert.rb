@@ -39,7 +39,7 @@ module R509
         end
       end
       if not @key.nil?
-        if not @cert.public_key.to_s == @key.public_key.to_s then
+        if not @cert.public_key.to_der == @key.public_key.to_der then
           raise R509Error, 'Key does not match cert.'
         end
       end
@@ -224,6 +224,13 @@ module R509
       @cert.public_key.kind_of?(OpenSSL::PKey::DSA)
     end
 
+    # Returns whether the public key is EC
+    #
+    # @return [Boolean] true if the public key is EC, false otherwise
+    def ec?
+      @cert.public_key.kind_of?(OpenSSL::PKey::EC)
+    end
+
     # Returns the bit strength of the key used to create the certificate
     #
     # @return [Integer] integer value of bit strength
@@ -232,24 +239,40 @@ module R509
         return @cert.public_key.n.num_bits
       elsif self.dsa?
         return @cert.public_key.p.num_bits
+      elsif self.ec?
+        raise R509::R509Error, 'Bit strength is not available for EC at this time.'
+      end
+    end
+
+    # Returns the short name of the elliptic curve used to generate the public key
+    # if the key is EC. If not, raises an error.
+    #
+    # @return [String] elliptic curve name
+    def curve_name
+      if self.ec?
+        @cert.public_key.group.curve_name
+      else
+        raise R509::R509Error, 'Curve name is only available with EC certs'
       end
     end
 
     # Returns signature algorithm
     #
-    # @return [String] value of the signature algorithm. E.g. sha1WithRSAEncryption, sha256WithRSAEncryption, md5WithRSAEncryption
+    # @return [String] value of the signature algorithm. E.g. sha1WithRSAEncryption, sha256WithRSAEncryption, md5WithRSAEncryption, et cetera
     def signature_algorithm
       @cert.signature_algorithm
     end
 
-    # Returns key algorithm (RSA or DSA)
+    # Returns key algorithm (RSA, DSA, EC)
     #
-    # @return [String] value of the key algorithm. RSA or DSA
+    # @return [String] value of the key algorithm. RSA, DSA, EC
     def key_algorithm
       if self.rsa?
         "RSA"
       elsif self.dsa?
         "DSA"
+      elsif self.ec?
+        "EC"
       end
     end
 

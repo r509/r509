@@ -281,7 +281,6 @@ describe R509::CertificateAuthority::Signer do
       cert.subject.to_s.should == '/C=US/ST=Illinois/L=Chicago/O=Paul Kehrer/CN=langui.sh'
       cert.signature_algorithm.should == 'ecdsa-with-SHA384'
       cert.key_algorithm.should == 'EC'
-      cert.key.private?.should == true
       extended_key_usage = cert.extensions['extendedKeyUsage']
       extended_key_usage['value'].should == 'TLS Web Server Authentication'
     end

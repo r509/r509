@@ -262,15 +262,21 @@ describe R509::Cert do
   it "checks rsa?" do
     cert = R509::Cert.new(:cert => @cert)
     cert.rsa?.should == true
+    cert.ec?.should == false
     cert.dsa?.should == false
   end
   it "gets RSA bit strength" do
     cert = R509::Cert.new(:cert => @cert)
     cert.bit_strength.should == 2048
   end
+  it "returns an error for curve_name for DSA/RSA" do
+    cert = R509::Cert.new(:cert => @cert)
+    expect { cert.curve_name }.to raise_error(R509::R509Error, 'Curve name is only available with EC certs')
+  end
   it "checks dsa?" do
     cert = R509::Cert.new(:cert => @cert6)
     cert.rsa?.should == false
+    cert.ec?.should == false
     cert.dsa?.should == true
   end
   it "gets DSA bit strength" do
@@ -317,5 +323,45 @@ describe R509::Cert do
     path = File.dirname(__FILE__) + '/fixtures/cert1.pem'
     cert = R509::Cert.load_from_file path
     cert.serial.to_i.should == 211653423715
+  end
+
+  context "elliptic curve certs" do
+    before :all do
+      @cert_ec = TestFixtures::EC_EE_CERT
+      @key_ec = TestFixtures::EC_EE_KEY
+    end
+    it "loads a cert" do
+      expect { R509::Cert.new(:cert => @cert_ec) }.to_not raise_error
+    end
+    it "writes to pkcs12 when key/cert are present" do
+      cert = R509::Cert.new(:cert => @cert_ec, :key => @key_ec)
+      sio = StringIO.new
+      sio.set_encoding("BINARY") if sio.respond_to?(:set_encoding)
+      cert.write_pkcs12(sio,'r509_password')
+      expect { R509::Cert.new(:pkcs12 => sio.string, :password => 'r509_password') }.to_not raise_error
+    end
+    it "raises error on bit strength" do
+      cert = R509::Cert.new(:cert => @cert_ec)
+      expect { cert.bit_strength }.to raise_error(R509::R509Error,'Bit strength is not available for EC at this time.')
+    end
+    it "returns curve name" do
+      cert = R509::Cert.new(:cert => @cert_ec)
+      cert.curve_name.should == 'secp384r1'
+    end
+    it "checks ec?" do
+      cert = R509::Cert.new(:cert => @cert_ec)
+      cert.rsa?.should == false
+      cert.dsa?.should == false
+      cert.ec?.should == true
+    end
+    it "returns the public key" do
+      cert = R509::Cert.new(:cert => @cert_ec)
+      private_key = R509::PrivateKey.new(:key => @key_ec)
+      cert.public_key.to_der.should == private_key.public_key.to_der
+    end
+    it "returns the key algorithm" do
+      cert = R509::Cert.new(:cert => @cert_ec)
+      cert.key_algorithm.should == 'EC'
+    end
   end
 end

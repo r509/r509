@@ -33,6 +33,7 @@ describe R509::Csr do
     csr = R509::Csr.new(:subject => [['CN','testing.rsa']], :bit_strength => 1024)
     csr.rsa?.should == true
     csr.dsa?.should == false
+    csr.ec?.should == false
   end
   it "returns expected value for to_der" do
     csr = R509::Csr.new(:csr => @csr)
