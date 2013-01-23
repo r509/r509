@@ -93,6 +93,10 @@ module TestFixtures
 
   KEY4 = read_fixture('key4.pem')
 
+  EC_KEY1 = read_fixture('ec_key1.pem')
+  EC_KEY1_DER = read_fixture('ec_key1.der')
+  EC_KEY1_ENCRYPTED = read_fixture('ec_key1_encrypted.pem')
+
   TEST_CA_CERT = read_fixture('test_ca.cer')
   TEST_CA_KEY  = read_fixture('test_ca.key')
 

@@ -7,10 +7,11 @@ module R509
   class PrivateKey
     include R509::IOHelpers
 
-    # @option opts [Symbol] :type :rsa/:dsa
-    # @option opts [Integer] :bit_strength
+    # @option opts [Symbol] :type :rsa/:dsa/:ec
+    # @option opts [String] :curve_name ("secp384r1") Only used if :type is :ec
+    # @option opts [Integer] :bit_strength (2048) Only used if :type is :rsa or :dsa.
     # @option opts [String] :password
-    # @option opts [String,OpenSSL::PKey::RSA,OpenSSL::PKey::DSA] :key
+    # @option opts [String,OpenSSL::PKey::RSA,OpenSSL::PKey::DSA,OpenSSL::PKey::EC] :key
     # @option opts [OpenSSL::Engine] :engine
     # @option opts [string] :key_name (used with engine)
     def initialize(opts)
@@ -35,14 +36,18 @@ module R509
       if opts.has_key?(:key)
         password = opts[:password] || nil
         #OpenSSL::PKey.read solves this begin/rescue garbage but is only
-        #available to Ruby 1.9.3+
+        #available to Ruby 1.9.3+ and may not solve the EC portion
         begin
           @key = OpenSSL::PKey::RSA.new(opts[:key],password)
         rescue OpenSSL::PKey::RSAError
           begin
             @key = OpenSSL::PKey::DSA.new(opts[:key],password)
           rescue
-            raise R509::R509Error, "Failed to load private key. Invalid key or incorrect password."
+            begin
+              @key = OpenSSL::PKey::EC.new(opts[:key],password)
+            rescue
+              raise R509::R509Error, "Failed to load private key. Invalid key or incorrect password."
+            end
           end
         end
       else
@@ -53,8 +58,12 @@ module R509
           @key = OpenSSL::PKey::RSA.new(bit_strength)
         when :dsa
           @key = OpenSSL::PKey::DSA.new(bit_strength)
+        when :ec
+          curve_name = opts[:curve_name] || "secp384r1"
+          @key = OpenSSL::PKey::EC.new(curve_name)
+          @key.generate_key
         else
-          raise ArgumentError, 'Must provide :rsa or :dsa as type when key or engine is nil'
+          raise ArgumentError, 'Must provide :rsa, :dsa , or :ec as type when key or engine is nil'
         end
       end
     end
@@ -74,6 +83,20 @@ module R509
         return self.public_key.n.num_bits
       elsif self.dsa?
         return self.public_key.p.num_bits
+      elsif self.ec?
+        raise R509::R509Error, 'Bit strength is not available for EC at this time.'
+      end
+    end
+
+    # Returns the short name of the elliptic curve used to generate the private key
+    # if the key is EC. If not, raises an error.
+    #
+    # @return [String] elliptic curve name
+    def curve_name
+      if self.ec?
+        self.key.group.curve_name
+      else
+        raise R509::R509Error, 'Curve name is only available with EC private keys'
       end
     end
 
@@ -95,9 +118,20 @@ module R509
       end
     end
 
-    # @return [OpenSSL::PKey::RSA,OpenSSL::PKey::DSA] public key
+    # @return [OpenSSL::PKey::RSA,OpenSSL::PKey::DSA,OpenSSL::PKey::EC] public key
     def public_key
-      self.key.public_key
+      if self.ec?
+        # OpenSSL::PKey::EC.public_key returns an OpenSSL::PKey::EC::Point, which isn't consistent
+        # with the way OpenSSL::PKey::RSA/DSA do it. We could return the original PKey::EC object
+        # but if we do that then it has the private_key as well. Here's a ghetto workaround.
+        # We have to supply the curve name to the temporary key object or else #public_key= fails
+        curve_name = self.key.group.curve_name
+        temp_key = OpenSSL::PKey::EC.new(curve_name)
+        temp_key.public_key=self.key.public_key
+        temp_key
+      else
+        self.key.public_key
+      end
     end
 
     alias :to_s :public_key
@@ -168,18 +202,25 @@ module R509
     end
 
 
-    # Returns whether the public key is RSA
+    # Returns whether the key is RSA
     #
-    # @return [Boolean] true if the public key is RSA, false otherwise
+    # @return [Boolean] true if the key is RSA, false otherwise
     def rsa?
       self.key.kind_of?(OpenSSL::PKey::RSA)
     end
 
-    # Returns whether the public key is DSA
+    # Returns whether the key is DSA
     #
-    # @return [Boolean] true if the public key is DSA, false otherwise
+    # @return [Boolean] true if the key is DSA, false otherwise
     def dsa?
       self.key.kind_of?(OpenSSL::PKey::DSA)
+    end
+
+    # Returns whether the key is EC
+    #
+    # @return [Boolean] true if the key is EC, false otherwise
+    def ec?
+      self.key.kind_of?(OpenSSL::PKey::EC)
     end
   end
 end
