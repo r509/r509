@@ -297,6 +297,20 @@ describe R509::CertificateAuthority::Signer do
   end
 
   context "issuing off a DSA CA" do
-    it "properly issues server cert"
+    before :all do
+      @test_ca_dsa = R509::Config::CaConfig.from_yaml("test_ca_dsa", File.read("#{File.dirname(__FILE__)}/fixtures/config_test_dsa.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"})
+      @ca_dsa = R509::CertificateAuthority::Signer.new(@test_ca_dsa)
+    end
+
+    it "properly issues server cert" do
+      csr = R509::Csr.new(:cert => @cert, :type => :dsa, :bit_strength => 1024)
+      cert = @ca_dsa.sign( :csr => csr, :profile_name => 'server' )
+      cert.to_pem.should match(/BEGIN CERTIFICATE/)
+      cert.subject.to_s.should == '/C=US/ST=Illinois/L=Chicago/O=Paul Kehrer/CN=langui.sh'
+      cert.signature_algorithm.should == 'dsaWithSHA1'
+      cert.key_algorithm.should == 'DSA'
+      extended_key_usage = cert.extensions['extendedKeyUsage']
+      extended_key_usage['value'].should == 'TLS Web Server Authentication'
+    end
   end
 end
