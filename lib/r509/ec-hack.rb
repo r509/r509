@@ -5,9 +5,11 @@
 # both define this method, but OpenSSL::PKey::EC defines #private_key? instead. This
 # will open up the class and add #private? as an alias to allow successful signing
 if defined?(OpenSSL::PKey::EC) and not OpenSSL::PKey::EC.method_defined?('private?')
-  # OpenSSL::PKey module that contains the EC class
+  # marked as @private so it won't appear in the yard doc
+  # @private
   module OpenSSL::PKey
-    # The EC class we're about to open up
+    # marked as @private so it won't appear in the yard doc
+    # @private
     class EC
       def private?
         private_key?
