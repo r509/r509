@@ -69,9 +69,9 @@ module R509::CertificateAuthority
         raise R509::R509Error, "Certificate request signature is invalid."
       end
 
-      # prior to OpenSSL 1.0 DSA could only use DSS1 signatures. post-1.0 anything goes
-      # at the moment we don't enforce this restriction so an OpenSSL error could bubble up
-      # if they do it wrong.
+      # prior to OpenSSL 1.0 DSA could only use DSS1 (aka SHA1) signatures. post-1.0 anything
+      # goes but at the moment we don't enforce this restriction so an OpenSSL error could
+      # bubble up if they do it wrong.
       if options.has_key?(:message_digest)
         message_digest = R509::MessageDigest.new(options[:message_digest])
       else

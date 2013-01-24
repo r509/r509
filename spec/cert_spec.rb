@@ -310,14 +310,12 @@ describe R509::Cert do
     cert = R509::Cert.new(:cert => @cert3)
     crl_admin = R509::Crl::Administrator.new(TestFixtures.test_ca_config)
     crl_admin.revoke_cert(1425751142578902223005775172931960716533532010870)
-    crl = crl_admin.to_crl
-    cert.is_revoked_by_crl?(crl).should == true
+    cert.is_revoked_by_crl?(crl_admin.crl).should == true
   end
   it "is not revoked by crl" do
     cert = R509::Cert.new(:cert => @cert3)
     crl_admin = R509::Crl::Administrator.new(TestFixtures.test_ca_config)
-    crl = crl_admin.to_crl
-    cert.is_revoked_by_crl?(crl).should == false
+    cert.is_revoked_by_crl?(crl_admin.crl).should == false
   end
   it "loads a cert with load_from_file" do
     path = File.dirname(__FILE__) + '/fixtures/cert1.pem'
