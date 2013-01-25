@@ -17,10 +17,25 @@ module R509
     # @option opts [String] :message_digest Optional digest. sha1, sha224, sha256, sha384, sha512, md5. Defaults to sha1
     # @option opts [Array] :san_names List of domains to encode as subjectAltNames
     # @option opts [R509::Subject,Array,OpenSSL::X509::Name] :subject array of subject items
-    # @example [['CN','langui.sh'],['ST','Illinois'],['L','Chicago'],['C','US'],['emailAddress','ca@langui.sh']]
-    # you can also pass OIDs (see tests)
     # @option opts [String,R509::Cert,OpenSSL::X509::Certificate] :cert takes a cert (used for generating a CSR with the certificate's values)
     # @option opts [R509::PrivateKey,String] :key optional private key to supply. either an unencrypted PEM/DER string or an R509::PrivateKey object (use the latter if you need password/hardware support)
+    # @example Generate a 4096-bit RSA key + CSR
+    #   :type => :rsa,
+    #   :bit_strength => 4096,
+    #   :subject => [
+    #     ['CN','somedomain.com'],
+    #     ['O','My Org'],
+    #     ['L','City'],
+    #     ['ST','State'],
+    #     ['C','US']
+    #   ]
+    # @example Generate an ECDSA key using the secp384r1 curve parameters + CSR and sign with SHA512
+    #   :type => :ec,
+    #   :curve_name => 'secp384r1',
+    #   :message_digest => 'sha512',
+    #   :subject => [
+    #     ['CN','somedomain.com'],
+    #   ]
     def initialize(opts={})
       if not opts.kind_of?(Hash)
         raise ArgumentError, 'Must provide a hash of options'
