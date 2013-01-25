@@ -482,7 +482,7 @@ key if the key is EC.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>you can also pass OIDs (see tests).</p>
+<p>A new instance of Csr.</p>
 </div></span>
   
 </li>
@@ -783,7 +783,7 @@ key if the key is EC.</p>
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>you can also pass OIDs (see tests)</p>
+<p>A new instance of Csr</p>
 
 
   </div>
@@ -794,11 +794,32 @@ key if the key is EC.</p>
     <p class="tag_title">Examples:</p>
     
       
-        <p class="example_title"><div class='inline'><dl class="rdoc-list"><dt>['<a href="http://'ST','Illinois'">CN','langui.sh'],</a>,['<a href="http://'C','US'">L','Chicago'],</a>,['emailAddress','ca@langui.sh']</dt>
-<dd></dd></dl>
+        <p class="example_title"><div class='inline'>
+<p>Generate a 4096-bit RSA key + CSR</p>
 </div></p>
       
-      <pre class="example code"></pre>
+      <pre class="example code">:type =&gt; :rsa,
+:bit_strength =&gt; 4096,
+:subject =&gt; [
+  ['CN','somedomain.com'],
+  ['O','My Org'],
+  ['L','City'],
+  ['ST','State'],
+  ['C','US']
+]</pre>
+    
+      
+        <p class="example_title"><div class='inline'>
+<p>Generate an ECDSA key using the secp384r1 curve parameters + CSR and sign
+with SHA512</p>
+</div></p>
+      
+      <pre class="example code">:type =&gt; :ec,
+:curve_name =&gt; 'secp384r1',
+:message_digest =&gt; 'sha512',
+:subject =&gt; [
+  ['CN','somedomain.com'],
+]</pre>
     
   </div>
 <p class="tag_title">Parameters:</p>
@@ -966,21 +987,6 @@ support)</p>
       <pre class="lines">
 
 
-24
-25
-26
-27
-28
-29
-30
-31
-32
-33
-34
-35
-36
-37
-38
 39
 40
 41
@@ -1028,10 +1034,25 @@ support)</p>
 83
 84
 85
-86</pre>
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/csr.rb', line 24</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/csr.rb', line 39</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='id identifier rubyid_opts'>opts</span><span class='op'>=</span><span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='kw'>not</span> <span class='id identifier rubyid_opts'>opts</span><span class='period'>.</span><span class='id identifier rubyid_kind_of?'>kind_of?</span><span class='lparen'>(</span><span class='const'>Hash</span><span class='rparen'>)</span>
@@ -1435,12 +1456,12 @@ support)</p>
       <pre class="lines">
 
 
-92
-93
-94</pre>
+107
+108
+109</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/csr.rb', line 92</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/csr.rb', line 107</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_load_from_file'>load_from_file</span><span class='lparen'>(</span> <span class='id identifier rubyid_filename'>filename</span> <span class='rparen'>)</span>
   <span class='kw'>return</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>Csr</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='symbol'>:csr</span> <span class='op'>=&gt;</span> <span class='const'>IOHelpers</span><span class='period'>.</span><span class='id identifier rubyid_read_data'>read_data</span><span class='lparen'>(</span><span class='id identifier rubyid_filename'>filename</span><span class='rparen'>)</span> <span class='rparen'>)</span>
@@ -1500,18 +1521,18 @@ support)</p>
       <pre class="lines">
 
 
-173
-174
-175
-176
-177
-178
-179
-180
-181</pre>
+188
+189
+190
+191
+192
+193
+194
+195
+196</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/csr.rb', line 173</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/csr.rb', line 188</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_bit_strength'>bit_strength</span>
   <span class='kw'>if</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_rsa?'>rsa?</span>
@@ -1572,16 +1593,16 @@ key if the key is EC. If not, raises an error.</p>
       <pre class="lines">
 
 
-187
-188
-189
-190
-191
-192
-193</pre>
+202
+203
+204
+205
+206
+207
+208</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/csr.rb', line 187</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/csr.rb', line 202</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_curve_name'>curve_name</span>
   <span class='kw'>if</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_ec?'>ec?</span>
@@ -1639,12 +1660,12 @@ key if the key is EC. If not, raises an error.</p>
       <pre class="lines">
 
 
-160
-161
-162</pre>
+175
+176
+177</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/csr.rb', line 160</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/csr.rb', line 175</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_dsa?'>dsa?</span>
   <span class='ivar'>@req</span><span class='period'>.</span><span class='id identifier rubyid_public_key'>public_key</span><span class='period'>.</span><span class='id identifier rubyid_kind_of?'>kind_of?</span><span class='lparen'>(</span><span class='const'>OpenSSL</span><span class='op'>::</span><span class='const'>PKey</span><span class='op'>::</span><span class='const'>DSA</span><span class='rparen'>)</span>
@@ -1698,12 +1719,12 @@ key if the key is EC. If not, raises an error.</p>
       <pre class="lines">
 
 
-167
-168
-169</pre>
+182
+183
+184</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/csr.rb', line 167</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/csr.rb', line 182</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_ec?'>ec?</span>
   <span class='ivar'>@req</span><span class='period'>.</span><span class='id identifier rubyid_public_key'>public_key</span><span class='period'>.</span><span class='id identifier rubyid_kind_of?'>kind_of?</span><span class='lparen'>(</span><span class='const'>OpenSSL</span><span class='op'>::</span><span class='const'>PKey</span><span class='op'>::</span><span class='const'>EC</span><span class='rparen'>)</span>
@@ -1757,16 +1778,16 @@ key if the key is EC. If not, raises an error.</p>
       <pre class="lines">
 
 
-110
-111
-112
-113
-114
-115
-116</pre>
+125
+126
+127
+128
+129
+130
+131</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/csr.rb', line 110</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/csr.rb', line 125</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_has_private_key?'>has_private_key?</span>
   <span class='kw'>if</span> <span class='kw'>not</span> <span class='ivar'>@key</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
@@ -1824,18 +1845,18 @@ key if the key is EC. If not, raises an error.</p>
       <pre class="lines">
 
 
-217
-218
-219
-220
-221
-222
-223
-224
-225</pre>
+232
+233
+234
+235
+236
+237
+238
+239
+240</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/csr.rb', line 217</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/csr.rb', line 232</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_key_algorithm'>key_algorithm</span>
   <span class='kw'>if</span> <span class='ivar'>@req</span><span class='period'>.</span><span class='id identifier rubyid_public_key'>public_key</span><span class='period'>.</span><span class='id identifier rubyid_kind_of?'>kind_of?</span> <span class='const'>OpenSSL</span><span class='op'>::</span><span class='const'>PKey</span><span class='op'>::</span><span class='const'>RSA</span> <span class='kw'>then</span>
@@ -1895,14 +1916,14 @@ key if the key is EC. If not, raises an error.</p>
       <pre class="lines">
 
 
-97
-98
-99
-100
-101</pre>
+112
+113
+114
+115
+116</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/csr.rb', line 97</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/csr.rb', line 112</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_public_key'>public_key</span>
   <span class='kw'>if</span><span class='lparen'>(</span><span class='ivar'>@req</span><span class='period'>.</span><span class='id identifier rubyid_kind_of?'>kind_of?</span><span class='lparen'>(</span><span class='const'>OpenSSL</span><span class='op'>::</span><span class='const'>X509</span><span class='op'>::</span><span class='const'>Request</span><span class='rparen'>)</span><span class='rparen'>)</span> <span class='kw'>then</span>
@@ -1958,12 +1979,12 @@ key if the key is EC. If not, raises an error.</p>
       <pre class="lines">
 
 
-153
-154
-155</pre>
+168
+169
+170</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/csr.rb', line 153</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/csr.rb', line 168</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_rsa?'>rsa?</span>
   <span class='ivar'>@req</span><span class='period'>.</span><span class='id identifier rubyid_public_key'>public_key</span><span class='period'>.</span><span class='id identifier rubyid_kind_of?'>kind_of?</span><span class='lparen'>(</span><span class='const'>OpenSSL</span><span class='op'>::</span><span class='const'>PKey</span><span class='op'>::</span><span class='const'>RSA</span><span class='rparen'>)</span>
@@ -2018,12 +2039,12 @@ sha256WithRSAEncryption, md5WithRSAEncryption</p>
       <pre class="lines">
 
 
-210
-211
-212</pre>
+225
+226
+227</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/csr.rb', line 210</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/csr.rb', line 225</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_signature_algorithm'>signature_algorithm</span>
   <span class='ivar'>@req</span><span class='period'>.</span><span class='id identifier rubyid_signature_algorithm'>signature_algorithm</span>
@@ -2077,17 +2098,17 @@ sha256WithRSAEncryption, md5WithRSAEncryption</p>
       <pre class="lines">
 
 
-198
-199
-200
-201
-202
-203
-204
-205</pre>
+213
+214
+215
+216
+217
+218
+219
+220</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/csr.rb', line 198</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/csr.rb', line 213</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_subject_component'>subject_component</span> <span class='id identifier rubyid_short_name'>short_name</span>
   <span class='ivar'>@req</span><span class='period'>.</span><span class='id identifier rubyid_subject'>subject</span><span class='period'>.</span><span class='id identifier rubyid_to_a'>to_a</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_element'>element</span><span class='op'>|</span>
@@ -2146,12 +2167,12 @@ sha256WithRSAEncryption, md5WithRSAEncryption</p>
       <pre class="lines">
 
 
-130
-131
-132</pre>
+145
+146
+147</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/csr.rb', line 130</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/csr.rb', line 145</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_to_der'>to_der</span>
   <span class='ivar'>@req</span><span class='period'>.</span><span class='id identifier rubyid_to_der'>to_der</span>
@@ -2207,12 +2228,12 @@ class.</p>
       <pre class="lines">
 
 
-232
-233
-234</pre>
+247
+248
+249</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/csr.rb', line 232</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/csr.rb', line 247</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_to_hash'>to_hash</span>
   <span class='lbrace'>{</span> <span class='symbol'>:subject</span> <span class='op'>=&gt;</span> <span class='ivar'>@subject</span><span class='period'>.</span><span class='id identifier rubyid_dup'>dup</span> <span class='comma'>,</span> <span class='symbol'>:san_names</span> <span class='op'>=&gt;</span> <span class='ivar'>@san_names</span><span class='period'>.</span><span class='id identifier rubyid_dup'>dup</span> <span class='rbrace'>}</span>
@@ -2270,12 +2291,12 @@ class.</p>
       <pre class="lines">
 
 
-121
-122
-123</pre>
+136
+137
+138</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/csr.rb', line 121</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/csr.rb', line 136</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_to_pem'>to_pem</span>
   <span class='ivar'>@req</span><span class='period'>.</span><span class='id identifier rubyid_to_pem'>to_pem</span>
@@ -2324,12 +2345,12 @@ class.</p>
       <pre class="lines">
 
 
-105
-106
-107</pre>
+120
+121
+122</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/csr.rb', line 105</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/csr.rb', line 120</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_verify_signature'>verify_signature</span>
   <span class='ivar'>@req</span><span class='period'>.</span><span class='id identifier rubyid_verify'>verify</span><span class='lparen'>(</span><span class='id identifier rubyid_public_key'>public_key</span><span class='rparen'>)</span>
@@ -2386,12 +2407,12 @@ IO-like object.</p>
       <pre class="lines">
 
 
-146
-147
-148</pre>
+161
+162
+163</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/csr.rb', line 146</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/csr.rb', line 161</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_write_der'>write_der</span><span class='lparen'>(</span><span class='id identifier rubyid_filename_or_io'>filename_or_io</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_write_data'>write_data</span><span class='lparen'>(</span><span class='id identifier rubyid_filename_or_io'>filename_or_io</span><span class='comma'>,</span> <span class='ivar'>@req</span><span class='period'>.</span><span class='id identifier rubyid_to_der'>to_der</span><span class='rparen'>)</span>
@@ -2448,12 +2469,12 @@ IO-like object.</p>
       <pre class="lines">
 
 
-138
-139
-140</pre>
+153
+154
+155</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/csr.rb', line 138</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/csr.rb', line 153</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_write_pem'>write_pem</span><span class='lparen'>(</span><span class='id identifier rubyid_filename_or_io'>filename_or_io</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_write_data'>write_data</span><span class='lparen'>(</span><span class='id identifier rubyid_filename_or_io'>filename_or_io</span><span class='comma'>,</span> <span class='ivar'>@req</span><span class='period'>.</span><span class='id identifier rubyid_to_pem'>to_pem</span><span class='rparen'>)</span>
@@ -2468,7 +2489,7 @@ IO-like object.</p>
 </div>
 
     <div id="footer">
-  Generated on Fri Jan 25 13:27:06 2013 by
+  Generated on Fri Jan 25 13:45:19 2013 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.3 (ruby-1.9.3).
 </div>
