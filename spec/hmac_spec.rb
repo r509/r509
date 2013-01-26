@@ -1,0 +1,76 @@
+require 'spec_helper'
+require 'r509/hmac'
+require 'openssl'
+
+describe R509::Hmac do
+  before :all do
+    @valid_hmacsha512_key = "\xEB\x88\x9B\n\x9E\x05\tHk\x12\xCF\xAF\xA3\xD8kMX4\xA4\xE8\xB3\xC6\xC07km\b\x13\x052\xE2\xCC{\xCC/}\xA18\xBE\xA3IE\x814\x96\x8A\x99\xF3\x93\xB7{\xE0$\xE2\b\x174\xDD}'\x15\xB4Q\xA7"
+    @valid_hmacsha1_key = "l\xFA\x94}\x93[a\xBD\"W\tO\x17b\x88\xF6\t\x9128"
+  end
+
+  it "errors when no hash is supplied" do
+    expect { R509::Hmac.hexdigest('wrong pararm') }.to raise_error(ArgumentError, 'Must provide a hash of options')
+    expect { R509::Hmac.digest('wrong pararm') }.to raise_error(ArgumentError, 'Must provide a hash of options')
+  end
+
+  it "errors when no key is supplied" do
+    expect { R509::Hmac.hexdigest(:data => 'hmac me!') }.to raise_error(ArgumentError, ':key is required')
+    expect { R509::Hmac.digest(:data => 'hmac me!') }.to raise_error(ArgumentError, ':key is required')
+    expect { R509::Hmac.hexdigest(:key => '', :data => 'hmac me!') }.to raise_error(ArgumentError, ':key is required')
+    expect { R509::Hmac.digest(:key => '', :data => 'hmac me!') }.to raise_error(ArgumentError, ':key is required')
+  end
+
+  it "errors when no data is supplied" do
+    expect { R509::Hmac.hexdigest(:key => @valid_hmacsha512_key) }.to raise_error(ArgumentError, ':data is required')
+    expect { R509::Hmac.digest(:key => @valid_hmacsha512_key) }.to raise_error(ArgumentError, ':data is required')
+    expect { R509::Hmac.hexdigest(:key => @valid_hmacsha512_key, :data => '') }.to raise_error(ArgumentError, ':data is required')
+    expect { R509::Hmac.digest(:key => @valid_hmacsha512_key, :data => '') }.to raise_error(ArgumentError, ':data is required')
+  end
+
+  it "errors when key is too short" do
+    key = "worthless key"
+    expect { R509::Hmac.hexdigest(:key => key, :data => 'hmac me!') }.to raise_error(R509::R509Error, 'Key must be at least equal to the digest length. Since your digest is sha512 the length must be 64 bytes. This check can be overridden with :allow_low_entropy if needed')
+    expect { R509::Hmac.digest(:key => key, :data => 'hmac me!') }.to raise_error(R509::R509Error, 'Key must be at least equal to the digest length. Since your digest is sha512 the length must be 64 bytes. This check can be overridden with :allow_low_entropy if needed')
+  end
+
+  it "allows keys that are too short with :allow_low_entropy" do
+    key = "worthless key"
+    expect { R509::Hmac.hexdigest(:key => key, :data => 'hmac me!', :allow_low_entropy => true) }.to_not raise_error
+    expect { R509::Hmac.digest(:key => key, :data => 'hmac me!', :allow_low_entropy => true) }.to_not raise_error
+  end
+
+  it "responds successfully when the params are valid for the default digest" do
+    R509::Hmac.hexdigest(:key => @valid_hmacsha512_key, :data => 'sign me!').should == '9eecc06cbc3dc413a5d531853b2b669fd3331b811ebd6cbd91ffdd6ad3598e0313cc54346dfde5bbaeb1e41b222514115eceed6f0c7a567a28f0de2b101be0c7'
+    R509::Hmac.digest(:key => @valid_hmacsha512_key, :data => 'sign me!').should == "\x9E\xEC\xC0l\xBC=\xC4\x13\xA5\xD51\x85;+f\x9F\xD33\e\x81\x1E\xBDl\xBD\x91\xFF\xDDj\xD3Y\x8E\x03\x13\xCCT4m\xFD\xE5\xBB\xAE\xB1\xE4\e\"%\x14\x11^\xCE\xEDo\fzVz(\xF0\xDE+\x10\e\xE0\xC7"
+  end
+
+  it "responds successfully when the params are valid for a custom digest" do
+    R509::Hmac.hexdigest(:message_digest => 'sha1', :key => @valid_hmacsha1_key, :data => 'sign me!').should == "f8857d44bbe5afa1407bb8c247c319c85a60262a"
+    R509::Hmac.digest(:message_digest => 'sha1', :key => @valid_hmacsha1_key, :data => 'sign me!').should == "\xF8\x85}D\xBB\xE5\xAF\xA1@{\xB8\xC2G\xC3\x19\xC8Z`&*"
+  end
+
+  it "generates a key with the proper length for the default digest (sha512)" do
+    R509::Hmac.generate_key.size.should == 64
+  end
+
+  it "generates a key with the proper length for a custom digest" do
+    R509::Hmac.generate_key('sha1').size.should == 20
+    R509::Hmac.generate_key('sha256').size.should == 32
+  end
+
+  it "rejects keys with shannon entropy < 3.5" do
+    expect { R509::Hmac.hexdigest(:key => "key00000000000000000", :message_digest => 'sha1', :data => 'boo!') }.to raise_error(R509::R509Error,"The shannon entropy of this key is low and therefore is not considered secure. Consider using a key from the R509::Hmac.generate_key method. This check can be overridden with :allow_low_entropy if needed")
+    expect { R509::Hmac.digest(:key => "key00000000000000000", :message_digest => 'sha1', :data => 'boo!') }.to raise_error(R509::R509Error,"The shannon entropy of this key is low and therefore is not considered secure. Consider using a key from the R509::Hmac.generate_key method. This check can be overridden with :allow_low_entropy if needed")
+  end
+
+  it "allows keys with shannon entropy < 3.5 with :allow_low_entropy" do
+    expect { R509::Hmac.hexdigest(:key => "key00000000000000000", :allow_low_entropy => true, :message_digest => 'sha1', :data => 'boo!') }.to_not raise_error
+    expect { R509::Hmac.digest(:key => "key00000000000000000", :allow_low_entropy => true, :message_digest => 'sha1', :data => 'boo!') }.to_not raise_error
+  end
+
+  it "allows keys with shannon entropy > 3.5" do
+    just_barely_allowed_key = 'mko09ijnbhu87yffffff'
+    expect { R509::Hmac.hexdigest(:key => just_barely_allowed_key, :message_digest => 'sha1', :data => 'allowed!') }.to_not raise_error
+  end
+
+end
