@@ -125,6 +125,9 @@ module TestFixtures
 
   CRL_REASON = read_fixture("crl_with_reason.pem")
 
+  HMACSHA512_SIG = read_fixture("hmacsha512.sig")
+  HMACSHA1_SIG = read_fixture("hmacsha1.sig")
+
   def self.test_ca_cert
     R509::Cert.new(:cert => TEST_CA_CERT, :key => TEST_CA_KEY)
   end

@@ -90,7 +90,7 @@ module R509
 
       md = R509::MessageDigest.new(opts[:message_digest])
       required_length = md.digest.digest_length
-      if required_length > opts[:key].size and not opts[:allow_low_entropy] == true
+      if required_length > opts[:key].bytesize and not opts[:allow_low_entropy] == true
         raise R509::R509Error, "Key must be at least equal to the digest length. Since your digest is #{md.name} the length must be #{required_length} bytes. This check can be overridden with :allow_low_entropy if needed"
       end
 
@@ -108,7 +108,7 @@ module R509
     # http://en.wikipedia.org/wiki/Entropy_(information_theory)
     # http://www.shannonentropy.netmark.pl/calculate/
     def self.shannon_entropy(key)
-      total = key.size
+      total = key.bytesize
 
       frequency = Hash.new { 0 }
       key.each_byte do |b|
