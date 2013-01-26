@@ -306,9 +306,19 @@ R509::OidMapper.batch_register([
 ])
 ```
 
+###HMAC Signing
+
+```ruby
+key = R509::Hmac.generate_key("sha256")
+data = "Some data to sign"
+signature = R509::Hmac.hexdigest(:key => key, :data => data, :message_digest => "sha256")
+# or
+binary_sig = R509::Hmac.digest(:key => key, :data => data, :message_digest => "sha256")
+```
+
 ##Documentation
 
-There is (relatively) complete documentation available for every method and class in r509 available via yardoc. If you installed via gem it should be pre-generated in the doc directory. If you cloned this repo, just type ```rake yard``` with the yard gem installed. You will also need the redcarpet and github-markup gems to properly parse the Readme.md.
+There is documentation available for every method and class in r509 available via yardoc. If you installed via gem it should be pre-generated in the doc directory. If you cloned this repo, just type ```rake yard``` with the yard gem installed. You will also need the redcarpet and github-markup gems to properly parse the Readme.md. Alternately you can view pre-generated documentation at [r509.org](http://r509.org)
 
 
 ##Thanks to...
