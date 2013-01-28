@@ -1,7 +1,7 @@
 engine_and_key: {
-    ca_cert: {
-        cert: 'test_ca.cer',
-        key: 'test_ca.key',
-        engine: 'chil'
-    }
+  ca_cert: {
+    cert: 'test_ca.cer',
+    key: 'test_ca.key',
+    engine: 'chil'
+  }
 }

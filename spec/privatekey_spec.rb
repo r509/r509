@@ -9,8 +9,11 @@ describe R509::PrivateKey do
     @csr_public_key_modulus = TestFixtures::CSR_PUBLIC_KEY_MODULUS
     @key_csr_der = TestFixtures::KEY_CSR_DER
     @dsa_key = TestFixtures::DSA_KEY
+    @ec_key_pem = TestFixtures::EC_KEY1
+    @ec_key_der = TestFixtures::EC_KEY1_DER
+    @ec_key_encrypted = TestFixtures::EC_KEY1_ENCRYPTED
   end
-  it "throws an exception when given a type other than DSA or RSA" do
+  it "throws an exception when given a type other than DSA, RSA, or EC" do
     expect { R509::PrivateKey.new(:type=>:not_rsa_or_dsa) }.to raise_error(ArgumentError)
   end
   it "throws an exception when no hash is provided" do
@@ -19,11 +22,13 @@ describe R509::PrivateKey do
   it "returns the right value for #rsa?" do
     private_key = R509::PrivateKey.new(:key=>@key_csr)
     private_key.dsa?.should == false
+    private_key.ec?.should == false
     private_key.rsa?.should == true
   end
   it "returns the right value for #dsa?" do
     private_key = R509::PrivateKey.new(:key => @dsa_key)
     private_key.rsa?.should == false
+    private_key.ec?.should == false
     private_key.dsa?.should == true
   end
   it "defaults to RSA" do
@@ -176,7 +181,7 @@ describe R509::PrivateKey do
     faux_key = double("faux_key")
     faux_key.should_receive(:public_key).and_return("returning public key")
     key_name = "r509_key"
-    engine.should_receive(:load_private_key).with(key_name).and_return(faux_key)
+    engine.should_receive(:load_private_key).twice.with(key_name).and_return(faux_key)
     key = R509::PrivateKey.new(
       :engine => engine,
       :key_name => key_name
@@ -193,6 +198,73 @@ describe R509::PrivateKey do
     path = File.dirname(__FILE__) + '/fixtures/key4_encrypted_des3.pem'
     key = R509::PrivateKey.load_from_file( path, 'r509')
     key.rsa?.should == true
+  end
+
+  it "returns an error for curve_name for dsa/rsa" do
+    private_key = R509::PrivateKey.new(:key => @key_csr)
+    expect { private_key.curve_name }.to raise_error(R509::R509Error, 'Curve name is only available with EC private keys')
+  end
+
+  context "elliptic curves" do
+    it "loads a pre-existing EC key" do
+      private_key = R509::PrivateKey.new(:key => @ec_key_pem)
+      private_key.to_pem.should == @ec_key_pem
+      @ec_key_pem.should_not be_nil
+    end
+
+    it "loads an encrypted private key with the right password" do
+      private_key = R509::PrivateKey.new(:key => @ec_key_encrypted, :password => 'Testing1')
+      private_key.to_pem.should == @ec_key_pem
+      @ec_key_encrypted.should_not be_nil
+      @ec_key_pem.should_not be_nil
+    end
+
+    it "returns the right value for #ec?" do
+      path = File.dirname(__FILE__) + '/fixtures/ec_key1.der'
+      private_key = R509::PrivateKey.load_from_file path
+      private_key.rsa?.should == false
+      private_key.dsa?.should == false
+      private_key.ec?.should == true
+    end
+
+    it "returns the curve_name" do
+      private_key = R509::PrivateKey.new(:key => @ec_key_pem)
+      private_key.curve_name.should == 'secp384r1'
+    end
+
+    it "generates an elliptic curve key using the default curve (secp384r1)" do
+      private_key = R509::PrivateKey.new(:type => :ec)
+      private_key.curve_name.should == 'secp384r1'
+    end
+
+    it "generates an elliptic curve key using a specified curve" do
+      private_key = R509::PrivateKey.new(:type => :ec, :curve_name => 'sect283r1')
+      private_key.curve_name.should == 'sect283r1'
+    end
+
+    it "returns the public key" do
+      private_key = R509::PrivateKey.new(:key => @ec_key_pem)
+      public_key = private_key.public_key
+      public_key.public_key?.should == true
+      public_key.private_key?.should == false
+    end
+
+    it "returns the pem" do
+      private_key = R509::PrivateKey.new(:key => @ec_key_pem)
+      private_key.to_pem.should == @ec_key_pem
+    end
+
+    it "returns the der" do
+      private_key = R509::PrivateKey.new(:key => @ec_key_pem)
+      private_key.to_der.should == @ec_key_der
+    end
+
+    it "returns error for bit_strength" do
+      private_key = R509::PrivateKey.new(:key => @ec_key_pem)
+      expect { private_key.bit_strength }.to raise_error(R509::R509Error,'Bit strength is not available for EC at this time.')
+    end
+
+
   end
 end
 

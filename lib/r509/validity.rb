@@ -4,7 +4,9 @@ require 'openssl'
 module R509::Validity
   #mapping from OpenSSL
   VALID = OpenSSL::OCSP::V_CERTSTATUS_GOOD
+  #mapping from OpenSSL
   REVOKED = OpenSSL::OCSP::V_CERTSTATUS_REVOKED
+  #mapping from OpenSSL
   UNKNOWN = OpenSSL::OCSP::V_CERTSTATUS_UNKNOWN
 
   #data about the status of a certificate

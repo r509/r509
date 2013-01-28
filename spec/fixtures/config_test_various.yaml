@@ -1,100 +1,100 @@
 pkcs12_ca: {
-    ca_cert: {
-        pkcs12: "test_ca.p12",
-        password: "r509"
-    }
+  ca_cert: {
+    pkcs12: "test_ca.p12",
+    password: "r509"
+  }
 }
 pkcs12_key_ca: {
-    ca_cert: {
-        pkcs12: "test_ca.p12",
-        password: "r509",
-        key: "test_ca.cer"
-    }
+  ca_cert: {
+    pkcs12: "test_ca.p12",
+    password: "r509",
+    key: "test_ca.cer"
+  }
 }
 pkcs12_cert_ca: {
-    ca_cert: {
-        pkcs12: "test_ca.p12",
-        password: "r509",
-        cert: "test_ca.cer"
-    }
+  ca_cert: {
+    pkcs12: "test_ca.p12",
+    password: "r509",
+    cert: "test_ca.cer"
+  }
 }
 pkcs12_engine_ca: {
-    ca_cert: {
-        pkcs12: "test_ca.p12",
-        password: "r509",
-        engine: "chil",
-        key_name: "r509_key"
-    }
+  ca_cert: {
+    pkcs12: "test_ca.p12",
+    password: "r509",
+    engine: "chil",
+    key_name: "r509_key"
+  }
 }
 cert_no_key_ca: {
-    ca_cert: {
-        cert: "test_ca.cer"
-    }
+  ca_cert: {
+    cert: "test_ca.cer"
+  }
 }
 missing_key_identifier_ca: {
-    ca_cert: {
-        cert: 'missing_key_identifier_ca.cer',
-        key: 'missing_key_identifier_ca.key'
-    },
-    message_digest: 'SHA1', #SHA1, SHA256, SHA512 supported. MD5 too, but you really shouldn't use that unless you have a good reason
-    profiles: {
-        server: {
-            basic_constraints: "CA:FALSE",
-            key_usage: [digitalSignature,keyEncipherment],
-            extended_key_usage: [serverAuth],
-            certificate_policies: [ [ "policyIdentifier=2.16.840.1.9999999999.3.0"], [ "policyIdentifier=2.16.840.1.9999999999.1.2.3.4.1", "CPS.1=http://example.com/cps"] ]
-        }
+  ca_cert: {
+    cert: 'missing_key_identifier_ca.cer',
+    key: 'missing_key_identifier_ca.key'
+  },
+  message_digest: 'SHA1', #SHA1, SHA256, SHA512 supported. MD5 too, but you really shouldn't use that unless you have a good reason
+  profiles: {
+    server: {
+      basic_constraints: "CA:FALSE",
+      key_usage: [digitalSignature,keyEncipherment],
+      extended_key_usage: [serverAuth],
+      certificate_policies: [ [ "policyIdentifier=2.16.840.1.9999999999.3.0"], [ "policyIdentifier=2.16.840.1.9999999999.1.2.3.4.1", "CPS.1=http://example.com/cps"] ]
     }
+  }
 }
 multi_policy_ca: {
-    ca_cert: {
-        cert: 'test_ca.cer',
-        key: 'test_ca.key'
-    },
-    message_digest: 'SHA1', #SHA1, SHA256, SHA512 supported. MD5 too, but you really shouldn't use that unless you have a good reason
-    profiles: {
-        server: {
-            basic_constraints: "CA:FALSE",
-            key_usage: [digitalSignature,keyEncipherment],
-            extended_key_usage: [serverAuth],
-            certificate_policies: [ [ "policyIdentifier=2.16.840.1.9999999999.3.0"], [ "policyIdentifier=2.16.840.1.9999999999.1.2.3.4.1", "CPS.1=http://example.com/cps"] ]
-        }
+  ca_cert: {
+    cert: 'test_ca.cer',
+    key: 'test_ca.key'
+  },
+  message_digest: 'SHA1', #SHA1, SHA256, SHA512 supported. MD5 too, but you really shouldn't use that unless you have a good reason
+  profiles: {
+    server: {
+      basic_constraints: "CA:FALSE",
+      key_usage: [digitalSignature,keyEncipherment],
+      extended_key_usage: [serverAuth],
+      certificate_policies: [ [ "policyIdentifier=2.16.840.1.9999999999.3.0"], [ "policyIdentifier=2.16.840.1.9999999999.1.2.3.4.1", "CPS.1=http://example.com/cps"] ]
     }
+  }
 }
 ocsp_delegate_ca: {
-    ca_cert: {
-        cert: 'test_ca.cer'
-    },
-    ocsp_cert: {
-        cert: 'test_ca_ocsp.cer',
-        key: 'test_ca_ocsp.key'
-    }
+  ca_cert: {
+    cert: 'test_ca.cer'
+  },
+  ocsp_cert: {
+    cert: 'test_ca_ocsp.cer',
+    key: 'test_ca_ocsp.key'
+  }
 }
 ocsp_chain_ca: {
-    ca_cert: {
-        cert: 'test_ca.cer'
-    },
-    ocsp_cert: {
-        cert: 'test_ca_ocsp.cer',
-        key: 'test_ca_ocsp.key'
-    },
-    ocsp_chain: 'test_ca_ocsp_chain.txt'
+  ca_cert: {
+    cert: 'test_ca.cer'
+  },
+  ocsp_cert: {
+    cert: 'test_ca_ocsp.cer',
+    key: 'test_ca_ocsp.key'
+  },
+  ocsp_chain: 'test_ca_ocsp_chain.txt'
 }
 ocsp_pkcs12_ca: {
-    ca_cert: {
-        cert: 'test_ca.cer'
-    },
-    ocsp_cert: {
-        pkcs12: 'test_ca_ocsp.p12',
-        password: 'r509'
-    }
+  ca_cert: {
+    cert: 'test_ca.cer'
+  },
+  ocsp_cert: {
+    pkcs12: 'test_ca_ocsp.p12',
+    password: 'r509'
+  }
 }
 ocsp_engine_ca: {
-    ca_cert: {
-        cert: 'test_ca.cer'
-    },
-    ocsp_cert: {
-        cert: 'test_ca_ocsp.cer',
-        engine: 'chil'
-    }
+  ca_cert: {
+    cert: 'test_ca.cer'
+  },
+  ocsp_cert: {
+    cert: 'test_ca_ocsp.cer',
+    engine: 'chil'
+  }
 }

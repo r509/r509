@@ -1,7 +1,7 @@
-test_ca: {
+test_ca_dsa: {
   ca_cert: {
-    cert: 'test_ca.cer',
-    key: 'test_ca.key'
+    cert: 'dsa_root.cer',
+    key: 'dsa_root.key'
   },
   crl_list: "crl_list_file.txt",
   crl_number: "crl_number_file.txt",
@@ -38,4 +38,3 @@ test_ca: {
     }
   }
 }
-config_is_string: "this is bogus"

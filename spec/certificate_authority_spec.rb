@@ -119,10 +119,20 @@ describe R509::CertificateAuthority::Signer do
     cert = @ca.sign(:csr => csr, :profile_name => 'server', :message_digest => 'sha1')
     cert.cert.signature_algorithm.should == 'sha1WithRSAEncryption'
   end
+  it "issues with sha224" do
+    csr = R509::Csr.new(:csr => @csr3)
+    cert = @ca.sign(:csr => csr, :profile_name => 'server', :message_digest => 'sha224')
+    cert.cert.signature_algorithm.should == 'sha224WithRSAEncryption'
+  end
   it "issues with sha256" do
     csr = R509::Csr.new(:csr => @csr3)
     cert = @ca.sign(:csr => csr, :profile_name => 'server', :message_digest => 'sha256')
     cert.cert.signature_algorithm.should == 'sha256WithRSAEncryption'
+  end
+  it "issues with sha384" do
+    csr = R509::Csr.new(:csr => @csr3)
+    cert = @ca.sign(:csr => csr, :profile_name => 'server', :message_digest => 'sha384')
+    cert.cert.signature_algorithm.should == 'sha384WithRSAEncryption'
   end
   it "issues with sha512" do
     csr = R509::Csr.new(:csr => @csr3)
@@ -256,5 +266,51 @@ describe R509::CertificateAuthority::Signer do
     ca_signer = R509::CertificateAuthority::Signer.new
     csr = R509::Csr.new(:csr => @csr3)
     expect { ca_signer.sign(:csr => csr, :profile_name => "server") }.to raise_error(R509::R509Error, "When instantiating the signer without a config you can only call #selfsign")
+  end
+
+  context "issuing off an elliptic curve CA" do
+    before :all do
+      @test_ca_ec = R509::Config::CaConfig.from_yaml("test_ca_ec", File.read("#{File.dirname(__FILE__)}/fixtures/config_test_ec.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"})
+      @ca_ec = R509::CertificateAuthority::Signer.new(@test_ca_ec)
+    end
+
+    it "properly issues server cert" do
+      csr = R509::Csr.new(:cert => @cert, :type => :ec)
+      cert = @ca_ec.sign( :csr => csr, :profile_name => 'server' )
+      cert.to_pem.should match(/BEGIN CERTIFICATE/)
+      cert.subject.to_s.should == '/C=US/ST=Illinois/L=Chicago/O=Paul Kehrer/CN=langui.sh'
+      cert.signature_algorithm.should == 'ecdsa-with-SHA384'
+      cert.key_algorithm.should == 'EC'
+      extended_key_usage = cert.extensions['extendedKeyUsage']
+      extended_key_usage['value'].should == 'TLS Web Server Authentication'
+    end
+    it "properly issues server cert using spki" do
+      spki = R509::Spki.new(:spki => @spki, :subject=>[['CN','test.local']])
+      cert = @ca_ec.sign( :spki => spki, :profile_name => 'server' )
+      cert.to_pem.should match(/BEGIN CERTIFICATE/)
+      cert.subject.to_s.should == '/CN=test.local'
+      cert.signature_algorithm.should == 'ecdsa-with-SHA384'
+      cert.key_algorithm.should == 'RSA' #weird right?!
+      extended_key_usage = cert.extensions['extendedKeyUsage']
+      extended_key_usage['value'].should == 'TLS Web Server Authentication'
+    end
+  end
+
+  context "issuing off a DSA CA" do
+    before :all do
+      @test_ca_dsa = R509::Config::CaConfig.from_yaml("test_ca_dsa", File.read("#{File.dirname(__FILE__)}/fixtures/config_test_dsa.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"})
+      @ca_dsa = R509::CertificateAuthority::Signer.new(@test_ca_dsa)
+    end
+
+    it "properly issues server cert" do
+      csr = R509::Csr.new(:cert => @cert, :type => :dsa, :bit_strength => 1024)
+      cert = @ca_dsa.sign( :csr => csr, :profile_name => 'server' )
+      cert.to_pem.should match(/BEGIN CERTIFICATE/)
+      cert.subject.to_s.should == '/C=US/ST=Illinois/L=Chicago/O=Paul Kehrer/CN=langui.sh'
+      cert.signature_algorithm.should == 'dsaWithSHA1'
+      cert.key_algorithm.should == 'DSA'
+      extended_key_usage = cert.extensions['extendedKeyUsage']
+      extended_key_usage['value'].should == 'TLS Web Server Authentication'
+    end
   end
 end

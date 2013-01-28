@@ -13,6 +13,11 @@ describe R509::MessageDigest do
     md.name.should == "sha1"
     md.digest.kind_of?(OpenSSL::Digest::SHA1).should == true
   end
+  it "translates sha224 name -> digest" do
+    md = R509::MessageDigest.new("sha224")
+    md.name.should == "sha224"
+    md.digest.kind_of?(OpenSSL::Digest::SHA224).should == true
+  end
   it "translates sha256 name -> digest" do
     md = R509::MessageDigest.new("sha256")
     md.name.should == "sha256"
@@ -22,6 +27,11 @@ describe R509::MessageDigest do
     md = R509::MessageDigest.new("SHA256")
     md.name.should == "sha256"
     md.digest.kind_of?(OpenSSL::Digest::SHA256).should == true
+  end
+  it "translates SHA384 name -> digest" do
+    md = R509::MessageDigest.new("SHA384")
+    md.name.should == "sha384"
+    md.digest.kind_of?(OpenSSL::Digest::SHA384).should == true
   end
   it "translates sha512 name -> digest" do
     md = R509::MessageDigest.new("sha512")
@@ -63,10 +73,20 @@ describe R509::MessageDigest do
     md.name.should == "sha1"
     md.digest.kind_of?(OpenSSL::Digest::SHA1).should == true
   end
+  it "translates sha224 digest -> name" do
+    md = R509::MessageDigest.new(OpenSSL::Digest::SHA224.new)
+    md.name.should == "sha224"
+    md.digest.kind_of?(OpenSSL::Digest::SHA224).should == true
+  end
   it "translates sha256 digest -> name" do
     md = R509::MessageDigest.new(OpenSSL::Digest::SHA256.new)
     md.name.should == "sha256"
     md.digest.kind_of?(OpenSSL::Digest::SHA256).should == true
+  end
+  it "translates sha384 digest -> name" do
+    md = R509::MessageDigest.new(OpenSSL::Digest::SHA384.new)
+    md.name.should == "sha384"
+    md.digest.kind_of?(OpenSSL::Digest::SHA384).should == true
   end
   it "translates sha512 digest -> name" do
     md = R509::MessageDigest.new(OpenSSL::Digest::SHA512.new)

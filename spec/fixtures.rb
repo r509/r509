@@ -93,6 +93,23 @@ module TestFixtures
 
   KEY4 = read_fixture('key4.pem')
 
+  EC_KEY1 = read_fixture('ec_key1.pem')
+  EC_KEY1_DER = read_fixture('ec_key1.der')
+  EC_KEY1_ENCRYPTED = read_fixture('ec_key1_encrypted.pem')
+
+  EC_CSR2_PEM = read_fixture('ec_csr2.pem')
+  EC_CSR2_DER = read_fixture('ec_csr2.der')
+  EC_KEY2 = read_fixture('ec_key2.pem')
+
+  EC_EE_CERT = read_fixture("test_ca_ec_ee.cer")
+  EC_EE_KEY = read_fixture("test_ca_ec_ee.key")
+
+  DSA_CA_CERT = read_fixture('dsa_root.cer')
+  DSA_CA_KEY = read_fixture('dsa_root.key')
+
+  TEST_CA_EC_CERT = read_fixture('test_ca_ec.cer')
+  TEST_CA_EC_KEY = read_fixture('test_ca_ec.key')
+
   TEST_CA_CERT = read_fixture('test_ca.cer')
   TEST_CA_KEY  = read_fixture('test_ca.key')
 
@@ -130,6 +147,14 @@ module TestFixtures
 
   def self.test_ca_cert
     R509::Cert.new(:cert => TEST_CA_CERT, :key => TEST_CA_KEY)
+  end
+
+  def self.test_ca_ec_cert
+    R509::Cert.new(:cert => TEST_CA_EC_CERT, :key => TEST_CA_EC_KEY)
+  end
+
+  def self.test_ca_dsa_cert
+    R509::Cert.new(:cert => DSA_CA_CERT, :key => DSA_CA_KEY)
   end
 
   def self.test_ca_subroot_cert
@@ -224,6 +249,42 @@ module TestFixtures
 
     opts = {
       :ca_cert => test_ca_cert(),
+      :cdp_location => 'URI:http://crl.domain.com/test_ca.crl',
+      :ocsp_location => 'URI:http://ocsp.domain.com',
+      :ocsp_start_skew_seconds => 3600,
+      :ocsp_validity_hours => 48,
+      :crl_list_file => crl_list_sio,
+      :crl_number_file => crl_number_sio
+    }
+    R509::Config::CaConfig.new(opts)
+  end
+
+  def self.test_ca_ec_no_profile_config
+    crl_list_sio = StringIO.new
+    crl_list_sio.set_encoding("BINARY") if crl_list_sio.respond_to?(:set_encoding)
+    crl_number_sio = StringIO.new
+    crl_number_sio.set_encoding("BINARY") if crl_number_sio.respond_to?(:set_encoding)
+
+    opts = {
+      :ca_cert => test_ca_ec_cert(),
+      :cdp_location => 'URI:http://crl.domain.com/test_ca.crl',
+      :ocsp_location => 'URI:http://ocsp.domain.com',
+      :ocsp_start_skew_seconds => 3600,
+      :ocsp_validity_hours => 48,
+      :crl_list_file => crl_list_sio,
+      :crl_number_file => crl_number_sio
+    }
+    R509::Config::CaConfig.new(opts)
+  end
+
+  def self.test_ca_dsa_no_profile_config
+    crl_list_sio = StringIO.new
+    crl_list_sio.set_encoding("BINARY") if crl_list_sio.respond_to?(:set_encoding)
+    crl_number_sio = StringIO.new
+    crl_number_sio.set_encoding("BINARY") if crl_number_sio.respond_to?(:set_encoding)
+
+    opts = {
+      :ca_cert => test_ca_dsa_cert(),
       :cdp_location => 'URI:http://crl.domain.com/test_ca.crl',
       :ocsp_location => 'URI:http://ocsp.domain.com',
       :ocsp_start_skew_seconds => 3600,

@@ -84,6 +84,7 @@ module R509
   # Sanitize an X509::Name. The #to_a method replaces unknown OIDs with "UNDEF", but the #to_s
   # method doesn't. What we want to do is build the array that would have been produced by #to_a
   # if it didn't throw away the OID.
+  # This method is not required as of ruby-1.9.3p125 and up.
   class NameSanitizer
     # @option name [OpenSSL::X509::Name]
     # @return [Array] array of the form [["OID", "VALUE], ["OID", "VALUE"]] with "UNDEF" replaced by the actual OID
@@ -119,8 +120,8 @@ module R509
     # @option array [Array<OpenSSL::X509::Name>]
     # @return [Hash]
     # @example
-    # Return value looks like
-    # { :index => the index in the original array where we found an UNDEF, :value => the subject component value }
+    #  Return value looks like
+    #  { :index => the index in the original array where we found an UNDEF, :value => the subject component value }
     def undefined_components(array)
       components = []
       array.each_index do |index|

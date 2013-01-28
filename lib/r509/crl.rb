@@ -6,8 +6,10 @@ require 'r509/io_helpers'
 module R509
   # contains CRL related classes (generator and a pre-existing list loader)
   module Crl
+    # Parses CRLs
+    class SignedList
+      include R509::IOHelpers
 
-    class Parser
       attr_reader :crl
 
       # @param [String,OpenSSL::X509::CRL] crl
@@ -18,9 +20,9 @@ module R509
       # Helper method to quickly load a CRL from the filesystem
       #
       # @param [String] filename Path to file you want to load
-      # @return [R509::Crl::Parser] CRL object
+      # @return [R509::Crl::SignedList] CRL object
       def self.load_from_file( filename )
-        return R509::Crl::Parser.new( IOHelpers.read_data(filename) )
+        return R509::Crl::SignedList.new( IOHelpers.read_data(filename) )
       end
 
       # @return [OpenSSL::X509::Name]
@@ -40,19 +42,39 @@ module R509
         return nil
       end
 
-      # @return [Time]
+      # @return [String]
+      def signature_algorithm
+        @crl.signature_algorithm
+      end
+
+      # Writes the CRL into the PEM format
+      #
+      # @param [String, #write] filename_or_io Either a string of the path for
+      #  the file that you'd like to write, or an IO-like object.
+      def write_pem(filename_or_io)
+        write_data(filename_or_io, @crl.to_pem)
+      end
+
+      # Writes the CRL into the PEM format
+      #
+      # @param [String, #write] filename_or_io Either a string of the path for
+      #  the file that you'd like to write, or an IO-like object.
+      def write_der(filename_or_io)
+        write_data(filename_or_io, @crl.to_der)
+      end
+
+      # Returns the signing time of the CRL
+      #
+      # @return [Time] when the CRL was signed
       def last_update
         @crl.last_update
       end
 
-      # @return [Time]
+      # Returns the next update time for the CRL
+      #
+      # @return [Time] when it will be updated next
       def next_update
         @crl.next_update
-      end
-
-      # @return [String]
-      def signature_algorithm
-        @crl.signature_algorithm
       end
 
       # Pass a public key to verify that the CRL is signed by a specific certificate (call cert.public_key on that object)
@@ -71,6 +93,22 @@ module R509
         else
           false
         end
+      end
+
+      # Returns the CRL in PEM format
+      #
+      # @return [String] the CRL in PEM format
+      def to_pem
+        @crl.to_pem
+      end
+
+      alias :to_s :to_pem
+
+      # Returns the CRL in DER format
+      #
+      # @return [String] the CRL in DER format
+      def to_der
+        @crl.to_der
       end
 
       # @return [Hash] hash of serial => { :time, :reason } hashes
@@ -113,7 +151,7 @@ module R509
     class Administrator
       include R509::IOHelpers
 
-      attr_reader :crl_number,:crl_list_file,:crl_number_file, :validity_hours
+      attr_reader :crl_number,:crl_list_file,:crl_number_file, :validity_hours, :crl
 
       # @param [R509::Config::CaConfig] config
       def initialize(config)
@@ -152,58 +190,6 @@ module R509
         @revoked_certs[serial]
       end
 
-      # Returns the CRL in PEM format
-      #
-      # @return [String] the CRL in PEM format
-      def to_pem
-        @crl.to_pem
-      end
-
-      alias :to_s :to_pem
-
-      # Returns the CRL in DER format
-      #
-      # @return [String] the CRL in DER format
-      def to_der
-        @crl.to_der
-      end
-
-      # @return [R509::Crl::Parser]
-      def to_crl
-        return nil if @crl.nil?
-        return R509::Crl::Parser.new(@crl)
-      end
-
-      # Writes the CRL into the PEM format
-      #
-      # @param [String, #write] filename_or_io Either a string of the path for
-      #  the file that you'd like to write, or an IO-like object.
-      def write_pem(filename_or_io)
-        write_data(filename_or_io, @crl.to_pem)
-      end
-
-      # Writes the CRL into the PEM format
-      #
-      # @param [String, #write] filename_or_io Either a string of the path for
-      #  the file that you'd like to write, or an IO-like object.
-      def write_der(filename_or_io)
-        write_data(filename_or_io, @crl.to_der)
-      end
-
-      # Returns the signing time of the CRL
-      #
-      # @return [Time] when the CRL was signed
-      def last_update
-        @crl.last_update
-      end
-
-      # Returns the next update time for the CRL
-      #
-      # @return [Time] when it will be updated next
-      def next_update
-        @crl.next_update
-      end
-
       # Adds a certificate to the revocation list. After calling you must call generate_crl to sign a new CRL
       #
       # @param serial [Integer] serial number of the certificate to revoke
@@ -236,8 +222,8 @@ module R509
         end
         @revoked_certs[serial] = {:reason => reason, :revoke_time => revoke_time}
         if generate_and_save
-          generate_crl()
-          save_crl_list()
+          generate_crl
+          save_crl_list
         end
         nil
       end
@@ -247,8 +233,8 @@ module R509
       # @param serial [Integer] serial number of the certificate to remove from revocation
       def unrevoke_cert(serial)
         @revoked_certs.delete(serial)
-        generate_crl()
-        save_crl_list()
+        generate_crl
+        save_crl_list
         nil
       end
 
@@ -289,7 +275,7 @@ module R509
           crl.add_extension(ef.create_extension(oid, value, critical))
         }
         crl.sign(@config.ca_cert.key.key, OpenSSL::Digest::SHA1.new)
-        @crl = crl
+        @crl = R509::Crl::SignedList.new crl
         @crl.to_pem
       end
 
@@ -343,7 +329,7 @@ module R509
       #
       def increment_crl_number
         @crl_number += 1
-        save_crl_number()
+        save_crl_number
         @crl_number
       end
 

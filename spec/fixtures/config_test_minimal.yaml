@@ -1,7 +1,7 @@
 test_ca: {
-    ca_cert: {
-        cert: 'test_ca.cer',
-        key: 'test_ca.key'
-    }
+  ca_cert: {
+    cert: 'test_ca.cer',
+    key: 'test_ca.key'
+  }
 }
 config_is_string: "this is bogus"

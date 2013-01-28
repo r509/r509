@@ -13,6 +13,8 @@ module R509
   require('r509/subject.rb')
   require('r509/validity.rb')
   require('r509/hmac.rb')
+  require('r509/ec-hack.rb')
+  require('r509/version.rb')
 end
 
 #add some global mappings we want available throughout r509
