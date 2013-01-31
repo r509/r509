@@ -1,8 +1,6 @@
-#!/usr/bin/ruby
+#!/usr/bin/env ruby
 require 'rubygems'
 require 'r509'
-require 'r509/version'
-require 'openssl'
 
 if ARGV[0].nil? then
   puts "CSR and certificate parsing using r509 v#{R509::VERSION}."
