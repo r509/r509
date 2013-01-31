@@ -2,7 +2,7 @@ require 'openssl'
 
 module R509
   # Helps map raw OIDs to friendlier short names
-  class OidMapper
+  module OidMapper
     # Register an OID so we have a friendly short name
     # @param [String] oid A string representation of the OID you want to map (e.g. "1.6.2.3.55")
     # @param [String] short_name The short name (e.g. CN, O, OU, emailAddress)
