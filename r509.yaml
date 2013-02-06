@@ -5,8 +5,8 @@ certificate_authorities: {
             key: 'spec/fixtures/test_ca.key'
         },
         ocsp_cert: {
-            :pkcs12: 'spec/fixtures/test_ca_ocsp.p12',
-            :password: 'r509'
+            pkcs12: 'spec/fixtures/test_ca_ocsp.p12',
+            password: 'r509'
         },
         ocsp_location: 'URI:http://ocsp.domain.com',
         ocsp_chain: 'spec/fixtures/test_ca_ocsp_chain.txt',
