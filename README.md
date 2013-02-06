@@ -183,7 +183,7 @@ test_ca: {
   cdp_location: 'URI:http://crl.domain.com/test_ca.crl',
   crl_validity_hours: 168, #7 days
   ocsp_location: 'URI:http://ocsp.domain.com',
-  message_digest: 'SHA1', #SHA1, SHA256, SHA512 supported. MD5 too, but you really shouldn't use that unless you have a good reason
+  message_digest: 'SHA1', #SHA1, SHA224, SHA256, SHA384, SHA512 supported. MD5 too, but you really shouldn't use that unless you have a good reason
   profiles: {
     server: {
       basic_constraints: "CA:FALSE",
@@ -411,7 +411,9 @@ Integer seconds to skew back the "thisUpdate" field. This prevents issues where 
 String value of the message digest to use for signing (both CRL and certificates). Allowed values are:
 
 * SHA1 (default)
+* SHA224
 * SHA256
+* SHA384
 * SHA512
 * MD5 (Don't use this unless you have a really, really good reason. Even then, you shouldn't)
 
