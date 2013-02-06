@@ -16,6 +16,9 @@ We run continuous integration tests (using Travis-CI) against 1.9.3, 2.0.0, ruby
 
 Inside the gem there is a binary named ```r509```. Type ```r509 -h``` to see a list of options.
 
+##CA Howto
+[This guide](https://langui.sh/2012/11/02/building-a-ca-r509-howto/) provides instructions on building a basic CA using r509. In it you will learn how to create a root, set up the configuration profiles, issue certificates, revoke certificates, and see responses from an OCSP responder.
+
 ##Usage
 ###CSR
 To generate a 2048-bit RSA CSR
