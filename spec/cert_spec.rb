@@ -287,6 +287,10 @@ describe R509::Cert do
     cert = R509::Cert.new(:cert => @cert6)
     cert.serial.should == 951504
   end
+  it "gets hexserial of cert" do
+    cert = R509::Cert.new(:cert => @cert6)
+    cert.hexserial.should == "0E84D0"
+  end
   it "checks a cert that is not yet valid" do
     cert = R509::Cert.new(:cert => @cert_not_yet_valid)
     cert.valid?.should == false

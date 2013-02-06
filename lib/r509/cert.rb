@@ -89,6 +89,13 @@ module R509
       @cert.serial.to_i
     end
 
+    # Returns the serial number of the certificate in hexadecimal form
+    #
+    # @return [String]
+    def hexserial
+      @cert.serial.to_s(16)
+    end
+
     # Returns ending (notAfter) of certificate validity period
     #
     # @return [Time] time object
