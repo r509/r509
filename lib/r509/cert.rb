@@ -23,7 +23,7 @@ module R509
       elsif opts.has_key?(:pkcs12)
         pkcs12 = OpenSSL::PKCS12.new( opts[:pkcs12], opts[:password] )
         parse_certificate(pkcs12.certificate)
-        @key = R509::PrivateKey.new( :key => pkcs12.key )
+        key = R509::PrivateKey.new( :key => pkcs12.key )
       elsif not opts.has_key?(:cert)
         raise ArgumentError, 'Must provide :cert or :pkcs12'
       else
@@ -33,16 +33,12 @@ module R509
 
       if opts.has_key?(:key)
         if opts[:key].kind_of?(R509::PrivateKey)
-          @key = opts[:key]
+          key = opts[:key]
         else
-          @key = R509::PrivateKey.new( :key => opts[:key], :password => opts[:password] )
+          key = R509::PrivateKey.new( :key => opts[:key], :password => opts[:password] )
         end
       end
-      if not @key.nil?
-        if not @cert.public_key.to_der == @key.public_key.to_der then
-          raise R509Error, 'Key does not match cert.'
-        end
-      end
+      associate_private_key(key)
     end
 
     # Helper method to quickly load a cert from the filesystem
@@ -52,7 +48,6 @@ module R509
     def self.load_from_file( filename )
       return R509::Cert.new(:cert => IOHelpers.read_data(filename) )
     end
-
 
 
     # Converts the Cert into the PEM format
@@ -438,6 +433,15 @@ module R509
 
     def parse_certificate(cert)
       @cert = OpenSSL::X509::Certificate.new cert
+    end
+
+    def associate_private_key(key)
+      if not key.nil?
+        if not @cert.public_key.to_der == key.public_key.to_der then
+          raise R509Error, 'Key does not match cert.'
+        end
+        @key = key
+      end
     end
 
   end
