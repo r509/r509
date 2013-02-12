@@ -35,6 +35,18 @@ csr = R509::Csr.new(
 )
 ```
 
+Another way to build the subject:
+
+```ruby
+subject = R509::Subject.new
+subject.CN="somedomain.com"
+subject.O="My Org"
+subject.L="City"
+subject.ST="State"
+subject.C="US"
+csr = R509::Csr.new( :subject => subject )
+```
+
 To load an existing CSR (without private key)
 
 ```ruby

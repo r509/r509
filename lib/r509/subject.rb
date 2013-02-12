@@ -1,9 +1,24 @@
 require "openssl"
 
 module R509
-  #subject class. Used for building OpenSSL::X509::Name objects in a sane fashion
+  # subject class. Used for building OpenSSL::X509::Name objects in a sane fashion
+  # @example
+  #   subject = R509::Subject.new
+  #   subject.CN= "test.test"
+  #   subject.organization= "r509 LLC"
+  # @example
+  #   subject = R509::Subject.new([['CN','test.test'],['O','r509 LLC']])
+  # @example
+  #   # you can also use the friendly getter/setters with custom OIDs
+  #   R509::OidMapper.register("1.2.3.4.5.6.7.8","COI","customOid")
+  #   subject = R509::Subject.new
+  #   subject.COI="test"
+  #   # or
+  #   subject.customOid="test"
+  #   # or
+  #   subject.custom_oid="test"
   class Subject
-    # @param [Array, OpenSSL::X509::Name, R509::Subject] arg
+    # @param [Array, OpenSSL::X509::Name, R509::Subject, nil] arg
     def initialize(arg=nil)
       case arg
       when Array
@@ -75,9 +90,72 @@ module R509
       name.to_s
     end
 
-    # @return [Array] Array of form [['CN','langui.sh'],['O','Org']]
+    # @return [Array] Array of form [['CN','langui.sh']]
     def to_a
       @array
+    end
+
+    # @private
+    def respond_to?(method_sym, include_private = false)
+      method_sym.to_s =~ /([^=]*)/
+      oid = oid_check($1)
+      if not oid.nil?
+        true
+      else
+        super
+      end
+    end
+
+    private
+
+    # Try to build methods for getting/setting various subject attributes
+    # dynamically. this will also cache methods that get built via instance_eval.
+    # This code will also allow you to set subject items for custom oids
+    # defined via R509::OidMapper
+    #
+    def method_missing(method_sym, *args, &block)
+      if method_sym.to_s =~ /(.*)=$/
+        sn = oid_check($1)
+        if not sn.nil?
+          define_dynamic_setter(method_sym,sn)
+          send(method_sym, args.first)
+        else
+          return super
+        end
+      else
+        sn = oid_check(method_sym)
+        if not sn.nil?
+          define_dynamic_getter(method_sym,sn)
+          send(method_sym)
+        else
+          return super
+        end
+      end
+    end
+
+    def define_dynamic_setter(name,sn)
+      instance_eval <<-RUBY
+        def #{name.to_s}(value)
+          self["#{sn}"]= value
+        end
+      RUBY
+    end
+
+    def define_dynamic_getter(name,sn)
+      instance_eval <<-RUBY
+        def #{name.to_s}
+          self["#{sn}"]
+        end
+      RUBY
+    end
+
+    def oid_check(name)
+        oid = OpenSSL::ASN1::ObjectId.new(camelize(name))
+        oid.short_name
+    end
+
+    def camelize(sym)
+      sym.to_s.split('_').inject([]){ |buffer,e| buffer.push(buffer.empty? ? e : e.capitalize) }.join
     end
   end
 

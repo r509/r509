@@ -110,6 +110,74 @@ describe R509::Subject do
     subject["CN"].should == 'normaldomain.com'
   end
 
+  context "dynamic getter/setter behaviors" do
+    it "recognizes getters for a standard subject oid" do
+      subject = R509::Subject.new [['CN','testCN']]
+      subject.CN.should == 'testCN'
+      subject.common_name.should == 'testCN'
+      subject.commonName.should == 'testCN'
+    end
+
+    it "recognizes setters for a standard subject oid" do
+      subject = R509::Subject.new
+      subject.CN= 'testCN'
+      subject.CN.should == 'testCN'
+      subject.common_name= 'testCN2'
+      subject.common_name.should == 'testCN2'
+      subject.commonName= 'testCN3'
+      subject.commonName.should == 'testCN3'
+      subject.CN.should == 'testCN3'
+      subject.common_name.should == 'testCN3'
+    end
+
+    it "returns properly for respond_to? with a standard subject oid" do
+      subject = R509::Subject.new
+      subject.respond_to?("CN").should == true
+      subject.respond_to?("CN=").should == true
+      subject.respond_to?("commonName").should == true
+      subject.respond_to?("commonName=").should == true
+      subject.respond_to?("common_name").should == true
+      subject.respond_to?("common_name=").should == true
+    end
+
+    it "returns properly for respond_to? for an invalid method name" do
+      subject = R509::Subject.new
+      subject.respond_to?("not_a_real_method=").should == false
+      subject.respond_to?("not_a_real_method").should == false
+    end
+
+    it "errors on invalid method names" do
+      subject = R509::Subject.new
+      expect { subject.random_value="assign" }.to raise_error(NoMethodError)
+      expect { subject.random_value }.to raise_error(NoMethodError)
+    end
+
+    it "works with an arbitrarily defined OID" do
+      R509::OidMapper.register("1.4.3.2.1.2.3.6.6.6.6", "AOI", "arbitraryOidName")
+      subject = R509::Subject.new
+      subject.AOI= "test"
+      subject.AOI.should == "test"
+      subject.arbitrary_oid_name= "test2"
+      subject.arbitrary_oid_name.should == "test2"
+      subject.arbitraryOidName= "test3"
+      subject.arbitraryOidName.should == "test3"
+      subject.AOI.should == "test3"
+      subject.arbitrary_oid_name.should == "test3"
+    end
+
+    it "returns properly for respond_to? with a custom subject oid" do
+      R509::OidMapper.register("1.4.3.2.1.2.3.7.7.7.7", "IOS", "iOperatingSystem")
+      subject = R509::Subject.new
+      subject.respond_to?("IOS").should == true
+      subject.respond_to?("IOS=").should == true
+      subject.respond_to?("iOperatingSystem").should == true
+      subject.respond_to?("iOperatingSystem=").should == true
+      subject.respond_to?("i_operating_system").should == true
+      subject.respond_to?("i_operating_system=").should == true
+    end
+
+  end
+
 end
 
 describe R509::NameSanitizer do
