@@ -102,7 +102,7 @@ module R509
       if not oid.nil?
         true
       else
-        super
+        super(method_sym, include_private)
       end
     end
 
@@ -120,7 +120,7 @@ module R509
           define_dynamic_setter(method_sym,sn)
           send(method_sym, args.first)
         else
-          return super
+          return super(method_sym, *args, &block)
         end
       else
         sn = oid_check(method_sym)
@@ -128,7 +128,7 @@ module R509
           define_dynamic_getter(method_sym,sn)
           send(method_sym)
         else
-          return super
+          return super(method_sym, *args, &block)
         end
       end
     end
