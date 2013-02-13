@@ -419,6 +419,15 @@ module R509
       return r509_extensions[R509::Cert::Extensions::CrlDistributionPoints]
     end
 
+    # Returns true if the OCSP No Check extension is present
+    # (value is irrelevant to this extension)
+    #
+    # @return [Boolean] presence/absence of the nocheck extension
+    def ocsp_no_check?
+      return (r509_extensions.has_key?(R509::Cert::Extensions::OCSPNoCheck))
+    end
+
+
     private
     # This method exists only to provide a friendlier error msg if you attempt to
     # parse a CSR as a certificate. All for Sean

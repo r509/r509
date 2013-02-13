@@ -5,6 +5,7 @@ describe R509::Cert do
     @cert = TestFixtures::CERT
     @cert_public_key_modulus = TestFixtures::CERT_PUBLIC_KEY_MODULUS
     @cert3 = TestFixtures::CERT3
+    @cert_ocsp_no_check = TestFixtures::CERT_OCSP_NO_CHECK
     @cert_der = TestFixtures::CERT_DER
     @cert_san = TestFixtures::CERT_SAN
     @cert_san2 = TestFixtures::CERT_SAN2
@@ -257,6 +258,14 @@ describe R509::Cert do
   it "gets the right object from #crl_distribution_points" do
     cert = R509::Cert.new(:cert => @cert)
     cert.crl_distribution_points.class.should == R509::Cert::Extensions::CrlDistributionPoints
+  end
+  it "returns true from #ocsp_no_check? when the extension is present" do
+    cert = R509::Cert.new(:cert => @cert_ocsp_no_check)
+    cert.ocsp_no_check?.should == true
+  end
+  it "returns false from #ocsp_no_check? when the extension is not present" do
+    cert = R509::Cert.new(:cert => @cert)
+    cert.ocsp_no_check?.should == false
   end
 
   it "checks rsa?" do

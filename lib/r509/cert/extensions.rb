@@ -268,6 +268,17 @@ module R509
         end
       end
 
+      # Implements the OCSP noCheck certificate extension
+      class OCSPNoCheck < OpenSSL::X509::Extension
+        OID = "noCheck"
+        Extensions.register_class(self)
+
+        # See OpenSSL::X509::Extension#initialize
+        def initialize(*args)
+          super(*args)
+        end
+      end
+
 
       #
       # Helper class methods
