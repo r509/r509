@@ -129,3 +129,17 @@ ca_issuers_ca: {
     }
   }
 }
+all_eku_ca: {
+  ca_cert: {
+    cert: 'test_ca.cer',
+    key: 'test_ca.key'
+  },
+  message_digest: 'SHA1', #SHA1, SHA256, SHA512 supported. MD5 too, but you really shouldn't use that unless you have a good reason
+  profiles: {
+    smorgasbord: {
+      basic_constraints: "CA:FALSE",
+      key_usage: [digitalSignature,keyEncipherment],
+      extended_key_usage: [serverAuth,clientAuth,codeSigning,emailProtection,OCSPSigning,timeStamping],
+    }
+  }
+}

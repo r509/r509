@@ -46,16 +46,26 @@ describe R509::CertificateAuthority::Signer do
     cert = @ca.sign({ :spki => spki, :profile_name => 'server' })
     cert.to_pem.should match(/BEGIN CERTIFICATE/)
     cert.subject.to_s.should == '/CN=test.local'
-    extended_key_usage = cert.extensions['extendedKeyUsage']
-    extended_key_usage['value'].should == 'TLS Web Server Authentication'
+    cert.extended_key_usage.web_server_authentication?.should == true
   end
   it "properly issues server cert" do
     csr = R509::Csr.new(:cert => @cert, :bit_strength => 1024)
     cert = @ca.sign({ :csr => csr, :profile_name => 'server' })
     cert.to_pem.should match(/BEGIN CERTIFICATE/)
     cert.subject.to_s.should == '/C=US/ST=Illinois/L=Chicago/O=Paul Kehrer/CN=langui.sh'
-    extended_key_usage = cert.extensions['extendedKeyUsage']
-    extended_key_usage['value'].should == 'TLS Web Server Authentication'
+    cert.extended_key_usage.web_server_authentication?.should == true
+  end
+  it "properly issues cert with all EKUs" do
+    csr = R509::Csr.new(:cert => @cert, :bit_strength => 1024)
+    config = R509::Config::CaConfig.from_yaml("all_eku_ca", File.read("#{File.dirname(__FILE__)}/fixtures/config_test_various.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"})
+    ca = R509::CertificateAuthority::Signer.new(config)
+    cert = ca.sign({ :csr => csr, :profile_name => 'smorgasbord' })
+    cert.extended_key_usage.web_server_authentication?.should == true
+    cert.extended_key_usage.web_client_authentication?.should == true
+    cert.extended_key_usage.code_signing?.should == true
+    cert.extended_key_usage.email_protection?.should == true
+    cert.extended_key_usage.ocsp_signing?.should == true
+    cert.extended_key_usage.time_stamping?.should == true
   end
   it "when supplied, uses subject_item_policy to determine allowed subject" do
     csr = R509::Csr.new(:cert => @cert, :bit_strength => 512)
@@ -123,7 +133,8 @@ describe R509::CertificateAuthority::Signer do
   it "tests basic constraints CA:TRUE and pathlen:0 on a subroot" do
     csr = R509::Csr.new(:csr => @csr)
     cert = @ca.sign(:csr => csr, :profile_name => 'subroot')
-    cert.extensions['basicConstraints']['value'].should == 'CA:TRUE, pathlen:0'
+    cert.basic_constraints.is_ca?.should == true
+    cert.basic_constraints.path_length.should == 0
   end
   it "issues with md5" do
     csr = R509::Csr.new(:csr => @csr3)
@@ -203,7 +214,7 @@ describe R509::CertificateAuthority::Signer do
     ca = R509::CertificateAuthority::Signer.new(config)
     csr = R509::Csr.new(:csr => @csr3)
     cert = ca.sign(:csr => csr, :profile_name => "server")
-    cert.extensions['authorityKeyIdentifier'].should == nil
+    cert.authority_key_identifier.should == nil
     cert.extended_key_usage.web_server_authentication?.should == true
   end
   it "raises error unless you provide a proper config (or nil)" do
@@ -242,7 +253,7 @@ describe R509::CertificateAuthority::Signer do
     cert.not_after.to_i.should == not_after
     cert.subject.to_s.should == '/C=US/O=r509 LLC/CN=r509 Self-Signed CA Test'
     cert.issuer.to_s.should == '/C=US/O=r509 LLC/CN=r509 Self-Signed CA Test'
-    cert.extensions['basicConstraints']['value'].should == 'CA:TRUE'
+    cert.basic_constraints.is_ca?.should == true
     cert.san_names.should include('sanname1','sanname2')
   end
   it "issues self-signed certificate with SAN in CSR" do
@@ -272,7 +283,7 @@ describe R509::CertificateAuthority::Signer do
     (cert.not_after.to_i-cert.not_before.to_i).should == 31536000
     cert.subject.to_s.should == '/C=US/O=r509 LLC/CN=r509 Self-Signed CA Test'
     cert.issuer.to_s.should == '/C=US/O=r509 LLC/CN=r509 Self-Signed CA Test'
-    cert.extensions['basicConstraints']['value'].should == 'CA:TRUE'
+    cert.basic_constraints.is_ca?.should == true
   end
   it "raises an error if attempting to self-sign without a key" do
     csr = R509::Csr.new(:csr => @csr3)
@@ -297,8 +308,7 @@ describe R509::CertificateAuthority::Signer do
       cert.subject.to_s.should == '/C=US/ST=Illinois/L=Chicago/O=Paul Kehrer/CN=langui.sh'
       cert.signature_algorithm.should == 'ecdsa-with-SHA384'
       cert.key_algorithm.should == 'EC'
-      extended_key_usage = cert.extensions['extendedKeyUsage']
-      extended_key_usage['value'].should == 'TLS Web Server Authentication'
+      cert.extended_key_usage.web_server_authentication?.should == true
     end
     it "properly issues server cert using spki" do
       spki = R509::Spki.new(:spki => @spki, :subject=>[['CN','test.local']])
@@ -307,8 +317,7 @@ describe R509::CertificateAuthority::Signer do
       cert.subject.to_s.should == '/CN=test.local'
       cert.signature_algorithm.should == 'ecdsa-with-SHA384'
       cert.key_algorithm.should == 'RSA' #weird right?!
-      extended_key_usage = cert.extensions['extendedKeyUsage']
-      extended_key_usage['value'].should == 'TLS Web Server Authentication'
+      cert.extended_key_usage.web_server_authentication?.should == true
     end
   end
 
@@ -325,8 +334,7 @@ describe R509::CertificateAuthority::Signer do
       cert.subject.to_s.should == '/C=US/ST=Illinois/L=Chicago/O=Paul Kehrer/CN=langui.sh'
       cert.signature_algorithm.should == 'dsaWithSHA1'
       cert.key_algorithm.should == 'DSA'
-      extended_key_usage = cert.extensions['extendedKeyUsage']
-      extended_key_usage['value'].should == 'TLS Web Server Authentication'
+      cert.extended_key_usage.web_server_authentication?.should == true
     end
   end
 end

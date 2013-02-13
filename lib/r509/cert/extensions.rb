@@ -46,7 +46,8 @@ module R509
         end
 
         # Returns true if the path length allows this certificate to be used to
-        # sign CA certificates.
+        # create subordinate signing certificates beneath it. Does not check if
+        # there is a pathlen restriction in the cert chain above the current cert
         def allows_sub_ca?()
           return false if @path_length.nil?
           return @path_length > 0
@@ -147,6 +148,10 @@ module R509
         AU_CODE_SIGNING = "Code Signing"
         # The OpenSSL friendly name for the "emailProtection" extended key use.
         AU_EMAIL_PROTECTION = "E-mail Protection"
+        # The OpenSSL friendly name for the "OCSPSigning" extended key use.
+        AU_OCSP_SIGNING = "OCSP Signing"
+        # The OpenSSL friendly name for the "timeStamping" extended key use.
+        AU_TIME_STAMPING = "Time Stamping"
 
         # An array of the key uses allowed. See the AU_* constants in this class.
         attr_reader :allowed_uses
@@ -180,7 +185,13 @@ module R509
           allows?( AU_EMAIL_PROTECTION )
         end
 
-        # ...
+        def ocsp_signing?
+          allows?( AU_OCSP_SIGNING )
+        end
+
+        def time_stamping?
+          allows?( AU_TIME_STAMPING )
+        end
       end
 
       # Implements the SubjectKeyIdentifier certificate extension, with methods to
