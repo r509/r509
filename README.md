@@ -1,5 +1,5 @@
 #r509 [![Build Status](https://secure.travis-ci.org/reaperhulk/r509.png)](http://travis-ci.org/reaperhulk/r509)
-r509 is a wrapper for various OpenSSL functions to allow easy creation of CSRs, signing of certificates, and revocation via CRL. Together with projects like [r509-ocsp-responder](https://github.com/reaperhulk/r509-ocsp-responder) and [r509-ca-http](https://github.com/sirsean/r509-ca-http) it is intended to be a complete certificate authority for use in production environments.
+r509 is a Ruby gem built using OpenSSL that is designed to ease management of a public key infrastructure. The r509 API facilitates easy creation of CSRs, signing of certificates, revocation (CRL/OCSP), and much more. Together with projects like [r509-ocsp-responder](https://github.com/reaperhulk/r509-ocsp-responder) and [r509-ca-http](https://github.com/sirsean/r509-ca-http) it is intended to be a complete certificate authority for use in production environments.
 
 ##Requirements/Installation
 
