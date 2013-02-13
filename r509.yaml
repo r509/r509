@@ -9,6 +9,7 @@ certificate_authorities: {
             password: 'r509'
         },
         ocsp_location: 'URI:http://ocsp.domain.com',
+        ca_issuers_location: 'URI:http://domain.com/ca.html',
         ocsp_chain: 'spec/fixtures/test_ca_ocsp_chain.txt',
         ocsp_start_skew_seconds: 3600,
         ocsp_validity_hours: 168,

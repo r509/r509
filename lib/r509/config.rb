@@ -129,7 +129,8 @@ module R509
       extend R509::IOHelpers
       attr_accessor :ca_cert, :crl_validity_hours, :message_digest,
         :cdp_location, :crl_start_skew_seconds, :ocsp_location, :ocsp_chain,
-        :ocsp_start_skew_seconds, :ocsp_validity_hours, :crl_number_file, :crl_list_file
+        :ocsp_start_skew_seconds, :ocsp_validity_hours, :crl_number_file, :crl_list_file,
+        :ca_issuers_location
 
       # @option opts [R509::Cert] :ca_cert Cert+Key pair
       # @option opts [Integer] :crl_validity_hours (168) The number of hours that
@@ -138,6 +139,7 @@ module R509
       # @option opts [String] :message_digest (SHA1) The hashing algorithm to use.
       # @option opts [String] :cdp_location
       # @option opts [String] :ocsp_location
+      # @option opts [String] :ca_issuers_location
       # @option opts [String] :crl_number_file The file that we will save
       #  the CRL numbers to. defaults to a StringIO object if not provided
       # @option opts [String] :crl_list_file The file that we will save
@@ -167,6 +169,7 @@ module R509
         end
         @ocsp_cert = opts[:ocsp_cert] unless opts[:ocsp_cert].nil?
         @ocsp_location = opts[:ocsp_location]
+        @ca_issuers_location = opts[:ca_issuers_location]
         @ocsp_chain = opts[:ocsp_chain] if opts[:ocsp_chain].kind_of?(Array)
         @ocsp_validity_hours = opts[:ocsp_validity_hours] || 168
         @ocsp_start_skew_seconds = opts[:ocsp_start_skew_seconds] || 3600
@@ -284,6 +287,7 @@ module R509
           :ocsp_validity_hours => conf['ocsp_validity_hours'],
           :ocsp_start_skew_seconds => conf['ocsp_start_skew_seconds'],
           :ocsp_location => conf['ocsp_location'],
+          :ca_issuers_location => conf['ca_issuers_location'],
           :cdp_location => conf['cdp_location'],
           :message_digest => conf['message_digest'],
         }

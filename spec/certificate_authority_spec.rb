@@ -104,6 +104,22 @@ describe R509::CertificateAuthority::Signer do
     cert = ca.sign(:csr => csr, :profile_name => 'server')
     cert.extensions['certificatePolicies']['value'].should == "Policy: 2.16.840.1.9999999999.3.0\nPolicy: 2.16.840.1.9999999999.1.2.3.4.1\n  CPS: http://example.com/cps\n"
   end
+  it "issues a certificate with a ca_issuers_location and ocsp_location" do
+    csr = R509::Csr.new(:csr => @csr)
+    config = R509::Config::CaConfig.from_yaml("ca_issuers_and_ocsp_ca", File.read("#{File.dirname(__FILE__)}/fixtures/config_test_various.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"})
+    ca = R509::CertificateAuthority::Signer.new(config)
+    cert = ca.sign(:csr => csr, :profile_name => 'server')
+    cert.authority_info_access.ca_issuers_uris.should == ["http://domain.com/ca.html"]
+    cert.authority_info_access.ocsp_uris.should == ["http://ocsp.domain.com"]
+  end
+  it "issues a certificate with a ca_issuers_location and no ocsp_location" do
+    csr = R509::Csr.new(:csr => @csr)
+    config = R509::Config::CaConfig.from_yaml("ca_issuers_ca", File.read("#{File.dirname(__FILE__)}/fixtures/config_test_various.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"})
+    ca = R509::CertificateAuthority::Signer.new(config)
+    cert = ca.sign(:csr => csr, :profile_name => 'server')
+    cert.authority_info_access.ca_issuers_uris.should == ["http://domain.com/ca.html"]
+    cert.authority_info_access.ocsp_uris.should == []
+  end
   it "tests basic constraints CA:TRUE and pathlen:0 on a subroot" do
     csr = R509::Csr.new(:csr => @csr)
     cert = @ca.sign(:csr => csr, :profile_name => 'subroot')

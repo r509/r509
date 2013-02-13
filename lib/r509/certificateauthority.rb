@@ -266,10 +266,20 @@ module R509::CertificateAuthority
         ext << ef.create_extension("crlDistributionPoints", @config.cdp_location)
       end
 
-      if not @config.nil? and not @config.ocsp_location.nil? then
-      ext << ef.create_extension("authorityInfoAccess",
-            "OCSP;" << @config.ocsp_location)
+      aia = []
+
+      if not @config.nil? and not @config.ocsp_location.nil?
+        aia.push "OCSP;#{@config.ocsp_location}"
       end
+
+      if not @config.nil? and not @config.ca_issuers_location.nil?
+        aia.push "caIssuers;#{@config.ca_issuers_location}"
+      end
+
+      if not aia.empty?
+      ext << ef.create_extension("authorityInfoAccess",aia.join(","))
+      end
+
       options[:subject_certificate].extensions = ext
       nil
     end
