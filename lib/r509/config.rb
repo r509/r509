@@ -26,7 +26,7 @@ module R509
         @key_usage = opts[:key_usage]
         @extended_key_usage = opts[:extended_key_usage]
         @certificate_policies = opts[:certificate_policies]
-        @ocsp_no_check = (opts[:ocsp_no_check])?true:false
+        @ocsp_no_check = (opts[:ocsp_no_check] == true or opts[:ocsp_no_check] == "true")?true:false
         if opts.has_key?(:subject_item_policy) and not opts[:subject_item_policy].nil? and not opts[:subject_item_policy].kind_of?(R509::Config::SubjectItemPolicy)
           raise R509Error, "subject_item_policy must be of type R509::Config::SubjectItemPolicy"
         end

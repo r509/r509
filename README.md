@@ -156,7 +156,8 @@ profile = R509::Config::CaProfile.new(
   :key_usage => ["digitalSignature","keyEncipherment"],
   :extended_key_usage => ["serverAuth"],
   :certificate_policies => [ ["policyIdentifier=2.16.840.1.999999999.1.2.3.4.1", "CPS.1=http://example.com/cps"] ],
-  :subject_item_policy => nil
+  :subject_item_policy => nil,
+  :ocsp_no_check => false # this should only be true if you are setting OCSPSigning EKU
 )
 # config object from above assumed
 config.set_profile("server",profile)

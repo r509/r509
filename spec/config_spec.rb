@@ -366,7 +366,7 @@ describe R509::Config::CaProfile do
   end
   it "initializes with expected defaults" do
     profile = R509::Config::CaProfile.new
-    profile.basic_constraints.should == nil #TODO
+    profile.basic_constraints.should == nil
     profile.key_usage.should == nil
     profile.extended_key_usage.should == nil
     profile.certificate_policies.should == nil
@@ -375,5 +375,14 @@ describe R509::Config::CaProfile do
   end
   it "raises an error with an invalid subject_item_policy" do
     expect { R509::Config::CaProfile.new( :subject_item_policy => "lenient!" ) }.to raise_error(R509::R509Error,'subject_item_policy must be of type R509::Config::SubjectItemPolicy')
+  end
+  it "loads profiles from YAML while setting expected defaults" do
+    config = R509::Config::CaConfig.from_yaml("test_ca", File.read("#{File.dirname(__FILE__)}/fixtures/config_test.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"})
+    server_profile = config.profile("server") # no ocsp_no_check node
+    server_profile.ocsp_no_check.should == false
+    ocsp_profile = config.profile("ocsp_delegate_with_no_check") # ocsp_no_check => true
+    ocsp_profile.ocsp_no_check.should == true
+    client_profile = config.profile("client") # ocsp_no_check => false
+    client_profile.ocsp_no_check.should == false
   end
 end
