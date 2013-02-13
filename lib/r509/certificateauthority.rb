@@ -95,6 +95,7 @@ module R509::CertificateAuthority
       key_usage = profile.key_usage
       extended_key_usage = profile.extended_key_usage
       certificate_policies = profile.certificate_policies
+      ocsp_no_check = profile.ocsp_no_check
 
       build_extensions(
         :subject_certificate => cert,
@@ -102,6 +103,7 @@ module R509::CertificateAuthority
         :basic_constraints => basic_constraints,
         :key_usage => key_usage,
         :extended_key_usage => extended_key_usage,
+        :ocsp_no_check => ocsp_no_check,
         :certificate_policies => certificate_policies,
         :san_names => san_names
       )
@@ -228,10 +230,10 @@ module R509::CertificateAuthority
       if not options[:basic_constraints].nil?
         ext << ef.create_extension("basicConstraints", options[:basic_constraints], true)
       end
-      if options.has_key?(:key_usage) and not options[:key_usage].empty?
+      if not options[:key_usage].nil? and not options[:key_usage].empty?
         ext << ef.create_extension("keyUsage", options[:key_usage].join(","))
       end
-      if options.has_key?(:extended_key_usage) and not options[:extended_key_usage].empty?
+      if not options[:extended_key_usage].nil? and not options[:extended_key_usage].empty?
         ext << ef.create_extension("extendedKeyUsage", options[:extended_key_usage].join(","))
       end
       ext << ef.create_extension("subjectKeyIdentifier", "hash")
@@ -244,11 +246,9 @@ module R509::CertificateAuthority
       if not options[:certificate_policies].nil? and not options[:certificate_policies].empty?
         conf = []
         conf_names = []
-        i = 0
-        options[:certificate_policies].each do |policy|
+        options[:certificate_policies].each_with_index do |policy,i|
           conf << build_conf("certPolicies#{i}",policy)
           conf_names << "@certPolicies#{i}"
-          i+=1
         end
         ef.config = OpenSSL::Config.parse(conf.join("\n"))
         ext << ef.create_extension("certificatePolicies", conf_names.join(","))
@@ -258,7 +258,7 @@ module R509::CertificateAuthority
       #CPS.1 = http://www.example.com/cps
       #_end_of_cnf_
 
-      if options.has_key?(:san_names) and not options[:san_names].empty?
+      if not options[:san_names].nil? and not options[:san_names].empty?
         ext << ef.create_extension("subjectAltName", process_san_names(options[:san_names]))
       end
 
@@ -277,7 +277,12 @@ module R509::CertificateAuthority
       end
 
       if not aia.empty?
-      ext << ef.create_extension("authorityInfoAccess",aia.join(","))
+        ext << ef.create_extension("authorityInfoAccess",aia.join(","))
+      end
+
+      if options[:ocsp_no_check]
+        # the value of this extension is not encoded. presence is all that matters
+        ext << ef.create_extension("noCheck","yes")
       end
 
       options[:subject_certificate].extensions = ext

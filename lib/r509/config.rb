@@ -13,19 +13,22 @@ module R509
     # Provides access to configuration profiles
     class CaProfile
       attr_reader :basic_constraints, :key_usage, :extended_key_usage,
-        :certificate_policies, :subject_item_policy
+        :certificate_policies, :subject_item_policy, :ocsp_no_check
 
       # @option opts [String] :basic_constraints
       # @option opts [Array] :key_usage
       # @option opts [Array] :extended_key_usage
       # @option opts [Array] :certificate_policies
+      # @option opts [Boolean] :ocsp_no_check Sets OCSP No Check extension in the certificate if true
       # @option opts [R509::Config::SubjectItemPolicy] :subject_item_policy optional
       def initialize(opts = {})
         @basic_constraints = opts[:basic_constraints]
         @key_usage = opts[:key_usage]
         @extended_key_usage = opts[:extended_key_usage]
         @certificate_policies = opts[:certificate_policies]
-        if opts.has_key?(:subject_item_policy) and not opts[:subject_item_policy].kind_of?(R509::Config::SubjectItemPolicy)
+        @ocsp_no_check = (opts[:ocsp_no_check])?true:false
+        if opts.has_key?(:subject_item_policy) and not opts[:subject_item_policy].nil? and not opts[:subject_item_policy].kind_of?(R509::Config::SubjectItemPolicy)
+          raise R509Error, "subject_item_policy must be of type R509::Config::SubjectItemPolicy"
         end
         @subject_item_policy = opts[:subject_item_policy] || nil
       end
@@ -311,6 +314,7 @@ module R509
                              :extended_key_usage => data["extended_key_usage"],
                              :basic_constraints => data["basic_constraints"],
                              :certificate_policies => data["certificate_policies"],
+                             :ocsp_no_check => data["ocsp_no_check"],
                              :subject_item_policy => subject_item_policy)
         end unless conf['profiles'].nil?
         opts[:profiles] = profs

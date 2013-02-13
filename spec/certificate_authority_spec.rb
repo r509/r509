@@ -41,6 +41,15 @@ describe R509::CertificateAuthority::Signer do
     ca = R509::CertificateAuthority::Signer.new(config)
     expect { ca.sign(:csr => @csr)  }.to raise_error(R509::R509Error, 'You must have at least one CaProfile on your CaConfig to issue')
   end
+  it "properly issues a cert with the default CaProfile configuration" do
+    csr = R509::Csr.new(:subject => [["CN","testy.mctest"]], :bit_strength => 1024)
+    ca_cert = R509::Cert.new( :cert => TestFixtures::TEST_CA_CERT, :key => TestFixtures::TEST_CA_KEY )
+    config = R509::Config::CaConfig.new(:ca_cert => ca_cert)
+    profile = R509::Config::CaProfile.new
+    config.set_profile("default",profile)
+    ca = R509::CertificateAuthority::Signer.new(config)
+    expect { ca.sign( :csr => csr, :profile_name => 'default') }.to_not raise_error
+  end
   it "properly issues server cert using spki" do
     spki = R509::Spki.new(:spki => @spki, :subject=>[['CN','test.local']])
     cert = @ca.sign({ :spki => spki, :profile_name => 'server' })
@@ -66,6 +75,19 @@ describe R509::CertificateAuthority::Signer do
     cert.extended_key_usage.email_protection?.should == true
     cert.extended_key_usage.ocsp_signing?.should == true
     cert.extended_key_usage.time_stamping?.should == true
+  end
+  it "properly issues cert with OCSP noCheck in profile" do
+    csr = R509::Csr.new(:cert => @cert, :bit_strength => 1024)
+    config = R509::Config::CaConfig.from_yaml("ocsp_no_check_ca", File.read("#{File.dirname(__FILE__)}/fixtures/config_test_various.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"})
+    ca = R509::CertificateAuthority::Signer.new(config)
+    cert = ca.sign({ :csr => csr, :profile_name => 'ocsp_no_check_delegate' })
+    cert.ocsp_no_check?.should == true
+    cert.extended_key_usage.ocsp_signing?.should == true
+  end
+  it "does not encode noCheck if not specified by the profile" do
+    csr = R509::Csr.new(:cert => @cert, :bit_strength => 512)
+    cert = @ca.sign({ :csr => csr, :profile_name => 'server' })
+    cert.ocsp_no_check?.should == false
   end
   it "when supplied, uses subject_item_policy to determine allowed subject" do
     csr = R509::Csr.new(:cert => @cert, :bit_strength => 512)

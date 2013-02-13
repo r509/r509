@@ -143,3 +143,18 @@ all_eku_ca: {
     }
   }
 }
+ocsp_no_check_ca: {
+  ca_cert: {
+    cert: 'test_ca.cer',
+    key: 'test_ca.key'
+  },
+  message_digest: 'SHA1', #SHA1, SHA256, SHA512 supported. MD5 too, but you really shouldn't use that unless you have a good reason
+  profiles: {
+    ocsp_no_check_delegate: {
+      basic_constraints: "CA:FALSE",
+      key_usage: [digitalSignature],
+      extended_key_usage: [OCSPSigning],
+      ocsp_no_check: true
+    }
+  }
+}

@@ -176,7 +176,8 @@ describe R509::Config::CaConfig do
     config.crl_validity_hours.should == 72
     config.ocsp_validity_hours.should == 96
     config.message_digest.should == "SHA1"
-    config.num_profiles.should == 3
+    config.num_profiles.should == 4
+    config.profile("ocsp_delegate_with_no_check").ocsp_no_check.should == true
   end
   it "loads OCSP cert/key from yaml" do
     config = R509::Config::CaConfig.from_yaml("ocsp_delegate_ca", File.read("#{File.dirname(__FILE__)}/fixtures/config_test_various.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"})
@@ -345,5 +346,34 @@ describe R509::Config::SubjectItemPolicy do
     subject_item_policy = R509::Config::SubjectItemPolicy.new("CN" => "required", "O" => "required", "OU" => "optional", "L" => "required", "emailAddress" => "optional")
     subject_item_policy.optional.should include("OU","emailAddress")
     subject_item_policy.required.should include("CN","O","L")
+  end
+end
+
+describe R509::Config::CaProfile do
+  it "initializes and stores the options provided" do
+    profile = R509::Config::CaProfile.new(
+      :basic_constraints => "CA:TRUE",
+      :key_usage => ["digitalSignature"],
+      :extended_key_usage => ["serverAuth"],
+      :certificate_policies => [ [ "policyIdentifier=2.16.840.1.9999999999.1.2.3.4.1", "CPS.1=http://example.com/cps"] ],
+      :ocsp_no_check => true
+    )
+    profile.basic_constraints.should == "CA:TRUE"
+    profile.key_usage.should == ["digitalSignature"]
+    profile.extended_key_usage.should == ["serverAuth"]
+    profile.certificate_policies.should ==  [ [ "policyIdentifier=2.16.840.1.9999999999.1.2.3.4.1", "CPS.1=http://example.com/cps"] ]
+    profile.ocsp_no_check.should == true
+  end
+  it "initializes with expected defaults" do
+    profile = R509::Config::CaProfile.new
+    profile.basic_constraints.should == nil #TODO
+    profile.key_usage.should == nil
+    profile.extended_key_usage.should == nil
+    profile.certificate_policies.should == nil
+    profile.ocsp_no_check.should == false
+    profile.subject_item_policy.should == nil
+  end
+  it "raises an error with an invalid subject_item_policy" do
+    expect { R509::Config::CaProfile.new( :subject_item_policy => "lenient!" ) }.to raise_error(R509::R509Error,'subject_item_policy must be of type R509::Config::SubjectItemPolicy')
   end
 end
