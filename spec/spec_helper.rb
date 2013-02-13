@@ -1,4 +1,4 @@
-if (RUBY_VERSION.split('.')[1].to_i > 8)
+if (RUBY_VERSION.split('.')[1].to_i > 8 or RUBY_VERSION.split('.')[0].to_i > 1)
   begin
     require 'simplecov'
     SimpleCov.start
