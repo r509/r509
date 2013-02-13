@@ -15,11 +15,11 @@ module R509
       attr_reader :basic_constraints, :key_usage, :extended_key_usage,
         :certificate_policies, :subject_item_policy
 
-      # @option [String] :basic_constraints
-      # @option [Array] :key_usage
-      # @option [Array] :extended_key_usage
-      # @option [Array] :certificate_policies
-      # @option [R509::Config::SubjectItemPolicy] :subject_item_policy optional
+      # @option opts [String] :basic_constraints
+      # @option opts [Array] :key_usage
+      # @option opts [Array] :extended_key_usage
+      # @option opts [Array] :certificate_policies
+      # @option opts [R509::Config::SubjectItemPolicy] :subject_item_policy optional
       def initialize(opts = {})
         @basic_constraints = opts[:basic_constraints]
         @key_usage = opts[:key_usage]
