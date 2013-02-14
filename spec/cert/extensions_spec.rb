@@ -143,7 +143,9 @@ shared_examples_for "a correct R509 AuthorityKeyIdentifier object" do
     @r509_ext = klass.new( openssl_ext )
   end
 
-  #TODO
+  it "has the expected type" do
+    @r509_ext.oid.should == "authorityKeyIdentifier"
+  end
 end
 
 shared_examples_for "a correct R509 SubjectAlternativeName object" do
