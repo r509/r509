@@ -225,8 +225,8 @@ module TestFixtures
 
     opts = {
       :ca_cert => test_ca_cert(),
-      :cdp_location => 'URI:http://crl.domain.com/test_ca.crl',
-      :ocsp_location => 'URI:http://ocsp.domain.com',
+      :cdp_location => ['http://crl.domain.com/test_ca.crl'],
+      :ocsp_location => ['http://ocsp.domain.com'],
       :ocsp_start_skew_seconds => 3600,
       :ocsp_validity_hours => 48,
       :crl_list_file => crl_list_sio,
@@ -251,8 +251,8 @@ module TestFixtures
 
     opts = {
       :ca_cert => test_ca_cert(),
-      :cdp_location => 'URI:http://crl.domain.com/test_ca.crl',
-      :ocsp_location => 'URI:http://ocsp.domain.com',
+      :cdp_location => ['http://crl.domain.com/test_ca.crl'],
+      :ocsp_location => ['http://ocsp.domain.com'],
       :ocsp_start_skew_seconds => 3600,
       :ocsp_validity_hours => 48,
       :crl_list_file => crl_list_sio,
@@ -269,8 +269,8 @@ module TestFixtures
 
     opts = {
       :ca_cert => test_ca_ec_cert(),
-      :cdp_location => 'URI:http://crl.domain.com/test_ca.crl',
-      :ocsp_location => 'URI:http://ocsp.domain.com',
+      :cdp_location => ['http://crl.domain.com/test_ca.crl'],
+      :ocsp_location => ['http://ocsp.domain.com'],
       :ocsp_start_skew_seconds => 3600,
       :ocsp_validity_hours => 48,
       :crl_list_file => crl_list_sio,
@@ -287,8 +287,8 @@ module TestFixtures
 
     opts = {
       :ca_cert => test_ca_dsa_cert(),
-      :cdp_location => 'URI:http://crl.domain.com/test_ca.crl',
-      :ocsp_location => 'URI:http://ocsp.domain.com',
+      :cdp_location => ['http://crl.domain.com/test_ca.crl'],
+      :ocsp_location => ['http://ocsp.domain.com'],
       :ocsp_start_skew_seconds => 3600,
       :ocsp_validity_hours => 48,
       :crl_list_file => crl_list_sio,

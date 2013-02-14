@@ -103,8 +103,8 @@ ca_issuers_and_ocsp_ca: {
     cert: 'test_ca.cer',
     key: 'test_ca.key'
   },
-  ocsp_location: 'URI:http://ocsp.domain.com',
-  ca_issuers_location: 'URI:http://domain.com/ca.html',
+  ocsp_location: ['http://ocsp.domain.com','http://ocsp.other.com'],
+  ca_issuers_location: ['http://domain.com/ca.html'],
   message_digest: 'SHA1', #SHA1, SHA256, SHA512 supported. MD5 too, but you really shouldn't use that unless you have a good reason
   profiles: {
     server: {
@@ -119,7 +119,7 @@ ca_issuers_ca: {
     cert: 'test_ca.cer',
     key: 'test_ca.key'
   },
-  ca_issuers_location: 'URI:http://domain.com/ca.html',
+  ca_issuers_location: ['http://domain.com/ca.html'],
   message_digest: 'SHA1', #SHA1, SHA256, SHA512 supported. MD5 too, but you really shouldn't use that unless you have a good reason
   profiles: {
     server: {

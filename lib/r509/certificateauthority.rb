@@ -262,18 +262,26 @@ module R509::CertificateAuthority
         ext << ef.create_extension("subjectAltName", process_san_names(options[:san_names]))
       end
 
-      if not @config.nil? and not @config.cdp_location.nil?
-        ext << ef.create_extension("crlDistributionPoints", @config.cdp_location)
+      if not @config.nil? and @config.cdp_location.respond_to?(:each)
+        cdps = []
+        @config.cdp_location.each do |cdp|
+          cdps << "URI:#{cdp}"
+        end
+        ext << ef.create_extension("crlDistributionPoints", cdps.join(","))
       end
 
       aia = []
 
-      if not @config.nil? and not @config.ocsp_location.nil?
-        aia.push "OCSP;#{@config.ocsp_location}"
+      if not @config.nil? and @config.ocsp_location.respond_to?(:each)
+        @config.ocsp_location.each do |loc|
+          aia.push "OCSP;URI:#{loc}"
+        end
       end
 
-      if not @config.nil? and not @config.ca_issuers_location.nil?
-        aia.push "caIssuers;#{@config.ca_issuers_location}"
+      if not @config.nil? and @config.ca_issuers_location.respond_to?(:each)
+        @config.ca_issuers_location.each do |loc|
+          aia.push "caIssuers;URI:#{loc}"
+        end
       end
 
       if not aia.empty?

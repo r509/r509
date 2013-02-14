@@ -142,7 +142,7 @@ describe R509::CertificateAuthority::Signer do
     ca = R509::CertificateAuthority::Signer.new(config)
     cert = ca.sign(:csr => csr, :profile_name => 'server')
     cert.authority_info_access.ca_issuers_uris.should == ["http://domain.com/ca.html"]
-    cert.authority_info_access.ocsp_uris.should == ["http://ocsp.domain.com"]
+    cert.authority_info_access.ocsp_uris.should == ["http://ocsp.domain.com","http://ocsp.other.com"]
   end
   it "issues a certificate with a ca_issuers_location and no ocsp_location" do
     csr = R509::Csr.new(:csr => @csr)
@@ -151,6 +151,62 @@ describe R509::CertificateAuthority::Signer do
     cert = ca.sign(:csr => csr, :profile_name => 'server')
     cert.authority_info_access.ca_issuers_uris.should == ["http://domain.com/ca.html"]
     cert.authority_info_access.ocsp_uris.should == []
+  end
+  it "issues a certificate with multiple ca_issuer_locations" do
+    csr = R509::Csr.new(:csr => @csr)
+    ca_cert = R509::Cert.new( :cert => TestFixtures::TEST_CA_CERT, :key => TestFixtures::TEST_CA_KEY )
+    config = R509::Config::CaConfig.new(:ca_cert => ca_cert)
+    config.ca_issuers_location = ["http://somelocation.com/c.html","http://other.com/d.html"]
+    profile = R509::Config::CaProfile.new
+    config.set_profile("default",profile)
+    ca = R509::CertificateAuthority::Signer.new(config)
+    cert = ca.sign( :csr => csr, :profile_name => 'default')
+    cert.authority_info_access.ocsp_uris.should == []
+    cert.authority_info_access.ca_issuers_uris.should == ["http://somelocation.com/c.html","http://other.com/d.html"]
+  end
+  it "issues a certificate with OCSP AIA" do
+    csr = R509::Csr.new(:csr => @csr)
+    ca_cert = R509::Cert.new( :cert => TestFixtures::TEST_CA_CERT, :key => TestFixtures::TEST_CA_KEY )
+    config = R509::Config::CaConfig.new(:ca_cert => ca_cert)
+    config.ocsp_location = ["http://myocsp.jb.net"]
+    profile = R509::Config::CaProfile.new
+    config.set_profile("default",profile)
+    ca = R509::CertificateAuthority::Signer.new(config)
+    cert = ca.sign( :csr => csr, :profile_name => 'default')
+    cert.authority_info_access.ca_issuers_uris.should == []
+    cert.authority_info_access.ocsp_uris.should == ["http://myocsp.jb.net"]
+  end
+  it "issues a certificate with no CDP" do
+    csr = R509::Csr.new(:csr => @csr)
+    ca_cert = R509::Cert.new( :cert => TestFixtures::TEST_CA_CERT, :key => TestFixtures::TEST_CA_KEY )
+    config = R509::Config::CaConfig.new(:ca_cert => ca_cert)
+    profile = R509::Config::CaProfile.new
+    config.set_profile("default",profile)
+    ca = R509::CertificateAuthority::Signer.new(config)
+    cert = ca.sign( :csr => csr, :profile_name => 'default')
+    cert.crl_distribution_points.should == nil
+  end
+  it "issues a certificate with a single CDP" do
+    csr = R509::Csr.new(:csr => @csr)
+    ca_cert = R509::Cert.new( :cert => TestFixtures::TEST_CA_CERT, :key => TestFixtures::TEST_CA_KEY )
+    config = R509::Config::CaConfig.new(:ca_cert => ca_cert)
+    config.cdp_location = ["http://mycdp.com/x.crl"]
+    profile = R509::Config::CaProfile.new
+    config.set_profile("default",profile)
+    ca = R509::CertificateAuthority::Signer.new(config)
+    cert = ca.sign( :csr => csr, :profile_name => 'default')
+    cert.crl_distribution_points.crl_uris.should == ["http://mycdp.com/x.crl"]
+  end
+  it "issues a certificate with multiple CDPs" do
+    csr = R509::Csr.new(:csr => @csr)
+    ca_cert = R509::Cert.new( :cert => TestFixtures::TEST_CA_CERT, :key => TestFixtures::TEST_CA_KEY )
+    config = R509::Config::CaConfig.new(:ca_cert => ca_cert)
+    config.cdp_location = ["http://mycdp.com/x.crl","http://anothercrl.com/x.crl"]
+    profile = R509::Config::CaProfile.new
+    config.set_profile("default",profile)
+    ca = R509::CertificateAuthority::Signer.new(config)
+    cert = ca.sign( :csr => csr, :profile_name => 'default')
+    cert.crl_distribution_points.crl_uris.should == ["http://mycdp.com/x.crl","http://anothercrl.com/x.crl"]
   end
   it "tests basic constraints CA:TRUE and pathlen:0 on a subroot" do
     csr = R509::Csr.new(:csr => @csr)

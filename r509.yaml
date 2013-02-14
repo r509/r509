@@ -8,12 +8,12 @@ certificate_authorities: {
       pkcs12: 'spec/fixtures/test_ca_ocsp.p12',
       password: 'r509'
     },
-    ocsp_location: 'URI:http://ocsp.domain.com',
-    ca_issuers_location: 'URI:http://domain.com/ca.html',
+    ocsp_location: ['http://ocsp.domain.com'],
+    ca_issuers_location: ['http://domain.com/ca.html'],
     ocsp_chain: 'spec/fixtures/test_ca_ocsp_chain.txt',
     ocsp_start_skew_seconds: 3600,
     ocsp_validity_hours: 168,
-    cdp_location: 'URI:http://crl.domain.com/test_ca.crl',
+    cdp_location: ['http://crl.domain.com/test_ca.crl'],
     crl_list: 'spec/fixtures/test_ca_crl_list.txt',
     crl_number: 'spec/fixtures/test_ca_crl_number.txt',
     crl_validity_hours: 168, #7 days
