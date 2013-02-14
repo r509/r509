@@ -140,9 +140,9 @@ module R509
       #  a CRL will be valid. Defaults to 7 days.
       # @option opts [Hash<String, R509::Config::CaProfile>] :profiles
       # @option opts [String] :message_digest (SHA1) The hashing algorithm to use.
-      # @option opts [String] :cdp_location
-      # @option opts [String] :ocsp_location
-      # @option opts [String] :ca_issuers_location
+      # @option opts [Array] :cdp_location array of strings (URLs)
+      # @option opts [Array] :ocsp_location array of strings (URLs)
+      # @option opts [Array] :ca_issuers_location array of strings (URLs)
       # @option opts [String] :crl_number_file The file that we will save
       #  the CRL numbers to. defaults to a StringIO object if not provided
       # @option opts [String] :crl_list_file The file that we will save
