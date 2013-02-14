@@ -325,6 +325,12 @@ describe R509::Config::SubjectItemPolicy do
     validated_subject = subject_item_policy.validate_subject(subject)
     validated_subject.to_s.should == subject.to_s
   end
+  it "preserves subject order when applying policies" do
+    subject_item_policy = R509::Config::SubjectItemPolicy.new("CN" => "required", "O" => "required", "OU" => "optional", "L" => "required", "C" => "required")
+    subject = R509::Subject.new [["C","US"],["L","Chicago"],["ST","Illinois"],["CN","langui.sh"],["OU","Org Unit"],["O","Org"]]
+    validated_subject = subject_item_policy.validate_subject(subject)
+    validated_subject.to_s.should == "/C=US/L=Chicago/CN=langui.sh/OU=Org Unit/O=Org"
+  end
   it "does not match if you get case of subject_item_policy element wrong" do
     subject_item_policy = R509::Config::SubjectItemPolicy.new("cn" => "required")
     subject = R509::Subject.new [["CN","langui.sh"]]
