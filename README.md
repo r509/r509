@@ -1,5 +1,5 @@
 #r509 [![Build Status](https://secure.travis-ci.org/reaperhulk/r509.png)](http://travis-ci.org/reaperhulk/r509)
-r509 is a Ruby gem built using OpenSSL that is designed to ease management of a public key infrastructure. The r509 API facilitates easy creation of CSRs, signing of certificates, revocation (CRL/OCSP), and much more. Together with projects like [r509-ocsp-responder](https://github.com/reaperhulk/r509-ocsp-responder) and [r509-ca-http](https://github.com/sirsean/r509-ca-http) it is intended to be a complete certificate authority for use in production environments.
+r509 is a Ruby gem built using OpenSSL that is designed to ease management of a public key infrastructure. The r509 API facilitates easy creation of CSRs, signing of certificates, revocation (CRL/OCSP), and much more. Together with projects like [r509-ocsp-responder](https://github.com/reaperhulk/r509-ocsp-responder) and [r509-ca-http](https://github.com/sirsean/r509-ca-http) it is intended to be a complete [RFC 5280](http://www.ietf.org/rfc/rfc5280.txt)-compliant certificate authority for use in production environments.
 
 ##Requirements/Installation
 
@@ -461,12 +461,12 @@ An array of strings that conform to the OpenSSL naming scheme for available EKU 
 * emailProtection
 * OCSPSigning
 * timeStamping
-* msCodeInd
-* msCodeCom
-* msCTLSign
-* msSGC
-* msEFS
-* nsSGC
+* msCodeInd (not part of RFC 5280)
+* msCodeCom (not part of RFC 5280)
+* msCTLSign (not part of RFC 5280)
+* msSGC (not part of RFC 5280)
+* msEFS (not part of RFC 5280)
+* nsSGC (not part of RFC 5280)
 
 ####certificate\_policies
 An array of arrays containing policy identifiers and CPS URIs. For example:
