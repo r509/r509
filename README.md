@@ -199,9 +199,10 @@ test_ca: {
   },
   crl_list: "crl_list_file.txt",
   crl_number: "crl_number_file.txt",
-  cdp_location: 'URI:http://crl.domain.com/test_ca.crl',
+  cdp_location: ['http://crl.domain.com/test_ca.crl'],
   crl_validity_hours: 168, #7 days
-  ocsp_location: 'URI:http://ocsp.domain.com',
+  ocsp_location: ['http://ocsp.domain.com'],
+  ca_issuers_location: ['http://www.domain.com/my_roots.html'],
   message_digest: 'SHA1', #SHA1, SHA224, SHA256, SHA384, SHA512 supported. MD5 too, but you really shouldn't use that unless you have a good reason
   profiles: {
     server: {
@@ -404,9 +405,11 @@ This hash defines the certificate + key that will be used to sign for OCSP respo
 * password (optional, used for pkcs12 or passworded private key)
 
 ###cdp\_location
-The CRL distribution point for certificates issued from this CA.
+An array of CRL distribution points for certificates issued from this CA.
 
-Example: 'URI:http://crl.r509.org/myca.crl'
+```ruby
+['http://crl.r509.org/myca.crl']
+```
 
 ###crl\_list
 The path on the filesystem of the list of revoked certificates for this CA.
@@ -422,9 +425,18 @@ Example: '/path/to/my\_ca\_crl\_number.txt'
 Integer hours for CRL validity.
 
 ###ocsp\_location
-The OCSP AIA extension value for certificates issued from this CA.
+An array of URIs for client OCSP checks.
 
-Example: 'URI:http://ocsp.r509.org'
+```ruby
+['http://ocsp.r509.org']
+```
+
+###ca\_issuers\_location
+An array of ca issuer URIs
+
+```ruby
+['http://www.r509.org/some_roots.html']
+```
 
 ###ocsp\_chain
 An optional path to a concatenated text file of PEMs that should be attached to OCSP responses
