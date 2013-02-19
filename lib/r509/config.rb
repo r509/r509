@@ -33,6 +33,9 @@ module R509
         @subject_item_policy = opts[:subject_item_policy] || nil
       end
 
+      private
+      # @private
+      # validates the structure of the certificate policies array
       def validate_certificate_policies(policies)
         if not policies.nil?
           if not policies.respond_to?(:each)

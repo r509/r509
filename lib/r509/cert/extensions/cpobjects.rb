@@ -32,6 +32,7 @@ module R509
             @user_notices = []
           end
 
+          # parse each PolicyQualifier and store the results into the object array
           def parse(data)
             oid = data.entries[0].value
             case

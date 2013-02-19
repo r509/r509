@@ -282,6 +282,7 @@ module R509
 
       # Implements the OCSP noCheck certificate extension
       class OCSPNoCheck < OpenSSL::X509::Extension
+        # friendly name for OCSP No Check
         OID = "noCheck"
         Extensions.register_class(self)
 
@@ -292,6 +293,8 @@ module R509
       end
 
 
+      # Implements the CertificatePolicies certificate extension, with methods to
+      # provide access to the components and meaning of the extension's contents.
       class CertificatePolicies < OpenSSL::X509::Extension
         # friendly name for CP OID
         OID = "certificatePolicies"
@@ -303,11 +306,8 @@ module R509
           super(*args)
 
           seq = OpenSSL::ASN1.decode(self.to_der)
-          if seq.entries[0].value != "certificatePolicies"
-            raise R509::R509Error, "You must pass a certificate policies extension to this class"
-          end
-          # we need the second element (element #1 will be the oid certificatePolicies).
-          # element #2 will be another asn.1 sequence
+          # we need the second element (element 0 will be the oid certificatePolicies).
+          # element 1 will be another asn.1 sequence
           if not seq.entries[1].nil?
             data = OpenSSL::ASN1.decode(seq.entries[1].value)
             # each element of this sequence should be part of a policy + qualifiers
