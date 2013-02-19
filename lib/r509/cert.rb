@@ -427,6 +427,14 @@ module R509
       return (r509_extensions.has_key?(R509::Cert::Extensions::OCSPNoCheck))
     end
 
+    # Returns this object's CertificatePolicies extension as an R509 extension
+    #
+    # @return [R509::Cert::Extensions::CertificatePolicies] The object, or nil
+    # if this cert does not have a CertificatePolicies extension.
+    def certificate_policies
+      return r509_extensions[R509::Cert::Extensions::CertificatePolicies]
+    end
+
 
     private
     # This method exists only to provide a friendlier error msg if you attempt to

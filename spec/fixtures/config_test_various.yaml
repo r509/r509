@@ -36,13 +36,12 @@ missing_key_identifier_ca: {
     cert: 'missing_key_identifier_ca.cer',
     key: 'missing_key_identifier_ca.key'
   },
-  message_digest: 'SHA1', #SHA1, SHA256, SHA512 supported. MD5 too, but you really shouldn't use that unless you have a good reason
+  message_digest: 'SHA1',
   profiles: {
     server: {
       basic_constraints: "CA:FALSE",
       key_usage: [digitalSignature,keyEncipherment],
       extended_key_usage: [serverAuth],
-      certificate_policies: [ [ "policyIdentifier=2.16.840.1.9999999999.3.0"], [ "policyIdentifier=2.16.840.1.9999999999.1.2.3.4.1", "CPS.1=http://example.com/cps"] ]
     }
   }
 }
@@ -51,13 +50,22 @@ multi_policy_ca: {
     cert: 'test_ca.cer',
     key: 'test_ca.key'
   },
-  message_digest: 'SHA1', #SHA1, SHA256, SHA512 supported. MD5 too, but you really shouldn't use that unless you have a good reason
+  message_digest: 'SHA1',
   profiles: {
     server: {
       basic_constraints: "CA:FALSE",
       key_usage: [digitalSignature,keyEncipherment],
       extended_key_usage: [serverAuth],
-      certificate_policies: [ [ "policyIdentifier=2.16.840.1.9999999999.3.0"], [ "policyIdentifier=2.16.840.1.9999999999.1.2.3.4.1", "CPS.1=http://example.com/cps"] ]
+      certificate_policies: [
+        { policy_identifier: "2.16.840.1.99999.21.234",
+          cps_uris: ["http://example.com/cps","http://haha.com"],
+          user_notices: [ { explicit_text: "this is a great thing", organization: "my org", notice_numbers: "1,2,3" } ]
+        },
+        { policy_identifier: "2.16.840.1.99999.21.235",
+          cps_uris: ["http://example.com/cps2"],
+          user_notices: [ { explicit_text: "this is a bad thing", organization: "another org", notice_numbers: "3,2,1" },{ explicit_text: "another user notice"} ]
+        }
+      ]
     }
   }
 }
@@ -105,7 +113,7 @@ ca_issuers_and_ocsp_ca: {
   },
   ocsp_location: ['http://ocsp.domain.com','http://ocsp.other.com'],
   ca_issuers_location: ['http://domain.com/ca.html'],
-  message_digest: 'SHA1', #SHA1, SHA256, SHA512 supported. MD5 too, but you really shouldn't use that unless you have a good reason
+  message_digest: 'SHA1',
   profiles: {
     server: {
       basic_constraints: "CA:FALSE",
@@ -120,7 +128,7 @@ ca_issuers_ca: {
     key: 'test_ca.key'
   },
   ca_issuers_location: ['http://domain.com/ca.html'],
-  message_digest: 'SHA1', #SHA1, SHA256, SHA512 supported. MD5 too, but you really shouldn't use that unless you have a good reason
+  message_digest: 'SHA1',
   profiles: {
     server: {
       basic_constraints: "CA:FALSE",
@@ -134,7 +142,7 @@ all_eku_ca: {
     cert: 'test_ca.cer',
     key: 'test_ca.key'
   },
-  message_digest: 'SHA1', #SHA1, SHA256, SHA512 supported. MD5 too, but you really shouldn't use that unless you have a good reason
+  message_digest: 'SHA1',
   profiles: {
     smorgasbord: {
       basic_constraints: "CA:FALSE",
@@ -148,7 +156,7 @@ ocsp_no_check_ca: {
     cert: 'test_ca.cer',
     key: 'test_ca.key'
   },
-  message_digest: 'SHA1', #SHA1, SHA256, SHA512 supported. MD5 too, but you really shouldn't use that unless you have a good reason
+  message_digest: 'SHA1',
   profiles: {
     ocsp_no_check_delegate: {
       basic_constraints: "CA:FALSE",

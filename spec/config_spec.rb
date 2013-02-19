@@ -356,18 +356,43 @@ describe R509::Config::SubjectItemPolicy do
 end
 
 describe R509::Config::CaProfile do
+  context "validate certificate policy structure" do
+    it "must be an array" do
+      expect { R509::Config::CaProfile.new(:certificate_policies => "whatever") }.to raise_error(R509::R509Error,'Not a valid certificate policy structure. Must be an array of hashes')
+    end
+    it "require a policy identifier" do
+      expect { R509::Config::CaProfile.new(:certificate_policies => [{"stuff" => "thing"}]) }.to raise_error(R509::R509Error,'Each policy requires a policy identifier')
+    end
+    it "the cps uri must be array of strings" do
+      expect { R509::Config::CaProfile.new(:certificate_policies => [{"policy_identifier" => "1.2.3.4.5", "cps_uris" => "not an array"}]) }.to raise_error(R509::R509Error,'CPS URIs must be an array of strings')
+    end
+    it "user notices must be an array of hashes" do
+      expect { R509::Config::CaProfile.new(:certificate_policies => [{"policy_identifier" => "1.2.3.4.5", "user_notices" => "not an array"}]) }.to raise_error(R509::R509Error,'User notices must be an array of hashes')
+    end
+    it "org in user notice requires notice numbers" do
+      expect { R509::Config::CaProfile.new(:certificate_policies => [{"policy_identifier" => "1.2.3.4.5", "user_notices" => [{"explicit_text" => "explicit", "organization" => "something"}]}]) }.to raise_error(R509::R509Error,'If you provide an organization you must provide notice numbers')
+    end
+    it "notice numbers in user notice requires org" do
+      expect { R509::Config::CaProfile.new(:certificate_policies => [{"policy_identifier" => "1.2.3.4.5", "user_notices" => [{"explicit_text" => "explicit", "notice_numbers" => "1,2,3"}]}]) }.to raise_error(R509::R509Error,'If you provide notice numbers you must provide an organization')
+    end
+  end
   it "initializes and stores the options provided" do
     profile = R509::Config::CaProfile.new(
       :basic_constraints => "CA:TRUE",
       :key_usage => ["digitalSignature"],
       :extended_key_usage => ["serverAuth"],
-      :certificate_policies => [ [ "policyIdentifier=2.16.840.1.9999999999.1.2.3.4.1", "CPS.1=http://example.com/cps"] ],
+      :certificate_policies => [
+          { "policy_identifier" => "2.16.840.1.12345.1.2.3.4.1",
+  "cps_uris" => ["http://example.com/cps","http://other.com/cps"],
+  "user_notices" => [ {"explicit_text" => "thing", "organization" => "my org", "notice_numbers" => "1,2,3,4"} ]
+          }
+      ],
       :ocsp_no_check => true
     )
     profile.basic_constraints.should == "CA:TRUE"
     profile.key_usage.should == ["digitalSignature"]
     profile.extended_key_usage.should == ["serverAuth"]
-    profile.certificate_policies.should ==  [ [ "policyIdentifier=2.16.840.1.9999999999.1.2.3.4.1", "CPS.1=http://example.com/cps"] ]
+    profile.certificate_policies[0]["policy_identifier"].should == "2.16.840.1.12345.1.2.3.4.1"
     profile.ocsp_no_check.should == true
   end
   it "initializes with expected defaults" do

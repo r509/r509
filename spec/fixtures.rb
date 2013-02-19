@@ -169,10 +169,10 @@ module TestFixtures
         :key_usage => ["digitalSignature","keyEncipherment"],
         :extended_key_usage => ["serverAuth"],
         :certificate_policies => [
-          [
-            "policyIdentifier=2.16.840.1.12345.1.2.3.4.1",
-            "CPS.1=http://example.com/cps"
-          ]
+          { "policy_identifier" => "2.16.840.1.12345.1.2.3.4.1",
+  "cps_uris" => ["http://example.com/cps","http://other.com/cps"],
+  "user_notices" => [ {"explicit_text" => "thing", "organization" => "my org", "notice_numbers" => "1,2,3,4"} ]
+          }
         ]
     )
 
@@ -191,10 +191,10 @@ module TestFixtures
       :key_usage => ["digitalSignature","keyEncipherment"],
       :extended_key_usage => ["serverAuth"],
       :certificate_policies => [
-        [
-          "policyIdentifier=2.16.840.1.12345.1.2.3.4.1",
-          "CPS.1=http://example.com/cps"
-        ]
+        { "policy_identifier" => "2.16.840.1.12345.1.2.3.4.1",
+"cps_uris" => ["http://example.com/cps","http://other.com/cps"],
+"user_notices" => [ {"explicit_text" => "thing", "organization" => "my org", "notice_numbers" => "1,2,3,4"} ]
+        }
       ],
       :subject_item_policy => subject_item_policy
     )

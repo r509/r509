@@ -127,14 +127,42 @@ describe R509::CertificateAuthority::Signer do
   it "tests that policy identifiers are properly encoded" do
     csr = R509::Csr.new(:csr => @csr)
     cert = @ca.sign(:csr => csr, :profile_name => 'server')
-    cert.extensions['certificatePolicies']['value'].should == "Policy: 2.16.840.1.12345.1.2.3.4.1\n  CPS: http://example.com/cps\n"
+    cert.certificate_policies.should_not be_nil
+    cert.certificate_policies.policies.count.should == 1
+    cert.certificate_policies.policies[0].policy_identifier.should == "2.16.840.1.12345.1.2.3.4.1"
+    cert.certificate_policies.policies[0].policy_qualifiers.cps_uris.should == ["http://example.com/cps", "http://other.com/cps"]
+    cert.certificate_policies.policies[0].policy_qualifiers.user_notices.count.should == 1
+    un = cert.certificate_policies.policies[0].policy_qualifiers.user_notices[0]
+    un.notice_reference.notice_numbers.should == [1,2,3,4]
+    un.notice_reference.organization.should == 'my org'
+    un.explicit_text.should == "thing"
   end
   it "multiple policy identifiers are properly encoded" do
     csr = R509::Csr.new(:csr => @csr)
     config = R509::Config::CaConfig.from_yaml("multi_policy_ca", File.read("#{File.dirname(__FILE__)}/fixtures/config_test_various.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"})
     ca = R509::CertificateAuthority::Signer.new(config)
     cert = ca.sign(:csr => csr, :profile_name => 'server')
-    cert.extensions['certificatePolicies']['value'].should == "Policy: 2.16.840.1.9999999999.3.0\nPolicy: 2.16.840.1.9999999999.1.2.3.4.1\n  CPS: http://example.com/cps\n"
+    cert.certificate_policies.should_not be_nil
+    cert.certificate_policies.policies.count.should == 2
+    p0 = cert.certificate_policies.policies[0]
+    p0.policy_identifier.should == "2.16.840.1.99999.21.234"
+    p0.policy_qualifiers.cps_uris.should == ["http://example.com/cps", "http://haha.com"]
+    p0.policy_qualifiers.user_notices.count.should == 1
+    un0 = p0.policy_qualifiers.user_notices[0]
+    un0.notice_reference.notice_numbers.should == [1,2,3]
+    un0.notice_reference.organization.should == "my org"
+    un0.explicit_text.should == "this is a great thing"
+    p1 = cert.certificate_policies.policies[1]
+    p1.policy_identifier.should == "2.16.840.1.99999.21.235"
+    p1.policy_qualifiers.cps_uris.should == ["http://example.com/cps2"]
+    p1.policy_qualifiers.user_notices.count.should == 2
+    un1 = p1.policy_qualifiers.user_notices[0]
+    un1.notice_reference.notice_numbers.should == [3,2,1]
+    un1.notice_reference.organization.should == "another org"
+    un1.explicit_text.should == 'this is a bad thing'
+    un2 = p1.policy_qualifiers.user_notices[1]
+    un2.notice_reference.should be_nil
+    un2.explicit_text.should == "another user notice"
   end
   it "issues a certificate with a ca_issuers_location and ocsp_location" do
     csr = R509::Csr.new(:csr => @csr)

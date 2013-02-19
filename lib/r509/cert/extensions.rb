@@ -1,5 +1,6 @@
 require 'openssl'
 require 'set'
+require 'r509/cert/extensions/cpobjects'
 
 module R509
   class Cert
@@ -287,6 +288,34 @@ module R509
         # See OpenSSL::X509::Extension#initialize
         def initialize(*args)
           super(*args)
+        end
+      end
+
+
+      class CertificatePolicies < OpenSSL::X509::Extension
+        # friendly name for CP OID
+        OID = "certificatePolicies"
+        Extensions.register_class(self)
+        attr_reader :policies
+
+        def initialize(*args)
+          @policies = []
+          super(*args)
+
+          seq = OpenSSL::ASN1.decode(self.to_der)
+          if seq.entries[0].value != "certificatePolicies"
+            raise R509::R509Error, "You must pass a certificate policies extension to this class"
+          end
+          # we need the second element (element #1 will be the oid certificatePolicies).
+          # element #2 will be another asn.1 sequence
+          if not seq.entries[1].nil?
+            data = OpenSSL::ASN1.decode(seq.entries[1].value)
+            # each element of this sequence should be part of a policy + qualifiers
+            #   certificatePolicies ::= SEQUENCE SIZE (1..MAX) OF PolicyInformation
+            data.each do |cp|
+              @policies << R509::Cert::Extensions::CPObjects::PolicyInformation.new(cp)
+            end if data.respond_to?(:each)
+          end
         end
       end
 

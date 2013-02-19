@@ -14,19 +14,16 @@ test_ca_dsa: {
       basic_constraints: "CA:FALSE",
       key_usage: [digitalSignature,keyEncipherment],
       extended_key_usage: [serverAuth],
-      certificate_policies: [ [ "policyIdentifier=2.16.840.1.9999999999.1.2.3.4.1", "CPS.1=http://example.com/cps"] ]
     },
     client: {
       basic_constraints: "CA:FALSE",
       key_usage: [digitalSignature,keyEncipherment],
       extended_key_usage: [clientAuth],
-      certificate_policies: [ [ "policyIdentifier=2.16.840.1.9999999999.1.2.3.4.2", "CPS.1=http://example.com/cps"] ]
     },
     server_with_subject_item_policy: {
       basic_constraints: "CA:FALSE",
       key_usage: [digitalSignature,keyEncipherment],
       extended_key_usage: [serverAuth],
-      certificate_policies: [ [ "policyIdentifier=2.16.840.1.9999999999.1.2.3.4.1", "CPS.1=http://example.com/cps"] ],
       subject_item_policy: {
         "CN" : "required",
         "O" : "optional",

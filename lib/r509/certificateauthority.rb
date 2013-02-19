@@ -171,9 +171,26 @@ module R509::CertificateAuthority
       domains.map { |domain| 'DNS: '+domain }.join(",")
     end
 
-    def build_conf(section,data)
+    def build_conf(section,hash,index)
       conf = ["[#{section}]"]
-      conf.concat data
+      conf.push "policyIdentifier=#{hash["policy_identifier"]}" unless hash["policy_identifier"].nil?
+      hash["cps_uris"].each_with_index do |cps,idx|
+        conf.push "CPS.#{idx+1}=\"#{cps}\""
+      end if hash["cps_uris"].respond_to?(:each_with_index)
+
+      user_notice_confs = []
+      hash["user_notices"].each_with_index do |un,k|
+        conf.push "userNotice.#{k+1}=@user_notice#{k+1}#{index}"
+        user_notice_confs.push "[user_notice#{k+1}#{index}]"
+        user_notice_confs.push "explicitText=\"#{un["explicit_text"]}\"" unless un["explicit_text"].nil?
+        if un["organization"].nil? and not un["notice_numbers"].nil?
+          raise R509::R509Error, "User notice references requires organization if notice numbers are provided"
+        end
+        user_notice_confs.push "organization=\"#{un["organization"]}\"" unless un["organization"].nil?
+        user_notice_confs.push "noticeNumbers=\"#{un["notice_numbers"]}\"" unless un["notice_numbers"].nil?
+      end unless not hash["user_notices"].kind_of?(Array)
+
+      conf.concat(user_notice_confs)
       conf.join "\n"
     end
 
@@ -243,15 +260,15 @@ module R509::CertificateAuthority
         ext << ef.create_extension("authorityKeyIdentifier", "keyid:always,issuer:always")
       end
 
-      if not options[:certificate_policies].nil? and not options[:certificate_policies].empty?
+      if not options[:certificate_policies].nil? and options[:certificate_policies].respond_to?(:each)
         conf = []
-        conf_names = []
+        policy_names = ["ia5org"]
         options[:certificate_policies].each_with_index do |policy,i|
-          conf << build_conf("certPolicies#{i}",policy)
-          conf_names << "@certPolicies#{i}"
+          conf << build_conf("certPolicies#{i}",policy,i)
+          policy_names << "@certPolicies#{i}"
         end
         ef.config = OpenSSL::Config.parse(conf.join("\n"))
-        ext << ef.create_extension("certificatePolicies", conf_names.join(","))
+        ext << ef.create_extension("certificatePolicies", policy_names.join(","))
       end
       #ef.config = OpenSSL::Config.parse(<<-_end_of_cnf_)
       #[certPolicies]

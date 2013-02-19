@@ -23,7 +23,6 @@ certificate_authorities: {
         basic_constraints: "CA:FALSE",
         key_usage: [digitalSignature,keyEncipherment],
         extended_key_usage: [serverAuth],
-        certificate_policies: [ [ "policyIdentifier=2.16.840.1.9999999999.1.2.3.4.1", "CPS.1=http://example.com/cps"] ],
         subject_item_policy: {
           CN: "required",
           O:  "required",
@@ -37,44 +36,47 @@ certificate_authorities: {
         basic_constraints: "CA:FALSE",
         key_usage: [digitalSignature,keyEncipherment],
         extended_key_usage: [clientAuth],
-        certificate_policies: [ [ "policyIdentifier=2.16.840.1.9999999999.1.2.3.4.2", "CPS.1=http://example.com/cps"] ]
       },
       email: {
         basic_constraints: "CA:FALSE",
         key_usage: [digitalSignature,keyEncipherment],
         extended_key_usage: [emailProtection],
-        certificate_policies: [ [ "policyIdentifier=2.16.840.1.9999999999.1.2.3.4.3", "CPS.1=http://example.com/cps"] ]
       },
       clientserver: {
         basic_constraints:  "CA:FALSE",
         key_usage: [digitalSignature,keyEncipherment],
         extended_key_usage: [serverAuth,clientAuth],
-        certificate_policies: [ [ "policyIdentifier=2.16.840.1.9999999999.1.2.3.4.4", "CPS.1=http://example.com/cps"] ]
       },
       codesigning: {
         basic_constraints:  "CA:FALSE",
         key_usage: [digitalSignature],
         extended_key_usage: [codeSigning],
-        certificate_policies: [ [ "policyIdentifier=2.16.840.1.9999999999.1.2.3.4.5", "CPS.1=http://example.com/cps"] ]
       },
       timestamping: {
         basic_constraints:  "CA:FALSE",
         key_usage: [digitalSignature],
         extended_key_usage: [timeStamping],
-        certificate_policies: [ [ "policyIdentifier=2.16.840.1.9999999999.1.2.3.4.6", "CPS.1=http://example.com/cps"] ]
       },
       subroot: {
         basic_constraints:  "CA:TRUE,pathlen:0",
         key_usage: [keyCertSign,cRLSign],
         extended_key_usage: [],
-        certificate_policies: [ ]
+        certificate_policies: [
+          { policy_identifier: "2.16.840.1.99999.21.234",
+            cps_uris: ["http://example.com/cps","http://haha.com"],
+            user_notices: [ { explicit_text: "this is a great thing", organization: "my org", notice_numbers: "1,2,3" } ]
+          },
+          { policy_identifier: "2.16.840.1.99999.21.235",
+            cps_uris: ["http://example.com/cps2"],
+            user_notices: [ { explicit_text: "this is a bad thing", organization: "another org", notice_numbers: "3,2,1" },{ explicit_text: "another user notice"} ]
+          }
+        ]
       },
       ocsp_delegate: {
         basic_constraints:  "CA:FALSE",
         key_usage: [digitalSignature],
         extended_key_usage: [OCSPSigning],
-        ocsp_no_check: true,
-        certificate_policies: [ ]
+        ocsp_no_check: true
       }
     }
   }
