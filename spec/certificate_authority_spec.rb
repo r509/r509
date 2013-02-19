@@ -164,6 +164,11 @@ describe R509::CertificateAuthority::Signer do
     un2.notice_reference.should be_nil
     un2.explicit_text.should == "another user notice"
   end
+  it "issues a certificate with an authority key identifier" do
+    csr = R509::Csr.new(:csr => @csr)
+    cert = @ca.sign(:csr => csr, :profile_name => 'server')
+    cert.authority_key_identifier.should_not be_nil
+  end
   it "issues a certificate with a ca_issuers_location and ocsp_location" do
     csr = R509::Csr.new(:csr => @csr)
     config = R509::Config::CaConfig.from_yaml("ca_issuers_and_ocsp_ca", File.read("#{File.dirname(__FILE__)}/fixtures/config_test_various.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"})

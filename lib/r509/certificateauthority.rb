@@ -183,9 +183,7 @@ module R509::CertificateAuthority
         conf.push "userNotice.#{k+1}=@user_notice#{k+1}#{index}"
         user_notice_confs.push "[user_notice#{k+1}#{index}]"
         user_notice_confs.push "explicitText=\"#{un["explicit_text"]}\"" unless un["explicit_text"].nil?
-        if un["organization"].nil? and not un["notice_numbers"].nil?
-          raise R509::R509Error, "User notice references requires organization if notice numbers are provided"
-        end
+        # if org is supplied notice numbers is also required (and vice versa). enforced in CaProfile
         user_notice_confs.push "organization=\"#{un["organization"]}\"" unless un["organization"].nil?
         user_notice_confs.push "noticeNumbers=\"#{un["notice_numbers"]}\"" unless un["notice_numbers"].nil?
       end unless not hash["user_notices"].kind_of?(Array)
@@ -256,7 +254,7 @@ module R509::CertificateAuthority
       ext << ef.create_extension("subjectKeyIdentifier", "hash")
 
       #attach the key identifier if it's not a self-sign
-      if not ef.subject_certificate == ef.issuer_certificate and R509::Cert.new(:cert=>options[:issuer_certificate]).extensions['subjectKeyIdentifier']
+      if not ef.subject_certificate == ef.issuer_certificate and not R509::Cert.new(:cert=>options[:issuer_certificate]).authority_key_identifier.nil?
         ext << ef.create_extension("authorityKeyIdentifier", "keyid:always,issuer:always")
       end
 

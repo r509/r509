@@ -216,17 +216,6 @@ describe R509::Cert do
       cert.to_s.should == @cert
      end
   end
-  it "gets key usage from the extensions array" do
-    cert = R509::Cert.new(:cert => @cert)
-    cert.extensions["keyUsage"].nil?.should == false
-    cert.extensions["keyUsage"]["value"].should == "Digital Signature, Key Encipherment"
-  end
-  it "gets extended key usage from the extensions array" do
-    cert = R509::Cert.new(:cert => @cert)
-    cert.extensions["extendedKeyUsage"].nil?.should == false
-    cert.extensions["extendedKeyUsage"]["value"].should == "TLS Web Server Authentication"
-  end
-
   it "gets the right object from #basic_constraints" do
     cert = R509::Cert.new(:cert => @cert)
     cert.basic_constraints.class.should == R509::Cert::Extensions::BasicConstraints

@@ -309,23 +309,9 @@ module R509
     # check to verify that the CRL you're checking is signed by the same CA as the cert
     # so do that check yourself
     #
-    # @param [R509::Crl] r509_crl A CRL from the CA that issued this certificate.
+    # @param [R509::Crl::SignedList] r509_crl A CRL from the CA that issued this certificate.
     def is_revoked_by_crl?( r509_crl )
       return r509_crl.revoked?( self.serial )
-    end
-
-    # Return the certificate extensions
-    #
-    # @return [Array] an array of hashes representing the extensions in the cert
-    def extensions
-      if @extensions.nil?
-        @extensions = Hash.new
-        @cert.extensions.each { |extension|
-          hash = {'value' => extension.value, 'critical' => extension.critical?}
-          @extensions[extension.oid] = hash
-        }
-      end
-      @extensions
     end
 
     # Returns the certificate extensions as a hash of R509::Cert::Extensions
@@ -335,7 +321,7 @@ module R509
     # R509::Cert::Extensions module, each specific to the extension. The hash
     # is keyed with the R509 extension class. Extensions without an R509
     # implementation are ignored (see #get_unknown_extensions).
-    def r509_extensions
+    def extensions
       if @r509_extensions.nil?
         @r509_extensions = Extensions.wrap_openssl_extensions( self.cert.extensions )
       end
@@ -360,7 +346,7 @@ module R509
     # @return [R509::Cert::Extensions::BasicConstraints] The object, or nil
     # if this cert does not have a BasicConstraints extension.
     def basic_constraints
-      return r509_extensions[R509::Cert::Extensions::BasicConstraints]
+      return extensions[R509::Cert::Extensions::BasicConstraints]
     end
 
     # Returns this object's KeyUsage extension as an R509 extension
@@ -368,7 +354,7 @@ module R509
     # @return [R509::Cert::Extensions::KeyUsage] The object, or nil
     # if this cert does not have a KeyUsage extension.
     def key_usage
-      return r509_extensions[R509::Cert::Extensions::KeyUsage]
+      return extensions[R509::Cert::Extensions::KeyUsage]
     end
 
     # Returns this object's ExtendedKeyUsage extension as an R509 extension
@@ -376,7 +362,7 @@ module R509
     # @return [R509::Cert::Extensions::ExtendedKeyUsage] The object, or nil
     # if this cert does not have a ExtendedKeyUsage extension.
     def extended_key_usage
-      return r509_extensions[R509::Cert::Extensions::ExtendedKeyUsage]
+      return extensions[R509::Cert::Extensions::ExtendedKeyUsage]
     end
 
     # Returns this object's SubjectKeyIdentifier extension as an R509 extension
@@ -384,7 +370,7 @@ module R509
     # @return [R509::Cert::Extensions::SubjectKeyIdentifier] The object, or nil
     # if this cert does not have a SubjectKeyIdentifier extension.
     def subject_key_identifier
-      return r509_extensions[R509::Cert::Extensions::SubjectKeyIdentifier]
+      return extensions[R509::Cert::Extensions::SubjectKeyIdentifier]
     end
 
     # Returns this object's AuthorityKeyIdentifier extension as an R509 extension
@@ -392,7 +378,7 @@ module R509
     # @return [R509::Cert::Extensions::AuthorityKeyIdentifier] The object, or nil
     # if this cert does not have a AuthorityKeyIdentifier extension.
     def authority_key_identifier
-      return r509_extensions[R509::Cert::Extensions::AuthorityKeyIdentifier]
+      return extensions[R509::Cert::Extensions::AuthorityKeyIdentifier]
     end
 
     # Returns this object's SubjectAlternativeName extension as an R509 extension
@@ -400,7 +386,7 @@ module R509
     # @return [R509::Cert::Extensions::SubjectAlternativeName] The object, or nil
     # if this cert does not have a SubjectAlternativeName extension.
     def subject_alternative_name
-      return r509_extensions[R509::Cert::Extensions::SubjectAlternativeName]
+      return extensions[R509::Cert::Extensions::SubjectAlternativeName]
     end
 
     # Returns this object's AuthorityInfoAccess extension as an R509 extension
@@ -408,7 +394,7 @@ module R509
     # @return [R509::Cert::Extensions::AuthorityInfoAccess] The object, or nil
     # if this cert does not have a AuthorityInfoAccess extension.
     def authority_info_access
-      return r509_extensions[R509::Cert::Extensions::AuthorityInfoAccess]
+      return extensions[R509::Cert::Extensions::AuthorityInfoAccess]
     end
 
     # Returns this object's CrlDistributionPoints extension as an R509 extension
@@ -416,7 +402,7 @@ module R509
     # @return [R509::Cert::Extensions::CrlDistributionPoints] The object, or nil
     # if this cert does not have a CrlDistributionPoints extension.
     def crl_distribution_points
-      return r509_extensions[R509::Cert::Extensions::CrlDistributionPoints]
+      return extensions[R509::Cert::Extensions::CrlDistributionPoints]
     end
 
     # Returns true if the OCSP No Check extension is present
@@ -424,7 +410,7 @@ module R509
     #
     # @return [Boolean] presence/absence of the nocheck extension
     def ocsp_no_check?
-      return (r509_extensions.has_key?(R509::Cert::Extensions::OCSPNoCheck))
+      return (extensions.has_key?(R509::Cert::Extensions::OCSPNoCheck))
     end
 
     # Returns this object's CertificatePolicies extension as an R509 extension
@@ -432,7 +418,7 @@ module R509
     # @return [R509::Cert::Extensions::CertificatePolicies] The object, or nil
     # if this cert does not have a CertificatePolicies extension.
     def certificate_policies
-      return r509_extensions[R509::Cert::Extensions::CertificatePolicies]
+      return extensions[R509::Cert::Extensions::CertificatePolicies]
     end
 
 
