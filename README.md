@@ -155,7 +155,11 @@ profile = R509::Config::CaProfile.new(
   :basic_constraints => "CA:FALSE",
   :key_usage => ["digitalSignature","keyEncipherment"],
   :extended_key_usage => ["serverAuth"],
-  :certificate_policies => [ ["policyIdentifier=2.16.840.1.999999999.1.2.3.4.1", "CPS.1=http://example.com/cps"] ],
+  :certificate_policies => [
+    { "policy_identifier" => "2.16.840.1.99999.21.234",
+      "cps_uris" => ["http://example.com/cps","http://haha.com"],
+      "user_notices" => [ { "explicit_text" => "this is a great thing", "organization" => "my org", "notice_numbers" => "1,2,3" } ]
+    },
   :subject_item_policy => nil,
   :ocsp_no_check => false # this should only be true if you are setting OCSPSigning EKU
 )
@@ -170,7 +174,6 @@ profile = R509::Config::CaProfile.new(
   :basic_constraints => "CA:FALSE",
   :key_usage => ["digitalSignature","keyEncipherment"],
   :extended_key_usage => ["serverAuth"],
-  :certificate_policies => [ ["policyIdentifier=2.16.840.1.999999999.1.2.3.4.1", "CPS.1=http://example.com/cps"] ],
   :subject_item_policy => {
     "CN" => "required",
     "O" => "optional"
@@ -205,7 +208,16 @@ test_ca: {
       basic_constraints: "CA:FALSE",
       key_usage: [digitalSignature,keyEncipherment],
       extended_key_usage: [serverAuth],
-      certificate_policies: [ [ "policyIdentifier=2.16.840.1.9999999999.1.2.3.4.1", "CPS.1=http://example.com/cps"] ],
+      certificate_policies: [
+        { policy_identifier: "2.16.840.1.99999.21.234",
+          cps_uris: ["http://example.com/cps","http://haha.com"],
+          user_notices: [ { explicit_text: "this is a great thing", organization: "my org", notice_numbers: "1,2,3" } ]
+        },
+        { policy_identifier: "2.16.840.1.99999.21.235",
+          cps_uris: ["http://example.com/cps2"],
+          user_notices: [ { explicit_text: "this is a bad thing", organization: "another org", notice_numbers: "3,2,1" },{ explicit_text: "another user notice"} ]
+        }
+      ],
       subject_item_policy: {
         "CN" : "required",
         "O" : "optional",
@@ -469,16 +481,29 @@ An array of strings that conform to the OpenSSL naming scheme for available EKU 
 * nsSGC (not part of RFC 5280)
 
 ####certificate\_policies
-An array of arrays containing policy identifiers and CPS URIs. For example:
+An array of hashes containing policy identifiers, CPS URI(s), and user notice(s)
 
 ```yaml
-[ [ "policyIdentifier=2.16.840.1.9999999.1.2.3.4.2","CPS.1=http://r509.org/cps" ] ]
+[
+  { policy_identifier: "2.16.840.1.99999.21.234",
+    cps_uris: ["http://example.com/cps"]
+  }
+]
 ```
 
 or
 
 ```yaml
-[ ["policyIdentifier=2.16.840.1.999999.0"], [ "policyIdentifier=2.16.840.1.9999999.1.2.3.4.2","CPS.1=http://r509.org/cps" ] ]
+[
+  { policy_identifier: "2.16.840.1.99999.21.234",
+    cps_uris: ["http://example.com/cps","http://haha.com"],
+    user_notices: [ { explicit_text: "this is a great thing", organization: "my org", notice_numbers: "1,2,3" } ]
+  },
+  { policy_identifier: "2.16.840.1.99999.21.235",
+    cps_uris: ["http://example.com/cps2"],
+    user_notices: [ { explicit_text: "this is a bad thing", organization: "another org", notice_numbers: "3,2,1" },{ explicit_text: "another user notice"} ]
+  }
+]
 ```
 
 ####subject\_item\_policy
