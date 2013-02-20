@@ -68,10 +68,11 @@ shared_examples_for "a correct R509 BasicConstraints object" do
 end
 
 shared_examples_for "a correct R509 KeyUsage object" do
-  before :all do
+  before :each do
     extension_name = "keyUsage"
     klass = KeyUsage
-    openssl_ext = OpenSSL::X509::Extension.new( extension_name, @extension_value )
+    ef = OpenSSL::X509::ExtensionFactory.new
+    openssl_ext = ef.create_extension( extension_name, @extension_value )
     @r509_ext = klass.new( openssl_ext )
   end
 
@@ -89,7 +90,7 @@ shared_examples_for "a correct R509 KeyUsage object" do
     @r509_ext.key_encipherment?.should == @allowed_uses.include?( KeyUsage::AU_KEY_ENCIPHERMENT )
     @r509_ext.data_encipherment?.should == @allowed_uses.include?( KeyUsage::AU_DATA_ENCIPHERMENT )
     @r509_ext.key_agreement?.should == @allowed_uses.include?( KeyUsage::AU_KEY_AGREEMENT )
-    @r509_ext.certificate_sign?.should == @allowed_uses.include?( KeyUsage::AU_CERTIFICATE_SIGN )
+    @r509_ext.key_cert_sign?.should == @allowed_uses.include?( KeyUsage::AU_KEY_CERT_SIGN )
     @r509_ext.crl_sign?.should == @allowed_uses.include?( KeyUsage::AU_CRL_SIGN )
     @r509_ext.encipher_only?.should == @allowed_uses.include?( KeyUsage::AU_ENCIPHER_ONLY )
     @r509_ext.decipher_only?.should == @allowed_uses.include?( KeyUsage::AU_DECIPHER_ONLY )
@@ -247,14 +248,15 @@ describe R509::Cert::Extensions do
       context "with all implemented extensions" do
         before :each do
           @wrappable_extensions = []
-          @wrappable_extensions << OpenSSL::X509::Extension.new( "basicConstraints", "CA:TRUE;pathlen:0" )
-          @wrappable_extensions << OpenSSL::X509::Extension.new( "keyUsage", KeyUsage::AU_DIGITAL_SIGNATURE )
-          @wrappable_extensions << OpenSSL::X509::Extension.new( "extendedKeyUsage", ExtendedKeyUsage::AU_WEB_SERVER_AUTH )
+          ef = OpenSSL::X509::ExtensionFactory.new
+          @wrappable_extensions << ef.create_extension( "basicConstraints", "CA:TRUE,pathlen:0", true )
+          @wrappable_extensions << ef.create_extension( "keyUsage", KeyUsage::AU_DIGITAL_SIGNATURE )
+          @wrappable_extensions << ef.create_extension( "extendedKeyUsage", ExtendedKeyUsage::AU_WEB_SERVER_AUTH )
           @wrappable_extensions << OpenSSL::X509::Extension.new( "subjectKeyIdentifier", "00:11:22:33:44:55:66:77:88:99:00:AA:BB:CC:DD:EE:FF:00:11:22" )
           @wrappable_extensions << OpenSSL::X509::Extension.new( "authorityKeyIdentifier", "keyid:always" )
-          @wrappable_extensions << OpenSSL::X509::Extension.new( "subjectAltName", "DNS:www.test.local" )
-          @wrappable_extensions << OpenSSL::X509::Extension.new( "authorityInfoAccess", "CA Issuers - URI:http://www.test.local" )
-          @wrappable_extensions << OpenSSL::X509::Extension.new( "crlDistributionPoints", "URI:http://www.test.local" )
+          @wrappable_extensions << ef.create_extension( "subjectAltName", "DNS:www.test.local" )
+          @wrappable_extensions << ef.create_extension( "authorityInfoAccess", "caIssuers;URI:http://www.test.local" )
+          @wrappable_extensions << ef.create_extension( "crlDistributionPoints", "URI:http://www.test.local" )
 
           @unknown_extensions = []
 
@@ -389,7 +391,7 @@ describe R509::Cert::Extensions do
 
     context "with some different allowed uses" do
       before :all do
-        @allowed_uses = [ KeyUsage::AU_NON_REPUDIATION, KeyUsage::AU_DATA_ENCIPHERMENT, KeyUsage::AU_CERTIFICATE_SIGN, KeyUsage::AU_ENCIPHER_ONLY ]
+        @allowed_uses = [ KeyUsage::AU_NON_REPUDIATION, KeyUsage::AU_DATA_ENCIPHERMENT, KeyUsage::AU_KEY_CERT_SIGN, KeyUsage::AU_ENCIPHER_ONLY ]
         @extension_value = @allowed_uses.join( ", " )
       end
 
@@ -398,10 +400,11 @@ describe R509::Cert::Extensions do
 
     context "with all allowed uses" do
       before :all do
-        @allowed_uses = [ KeyUsage::AU_DIGITAL_SIGNATURE, KeyUsage::AU_KEY_ENCIPHERMENT,
-                 KeyUsage::AU_KEY_AGREEMENT, KeyUsage::AU_CRL_SIGN, KeyUsage::AU_DECIPHER_ONLY,
-                 KeyUsage::AU_NON_REPUDIATION, KeyUsage::AU_DATA_ENCIPHERMENT,
-                 KeyUsage::AU_CERTIFICATE_SIGN, KeyUsage::AU_ENCIPHER_ONLY ]
+        @allowed_uses = [ KeyUsage::AU_DIGITAL_SIGNATURE, KeyUsage::AU_NON_REPUDIATION,
+                 KeyUsage::AU_KEY_ENCIPHERMENT, KeyUsage::AU_DATA_ENCIPHERMENT,
+                 KeyUsage::AU_KEY_AGREEMENT, KeyUsage::AU_KEY_CERT_SIGN,
+                 KeyUsage::AU_CRL_SIGN, KeyUsage::AU_ENCIPHER_ONLY,
+                 KeyUsage::AU_DECIPHER_ONLY ]
         @extension_value = @allowed_uses.join( ", " )
       end
 

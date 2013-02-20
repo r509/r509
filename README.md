@@ -464,7 +464,7 @@ Each CA can have an arbitrary number of issuance profiles (with arbitrary names)
 All basic constraints are encoded with the critical bit set to true. In general you should only pass "CA:TRUE" (for an issuing CA) or "CA:FALSE" for everything else with this flag.
 
 ####key\_usage
-An array of strings that conform to the OpenSSL naming scheme for available key usage OIDs. TODO: Document whether arbitrary OIDs can be passed here.
+An array of strings that conform to the OpenSSL naming scheme for available key usage OIDs.
 
 * digitalSignature
 * nonRepudiation

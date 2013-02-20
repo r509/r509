@@ -62,75 +62,140 @@ module R509
         OID = "keyUsage"
         Extensions.register_class(self)
 
-        # The OpenSSL friendly name for the "digitalSignature" key use.
-        AU_DIGITAL_SIGNATURE = "Digital Signature"
-        # The OpenSSL friendly name for the "nonRepudiation" key use.
-        AU_NON_REPUDIATION = "Non Repudiation"
-        # The OpenSSL friendly name for the "keyEncipherment" key use.
-        AU_KEY_ENCIPHERMENT = "Key Encipherment"
-        # The OpenSSL friendly name for the "dataEncipherment" key use.
-        AU_DATA_ENCIPHERMENT = "Data Encipherment"
-        # The OpenSSL friendly name for the "keyAgreement" key use.
-        AU_KEY_AGREEMENT = "Key Agreement"
-        # The OpenSSL friendly name for the "keyCertSign" key use.
-        AU_CERTIFICATE_SIGN = "Certificate Sign"
-        # The OpenSSL friendly name for the "cRLSign" key use.
-        AU_CRL_SIGN = "CRL Sign"
-        # The OpenSSL friendly name for the "encipherOnly" key use.
-        AU_ENCIPHER_ONLY = "Encipher Only"
-        # The OpenSSL friendly name for the "decipherOnly" key use.
-        AU_DECIPHER_ONLY = "Decipher Only"
-
-        # An array of the key uses allowed. See the AU_* constants in this class.
+        # An array of the key uses allowed.
         attr_reader :allowed_uses
+
+        # OpenSSL short name for Digital Signature
+        AU_DIGITAL_SIGNATURE = "digitalSignature"
+        # OpenSSL short name for Non Repudiation (also known as content commitment)
+        AU_NON_REPUDIATION = "nonRepudiation"
+        # OpenSSL short name for Key Encipherment
+        AU_KEY_ENCIPHERMENT = "keyEncipherment"
+        # OpenSSL short name for Data Encipherment
+        AU_DATA_ENCIPHERMENT = "dataEncipherment"
+        # OpenSSL short name for Key Agreement
+        AU_KEY_AGREEMENT = "keyAgreement"
+        # OpenSSL short name for Certificate Sign
+        AU_KEY_CERT_SIGN = "keyCertSign"
+        # OpenSSL short name for CRL Sign
+        AU_CRL_SIGN = "cRLSign"
+        # OpenSSL short name for Encipher Only
+        AU_ENCIPHER_ONLY = "encipherOnly"
+        # OpenSSL short name for Decipher Only
+        AU_DECIPHER_ONLY = "decipherOnly"
 
         # See OpenSSL::X509::Extension#initialize
         def initialize(*args)
           super(*args)
 
-          @allowed_uses = self.value.split(",").map {|use| use.strip}
+          asn = OpenSSL::ASN1.decode self
+          data = nil
+          asn.entries.each do |entry|
+            # there will be between 2 and 3 entries. If there are 3
+            # then one will be a Boolean marking this as critical
+            if entry.kind_of?(OpenSSL::ASN1::OctetString)
+              data = OpenSSL::ASN1.decode(entry.value).value
+            end
+          end
+          # There are 9 possible bits, which means we need 2 bytes
+          # to represent them all. When the last bit is not set
+          # the second byte is not encoded. let's add it back so we can
+          # have the full bitmask for comparison
+          if data.size == 1
+            data = data + "\0"
+          end
+          bit_mask = data.unpack('n')[0] # treat it as a 16-bit unsigned big endian
+          #      KeyUsage ::= BIT STRING {
+          #           digitalSignature        (0),
+          #           nonRepudiation          (1), -- recent editions of X.509 have
+          #                                -- renamed this bit to contentCommitment
+          #           keyEncipherment         (2),
+          #           dataEncipherment        (3),
+          #           keyAgreement            (4),
+          #           keyCertSign             (5),
+          #           cRLSign                 (6),
+          #           encipherOnly            (7),
+          #           decipherOnly            (8) }
+          @allowed_uses = []
+          if bit_mask & 0b1000000000000000 > 0
+            @digital_signature = true
+            @allowed_uses << AU_DIGITAL_SIGNATURE
+          end
+          if bit_mask & 0b0100000000000000 > 0
+            @non_repudiation = true
+            @allowed_uses << AU_NON_REPUDIATION
+          end
+          if bit_mask & 0b0010000000000000 > 0
+            @key_encipherment = true
+            @allowed_uses << AU_KEY_ENCIPHERMENT
+          end
+          if bit_mask & 0b0001000000000000 > 0
+            @data_encipherment = true
+            @allowed_uses << AU_DATA_ENCIPHERMENT
+          end
+          if bit_mask & 0b0000100000000000 > 0
+            @key_agreement = true
+            @allowed_uses << AU_KEY_AGREEMENT
+          end
+          if bit_mask & 0b0000010000000000 > 0
+            @key_cert_sign = true
+            @allowed_uses << AU_KEY_CERT_SIGN
+          end
+          if bit_mask & 0b0000001000000000 > 0
+            @crl_sign = true
+            @allowed_uses << AU_CRL_SIGN
+          end
+          if bit_mask & 0b0000000100000000 > 0
+            @encipher_only = true
+            @allowed_uses << AU_ENCIPHER_ONLY
+          end
+          if bit_mask & 0b0000000010000000 > 0
+            @decipher_only = true
+            @allowed_uses << AU_DECIPHER_ONLY
+          end
         end
 
         # Returns true if the given use is allowed by this extension.
-        # @param [string] friendly_use_name One of the AU_* constants in this class.
+        # @param [String] A key usage short name (e.g. digitalSignature, cRLSign, etc)
+        #   or one of the AU_* constants in this class
         def allows?( friendly_use_name )
           @allowed_uses.include?( friendly_use_name )
         end
 
         def digital_signature?
-          allows?( AU_DIGITAL_SIGNATURE )
+          (@digital_signature == true)
         end
 
         def non_repudiation?
-          allows?( AU_NON_REPUDIATION )
+          (@non_repudiation == true)
         end
 
         def key_encipherment?
-          allows?( AU_KEY_ENCIPHERMENT )
+          (@key_encipherment == true)
         end
 
         def data_encipherment?
-          allows?( AU_DATA_ENCIPHERMENT )
+          (@data_encipherment == true)
         end
 
         def key_agreement?
-          allows?( AU_KEY_AGREEMENT )
+          (@key_agreement == true)
         end
 
-        def certificate_sign?
-          allows?( AU_CERTIFICATE_SIGN )
+        def key_cert_sign?
+          (@key_cert_sign == true)
         end
 
         def crl_sign?
-          allows?( AU_CRL_SIGN )
+          (@crl_sign == true)
         end
 
         def encipher_only?
-          allows?( AU_ENCIPHER_ONLY )
+          (@encipher_only == true)
         end
 
         def decipher_only?
-          allows?( AU_DECIPHER_ONLY )
+          (@decipher_only == true)
         end
       end
 
@@ -306,15 +371,18 @@ module R509
           super(*args)
 
           seq = OpenSSL::ASN1.decode(self.to_der)
-          # we need the second element (element 0 will be the oid certificatePolicies).
-          # element 1 will be another asn.1 sequence
-          if not seq.entries[1].nil?
-            data = OpenSSL::ASN1.decode(seq.entries[1].value)
-            # each element of this sequence should be part of a policy + qualifiers
-            #   certificatePolicies ::= SEQUENCE SIZE (1..MAX) OF PolicyInformation
-            data.each do |cp|
-              @policies << R509::Cert::Extensions::CPObjects::PolicyInformation.new(cp)
-            end if data.respond_to?(:each)
+          # there will be between 2 and 3 entries. If there are 3
+          # then one will be a Boolean marking this as critical. the
+          # data will be held in an octetstring we need to further decode
+          seq.entries.each do |data|
+            if data.kind_of?(OpenSSL::ASN1::OctetString)
+              decoded = OpenSSL::ASN1.decode(data.value)
+              # each element of this sequence should be part of a policy + qualifiers
+              #   certificatePolicies ::= SEQUENCE SIZE (1..MAX) OF PolicyInformation
+              decoded.each do |cp|
+                @policies << R509::Cert::Extensions::CPObjects::PolicyInformation.new(cp)
+              end if decoded.respond_to?(:each)
+            end
           end
         end
       end
