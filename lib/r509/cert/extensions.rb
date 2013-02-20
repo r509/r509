@@ -23,6 +23,22 @@ module R509
         R509_EXTENSION_CLASSES << r509_ext_class
       end
 
+      # parses the ASN.1 payload and gets the extension data out for further processing
+      # by the subclasses
+      def self.get_extension_payload(ext)
+          asn = OpenSSL::ASN1.decode ext
+          # Our extension object. Here's the structure:
+          #   Extension  ::=  SEQUENCE  {
+          #        extnID      OBJECT IDENTIFIER,
+          #        critical    BOOLEAN DEFAULT FALSE,
+          #        extnValue   OCTET STRING
+          #                    -- contains the DER encoding of an ASN.1 value
+          #                    -- corresponding to the extension type identified
+          #                    -- by extnID
+          #        }
+          OpenSSL::ASN1.decode(asn.entries.last.value).value
+      end
+
       public
       # Implements the BasicConstraints certificate extension, with methods to
       # provide access to the components and meaning of the extension's contents.
@@ -37,9 +53,21 @@ module R509
         def initialize(*args)
           super(*args)
 
-          @is_ca = ! ( self.value =~ /CA:TRUE/ ).nil?
-          pathlen_match = self.value.match( /pathlen:(\d+)/ )
-          @path_length = pathlen_match[1].to_i unless pathlen_match.nil?
+          data = R509::Cert::Extensions.get_extension_payload(self)
+          @is_ca = false
+          #   BasicConstraints ::= SEQUENCE {
+          #        cA                      BOOLEAN DEFAULT FALSE,
+          #        pathLenConstraint       INTEGER (0..MAX) OPTIONAL }
+          data.entries.each do |entry|
+            if entry.kind_of?(OpenSSL::ASN1::Boolean)
+              # since the boolean is optional it may not be present
+              @is_ca = entry.value
+            else
+              # There are only two kinds of entries permitted so anything
+              # else is an integer pathlength
+              @path_length = entry.value
+            end
+          end
         end
 
         def is_ca?()
@@ -88,15 +116,8 @@ module R509
         def initialize(*args)
           super(*args)
 
-          asn = OpenSSL::ASN1.decode self
-          data = nil
-          asn.entries.each do |entry|
-            # there will be between 2 and 3 entries. If there are 3
-            # then one will be a Boolean marking this as critical
-            if entry.kind_of?(OpenSSL::ASN1::OctetString)
-              data = OpenSSL::ASN1.decode(entry.value).value
-            end
-          end
+          data = R509::Cert::Extensions.get_extension_payload(self)
+
           # There are 9 possible bits, which means we need 2 bytes
           # to represent them all. When the last bit is not set
           # the second byte is not encoded. let's add it back so we can
@@ -228,15 +249,8 @@ module R509
           super(*args)
 
           @allowed_uses = []
-          asn = OpenSSL::ASN1.decode self
-          data = nil
-          asn.entries.each do |entry|
-            # there will be between 2 and 3 entries. If there are 3
-            # then one will be a Boolean marking this as critical
-            if entry.kind_of?(OpenSSL::ASN1::OctetString)
-              data = OpenSSL::ASN1.decode(entry.value).value
-            end
-          end
+          data = R509::Cert::Extensions.get_extension_payload(self)
+
           data.entries.each do |eku|
             #   The following key usage purposes are defined:
             #
@@ -437,20 +451,13 @@ module R509
           @policies = []
           super(*args)
 
-          seq = OpenSSL::ASN1.decode(self.to_der)
-          # there will be between 2 and 3 entries. If there are 3
-          # then one will be a Boolean marking this as critical. the
-          # data will be held in an octetstring we need to further decode
-          seq.entries.each do |data|
-            if data.kind_of?(OpenSSL::ASN1::OctetString)
-              decoded = OpenSSL::ASN1.decode(data.value)
-              # each element of this sequence should be part of a policy + qualifiers
-              #   certificatePolicies ::= SEQUENCE SIZE (1..MAX) OF PolicyInformation
-              decoded.each do |cp|
-                @policies << R509::Cert::Extensions::CPObjects::PolicyInformation.new(cp)
-              end if decoded.respond_to?(:each)
-            end
-          end
+          data = R509::Cert::Extensions.get_extension_payload(self)
+
+          # each element of this sequence should be part of a policy + qualifiers
+          #   certificatePolicies ::= SEQUENCE SIZE (1..MAX) OF PolicyInformation
+          data.each do |cp|
+            @policies << R509::Cert::Extensions::CPObjects::PolicyInformation.new(cp)
+          end if data.respond_to?(:each)
         end
       end
 

@@ -50,7 +50,8 @@ shared_examples_for "a correct R509 BasicConstraints object" do
   before :all do
     extension_name = "basicConstraints"
     klass = BasicConstraints
-    openssl_ext = OpenSSL::X509::Extension.new( extension_name, @extension_value )
+    ef = OpenSSL::X509::ExtensionFactory.new
+    openssl_ext = ef.create_extension( extension_name, @extension_value )
     @r509_ext = klass.new( openssl_ext )
   end
 
@@ -248,7 +249,8 @@ describe R509::Cert::Extensions do
       context "with one implemented extension" do
         before :each do
           @wrappable_extensions = []
-          @wrappable_extensions << OpenSSL::X509::Extension.new( "basicConstraints", "CA:TRUE;pathlen:0" )
+          ef = OpenSSL::X509::ExtensionFactory.new
+          @wrappable_extensions << ef.create_extension( "basicConstraints", "CA:TRUE,pathlen:0" )
 
           @unknown_extensions = []
 
@@ -298,7 +300,8 @@ describe R509::Cert::Extensions do
       context "with implemented and unimplemented extensions" do
         before :each do
           @wrappable_extensions = []
-          @wrappable_extensions << OpenSSL::X509::Extension.new( "basicConstraints", "CA:TRUE;pathlen:0" )
+          ef = OpenSSL::X509::ExtensionFactory.new
+          @wrappable_extensions << ef.create_extension( "basicConstraints", "CA:TRUE,pathlen:0" )
 
           @unknown_extensions = []
           @unknown_extensions << OpenSSL::X509::Extension.new( "issuerAltName", "DNS:www.test.local" )
@@ -313,8 +316,9 @@ describe R509::Cert::Extensions do
       context "with multiple extensions of an implemented type" do
         before :each do
           @wrappable_extensions = []
-          @wrappable_extensions << OpenSSL::X509::Extension.new( "basicConstraints", "CA:TRUE;pathlen:0" )
-          @wrappable_extensions << OpenSSL::X509::Extension.new( "basicConstraints", "CA:TRUE;pathlen:1" )
+          ef = OpenSSL::X509::ExtensionFactory.new
+          @wrappable_extensions << ef.create_extension( "basicConstraints", "CA:TRUE,pathlen:0" )
+          @wrappable_extensions << ef.create_extension( "basicConstraints", "CA:TRUE,pathlen:1" )
 
           @unknown_extensions = []
           @unknown_extensions << OpenSSL::X509::Extension.new( "issuerAltName", "DNS:www.test.local" )
@@ -333,7 +337,8 @@ describe R509::Cert::Extensions do
       context "with multiple extensions of an unimplemented type" do
         before :each do
           @wrappable_extensions = []
-          @wrappable_extensions << OpenSSL::X509::Extension.new( "basicConstraints", "CA:TRUE;pathlen:0" )
+          ef = OpenSSL::X509::ExtensionFactory.new
+          @wrappable_extensions << ef.create_extension( "basicConstraints", "CA:TRUE,pathlen:0" )
 
           @unknown_extensions = []
           @unknown_extensions << OpenSSL::X509::Extension.new( "issuerAltName", "DNS:www.test.local" )
@@ -351,9 +356,9 @@ describe R509::Cert::Extensions do
   context "BasicConstraints" do
     context "with constraints for a CA certificate" do
       before :all do
-        @extension_value = "CA:TRUE;pathlen:1"
+        @extension_value = "CA:TRUE,pathlen:3"
         @is_ca = true
-        @pathlen = 1
+        @pathlen = 3
         @allows_sub_ca = true
       end
 
@@ -362,7 +367,7 @@ describe R509::Cert::Extensions do
 
     context "with constraints for a sub-CA certificate" do
       before :all do
-        @extension_value = "CA:TRUE;pathlen:0"
+        @extension_value = "CA:TRUE,pathlen:0"
         @is_ca = true
         @pathlen = 0
         @allows_sub_ca = false
