@@ -95,13 +95,20 @@ shared_examples_for "a correct R509 KeyUsage object" do
     @r509_ext.encipher_only?.should == @allowed_uses.include?( KeyUsage::AU_ENCIPHER_ONLY )
     @r509_ext.decipher_only?.should == @allowed_uses.include?( KeyUsage::AU_DECIPHER_ONLY )
   end
+
+  it "the #allows? method should work" do
+    @allowed_uses.each do |au|
+      @r509_ext.allows?(au).should == true
+    end
+  end
 end
 
 shared_examples_for "a correct R509 ExtendedKeyUsage object" do
   before :all do
     extension_name = "extendedKeyUsage"
     klass = ExtendedKeyUsage
-    openssl_ext = OpenSSL::X509::Extension.new( extension_name, @extension_value )
+    ef = OpenSSL::X509::ExtensionFactory.new
+    openssl_ext = ef.create_extension( extension_name, @extension_value )
     @r509_ext = klass.new( openssl_ext )
   end
 
@@ -120,6 +127,13 @@ shared_examples_for "a correct R509 ExtendedKeyUsage object" do
     @r509_ext.email_protection?.should == @allowed_uses.include?( ExtendedKeyUsage::AU_EMAIL_PROTECTION )
     @r509_ext.ocsp_signing?.should == @allowed_uses.include?( ExtendedKeyUsage::AU_OCSP_SIGNING )
     @r509_ext.time_stamping?.should == @allowed_uses.include?( ExtendedKeyUsage::AU_TIME_STAMPING )
+    @r509_ext.any_extended_key_usage?.should == @allowed_uses.include?( ExtendedKeyUsage::AU_ANY_EXTENDED_KEY_USAGE )
+  end
+
+  it "the #allows? method should work" do
+    @allowed_uses.each do |au|
+      @r509_ext.allows?(au).should == true
+    end
   end
 end
 
@@ -445,7 +459,8 @@ describe R509::Cert::Extensions do
       before :all do
         @allowed_uses = [ ExtendedKeyUsage::AU_WEB_SERVER_AUTH, ExtendedKeyUsage::AU_CODE_SIGNING,
                   ExtendedKeyUsage::AU_WEB_CLIENT_AUTH, ExtendedKeyUsage::AU_EMAIL_PROTECTION,
-                  ExtendedKeyUsage::AU_TIME_STAMPING, ExtendedKeyUsage::AU_OCSP_SIGNING]
+                  ExtendedKeyUsage::AU_TIME_STAMPING, ExtendedKeyUsage::AU_OCSP_SIGNING,
+                  ExtendedKeyUsage::AU_ANY_EXTENDED_KEY_USAGE]
         @extension_value = @allowed_uses.join( ", " )
       end
 

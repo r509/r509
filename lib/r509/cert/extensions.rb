@@ -206,27 +206,90 @@ module R509
         OID = "extendedKeyUsage"
         Extensions.register_class(self)
 
-        # The OpenSSL friendly name for the "serverAuth" extended key use.
-        AU_WEB_SERVER_AUTH = "TLS Web Server Authentication"
-        # The OpenSSL friendly name for the "clientAuth" extended key use.
-        AU_WEB_CLIENT_AUTH = "TLS Web Client Authentication"
-        # The OpenSSL friendly name for the "codeSigning" extended key use.
-        AU_CODE_SIGNING = "Code Signing"
-        # The OpenSSL friendly name for the "emailProtection" extended key use.
-        AU_EMAIL_PROTECTION = "E-mail Protection"
-        # The OpenSSL friendly name for the "OCSPSigning" extended key use.
-        AU_OCSP_SIGNING = "OCSP Signing"
-        # The OpenSSL friendly name for the "timeStamping" extended key use.
-        AU_TIME_STAMPING = "Time Stamping"
+        # The OpenSSL short name for TLS Web Server Authentication
+        AU_WEB_SERVER_AUTH = "serverAuth"
+        # The OpenSSL short name for TLS Web Client Authentication
+        AU_WEB_CLIENT_AUTH = "clientAuth"
+        # The OpenSSL short name for Code Signing
+        AU_CODE_SIGNING = "codeSigning"
+        # The OpenSSL short name for E-mail Protection
+        AU_EMAIL_PROTECTION = "emailProtection"
+        # The OpenSSL short name for OCSP Signing
+        AU_OCSP_SIGNING = "OCSPSigning"
+        # The OpenSSL short name for Time Stamping
+        AU_TIME_STAMPING = "timeStamping"
+        # The OpenSSL short name for Any Extended Key Usage
+        AU_ANY_EXTENDED_KEY_USAGE = "anyExtendedKeyUsage"
 
-        # An array of the key uses allowed. See the AU_* constants in this class.
         attr_reader :allowed_uses
 
         # See OpenSSL::X509::Extension#initialize
         def initialize(*args)
           super(*args)
 
-          @allowed_uses = self.value.split(",").map {|use| use.strip}
+          @allowed_uses = []
+          asn = OpenSSL::ASN1.decode self
+          data = nil
+          asn.entries.each do |entry|
+            # there will be between 2 and 3 entries. If there are 3
+            # then one will be a Boolean marking this as critical
+            if entry.kind_of?(OpenSSL::ASN1::OctetString)
+              data = OpenSSL::ASN1.decode(entry.value).value
+            end
+          end
+          data.entries.each do |eku|
+            #   The following key usage purposes are defined:
+            #
+            #   anyExtendedKeyUsage OBJECT IDENTIFIER ::= { id-ce-extKeyUsage 0 }
+            #
+            #   id-kp OBJECT IDENTIFIER ::= { id-pkix 3 }
+            #   id-kp-serverAuth             OBJECT IDENTIFIER ::= { id-kp 1 }
+            #   -- TLS WWW server authentication
+            #   -- Key usage bits that may be consistent: digitalSignature,
+            #   -- keyEncipherment or keyAgreement
+            #
+            #   id-kp-clientAuth             OBJECT IDENTIFIER ::= { id-kp 2 }
+            #   -- TLS WWW client authentication
+            #   -- Key usage bits that may be consistent: digitalSignature
+            #   -- and/or keyAgreement
+            #
+            #   id-kp-codeSigning             OBJECT IDENTIFIER ::= { id-kp 3 }
+            #   -- Signing of downloadable executable code
+            #   -- Key usage bits that may be consistent: digitalSignature
+            #
+            #   id-kp-emailProtection         OBJECT IDENTIFIER ::= { id-kp 4 }
+            #   -- Email protection
+            #   -- Key usage bits that may be consistent: digitalSignature,
+            #   -- nonRepudiation, and/or (keyEncipherment or keyAgreement)
+            #
+            #   id-kp-timeStamping            OBJECT IDENTIFIER ::= { id-kp 8 }
+            #   -- Binding the hash of an object to a time
+            #   -- Key usage bits that may be consistent: digitalSignature
+            #   -- and/or nonRepudiation
+            #
+            #   id-kp-OCSPSigning            OBJECT IDENTIFIER ::= { id-kp 9 }
+            #   -- Signing OCSP responses
+            #   -- Key usage bits that may be consistent: digitalSignature
+            #   -- and/or nonRepudiation
+
+            case eku.value
+            when AU_WEB_SERVER_AUTH
+              @web_server_authentication = true
+            when AU_WEB_CLIENT_AUTH
+              @web_client_authentication = true
+            when AU_CODE_SIGNING
+              @code_signing = true
+            when AU_EMAIL_PROTECTION
+              @email_protection = true
+            when AU_OCSP_SIGNING
+              @ocsp_signing = true
+            when AU_TIME_STAMPING
+              @time_stamping = true
+            when AU_ANY_EXTENDED_KEY_USAGE
+              @any_extended_key_usage = true
+            end
+            @allowed_uses << eku.value
+          end
         end
 
         # Returns true if the given use is allowed by this extension.
@@ -236,27 +299,31 @@ module R509
         end
 
         def web_server_authentication?
-          allows?( AU_WEB_SERVER_AUTH )
+          (@web_server_authentication == true)
         end
 
         def web_client_authentication?
-          allows?( AU_WEB_CLIENT_AUTH )
+          (@web_client_authentication == true)
         end
 
         def code_signing?
-          allows?( AU_CODE_SIGNING )
+          (@code_signing == true)
         end
 
         def email_protection?
-          allows?( AU_EMAIL_PROTECTION )
+          (@email_protection == true)
         end
 
         def ocsp_signing?
-          allows?( AU_OCSP_SIGNING )
+          (@ocsp_signing == true)
         end
 
         def time_stamping?
-          allows?( AU_TIME_STAMPING )
+          (@time_stamping == true)
+        end
+
+        def any_extended_key_usage?
+          (@any_extended_key_usage == true)
         end
       end
 
