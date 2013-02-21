@@ -174,16 +174,16 @@ describe R509::CertificateAuthority::Signer do
     config = R509::Config::CaConfig.from_yaml("ca_issuers_and_ocsp_ca", File.read("#{File.dirname(__FILE__)}/fixtures/config_test_various.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"})
     ca = R509::CertificateAuthority::Signer.new(config)
     cert = ca.sign(:csr => csr, :profile_name => 'server')
-    cert.authority_info_access.ca_issuers_uris.should == ["http://domain.com/ca.html"]
-    cert.authority_info_access.ocsp_uris.should == ["http://ocsp.domain.com","http://ocsp.other.com"]
+    cert.authority_info_access.ca_issuers.uris.should == ["http://domain.com/ca.html"]
+    cert.authority_info_access.ocsp.uris.should == ["http://ocsp.domain.com","http://ocsp.other.com"]
   end
   it "issues a certificate with a ca_issuers_location and no ocsp_location" do
     csr = R509::Csr.new(:csr => @csr)
     config = R509::Config::CaConfig.from_yaml("ca_issuers_ca", File.read("#{File.dirname(__FILE__)}/fixtures/config_test_various.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"})
     ca = R509::CertificateAuthority::Signer.new(config)
     cert = ca.sign(:csr => csr, :profile_name => 'server')
-    cert.authority_info_access.ca_issuers_uris.should == ["http://domain.com/ca.html"]
-    cert.authority_info_access.ocsp_uris.should == []
+    cert.authority_info_access.ca_issuers.uris.should == ["http://domain.com/ca.html"]
+    cert.authority_info_access.ocsp.uris.should == []
   end
   it "issues a certificate with multiple ca_issuer_locations" do
     csr = R509::Csr.new(:csr => @csr)
@@ -194,8 +194,8 @@ describe R509::CertificateAuthority::Signer do
     config.set_profile("default",profile)
     ca = R509::CertificateAuthority::Signer.new(config)
     cert = ca.sign( :csr => csr, :profile_name => 'default')
-    cert.authority_info_access.ocsp_uris.should == []
-    cert.authority_info_access.ca_issuers_uris.should == ["http://somelocation.com/c.html","http://other.com/d.html"]
+    cert.authority_info_access.ocsp.uris.should == []
+    cert.authority_info_access.ca_issuers.uris.should == ["http://somelocation.com/c.html","http://other.com/d.html"]
   end
   it "issues a certificate with OCSP AIA" do
     csr = R509::Csr.new(:csr => @csr)
@@ -206,8 +206,8 @@ describe R509::CertificateAuthority::Signer do
     config.set_profile("default",profile)
     ca = R509::CertificateAuthority::Signer.new(config)
     cert = ca.sign( :csr => csr, :profile_name => 'default')
-    cert.authority_info_access.ca_issuers_uris.should == []
-    cert.authority_info_access.ocsp_uris.should == ["http://myocsp.jb.net"]
+    cert.authority_info_access.ca_issuers.uris.should == []
+    cert.authority_info_access.ocsp.uris.should == ["http://myocsp.jb.net"]
   end
   it "issues a certificate with no CDP" do
     csr = R509::Csr.new(:csr => @csr)

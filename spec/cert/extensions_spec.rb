@@ -189,16 +189,17 @@ shared_examples_for "a correct R509 AuthorityInfoAccess object" do
   before :all do
     extension_name = "authorityInfoAccess"
     klass = AuthorityInfoAccess
-    openssl_ext = OpenSSL::X509::Extension.new( extension_name, @extension_value )
+    ef = OpenSSL::X509::ExtensionFactory.new
+    openssl_ext = ef.create_extension( extension_name, @extension_value )
     @r509_ext = klass.new( openssl_ext )
   end
 
   it "ca_issuers_uri should be correct" do
-    @r509_ext.ca_issuers_uris.should == @ca_issuers_uris
+    @r509_ext.ca_issuers.uris.should == @ca_issuers_uris
   end
 
   it "ocsp_uri should be correct" do
-    @r509_ext.ocsp_uris.should == @ocsp_uris
+    @r509_ext.ocsp.uris.should == @ocsp_uris
   end
 end
 
@@ -584,7 +585,7 @@ describe R509::Cert::Extensions do
       before :all do
         @ca_issuers_uris = ["http://www.test.local/ca.cert"]
         @ocsp_uris = []
-        @extension_value = "CA Issuers - URI:#{@ca_issuers_uris.join(",URI:")}"
+        @extension_value = "caIssuers;URI:#{@ca_issuers_uris.join(",caIssuers;URI:")}"
       end
 
       it_should_behave_like "a correct R509 AuthorityInfoAccess object"
@@ -594,7 +595,7 @@ describe R509::Cert::Extensions do
       before :all do
         @ca_issuers_uris = ["http://www.test.local/ca.cert", "http://www.test.local/subca.cert"]
         @ocsp_uris = []
-        @extension_value = "CA Issuers - URI:#{@ca_issuers_uris.join(",CA Issuers - URI:")}"
+        @extension_value = "caIssuers;URI:#{@ca_issuers_uris.join(",caIssuers;URI:")}"
       end
 
       it_should_behave_like "a correct R509 AuthorityInfoAccess object"
@@ -604,7 +605,7 @@ describe R509::Cert::Extensions do
       before :all do
         @ca_issuers_uris = []
         @ocsp_uris = ["http://www.test.local"]
-        @extension_value = "OCSP - URI:#{@ocsp_uris.join(",URI:")}"
+        @extension_value = "OCSP;URI:#{@ocsp_uris.join(",OCSP;URI:")}"
       end
 
       it_should_behave_like "a correct R509 AuthorityInfoAccess object"
@@ -614,7 +615,7 @@ describe R509::Cert::Extensions do
       before :all do
         @ca_issuers_uris = []
         @ocsp_uris = ["http://www.test.local", "http://www2.test.local"]
-        @extension_value = "OCSP - URI:#{@ocsp_uris.join(",OCSP - URI:")}"
+        @extension_value = "OCSP;URI:#{@ocsp_uris.join(",OCSP;URI:")}"
       end
 
       it_should_behave_like "a correct R509 AuthorityInfoAccess object"
@@ -624,17 +625,7 @@ describe R509::Cert::Extensions do
       before :all do
         @ca_issuers_uris = ["http://www.test.local/ca.cert"]
         @ocsp_uris = ["http://www.test.local"]
-        @extension_value = "CA Issuers - URI:#{@ca_issuers_uris.join(",CA Issuers - URI:")},OCSP - URI:#{@ocsp_uris.join(",URI:")}"
-      end
-
-      it_should_behave_like "a correct R509 AuthorityInfoAccess object"
-    end
-
-    context "with both a CA Issuers URI and an OCSP URI with trailing newlines" do
-      before :all do
-        @ca_issuers_uris = ["http://www.test.local/ca.cert"]
-        @ocsp_uris = ["http://www.test.local"]
-        @extension_value = "CA Issuers - URI:#{@ca_issuers_uris.join("\n,CA Issuers - URI:")}\n,OCSP - URI:#{@ocsp_uris.join("\n,URI:")}\n"
+        @extension_value = "caIssuers;URI:#{@ca_issuers_uris.join(",caIssuers;URI:")},OCSP;URI:#{@ocsp_uris.join(",OCSP;URI:")}"
       end
 
       it_should_behave_like "a correct R509 AuthorityInfoAccess object"

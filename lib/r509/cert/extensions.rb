@@ -39,6 +39,86 @@ module R509
           OpenSSL::ASN1.decode(asn.entries.last.value).value
       end
 
+      # object to hold parsed sequences of generalnames
+      # these structures are used in SubjectAlternativeName, AuthorityInfoAccess, CrlDistributionPoints, etc
+      class GeneralNameArray
+        def initialize
+          @types = {
+            :otherName => [],
+            :rfc822Name => [],
+            :dNSName => [],
+            :x400Address => [],
+            :directoryName => [],
+            :ediPartyName => [],
+            :uniformResourceIdentifier => [],
+            :iPAddress => [],
+            :registeredID => []
+          }
+        end
+
+        def add_item(asn)
+          # map general names into our hash of arrays
+          #   GeneralName ::= CHOICE {
+          #        otherName                       [0]     OtherName,
+          #        rfc822Name                      [1]     IA5String,
+          #        dNSName                         [2]     IA5String,
+          #        x400Address                     [3]     ORAddress,
+          #        directoryName                   [4]     Name,
+          #        ediPartyName                    [5]     EDIPartyName,
+          #        uniformResourceIdentifier       [6]     IA5String,
+          #        iPAddress                       [7]     OCTET STRING,
+          #        registeredID                    [8]     OBJECT IDENTIFIER }
+          case asn.tag
+          when 0 then @types[:otherName] << asn.value
+          when 1 then @types[:rfc822Name] << asn.value
+          when 2 then @types[:dNSName] << asn.value
+          when 3 then @types[:x400Address] << asn.value
+          when 4 then @types[:directoryName] << asn.value
+          when 5 then @types[:ediPartyName] << asn.value
+          when 6 then @types[:uniformResourceIdentifier] << asn.value
+          when 7 then @types[:iPAddress] << asn.value
+          when 8 then @types[:registeredID] << asn.value
+          end
+        end
+
+        def other_names
+          @types[:otherName]
+        end
+
+        def rfc_822_names
+          @types[:rfc822Name]
+        end
+
+        def dns_names
+          @types[:dNSName]
+        end
+
+        def x400_addresses
+          @types[:x400Address]
+        end
+
+        def directory_names
+          @types[:directoryName]
+        end
+
+        def edi_party_names
+          @types[:ediPartyName]
+        end
+
+        def uniform_resource_identifiers
+          @types[:uniformResourceIdentifier]
+        end
+        alias_method :uris, :uniform_resource_identifiers
+
+        def ip_addresses
+          @types[:iPAddress]
+        end
+
+        def registered_ids
+          @types[:registeredID]
+        end
+      end
+
       public
       # Implements the BasicConstraints certificate extension, with methods to
       # provide access to the components and meaning of the extension's contents.
@@ -394,17 +474,29 @@ module R509
         OID = "authorityInfoAccess"
         Extensions.register_class(self)
 
-        # An array of the OCSP URIs, if any
-        attr_reader :ocsp_uris
-        # An array of the CA issuers URIs, if any
-        attr_reader :ca_issuers_uris
+        # An array of the OCSP data, if any
+        attr_reader :ocsp
+        # An array of the CA issuers data, if any
+        attr_reader :ca_issuers
 
         # See OpenSSL::X509::Extension#initialize
         def initialize(*args)
           super(*args)
 
-          @ocsp_uris = self.value.scan( /OCSP - #{URI_REGEX}/ ).map { |match| match[0] }
-          @ca_issuers_uris = self.value.scan( /CA Issuers - #{URI_REGEX}/ ).map { |match| match[0] }
+          data = R509::Cert::Extensions.get_extension_payload(self)
+          @ocsp= GeneralNameArray.new
+          @ca_issuers= GeneralNameArray.new
+          data.entries.each do |access_description|
+            #   AccessDescription  ::=  SEQUENCE {
+            #           accessMethod          OBJECT IDENTIFIER,
+            #           accessLocation        GeneralName  }
+            case access_description.entries[0].value
+            when "OCSP"
+              @ocsp.add_item(access_description.entries[1])
+            when "caIssuers"
+              @ca_issuers.add_item(access_description.entries[1])
+            end
+          end
         end
       end
 
