@@ -207,12 +207,13 @@ shared_examples_for "a correct R509 CrlDistributionPoints object" do
   before :all do
     extension_name = "crlDistributionPoints"
     klass = CrlDistributionPoints
-    openssl_ext = OpenSSL::X509::Extension.new( extension_name, @extension_value )
+    ef = OpenSSL::X509::ExtensionFactory.new
+    openssl_ext = ef.create_extension( extension_name, @extension_value )
     @r509_ext = klass.new( openssl_ext )
   end
 
   it "crl_uri should be correct" do
-    @r509_ext.crl_uris.should == @crl_uris
+    @r509_ext.crl.uris.should == @crl_uris
   end
 end
 
@@ -646,15 +647,6 @@ describe R509::Cert::Extensions do
       before :all do
         @crl_uris = ["http://www.test.local/ca.crl", "http://www.test.local/subca.crl"]
         @extension_value = "URI:#{@crl_uris.join(",URI:")}"
-      end
-
-      it_should_behave_like "a correct R509 CrlDistributionPoints object"
-    end
-
-    context "with multiple CRL URIs and trailing newlines" do
-      before :all do
-        @crl_uris = ["http://www.test.local/ca.crl", "http://www.test.local/subca.crl"]
-        @extension_value = "URI:#{@crl_uris.join("\n,URI:")}\n"
       end
 
       it_should_behave_like "a correct R509 CrlDistributionPoints object"

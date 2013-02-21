@@ -508,13 +508,27 @@ module R509
         Extensions.register_class(self)
 
         # An array of the CRL URIs, if any
-        attr_reader :crl_uris
+        attr_reader :crl
 
         # See OpenSSL::X509::Extension#initialize
         def initialize(*args)
           super(*args)
 
-          @crl_uris = self.value.scan( URI_REGEX ).map { |match| match[0] }
+          @crl= GeneralNameArray.new
+          data = R509::Cert::Extensions.get_extension_payload(self)
+          data.entries.each do |distribution_point|
+            #   DistributionPoint ::= SEQUENCE {
+            #        distributionPoint       [0]     DistributionPointName OPTIONAL,
+            #        reasons                 [1]     ReasonFlags OPTIONAL,
+            #        cRLIssuer               [2]     GeneralNames OPTIONAL }
+            #   DistributionPointName ::= CHOICE {
+            #        fullName                [0]     GeneralNames,
+            #        nameRelativeToCRLIssuer [1]     RelativeDistinguishedName }
+            # We're only going to handle DistributionPointName [0] for now
+            # so grab entries[0] and then get the fullName with value[0]
+            # and the value of that ASN1Data with value[0] again
+            @crl.add_item(distribution_point.entries[0].value[0].value[0])
+          end
         end
       end
 

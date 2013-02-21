@@ -228,7 +228,7 @@ describe R509::CertificateAuthority::Signer do
     config.set_profile("default",profile)
     ca = R509::CertificateAuthority::Signer.new(config)
     cert = ca.sign( :csr => csr, :profile_name => 'default')
-    cert.crl_distribution_points.crl_uris.should == ["http://mycdp.com/x.crl"]
+    cert.crl_distribution_points.crl.uris.should == ["http://mycdp.com/x.crl"]
   end
   it "issues a certificate with multiple CDPs" do
     csr = R509::Csr.new(:csr => @csr)
@@ -239,7 +239,7 @@ describe R509::CertificateAuthority::Signer do
     config.set_profile("default",profile)
     ca = R509::CertificateAuthority::Signer.new(config)
     cert = ca.sign( :csr => csr, :profile_name => 'default')
-    cert.crl_distribution_points.crl_uris.should == ["http://mycdp.com/x.crl","http://anothercrl.com/x.crl"]
+    cert.crl_distribution_points.crl.uris.should == ["http://mycdp.com/x.crl","http://anothercrl.com/x.crl"]
   end
   it "tests basic constraints CA:TRUE and pathlen:0 on a subroot" do
     csr = R509::Csr.new(:csr => @csr)
