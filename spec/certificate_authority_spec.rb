@@ -2,7 +2,6 @@ require 'spec_helper'
 
 describe R509::CertificateAuthority::Signer do
   before :each do
-    @cert = TestFixtures::CERT
     @csr = TestFixtures::CSR
     @csr_invalid_signature = TestFixtures::CSR_INVALID_SIGNATURE
     @csr3 = TestFixtures::CSR3
@@ -58,14 +57,14 @@ describe R509::CertificateAuthority::Signer do
     cert.extended_key_usage.web_server_authentication?.should == true
   end
   it "properly issues server cert" do
-    csr = R509::Csr.new(:cert => @cert, :bit_strength => 1024)
+    csr = R509::Csr.new(:subject => [['C','US'],['ST','Illinois'],['L','Chicago'],['O','Paul Kehrer'],['CN','langui.sh']], :bit_strength => 1024)
     cert = @ca.sign({ :csr => csr, :profile_name => 'server' })
     cert.to_pem.should match(/BEGIN CERTIFICATE/)
     cert.subject.to_s.should == '/C=US/ST=Illinois/L=Chicago/O=Paul Kehrer/CN=langui.sh'
     cert.extended_key_usage.web_server_authentication?.should == true
   end
   it "properly issues cert with all EKUs" do
-    csr = R509::Csr.new(:cert => @cert, :bit_strength => 1024)
+    csr = R509::Csr.new(:subject => [['C','US'],['ST','Illinois'],['L','Chicago'],['O','Paul Kehrer'],['CN','langui.sh']], :bit_strength => 1024)
     config = R509::Config::CaConfig.from_yaml("all_eku_ca", File.read("#{File.dirname(__FILE__)}/fixtures/config_test_various.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"})
     ca = R509::CertificateAuthority::Signer.new(config)
     cert = ca.sign({ :csr => csr, :profile_name => 'smorgasbord' })
@@ -77,7 +76,7 @@ describe R509::CertificateAuthority::Signer do
     cert.extended_key_usage.time_stamping?.should == true
   end
   it "properly issues cert with OCSP noCheck in profile" do
-    csr = R509::Csr.new(:cert => @cert, :bit_strength => 1024)
+    csr = R509::Csr.new(:subject => [['C','US'],['ST','Illinois'],['L','Chicago'],['O','Paul Kehrer'],['CN','langui.sh']], :bit_strength => 1024)
     config = R509::Config::CaConfig.from_yaml("ocsp_no_check_ca", File.read("#{File.dirname(__FILE__)}/fixtures/config_test_various.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"})
     ca = R509::CertificateAuthority::Signer.new(config)
     cert = ca.sign({ :csr => csr, :profile_name => 'ocsp_no_check_delegate' })
@@ -85,12 +84,12 @@ describe R509::CertificateAuthority::Signer do
     cert.extended_key_usage.ocsp_signing?.should == true
   end
   it "does not encode noCheck if not specified by the profile" do
-    csr = R509::Csr.new(:cert => @cert, :bit_strength => 512)
+    csr = R509::Csr.new(:subject => [['C','US'],['ST','Illinois'],['L','Chicago'],['O','Paul Kehrer'],['CN','langui.sh']], :bit_strength => 1024)
     cert = @ca.sign({ :csr => csr, :profile_name => 'server' })
     cert.ocsp_no_check?.should == false
   end
   it "when supplied, uses subject_item_policy to determine allowed subject" do
-    csr = R509::Csr.new(:cert => @cert, :bit_strength => 512)
+    csr = R509::Csr.new(:subject => [['C','US'],['ST','Illinois'],['L','Chicago'],['O','Paul Kehrer'],['CN','langui.sh']], :bit_strength => 1024)
     cert = @ca.sign({ :csr => csr, :profile_name => 'server_with_subject_item_policy' })
     #profile requires C, ST, CN. O and OU are optional
     cert.subject.to_s.should == '/C=US/ST=Illinois/O=Paul Kehrer/CN=langui.sh'
@@ -100,7 +99,7 @@ describe R509::CertificateAuthority::Signer do
     expect { @ca.sign({ :csr => csr, :profile_name => 'server_with_subject_item_policy' }) }.to raise_error(R509::R509Error, /This profile requires you supply/)
   end
   it "issues with specified san domains" do
-    csr = R509::Csr.new(:cert => @cert, :bit_strength => 1024)
+    csr = R509::Csr.new(:subject => [['C','US'],['ST','Illinois'],['L','Chicago'],['O','Paul Kehrer'],['CN','langui.sh']], :bit_strength => 1024)
     data_hash = csr.to_hash
     data_hash[:san_names] = ['langui.sh','domain2.com']
     cert = @ca.sign(:csr => csr, :profile_name => 'server', :data_hash => data_hash )
@@ -413,7 +412,7 @@ describe R509::CertificateAuthority::Signer do
     end
 
     it "properly issues server cert" do
-      csr = R509::Csr.new(:cert => @cert, :type => :ec)
+      csr = R509::Csr.new(:subject => [['C','US'],['ST','Illinois'],['L','Chicago'],['O','Paul Kehrer'],['CN','langui.sh']], :type => :ec)
       cert = @ca_ec.sign( :csr => csr, :profile_name => 'server' )
       cert.to_pem.should match(/BEGIN CERTIFICATE/)
       cert.subject.to_s.should == '/C=US/ST=Illinois/L=Chicago/O=Paul Kehrer/CN=langui.sh'
@@ -439,7 +438,7 @@ describe R509::CertificateAuthority::Signer do
     end
 
     it "properly issues server cert" do
-      csr = R509::Csr.new(:cert => @cert, :type => :dsa, :bit_strength => 1024)
+      csr = R509::Csr.new(:subject => [['C','US'],['ST','Illinois'],['L','Chicago'],['O','Paul Kehrer'],['CN','langui.sh']], :type => :dsa, :bit_strength => 1024)
       cert = @ca_dsa.sign( :csr => csr, :profile_name => 'server' )
       cert.to_pem.should match(/BEGIN CERTIFICATE/)
       cert.subject.to_s.should == '/C=US/ST=Illinois/L=Chicago/O=Paul Kehrer/CN=langui.sh'

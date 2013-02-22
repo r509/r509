@@ -5,8 +5,6 @@ require 'r509/csr'
 
 describe R509::Csr do
   before :all do
-    @cert = TestFixtures::CERT
-    @cert_san = TestFixtures::CERT_SAN
     @csr = TestFixtures::CSR
     @csr_newlines = TestFixtures::CSR_NEWLINES
     @csr_no_begin_end = TestFixtures::CSR_NO_BEGIN_END
@@ -69,20 +67,14 @@ describe R509::Csr do
     key = R509::PrivateKey.new(:key => @key3)
     expect { R509::Csr.new(:key => key, :csr => @csr3)}.to_not raise_error
   end
-  it "raises an exception when you pass a cert and subject" do
-    expect { R509::Csr.new(:cert => @cert, :subject => [['CN','fail.com']]) }.to raise_error(ArgumentError,'Can only provide one of cert, subject, or csr')
-  end
-  it "raises an exception when you pass a cert and CSR" do
-    expect { R509::Csr.new(:cert => @cert, :csr => @csr) }.to raise_error(ArgumentError,'Can only provide one of cert, subject, or csr')
-  end
-  it "raises an exception when you pass a subject and CSR" do
-    expect { R509::Csr.new(:subject => [['CN','error.com']], :csr => @csr) }.to raise_error(ArgumentError,'Can only provide one of cert, subject, or csr')
+  it "raises an exception when you pass :subject and :csr" do
+    expect { R509::Csr.new(:subject => [['CN','error.com']], :csr => @csr) }.to raise_error(ArgumentError,'You must provide :subject or :csr, not both')
   end
   it "raises an exception for not providing valid type when key is nil" do
     expect { R509::Csr.new(:subject => [['CN','error.com']], :type => :invalid_symbol) }.to raise_error(ArgumentError,'Must provide :rsa, :dsa, or :ec as type when key is nil')
   end
-  it "raises an exception when you don't provide cert, subject, or CSR" do
-    expect { R509::Csr.new(:bit_strength => 1024) }.to raise_error(ArgumentError,'Must provide one of cert, subject, or csr')
+  it "raises an exception when you don't provide :subject or :csr" do
+    expect { R509::Csr.new(:bit_strength => 1024) }.to raise_error(ArgumentError,'You must provide :subject or :csr')
   end
   it "raises an exception if you provide a list of domains with an existing CSR" do
     expect { R509::Csr.new(:csr => @csr, :san_names => ['moredomainsiwanttoadd.com']) }.to raise_error(ArgumentError,'You can\'t add domains to an existing CSR')
@@ -145,32 +137,6 @@ describe R509::Csr do
     end
     it "raises exception when providing invalid key" do
       expect { R509::Csr.new({:csr => @csr, :key => 'invalid key'}) }.to raise_error(R509::R509Error,"Failed to load private key. Invalid key or incorrect password.")
-    end
-  end
-  context "when passing a cert to generate" do
-    it "returns a valid pem" do
-      csr = R509::Csr.new( :bit_strength => 1024, :cert => @cert )
-      csr.to_pem.should match(/CERTIFICATE REQUEST/)
-    end
-    it "has a public key length of 2048 by default" do
-      csr = R509::Csr.new( :cert => @cert )
-      csr.bit_strength.should == 2048
-    end
-    it "generates a matching CSR" do
-      csr = R509::Csr.new( :bit_strength => 1024, :cert => @cert )
-      csr.subject.to_s.should == '/C=US/ST=Illinois/L=Chicago/O=Paul Kehrer/CN=langui.sh'
-    end
-    it "SAN domains from the cert should be encoded in the request" do
-      csr = R509::Csr.new( :bit_strength => 1024, :cert => @cert_san )
-      csr.san_names.should == ["langui.sh"]
-    end
-    it "duplicate SAN names should be removed" do
-      csr = R509::Csr.new( :cert => @cert, :san_names => ["test2.local","test.local","test.local"] )
-      csr.san_names.should == ["test2.local", "test.local"]
-    end
-    it "SAN names added in addition to those present in the cert should be merged" do
-      csr = R509::Csr.new( :cert => @cert_san, :san_names => ["test2.local","test.local","test.local"] )
-      csr.san_names.should == ["langui.sh","test2.local", "test.local"]
     end
   end
   context "when passing a subject array" do

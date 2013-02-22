@@ -15,9 +15,8 @@ module R509
     # @option opts [String] :curve_name ("secp384r1") Only used if :type is :ec
     # @option opts [Integer] :bit_strength (2048) Only used if :type is :rsa or :dsa
     # @option opts [String] :message_digest Optional digest. sha1, sha224, sha256, sha384, sha512, md5. Defaults to sha1
-    # @option opts [Array] :san_names List of domains to encode as subjectAltNames
+    # @option opts [Array] :san_names List of domains and/or IP addresses to encode as subjectAltNames
     # @option opts [R509::Subject,Array,OpenSSL::X509::Name] :subject array of subject items
-    # @option opts [String,R509::Cert,OpenSSL::X509::Certificate] :cert takes a cert (used for generating a CSR with the certificate's values)
     # @option opts [R509::PrivateKey,String] :key optional private key to supply. either an unencrypted PEM/DER string or an R509::PrivateKey object (use the latter if you need password/hardware support)
     # @example Generate a 4096-bit RSA key + CSR
     #   :type => :rsa,
@@ -40,10 +39,8 @@ module R509
       if not opts.kind_of?(Hash)
         raise ArgumentError, 'Must provide a hash of options'
       end
-      if (opts.has_key?(:cert) and opts.has_key?(:subject)) or
-        (opts.has_key?(:cert) and opts.has_key?(:csr)) or
-        (opts.has_key?(:subject) and opts.has_key?(:csr))
-        raise ArgumentError, "Can only provide one of cert, subject, or csr"
+        if opts.has_key?(:subject) and opts.has_key?(:csr)
+        raise ArgumentError, "You must provide :subject or :csr, not both"
       end
       @bit_strength = opts[:bit_strength] || 2048
       @curve_name = opts[:curve_name] || "secp384r1"
@@ -61,13 +58,7 @@ module R509
         raise ArgumentError, 'Must provide :rsa, :dsa, or :ec as type when key is nil'
       end
 
-      if opts.has_key?(:cert)
-        domains = opts[:san_names] || []
-        parsed_domains = prefix_domains(domains)
-        cert_data = parse_cert(opts[:cert])
-        merged_domains = cert_data[:subjectAltName].concat(parsed_domains)
-        create_request(cert_data[:subject],merged_domains) #sets @req
-      elsif opts.has_key?(:subject)
+      if opts.has_key?(:subject)
         domains = opts[:san_names] || []
         parsed_domains = prefix_domains(domains)
         create_request(opts[:subject], parsed_domains) #sets @req
@@ -77,7 +68,7 @@ module R509
         end
         parse_csr(opts[:csr])
       else
-        raise ArgumentError, "Must provide one of cert, subject, or csr"
+        raise ArgumentError, "You must provide :subject or :csr"
       end
 
       if dsa?
@@ -293,19 +284,6 @@ module R509
       @san_names = @attributes['subjectAltName'] || []
     end
 
-    # parses an existing cert to get data to add to new CSR
-    def parse_cert(cert)
-      domains_to_add = []
-      san_extension = nil
-      parsed_cert = OpenSSL::X509::Certificate.new(cert)
-      parsed_cert.extensions.each { |extension|
-        if (extension.oid == 'subjectAltName') then
-          domains_to_add = parse_san_extension(extension)
-        end
-      }
-      {:subject => parsed_cert.subject, :subjectAltName => domains_to_add}
-    end
-
     # @return [Hash] attributes of a CSR
     def parse_attributes_from_csr(req)
       attributes = Hash.new
@@ -355,11 +333,17 @@ module R509
     end
 
     def prefix_domains(domains)
-      domains.map { |domain| 'DNS: '+domain }
+      domains.map do |domain|
+        if not domain.scan(/\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b/).empty?
+          'IP: '+domain
+        else
+          'DNS: '+domain
+        end
+      end
     end
 
     def strip_prefix(domains)
-      domains.map{ |name| name.gsub(/DNS:/,'').strip }
+      domains.map{ |name| name.gsub(/DNS:||IP:/,'').strip }
     end
   end
 end
