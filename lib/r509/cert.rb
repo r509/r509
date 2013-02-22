@@ -180,7 +180,7 @@ module R509
       if self.subject_alternative_name.nil?
         return []
       else
-        return self.subject_alternative_name.dns_names
+        return self.subject_alternative_name.san.dns_names
       end
     end
 

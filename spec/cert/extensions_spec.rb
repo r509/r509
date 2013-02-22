@@ -168,20 +168,21 @@ shared_examples_for "a correct R509 SubjectAlternativeName object" do
   before :all do
     extension_name = "subjectAltName"
     klass = SubjectAlternativeName
-    openssl_ext = OpenSSL::X509::Extension.new( extension_name, @extension_value )
+    ef = OpenSSL::X509::ExtensionFactory.new
+    openssl_ext = ef.create_extension( extension_name, @extension_value )
     @r509_ext = klass.new( openssl_ext )
   end
 
   it "dns_names should be correct" do
-    @r509_ext.dns_names.should == @dns_names
+    @r509_ext.san.dns_names.should == @dns_names
   end
 
   it "ip_addresses should be correct" do
-    @r509_ext.ip_addresses.should == @ip_addresses
+    @r509_ext.san.ip_addresses.should == @ip_addresses
   end
 
   it "uris should be correct" do
-    @r509_ext.uris.should == @uris
+    @r509_ext.san.uris.should == @uris
   end
 end
 
@@ -518,7 +519,7 @@ describe R509::Cert::Extensions do
     context "with an IP address alternative name only" do
       before :all do
         @dns_names = []
-        @ip_addresses = ["10.1.2.3"]
+        @ip_addresses = ["203.1.2.3"]
         @uris = []
         @extension_value = "IP:#{@ip_addresses.join(",IP:")}"
       end
@@ -565,17 +566,6 @@ describe R509::Cert::Extensions do
         @ip_addresses = ["10.1.2.3"]
         @uris = ["http://www.test.local"]
         @extension_value = "DNS:#{@dns_names.join(",DNS:")},IP:#{@ip_addresses.join(",IP:")},URI:#{@uris.join(",URI:")}"
-      end
-
-      it_should_behave_like "a correct R509 SubjectAlternativeName object"
-    end
-
-    context "with multiple different alternative names with trailing newlines" do
-      before :all do
-        @dns_names = ["www.test.local"]
-        @ip_addresses = ["10.1.2.3"]
-        @uris = ["http://www.test.local"]
-        @extension_value = "DNS:#{@dns_names.join("\n,DNS:")}\n,IP:#{@ip_addresses.join("\n,IP:")}\n,URI:#{@uris.join("\n,URI:")}\n"
       end
 
       it_should_behave_like "a correct R509 SubjectAlternativeName object"

@@ -8,11 +8,6 @@ module R509
     module Extensions
 
       private
-      # Regexes for OpenSSL's parsed values
-      DNS_REGEX = /DNS:([^,\n]+)/
-      IP_ADDRESS_REGEX = /IP:([^,\n]+)/
-      URI_REGEX = /URI:([^,\n]+)/
-
       R509_EXTENSION_CLASSES = Set.new
 
       # Registers a class as being an R509 certificate extension class. Registered
@@ -41,15 +36,15 @@ module R509
 
       # object to hold parsed sequences of generalnames
       # these structures are used in SubjectAlternativeName, AuthorityInfoAccess, CrlDistributionPoints, etc
-      class GeneralNameArray
+      class GeneralNameHash
         def initialize
           @types = {
-            :otherName => [],
+            :otherName => [], #TODO handle AnotherName objects
             :rfc822Name => [],
             :dNSName => [],
             :x400Address => [],
             :directoryName => [],
-            :ediPartyName => [],
+            :ediPartyName => [], #TODO handle EDIPartyName objects
             :uniformResourceIdentifier => [],
             :iPAddress => [],
             :registeredID => []
@@ -76,8 +71,11 @@ module R509
           when 4 then @types[:directoryName] << asn.value
           when 5 then @types[:ediPartyName] << asn.value
           when 6 then @types[:uniformResourceIdentifier] << asn.value
-          when 7 then @types[:iPAddress] << asn.value
+          when 7
+            @types[:iPAddress] << asn.value.bytes.to_a.join(".")
           when 8 then @types[:registeredID] << asn.value
+          else
+            raise R509::R509Error, "Unimplemented GeneralName type found. #{asn.tag}"
           end
         end
 
@@ -450,20 +448,17 @@ module R509
         OID = "subjectAltName"
         Extensions.register_class(self)
 
-        # An array of the DNS alternative names, if any
-        attr_reader :dns_names
-        # An array of the IP-address alternative names, if any
-        attr_reader :ip_addresses
-        # An array of the URI alternative names, if any
-        attr_reader :uris
+        attr_reader :san
 
         # See OpenSSL::X509::Extension#initialize
         def initialize(*args)
           super(*args)
 
-          @dns_names = self.value.scan( DNS_REGEX ).map { |match| match[0] }
-          @ip_addresses = self.value.scan( IP_ADDRESS_REGEX ).map { |match| match[0] }
-          @uris = self.value.scan( URI_REGEX ).map { |match| match[0] }
+          data = R509::Cert::Extensions.get_extension_payload(self)
+          @san = GeneralNameHash.new
+          data.entries.each do |gn|
+            @san.add_item(gn)
+          end
         end
       end
 
@@ -484,8 +479,8 @@ module R509
           super(*args)
 
           data = R509::Cert::Extensions.get_extension_payload(self)
-          @ocsp= GeneralNameArray.new
-          @ca_issuers= GeneralNameArray.new
+          @ocsp= GeneralNameHash.new
+          @ca_issuers= GeneralNameHash.new
           data.entries.each do |access_description|
             #   AccessDescription  ::=  SEQUENCE {
             #           accessMethod          OBJECT IDENTIFIER,
@@ -514,7 +509,7 @@ module R509
         def initialize(*args)
           super(*args)
 
-          @crl= GeneralNameArray.new
+          @crl= GeneralNameHash.new
           data = R509::Cert::Extensions.get_extension_payload(self)
           data.entries.each do |distribution_point|
             #   DistributionPoint ::= SEQUENCE {
