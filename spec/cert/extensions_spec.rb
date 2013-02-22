@@ -46,46 +46,50 @@ shared_examples_for "a correctly implemented get_unknown_extensions" do
   end
 end
 
-shared_examples_for "a correct R509 BasicConstraints object" do
+shared_examples_for "a correct R509 BasicConstraints object" do |critical|
   before :all do
     extension_name = "basicConstraints"
     klass = BasicConstraints
     ef = OpenSSL::X509::ExtensionFactory.new
-    openssl_ext = ef.create_extension( extension_name, @extension_value )
+    openssl_ext = ef.create_extension( extension_name, @extension_value , critical)
     @r509_ext = klass.new( openssl_ext )
   end
 
-  it "is_ca? should correctly report whether it's a CA certificate" do
+  it "is_ca? should correctly report whether it's a CA certificate (critical:#{critical})" do
     @r509_ext.is_ca?.should == @is_ca
   end
 
-  it "the path length should be correct" do
+  it "the path length should be correct (critical:#{critical})" do
     @r509_ext.path_length.should == @pathlen
   end
 
-  it "allows_sub_ca? should correctly report whether its path length allows it to issue CA certs" do
+  it "allows_sub_ca? should correctly report whether its path length allows it to issue CA certs (critical:#{critical})" do
     @r509_ext.allows_sub_ca?.should == @allows_sub_ca
+  end
+
+  it "reports #critical? properly" do
+    @r509_ext.critical?.should == critical
   end
 end
 
-shared_examples_for "a correct R509 KeyUsage object" do
+shared_examples_for "a correct R509 KeyUsage object" do |critical|
   before :each do
     extension_name = "keyUsage"
     klass = KeyUsage
     ef = OpenSSL::X509::ExtensionFactory.new
-    openssl_ext = ef.create_extension( extension_name, @extension_value )
+    openssl_ext = ef.create_extension( extension_name, @extension_value, critical )
     @r509_ext = klass.new( openssl_ext )
   end
 
-  it "allowed_uses should be non-nil" do
+  it "allowed_uses should be non-nil critical:#{critical}" do
     @r509_ext.allowed_uses.should_not == nil
   end
 
-  it "allowed_uses should be correct" do
+  it "allowed_uses should be correct critical:#{critical}" do
     @r509_ext.allowed_uses.should == @allowed_uses
   end
 
-  it "the individual allowed-use functions should be correct" do
+  it "the individual allowed-use functions should be correct critical:#{critical}" do
     @r509_ext.digital_signature?.should == @allowed_uses.include?( KeyUsage::AU_DIGITAL_SIGNATURE )
     @r509_ext.non_repudiation?.should == @allowed_uses.include?( KeyUsage::AU_NON_REPUDIATION )
     @r509_ext.key_encipherment?.should == @allowed_uses.include?( KeyUsage::AU_KEY_ENCIPHERMENT )
@@ -97,31 +101,35 @@ shared_examples_for "a correct R509 KeyUsage object" do
     @r509_ext.decipher_only?.should == @allowed_uses.include?( KeyUsage::AU_DECIPHER_ONLY )
   end
 
-  it "the #allows? method should work" do
+  it "the #allows? method should work critical:#{critical}" do
     @allowed_uses.each do |au|
       @r509_ext.allows?(au).should == true
     end
   end
+
+  it "reports #critical? properly" do
+    @r509_ext.critical?.should == critical
+  end
 end
 
-shared_examples_for "a correct R509 ExtendedKeyUsage object" do
+shared_examples_for "a correct R509 ExtendedKeyUsage object" do |critical|
   before :all do
     extension_name = "extendedKeyUsage"
     klass = ExtendedKeyUsage
     ef = OpenSSL::X509::ExtensionFactory.new
-    openssl_ext = ef.create_extension( extension_name, @extension_value )
+    openssl_ext = ef.create_extension( extension_name, @extension_value , critical )
     @r509_ext = klass.new( openssl_ext )
   end
 
-  it "allowed_uses should be non-nil" do
+  it "allowed_uses should be non-nil critical:#{critical}" do
     @r509_ext.allowed_uses.should_not == nil
   end
 
-  it "allowed_uses should be correct" do
+  it "allowed_uses should be correct critical:#{critical}" do
     @r509_ext.allowed_uses.should == @allowed_uses
   end
 
-  it "the individual allowed-use functions should be correct" do
+  it "the individual allowed-use functions should be correct critical:#{critical}" do
     @r509_ext.web_server_authentication?.should == @allowed_uses.include?( ExtendedKeyUsage::AU_WEB_SERVER_AUTH )
     @r509_ext.web_client_authentication?.should == @allowed_uses.include?( ExtendedKeyUsage::AU_WEB_CLIENT_AUTH )
     @r509_ext.code_signing?.should == @allowed_uses.include?( ExtendedKeyUsage::AU_CODE_SIGNING )
@@ -131,10 +139,14 @@ shared_examples_for "a correct R509 ExtendedKeyUsage object" do
     @r509_ext.any_extended_key_usage?.should == @allowed_uses.include?( ExtendedKeyUsage::AU_ANY_EXTENDED_KEY_USAGE )
   end
 
-  it "the #allows? method should work" do
+  it "the #allows? method should work critical:#{critical}" do
     @allowed_uses.each do |au|
       @r509_ext.allows?(au).should == true
     end
+  end
+
+  it "reports #critical? properly" do
+    @r509_ext.critical?.should == critical
   end
 end
 
@@ -164,57 +176,73 @@ shared_examples_for "a correct R509 AuthorityKeyIdentifier object" do
   end
 end
 
-shared_examples_for "a correct R509 SubjectAlternativeName object" do
+shared_examples_for "a correct R509 SubjectAlternativeName object" do |critical|
   before :all do
     extension_name = "subjectAltName"
     klass = SubjectAlternativeName
     ef = OpenSSL::X509::ExtensionFactory.new
-    openssl_ext = ef.create_extension( extension_name, @extension_value )
+    openssl_ext = ef.create_extension( extension_name, @extension_value , critical )
     @r509_ext = klass.new( openssl_ext )
   end
 
-  it "dns_names should be correct" do
+  it "dns_names should be correct critical:#{critical}" do
     @r509_ext.san.dns_names.should == @dns_names
   end
 
-  it "ip_addresses should be correct" do
+  it "ip_addresses should be correct critical:#{critical}" do
     @r509_ext.san.ip_addresses.should == @ip_addresses
   end
 
-  it "uris should be correct" do
+  it "rfc_822names should be correct critical:#{critical}" do
+    @r509_ext.san.rfc_822_names.should == @rfc_822_names
+  end
+
+  it "uris should be correct critical:#{critical}" do
     @r509_ext.san.uris.should == @uris
+  end
+
+  it "reports #critical? properly" do
+    @r509_ext.critical?.should == critical
   end
 end
 
-shared_examples_for "a correct R509 AuthorityInfoAccess object" do
+shared_examples_for "a correct R509 AuthorityInfoAccess object" do |critical|
   before :all do
     extension_name = "authorityInfoAccess"
     klass = AuthorityInfoAccess
     ef = OpenSSL::X509::ExtensionFactory.new
-    openssl_ext = ef.create_extension( extension_name, @extension_value )
+    openssl_ext = ef.create_extension( extension_name, @extension_value, critical )
     @r509_ext = klass.new( openssl_ext )
   end
 
-  it "ca_issuers_uri should be correct" do
+  it "ca_issuers_uri should be correct critical:#{critical}" do
     @r509_ext.ca_issuers.uris.should == @ca_issuers_uris
   end
 
-  it "ocsp_uri should be correct" do
+  it "ocsp_uri should be correct critical:#{critical}" do
     @r509_ext.ocsp.uris.should == @ocsp_uris
+  end
+
+  it "reports #critical? properly" do
+    @r509_ext.critical?.should == critical
   end
 end
 
-shared_examples_for "a correct R509 CrlDistributionPoints object" do
+shared_examples_for "a correct R509 CrlDistributionPoints object" do |critical|
   before :all do
     extension_name = "crlDistributionPoints"
     klass = CrlDistributionPoints
     ef = OpenSSL::X509::ExtensionFactory.new
-    openssl_ext = ef.create_extension( extension_name, @extension_value )
+    openssl_ext = ef.create_extension( extension_name, @extension_value , critical )
     @r509_ext = klass.new( openssl_ext )
   end
 
-  it "crl_uri should be correct" do
+  it "crl_uri should be correct critical:#{critical}" do
     @r509_ext.crl.uris.should == @crl_uris
+  end
+
+  it "reports #critical? properly" do
+    @r509_ext.critical?.should == critical
   end
 end
 
@@ -231,6 +259,21 @@ shared_examples_for "a correct R509 OCSPNoCheck object" do
   end
 end
 
+shared_examples_for "a correct R509 CertificatePolicies object" do
+
+
+  before :all do
+    klass = CertificatePolicies
+    openssl_ext = OpenSSL::X509::Extension.new @policy_data
+    @r509_ext = klass.new( openssl_ext )
+  end
+
+  it "should correctly parse the data" do
+    @r509_ext.policies.count.should == 1
+    @r509_ext.policies[0].policy_identifier.should == "2.16.840.1.12345.1.2.3.4.1"
+    @r509_ext.policies[0].policy_qualifiers.cps_uris.should == ["http://example.com/cps", "http://other.com/cps"]
+  end
+end
 
 describe R509::Cert::Extensions do
   include R509::Cert::Extensions
@@ -365,7 +408,8 @@ describe R509::Cert::Extensions do
         @allows_sub_ca = true
       end
 
-      it_should_behave_like "a correct R509 BasicConstraints object"
+      it_should_behave_like "a correct R509 BasicConstraints object", false
+      it_should_behave_like "a correct R509 BasicConstraints object", true
     end
 
     context "with constraints for a sub-CA certificate" do
@@ -376,7 +420,8 @@ describe R509::Cert::Extensions do
         @allows_sub_ca = false
       end
 
-      it_should_behave_like "a correct R509 BasicConstraints object"
+      it_should_behave_like "a correct R509 BasicConstraints object", false
+      it_should_behave_like "a correct R509 BasicConstraints object", true
     end
 
     context "with constraints for a non-CA certificate" do
@@ -387,7 +432,8 @@ describe R509::Cert::Extensions do
         @allows_sub_ca = false
       end
 
-      it_should_behave_like "a correct R509 BasicConstraints object"
+      it_should_behave_like "a correct R509 BasicConstraints object", false
+      it_should_behave_like "a correct R509 BasicConstraints object", true
     end
   end
 
@@ -398,7 +444,8 @@ describe R509::Cert::Extensions do
         @extension_value = @allowed_uses.join( ", " )
       end
 
-      it_should_behave_like "a correct R509 KeyUsage object"
+      it_should_behave_like "a correct R509 KeyUsage object", false
+      it_should_behave_like "a correct R509 KeyUsage object", true
     end
 
     context "with some allowed uses" do
@@ -408,7 +455,8 @@ describe R509::Cert::Extensions do
         @extension_value = @allowed_uses.join( ", " )
       end
 
-      it_should_behave_like "a correct R509 KeyUsage object"
+      it_should_behave_like "a correct R509 KeyUsage object", false
+      it_should_behave_like "a correct R509 KeyUsage object", true
     end
 
     context "with some different allowed uses" do
@@ -417,7 +465,8 @@ describe R509::Cert::Extensions do
         @extension_value = @allowed_uses.join( ", " )
       end
 
-      it_should_behave_like "a correct R509 KeyUsage object"
+      it_should_behave_like "a correct R509 KeyUsage object", false
+      it_should_behave_like "a correct R509 KeyUsage object", true
     end
 
     context "with all allowed uses" do
@@ -430,7 +479,8 @@ describe R509::Cert::Extensions do
         @extension_value = @allowed_uses.join( ", " )
       end
 
-      it_should_behave_like "a correct R509 KeyUsage object"
+      it_should_behave_like "a correct R509 KeyUsage object", false
+      it_should_behave_like "a correct R509 KeyUsage object", true
     end
   end
 
@@ -441,7 +491,8 @@ describe R509::Cert::Extensions do
         @extension_value = @allowed_uses.join( ", " )
       end
 
-      it_should_behave_like "a correct R509 ExtendedKeyUsage object"
+      it_should_behave_like "a correct R509 ExtendedKeyUsage object", false
+      it_should_behave_like "a correct R509 ExtendedKeyUsage object", true
     end
 
     context "with some allowed uses" do
@@ -451,7 +502,8 @@ describe R509::Cert::Extensions do
         @extension_value = @allowed_uses.join( ", " )
       end
 
-      it_should_behave_like "a correct R509 ExtendedKeyUsage object"
+      it_should_behave_like "a correct R509 ExtendedKeyUsage object", false
+      it_should_behave_like "a correct R509 ExtendedKeyUsage object", true
     end
 
     context "with some different allowed uses" do
@@ -460,7 +512,8 @@ describe R509::Cert::Extensions do
         @extension_value = @allowed_uses.join( ", " )
       end
 
-      it_should_behave_like "a correct R509 ExtendedKeyUsage object"
+      it_should_behave_like "a correct R509 ExtendedKeyUsage object", false
+      it_should_behave_like "a correct R509 ExtendedKeyUsage object", true
     end
 
     context "with all allowed uses" do
@@ -472,7 +525,8 @@ describe R509::Cert::Extensions do
         @extension_value = @allowed_uses.join( ", " )
       end
 
-      it_should_behave_like "a correct R509 ExtendedKeyUsage object"
+      it_should_behave_like "a correct R509 ExtendedKeyUsage object", false
+      it_should_behave_like "a correct R509 ExtendedKeyUsage object", true
     end
   end
 
@@ -494,15 +548,24 @@ describe R509::Cert::Extensions do
   end
 
   context "SubjectAlternativeName" do
+    context "with an unimplemented GeneralName type" do
+      it "errors as expected" do
+        ef = OpenSSL::X509::ExtensionFactory.new
+        ext = ef.create_extension("subjectAltName","otherName:1.2.3.4;IA5STRING:Hello World")
+        expect { R509::Cert::Extensions::SubjectAlternativeName.new ext }.to raise_error(R509::R509Error, 'Unimplemented GeneralName type found. 0 At this time R509 does not support GeneralName types other than rfc822Name, dNSName, uniformResourceIdentifier, and iPAddress')
+      end
+    end
     context "with a DNS alternative name only" do
       before :all do
         @dns_names = ["www.test.local"]
         @ip_addresses = []
         @uris = []
+        @rfc_822_names = []
         @extension_value = "DNS:#{@dns_names.join(",DNS:")}"
       end
 
-      it_should_behave_like "a correct R509 SubjectAlternativeName object"
+      it_should_behave_like "a correct R509 SubjectAlternativeName object", false
+      it_should_behave_like "a correct R509 SubjectAlternativeName object", true
     end
 
     context "with multiple DNS alternative names only" do
@@ -510,21 +573,25 @@ describe R509::Cert::Extensions do
         @dns_names = ["www.test.local", "www2.test.local"]
         @ip_addresses = []
         @uris = []
+        @rfc_822_names = []
         @extension_value = "DNS:#{@dns_names.join(",DNS:")}"
       end
 
-      it_should_behave_like "a correct R509 SubjectAlternativeName object"
+      it_should_behave_like "a correct R509 SubjectAlternativeName object", false
+      it_should_behave_like "a correct R509 SubjectAlternativeName object", true
     end
 
     context "with an IP address alternative name only" do
       before :all do
         @dns_names = []
         @ip_addresses = ["203.1.2.3"]
+        @rfc_822_names = []
         @uris = []
         @extension_value = "IP:#{@ip_addresses.join(",IP:")}"
       end
 
-      it_should_behave_like "a correct R509 SubjectAlternativeName object"
+      it_should_behave_like "a correct R509 SubjectAlternativeName object", false
+      it_should_behave_like "a correct R509 SubjectAlternativeName object", true
     end
 
     context "with multiple IP address alternative names only" do
@@ -532,43 +599,77 @@ describe R509::Cert::Extensions do
         @dns_names = []
         @ip_addresses = ["10.1.2.3", "10.1.2.4"]
         @uris = []
+        @rfc_822_names = []
         @extension_value = "IP:#{@ip_addresses.join(",IP:")}"
       end
 
-      it_should_behave_like "a correct R509 SubjectAlternativeName object"
+      it_should_behave_like "a correct R509 SubjectAlternativeName object", false
+      it_should_behave_like "a correct R509 SubjectAlternativeName object", true
+    end
+
+    context "with an rfc822Name alternative name only" do
+      before :all do
+        @dns_names = []
+        @ip_addresses = []
+        @rfc_822_names = ["some@guy.com"]
+        @uris = []
+        @extension_value = "email:#{@rfc_822_names.join(",email:")}"
+      end
+
+      it_should_behave_like "a correct R509 SubjectAlternativeName object", false
+      it_should_behave_like "a correct R509 SubjectAlternativeName object", true
+    end
+
+    context "with multiple rfc822Name alternative names only" do
+      before :all do
+        @dns_names = []
+        @ip_addresses = []
+        @rfc_822_names = ["some@guy.com","other@guy.com"]
+        @uris = []
+        @extension_value = "email:#{@rfc_822_names.join(",email:")}"
+      end
+
+      it_should_behave_like "a correct R509 SubjectAlternativeName object", false
+      it_should_behave_like "a correct R509 SubjectAlternativeName object", true
     end
 
     context "with a URI alternative name only" do
       before :all do
         @dns_names = []
         @ip_addresses = []
+        @rfc_822_names = []
         @uris = ["http://www.test.local"]
         @extension_value = "URI:#{@uris.join(",URI:")}"
       end
 
-      it_should_behave_like "a correct R509 SubjectAlternativeName object"
+      it_should_behave_like "a correct R509 SubjectAlternativeName object", false
+      it_should_behave_like "a correct R509 SubjectAlternativeName object", true
     end
 
     context "with multiple URI alternative names only" do
       before :all do
         @dns_names = []
         @ip_addresses = []
+        @rfc_822_names = []
         @uris = ["http://www.test.local","http://www2.test.local"]
         @extension_value = "URI:#{@uris.join(",URI:")}"
       end
 
-      it_should_behave_like "a correct R509 SubjectAlternativeName object"
+      it_should_behave_like "a correct R509 SubjectAlternativeName object", false
+      it_should_behave_like "a correct R509 SubjectAlternativeName object", true
     end
 
     context "with multiple different alternative names" do
       before :all do
         @dns_names = ["www.test.local"]
         @ip_addresses = ["10.1.2.3"]
+        @rfc_822_names = ["myemail@email.com"]
         @uris = ["http://www.test.local"]
-        @extension_value = "DNS:#{@dns_names.join(",DNS:")},IP:#{@ip_addresses.join(",IP:")},URI:#{@uris.join(",URI:")}"
+        @extension_value = "DNS:#{@dns_names.join(",DNS:")},IP:#{@ip_addresses.join(",IP:")},URI:#{@uris.join(",URI:")},email:#{@rfc_822_names.join(",email:")}"
       end
 
-      it_should_behave_like "a correct R509 SubjectAlternativeName object"
+      it_should_behave_like "a correct R509 SubjectAlternativeName object", false
+      it_should_behave_like "a correct R509 SubjectAlternativeName object", true
     end
   end
   context "AuthorityInfoAccess" do
@@ -579,7 +680,8 @@ describe R509::Cert::Extensions do
         @extension_value = "caIssuers;URI:#{@ca_issuers_uris.join(",caIssuers;URI:")}"
       end
 
-      it_should_behave_like "a correct R509 AuthorityInfoAccess object"
+      it_should_behave_like "a correct R509 AuthorityInfoAccess object", false
+      it_should_behave_like "a correct R509 AuthorityInfoAccess object", true
     end
 
     context "with multiple CA Issuers URIs only" do
@@ -589,7 +691,8 @@ describe R509::Cert::Extensions do
         @extension_value = "caIssuers;URI:#{@ca_issuers_uris.join(",caIssuers;URI:")}"
       end
 
-      it_should_behave_like "a correct R509 AuthorityInfoAccess object"
+      it_should_behave_like "a correct R509 AuthorityInfoAccess object", false
+      it_should_behave_like "a correct R509 AuthorityInfoAccess object", true
     end
 
     context "with an OCSP URI only" do
@@ -599,7 +702,8 @@ describe R509::Cert::Extensions do
         @extension_value = "OCSP;URI:#{@ocsp_uris.join(",OCSP;URI:")}"
       end
 
-      it_should_behave_like "a correct R509 AuthorityInfoAccess object"
+      it_should_behave_like "a correct R509 AuthorityInfoAccess object", false
+      it_should_behave_like "a correct R509 AuthorityInfoAccess object", true
     end
 
     context "with multiple OCSP URIs only" do
@@ -609,7 +713,8 @@ describe R509::Cert::Extensions do
         @extension_value = "OCSP;URI:#{@ocsp_uris.join(",OCSP;URI:")}"
       end
 
-      it_should_behave_like "a correct R509 AuthorityInfoAccess object"
+      it_should_behave_like "a correct R509 AuthorityInfoAccess object", false
+      it_should_behave_like "a correct R509 AuthorityInfoAccess object", true
     end
 
     context "with both a CA Issuers URI and an OCSP URI" do
@@ -619,7 +724,8 @@ describe R509::Cert::Extensions do
         @extension_value = "caIssuers;URI:#{@ca_issuers_uris.join(",caIssuers;URI:")},OCSP;URI:#{@ocsp_uris.join(",OCSP;URI:")}"
       end
 
-      it_should_behave_like "a correct R509 AuthorityInfoAccess object"
+      it_should_behave_like "a correct R509 AuthorityInfoAccess object", false
+      it_should_behave_like "a correct R509 AuthorityInfoAccess object", true
     end
   end
 
@@ -630,7 +736,8 @@ describe R509::Cert::Extensions do
         @extension_value = "URI:#{@crl_uris.join(",URI:")}"
       end
 
-      it_should_behave_like "a correct R509 CrlDistributionPoints object"
+      it_should_behave_like "a correct R509 CrlDistributionPoints object", false
+      it_should_behave_like "a correct R509 CrlDistributionPoints object", true
     end
 
     context "with multiple CRL URIs" do
@@ -639,12 +746,21 @@ describe R509::Cert::Extensions do
         @extension_value = "URI:#{@crl_uris.join(",URI:")}"
       end
 
-      it_should_behave_like "a correct R509 CrlDistributionPoints object"
+      it_should_behave_like "a correct R509 CrlDistributionPoints object", false
+      it_should_behave_like "a correct R509 CrlDistributionPoints object", true
     end
   end
 
   context "OCSPNoCheck" do
     it_should_behave_like "a correct R509 OCSPNoCheck object"
+  end
+
+  context "CertificatePolicies" do
+    before :all do
+      @policy_data = "0\x81\x90\x06\x03U\x1D \x04\x81\x880\x81\x850\x81\x82\x06\v`\x86H\x01\xE09\x01\x02\x03\x04\x010s0\"\x06\b+\x06\x01\x05\x05\a\x02\x01\x16\x16http://example.com/cps0 \x06\b+\x06\x01\x05\x05\a\x02\x01\x16\x14http://other.com/cps0+\x06\b+\x06\x01\x05\x05\a\x02\x020\x1F0\x16\x16\x06my org0\f\x02\x01\x01\x02\x01\x02\x02\x01\x03\x02\x01\x04\x1A\x05thing"
+    end
+
+    it_should_behave_like "a correct R509 CertificatePolicies object"
   end
 
 

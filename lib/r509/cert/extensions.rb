@@ -39,15 +39,15 @@ module R509
       class GeneralNameHash
         def initialize
           @types = {
-            :otherName => [], #TODO handle AnotherName objects
+            :otherName => [], # unimplemented
             :rfc822Name => [],
             :dNSName => [],
-            :x400Address => [],
-            :directoryName => [],
-            :ediPartyName => [], #TODO handle EDIPartyName objects
+            :x400Address => [], # unimplemented
+            :directoryName => [], # unimplemented
+            :ediPartyName => [], # unimplemented
             :uniformResourceIdentifier => [],
             :iPAddress => [],
-            :registeredID => []
+            :registeredID => [] # unimplemented
           }
         end
 
@@ -66,24 +66,13 @@ module R509
           #        iPAddress                       [7]     OCTET STRING,
           #        registeredID                    [8]     OBJECT IDENTIFIER }
           case asn.tag
-          when 0 then @types[:otherName] << asn.value
           when 1 then @types[:rfc822Name] << asn.value
           when 2 then @types[:dNSName] << asn.value
-          when 3 then @types[:x400Address] << asn.value
-          when 4 then @types[:directoryName] << asn.value
-          when 5 then @types[:ediPartyName] << asn.value
           when 6 then @types[:uniformResourceIdentifier] << asn.value
-          when 7
-            @types[:iPAddress] << asn.value.bytes.to_a.join(".")
-          when 8 then @types[:registeredID] << asn.value
+          when 7 then @types[:iPAddress] << asn.value.bytes.to_a.join(".")
           else
-            raise R509::R509Error, "Unimplemented GeneralName type found. #{asn.tag}"
+            raise R509::R509Error, "Unimplemented GeneralName type found. #{asn.tag} At this time R509 does not support GeneralName types other than rfc822Name, dNSName, uniformResourceIdentifier, and iPAddress"
           end
-        end
-
-        # @return [Array] Array of otherName objects TODO
-        def other_names
-          @types[:otherName]
         end
 
         # @return [Array] Array of rfc822name strings
@@ -96,21 +85,6 @@ module R509
           @types[:dNSName]
         end
 
-        # @return [Array] Array of x400Address objects TODO
-        def x400_addresses
-          @types[:x400Address]
-        end
-
-        # @return [Array] Array of directoryName objects TODO
-        def directory_names
-          @types[:directoryName]
-        end
-
-        # @return [Array] Array of ediPartyName objects TODO
-        def edi_party_names
-          @types[:ediPartyName]
-        end
-
         # @return [Array] Array of uri strings
         def uniform_resource_identifiers
           @types[:uniformResourceIdentifier]
@@ -120,11 +94,6 @@ module R509
         # @return [Array] Array of IP address strings
         def ip_addresses
           @types[:iPAddress]
-        end
-
-        # @return [Array] Array of registered ID TODO
-        def registered_ids
-          @types[:registeredID]
         end
       end
 
