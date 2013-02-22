@@ -152,7 +152,7 @@ Add a signing profile named "server" (CaProfile) to a config object
 
 ```ruby
 profile = R509::Config::CaProfile.new(
-  :basic_constraints => "CA:FALSE",
+  :basic_constraints => {"ca" : false},
   :key_usage => ["digitalSignature","keyEncipherment"],
   :extended_key_usage => ["serverAuth"],
   :certificate_policies => [
@@ -171,7 +171,7 @@ Set up a subject item policy (required/optional). The keys must match OpenSSL's 
 
 ```ruby
 profile = R509::Config::CaProfile.new(
-  :basic_constraints => "CA:FALSE",
+  :basic_constraints => {"ca" : false},
   :key_usage => ["digitalSignature","keyEncipherment"],
   :extended_key_usage => ["serverAuth"],
   :subject_item_policy => {
@@ -206,7 +206,7 @@ test_ca: {
   message_digest: 'SHA1', #SHA1, SHA224, SHA256, SHA384, SHA512 supported. MD5 too, but you really shouldn't use that unless you have a good reason
   profiles: {
     server: {
-      basic_constraints: "CA:FALSE",
+      basic_constraints: {"ca" : false},
       key_usage: [digitalSignature,keyEncipherment],
       extended_key_usage: [serverAuth],
       certificate_policies: [
@@ -407,7 +407,7 @@ This hash defines the certificate + key that will be used to sign for OCSP respo
 ###cdp\_location
 An array of CRL distribution points for certificates issued from this CA.
 
-```ruby
+```yaml
 ['http://crl.r509.org/myca.crl']
 ```
 
@@ -427,14 +427,14 @@ Integer hours for CRL validity.
 ###ocsp\_location
 An array of URIs for client OCSP checks.
 
-```ruby
+```yaml
 ['http://ocsp.r509.org']
 ```
 
 ###ca\_issuers\_location
 An array of ca issuer URIs
 
-```ruby
+```yaml
 ['http://www.r509.org/some_roots.html']
 ```
 
@@ -461,7 +461,19 @@ String value of the message digest to use for signing (both CRL and certificates
 Each CA can have an arbitrary number of issuance profiles (with arbitrary names). For example, a CA named __test\_ca__ might have 3 issuance profiles: server, email, clientserver. Each of these profiles then has a set of options that define the encoded data in the certificate for that profile. If no profiles are defined the root cannot issue certs, but can still issue CRLs.
 
 ####basic\_constraints
-All basic constraints are encoded with the critical bit set to true. In general you should only pass "CA:TRUE" (for an issuing CA) or "CA:FALSE" for everything else with this flag.
+All basic constraints are encoded with the critical bit set to true. The basic constraints config expects a hash with between one and two keys.
+
+#####ca
+The ca key is required and must be set to true (for an issuing CA) or false (everything else).
+
+#####path_length
+This option is only allowed if ca is set to TRUE. path_length allows you to define the maximum number of non-self-issued intermediate certificates that may follow this certificate in a valid certification path. For example, if you set this value to 0 then the certificate issued can only issue end entity certificates, not additional subroots. This must be a non-negative integer (>=0).
+
+```yaml
+{ca : true}
+{ca : false}
+{ca : true, path_length: 3}
+```
 
 ####key\_usage
 An array of strings that conform to the OpenSSL naming scheme for available key usage OIDs.

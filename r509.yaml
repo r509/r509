@@ -20,7 +20,7 @@ certificate_authorities: {
     message_digest: 'SHA1', #SHA1, SHA256, SHA512 supported. MD5 too, but you really shouldn't use that unless you have a good reason
     profiles: {
       server: {
-        basic_constraints: "CA:FALSE",
+        basic_constraints: {"ca" : false},
         key_usage: [digitalSignature,keyEncipherment],
         extended_key_usage: [serverAuth],
         subject_item_policy: {
@@ -33,32 +33,32 @@ certificate_authorities: {
         }
       },
       client: {
-        basic_constraints: "CA:FALSE",
+        basic_constraints: {"ca" : false},
         key_usage: [digitalSignature,keyEncipherment],
         extended_key_usage: [clientAuth],
       },
       email: {
-        basic_constraints: "CA:FALSE",
+        basic_constraints: {"ca" : false},
         key_usage: [digitalSignature,keyEncipherment],
         extended_key_usage: [emailProtection],
       },
       clientserver: {
-        basic_constraints:  "CA:FALSE",
+        basic_constraints:  {"ca" : false},
         key_usage: [digitalSignature,keyEncipherment],
         extended_key_usage: [serverAuth,clientAuth],
       },
       codesigning: {
-        basic_constraints:  "CA:FALSE",
+        basic_constraints:  {"ca" : false},
         key_usage: [digitalSignature],
         extended_key_usage: [codeSigning],
       },
       timestamping: {
-        basic_constraints:  "CA:FALSE",
+        basic_constraints:  {"ca" : false},
         key_usage: [digitalSignature],
         extended_key_usage: [timeStamping],
       },
       subroot: {
-        basic_constraints:  "CA:TRUE,pathlen:0",
+        basic_constraints:  {"ca" : true, "path_length" : 0},
         key_usage: [keyCertSign,cRLSign],
         extended_key_usage: [],
         certificate_policies: [
@@ -73,7 +73,7 @@ certificate_authorities: {
         ]
       },
       ocsp_delegate: {
-        basic_constraints:  "CA:FALSE",
+        basic_constraints:  {"ca" : false},
         key_usage: [digitalSignature],
         extended_key_usage: [OCSPSigning],
         ocsp_no_check: true

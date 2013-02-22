@@ -51,6 +51,8 @@ module R509
           }
         end
 
+        # @private
+        # @param [OpenSSL::ASN1::ASN1Data] asn Takes ASN.1 data in for parsing GeneralName structures
         def add_item(asn)
           # map general names into our hash of arrays
           #   GeneralName ::= CHOICE {
@@ -79,39 +81,48 @@ module R509
           end
         end
 
+        # @return [Array] Array of otherName objects TODO
         def other_names
           @types[:otherName]
         end
 
+        # @return [Array] Array of rfc822name strings
         def rfc_822_names
           @types[:rfc822Name]
         end
 
+        # @return [Array] Array of dnsName strings
         def dns_names
           @types[:dNSName]
         end
 
+        # @return [Array] Array of x400Address objects TODO
         def x400_addresses
           @types[:x400Address]
         end
 
+        # @return [Array] Array of directoryName objects TODO
         def directory_names
           @types[:directoryName]
         end
 
+        # @return [Array] Array of ediPartyName objects TODO
         def edi_party_names
           @types[:ediPartyName]
         end
 
+        # @return [Array] Array of uri strings
         def uniform_resource_identifiers
           @types[:uniformResourceIdentifier]
         end
         alias_method :uris, :uniform_resource_identifiers
 
+        # @return [Array] Array of IP address strings
         def ip_addresses
           @types[:iPAddress]
         end
 
+        # @return [Array] Array of registered ID TODO
         def registered_ids
           @types[:registeredID]
         end
@@ -255,8 +266,9 @@ module R509
         end
 
         # Returns true if the given use is allowed by this extension.
-        # @param [String] A key usage short name (e.g. digitalSignature, cRLSign, etc)
+        # @param [String] friendly_use_name key usage short name (e.g. digitalSignature, cRLSign, etc)
         #   or one of the AU_* constants in this class
+        # @return [Boolean]
         def allows?( friendly_use_name )
           @allowed_uses.include?( friendly_use_name )
         end
