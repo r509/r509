@@ -165,7 +165,7 @@ module TestFixtures
 
   def self.test_ca_server_profile
     R509::Config::CaProfile.new(
-        :basic_constraints => "CA:FALSE",
+        :basic_constraints => {"ca" => false },
         :key_usage => ["digitalSignature","keyEncipherment"],
         :extended_key_usage => ["serverAuth"],
         :certificate_policies => [
@@ -187,7 +187,7 @@ module TestFixtures
       "OU" => "optional"
     )
     R509::Config::CaProfile.new(
-      :basic_constraints => "CA:FALSE",
+      :basic_constraints => {"ca" => false },
       :key_usage => ["digitalSignature","keyEncipherment"],
       :extended_key_usage => ["serverAuth"],
       :certificate_policies => [
@@ -202,7 +202,7 @@ module TestFixtures
 
   def self.test_ca_subroot_profile
     R509::Config::CaProfile.new(
-          :basic_constraints => "CA:TRUE,pathlen:0",
+          :basic_constraints => {"ca" => true, "path_length" => 0 },
           :key_usage => ["keyCertSign","cRLSign"],
           :extended_key_usage => [],
           :certificate_policies => nil)
@@ -210,7 +210,7 @@ module TestFixtures
 
   def self.test_ca_ocspsigner_profile
     R509::Config::CaProfile.new(
-          :basic_constraints => "CA:FALSE",
+          :basic_constraints => { "ca" => false },
           :key_usage => ["digitalSignature"],
           :extended_key_usage => ["OCSPSigning"],
           :certificate_policies => nil)

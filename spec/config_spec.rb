@@ -378,7 +378,7 @@ describe R509::Config::CaProfile do
   end
   it "initializes and stores the options provided" do
     profile = R509::Config::CaProfile.new(
-      :basic_constraints => "CA:TRUE",
+      :basic_constraints => {"ca" => true},
       :key_usage => ["digitalSignature"],
       :extended_key_usage => ["serverAuth"],
       :certificate_policies => [
@@ -389,7 +389,7 @@ describe R509::Config::CaProfile do
       ],
       :ocsp_no_check => true
     )
-    profile.basic_constraints.should == "CA:TRUE"
+    profile.basic_constraints.should == {"ca" => true}
     profile.key_usage.should == ["digitalSignature"]
     profile.extended_key_usage.should == ["serverAuth"]
     profile.certificate_policies[0]["policy_identifier"].should == "2.16.840.1.12345.1.2.3.4.1"

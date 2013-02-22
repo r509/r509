@@ -22,7 +22,7 @@ module R509
       # @option opts [Boolean] :ocsp_no_check Sets OCSP No Check extension in the certificate if true
       # @option opts [R509::Config::SubjectItemPolicy] :subject_item_policy optional
       def initialize(opts = {})
-        @basic_constraints = opts[:basic_constraints]
+        validate_basic_constraints opts[:basic_constraints]
         @key_usage = opts[:key_usage]
         @extended_key_usage = opts[:extended_key_usage]
         validate_certificate_policies opts[:certificate_policies]
@@ -68,6 +68,26 @@ module R509
           end
           @certificate_policies = policies
         end
+      end
+
+      # @private
+      # validates the structure of the certificate policies array
+      def validate_basic_constraints(constraints)
+        if not constraints.nil?
+          if not constraints.respond_to?(:has_key?) or not constraints.has_key?("ca")
+            raise R509Error, "You must supply a hash with a key named \"ca\" with a boolean value"
+          end
+          if constraints["ca"].nil? or (not constraints["ca"].kind_of?(TrueClass) and not constraints["ca"].kind_of?(FalseClass))
+            raise R509Error, "You must supply true/false for the ca key when specifying basic constraints"
+          end
+          if constraints["ca"] == false and not constraints["path_length"].nil?
+            raise R509Error, "Specifying a path length is invalid when CA is false"
+          end
+          if constraints["ca"] == true and not constraints["path_length"].nil? and (constraints["path_length"] < 0 or not constraints["path_length"].kind_of?(Integer))
+            raise R509Error, "Path length must be an integer with value 0 or greater"
+          end
+        end
+        @basic_constraints = constraints
       end
     end
 

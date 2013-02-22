@@ -39,7 +39,7 @@ missing_key_identifier_ca: {
   message_digest: 'SHA1',
   profiles: {
     server: {
-      basic_constraints: "CA:FALSE",
+      basic_constraints: { "ca" : false },
       key_usage: [digitalSignature,keyEncipherment],
       extended_key_usage: [serverAuth],
     }
@@ -53,7 +53,7 @@ multi_policy_ca: {
   message_digest: 'SHA1',
   profiles: {
     server: {
-      basic_constraints: "CA:FALSE",
+      basic_constraints: { "ca" : false },
       key_usage: [digitalSignature,keyEncipherment],
       extended_key_usage: [serverAuth],
       certificate_policies: [
@@ -116,7 +116,7 @@ ca_issuers_and_ocsp_ca: {
   message_digest: 'SHA1',
   profiles: {
     server: {
-      basic_constraints: "CA:FALSE",
+      basic_constraints: { "ca" : false },
       key_usage: [digitalSignature,keyEncipherment],
       extended_key_usage: [serverAuth],
     }
@@ -131,7 +131,7 @@ ca_issuers_ca: {
   message_digest: 'SHA1',
   profiles: {
     server: {
-      basic_constraints: "CA:FALSE",
+      basic_constraints: { "ca" : false },
       key_usage: [digitalSignature,keyEncipherment],
       extended_key_usage: [serverAuth],
     }
@@ -145,7 +145,7 @@ all_eku_ca: {
   message_digest: 'SHA1',
   profiles: {
     smorgasbord: {
-      basic_constraints: "CA:FALSE",
+      basic_constraints: { "ca" : false },
       key_usage: [digitalSignature,keyEncipherment],
       extended_key_usage: [serverAuth,clientAuth,codeSigning,emailProtection,OCSPSigning,timeStamping],
     }
@@ -159,7 +159,7 @@ ocsp_no_check_ca: {
   message_digest: 'SHA1',
   profiles: {
     ocsp_no_check_delegate: {
-      basic_constraints: "CA:FALSE",
+      basic_constraints: { "ca" : false },
       key_usage: [digitalSignature],
       extended_key_usage: [OCSPSigning],
       ocsp_no_check: true

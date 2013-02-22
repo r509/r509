@@ -149,7 +149,7 @@ module R509::CertificateAuthority
       build_extensions(
         :subject_certificate => cert,
         :issuer_certificate => cert,
-        :basic_constraints => "CA:TRUE",
+        :basic_constraints => {"ca" => true },
         :san_names => san_names
       )
 
@@ -243,7 +243,17 @@ module R509::CertificateAuthority
 
       ext = []
       if not options[:basic_constraints].nil?
-        ext << ef.create_extension("basicConstraints", options[:basic_constraints], true)
+        bc = options[:basic_constraints]
+        if bc["ca"] == true
+          bc_value = "CA:TRUE"
+          if not bc["path_length"].nil?
+            bc_value += ",pathlen:#{bc["path_length"]}"
+          end
+        else
+          bc_value = "CA:FALSE"
+        end
+
+        ext << ef.create_extension("basicConstraints", bc_value, true)
       end
       if not options[:key_usage].nil? and not options[:key_usage].empty?
         ext << ef.create_extension("keyUsage", options[:key_usage].join(","))
