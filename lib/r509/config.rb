@@ -81,10 +81,10 @@ module R509
             raise R509Error, "You must supply true/false for the ca key when specifying basic constraints"
           end
           if constraints["ca"] == false and not constraints["path_length"].nil?
-            raise R509Error, "Specifying a path length is invalid when CA is false"
+            raise R509Error, "path_length is not allowed when ca is false"
           end
           if constraints["ca"] == true and not constraints["path_length"].nil? and (constraints["path_length"] < 0 or not constraints["path_length"].kind_of?(Integer))
-            raise R509Error, "Path length must be an integer with value 0 or greater"
+            raise R509Error, "Path length must be a non-negative integer (>= 0)"
           end
         end
         @basic_constraints = constraints

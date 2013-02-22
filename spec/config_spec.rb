@@ -376,6 +376,34 @@ describe R509::Config::CaProfile do
       expect { R509::Config::CaProfile.new(:certificate_policies => [{"policy_identifier" => "1.2.3.4.5", "user_notices" => [{"explicit_text" => "explicit", "notice_numbers" => "1,2,3"}]}]) }.to raise_error(R509::R509Error,'If you provide notice numbers you must provide an organization')
     end
   end
+  context "validate basic constraints structure" do
+    it "must be a hash with key \"ca\"" do
+      expect { R509::Config::CaProfile.new(:basic_constraints => 'string') }.to raise_error(R509::R509Error, "You must supply a hash with a key named \"ca\" with a boolean value")
+      expect { R509::Config::CaProfile.new(:basic_constraints => {}) }.to raise_error(R509::R509Error, "You must supply a hash with a key named \"ca\" with a boolean value")
+    end
+    it "must have true or false for the ca key value" do
+      expect { R509::Config::CaProfile.new(:basic_constraints => {"ca" => 'truestring'}) }.to raise_error(R509::R509Error, "You must supply true/false for the ca key when specifying basic constraints")
+    end
+    it "must not pass a path_length if ca is false" do
+      expect { R509::Config::CaProfile.new(:basic_constraints => {"ca" => false, "path_length" => 5}) }.to raise_error(R509::R509Error, "path_length is not allowed when ca is false")
+    end
+    it "must pass a non-negative integer to path_length" do
+      expect { R509::Config::CaProfile.new(:basic_constraints => {"ca" => true, "path_length" => -1.5}) }.to raise_error(R509::R509Error, "Path length must be a non-negative integer (>= 0)")
+      expect { R509::Config::CaProfile.new(:basic_constraints => {"ca" => true, "path_length" => 1.5}) }.to raise_error(R509::R509Error, "Path length must be a non-negative integer (>= 0)")
+    end
+    it "does not require a path_length when ca is true" do
+      ca_profile = R509::Config::CaProfile.new(:basic_constraints => {"ca" => true})
+      ca_profile.basic_constraints.should == {"ca" => true }
+    end
+    it "allows ca:false" do
+      ca_profile = R509::Config::CaProfile.new(:basic_constraints => {"ca" => false})
+      ca_profile.basic_constraints.should == {"ca" => false }
+    end
+    it "allows ca:true and a valid path length" do
+      ca_profile = R509::Config::CaProfile.new(:basic_constraints => {"ca" => true, "path_length" => 2})
+      ca_profile.basic_constraints.should == {"ca" => true, "path_length" => 2 }
+    end
+  end
   it "initializes and stores the options provided" do
     profile = R509::Config::CaProfile.new(
       :basic_constraints => {"ca" => true},
