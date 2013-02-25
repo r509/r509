@@ -186,19 +186,23 @@ shared_examples_for "a correct R509 SubjectAlternativeName object" do |critical|
   end
 
   it "dns_names should be correct critical:#{critical}" do
-    @r509_ext.san.dns_names.should == @dns_names
+    @r509_ext.dns_names.should == @dns_names
   end
 
   it "ip_addresses should be correct critical:#{critical}" do
-    @r509_ext.san.ip_addresses.should == @ip_addresses
+    @r509_ext.ip_addresses.should == @ip_addresses
   end
 
   it "rfc_822names should be correct critical:#{critical}" do
-    @r509_ext.san.rfc_822_names.should == @rfc_822_names
+    @r509_ext.rfc_822_names.should == @rfc_822_names
   end
 
   it "uris should be correct critical:#{critical}" do
-    @r509_ext.san.uris.should == @uris
+    @r509_ext.uris.should == @uris
+  end
+
+  it "ordered should be correct critical:#{critical}" do
+    @r509_ext.ordered_names.size.should == @dns_names.size + @ip_addresses.size + @rfc_822_names.size + @uris.size
   end
 
   it "reports #critical? properly" do

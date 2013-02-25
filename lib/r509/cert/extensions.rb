@@ -34,6 +34,38 @@ module R509
           OpenSSL::ASN1.decode(asn.entries.last.value).value
       end
 
+      class GeneralName
+        attr_reader :type, :value
+        def initialize(asn)
+          #   GeneralName ::= CHOICE {
+          #        otherName                       [0]     OtherName,
+          #        rfc822Name                      [1]     IA5String,
+          #        dNSName                         [2]     IA5String,
+          #        x400Address                     [3]     ORAddress,
+          #        directoryName                   [4]     Name,
+          #        ediPartyName                    [5]     EDIPartyName,
+          #        uniformResourceIdentifier       [6]     IA5String,
+          #        iPAddress                       [7]     OCTET STRING,
+          #        registeredID                    [8]     OBJECT IDENTIFIER }
+          case asn.tag
+          when 1
+            @type = :rfc822Name
+            @value = asn.value
+          when 2
+            @type = :dNSName
+            @value = asn.value
+          when 6
+            @type = :uniformResourceIdentifier
+            @value = asn.value
+          when 7
+            @type = :iPAddress
+            @value = asn.value.bytes.to_a.join(".")
+          else
+            raise R509::R509Error, "Unimplemented GeneralName type found. #{asn.tag} At this time R509 does not support GeneralName types other than rfc822Name, dNSName, uniformResourceIdentifier, and iPAddress"
+          end
+        end
+      end
+
       # object to hold parsed sequences of generalnames
       # these structures are used in SubjectAlternativeName, AuthorityInfoAccess, CrlDistributionPoints, etc
       class GeneralNameHash
@@ -49,6 +81,7 @@ module R509
             :iPAddress => [],
             :registeredID => [] # unimplemented
           }
+          @ordered = []
         end
 
         # @private
@@ -65,14 +98,24 @@ module R509
           #        uniformResourceIdentifier       [6]     IA5String,
           #        iPAddress                       [7]     OCTET STRING,
           #        registeredID                    [8]     OBJECT IDENTIFIER }
-          case asn.tag
-          when 1 then @types[:rfc822Name] << asn.value
-          when 2 then @types[:dNSName] << asn.value
-          when 6 then @types[:uniformResourceIdentifier] << asn.value
-          when 7 then @types[:iPAddress] << asn.value.bytes.to_a.join(".")
-          else
-            raise R509::R509Error, "Unimplemented GeneralName type found. #{asn.tag} At this time R509 does not support GeneralName types other than rfc822Name, dNSName, uniformResourceIdentifier, and iPAddress"
+          gn = R509::Cert::Extensions::GeneralName.new(asn)
+          @ordered << gn
+          case gn.type
+          when :rfc822Name
+            @types[:rfc822Name] << gn.value
+          when :dNSName
+            @types[:dNSName] << gn.value
+          when :uniformResourceIdentifier
+            @types[:uniformResourceIdentifier] << gn.value
+          when :iPAddress
+            @types[:iPAddress] << gn.value
           end
+        end
+
+        # @return [Array] array of hashes of form { :type => "", :value => "" } that preserve the order found
+        #   in the extension
+        def ordered_names
+          @ordered
         end
 
         # @return [Array] Array of rfc822name strings
@@ -429,17 +472,41 @@ module R509
         OID = "subjectAltName"
         Extensions.register_class(self)
 
-        attr_reader :san
-
         # See OpenSSL::X509::Extension#initialize
         def initialize(*args)
           super(*args)
 
           data = R509::Cert::Extensions.get_extension_payload(self)
-          @san = GeneralNameHash.new
+          @hash = GeneralNameHash.new
           data.entries.each do |gn|
-            @san.add_item(gn)
+            @hash.add_item(gn)
           end
+        end
+
+        # @return [Array<String>] DNS names
+        def dns_names
+          @hash.dns_names
+        end
+
+        # @return [Array<String>] IP addresses formatted as dotted quad
+        def ip_addresses
+          @hash.ip_addresses
+        end
+
+        # @return [Array<String>] email addresses
+        def rfc_822_names
+          @hash.rfc_822_names
+        end
+
+        # @return [Array<String>] URIs (not typically found in SAN extensions)
+        def uris
+          @hash.uris
+        end
+
+        # @return [Array] array of hashes of form { :type => "", :value => "" } that preserve the order found
+        #   in the extension
+        def ordered_names
+          @hash.ordered_names
         end
       end
 
