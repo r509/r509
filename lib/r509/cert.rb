@@ -180,7 +180,7 @@ module R509
       if self.subject_alternative_name.nil?
         return []
       else
-        return self.subject_alternative_name.san.dns_names
+        return self.subject_alternative_name.dns_names
       end
     end
 
@@ -356,6 +356,7 @@ module R509
     def key_usage
       return extensions[R509::Cert::Extensions::KeyUsage]
     end
+    alias_method :ku, :key_usage
 
     # Returns this object's ExtendedKeyUsage extension as an R509 extension
     #
@@ -364,6 +365,7 @@ module R509
     def extended_key_usage
       return extensions[R509::Cert::Extensions::ExtendedKeyUsage]
     end
+    alias_method :eku, :extended_key_usage
 
     # Returns this object's SubjectKeyIdentifier extension as an R509 extension
     #
@@ -388,6 +390,8 @@ module R509
     def subject_alternative_name
       return extensions[R509::Cert::Extensions::SubjectAlternativeName]
     end
+    alias_method :san, :subject_alternative_name
+    alias_method :subject_alt_name, :subject_alternative_name
 
     # Returns this object's AuthorityInfoAccess extension as an R509 extension
     #
@@ -396,6 +400,7 @@ module R509
     def authority_info_access
       return extensions[R509::Cert::Extensions::AuthorityInfoAccess]
     end
+    alias_method :aia, :authority_info_access
 
     # Returns this object's CrlDistributionPoints extension as an R509 extension
     #
@@ -404,6 +409,7 @@ module R509
     def crl_distribution_points
       return extensions[R509::Cert::Extensions::CrlDistributionPoints]
     end
+    alias_method :cdp, :crl_distribution_points
 
     # Returns true if the OCSP No Check extension is present
     # (value is irrelevant to this extension)
