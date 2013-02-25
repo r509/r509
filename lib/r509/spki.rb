@@ -7,25 +7,13 @@ module R509
   class Spki
     include R509::IOHelpers
 
-    attr_reader :subject, :spki, :san_names
+    attr_reader :spki
     # @option opts [String,OpenSSL::Netscape::SPKI] :spki the spki you want to parse
-    # @option opts [R509::Subject,Array,OpenSSL::X509::Name] :subject array of subject items
-    # @example [['CN','langui.sh'],['ST','Illinois'],['L','Chicago'],['C','US'],['emailAddress','ca@langui.sh']]
-    # you can also pass OIDs (see tests)
-    # @option opts [Array] :san_names array of SAN names
     def initialize(opts={})
       if not opts.kind_of?(Hash)
         raise ArgumentError, 'Must provide a hash of options'
       end
-      if opts.has_key?(:spki) and not opts.has_key?(:subject)
-        raise ArgumentError, "Must provide both spki and subject"
-      end
-      if opts.has_key?(:san_names) and not opts[:san_names].kind_of?(Array)
-        raise ArgumentError, "if san_names are provided they must be in an Array"
-      end
       @spki = OpenSSL::Netscape::SPKI.new(opts[:spki].sub("SPKAC=",""))
-      @subject = R509::Subject.new(opts[:subject])
-      @san_names = opts[:san_names] || []
     end
 
     # @return [OpenSSL::PKey::RSA] public key
@@ -94,19 +82,10 @@ module R509
     # @return [String] value of the key algorithm. RSA or DSA
     def key_algorithm
       if @spki.public_key.kind_of? OpenSSL::PKey::RSA then
-        'RSA'
+        :rsa
       elsif @spki.public_key.kind_of? OpenSSL::PKey::DSA then
-        'DSA'
+        :dsa
       end
-    end
-
-    # Returns a hash structure you can pass to the Ca
-    # You will want to call this method if you intend to alter the values
-    # and then pass them to the Ca class.
-    #
-    # @return [Hash] :subject and :san_names you can pass to Ca
-    def to_hash
-      { :subject => @subject.dup , :san_names => @san_names.dup }
     end
   end
 end
