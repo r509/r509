@@ -556,7 +556,7 @@ describe R509::Cert::Extensions do
       it "errors as expected" do
         ef = OpenSSL::X509::ExtensionFactory.new
         ext = ef.create_extension("subjectAltName","otherName:1.2.3.4;IA5STRING:Hello World")
-        expect { R509::Cert::Extensions::SubjectAlternativeName.new ext }.to raise_error(R509::R509Error, 'Unimplemented GeneralName type found. 0 At this time R509 does not support GeneralName types other than rfc822Name, dNSName, uniformResourceIdentifier, and iPAddress')
+        expect { R509::Cert::Extensions::SubjectAlternativeName.new ext }.to raise_error(R509::R509Error, 'Unimplemented GeneralName type found. Tag: 0. At this time R509 does not support GeneralName types other than rfc822Name, dNSName, uniformResourceIdentifier, and iPAddress')
       end
     end
     context "with a DNS alternative name only" do

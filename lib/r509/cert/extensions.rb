@@ -1,6 +1,6 @@
 require 'openssl'
+require 'r509/asn1'
 require 'set'
-require 'r509/cert/extensions/cpobjects'
 
 module R509
   class Cert
@@ -18,127 +18,6 @@ module R509
         R509_EXTENSION_CLASSES << r509_ext_class
       end
 
-      # parses the ASN.1 payload and gets the extension data out for further processing
-      # by the subclasses
-      def self.get_extension_payload(ext)
-          asn = OpenSSL::ASN1.decode ext
-          # Our extension object. Here's the structure:
-          #   Extension  ::=  SEQUENCE  {
-          #        extnID      OBJECT IDENTIFIER,
-          #        critical    BOOLEAN DEFAULT FALSE,
-          #        extnValue   OCTET STRING
-          #                    -- contains the DER encoding of an ASN.1 value
-          #                    -- corresponding to the extension type identified
-          #                    -- by extnID
-          #        }
-          OpenSSL::ASN1.decode(asn.entries.last.value).value
-      end
-
-      class GeneralName
-        attr_reader :type, :value
-        def initialize(asn)
-          #   GeneralName ::= CHOICE {
-          #        otherName                       [0]     OtherName,
-          #        rfc822Name                      [1]     IA5String,
-          #        dNSName                         [2]     IA5String,
-          #        x400Address                     [3]     ORAddress,
-          #        directoryName                   [4]     Name,
-          #        ediPartyName                    [5]     EDIPartyName,
-          #        uniformResourceIdentifier       [6]     IA5String,
-          #        iPAddress                       [7]     OCTET STRING,
-          #        registeredID                    [8]     OBJECT IDENTIFIER }
-          case asn.tag
-          when 1
-            @type = :rfc822Name
-            @value = asn.value
-          when 2
-            @type = :dNSName
-            @value = asn.value
-          when 6
-            @type = :uniformResourceIdentifier
-            @value = asn.value
-          when 7
-            @type = :iPAddress
-            @value = asn.value.bytes.to_a.join(".")
-          else
-            raise R509::R509Error, "Unimplemented GeneralName type found. #{asn.tag} At this time R509 does not support GeneralName types other than rfc822Name, dNSName, uniformResourceIdentifier, and iPAddress"
-          end
-        end
-      end
-
-      # object to hold parsed sequences of generalnames
-      # these structures are used in SubjectAlternativeName, AuthorityInfoAccess, CrlDistributionPoints, etc
-      class GeneralNameHash
-        def initialize
-          @types = {
-            :otherName => [], # unimplemented
-            :rfc822Name => [],
-            :dNSName => [],
-            :x400Address => [], # unimplemented
-            :directoryName => [], # unimplemented
-            :ediPartyName => [], # unimplemented
-            :uniformResourceIdentifier => [],
-            :iPAddress => [],
-            :registeredID => [] # unimplemented
-          }
-          @ordered = []
-        end
-
-        # @private
-        # @param [OpenSSL::ASN1::ASN1Data] asn Takes ASN.1 data in for parsing GeneralName structures
-        def add_item(asn)
-          # map general names into our hash of arrays
-          #   GeneralName ::= CHOICE {
-          #        otherName                       [0]     OtherName,
-          #        rfc822Name                      [1]     IA5String,
-          #        dNSName                         [2]     IA5String,
-          #        x400Address                     [3]     ORAddress,
-          #        directoryName                   [4]     Name,
-          #        ediPartyName                    [5]     EDIPartyName,
-          #        uniformResourceIdentifier       [6]     IA5String,
-          #        iPAddress                       [7]     OCTET STRING,
-          #        registeredID                    [8]     OBJECT IDENTIFIER }
-          gn = R509::Cert::Extensions::GeneralName.new(asn)
-          @ordered << gn
-          case gn.type
-          when :rfc822Name
-            @types[:rfc822Name] << gn.value
-          when :dNSName
-            @types[:dNSName] << gn.value
-          when :uniformResourceIdentifier
-            @types[:uniformResourceIdentifier] << gn.value
-          when :iPAddress
-            @types[:iPAddress] << gn.value
-          end
-        end
-
-        # @return [Array] array of hashes of form { :type => "", :value => "" } that preserve the order found
-        #   in the extension
-        def ordered_names
-          @ordered
-        end
-
-        # @return [Array] Array of rfc822name strings
-        def rfc_822_names
-          @types[:rfc822Name]
-        end
-
-        # @return [Array] Array of dnsName strings
-        def dns_names
-          @types[:dNSName]
-        end
-
-        # @return [Array] Array of uri strings
-        def uniform_resource_identifiers
-          @types[:uniformResourceIdentifier]
-        end
-        alias_method :uris, :uniform_resource_identifiers
-
-        # @return [Array] Array of IP address strings
-        def ip_addresses
-          @types[:iPAddress]
-        end
-      end
 
       public
       # Implements the BasicConstraints certificate extension, with methods to
@@ -154,7 +33,7 @@ module R509
         def initialize(*args)
           super(*args)
 
-          data = R509::Cert::Extensions.get_extension_payload(self)
+          data = R509::ASN1.get_extension_payload(self)
           @is_ca = false
           #   BasicConstraints ::= SEQUENCE {
           #        cA                      BOOLEAN DEFAULT FALSE,
@@ -217,7 +96,7 @@ module R509
         def initialize(*args)
           super(*args)
 
-          data = R509::Cert::Extensions.get_extension_payload(self)
+          data = R509::ASN1.get_extension_payload(self)
 
           # There are 9 possible bits, which means we need 2 bytes
           # to represent them all. When the last bit is not set
@@ -351,7 +230,7 @@ module R509
           super(*args)
 
           @allowed_uses = []
-          data = R509::Cert::Extensions.get_extension_payload(self)
+          data = R509::ASN1.get_extension_payload(self)
 
           data.entries.each do |eku|
             #   The following key usage purposes are defined:
@@ -476,8 +355,8 @@ module R509
         def initialize(*args)
           super(*args)
 
-          data = R509::Cert::Extensions.get_extension_payload(self)
-          @hash = GeneralNameHash.new
+          data = R509::ASN1.get_extension_payload(self)
+          @hash = R509::ASN1::GeneralNameHash.new
           data.entries.each do |gn|
             @hash.add_item(gn)
           end
@@ -526,9 +405,9 @@ module R509
         def initialize(*args)
           super(*args)
 
-          data = R509::Cert::Extensions.get_extension_payload(self)
-          @ocsp= GeneralNameHash.new
-          @ca_issuers= GeneralNameHash.new
+          data = R509::ASN1.get_extension_payload(self)
+          @ocsp= R509::ASN1::GeneralNameHash.new
+          @ca_issuers= R509::ASN1::GeneralNameHash.new
           data.entries.each do |access_description|
             #   AccessDescription  ::=  SEQUENCE {
             #           accessMethod          OBJECT IDENTIFIER,
@@ -557,8 +436,8 @@ module R509
         def initialize(*args)
           super(*args)
 
-          @crl= GeneralNameHash.new
-          data = R509::Cert::Extensions.get_extension_payload(self)
+          @crl= R509::ASN1::GeneralNameHash.new
+          data = R509::ASN1.get_extension_payload(self)
           data.entries.each do |distribution_point|
             #   DistributionPoint ::= SEQUENCE {
             #        distributionPoint       [0]     DistributionPointName OPTIONAL,
@@ -600,12 +479,12 @@ module R509
           @policies = []
           super(*args)
 
-          data = R509::Cert::Extensions.get_extension_payload(self)
+          data = R509::ASN1.get_extension_payload(self)
 
           # each element of this sequence should be part of a policy + qualifiers
           #   certificatePolicies ::= SEQUENCE SIZE (1..MAX) OF PolicyInformation
           data.each do |cp|
-            @policies << R509::Cert::Extensions::CPObjects::PolicyInformation.new(cp)
+            @policies << R509::ASN1::PolicyInformation.new(cp)
           end if data.respond_to?(:each)
         end
       end
