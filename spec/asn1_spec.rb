@@ -132,6 +132,11 @@ describe R509::ASN1::GeneralNames do
     gns.names.count.should == 2
     gns.names.uniq.count.should == 1
   end
+
+  it "errors with invalid params to #create_item" do
+    gns = R509::ASN1::GeneralNames.new
+    expect { gns.create_item({}) }.to raise_error(ArgumentError,'Must be a hash with :tag and :value nodes')
+  end
 end
 
 describe R509::ASN1::PolicyInformation do

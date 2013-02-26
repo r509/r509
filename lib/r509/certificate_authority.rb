@@ -70,12 +70,6 @@ module R509::CertificateAuthority
         san_names = R509::ASN1.general_name_parser(san_names)
       end
 
-      if not san_names.nil? and not san_names.respond_to?(:openssl_serialized_names)
-        raise ArgumentError, "When supplying :san you must provide an R509::ASN1::GeneralNames object"
-      end
-
-
-
       if options.has_key?(:csr) and not options[:csr].verify_signature
         raise R509::R509Error, "Certificate request signature is invalid."
       end

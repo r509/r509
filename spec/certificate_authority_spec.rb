@@ -29,6 +29,10 @@ describe R509::CertificateAuthority::Signer do
     spki = OpenSSL::Netscape::SPKI.new(@spki)
     expect { @ca.sign({ :spki => spki, :profile_name => 'server' }) }.to raise_error(ArgumentError, 'You must pass an R509::SPKI object for :spki')
   end
+  it "raise an error if you pass :spki without :subject" do
+    spki = R509::SPKI.new(:spki => @spki)
+    expect { @ca.sign({ :spki => spki, :profile_name => 'server' }) }.to raise_error(ArgumentError, 'You must supply :subject when passing :spki')
+  end
   it "raise an error if you don't pass an R509::CSR in :csr" do
     csr = OpenSSL::X509::Request.new(@csr)
     expect { @ca.sign({ :csr => csr, :profile_name => 'server' }) }.to raise_error(ArgumentError, 'You must pass an R509::CSR object for :csr')
