@@ -12,7 +12,7 @@ module R509
 
     attr_reader :san, :key, :subject, :req, :attributes, :message_digest
     # @option opts [String,OpenSSL::X509::Request] :csr a csr
-    # @option opts [Symbol] :type :rsa/:dsa/:ec
+    # @option opts [Symbol] :type :rsa/:dsa/:ec required if not providing existing :csr. Defaults to :rsa
     # @option opts [String] :curve_name ("secp384r1") Only used if :type is :ec
     # @option opts [Integer] :bit_strength (2048) Only used if :type is :rsa or :dsa
     # @option opts [String] :message_digest Optional digest. sha1, sha224, sha256, sha384, sha512, md5. Defaults to sha1

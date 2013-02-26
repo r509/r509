@@ -25,7 +25,7 @@ module R509::CertificateAuthority
     # @option options :spki [R509::Spki]
     # @option options :profile_name [String] The CA profile you want to use (eg "server in your config)
     # @option options :subject [R509::Subject,OpenSSL::X509::Subject,Array] (optional for R509::Csr, required for R509::Spki)
-    # @option options :san_names [R509::ASN1::GeneralNames] optional
+    # @option options :san_names [Array,R509::ASN1::GeneralNames] optional either an array of names that will be automatically parsed to determine their type, or an explicit R509::ASN1::GeneralNames object
     # @option options :message_digest [String] the message digest to use for this certificate instead of the config's default
     # @option options :serial [String] the serial number you want to issue the certificate with
     # @option options :not_before [Time] the notBefore for the certificate
@@ -64,6 +64,10 @@ module R509::CertificateAuthority
         public_key = options[:spki].public_key
         subject = R509::Subject.new(options[:subject])
         san_names = options[:san_names] # optional
+      end
+
+      if not san_names.nil? and san_names.respond_to?(:each)
+        san_names = R509::ASN1.general_name_parser(san_names)
       end
 
       if not san_names.nil? and not san_names.respond_to?(:openssl_serialized_names)
@@ -128,7 +132,7 @@ module R509::CertificateAuthority
     # @option options :serial [String] the serial number you want to issue the certificate with (defaults to random)
     # @option options :not_before [Time] the notBefore for the certificate (defaults to now)
     # @option options :not_after [Time] the notAfter for the certificate (defaults to 1 year)
-    # @option options :san_names [R509::ASN1::GeneralNames] Optional subject alternative names
+    # @option options :san_names [Array,R509::ASN1::GeneralNames] optional either an array of names that will be automatically parsed to determine their type, or an explicit R509::ASN1::GeneralNames object
     # @return [R509::Cert] the signed cert object
     def selfsign(options)
       if not options.kind_of?(Hash)

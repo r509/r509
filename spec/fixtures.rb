@@ -53,6 +53,8 @@ module TestFixtures
 
   SPKI_DSA = read_fixture('spkac_dsa.txt')
 
+  SPKI_DSA_NO_VERIFY = read_fixture('spkac_dsa_no_verify.txt')
+
   SPKI_EC = read_fixture('spkac_ec.txt')
 
   SPKI_RSA_NEWLINES = read_fixture('spkac_rsa_newlines.txt')

@@ -72,6 +72,47 @@ csr = R509::Csr.new(
 )
 ```
 
+###SPKI/SPKAC
+To generate a 2048-bit RSA SPKI
+
+```ruby
+key = R509::PrivateKey.new(:type => :rsa, :bit_strength => 1024)
+spki = R509::Spki.new(:key => key)
+```
+
+###PrivateKey
+Generate a 1536-bit RSA key
+
+```ruby
+key = R509::PrivateKey.new(:type => :rsa, :bit_strength => 1536)
+```
+
+Encrypt the private key
+
+```ruby
+key = R509::PrivateKey.new(:type => :rsa, :bit_strength => 2048)
+encrypted_pem = key.to_encrypted_pem("aes256","my-password")
+# or write it to disk
+key.write_encrypted_pem("/tmp/path","aes256","my-password")
+```
+
+####Load Hardware Engines in PrivateKey
+
+The engine you want to load must already be available to OpenSSL. How to compile/install OpenSSL engines is outside the scope of this document.
+
+```ruby
+OpenSSL::Engine.load("engine_name")
+engine = OpenSSL::Engine.by_id("engine_name")
+key = R509::PrivateKey(
+  :engine => engine,
+  :key_name => "my_key_name"
+)
+```
+
+You can then use this key for signing.
+
+
+
 ###Cert
 To load an existing certificate
 
@@ -289,34 +330,44 @@ csr = R509::Csr.new(
     ['C','US']
   ]
 )
-data_hash = csr.to_hash
-data_hash[:san_names] = ["sannames.com","domain2.com"]
-data_hash[:subject]["CN"] = "newdomain.com"
-data_hash[:subject]["O"] = "Org 2.0"
+subject = csr.subject.dup
+san_names = ["sannames.com","domain2.com","128.128.128.128"]
+subject.common_name = "newdomain.com"
+subject.organization = "Org 2.0"
 # assume config from yaml load above
 ca = R509::CertificateAuthority::Signer.new(config)
 cert = ca.sign(
   :profile_name => "server",
   :csr => csr,
-  :data_hash => data_hash
+  :subject => subject,
+  :san_names => san_names
 )
 ```
 
-###Load Hardware Engines
-
-The engine you want to load must already be available to OpenSSL. How to compile/install OpenSSL engines is outside the scope of this document.
+Sign an SPKI/SPKAC object
 
 ```ruby
-OpenSSL::Engine.load("engine_name")
-engine = OpenSSL::Engine.by_id("engine_name")
-key = R509::PrivateKey(
-  :engine => engine,
-  :key_name => "my_key_name"
+spki = R509::Spki.new(
+  :type => :rsa,
+  :bit_strength => 2048
 )
+# SPKI objects do not contain subject or san name data so it must be specified
+subject = R509::Subject.new
+subject.CN = "mydomain.com"
+subject.L = "Locality"
+subject.ST = "State"
+subject.C = "US"
+san_names = ["domain2.com","128.128.128.128"]
+# assume config from yaml load above
+ca = R509::CertificateAuthority::Signer.new(config)
+cert = ca.sign(
+  :profile_name => "server",
+  :spki => spki,
+  :subject => subject,
+  :san_names => san_names
+)
+
 ```
-
-You can then use this key for signing.
-
 
 ###OID Mapping
 
@@ -367,7 +418,6 @@ These curves are set via ```:curve_name```. The system defaults to using ```secp
  * sect571r1 -- NIST/SECG curve over a 571 bit binary field
 
 ##Documentation
-
 There is documentation available for every method and class in r509 available via yardoc. If you installed via gem it should be pre-generated in the doc directory. If you cloned this repo, just type ```rake yard``` with the yard gem installed. You will also need the redcarpet and github-markup gems to properly parse the Readme.md. Alternately you can view pre-generated documentation at [r509.org](http://r509.org)
 
 ##Created by...
