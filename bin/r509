@@ -126,8 +126,8 @@ if selfsign > 0
   end
 
   puts cert.subject
-  if not cert.san_names.empty?
-    puts "SAN(s): "+cert.san_names.join(", ")
+  if not cert.san.nil?
+    puts "SAN(s): "+cert.san.names.map { |n| n.value }.join(", ")
   end
 else
   if opts[:keyout].nil?
@@ -143,8 +143,8 @@ else
   end
 
   puts csr.subject
-  if not csr.san_names.empty?
-    puts "SAN(s): "+csr.san_names.join(", ")
+  if not csr.san.nil?
+    puts "SAN(s): "+csr.san.names.map{|n| n.value}.join(", ")
   end
 end
 
