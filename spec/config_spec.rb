@@ -2,21 +2,21 @@ require 'spec_helper'
 require 'r509/config'
 require 'r509/exceptions'
 
-describe R509::Config::CaConfigPool do
+describe R509::Config::CAConfigPool do
   context "defined manually" do
     it "has no configs" do
-      pool = R509::Config::CaConfigPool.new({})
+      pool = R509::Config::CAConfigPool.new({})
 
       pool["first"].should == nil
     end
 
     it "has one config" do
-      config = R509::Config::CaConfig.new(
+      config = R509::Config::CAConfig.new(
         :ca_cert => TestFixtures.test_ca_cert,
-        :profiles => { "first_profile" => R509::Config::CaProfile.new }
+        :profiles => { "first_profile" => R509::Config::CAProfile.new }
       )
 
-      pool = R509::Config::CaConfigPool.new({
+      pool = R509::Config::CAConfigPool.new({
         "first" => config
       })
 
@@ -26,17 +26,17 @@ describe R509::Config::CaConfigPool do
 
   context "all configs" do
     it "no configs" do
-      pool = R509::Config::CaConfigPool.new({})
+      pool = R509::Config::CAConfigPool.new({})
       pool.all.should == []
     end
 
     it "one config" do
-      config = R509::Config::CaConfig.new(
+      config = R509::Config::CAConfig.new(
         :ca_cert => TestFixtures.test_ca_cert,
-        :profiles => { "first_profile" => R509::Config::CaProfile.new }
+        :profiles => { "first_profile" => R509::Config::CAProfile.new }
       )
 
-      pool = R509::Config::CaConfigPool.new({
+      pool = R509::Config::CAConfigPool.new({
         "first" => config
       })
 
@@ -44,16 +44,16 @@ describe R509::Config::CaConfigPool do
     end
 
     it "two configs" do
-      config1 = R509::Config::CaConfig.new(
+      config1 = R509::Config::CAConfig.new(
         :ca_cert => TestFixtures.test_ca_cert,
-        :profiles => { "first_profile" => R509::Config::CaProfile.new }
+        :profiles => { "first_profile" => R509::Config::CAProfile.new }
       )
-      config2 = R509::Config::CaConfig.new(
+      config2 = R509::Config::CAConfig.new(
         :ca_cert => TestFixtures.test_ca_cert,
-        :profiles => { "first_profile" => R509::Config::CaProfile.new }
+        :profiles => { "first_profile" => R509::Config::CAProfile.new }
       )
 
-      pool = R509::Config::CaConfigPool.new({
+      pool = R509::Config::CAConfigPool.new({
         "first" => config1,
         "second" => config2
       })
@@ -66,7 +66,7 @@ describe R509::Config::CaConfigPool do
 
   context "loaded from YAML" do
     it "should load two configs" do
-      pool = R509::Config::CaConfigPool.from_yaml("certificate_authorities", File.read("#{File.dirname(__FILE__)}/fixtures/config_pool_test_minimal.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"})
+      pool = R509::Config::CAConfigPool.from_yaml("certificate_authorities", File.read("#{File.dirname(__FILE__)}/fixtures/config_pool_test_minimal.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"})
 
       pool.names.should include("test_ca", "second_ca")
 
@@ -78,9 +78,9 @@ describe R509::Config::CaConfigPool do
   end
 end
 
-describe R509::Config::CaConfig do
+describe R509::Config::CAConfig do
   before :each do
-    @config = R509::Config::CaConfig.new(
+    @config = R509::Config::CAConfig.new(
       :ca_cert => TestFixtures.test_ca_cert
     )
   end
@@ -104,20 +104,20 @@ describe R509::Config::CaConfig do
   end
 
   it "raises an error if you don't pass :ca_cert" do
-    expect { R509::Config::CaConfig.new(:crl_validity_hours => 2) }.to raise_error ArgumentError, 'Config object requires that you pass :ca_cert'
+    expect { R509::Config::CAConfig.new(:crl_validity_hours => 2) }.to raise_error ArgumentError, 'Config object requires that you pass :ca_cert'
   end
   it "raises an error if :ca_cert is not of type R509::Cert" do
-    expect { R509::Config::CaConfig.new(:ca_cert => 'not a cert, and not right type') }.to raise_error ArgumentError, ':ca_cert must be of type R509::Cert'
+    expect { R509::Config::CAConfig.new(:ca_cert => 'not a cert, and not right type') }.to raise_error ArgumentError, ':ca_cert must be of type R509::Cert'
   end
   it "loads the config even if :ca_cert does not contain a private key" do
-    config = R509::Config::CaConfig.new( :ca_cert => R509::Cert.new( :cert => TestFixtures::TEST_CA_CERT) )
+    config = R509::Config::CAConfig.new( :ca_cert => R509::Cert.new( :cert => TestFixtures::TEST_CA_CERT) )
     config.ca_cert.subject.to_s.should_not be_nil
   end
   it "raises an error if :ocsp_cert that is not R509::Cert" do
-    expect { R509::Config::CaConfig.new(:ca_cert => TestFixtures.test_ca_cert, :ocsp_cert => "not a cert") }.to raise_error ArgumentError, ':ocsp_cert, if provided, must be of type R509::Cert'
+    expect { R509::Config::CAConfig.new(:ca_cert => TestFixtures.test_ca_cert, :ocsp_cert => "not a cert") }.to raise_error ArgumentError, ':ocsp_cert, if provided, must be of type R509::Cert'
   end
   it "raises an error if :ocsp_cert does not contain a private key" do
-    expect { R509::Config::CaConfig.new( :ca_cert => TestFixtures.test_ca_cert, :ocsp_cert => R509::Cert.new( :cert => TestFixtures::TEST_CA_CERT) ) }.to raise_error ArgumentError, ':ocsp_cert must contain a private key, not just a certificate'
+    expect { R509::Config::CAConfig.new( :ca_cert => TestFixtures.test_ca_cert, :ocsp_cert => R509::Cert.new( :cert => TestFixtures::TEST_CA_CERT) ) }.to raise_error ArgumentError, ':ocsp_cert must contain a private key, not just a certificate'
   end
   it "returns the correct cert object on #ocsp_cert if none is specified" do
     @config.ocsp_cert.should == @config.ca_cert
@@ -127,32 +127,32 @@ describe R509::Config::CaConfig do
       :cert => TestFixtures::TEST_CA_OCSP_CERT,
       :key => TestFixtures::TEST_CA_OCSP_KEY
     )
-    config = R509::Config::CaConfig.new(
+    config = R509::Config::CAConfig.new(
       :ca_cert => TestFixtures.test_ca_cert,
       :ocsp_cert => ocsp_cert
     )
 
     config.ocsp_cert.should == ocsp_cert
   end
-  it "fails to specify a non-Config::CaProfile as the profile" do
-    config = R509::Config::CaConfig.new(
+  it "fails to specify a non-Config::CAProfile as the profile" do
+    config = R509::Config::CAConfig.new(
       :ca_cert => TestFixtures.test_ca_cert
     )
 
-    expect{ config.set_profile("bogus", "not a Config::CaProfile")}.to raise_error TypeError
+    expect{ config.set_profile("bogus", "not a Config::CAProfile")}.to raise_error TypeError
   end
 
-  it "shouldn't let you specify a profile that's not a Config::CaProfile, on instantiation" do
-    expect{ R509::Config::CaConfig.new(
+  it "shouldn't let you specify a profile that's not a Config::CAProfile, on instantiation" do
+    expect{ R509::Config::CAConfig.new(
       :ca_cert => TestFixtures.test_ca_cert,
-      :profiles => { "first_profile" => "not a Config::CaProfile" }
+      :profiles => { "first_profile" => "not a Config::CAProfile" }
     ) }.to raise_error TypeError
   end
 
   it "can specify a single profile" do
-    first_profile = R509::Config::CaProfile.new
+    first_profile = R509::Config::CAProfile.new
 
-    config = R509::Config::CaConfig.new(
+    config = R509::Config::CAConfig.new(
       :ca_cert => TestFixtures.test_ca_cert,
       :profiles => { "first_profile" => first_profile }
     )
@@ -161,9 +161,9 @@ describe R509::Config::CaConfig do
   end
 
   it "raises an error if you specify an invalid profile" do
-    first_profile = R509::Config::CaProfile.new
+    first_profile = R509::Config::CAProfile.new
 
-    config = R509::Config::CaConfig.new(
+    config = R509::Config::CAConfig.new(
       :ca_cert => TestFixtures.test_ca_cert,
       :profiles => { "first_profile" => first_profile }
     )
@@ -172,7 +172,7 @@ describe R509::Config::CaConfig do
   end
 
   it "should load YAML" do
-    config = R509::Config::CaConfig.from_yaml("test_ca", File.read("#{File.dirname(__FILE__)}/fixtures/config_test.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"})
+    config = R509::Config::CAConfig.from_yaml("test_ca", File.read("#{File.dirname(__FILE__)}/fixtures/config_test.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"})
     config.crl_validity_hours.should == 72
     config.ocsp_validity_hours.should == 96
     config.message_digest.should == "SHA1"
@@ -180,60 +180,60 @@ describe R509::Config::CaConfig do
     config.profile("ocsp_delegate_with_no_check").ocsp_no_check.should == true
   end
   it "loads OCSP cert/key from yaml" do
-    config = R509::Config::CaConfig.from_yaml("ocsp_delegate_ca", File.read("#{File.dirname(__FILE__)}/fixtures/config_test_various.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"})
+    config = R509::Config::CAConfig.from_yaml("ocsp_delegate_ca", File.read("#{File.dirname(__FILE__)}/fixtures/config_test_various.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"})
     config.ocsp_cert.has_private_key?.should == true
     config.ocsp_cert.subject.to_s.should == "/C=US/ST=Illinois/L=Chicago/O=r509 LLC/CN=r509 OCSP Signer"
   end
   it "loads OCSP pkcs12 from yaml" do
-    config = R509::Config::CaConfig.from_yaml("ocsp_pkcs12_ca", File.read("#{File.dirname(__FILE__)}/fixtures/config_test_various.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"})
+    config = R509::Config::CAConfig.from_yaml("ocsp_pkcs12_ca", File.read("#{File.dirname(__FILE__)}/fixtures/config_test_various.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"})
     config.ocsp_cert.has_private_key?.should == true
     config.ocsp_cert.subject.to_s.should == "/C=US/ST=Illinois/L=Chicago/O=r509 LLC/CN=r509 OCSP Signer"
   end
   it "loads OCSP cert/key in engine from yaml" do
     #most of this code path is tested by loading ca_cert engine.
     #look there for the extensive doubling
-    expect { R509::Config::CaConfig.from_yaml("ocsp_engine_ca", File.read("#{File.dirname(__FILE__)}/fixtures/config_test_various.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"}) }.to raise_error(R509::R509Error,"You must supply a key_name with an engine")
+    expect { R509::Config::CAConfig.from_yaml("ocsp_engine_ca", File.read("#{File.dirname(__FILE__)}/fixtures/config_test_various.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"}) }.to raise_error(R509::R509Error,"You must supply a key_name with an engine")
   end
   it "loads OCSP chain from yaml" do
-    config = R509::Config::CaConfig.from_yaml("ocsp_chain_ca", File.read("#{File.dirname(__FILE__)}/fixtures/config_test_various.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"})
+    config = R509::Config::CAConfig.from_yaml("ocsp_chain_ca", File.read("#{File.dirname(__FILE__)}/fixtures/config_test_various.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"})
     config.ocsp_chain.size.should == 2
     config.ocsp_chain[0].kind_of?(OpenSSL::X509::Certificate).should == true
     config.ocsp_chain[1].kind_of?(OpenSSL::X509::Certificate).should == true
   end
   it "should load subject_item_policy from yaml (if present)" do
-    config = R509::Config::CaConfig.from_yaml("test_ca", File.read("#{File.dirname(__FILE__)}/fixtures/config_test.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"})
+    config = R509::Config::CAConfig.from_yaml("test_ca", File.read("#{File.dirname(__FILE__)}/fixtures/config_test.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"})
     config.profile("server").subject_item_policy.should be_nil
     config.profile("server_with_subject_item_policy").subject_item_policy.optional.should include("O","OU")
     config.profile("server_with_subject_item_policy").subject_item_policy.required.should include("CN","ST","C")
   end
 
   it "should load YAML which only has a CA Cert and Key defined" do
-    config = R509::Config::CaConfig.from_yaml("test_ca", File.read("#{File.dirname(__FILE__)}/fixtures/config_test_minimal.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"})
+    config = R509::Config::CAConfig.from_yaml("test_ca", File.read("#{File.dirname(__FILE__)}/fixtures/config_test_minimal.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"})
     config.num_profiles.should == 0
   end
 
   it "should load YAML which has CA cert and key with password" do
-    expect { R509::Config::CaConfig.from_yaml("password_ca", File.read("#{File.dirname(__FILE__)}/fixtures/config_test_password.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"}) }.to_not raise_error
+    expect { R509::Config::CAConfig.from_yaml("password_ca", File.read("#{File.dirname(__FILE__)}/fixtures/config_test_password.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"}) }.to_not raise_error
   end
 
   it "should load YAML which has a PKCS12 with password" do
-    expect { R509::Config::CaConfig.from_yaml("pkcs12_ca", File.read("#{File.dirname(__FILE__)}/fixtures/config_test_various.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"}) }.to_not raise_error
+    expect { R509::Config::CAConfig.from_yaml("pkcs12_ca", File.read("#{File.dirname(__FILE__)}/fixtures/config_test_various.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"}) }.to_not raise_error
   end
 
   it "raises error on YAML with pkcs12 and key" do
-    expect { R509::Config::CaConfig.from_yaml("pkcs12_key_ca", File.read("#{File.dirname(__FILE__)}/fixtures/config_test_various.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"}) }.to raise_error(R509::R509Error, "You can't specify both pkcs12 and key")
+    expect { R509::Config::CAConfig.from_yaml("pkcs12_key_ca", File.read("#{File.dirname(__FILE__)}/fixtures/config_test_various.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"}) }.to raise_error(R509::R509Error, "You can't specify both pkcs12 and key")
   end
 
   it "raises error on YAML with pkcs12 and cert" do
-    expect { R509::Config::CaConfig.from_yaml("pkcs12_cert_ca", File.read("#{File.dirname(__FILE__)}/fixtures/config_test_various.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"}) }.to raise_error(R509::R509Error, "You can't specify both pkcs12 and cert")
+    expect { R509::Config::CAConfig.from_yaml("pkcs12_cert_ca", File.read("#{File.dirname(__FILE__)}/fixtures/config_test_various.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"}) }.to raise_error(R509::R509Error, "You can't specify both pkcs12 and cert")
   end
 
   it "raises error on YAML with pkcs12 and engine" do
-    expect { R509::Config::CaConfig.from_yaml("pkcs12_engine_ca", File.read("#{File.dirname(__FILE__)}/fixtures/config_test_various.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"}) }.to raise_error(R509::R509Error, "You can't specify both engine and pkcs12")
+    expect { R509::Config::CAConfig.from_yaml("pkcs12_engine_ca", File.read("#{File.dirname(__FILE__)}/fixtures/config_test_various.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"}) }.to raise_error(R509::R509Error, "You can't specify both engine and pkcs12")
   end
 
   it "loads config with cert and no key (useful in certain cases)" do
-    config = R509::Config::CaConfig.from_yaml("cert_no_key_ca", File.read("#{File.dirname(__FILE__)}/fixtures/config_test_various.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"})
+    config = R509::Config::CAConfig.from_yaml("cert_no_key_ca", File.read("#{File.dirname(__FILE__)}/fixtures/config_test_various.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"})
     config.ca_cert.subject.to_s.should_not be_nil
   end
 
@@ -259,38 +259,38 @@ describe R509::Config::CaConfig do
     faux_key.should_receive(:public_key).and_return(public_key)
     engine.should_receive(:load_private_key).twice.with("r509_key").and_return(faux_key)
 
-    config = R509::Config::CaConfig.load_from_hash(conf)
+    config = R509::Config::CAConfig.load_from_hash(conf)
   end
 
   it "should fail if YAML for ca_cert contains engine and key" do
-    expect { R509::Config::CaConfig.from_yaml("engine_and_key", File.read("#{File.dirname(__FILE__)}/fixtures/config_test_engine_key.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"}) }.to raise_error(R509::R509Error, "You can't specify both key and engine")
+    expect { R509::Config::CAConfig.from_yaml("engine_and_key", File.read("#{File.dirname(__FILE__)}/fixtures/config_test_engine_key.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"}) }.to raise_error(R509::R509Error, "You can't specify both key and engine")
   end
 
   it "should fail if YAML for ca_cert contains engine but no key_name" do
-    expect { R509::Config::CaConfig.from_yaml("engine_no_key_name", File.read("#{File.dirname(__FILE__)}/fixtures/config_test_engine_no_key_name.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"}) }.to raise_error(R509::R509Error, 'You must supply a key_name with an engine')
+    expect { R509::Config::CAConfig.from_yaml("engine_no_key_name", File.read("#{File.dirname(__FILE__)}/fixtures/config_test_engine_no_key_name.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"}) }.to raise_error(R509::R509Error, 'You must supply a key_name with an engine')
   end
 
   it "should fail if YAML config is null" do
-    expect{ R509::Config::CaConfig.from_yaml("no_config_here", File.read("#{File.dirname(__FILE__)}/fixtures/config_test.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"}) }.to raise_error(ArgumentError)
+    expect{ R509::Config::CAConfig.from_yaml("no_config_here", File.read("#{File.dirname(__FILE__)}/fixtures/config_test.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"}) }.to raise_error(ArgumentError)
   end
 
   it "should fail if YAML config isn't a hash" do
-    expect{ R509::Config::CaConfig.from_yaml("config_is_string", File.read("#{File.dirname(__FILE__)}/fixtures/config_test.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"}) }.to raise_error(ArgumentError)
+    expect{ R509::Config::CAConfig.from_yaml("config_is_string", File.read("#{File.dirname(__FILE__)}/fixtures/config_test.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"}) }.to raise_error(ArgumentError)
   end
 
   it "should fail if YAML config doesn't give a root CA directory that's a directory" do
-    expect{ R509::Config::CaConfig.from_yaml("test_ca", File.read("#{File.dirname(__FILE__)}/fixtures/config_test.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures/no_directory_here"}) }.to raise_error(R509::R509Error)
+    expect{ R509::Config::CAConfig.from_yaml("test_ca", File.read("#{File.dirname(__FILE__)}/fixtures/config_test.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures/no_directory_here"}) }.to raise_error(R509::R509Error)
   end
 
   it "should load YAML from filename" do
-    config = R509::Config::CaConfig.load_yaml("test_ca", "#{File.dirname(__FILE__)}/fixtures/config_test.yaml", {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"})
+    config = R509::Config::CAConfig.load_yaml("test_ca", "#{File.dirname(__FILE__)}/fixtures/config_test.yaml", {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"})
     config.crl_validity_hours.should == 72
     config.ocsp_validity_hours.should == 96
     config.message_digest.should == "SHA1"
   end
 
   it "can specify crl_number_file" do
-    config = R509::Config::CaConfig.new(
+    config = R509::Config::CAConfig.new(
       :ca_cert => TestFixtures.test_ca_cert,
       :crl_number_file => "crl_number_file.txt"
     )
@@ -298,7 +298,7 @@ describe R509::Config::CaConfig do
   end
 
   it "can specify crl_list_file" do
-    config = R509::Config::CaConfig.new(
+    config = R509::Config::CAConfig.new(
       :ca_cert => TestFixtures.test_ca_cert,
       :crl_list_file => "crl_list_file.txt"
     )
@@ -355,57 +355,57 @@ describe R509::Config::SubjectItemPolicy do
   end
 end
 
-describe R509::Config::CaProfile do
+describe R509::Config::CAProfile do
   context "validate certificate policy structure" do
     it "must be an array" do
-      expect { R509::Config::CaProfile.new(:certificate_policies => "whatever") }.to raise_error(R509::R509Error,'Not a valid certificate policy structure. Must be an array of hashes')
+      expect { R509::Config::CAProfile.new(:certificate_policies => "whatever") }.to raise_error(R509::R509Error,'Not a valid certificate policy structure. Must be an array of hashes')
     end
     it "require a policy identifier" do
-      expect { R509::Config::CaProfile.new(:certificate_policies => [{"stuff" => "thing"}]) }.to raise_error(R509::R509Error,'Each policy requires a policy identifier')
+      expect { R509::Config::CAProfile.new(:certificate_policies => [{"stuff" => "thing"}]) }.to raise_error(R509::R509Error,'Each policy requires a policy identifier')
     end
     it "the cps uri must be array of strings" do
-      expect { R509::Config::CaProfile.new(:certificate_policies => [{"policy_identifier" => "1.2.3.4.5", "cps_uris" => "not an array"}]) }.to raise_error(R509::R509Error,'CPS URIs must be an array of strings')
+      expect { R509::Config::CAProfile.new(:certificate_policies => [{"policy_identifier" => "1.2.3.4.5", "cps_uris" => "not an array"}]) }.to raise_error(R509::R509Error,'CPS URIs must be an array of strings')
     end
     it "user notices must be an array of hashes" do
-      expect { R509::Config::CaProfile.new(:certificate_policies => [{"policy_identifier" => "1.2.3.4.5", "user_notices" => "not an array"}]) }.to raise_error(R509::R509Error,'User notices must be an array of hashes')
+      expect { R509::Config::CAProfile.new(:certificate_policies => [{"policy_identifier" => "1.2.3.4.5", "user_notices" => "not an array"}]) }.to raise_error(R509::R509Error,'User notices must be an array of hashes')
     end
     it "org in user notice requires notice numbers" do
-      expect { R509::Config::CaProfile.new(:certificate_policies => [{"policy_identifier" => "1.2.3.4.5", "user_notices" => [{"explicit_text" => "explicit", "organization" => "something"}]}]) }.to raise_error(R509::R509Error,'If you provide an organization you must provide notice numbers')
+      expect { R509::Config::CAProfile.new(:certificate_policies => [{"policy_identifier" => "1.2.3.4.5", "user_notices" => [{"explicit_text" => "explicit", "organization" => "something"}]}]) }.to raise_error(R509::R509Error,'If you provide an organization you must provide notice numbers')
     end
     it "notice numbers in user notice requires org" do
-      expect { R509::Config::CaProfile.new(:certificate_policies => [{"policy_identifier" => "1.2.3.4.5", "user_notices" => [{"explicit_text" => "explicit", "notice_numbers" => "1,2,3"}]}]) }.to raise_error(R509::R509Error,'If you provide notice numbers you must provide an organization')
+      expect { R509::Config::CAProfile.new(:certificate_policies => [{"policy_identifier" => "1.2.3.4.5", "user_notices" => [{"explicit_text" => "explicit", "notice_numbers" => "1,2,3"}]}]) }.to raise_error(R509::R509Error,'If you provide notice numbers you must provide an organization')
     end
   end
   context "validate basic constraints structure" do
     it "must be a hash with key \"ca\"" do
-      expect { R509::Config::CaProfile.new(:basic_constraints => 'string') }.to raise_error(R509::R509Error, "You must supply a hash with a key named \"ca\" with a boolean value")
-      expect { R509::Config::CaProfile.new(:basic_constraints => {}) }.to raise_error(R509::R509Error, "You must supply a hash with a key named \"ca\" with a boolean value")
+      expect { R509::Config::CAProfile.new(:basic_constraints => 'string') }.to raise_error(R509::R509Error, "You must supply a hash with a key named \"ca\" with a boolean value")
+      expect { R509::Config::CAProfile.new(:basic_constraints => {}) }.to raise_error(R509::R509Error, "You must supply a hash with a key named \"ca\" with a boolean value")
     end
     it "must have true or false for the ca key value" do
-      expect { R509::Config::CaProfile.new(:basic_constraints => {"ca" => 'truestring'}) }.to raise_error(R509::R509Error, "You must supply true/false for the ca key when specifying basic constraints")
+      expect { R509::Config::CAProfile.new(:basic_constraints => {"ca" => 'truestring'}) }.to raise_error(R509::R509Error, "You must supply true/false for the ca key when specifying basic constraints")
     end
     it "must not pass a path_length if ca is false" do
-      expect { R509::Config::CaProfile.new(:basic_constraints => {"ca" => false, "path_length" => 5}) }.to raise_error(R509::R509Error, "path_length is not allowed when ca is false")
+      expect { R509::Config::CAProfile.new(:basic_constraints => {"ca" => false, "path_length" => 5}) }.to raise_error(R509::R509Error, "path_length is not allowed when ca is false")
     end
     it "must pass a non-negative integer to path_length" do
-      expect { R509::Config::CaProfile.new(:basic_constraints => {"ca" => true, "path_length" => -1.5}) }.to raise_error(R509::R509Error, "Path length must be a non-negative integer (>= 0)")
-      expect { R509::Config::CaProfile.new(:basic_constraints => {"ca" => true, "path_length" => 1.5}) }.to raise_error(R509::R509Error, "Path length must be a non-negative integer (>= 0)")
+      expect { R509::Config::CAProfile.new(:basic_constraints => {"ca" => true, "path_length" => -1.5}) }.to raise_error(R509::R509Error, "Path length must be a non-negative integer (>= 0)")
+      expect { R509::Config::CAProfile.new(:basic_constraints => {"ca" => true, "path_length" => 1.5}) }.to raise_error(R509::R509Error, "Path length must be a non-negative integer (>= 0)")
     end
     it "does not require a path_length when ca is true" do
-      ca_profile = R509::Config::CaProfile.new(:basic_constraints => {"ca" => true})
+      ca_profile = R509::Config::CAProfile.new(:basic_constraints => {"ca" => true})
       ca_profile.basic_constraints.should == {"ca" => true }
     end
     it "allows ca:false" do
-      ca_profile = R509::Config::CaProfile.new(:basic_constraints => {"ca" => false})
+      ca_profile = R509::Config::CAProfile.new(:basic_constraints => {"ca" => false})
       ca_profile.basic_constraints.should == {"ca" => false }
     end
     it "allows ca:true and a valid path length" do
-      ca_profile = R509::Config::CaProfile.new(:basic_constraints => {"ca" => true, "path_length" => 2})
+      ca_profile = R509::Config::CAProfile.new(:basic_constraints => {"ca" => true, "path_length" => 2})
       ca_profile.basic_constraints.should == {"ca" => true, "path_length" => 2 }
     end
   end
   it "initializes and stores the options provided" do
-    profile = R509::Config::CaProfile.new(
+    profile = R509::Config::CAProfile.new(
       :basic_constraints => {"ca" => true},
       :key_usage => ["digitalSignature"],
       :extended_key_usage => ["serverAuth"],
@@ -424,7 +424,7 @@ describe R509::Config::CaProfile do
     profile.ocsp_no_check.should == true
   end
   it "initializes with expected defaults" do
-    profile = R509::Config::CaProfile.new
+    profile = R509::Config::CAProfile.new
     profile.basic_constraints.should == nil
     profile.key_usage.should == nil
     profile.extended_key_usage.should == nil
@@ -433,10 +433,10 @@ describe R509::Config::CaProfile do
     profile.subject_item_policy.should == nil
   end
   it "raises an error with an invalid subject_item_policy" do
-    expect { R509::Config::CaProfile.new( :subject_item_policy => "lenient!" ) }.to raise_error(R509::R509Error,'subject_item_policy must be of type R509::Config::SubjectItemPolicy')
+    expect { R509::Config::CAProfile.new( :subject_item_policy => "lenient!" ) }.to raise_error(R509::R509Error,'subject_item_policy must be of type R509::Config::SubjectItemPolicy')
   end
   it "loads profiles from YAML while setting expected defaults" do
-    config = R509::Config::CaConfig.from_yaml("test_ca", File.read("#{File.dirname(__FILE__)}/fixtures/config_test.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"})
+    config = R509::Config::CAConfig.from_yaml("test_ca", File.read("#{File.dirname(__FILE__)}/fixtures/config_test.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"})
     server_profile = config.profile("server") # no ocsp_no_check node
     server_profile.ocsp_no_check.should == false
     ocsp_profile = config.profile("ocsp_delegate_with_no_check") # ocsp_no_check => true

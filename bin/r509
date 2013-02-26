@@ -74,7 +74,7 @@ if opts[:interactive] == true or opts[:subject].nil? then
   print "SAN Domains (comma separated):"
   san_domains = []
   san_domains = gets.chomp.split(',').collect { |domain| domain.strip }
-  csr = R509::Csr.new(
+  csr = R509::CSR.new(
     :subject => subject,
     :bit_strength => bit_strength,
     :type => opts[:type].downcase.to_sym,
@@ -97,7 +97,7 @@ elsif not opts[:subject].nil?
       subject.add_entry(value[0],value[1])
     end
   }
-  csr = R509::Csr.new(
+  csr = R509::CSR.new(
     :subject => subject,
     :bit_strength => opts[:bits],
     :type => opts[:type].downcase.to_sym,

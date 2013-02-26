@@ -10,11 +10,11 @@ module R509
   #   subject = R509::Subject.new([['CN','test.test'],['O','r509 LLC']])
   # @example
   #   # you can also use the friendly getter/setters with custom OIDs
-  #   R509::OidMapper.register("1.2.3.4.5.6.7.8","COI","customOid")
+  #   R509::OIDMapper.register("1.2.3.4.5.6.7.8","COI","customOID")
   #   subject = R509::Subject.new
   #   subject.COI="test"
   #   # or
-  #   subject.customOid="test"
+  #   subject.customOID="test"
   #   # or
   #   subject.custom_oid="test"
   class Subject
@@ -111,7 +111,7 @@ module R509
     # Try to build methods for getting/setting various subject attributes
     # dynamically. this will also cache methods that get built via instance_eval.
     # This code will also allow you to set subject items for custom oids
-    # defined via R509::OidMapper
+    # defined via R509::OIDMapper
     #
     def method_missing(method_sym, *args, &block)
       if method_sym.to_s =~ /(.*)=$/

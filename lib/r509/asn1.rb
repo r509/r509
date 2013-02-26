@@ -105,7 +105,7 @@ module R509
     end
 
     # object to hold parsed sequences of generalnames
-    # these structures are used in SubjectAlternativeName, AuthorityInfoAccess, CrlDistributionPoints, etc
+    # these structures are used in SubjectAlternativeName, AuthorityInfoAccess, CRLDistributionPoints, etc
     class GeneralNames
       def initialize
         @types = {

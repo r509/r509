@@ -3,15 +3,15 @@ require 'openssl'
 require 'r509/exceptions'
 require 'r509/io_helpers'
 require 'r509/subject'
-require 'r509/privatekey'
+require 'r509/private_key'
 require 'fileutils'
 require 'pathname'
 
 module R509
-  # Module to contain all configuration related classes (e.g. CaConfig, CaProfile, SubjectItemPolicy)
+  # Module to contain all configuration related classes (e.g. CAConfig, CAProfile, SubjectItemPolicy)
   module Config
     # Provides access to configuration profiles
-    class CaProfile
+    class CAProfile
       attr_reader :basic_constraints, :key_usage, :extended_key_usage,
         :certificate_policies, :subject_item_policy, :ocsp_no_check
 
@@ -148,8 +148,8 @@ module R509
     end
 
     # pool of configs, so we can support multiple CAs from a single config file
-    class CaConfigPool
-      # @option configs [Hash<String, R509::Config::CaConfig>] the configs to add to the pool
+    class CAConfigPool
+      # @option configs [Hash<String, R509::Config::CAConfig>] the configs to add to the pool
       def initialize(configs)
         @configs = configs
       end
@@ -177,14 +177,14 @@ module R509
         conf = YAML.load(yaml_data)
         configs = {}
         conf[name].each_pair do |ca_name, data|
-          configs[ca_name] = R509::Config::CaConfig.load_from_hash(data, opts)
+          configs[ca_name] = R509::Config::CAConfig.load_from_hash(data, opts)
         end
-        R509::Config::CaConfigPool.new(configs)
+        R509::Config::CAConfigPool.new(configs)
       end
     end
 
     # Stores a configuration for our CA.
-    class CaConfig
+    class CAConfig
       include R509::IOHelpers
       extend R509::IOHelpers
       attr_accessor :ca_cert, :crl_validity_hours, :message_digest,
@@ -195,7 +195,7 @@ module R509
       # @option opts [R509::Cert] :ca_cert Cert+Key pair
       # @option opts [Integer] :crl_validity_hours (168) The number of hours that
       #  a CRL will be valid. Defaults to 7 days.
-      # @option opts [Hash<String, R509::Config::CaProfile>] :profiles
+      # @option opts [Hash<String, R509::Config::CAProfile>] :profiles
       # @option opts [String] :message_digest (SHA1) The hashing algorithm to use.
       # @option opts [Array] :cdp_location array of strings (URLs)
       # @option opts [Array] :ocsp_location array of strings (URLs)
@@ -258,16 +258,16 @@ module R509
       end
 
       # @param [String] name The name of the profile
-      # @param [R509::Config::CaProfile] prof The profile configuration
+      # @param [R509::Config::CAProfile] prof The profile configuration
       def set_profile(name, prof)
-        unless prof.is_a?(R509::Config::CaProfile)
-          raise TypeError, "profile is supposed to be a R509::Config::CaProfile"
+        unless prof.is_a?(R509::Config::CAProfile)
+          raise TypeError, "profile is supposed to be a R509::Config::CAProfile"
         end
         @profiles[name] = prof
       end
 
       # @param [String] prof
-      # @return [R509::Config::CaProfile] The config profile.
+      # @return [R509::Config::CAProfile] The config profile.
       def profile(prof)
         if !@profiles.has_key?(prof)
           raise R509::R509Error, "unknown profile '#{prof}'"
@@ -367,7 +367,7 @@ module R509
           if not data["subject_item_policy"].nil?
             subject_item_policy = R509::Config::SubjectItemPolicy.new(data["subject_item_policy"])
           end
-          profs[profile] = R509::Config::CaProfile.new(:key_usage => data["key_usage"],
+          profs[profile] = R509::Config::CAProfile.new(:key_usage => data["key_usage"],
                              :extended_key_usage => data["extended_key_usage"],
                              :basic_constraints => data["basic_constraints"],
                              :certificate_policies => data["certificate_policies"],

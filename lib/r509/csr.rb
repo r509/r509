@@ -1,13 +1,13 @@
 require 'openssl'
 require 'r509/exceptions'
 require 'r509/io_helpers'
-require 'r509/privatekey'
+require 'r509/private_key'
 require 'r509/ec-hack'
 require 'r509/asn1'
 
 module R509
   # The primary certificate signing request object
-  class Csr
+  class CSR
     include R509::IOHelpers
 
     attr_reader :san, :key, :subject, :req, :attributes, :message_digest
@@ -94,9 +94,9 @@ module R509
     # Helper method to quickly load a CSR from the filesystem
     #
     # @param [String] filename Path to file you want to load
-    # @return [R509::Csr] Csr object
+    # @return [R509::CSR] CSR object
     def self.load_from_file( filename )
-      return R509::Csr.new(:csr => IOHelpers.read_data(filename) )
+      return R509::CSR.new(:csr => IOHelpers.read_data(filename) )
     end
 
     # @return [OpenSSL::PKey::RSA,OpenSSL::PKey::DSA,OpenSSL::PKey::EC] public key

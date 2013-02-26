@@ -300,7 +300,7 @@ module R509
     # check to verify that the CRL you're checking is signed by the same CA as the cert
     # so do that check yourself
     #
-    # @param [R509::Crl::SignedList] r509_crl A CRL from the CA that issued this certificate.
+    # @param [R509::CRL::SignedList] r509_crl A CRL from the CA that issued this certificate.
     def is_revoked_by_crl?( r509_crl )
       return r509_crl.revoked?( self.serial )
     end
@@ -393,12 +393,12 @@ module R509
     end
     alias_method :aia, :authority_info_access
 
-    # Returns this object's CrlDistributionPoints extension as an R509 extension
+    # Returns this object's CRLDistributionPoints extension as an R509 extension
     #
-    # @return [R509::Cert::Extensions::CrlDistributionPoints] The object, or nil
-    # if this cert does not have a CrlDistributionPoints extension.
+    # @return [R509::Cert::Extensions::CRLDistributionPoints] The object, or nil
+    # if this cert does not have a CRLDistributionPoints extension.
     def crl_distribution_points
-      return extensions[R509::Cert::Extensions::CrlDistributionPoints]
+      return extensions[R509::Cert::Extensions::CRLDistributionPoints]
     end
     alias_method :cdp, :crl_distribution_points
 

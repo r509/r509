@@ -2,25 +2,25 @@ require 'openssl'
 require 'r509/exceptions'
 require 'r509/config'
 
-#Ocsp module
-module R509::Ocsp
+#OCSP module
+module R509::OCSP
 
   #builds OCSP responses
   class Response
     # @param ocsp_response [OpenSSL::OCSP::Response]
     def initialize(ocsp_response)
       if not ocsp_response.kind_of?(OpenSSL::OCSP::Response)
-        raise R509::R509Error, 'You must pass an OpenSSL::OCSP::Response object to the constructor. See R509::Ocsp::Response.parse if you are trying to parse'
+        raise R509::R509Error, 'You must pass an OpenSSL::OCSP::Response object to the constructor. See R509::OCSP::Response.parse if you are trying to parse'
       end
       @ocsp_response = ocsp_response
     end
     # @param [String,OpenSSL::OCSP::Response] ocsp_string parses an existing response
-    # @return [R509::Ocsp::Response]
+    # @return [R509::OCSP::Response]
     def self.parse(ocsp_string)
       if ocsp_string.nil?
         raise R509::R509Error, 'You must pass a DER encoded OCSP response to this method'
       end
-      R509::Ocsp::Response.new(OpenSSL::OCSP::Response.new(ocsp_string))
+      R509::OCSP::Response.new(OpenSSL::OCSP::Response.new(ocsp_string))
     end
 
     # @return [OpenSSL::OCSP] response status of this response
@@ -63,7 +63,7 @@ module R509::Ocsp
     end
 
     # @param [OpenSSL::OCSP::Request] ocsp_request the OCSP request whose nonce to check
-    # @return [R509::Ocsp::Request::Nonce::CONSTANT] the status code of the nonce check
+    # @return [R509::OCSP::Request::Nonce::CONSTANT] the status code of the nonce check
     def check_nonce(ocsp_request)
       ocsp_request.check_nonce(@ocsp_response.basic)
     end

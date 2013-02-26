@@ -24,7 +24,7 @@ Inside the gem there is a binary named ```r509```. Type ```r509 -h``` to see a l
 To generate a 2048-bit RSA CSR
 
 ```ruby
-csr = R509::Csr.new(
+csr = R509::CSR.new(
   :subject => [
     ['CN','somedomain.com'],
     ['O','My Org'],
@@ -44,29 +44,29 @@ subject.O="My Org"
 subject.L="City"
 subject.ST="State"
 subject.C="US"
-csr = R509::Csr.new( :subject => subject )
+csr = R509::CSR.new( :subject => subject )
 ```
 
 To load an existing CSR (without private key)
 
 ```ruby
 csr_pem = File.read("/path/to/csr")
-csr = R509::Csr.new(:csr => csr_pem)
+csr = R509::CSR.new(:csr => csr_pem)
 # or
-csr = R509::Csr.load_from_file("/path/to/csr")
+csr = R509::CSR.load_from_file("/path/to/csr")
 ```
 
 To create a new CSR from the subject of a certificate
 
 ```ruby
 cert_pem = File.read("/path/to/cert")
-csr = R509::Csr.new(:cert => cert_pem)
+csr = R509::CSR.new(:cert => cert_pem)
 ```
 
 To create a CSR with SAN names
 
 ```ruby
-csr = R509::Csr.new(
+csr = R509::CSR.new(
   :subject => [['CN','something.com']],
   :san_names => ["something2.com","something3.com"]
 )
@@ -77,7 +77,7 @@ To generate a 2048-bit RSA SPKI
 
 ```ruby
 key = R509::PrivateKey.new(:type => :rsa, :bit_strength => 1024)
-spki = R509::Spki.new(:key => key)
+spki = R509::SPKI.new(:key => key)
 ```
 
 ###PrivateKey
@@ -162,7 +162,7 @@ To create a self-signed certificate
 ```ruby
 not_before = Time.now.to_i
 not_after = Time.now.to_i+3600*24*7300
-csr = R509::Csr.new(
+csr = R509::CSR.new(
   :subject => [['C','US'],['O','r509 LLC'],['CN','r509 Self-Signed CA Test']]
 )
 ca = R509::CertificateAuthority::Signer.new
@@ -175,7 +175,7 @@ cert = ca.selfsign(
 
 ###Config
 
-Create a basic CaConfig object
+Create a basic CAConfig object
 
 ```ruby
 cert_pem = File.read("/path/to/cert")
@@ -184,15 +184,15 @@ cert = R509::Cert.new(
   :cert => cert_pem,
   :key => key_pem
 )
-config = R509::Config::CaConfig.new(
+config = R509::Config::CAConfig.new(
   :ca_cert => cert
 )
 ```
 
-Add a signing profile named "server" (CaProfile) to a config object
+Add a signing profile named "server" (CAProfile) to a config object
 
 ```ruby
-profile = R509::Config::CaProfile.new(
+profile = R509::Config::CAProfile.new(
   :basic_constraints => {"ca" : false},
   :key_usage => ["digitalSignature","keyEncipherment"],
   :extended_key_usage => ["serverAuth"],
@@ -211,7 +211,7 @@ config.set_profile("server",profile)
 Set up a subject item policy (required/optional). The keys must match OpenSSL's shortnames!
 
 ```ruby
-profile = R509::Config::CaProfile.new(
+profile = R509::Config::CAProfile.new(
   :basic_constraints => {"ca" : false},
   :key_usage => ["digitalSignature","keyEncipherment"],
   :extended_key_usage => ["serverAuth"],
@@ -224,10 +224,10 @@ profile = R509::Config::CaProfile.new(
 config.set_profile("server",profile)
 ```
 
-Load CaConfig + Profile from YAML
+Load CAConfig + Profile from YAML
 
 ```ruby
-config = R509::Config::CaConfig.from_yaml("test_ca", "config_test.yaml")
+config = R509::Config::CAConfig.from_yaml("test_ca", "config_test.yaml")
 ```
 
 Example YAML (more options are supported than this example)
@@ -271,10 +271,10 @@ test_ca: {
 }
 ```
 
-Load multiple CaConfigs using a CaConfigPool
+Load multiple CAConfigs using a CAConfigPool
 
 ```ruby
-pool = R509::Config::CaConfigPool.from_yaml("certificate_authorities", "config_pool.yaml")
+pool = R509::Config::CAConfigPool.from_yaml("certificate_authorities", "config_pool.yaml")
 ```
 
 Example (Minimal) Config Pool YAML
@@ -301,7 +301,7 @@ certificate_authorities: {
 Sign a CSR
 
 ```ruby
-csr = R509::Csr.new(
+csr = R509::CSR.new(
   :subject => [
     ['CN','somedomain.com'],
     ['O','My Org'],
@@ -321,7 +321,7 @@ cert = ca.sign(
 Override a CSR's subject or SAN names when signing
 
 ```ruby
-csr = R509::Csr.new(
+csr = R509::CSR.new(
   :subject => [
     ['CN','somedomain.com'],
     ['O','My Org'],
@@ -347,7 +347,7 @@ cert = ca.sign(
 Sign an SPKI/SPKAC object
 
 ```ruby
-spki = R509::Spki.new(
+spki = R509::SPKI.new(
   :type => :rsa,
   :bit_strength => 2048
 )
@@ -374,13 +374,13 @@ cert = ca.sign(
 Register one
 
 ```ruby
-R509::OidMapper.register("1.3.5.6.7.8.3.23.3","short_name","optional_long_name")
+R509::OIDMapper.register("1.3.5.6.7.8.3.23.3","short_name","optional_long_name")
 ```
 
 Register in batch
 
 ```ruby
-R509::OidMapper.batch_register([
+R509::OIDMapper.batch_register([
   {:oid => "1.3.5.6.7.8.3.23.3", :short_name => "short_name", :long_name => "optional_long_name"},
   {:oid => "1.3.5.6.7.8.3.23.5", :short_name => "another_name"}
 ])
@@ -389,15 +389,15 @@ R509::OidMapper.batch_register([
 ###HMAC Signing
 
 ```ruby
-key = R509::Hmac.generate_key("sha256")
+key = R509::HMAC.generate_key("sha256")
 data = "Some data to sign"
-signature = R509::Hmac.hexdigest(:key => key, :data => data, :message_digest => "sha256")
+signature = R509::HMAC.hexdigest(:key => key, :data => data, :message_digest => "sha256")
 # or
-binary_sig = R509::Hmac.digest(:key => key, :data => data, :message_digest => "sha256")
+binary_sig = R509::HMAC.digest(:key => key, :data => data, :message_digest => "sha256")
 ```
 
 ###Alternate Key Algorithms
-In addition to the default RSA objects that are created above, r509 supports DSA and elliptic curve (EC). EC support is present only if Ruby has been linked against a version of OpenSSL compiled with EC enabled. This excludes Red Hat-based distributions at this time (unless you build it yourself). Take a look at the documentation for R509::PrivateKey, R509::Cert, and R509::Csr to see how to create DSA and EC types.
+In addition to the default RSA objects that are created above, r509 supports DSA and elliptic curve (EC). EC support is present only if Ruby has been linked against a version of OpenSSL compiled with EC enabled. This excludes Red Hat-based distributions at this time (unless you build it yourself). Take a look at the documentation for R509::PrivateKey, R509::Cert, and R509::CSR to see how to create DSA and EC types.
 
 ####NIST Recommended Elliptic Curves
 These curves are set via ```:curve_name```. The system defaults to using ```secp384r1```
@@ -594,4 +594,4 @@ L: "required",
 emailAddress: "optional"
 ```
 
-If you use the R509::OidMapper you can create new shortnames that are allowed within this directive.
+If you use the R509::OIDMapper you can create new shortnames that are allowed within this directive.

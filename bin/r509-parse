@@ -7,7 +7,7 @@ if ARGV[0].nil? then
   puts "Usage: r509-parse <cert or csr>"
 else
   begin
-    csr = R509::Csr.load_from_file ARGV[0]
+    csr = R509::CSR.load_from_file ARGV[0]
   rescue
   end
   if not csr.nil?

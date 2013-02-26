@@ -424,9 +424,9 @@ module R509
         end
       end
 
-      # Implements the CrlDistributionPoints certificate extension, with methods to
+      # Implements the CRLDistributionPoints certificate extension, with methods to
       # provide access to the components and meaning of the extension's contents.
-      class CrlDistributionPoints < OpenSSL::X509::Extension
+      class CRLDistributionPoints < OpenSSL::X509::Extension
         # friendly name for CDP OID
         OID = "crlDistributionPoints"
         Extensions.register_class(self)

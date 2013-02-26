@@ -1,14 +1,14 @@
 require 'openssl'
-require 'r509/messagedigest'
+require 'r509/message_digest'
 require 'r509/exceptions'
 
 module R509
   # A helper class to make generating HMAC signatures easier. This primarily focuses
   # on preventing common mistakes like keys that are too short or have too little
   # entropy (e.g., English phrases)
-  class Hmac
+  class HMAC
     # @option opts [String] :message_digest (sha512) The message digest to use
-    # @option opts [String] :key String key. This must be the same byte length as the hash output (per RFC2104 recommendation, see below). You can generate a key with R509::Hmac.generate_key(message_digest)
+    # @option opts [String] :key String key. This must be the same byte length as the hash output (per RFC2104 recommendation, see below). You can generate a key with R509::HMAC.generate_key(message_digest)
     # @option opts [String] :data Data to sign
     # @option opts [Boolean] :allow_low_entropy (False) A method to optionally override the Shannon entropy checks as well as the minimum key length. These checks exist to try to catch extremely bad keys, so disabling them is not recommended.
     # @return [String] hexadecimal digest
@@ -19,7 +19,7 @@ module R509
     end
 
     # @option opts [String] :message_digest (sha512) The message digest to use
-    # @option opts [String] :key String key. This must be the same byte length as the hash output (per RFC2104 recommendation, see below). You can generate a key with R509::Hmac.generate_key(message_digest)
+    # @option opts [String] :key String key. This must be the same byte length as the hash output (per RFC2104 recommendation, see below). You can generate a key with R509::HMAC.generate_key(message_digest)
     # @option opts [String] :data Data to sign
     # @option opts [Boolean] :allow_low_entropy (False) A method to optionally override the Shannon entropy checks as well as the minimum key length. These checks exist to try to catch extremely bad keys, so disabling them is not recommended.
     # @return [String] binary digest
@@ -99,7 +99,7 @@ module R509
       # English strings (which are the most common lousy keys). This is a relatively
       # lax value.
       if not opts[:allow_low_entropy] == true and self.shannon_entropy(opts[:key]) < 3.5
-        raise R509::R509Error, "The shannon entropy of this key is low and therefore is not considered secure. Consider using a key from the R509::Hmac.generate_key method. This check can be overridden with :allow_low_entropy if needed"
+        raise R509::R509Error, "The shannon entropy of this key is low and therefore is not considered secure. Consider using a key from the R509::HMAC.generate_key method. This check can be overridden with :allow_low_entropy if needed"
       end
       md
     end

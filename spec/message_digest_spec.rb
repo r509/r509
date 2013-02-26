@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'r509/messagedigest'
+require 'r509/message_digest'
 require 'openssl'
 
 describe R509::MessageDigest do

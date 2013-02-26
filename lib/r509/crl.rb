@@ -5,7 +5,7 @@ require 'r509/io_helpers'
 
 module R509
   # contains CRL related classes (generator and a pre-existing list loader)
-  module Crl
+  module CRL
     # Parses CRLs
     class SignedList
       include R509::IOHelpers
@@ -20,9 +20,9 @@ module R509
       # Helper method to quickly load a CRL from the filesystem
       #
       # @param [String] filename Path to file you want to load
-      # @return [R509::Crl::SignedList] CRL object
+      # @return [R509::CRL::SignedList] CRL object
       def self.load_from_file( filename )
-        return R509::Crl::SignedList.new( IOHelpers.read_data(filename) )
+        return R509::CRL::SignedList.new( IOHelpers.read_data(filename) )
       end
 
       # @return [OpenSSL::X509::Name]
@@ -153,12 +153,12 @@ module R509
 
       attr_reader :crl_number,:crl_list_file,:crl_number_file, :validity_hours, :crl
 
-      # @param [R509::Config::CaConfig] config
+      # @param [R509::Config::CAConfig] config
       def initialize(config)
         @config = config
 
-        unless @config.kind_of?(R509::Config::CaConfig)
-          raise R509Error, "config must be a kind of R509::Config::CaConfig"
+        unless @config.kind_of?(R509::Config::CAConfig)
+          raise R509Error, "config must be a kind of R509::Config::CAConfig"
         end
 
         @validity_hours = @config.crl_validity_hours
@@ -275,7 +275,7 @@ module R509
           crl.add_extension(ef.create_extension(oid, value, critical))
         }
         crl.sign(@config.ca_cert.key.key, OpenSSL::Digest::SHA1.new)
-        @crl = R509::Crl::SignedList.new crl
+        @crl = R509::CRL::SignedList.new crl
         @crl.to_pem
       end
 

@@ -12,8 +12,8 @@ module R509::CertificateAuthority
     def initialize(config=nil)
       @config = config
 
-      if not @config.nil? and not @config.kind_of?(R509::Config::CaConfig)
-        raise R509::R509Error, "config must be a kind of R509::Config::CaConfig or nil (for self-sign only)"
+      if not @config.nil? and not @config.kind_of?(R509::Config::CAConfig)
+        raise R509::R509Error, "config must be a kind of R509::Config::CAConfig or nil (for self-sign only)"
       end
       if not @config.nil? and not @config.ca_cert.has_private_key?
         raise R509::R509Error, "You must have a private key associated with your CA certificate to issue"
@@ -21,10 +21,10 @@ module R509::CertificateAuthority
     end
 
     # Signs a CSR
-    # @option options :csr [R509::Csr]
-    # @option options :spki [R509::Spki]
+    # @option options :csr [R509::CSR]
+    # @option options :spki [R509::SPKI]
     # @option options :profile_name [String] The CA profile you want to use (eg "server in your config)
-    # @option options :subject [R509::Subject,OpenSSL::X509::Subject,Array] (optional for R509::Csr, required for R509::Spki)
+    # @option options :subject [R509::Subject,OpenSSL::X509::Subject,Array] (optional for R509::CSR, required for R509::SPKI)
     # @option options :san_names [Array,R509::ASN1::GeneralNames] optional either an array of names that will be automatically parsed to determine their type, or an explicit R509::ASN1::GeneralNames object
     # @option options :message_digest [String] the message digest to use for this certificate instead of the config's default
     # @option options :serial [String] the serial number you want to issue the certificate with
@@ -35,7 +35,7 @@ module R509::CertificateAuthority
       if @config.nil?
         raise R509::R509Error, "When instantiating the signer without a config you can only call #selfsign"
       elsif @config.num_profiles == 0
-        raise R509::R509Error, "You must have at least one CaProfile on your CaConfig to issue"
+        raise R509::R509Error, "You must have at least one CAProfile on your CAConfig to issue"
       end
 
       if options.has_key?(:csr) and options.has_key?(:spki)
@@ -43,12 +43,12 @@ module R509::CertificateAuthority
       elsif not options.has_key?(:csr) and not options.has_key?(:spki)
         raise ArgumentError, "You must supply either :csr or :spki"
       elsif options.has_key?(:csr)
-        if not options[:csr].kind_of?(R509::Csr)
-          raise ArgumentError, "You must pass an R509::Csr object for :csr"
+        if not options[:csr].kind_of?(R509::CSR)
+          raise ArgumentError, "You must pass an R509::CSR object for :csr"
         end
       elsif not options.has_key?(:csr) and options.has_key?(:spki)
-        if not options[:spki].kind_of?(R509::Spki)
-          raise ArgumentError, "You must pass an R509::Spki object for :spki"
+        if not options[:spki].kind_of?(R509::SPKI)
+          raise ArgumentError, "You must pass an R509::SPKI object for :spki"
         end
       end
 
@@ -127,7 +127,7 @@ module R509::CertificateAuthority
     end
 
     # Self-signs a CSR
-    # @option options :csr [R509::Csr]
+    # @option options :csr [R509::CSR]
     # @option options :message_digest [String] the message digest to use for this certificate (defaults to sha1)
     # @option options :serial [String] the serial number you want to issue the certificate with (defaults to random)
     # @option options :not_before [Time] the notBefore for the certificate (defaults to now)
@@ -171,7 +171,7 @@ module R509::CertificateAuthority
         message_digest = R509::MessageDigest.new('sha1')
       end
 
-      # Csr#key returns R509::PrivateKey and #key on that returns OpenSSL object we need
+      # CSR#key returns R509::PrivateKey and #key on that returns OpenSSL object we need
       cert.sign( csr.key.key, message_digest.digest )
       R509::Cert.new(:cert => cert)
     end
@@ -190,7 +190,7 @@ module R509::CertificateAuthority
         conf.push "userNotice.#{k+1}=@user_notice#{k+1}#{index}"
         user_notice_confs.push "[user_notice#{k+1}#{index}]"
         user_notice_confs.push "explicitText=\"#{un["explicit_text"]}\"" unless un["explicit_text"].nil?
-        # if org is supplied notice numbers is also required (and vice versa). enforced in CaProfile
+        # if org is supplied notice numbers is also required (and vice versa). enforced in CAProfile
         user_notice_confs.push "organization=\"#{un["organization"]}\"" unless un["organization"].nil?
         user_notice_confs.push "noticeNumbers=\"#{un["notice_numbers"]}\"" unless un["notice_numbers"].nil?
       end unless not hash["user_notices"].kind_of?(Array)

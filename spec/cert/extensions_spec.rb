@@ -9,7 +9,7 @@ shared_examples_for "a correctly implemented wrap_openssl_extensions" do
     @r509_classes = [ BasicConstraints, KeyUsage, ExtendedKeyUsage,
             SubjectKeyIdentifier, AuthorityKeyIdentifier,
             SubjectAlternativeName, AuthorityInfoAccess,
-            CrlDistributionPoints, OCSPNoCheck ]
+            CRLDistributionPoints, OCSPNoCheck ]
   end
 
   it "should not have returned values that aren't R509 extensions" do
@@ -232,10 +232,10 @@ shared_examples_for "a correct R509 AuthorityInfoAccess object" do |critical|
   end
 end
 
-shared_examples_for "a correct R509 CrlDistributionPoints object" do |critical|
+shared_examples_for "a correct R509 CRLDistributionPoints object" do |critical|
   before :all do
     extension_name = "crlDistributionPoints"
-    klass = CrlDistributionPoints
+    klass = CRLDistributionPoints
     ef = OpenSSL::X509::ExtensionFactory.new
     openssl_ext = ef.create_extension( extension_name, @extension_value , critical )
     @r509_ext = klass.new( openssl_ext )
@@ -733,15 +733,15 @@ describe R509::Cert::Extensions do
     end
   end
 
-  context "CrlDistributionPoints" do
+  context "CRLDistributionPoints" do
     context "with a single CRL URI" do
       before :all do
         @crl_uris = ["http://www.test.local/ca.crl"]
         @extension_value = "URI:#{@crl_uris.join(",URI:")}"
       end
 
-      it_should_behave_like "a correct R509 CrlDistributionPoints object", false
-      it_should_behave_like "a correct R509 CrlDistributionPoints object", true
+      it_should_behave_like "a correct R509 CRLDistributionPoints object", false
+      it_should_behave_like "a correct R509 CRLDistributionPoints object", true
     end
 
     context "with multiple CRL URIs" do
@@ -750,8 +750,8 @@ describe R509::Cert::Extensions do
         @extension_value = "URI:#{@crl_uris.join(",URI:")}"
       end
 
-      it_should_behave_like "a correct R509 CrlDistributionPoints object", false
-      it_should_behave_like "a correct R509 CrlDistributionPoints object", true
+      it_should_behave_like "a correct R509 CRLDistributionPoints object", false
+      it_should_behave_like "a correct R509 CRLDistributionPoints object", true
     end
   end
 

@@ -103,7 +103,7 @@ describe R509::Subject do
   end
 
   it "parses unknown OIDs out of a CSR" do
-    csr = R509::Csr.new(:csr => @csr_unknown_oid)
+    csr = R509::CSR.new(:csr => @csr_unknown_oid)
     subject = R509::Subject.new(csr.subject)
     subject["1.2.3.4.5.6.7.8.9.8.7.6.5.4.3.2.1.0.0"].should == "random oid!"
     subject["1.3.3.543.567.32.43.335.1.1.1"].should == "another random oid!"
@@ -153,20 +153,20 @@ describe R509::Subject do
     end
 
     it "works with an arbitrarily defined OID" do
-      R509::OidMapper.register("1.4.3.2.1.2.3.6.6.6.6", "AOI", "arbitraryOidName")
+      R509::OIDMapper.register("1.4.3.2.1.2.3.6.6.6.6", "AOI", "arbitraryName")
       subject = R509::Subject.new
       subject.AOI= "test"
       subject.AOI.should == "test"
-      subject.arbitrary_oid_name= "test2"
-      subject.arbitrary_oid_name.should == "test2"
-      subject.arbitraryOidName= "test3"
-      subject.arbitraryOidName.should == "test3"
+      subject.arbitrary_name = "test2"
+      subject.arbitrary_name.should == "test2"
+      subject.arbitraryName= "test3"
+      subject.arbitraryName.should == "test3"
       subject.AOI.should == "test3"
-      subject.arbitrary_oid_name.should == "test3"
+      subject.arbitrary_name.should == "test3"
     end
 
     it "returns properly for respond_to? with a custom subject oid" do
-      R509::OidMapper.register("1.4.3.2.1.2.3.7.7.7.7", "IOS", "iOperatingSystem")
+      R509::OIDMapper.register("1.4.3.2.1.2.3.7.7.7.7", "IOS", "iOperatingSystem")
       subject = R509::Subject.new
       subject.respond_to?("IOS").should == true
       subject.respond_to?("IOS=").should == true
