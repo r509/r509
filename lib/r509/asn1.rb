@@ -1,3 +1,5 @@
+require 'ipaddr'
+
 module R509
   # Module for holding various classes related to parsed ASN.1 objects
   module ASN1
@@ -22,16 +24,18 @@ module R509
     def self.general_name_parser(names)
       general_names = R509::ASN1::GeneralNames.new
       names.map do |domain|
-        case domain
-        when /\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b/ #IP
-          ip = domain.strip.split(".").map { |m| m.to_i.chr }.join # need to make this binary for GeneralName
-          general_names.create_item(:tag => 7, :value => ip)
-        when /:\/\// #URI
-          general_names.create_item(:tag => 6, :value => domain.strip)
-        when /@/ #rfc822Name
-          general_names.create_item(:tag => 1, :value => domain.strip)
-        else #dNSName
-          general_names.create_item(:tag => 2, :value => domain.strip)
+        if !(IPAddr.new(domain.strip) rescue nil).nil?
+          ip = IPAddr.new(domain.strip)
+          general_names.create_item(:tag => 7, :value => ip.hton)
+        else
+          case domain
+          when /:\/\// #URI
+            general_names.create_item(:tag => 6, :value => domain.strip)
+          when /@/ #rfc822Name
+            general_names.create_item(:tag => 1, :value => domain.strip)
+          else #dNSName
+            general_names.create_item(:tag => 2, :value => domain.strip)
+          end
         end
       end
       general_names
@@ -85,7 +89,8 @@ module R509
         when 7
           @type = :iPAddress
           @serial_prefix = IP_ADDRESS_PREFIX
-          @value = value.bytes.to_a.join(".")
+          ip = IPAddr.new_ntoh(value)
+          @value = ip.to_s
         else
           raise R509::R509Error, "Unimplemented GeneralName type found. Tag: #{asn.tag}. At this time R509 does not support GeneralName types other than rfc822Name, dNSName, uniformResourceIdentifier, and iPAddress"
         end

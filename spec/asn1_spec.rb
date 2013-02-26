@@ -16,22 +16,27 @@ describe R509::ASN1 do
       general_names.dns_names.should == ["domain2.com", "domain3.com"]
     end
 
-    it "adds SAN IP names to a generated CSR" do
+    it "adds SAN IPv4 names" do
       general_names = R509::ASN1.general_name_parser(['1.2.3.4','2.3.4.5'])
       general_names.ip_addresses.should == ["1.2.3.4", "2.3.4.5"]
     end
 
-    it "adds SAN URI names to a generated CSR" do
+    it "adds SAN IPv6 names" do
+      general_names = R509::ASN1.general_name_parser(['FE80:0:0:0:0:0:0:1','fe80::2',])
+      general_names.ip_addresses.should == ["fe80::1", "fe80::2"]
+    end
+
+    it "adds SAN URI names" do
       general_names = R509::ASN1.general_name_parser(['http://myuri.com','ftp://whyftp'])
       general_names.uris.should == ['http://myuri.com','ftp://whyftp']
     end
 
-    it "adds SAN rfc822 names to a generated CSR" do
+    it "adds SAN rfc822 names" do
       general_names = R509::ASN1.general_name_parser(['email@domain.com','some@other.com'])
       general_names.rfc_822_names.should == ['email@domain.com','some@other.com']
     end
 
-    it "adds a mix of SAN name types to a generated CSR" do
+    it "adds a mix of SAN name types" do
       general_names = R509::ASN1.general_name_parser(['1.2.3.4','http://langui.sh','email@address.local','domain.internal','2.3.4.5'])
       general_names.ip_addresses.should == ['1.2.3.4','2.3.4.5']
       general_names.dns_names.should == ['domain.internal']
