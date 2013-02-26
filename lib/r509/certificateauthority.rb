@@ -24,7 +24,8 @@ module R509::CertificateAuthority
     # @option options :csr [R509::Csr]
     # @option options :spki [R509::Spki]
     # @option options :profile_name [String] The CA profile you want to use (eg "server in your config)
-    # @option options :data_hash [Hash] a hash containing the subject and SAN names you want encoded for this cert. Generate by calling Csr#to_hash or Spki#to_hash
+    # @option options :subject [R509::Subject,OpenSSL::X509::Subject,Array] (optional for R509::Csr, required for R509::Spki)
+    # @option options :san_names [R509::ASN1::GeneralNames] optional
     # @option options :message_digest [String] the message digest to use for this certificate instead of the config's default
     # @option options :serial [String] the serial number you want to issue the certificate with
     # @option options :not_before [Time] the notBefore for the certificate
@@ -44,23 +45,29 @@ module R509::CertificateAuthority
       elsif options.has_key?(:csr)
         if not options[:csr].kind_of?(R509::Csr)
           raise ArgumentError, "You must pass an R509::Csr object for :csr"
-        else
-          signable_object = options[:csr]
         end
       elsif not options.has_key?(:csr) and options.has_key?(:spki)
         if not options[:spki].kind_of?(R509::Spki)
           raise ArgumentError, "You must pass an R509::Spki object for :spki"
-        else
-          signable_object = options[:spki]
         end
       end
 
-      if options.has_key?(:data_hash)
-        san_names = options[:data_hash][:san_names]
-        subject = options[:data_hash][:subject]
+      if options.has_key?(:csr)
+        subject = (options.has_key?(:subject))? R509::Subject.new(options[:subject]) : options[:csr].subject
+        san_names = (options.has_key?(:san_names))? options[:san_names] : options[:csr].san
+        public_key = options[:csr].public_key
       else
-        san_names = signable_object.to_hash[:san_names]
-        subject = signable_object.to_hash[:subject]
+        # spki
+        if not options.has_key?(:subject)
+          raise ArgumentError, "You must supply :subject when passing :spki"
+        end
+        public_key = options[:spki].public_key
+        subject = R509::Subject.new(options[:subject])
+        san_names = options[:san_names] # optional
+      end
+
+      if not san_names.nil? and not san_names.respond_to?(:openssl_serialized_names)
+        raise ArgumentError, "When supplying :san you must provide an R509::ASN1::GeneralNames object"
       end
 
 
@@ -87,7 +94,7 @@ module R509::CertificateAuthority
         :issuer => @config.ca_cert.subject,
         :not_before => options[:not_before],
         :not_after => options[:not_after],
-        :public_key => signable_object.public_key,
+        :public_key => public_key,
         :serial => options[:serial]
       )
 
@@ -121,7 +128,7 @@ module R509::CertificateAuthority
     # @option options :serial [String] the serial number you want to issue the certificate with (defaults to random)
     # @option options :not_before [Time] the notBefore for the certificate (defaults to now)
     # @option options :not_after [Time] the notAfter for the certificate (defaults to 1 year)
-    # @option options :san_names [Array] Optional array of subject alternative names
+    # @option options :san_names [R509::ASN1::GeneralNames] Optional subject alternative names
     # @return [R509::Cert] the signed cert object
     def selfsign(options)
       if not options.kind_of?(Hash)
@@ -143,7 +150,7 @@ module R509::CertificateAuthority
       if options.has_key?(:san_names)
         san_names = options[:san_names]
       else
-        san_names = csr.san_names
+        san_names = csr.san
       end
 
       build_extensions(
@@ -166,10 +173,6 @@ module R509::CertificateAuthority
     end
 
     private
-
-    def process_san_names(domains)
-      domains.map { |domain| 'DNS: '+domain }.join(",")
-    end
 
     def build_conf(section,hash,index)
       conf = ["[#{section}]"]
@@ -283,8 +286,8 @@ module R509::CertificateAuthority
       #CPS.1 = http://www.example.com/cps
       #_end_of_cnf_
 
-      if not options[:san_names].nil? and not options[:san_names].empty?
-        ext << ef.create_extension("subjectAltName", process_san_names(options[:san_names]))
+      if not options[:san_names].nil? and options[:san_names].respond_to?(:openssl_serialized_names)
+        ext << ef.create_extension("subjectAltName", options[:san_names].openssl_serialized_names)
       end
 
       if not @config.nil? and @config.cdp_location.respond_to?(:each)

@@ -3,19 +3,20 @@ require 'r509/exceptions'
 require 'r509/io_helpers'
 require 'r509/privatekey'
 require 'r509/ec-hack'
+require 'r509/asn1'
 
 module R509
   # The primary certificate signing request object
   class Csr
     include R509::IOHelpers
 
-    attr_reader :san_names, :key, :subject, :req, :attributes, :message_digest
+    attr_reader :san, :key, :subject, :req, :attributes, :message_digest
     # @option opts [String,OpenSSL::X509::Request] :csr a csr
     # @option opts [Symbol] :type :rsa/:dsa/:ec
     # @option opts [String] :curve_name ("secp384r1") Only used if :type is :ec
     # @option opts [Integer] :bit_strength (2048) Only used if :type is :rsa or :dsa
     # @option opts [String] :message_digest Optional digest. sha1, sha224, sha256, sha384, sha512, md5. Defaults to sha1
-    # @option opts [Array] :san_names List of domains and/or IP addresses to encode as subjectAltNames
+    # @option opts [Array] :san_names List of domains, IPs, email addresses, or URIs to encode as subjectAltNames. The type is determined from the structure of the strings
     # @option opts [R509::Subject,Array,OpenSSL::X509::Name] :subject array of subject items
     # @option opts [R509::PrivateKey,String] :key optional private key to supply. either an unencrypted PEM/DER string or an R509::PrivateKey object (use the latter if you need password/hardware support)
     # @example Generate a 4096-bit RSA key + CSR
@@ -59,9 +60,8 @@ module R509
       end
 
       if opts.has_key?(:subject)
-        domains = opts[:san_names] || []
-        parsed_domains = prefix_domains(domains)
-        create_request(opts[:subject], parsed_domains) #sets @req
+        san_names = R509::ASN1.general_name_parser(opts[:san_names] || [])
+        create_request(opts[:subject], san_names) #sets @req
       elsif opts.has_key?(:csr)
         if opts.has_key?(:san_names)
           raise ArgumentError, "You can't add domains to an existing CSR"
@@ -219,24 +219,15 @@ module R509
 
     # Returns key algorithm (RSA/DSA/EC)
     #
-    # @return [String] value of the key algorithm. RSA, DSA, EC
+    # @return [Symbol] value of the key algorithm. :rsa, :dsa, :ec
     def key_algorithm
       if @req.public_key.kind_of? OpenSSL::PKey::RSA then
-        'RSA'
+        :rsa
       elsif @req.public_key.kind_of? OpenSSL::PKey::DSA then
-        'DSA'
+        :dsa
       elsif @req.public_key.kind_of? OpenSSL::PKey::EC then
-        'EC'
+        :ec
       end
-    end
-
-    # Returns a hash structure you can pass to the Ca.
-    # You will want to call this method if you intend to alter the values
-    # and then pass them to the Ca class.
-    #
-    # @return [Hash] :subject and :san_names you can pass to Ca
-    def to_hash
-      { :subject => @subject.dup , :san_names => @san_names.dup }
     end
 
     private
@@ -265,12 +256,10 @@ module R509
         @req = OpenSSL::X509::Request.new csr
       end
       @subject = R509::Subject.new(@req.subject)
-      @attributes = parse_attributes_from_csr(@req)
-      @san_names = @attributes['subjectAltName'] || []
+      parse_san_attribute_from_csr(@req)
     end
 
-    def create_request(subject,domains=[])
-      domains.uniq! #de-duplicate the array
+    def create_request(subject,san_names)
       @req = OpenSSL::X509::Request.new
       @req.version = 0
       @subject = R509::Subject.new(subject)
@@ -279,71 +268,44 @@ module R509
         @key = R509::PrivateKey.new(:type => @type, :bit_strength => @bit_strength, :curve_name => @curve_name)
       end
       @req.public_key = @key.public_key
-      add_san_extension(domains)
-      @attributes = parse_attributes_from_csr(@req)
-      @san_names = @attributes['subjectAltName'] || []
+      add_san_extension(san_names)
+      parse_san_attribute_from_csr(@req)
     end
 
-    # @return [Hash] attributes of a CSR
-    def parse_attributes_from_csr(req)
-      attributes = Hash.new
-      domains_from_csr = []
+    # @return [Array] array of GeneralName objects
+    def parse_san_attribute_from_csr(req)
+      san = nil
       set = nil
-      req.attributes.each { |attribute|
-        if attribute.oid == 'extReq' then
-        set = OpenSSL::ASN1.decode attribute.value
+      req.attributes.each do |attribute|
+        if attribute.oid == 'extReq'
+          set = OpenSSL::ASN1.decode attribute.value
+          extensions = set.value[0].value.collect{|asn1ext| OpenSSL::X509::Extension.new(asn1ext) }
+          r509_extensions = R509::Cert::Extensions.wrap_openssl_extensions( extensions )
+          if not r509_extensions[R509::Cert::Extensions::SubjectAlternativeName].nil?
+            san = r509_extensions[R509::Cert::Extensions::SubjectAlternativeName].general_names
+          end
+          break
         end
-      }
-      if !set.nil? then
-        set.value.each { |set_value|
-          @seq = set_value
-          extensions = @seq.value.collect{|asn1ext| OpenSSL::X509::Extension.new(asn1ext) }
-          extensions.each { |ext|
-            attributes[ext.oid] = {'value' => ext.value, 'critical'=> ext.critical? }
-            if ext.oid == 'subjectAltName' then
-              domains_from_csr = ext.value.gsub(/DNS:/,'').split(',')
-              domains_from_csr = domains_from_csr.collect {|x| x.strip }
-              attributes[ext.oid] = domains_from_csr
-            end
-          }
-        }
       end
-      attributes
+      @san = san
     end
 
-    #takes OpenSSL::X509::Extension object
-    def parse_san_extension(extension)
-      san_string = extension.value
-      stripped = []
-      san_string.split(',').each{ |name|
-        stripped.push name.strip
-      }
-      stripped
-    end
-
-    def add_san_extension(domains_to_add)
-      if(domains_to_add.size > 0) then
+    def add_san_extension(san_names)
+      if not san_names.nil? and not san_names.names.empty?
+        names = san_names.names.uniq
+        general_names = R509::ASN1::GeneralNames.new
+        names.each do |domain|
+          general_names.add_item(domain)
+        end
         ef = OpenSSL::X509::ExtensionFactory.new
         ex = []
-        ex << ef.create_extension("subjectAltName", domains_to_add.join(', '))
+        ex << ef.create_extension("subjectAltName", general_names.openssl_serialized_names)
         request_extension_set = OpenSSL::ASN1::Set([OpenSSL::ASN1::Sequence(ex)])
         @req.add_attribute(OpenSSL::X509::Attribute.new("extReq", request_extension_set))
-        @san_names = strip_prefix(domains_to_add)
+        parse_san_attribute_from_csr(@req)
       end
     end
 
-    def prefix_domains(domains)
-      domains.map do |domain|
-        if not domain.scan(/\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b/).empty?
-          'IP: '+domain
-        else
-          'DNS: '+domain
-        end
-      end
-    end
 
-    def strip_prefix(domains)
-      domains.map{ |name| name.gsub(/DNS:||IP:/,'').strip }
-    end
   end
 end

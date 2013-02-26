@@ -50,8 +50,8 @@ describe R509::CertificateAuthority::Signer do
     expect { ca.sign( :csr => csr, :profile_name => 'default') }.to_not raise_error
   end
   it "properly issues server cert using spki" do
-    spki = R509::Spki.new(:spki => @spki, :subject=>[['CN','test.local']])
-    cert = @ca.sign({ :spki => spki, :profile_name => 'server' })
+    spki = R509::Spki.new(:spki => @spki)
+    cert = @ca.sign({ :spki => spki, :profile_name => 'server', :subject=>[['CN','test.local']]})
     cert.to_pem.should match(/BEGIN CERTIFICATE/)
     cert.subject.to_s.should == '/CN=test.local'
     cert.extended_key_usage.web_server_authentication?.should == true
@@ -100,27 +100,26 @@ describe R509::CertificateAuthority::Signer do
   end
   it "issues with specified san domains" do
     csr = R509::Csr.new(:subject => [['C','US'],['ST','Illinois'],['L','Chicago'],['O','Paul Kehrer'],['CN','langui.sh']], :bit_strength => 1024)
-    data_hash = csr.to_hash
-    data_hash[:san_names] = ['langui.sh','domain2.com']
-    cert = @ca.sign(:csr => csr, :profile_name => 'server', :data_hash => data_hash )
-    cert.san_names.should == ['langui.sh','domain2.com']
+    san_names = R509::ASN1.general_name_parser(['langui.sh','domain2.com'])
+    cert = @ca.sign(:csr => csr, :profile_name => 'server', :subject => csr.subject, :san_names => san_names )
+    cert.san.dns_names.should == ['langui.sh','domain2.com']
   end
   it "issues with san domains from csr" do
     csr = R509::Csr.new(:csr => @csr)
     cert = @ca.sign(:csr => csr, :profile_name => 'server')
-    cert.san_names.should == ['test.local','additionaldomains.com','saniam.com']
+    cert.san.dns_names.should == ['test.local','additionaldomains.com','saniam.com']
   end
   it "issues a csr made via array" do
     csr = R509::Csr.new(:subject => [['CN','langui.sh']], :bit_strength => 1024)
     cert = @ca.sign(:csr => csr, :profile_name => 'server')
     cert.subject.to_s.should == '/CN=langui.sh'
   end
-  it "issues a cert with the subject array provided" do
+  it "overrides a CSR's subject with :subject" do
     csr = R509::Csr.new(:csr => @csr)
-    data_hash = csr.to_hash
-    data_hash[:subject]['CN'] = "someotherdomain.com"
-    data_hash[:subject].delete("O")
-    cert = @ca.sign(:csr => csr, :profile_name => 'server', :data_hash => data_hash )
+    subject = csr.subject
+    subject.CN = "someotherdomain.com"
+    subject.delete("O")
+    cert = @ca.sign(:csr => csr, :profile_name => 'server', :subject => subject )
     cert.subject.to_s.should == '/CN=someotherdomain.com'
   end
   it "tests that policy identifiers are properly encoded" do
@@ -348,13 +347,14 @@ describe R509::CertificateAuthority::Signer do
       :subject => [['C','US'],['O','r509 LLC'],['CN','r509 Self-Signed CA Test']],
       :bit_strength => 1024
     )
+    san_names = R509::ASN1.general_name_parser(['sanname1','sanname2'])
     cert = @ca.selfsign(
       :csr => csr,
       :serial => 3,
       :not_before => not_before,
       :not_after => not_after,
       :message_digest => 'sha256',
-      :san_names => ['sanname1','sanname2']
+      :san_names => san_names
     )
     cert.public_key.to_s.should == csr.public_key.to_s
     cert.signature_algorithm.should == 'sha256WithRSAEncryption'
@@ -364,7 +364,7 @@ describe R509::CertificateAuthority::Signer do
     cert.subject.to_s.should == '/C=US/O=r509 LLC/CN=r509 Self-Signed CA Test'
     cert.issuer.to_s.should == '/C=US/O=r509 LLC/CN=r509 Self-Signed CA Test'
     cert.basic_constraints.is_ca?.should == true
-    cert.san_names.should include('sanname1','sanname2')
+    cert.san.dns_names.should include('sanname1','sanname2')
   end
   it "issues self-signed certificate with SAN in CSR" do
     csr = R509::Csr.new(
@@ -375,7 +375,7 @@ describe R509::CertificateAuthority::Signer do
     cert = @ca.selfsign(
       :csr => csr
     )
-    cert.san_names.should include('sanname1','sanname2')
+    cert.san.dns_names.should include('sanname1','sanname2')
     cert.subject.to_s.should == '/CN=My Self Sign'
     cert.issuer.to_s.should == '/CN=My Self Sign'
     cert.public_key.to_s.should == csr.public_key.to_s
@@ -417,16 +417,16 @@ describe R509::CertificateAuthority::Signer do
       cert.to_pem.should match(/BEGIN CERTIFICATE/)
       cert.subject.to_s.should == '/C=US/ST=Illinois/L=Chicago/O=Paul Kehrer/CN=langui.sh'
       cert.signature_algorithm.should == 'ecdsa-with-SHA384'
-      cert.key_algorithm.should == 'EC'
+      cert.key_algorithm.should == :ec
       cert.extended_key_usage.web_server_authentication?.should == true
     end
     it "properly issues server cert using spki" do
-      spki = R509::Spki.new(:spki => @spki, :subject=>[['CN','test.local']])
-      cert = @ca_ec.sign( :spki => spki, :profile_name => 'server' )
+      spki = R509::Spki.new(:spki => @spki)
+      cert = @ca_ec.sign( :spki => spki, :profile_name => 'server', :subject=>[['CN','test.local']] )
       cert.to_pem.should match(/BEGIN CERTIFICATE/)
       cert.subject.to_s.should == '/CN=test.local'
       cert.signature_algorithm.should == 'ecdsa-with-SHA384'
-      cert.key_algorithm.should == 'RSA' #weird right?!
+      cert.key_algorithm.should == :rsa #weird right?! it's because the spki is RSA even though the signature is from an EC root
       cert.extended_key_usage.web_server_authentication?.should == true
     end
   end
@@ -443,7 +443,7 @@ describe R509::CertificateAuthority::Signer do
       cert.to_pem.should match(/BEGIN CERTIFICATE/)
       cert.subject.to_s.should == '/C=US/ST=Illinois/L=Chicago/O=Paul Kehrer/CN=langui.sh'
       cert.signature_algorithm.should == 'dsaWithSHA1'
-      cert.key_algorithm.should == 'DSA'
+      cert.key_algorithm.should == :dsa
       cert.extended_key_usage.web_server_authentication?.should == true
     end
   end

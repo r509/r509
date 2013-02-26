@@ -53,6 +53,10 @@ module TestFixtures
 
   SPKI_DSA = read_fixture('spkac_dsa.txt')
 
+  SPKI_EC = read_fixture('spkac_ec.txt')
+
+  SPKI_RSA_NEWLINES = read_fixture('spkac_rsa_newlines.txt')
+
   CSR = read_fixture('csr1.pem')
 
   CSR_PUBLIC_KEY_MODULUS = read_fixture('csr1_public_key_modulus.txt')

@@ -113,32 +113,32 @@ describe R509::Cert do
   end
   it "returns the RSA key algorithm" do
     cert = R509::Cert.new(:cert => @cert)
-    cert.key_algorithm.should == 'RSA'
+    cert.key_algorithm.should == :rsa
   end
   it "returns the DSA key algorithm" do
     cert = R509::Cert.new(:cert => @cert6)
-    cert.key_algorithm.should == 'DSA'
+    cert.key_algorithm.should == :dsa
   end
-  it "returns list of san_names when it is a san cert" do
+  it "returns list of san names when it is a san cert" do
     cert = R509::Cert.new(:cert => @cert_san)
-    cert.san_names.should == ['langui.sh']
+    cert.san.dns_names.should == ['langui.sh']
   end
-  it "returns an empty list when it is not a san cert" do
+  it "#san returns nil when it is not a san cert" do
     cert = R509::Cert.new(:cert => @cert)
-    cert.san_names.should == []
+    cert.san.should be_nil
   end
-  it "#subject_names should return a list of san_names in addition to the CN" do
+  it "#all_names should return a list of san names in addition to the CN" do
     cert = R509::Cert.new(:cert => @cert_san2)
-    cert.subject_names.should == ["cn.langui.sh", "san1.langui.sh",
+    cert.all_names.should == ["cn.langui.sh", "san1.langui.sh",
                     "san2.langui.sh", "san3.langui.sh"]
   end
-  it "#subject_names should not have duplicates" do
+  it "#all_names should not have duplicates" do
     cert = R509::Cert.new(:cert => @cert_san)
-    cert.subject_names.should == ["langui.sh"]
+    cert.all_names.should == ["langui.sh"]
   end
-  it "#subject_names should return the CN in the array, if there are no SANs" do
+  it "#all_names should return the CN in the array even if there are no SANs" do
     cert = R509::Cert.new(:cert => @cert)
-    cert.subject_names.should == ["langui.sh"]
+    cert.all_names.should == ["langui.sh"]
   end
   it "raises exception when providing invalid cert" do
     expect { R509::Cert.new(:cert => "invalid cert") }.to raise_error(OpenSSL::X509::CertificateError)
@@ -183,7 +183,7 @@ describe R509::Cert do
   end
   it "parses san extension" do
     cert = R509::Cert.new(:cert => @cert_san)
-    cert.san_names.should == ["langui.sh"]
+    cert.san.dns_names.should == ["langui.sh"]
   end
   context "when initialized with an OpenSSL::X509::Certificate" do
     it "returns pem on to_pem" do
@@ -361,7 +361,7 @@ describe R509::Cert do
     end
     it "returns the key algorithm" do
       cert = R509::Cert.new(:cert => @cert_ec)
-      cert.key_algorithm.should == 'EC'
+      cert.key_algorithm.should == :ec
     end
   end
 end

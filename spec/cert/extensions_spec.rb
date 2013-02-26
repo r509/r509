@@ -202,7 +202,7 @@ shared_examples_for "a correct R509 SubjectAlternativeName object" do |critical|
   end
 
   it "ordered should be correct critical:#{critical}" do
-    @r509_ext.ordered_names.size.should == @dns_names.size + @ip_addresses.size + @rfc_822_names.size + @uris.size
+    @r509_ext.names.size.should == @dns_names.size + @ip_addresses.size + @rfc_822_names.size + @uris.size
   end
 
   it "reports #critical? properly" do

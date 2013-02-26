@@ -351,41 +351,43 @@ module R509
         OID = "subjectAltName"
         Extensions.register_class(self)
 
+        attr_reader :general_names
+
         # See OpenSSL::X509::Extension#initialize
         def initialize(*args)
           super(*args)
 
           data = R509::ASN1.get_extension_payload(self)
-          @hash = R509::ASN1::GeneralNameHash.new
+          @general_names = R509::ASN1::GeneralNames.new
           data.entries.each do |gn|
-            @hash.add_item(gn)
+            @general_names.add_item(gn)
           end
         end
 
         # @return [Array<String>] DNS names
         def dns_names
-          @hash.dns_names
+          @general_names.dns_names
         end
 
         # @return [Array<String>] IP addresses formatted as dotted quad
         def ip_addresses
-          @hash.ip_addresses
+          @general_names.ip_addresses
         end
 
         # @return [Array<String>] email addresses
         def rfc_822_names
-          @hash.rfc_822_names
+          @general_names.rfc_822_names
         end
 
         # @return [Array<String>] URIs (not typically found in SAN extensions)
         def uris
-          @hash.uris
+          @general_names.uris
         end
 
         # @return [Array] array of hashes of form { :type => "", :value => "" } that preserve the order found
         #   in the extension
-        def ordered_names
-          @hash.ordered_names
+        def names
+          @general_names.names
         end
       end
 
@@ -406,8 +408,8 @@ module R509
           super(*args)
 
           data = R509::ASN1.get_extension_payload(self)
-          @ocsp= R509::ASN1::GeneralNameHash.new
-          @ca_issuers= R509::ASN1::GeneralNameHash.new
+          @ocsp= R509::ASN1::GeneralNames.new
+          @ca_issuers= R509::ASN1::GeneralNames.new
           data.entries.each do |access_description|
             #   AccessDescription  ::=  SEQUENCE {
             #           accessMethod          OBJECT IDENTIFIER,
@@ -436,7 +438,7 @@ module R509
         def initialize(*args)
           super(*args)
 
-          @crl= R509::ASN1::GeneralNameHash.new
+          @crl= R509::ASN1::GeneralNames.new
           data = R509::ASN1.get_extension_payload(self)
           data.entries.each do |distribution_point|
             #   DistributionPoint ::= SEQUENCE {

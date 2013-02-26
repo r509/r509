@@ -13,7 +13,19 @@ module R509
       if not opts.kind_of?(Hash)
         raise ArgumentError, 'Must provide a hash of options'
       end
-      @spki = OpenSSL::Netscape::SPKI.new(opts[:spki].sub("SPKAC=",""))
+      spki = opts[:spki]
+      # first let's try cleaning up the input a bit so OpenSSL is happy with it
+      # OpenSSL hates SPKAC=
+      spki.sub!("SPKAC=","")
+      # it really hates newlines (Firefox loves 'em)
+      # so let's normalize line endings
+      spki.gsub!(/\r\n?/, "\n")
+      # and nuke 'em
+      spki.gsub!("\n", "")
+      #and leading/trailing whitespace
+      spki.strip!
+      @spki = OpenSSL::Netscape::SPKI.new(spki)
+
     end
 
     # @return [OpenSSL::PKey::RSA] public key
@@ -67,6 +79,13 @@ module R509
       @spki.public_key.kind_of?(OpenSSL::PKey::DSA)
     end
 
+    # Returns whether the public key is EC
+    #
+    # @return [Boolean] true if the public key is EC, false otherwise
+    def ec?
+      @spki.public_key.kind_of?(OpenSSL::PKey::EC)
+    end
+
     # Returns the bit strength of the key used to create the SPKI
     # @return [Integer] the integer bit strength.
     def bit_strength
@@ -74,6 +93,20 @@ module R509
         return @spki.public_key.n.num_bits
       elsif self.dsa?
         return @spki.public_key.p.num_bits
+      elsif self.ec?
+        raise R509::R509Error, 'Bit strength is not available for EC at this time.'
+      end
+    end
+
+    # Returns the short name of the elliptic curve used to generate the public key
+    # if the key is EC. If not, raises an error.
+    #
+    # @return [String] elliptic curve name
+    def curve_name
+      if self.ec?
+        @spki.public_key.group.curve_name
+      else
+        raise R509::R509Error, 'Curve name is only available with EC SPKIs'
       end
     end
 
@@ -81,10 +114,12 @@ module R509
     #
     # @return [String] value of the key algorithm. RSA or DSA
     def key_algorithm
-      if @spki.public_key.kind_of? OpenSSL::PKey::RSA then
+      if self.rsa?
         :rsa
-      elsif @spki.public_key.kind_of? OpenSSL::PKey::DSA then
+      elsif self.dsa?
         :dsa
+      elsif self.ec?
+        :ec
       end
     end
   end

@@ -8,6 +8,8 @@ describe R509::Spki do
     #also known as SPKAC (signed public key and challenge)
     @spki_dsa = TestFixtures::SPKI_DSA.strip
     @spki = TestFixtures::SPKI.strip
+    @spki_rsa_newlines = TestFixtures::SPKI_RSA_NEWLINES
+    @spki_ec = TestFixtures::SPKI_EC
     @spki_der = TestFixtures::SPKI_DER
   end
   it "raises an error if you don't provide a hash" do
@@ -16,6 +18,10 @@ describe R509::Spki do
   it "loads an RSA spkac" do
     spki = R509::Spki.new( :spki => @spki )
     spki.to_pem.should == @spki
+  end
+  it "loads an spkac with newlines" do
+    spki = R509::Spki.new( :spki => @spki_rsa_newlines )
+    spki.to_pem.should == @spki_rsa_newlines.gsub("\n","")
   end
   it "properly strips SPKAC= prefix and loads" do
     spki = R509::Spki.new( :spki => "SPKAC="+@spki )
@@ -76,5 +82,34 @@ describe R509::Spki do
   it "returns DSA key algorithm for DSA" do
     spki = R509::Spki.new( :spki => @spki_dsa )
     spki.key_algorithm.should == :dsa
+  end
+
+  context "elliptic curve" do
+    it "loads an spkac" do
+      spki = R509::Spki.new( :spki => @spki_ec )
+      spki.to_pem.should == @spki_ec
+    end
+    it "returns the curve name" do
+      spki = R509::Spki.new( :spki => @spki_ec )
+      spki.curve_name.should == 'secp384r1'
+    end
+    it "raises error on bit strength" do
+      spki = R509::Spki.new( :spki => @spki_ec )
+      expect { spki.bit_strength }.to raise_error(R509::R509Error,'Bit strength is not available for EC at this time.')
+    end
+    it "returns the key algorithm" do
+      spki = R509::Spki.new( :spki => @spki_ec )
+      spki.key_algorithm.should == :ec
+    end
+    it "returns the public key" do
+      spki = R509::Spki.new( :spki => @spki_ec )
+      spki.public_key.should_not == nil
+    end
+    it "ec?" do
+      spki = R509::Spki.new( :spki => @spki_ec )
+      spki.ec?.should == true
+      spki.dsa?.should == false
+      spki.rsa?.should == false
+    end
   end
 end

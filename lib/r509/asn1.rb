@@ -17,6 +17,26 @@ module R509
       OpenSSL::ASN1.decode(asn.entries.last.value).value
     end
 
+    # @param [Array] names An array of strings. Can be dNSName, iPAddress, URI, or rfc822Name
+    # @return [R509::ASN1::GeneralNames]
+    def self.general_name_parser(names)
+      general_names = R509::ASN1::GeneralNames.new
+      names.map do |domain|
+        case domain
+        when /\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b/ #IP
+          ip = domain.strip.split(".").map { |m| m.to_i.chr }.join # need to make this binary for GeneralName
+          general_names.create_item(:tag => 7, :value => ip)
+        when /:\/\// #URI
+          general_names.create_item(:tag => 6, :value => domain.strip)
+        when /@/ #rfc822Name
+          general_names.create_item(:tag => 1, :value => domain.strip)
+        else #dNSName
+          general_names.create_item(:tag => 2, :value => domain.strip)
+        end
+      end
+      general_names
+    end
+
     #   GeneralName ::= CHOICE {
     #        otherName                       [0]     OtherName,
     #        rfc822Name                      [1]     IA5String,
@@ -114,6 +134,14 @@ module R509
           @ordered_names << gn
           @types[gn.type] << gn.value
         end
+      end
+
+      def create_item(hash)
+        if not hash.respond_to?(:has_key?) or not hash.has_key?(:tag) or not hash.has_key?(:value)
+          raise ArgumentError, "Must be a hash with :tag and :value nodes"
+        end
+        gn = R509::ASN1::GeneralName.new(:tag => hash[:tag], :value => hash[:value])
+        add_item(gn)
       end
 
       # @return [Array] array of hashes of form { :type => "", :value => "" } that preserve the

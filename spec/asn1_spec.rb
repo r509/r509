@@ -9,6 +9,42 @@ describe R509::ASN1 do
     payload = R509::ASN1.get_extension_payload(ext)
     payload.should_not be_nil
   end
+
+  context "general_name_parser" do
+    it "correctly parses dns names" do
+      general_names = R509::ASN1.general_name_parser(['domain2.com','domain3.com'])
+      general_names.dns_names.should == ["domain2.com", "domain3.com"]
+    end
+
+    it "adds SAN IP names to a generated CSR" do
+      general_names = R509::ASN1.general_name_parser(['1.2.3.4','2.3.4.5'])
+      general_names.ip_addresses.should == ["1.2.3.4", "2.3.4.5"]
+    end
+
+    it "adds SAN URI names to a generated CSR" do
+      general_names = R509::ASN1.general_name_parser(['http://myuri.com','ftp://whyftp'])
+      general_names.uris.should == ['http://myuri.com','ftp://whyftp']
+    end
+
+    it "adds SAN rfc822 names to a generated CSR" do
+      general_names = R509::ASN1.general_name_parser(['email@domain.com','some@other.com'])
+      general_names.rfc_822_names.should == ['email@domain.com','some@other.com']
+    end
+
+    it "adds a mix of SAN name types to a generated CSR" do
+      general_names = R509::ASN1.general_name_parser(['1.2.3.4','http://langui.sh','email@address.local','domain.internal','2.3.4.5'])
+      general_names.ip_addresses.should == ['1.2.3.4','2.3.4.5']
+      general_names.dns_names.should == ['domain.internal']
+      general_names.uris.should == ['http://langui.sh']
+      general_names.rfc_822_names.should == ['email@address.local']
+    end
+
+    it "handles empty array" do
+      general_names = R509::ASN1.general_name_parser([])
+      general_names.names.size.should == 0
+    end
+
+  end
 end
 
 describe R509::ASN1::GeneralName do
@@ -48,40 +84,48 @@ describe R509::ASN1::GeneralName do
   end
 end
 
-describe R509::ASN1::GeneralNameHash do
-  it "adds items of allowed type to hash" do
+describe R509::ASN1::GeneralNames do
+  it "adds items of allowed type to the object" do
     asn = OpenSSL::ASN1.decode "\x82\u000Ewww.test.local"
     asn2 = OpenSSL::ASN1.decode "\x81\u0011myemail@email.com"
     asn3 = OpenSSL::ASN1.decode "\x82\u000Ewww.text.local"
-    hash = R509::ASN1::GeneralNameHash.new
-    hash.add_item(asn)
-    hash.add_item(asn2)
-    hash.add_item(asn3)
-    hash.dns_names.should == ["www.test.local","www.text.local"]
-    hash.rfc_822_names.should == ["myemail@email.com"]
+    gns = R509::ASN1::GeneralNames.new
+    gns.add_item(asn)
+    gns.add_item(asn2)
+    gns.add_item(asn3)
+    gns.dns_names.should == ["www.test.local","www.text.local"]
+    gns.rfc_822_names.should == ["myemail@email.com"]
   end
   it "errors on unimplemented type" do
     # otherName type
-    hash = R509::ASN1::GeneralNameHash.new
+    gns = R509::ASN1::GeneralNames.new
     der = "\xA0\u0014\u0006\u0003*\u0003\u0004\xA0\r\u0016\vHello World"
     asn = OpenSSL::ASN1.decode der
-    expect { hash.add_item(asn) }.to raise_error(R509::R509Error, "Unimplemented GeneralName type found. Tag: 0. At this time R509 does not support GeneralName types other than rfc822Name, dNSName, uniformResourceIdentifier, and iPAddress")
+    expect { gns.add_item(asn) }.to raise_error(R509::R509Error, "Unimplemented GeneralName type found. Tag: 0. At this time R509 does not support GeneralName types other than rfc822Name, dNSName, uniformResourceIdentifier, and iPAddress")
   end
   it "preserves order" do
     asn = OpenSSL::ASN1.decode "\x82\u000Ewww.test.local"
     asn2 = OpenSSL::ASN1.decode "\x81\u0011myemail@email.com"
     asn3 = OpenSSL::ASN1.decode "\x82\u000Ewww.text.local"
-    hash = R509::ASN1::GeneralNameHash.new
-    hash.add_item(asn)
-    hash.add_item(asn2)
-    hash.add_item(asn3)
-    hash.ordered_names.count.should == 3
-    hash.ordered_names[0].type.should == :dNSName
-    hash.ordered_names[0].value.should == "www.test.local"
-    hash.ordered_names[1].type.should == :rfc822Name
-    hash.ordered_names[1].value.should == "myemail@email.com"
-    hash.ordered_names[2].type.should == :dNSName
-    hash.ordered_names[2].value.should == "www.text.local"
+    gns = R509::ASN1::GeneralNames.new
+    gns.add_item(asn)
+    gns.add_item(asn2)
+    gns.add_item(asn3)
+    gns.names.count.should == 3
+    gns.names[0].type.should == :dNSName
+    gns.names[0].value.should == "www.test.local"
+    gns.names[1].type.should == :rfc822Name
+    gns.names[1].value.should == "myemail@email.com"
+    gns.names[2].type.should == :dNSName
+    gns.names[2].value.should == "www.text.local"
+  end
+
+  it "allows #uniq-ing of #names" do
+    gns = R509::ASN1::GeneralNames.new
+    gns.create_item(:tag => 1, :value => "test")
+    gns.create_item(:tag => 1, :value => "test")
+    gns.names.count.should == 2
+    gns.names.uniq.count.should == 1
   end
 end
 

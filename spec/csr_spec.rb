@@ -119,17 +119,11 @@ describe R509::Csr do
   end
   it "duplicate SAN names should be removed" do
     csr = R509::Csr.new( :bit_strength => 512, :subject => [['CN','test2345.com']], :san_names => ["test2.local","test.local","test.local"] )
-    csr.san_names.should == ["test2.local", "test.local"]
+    csr.san.dns_names.should == ["test2.local", "test.local"]
   end
-  it "creates a valid hash object with to_hash" do
-    csr = R509::Csr.new(:csr => @csr)
-    csr.to_hash[:subject].kind_of?(R509::Subject).should == true
-    csr.to_hash[:subject].to_s.should == '/CN=test.local/O=Testing CSR'
-    csr.to_hash[:san_names].should == ["test.local", "additionaldomains.com", "saniam.com"]
-  end
-  it "san_names is an empty array when there are no SAN names" do
+  it "san is nil when there are no SAN names" do
     csr = R509::Csr.new( :subject => [['CN','langui.sh'],['emailAddress','ca@langui.sh']], :bit_strength => 512)
-    csr.san_names.should == []
+    csr.san.nil?.should == true
   end
   context "when initialized" do
     it "raises exception when providing invalid csr" do
@@ -144,14 +138,16 @@ describe R509::Csr do
       csr = R509::Csr.new( :subject=> [['CN','langui.sh'],['ST','Illinois'],['L','Chicago'],['C','US'],['emailAddress','ca@langui.sh']], :bit_strength => 1024)
       csr.subject.to_s.should == '/CN=langui.sh/ST=Illinois/L=Chicago/C=US/emailAddress=ca@langui.sh'
     end
-    it "adds SAN domains to a generated CSR" do
-      csr = R509::Csr.new( :subject => [['CN','langui.sh'],['emailAddress','ca@langui.sh']], :bit_strength => 1024, :san_names => ['domain2.com','domain3.com'])
-      csr.subject.to_s.should == '/CN=langui.sh/emailAddress=ca@langui.sh'
-      csr.san_names.should == ["domain2.com", "domain3.com"]
-    end
     it "generates a matching csr when supplying raw oids" do
       csr = R509::Csr.new( :subject => [['2.5.4.3','common name'],['2.5.4.15','business category'],['2.5.4.7','locality'],['1.3.6.1.4.1.311.60.2.1.3','jurisdiction oid openssl typically does not know']], :bit_strength => 1024 )
       csr.subject.to_s.should == "/CN=common name/businessCategory=business category/L=locality/jurisdictionOfIncorporationCountryName=jurisdiction oid openssl typically does not know"
+    end
+    it "adds SAN names to a generated CSR" do
+      csr = R509::Csr.new( :subject => [['CN','test']], :bit_strength => 1024, :san_names => ['1.2.3.4','http://langui.sh','email@address.local','domain.internal','2.3.4.5'])
+      csr.san.ip_addresses.should == ['1.2.3.4','2.3.4.5']
+      csr.san.dns_names.should == ['domain.internal']
+      csr.san.uris.should == ['http://langui.sh']
+      csr.san.rfc_822_names.should == ['email@address.local']
     end
   end
   context "when supplying an existing csr" do
@@ -165,11 +161,11 @@ describe R509::Csr do
     end
     it "parses the san names" do
       csr = R509::Csr.new({ :csr => @csr })
-      csr.san_names.should == ["test.local", "additionaldomains.com", "saniam.com"]
+      csr.san.dns_names.should == ["test.local", "additionaldomains.com", "saniam.com"]
     end
     it "parses san names when there are multiple non-SAN attributes" do
       csr = R509::Csr.new({ :csr => @csr4_multiple_attrs })
-      csr.san_names.should == ["adomain.com", "anotherdomain.com", "justanexample.com"]
+      csr.san.dns_names.should == ["adomain.com", "anotherdomain.com", "justanexample.com"]
     end
     it "fetches a subject component" do
       csr = R509::Csr.new({ :csr => @csr })
@@ -185,11 +181,11 @@ describe R509::Csr do
     end
     it "returns RSA key algorithm for RSA CSR" do
       csr = R509::Csr.new({ :csr => @csr })
-      csr.key_algorithm.should == 'RSA'
+      csr.key_algorithm.should == :rsa
     end
     it "returns DSA key algorithm for DSA CSR" do
       csr = R509::Csr.new({ :csr => @csr_dsa })
-      csr.key_algorithm.should == 'DSA'
+      csr.key_algorithm.should == :dsa
     end
     it "returns the public key" do
       #this is more complex than it should have to be. diff versions of openssl
@@ -312,7 +308,7 @@ describe R509::Csr do
     end
     it "returns the key algorithm" do
       csr = R509::Csr.new(:csr => @ec_csr2_pem)
-      csr.key_algorithm.should == 'EC'
+      csr.key_algorithm.should == :ec
     end
     it "returns the public key" do
       csr = R509::Csr.new(:csr => @ec_csr2_pem)

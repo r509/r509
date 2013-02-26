@@ -175,15 +175,6 @@ module R509
       end
     end
 
-    # @return [Array] list of SAN DNS names
-    def san_names
-      if self.subject_alternative_name.nil?
-        return []
-      else
-        return self.subject_alternative_name.dns_names
-      end
-    end
-
     # Returns the CN component, if any, of the subject
     #
     # @return [String]
@@ -203,11 +194,11 @@ module R509
     # Return the CN, as well as all the subject alternative names (SANs).
     #
     # @return [Array] the array of names. Returns an empty array if
-    #  there are no names, at all.
-    def subject_names
+    #  there are no names, at all. Discards SAN types
+    def all_names
       ret = []
       ret << subject_cn unless subject_cn.nil?
-      ret.concat( self.san_names )
+      ret.concat( self.san.names.map { |n| n.value } ) unless self.san.nil?
 
       return ret.sort.uniq
     end
@@ -267,14 +258,14 @@ module R509
 
     # Returns key algorithm (RSA, DSA, EC)
     #
-    # @return [String] value of the key algorithm. RSA, DSA, EC
+    # @return [Symbol] value of the key algorithm. :rsa, :dsa, :ec
     def key_algorithm
       if self.rsa?
-        "RSA"
+        :rsa
       elsif self.dsa?
-        "DSA"
+        :dsa
       elsif self.ec?
-        "EC"
+        :ec
       end
     end
 
