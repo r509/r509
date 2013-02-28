@@ -96,12 +96,33 @@ describe R509::ASN1::GeneralName do
     gn.type.should == :uniformResourceIdentifier
     gn.value.should == "http://www.test.local/subca.crl"
   end
-  it "handles iPAddress" do
+  it "handles iPAddress v4" do
     der = "\x87\u0004\n\u0001\u0002\u0003"
     asn = OpenSSL::ASN1.decode der
     gn = R509::ASN1::GeneralName.new(asn)
     gn.type.should == :iPAddress
     gn.value.should == '10.1.2.3'
+  end
+  it "handles iPAddress v6" do
+    der = "\x87\x10\x00\xFF\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"
+    asn = OpenSSL::ASN1.decode der
+    gn = R509::ASN1::GeneralName.new(asn)
+    gn.type.should == :iPAddress
+    gn.value.should == 'ff::'
+  end
+  it "handles iPAddress v4 with netmask" do
+    der = "\x87\b\n\x01\x02\x03\xFF\xFF\xFF\xFF"
+    asn = OpenSSL::ASN1.decode der
+    gn = R509::ASN1::GeneralName.new(asn)
+    gn.type.should == :iPAddress
+    gn.value.should == '10.1.2.3/255.255.255.255'
+  end
+  it "handles iPAddress v6 with netmask" do
+    der = "\x87 \x00\xFF\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xFF\x00\xFF\x00\xFF\x00\xFF\x00\xFF\x00\xFF\x00\xFF\x00\xFF"
+    asn = OpenSSL::ASN1.decode der
+    gn = R509::ASN1::GeneralName.new(asn)
+    gn.type.should == :iPAddress
+    gn.value.should == 'ff::/ff:ff:ff:ff:ff:ff:ff:ff'
   end
   it "handles directoryName" do
     der = "\xA4`0^1\v0\t\u0006\u0003U\u0004\u0006\u0013\u0002US1\u00110\u000F\u0006\u0003U\u0004\b\f\bIllinois1\u00100\u000E\u0006\u0003U\u0004\a\f\aChicago1\u00180\u0016\u0006\u0003U\u0004\n\f\u000FRuby CA Project1\u00100\u000E\u0006\u0003U\u0004\u0003\f\aTest CA"

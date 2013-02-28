@@ -108,14 +108,12 @@ module R509
             ip = IPAddr.new_ntoh(value)
             @value = ip.to_s
           elsif value.size == 8 #IPv4 with netmask
-            values = value.scan(/.{4}/)
-            ip = IPAddr.new_ntoh(values[0])
-            netmask = IPAddr.new_ntoh(values[1])
+            ip = IPAddr.new_ntoh(value[0,4])
+            netmask = IPAddr.new_ntoh(value[4,4])
             @value = ip.to_s + "/" + netmask.to_s
           elsif value.size == 32 #IPv6 with netmask
-            values = value.scan(/.{16}/)
-            ip = IPAddr.new_ntoh(values[0])
-            netmask = IPAddr.new_ntoh(values[1])
+            ip = IPAddr.new_ntoh(value[0,16])
+            netmask = IPAddr.new_ntoh(value[16,16])
             @value = ip.to_s + "/" + netmask.to_s
           end
 
@@ -190,6 +188,9 @@ module R509
         end
       end
 
+      # @private
+      # @param [Hash] hash A hash with :tag and :value keys. Allows you to build GeneralName objects and add
+      #   them to the GeneralNames object. Unless you know what you're doing you should really stay away from this.
       def create_item(hash)
         if not hash.respond_to?(:has_key?) or not hash.has_key?(:tag) or not hash.has_key?(:value)
           raise ArgumentError, "Must be a hash with :tag and :value nodes"
