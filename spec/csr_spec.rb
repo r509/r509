@@ -143,11 +143,13 @@ describe R509::CSR do
       csr.subject.to_s.should == "/CN=common name/businessCategory=business category/L=locality/jurisdictionOfIncorporationCountryName=jurisdiction oid openssl typically does not know"
     end
     it "adds SAN names to a generated CSR" do
-      csr = R509::CSR.new( :subject => [['CN','test']], :bit_strength => 1024, :san_names => ['1.2.3.4','http://langui.sh','email@address.local','domain.internal','2.3.4.5'])
+      csr = R509::CSR.new( :subject => [['CN','test']], :bit_strength => 1024, :san_names => ['1.2.3.4','http://langui.sh','email@address.local','domain.internal','2.3.4.5',[['CN','dirnametest']]])
       csr.san.ip_addresses.should == ['1.2.3.4','2.3.4.5']
       csr.san.dns_names.should == ['domain.internal']
       csr.san.uris.should == ['http://langui.sh']
       csr.san.rfc_822_names.should == ['email@address.local']
+      csr.san.directory_names.size.should == 1
+      csr.san.directory_names[0].to_s.should == '/CN=dirnametest'
     end
   end
   context "when supplying an existing csr" do

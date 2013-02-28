@@ -102,11 +102,20 @@ describe R509::CertificateAuthority::Signer do
     csr = R509::CSR.new(:csr => @csr)
     expect { @ca.sign({ :csr => csr, :profile_name => 'server_with_subject_item_policy' }) }.to raise_error(R509::R509Error, /This profile requires you supply/)
   end
-  it "issues with specified san domains in array" do
+  it "issues with specified (dnsName) san domains in array" do
     csr = R509::CSR.new(:subject => [['C','US'],['ST','Illinois'],['L','Chicago'],['O','Paul Kehrer'],['CN','langui.sh']], :bit_strength => 1024)
     san_names = ['langui.sh','domain2.com']
     cert = @ca.sign(:csr => csr, :profile_name => 'server', :subject => csr.subject, :san_names => san_names )
     cert.san.dns_names.should == ['langui.sh','domain2.com']
+  end
+  it "issues with specified (directoryName and dnsName) san domains in array" do
+    name = [['C','US'],['ST','Illinois'],['L','Chicago'],['O','Paul Kehrer'],['CN','langui.sh']]
+    csr = R509::CSR.new(:subject => name, :bit_strength => 1024)
+    san_names = ['langui.sh','domain2.com',name]
+    cert = @ca.sign(:csr => csr, :profile_name => 'server', :subject => csr.subject, :san_names => san_names )
+    cert.san.dns_names.should == ['langui.sh','domain2.com']
+    cert.san.directory_names.size.should == 1
+    cert.san.directory_names[0].to_s.should == "/C=US/ST=Illinois/L=Chicago/O=Paul Kehrer/CN=langui.sh"
   end
   it "issues with specified san domains in R509::ASN1::GeneralNames object" do
     csr = R509::CSR.new(:subject => [['C','US'],['ST','Illinois'],['L','Chicago'],['O','Paul Kehrer'],['CN','langui.sh']], :bit_strength => 1024)
