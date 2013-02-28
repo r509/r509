@@ -36,6 +36,28 @@ describe R509::ASN1 do
       general_names.rfc_822_names.should == ['email@domain.com','some@other.com']
     end
 
+    it "adds directoryNames via R509::Subject objects" do
+      s = R509::Subject.new([['CN','what-what']])
+      s2 = R509::Subject.new([['C','US'],['L','locality']])
+      general_names = R509::ASN1.general_name_parser([s,s2])
+      general_names.directory_names.size.should == 2
+      general_names.directory_names[0].CN.should == 'what-what'
+      general_names.directory_names[0].C.should be_nil
+      general_names.directory_names[1].C.should == 'US'
+      general_names.directory_names[1].L.should == 'locality'
+    end
+
+    it "adds directoryNames via arrays" do
+      s = [['CN','what-what']]
+      s2 = [['C','US'],['L','locality']]
+      general_names = R509::ASN1.general_name_parser([s,s2])
+      general_names.directory_names.size.should == 2
+      general_names.directory_names[0].CN.should == 'what-what'
+      general_names.directory_names[0].C.should be_nil
+      general_names.directory_names[1].C.should == 'US'
+      general_names.directory_names[1].L.should == 'locality'
+    end
+
     it "adds a mix of SAN name types" do
       general_names = R509::ASN1.general_name_parser(['1.2.3.4','http://langui.sh','email@address.local','domain.internal','2.3.4.5'])
       general_names.ip_addresses.should == ['1.2.3.4','2.3.4.5']
@@ -85,7 +107,7 @@ describe R509::ASN1::GeneralName do
     # otherName type
     der = "\xA0\u0014\u0006\u0003*\u0003\u0004\xA0\r\u0016\vHello World"
     asn = OpenSSL::ASN1.decode der
-    expect { R509::ASN1::GeneralName.new(asn) }.to raise_error(R509::R509Error, "Unimplemented GeneralName type found. Tag: 0. At this time R509 does not support GeneralName types other than rfc822Name, dNSName, uniformResourceIdentifier, and iPAddress")
+    expect { R509::ASN1::GeneralName.new(asn) }.to raise_error(R509::R509Error, "Unimplemented GeneralName type found. Tag: 0. At this time R509 does not support GeneralName types other than rfc822Name, dNSName, uniformResourceIdentifier, iPAddress, and directoryName")
   end
 end
 
@@ -106,7 +128,7 @@ describe R509::ASN1::GeneralNames do
     gns = R509::ASN1::GeneralNames.new
     der = "\xA0\u0014\u0006\u0003*\u0003\u0004\xA0\r\u0016\vHello World"
     asn = OpenSSL::ASN1.decode der
-    expect { gns.add_item(asn) }.to raise_error(R509::R509Error, "Unimplemented GeneralName type found. Tag: 0. At this time R509 does not support GeneralName types other than rfc822Name, dNSName, uniformResourceIdentifier, and iPAddress")
+    expect { gns.add_item(asn) }.to raise_error(R509::R509Error, "Unimplemented GeneralName type found. Tag: 0. At this time R509 does not support GeneralName types other than rfc822Name, dNSName, uniformResourceIdentifier, iPAddress, and directoryName")
   end
   it "preserves order" do
     asn = OpenSSL::ASN1.decode "\x82\u000Ewww.test.local"
@@ -136,6 +158,14 @@ describe R509::ASN1::GeneralNames do
   it "errors with invalid params to #create_item" do
     gns = R509::ASN1::GeneralNames.new
     expect { gns.create_item({}) }.to raise_error(ArgumentError,'Must be a hash with :tag and :value nodes')
+  end
+
+  it "allows addition of directoryNames with #create_item" do
+    gns = R509::ASN1::GeneralNames.new
+    s = R509::Subject.new([['C','US'],['L','locality']])
+    gns.directory_names.size.should == 0
+    gns.create_item( :tag => 4, :value => s )
+    gns.directory_names.size.should == 1
   end
 end
 

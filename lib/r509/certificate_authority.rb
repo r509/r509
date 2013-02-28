@@ -285,7 +285,9 @@ module R509::CertificateAuthority
       #_end_of_cnf_
 
       if not options[:san_names].nil? and options[:san_names].respond_to?(:serialize_names)
-        ext << ef.create_extension("subjectAltName", options[:san_names].serialize_names)
+        serialize = options[:san_names].serialize_names
+        ef.config = OpenSSL::Config.parse(serialize[:conf])
+        ext << ef.create_extension("subjectAltName", serialize[:extension_string])
       end
 
       if not @config.nil? and @config.cdp_location.respond_to?(:each)

@@ -167,7 +167,9 @@ shared_examples_for "a correct R509 AuthorityKeyIdentifier object" do
   before :all do
     extension_name = "authorityKeyIdentifier"
     klass = AuthorityKeyIdentifier
-    openssl_ext = OpenSSL::X509::Extension.new( extension_name, @extension_value )
+    ef = OpenSSL::X509::ExtensionFactory.new
+    ef.issuer_certificate = OpenSSL::X509::Certificate.new TestFixtures::TEST_CA_CERT
+    openssl_ext = ef.create_extension( "authorityKeyIdentifier", @extension_value )
     @r509_ext = klass.new( openssl_ext )
   end
 
@@ -322,6 +324,7 @@ shared_examples_for "a correct R509 NameConstraints object" do |critical|
     extension_name = "nameConstraints"
     klass = NameConstraints
     ef = OpenSSL::X509::ExtensionFactory.new
+    ef.config = OpenSSL::Config.parse(@conf)
     openssl_ext = ef.create_extension( extension_name, @extension_value, critical)
     @r509_ext = klass.new( openssl_ext )
   end
@@ -376,11 +379,13 @@ describe R509::Cert::Extensions do
         before :each do
           @wrappable_extensions = []
           ef = OpenSSL::X509::ExtensionFactory.new
+          ef.issuer_certificate = OpenSSL::X509::Certificate.new TestFixtures::TEST_CA_CERT
+          ef.subject_certificate = OpenSSL::X509::Certificate.new TestFixtures::TEST_CA_CERT
           @wrappable_extensions << ef.create_extension( "basicConstraints", "CA:TRUE,pathlen:0", true )
           @wrappable_extensions << ef.create_extension( "keyUsage", KeyUsage::AU_DIGITAL_SIGNATURE )
           @wrappable_extensions << ef.create_extension( "extendedKeyUsage", ExtendedKeyUsage::AU_WEB_SERVER_AUTH )
-          @wrappable_extensions << OpenSSL::X509::Extension.new( "subjectKeyIdentifier", "00:11:22:33:44:55:66:77:88:99:00:AA:BB:CC:DD:EE:FF:00:11:22" )
-          @wrappable_extensions << OpenSSL::X509::Extension.new( "authorityKeyIdentifier", "keyid:always" )
+          @wrappable_extensions << ef.create_extension( "subjectKeyIdentifier", "hash" )
+          @wrappable_extensions << ef.create_extension( "authorityKeyIdentifier", "keyid:always" )
           @wrappable_extensions << ef.create_extension( "subjectAltName", "DNS:www.test.local" )
           @wrappable_extensions << ef.create_extension( "authorityInfoAccess", "caIssuers;URI:http://www.test.local" )
           @wrappable_extensions << ef.create_extension( "crlDistributionPoints", "URI:http://www.test.local" )
@@ -617,7 +622,7 @@ describe R509::Cert::Extensions do
       it "errors as expected" do
         ef = OpenSSL::X509::ExtensionFactory.new
         ext = ef.create_extension("subjectAltName","otherName:1.2.3.4;IA5STRING:Hello World")
-        expect { R509::Cert::Extensions::SubjectAlternativeName.new ext }.to raise_error(R509::R509Error, 'Unimplemented GeneralName type found. Tag: 0. At this time R509 does not support GeneralName types other than rfc822Name, dNSName, uniformResourceIdentifier, and iPAddress')
+        expect { R509::Cert::Extensions::SubjectAlternativeName.new ext }.to raise_error(R509::R509Error, 'Unimplemented GeneralName type found. Tag: 0. At this time R509 does not support GeneralName types other than rfc822Name, dNSName, uniformResourceIdentifier, iPAddress, and directoryName')
       end
     end
     context "with a DNS alternative name only" do
@@ -878,10 +883,14 @@ describe R509::Cert::Extensions do
         @permitted_names.each do |name|
           gns.add_item(name)
         end
+        @conf = []
         permitted = gns.names.map { |name|
-          "permitted;" + name.serialize_name
+          serialized = name.serialize_name
+          @conf << serialized[:conf]
+          "permitted;" + serialized[:extension_string]
         }.join(",")
         @extension_value = permitted
+        @conf = @conf.join("\n")
       end
 
       it_should_behave_like "a correct R509 NameConstraints object", false
@@ -895,10 +904,14 @@ describe R509::Cert::Extensions do
         @permitted_names.each do |name|
           gns.add_item(name)
         end
+        @conf = []
         permitted = gns.names.map { |name|
-          "permitted;" + name.serialize_name
+          serialized = name.serialize_name
+          @conf << serialized[:conf]
+          "permitted;" + serialized[:extension_string]
         }.join(",")
         @extension_value = permitted
+        @conf = @conf.join("\n")
       end
 
       it_should_behave_like "a correct R509 NameConstraints object", false
@@ -912,10 +925,14 @@ describe R509::Cert::Extensions do
         @excluded_names.each do |name|
           egns.add_item(name)
         end
+        @conf = []
         excluded = egns.names.map { |name|
-          "excluded;" + name.serialize_name
+          serialized = name.serialize_name
+          @conf << serialized[:conf]
+          "excluded;" + serialized[:extension_string]
         }.join(",")
         @extension_value = excluded
+        @conf = @conf.join("\n")
       end
 
       it_should_behave_like "a correct R509 NameConstraints object", false
@@ -930,10 +947,14 @@ describe R509::Cert::Extensions do
         @excluded_names.each do |name|
           egns.add_item(name)
         end
+        @conf = []
         excluded = egns.names.map { |name|
-          "excluded;" + name.serialize_name
+          serialized = name.serialize_name
+          @conf << serialized[:conf]
+          "excluded;" + serialized[:extension_string]
         }.join(",")
         @extension_value = excluded
+        @conf = @conf.join("\n")
       end
 
       it_should_behave_like "a correct R509 NameConstraints object", false
@@ -947,17 +968,23 @@ describe R509::Cert::Extensions do
         @permitted_names.each do |name|
           gns.add_item(name)
         end
+        @conf = []
         permitted = gns.names.map { |name|
-          "permitted;" + name.serialize_name
+          serialized = name.serialize_name
+          @conf << serialized[:conf]
+          "permitted;" + serialized[:extension_string]
         }.join(",")
         egns = R509::ASN1::GeneralNames.new
         @excluded_names.each do |name|
           egns.add_item(name)
         end
         excluded = egns.names.map { |name|
-          "excluded;" + name.serialize_name
+          serialized = name.serialize_name
+          @conf << serialized[:conf]
+          "excluded;" + serialized[:extension_string]
         }.join(",")
         @extension_value = permitted + "," + excluded
+        @conf = @conf.join("\n")
       end
 
       it_should_behave_like "a correct R509 NameConstraints object", false

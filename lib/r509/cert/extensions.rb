@@ -342,6 +342,38 @@ module R509
         OID = "authorityKeyIdentifier"
         Extensions.register_class(self)
 
+        # key_identifier, if present, will be a hex string delimited by colons
+        # authority_cert_issuer, if present, will be a GeneralName object
+        # authority_cert_serial_number, if present, will be a hex string delimited by colons
+        attr_reader :key_identifier, :authority_cert_issuer, :authority_cert_serial_number
+
+        def initialize(*args)
+          super(*args)
+
+          data = R509::ASN1.get_extension_payload(self)
+          #   AuthorityKeyIdentifier ::= SEQUENCE {
+          #      keyIdentifier             [0] KeyIdentifier           OPTIONAL,
+          #      authorityCertIssuer       [1] GeneralNames            OPTIONAL,
+          #      authorityCertSerialNumber [2] CertificateSerialNumber OPTIONAL  }
+          data.entries.each do |el|
+            case el.tag
+            when 0
+              @key_identifier = el.value.unpack("H*")[0].upcase.scan(/../).join(":")
+            when 1
+              @authority_cert_issuer = R509::ASN1::GeneralName.new(el.value.first)
+            when 2
+              arr = el.value.unpack("H*")[0].upcase.scan(/../)
+              # OpenSSL's convention is to drop leading 00s, so let's strip that off if
+              # present
+              if arr[0] == "00"
+                arr.delete_at(0)
+              end
+              @authority_cert_serial_number = arr.join(":")
+            end
+          end
+
+        end
+
       end
 
       # Implements the SubjectAlternativeName certificate extension, with methods to

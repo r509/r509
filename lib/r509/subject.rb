@@ -18,18 +18,20 @@ module R509
   #   # or
   #   subject.custom_oid="test"
   class Subject
-    # @param [Array, OpenSSL::X509::Name, R509::Subject, nil] arg
+    # @param [Array, OpenSSL::X509::Name, R509::Subject, DER, nil] arg
     def initialize(arg=nil)
-      case arg
-      when Array
+      if arg.kind_of?(Array)
         @array = arg
-      when OpenSSL::X509::Name
+      elsif arg.kind_of?(OpenSSL::X509::Name)
         sanitizer = R509::NameSanitizer.new
         @array = sanitizer.sanitize(arg)
-      when R509::Subject
+      elsif arg.kind_of?(R509::Subject)
         @array = arg.to_a
       else
         @array = []
+        if not (begin OpenSSL::ASN1.decode(arg) rescue nil end).nil?
+          parse_asn1(arg)
+        end
       end
 
       # see if X509 thinks this is okay
@@ -156,6 +158,18 @@ module R509
 
     def camelize(sym)
       sym.to_s.split('_').inject([]){ |buffer,e| buffer.push(buffer.empty? ? e : e.capitalize) }.join
+    end
+
+    def parse_asn1(asn)
+      asn = OpenSSL::ASN1.decode asn
+      # parsing a subject DN
+      # We have to iterate a sequence, which holds sets. Each set has one value: a sequence, which has 2 values
+      # So it's effectively an array of arrays which each have only one element, which is an array of 2 values.
+      asn.value.each do |set|
+        sn = set.value.first.value.first.value
+        val = set.value.first.value.last.value
+        self[sn] = val
+      end
     end
   end
 

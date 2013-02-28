@@ -19,7 +19,8 @@ module R509
       OpenSSL::ASN1.decode(asn.entries.last.value).value
     end
 
-    # @param [Array] names An array of strings. Can be dNSName, iPAddress, URI, or rfc822Name
+    # @param [Array] names An array of strings. Can be dNSName, iPAddress, URI, or rfc822Name.
+    #   You can also supply a directoryName, but this must be an R509::Subject or array of arrays
     # @return [R509::ASN1::GeneralNames]
     def self.general_name_parser(names)
       general_names = R509::ASN1::GeneralNames.new
@@ -29,6 +30,8 @@ module R509
           general_names.create_item(:tag => 7, :value => ip.hton)
         else
           case domain
+          when R509::Subject, Array
+            general_names.create_item(:tag => 4, :value => domain)
           when /:\/\// #URI
             general_names.create_item(:tag => 6, :value => domain.strip)
           when /@/ #rfc822Name
@@ -63,6 +66,8 @@ module R509
       URI_PREFIX = "URI"
       # rfc822Name prefix
       RFC_822_NAME_PREFIX = "email"
+      # directoryName prefix
+      DIRECTORY_NAME_PREFIX = "dirName"
 
       # @param [OpenSSL::ASN1::ASN1Data,Hash] asn ASN.1 input data. Can also pass a hash with :tag and :value keys
       def initialize(asn)
@@ -82,6 +87,16 @@ module R509
           @type = :dNSName
           @serial_prefix = DNSNAME_PREFIX
           @value = value
+        when 4
+          @type = :directoryName
+          @serial_prefix = DIRECTORY_NAME_PREFIX
+          if value.kind_of?(R509::Subject)
+            @value = value
+          elsif value.kind_of?(Array) and not value.first.respond_to?(:to_der)
+            @value = R509::Subject.new(value)
+          else
+            @value = R509::Subject.new(value.first.to_der)
+          end
         when 6
           @type = :uniformResourceIdentifier
           @serial_prefix = URI_PREFIX
@@ -105,7 +120,7 @@ module R509
           end
 
         else
-          raise R509::R509Error, "Unimplemented GeneralName type found. Tag: #{asn.tag}. At this time R509 does not support GeneralName types other than rfc822Name, dNSName, uniformResourceIdentifier, and iPAddress"
+          raise R509::R509Error, "Unimplemented GeneralName type found. Tag: #{asn.tag}. At this time R509 does not support GeneralName types other than rfc822Name, dNSName, uniformResourceIdentifier, iPAddress, and directoryName"
         end
       end
 
@@ -121,9 +136,25 @@ module R509
         "#{self.type}#{self.tag}#{self.value}".hash
       end
 
-      # @return [String] name serialized for OpenSSL extension creation
+      # @return [Hash] conf section and name serialized for OpenSSL extension creation
       def serialize_name
-          self.serial_prefix + ":" + self.value
+        if self.type == :directoryName
+          conf_name = OpenSSL::Random.random_bytes(16).unpack("H*")[0]
+          conf = []
+          conf << "[#{conf_name}]"
+          @value.to_a.each do |el|
+            conf << "#{el[0]}=#{el[1]}"
+          end
+          conf = conf.join("\n")
+          extension_string = self.serial_prefix + ":" + conf_name
+        else
+          conf = nil
+          extension_string = self.serial_prefix + ":" + self.value
+        end
+        {
+          :conf => conf,
+          :extension_string => extension_string
+        }
       end
     end
 
@@ -136,7 +167,7 @@ module R509
           :rfc822Name => [],
           :dNSName => [],
           :x400Address => [], # unimplemented
-          :directoryName => [], # unimplemented
+          :directoryName => [],
           :ediPartyName => [], # unimplemented
           :uniformResourceIdentifier => [],
           :iPAddress => [],
@@ -194,11 +225,21 @@ module R509
         @types[:iPAddress]
       end
 
-      # @return [String] string of serialized names for OpenSSL extension creation
+      # @return [Array] Array of directoryNames (R509::Subject objects)
+      def directory_names
+        @types[:directoryName]
+      end
+
+      # @return [Array] string of serialized names for OpenSSL extension creation
       def serialize_names
-        @ordered_names.map { |item|
-          item.serialize_name
-        }.join(",")
+        confs = []
+        extension_strings = []
+        @ordered_names.each { |item|
+          data = item.serialize_name
+          confs << data[:conf]
+          extension_strings << data[:extension_string]
+        }
+        { :conf => confs.join("\n"), :extension_string => extension_strings.join(",") }
       end
     end
 
