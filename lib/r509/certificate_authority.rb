@@ -284,8 +284,8 @@ module R509::CertificateAuthority
       #CPS.1 = http://www.example.com/cps
       #_end_of_cnf_
 
-      if not options[:san_names].nil? and options[:san_names].respond_to?(:openssl_serialized_names)
-        ext << ef.create_extension("subjectAltName", options[:san_names].openssl_serialized_names)
+      if not options[:san_names].nil? and options[:san_names].respond_to?(:serialize_names)
+        ext << ef.create_extension("subjectAltName", options[:san_names].serialize_names)
       end
 
       if not @config.nil? and @config.cdp_location.respond_to?(:each)

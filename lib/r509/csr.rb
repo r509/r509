@@ -299,7 +299,7 @@ module R509
         end
         ef = OpenSSL::X509::ExtensionFactory.new
         ex = []
-        ex << ef.create_extension("subjectAltName", general_names.openssl_serialized_names)
+        ex << ef.create_extension("subjectAltName", general_names.serialize_names)
         request_extension_set = OpenSSL::ASN1::Set([OpenSSL::ASN1::Sequence(ex)])
         @req.add_attribute(OpenSSL::X509::Attribute.new("extReq", request_extension_set))
         parse_san_attribute_from_csr(@req)

@@ -250,22 +250,25 @@ shared_examples_for "a correct R509 CRLDistributionPoints object" do |critical|
   end
 end
 
-shared_examples_for "a correct R509 OCSPNoCheck object" do
+shared_examples_for "a correct R509 OCSPNoCheck object" do |critical|
   before :all do
     extension_name = "noCheck"
     klass = OCSPNoCheck
-    openssl_ext = OpenSSL::X509::Extension.new( extension_name, "irrelevant")
+    ef = OpenSSL::X509::ExtensionFactory.new
+    openssl_ext = ef.create_extension( extension_name, "irrelevant", critical)
     @r509_ext = klass.new( openssl_ext )
   end
 
   it "has the expected type" do
     @r509_ext.oid.should == "noCheck"
   end
+
+  it "reports #critical? properly" do
+    @r509_ext.critical?.should == critical
+  end
 end
 
 shared_examples_for "a correct R509 CertificatePolicies object" do
-
-
   before :all do
     klass = CertificatePolicies
     openssl_ext = OpenSSL::X509::Extension.new @policy_data
@@ -276,6 +279,64 @@ shared_examples_for "a correct R509 CertificatePolicies object" do
     @r509_ext.policies.count.should == 1
     @r509_ext.policies[0].policy_identifier.should == "2.16.840.1.12345.1.2.3.4.1"
     @r509_ext.policies[0].policy_qualifiers.cps_uris.should == ["http://example.com/cps", "http://other.com/cps"]
+  end
+end
+
+shared_examples_for "a correct R509 InhibitAnyPolicy object" do |critical|
+  before :all do
+    extension_name = "inhibitAnyPolicy"
+    klass = InhibitAnyPolicy
+    ef = OpenSSL::X509::ExtensionFactory.new
+    openssl_ext = ef.create_extension( extension_name, @skip_certs.to_s,critical)
+    @r509_ext = klass.new( openssl_ext )
+  end
+
+  it "should parse the integer value out of the extension" do
+    @r509_ext.skip_certs.should == @skip_certs
+  end
+
+  it "reports #critical? properly" do
+    @r509_ext.critical?.should == critical
+  end
+end
+
+shared_examples_for "a correct R509 PolicyConstraints object" do |critical|
+  before :all do
+    extension_name = "policyConstraints"
+    klass = PolicyConstraints
+    ef = OpenSSL::X509::ExtensionFactory.new
+    openssl_ext = ef.create_extension( extension_name, @extension_value, critical)
+    @r509_ext = klass.new( openssl_ext )
+  end
+
+  it "should have the expected require policy" do
+    @r509_ext.require_explicit_policy.should == @require_explicit_policy
+  end
+  it "should have the expected inhibit mapping" do
+    @r509_ext.inhibit_policy_mapping.should == @inhibit_policy_mapping
+  end
+end
+
+shared_examples_for "a correct R509 NameConstraints object" do |critical|
+  before :all do
+    extension_name = "nameConstraints"
+    klass = NameConstraints
+    ef = OpenSSL::X509::ExtensionFactory.new
+    openssl_ext = ef.create_extension( extension_name, @extension_value, critical)
+    @r509_ext = klass.new( openssl_ext )
+  end
+
+  it "should have the permitted names" do
+    @permitted_names.each_with_index do |name,index|
+      @r509_ext.permitted_names[index].tag.should == name[:tag]
+      @r509_ext.permitted_names[index].value.should == name[:checked_value]
+    end
+  end
+  it "should have the excluded names" do
+    @excluded_names.each_with_index do |name,index|
+      @r509_ext.excluded_names[index].tag.should == name[:tag]
+      @r509_ext.excluded_names[index].value.should == name[:checked_value]
+    end
   end
 end
 
@@ -756,7 +817,8 @@ describe R509::Cert::Extensions do
   end
 
   context "OCSPNoCheck" do
-    it_should_behave_like "a correct R509 OCSPNoCheck object"
+    it_should_behave_like "a correct R509 OCSPNoCheck object", false
+    it_should_behave_like "a correct R509 OCSPNoCheck object", true
   end
 
   context "CertificatePolicies" do
@@ -767,5 +829,139 @@ describe R509::Cert::Extensions do
     it_should_behave_like "a correct R509 CertificatePolicies object"
   end
 
+  context "InhibitAnyPolicy" do
+    before :all do
+      @skip_certs = 3
+    end
 
+    it_should_behave_like "a correct R509 InhibitAnyPolicy object", false
+    it_should_behave_like "a correct R509 InhibitAnyPolicy object", true
+  end
+
+  context "PolicyConstraints" do
+    context "with just require" do
+      before :all do
+        @require_explicit_policy = 2
+        @inhibit_policy_mapping = nil
+        @extension_value = "requireExplicitPolicy:#{@require_explicit_policy}"
+      end
+      it_should_behave_like "a correct R509 PolicyConstraints object", false
+      it_should_behave_like "a correct R509 PolicyConstraints object", true
+    end
+    context "with just inhibit" do
+      before :all do
+        @require_explicit_policy = nil
+        @inhibit_policy_mapping = 3
+        @extension_value = "inhibitPolicyMapping:#{@inhibit_policy_mapping}"
+      end
+      it_should_behave_like "a correct R509 PolicyConstraints object", false
+      it_should_behave_like "a correct R509 PolicyConstraints object", true
+    end
+    context "with both require and inhibit" do
+      before :all do
+        @require_explicit_policy = 2
+        @inhibit_policy_mapping = 3
+        @extension_value = "requireExplicitPolicy:#{@require_explicit_policy},inhibitPolicyMapping:#{@inhibit_policy_mapping}"
+      end
+      it_should_behave_like "a correct R509 PolicyConstraints object", false
+      it_should_behave_like "a correct R509 PolicyConstraints object", true
+    end
+
+  end
+
+  context "NameConstraints" do
+    context "with one permitted name" do
+      before :all do
+        @excluded_names = []
+        @permitted_names = [{:tag => 2, :value => ".whatever.com", :checked_value => ".whatever.com"}]
+        gns = R509::ASN1::GeneralNames.new
+        @permitted_names.each do |name|
+          gns.add_item(name)
+        end
+        permitted = gns.names.map { |name|
+          "permitted;" + name.serialize_name
+        }.join(",")
+        @extension_value = permitted
+      end
+
+      it_should_behave_like "a correct R509 NameConstraints object", false
+      it_should_behave_like "a correct R509 NameConstraints object", true
+    end
+    context "with multiple permitted names" do
+      before :all do
+        @excluded_names = []
+        @permitted_names = [{:tag => 2, :value => ".whatever.com", :checked_value => ".whatever.com"}, {:tag => 1, :value => "user@emaildomain.com", :checked_value => "user@emaildomain.com" } ]
+        gns = R509::ASN1::GeneralNames.new
+        @permitted_names.each do |name|
+          gns.add_item(name)
+        end
+        permitted = gns.names.map { |name|
+          "permitted;" + name.serialize_name
+        }.join(",")
+        @extension_value = permitted
+      end
+
+      it_should_behave_like "a correct R509 NameConstraints object", false
+      it_should_behave_like "a correct R509 NameConstraints object", true
+    end
+    context "with one excluded name" do
+      before :all do
+        @permitted_names = []
+        @excluded_names = [{:tag => 7, :value => "\x7F\x00\x00\x01\xFF\xFF\xFF\xFF", :checked_value => "127.0.0.1/255.255.255.255"}]
+        egns = R509::ASN1::GeneralNames.new
+        @excluded_names.each do |name|
+          egns.add_item(name)
+        end
+        excluded = egns.names.map { |name|
+          "excluded;" + name.serialize_name
+        }.join(",")
+        @extension_value = excluded
+      end
+
+      it_should_behave_like "a correct R509 NameConstraints object", false
+      it_should_behave_like "a correct R509 NameConstraints object", true
+    end
+    context "with multiple excluded names" do
+      before :all do
+        @permitted_names = []
+        @excluded_names = [{:tag => 7, :value => "\x7F\x00\x00\x01\xFF\xFF\xFF\xFF", :checked_value => "127.0.0.1/255.255.255.255"}, {:tag => 1, :value => "emaildomain.com", :checked_value => "emaildomain.com" } ]
+        @permitted_names = []
+        egns = R509::ASN1::GeneralNames.new
+        @excluded_names.each do |name|
+          egns.add_item(name)
+        end
+        excluded = egns.names.map { |name|
+          "excluded;" + name.serialize_name
+        }.join(",")
+        @extension_value = excluded
+      end
+
+      it_should_behave_like "a correct R509 NameConstraints object", false
+      it_should_behave_like "a correct R509 NameConstraints object", true
+    end
+    context "with both permitted and excluded names" do
+      before :all do
+        @excluded_names = [{:tag => 7, :value => "\x7F\x00\x00\x01\xFF\xFF\xFF\xFF", :checked_value => "127.0.0.1/255.255.255.255"}, {:tag => 1, :value => "emaildomain.com", :checked_value => "emaildomain.com" } ]
+        @permitted_names = [{:tag => 2, :value => ".whatever.com", :checked_value => ".whatever.com"}, {:tag => 1, :value => "user@emaildomain.com", :checked_value => "user@emaildomain.com"} ]
+        gns = R509::ASN1::GeneralNames.new
+        @permitted_names.each do |name|
+          gns.add_item(name)
+        end
+        permitted = gns.names.map { |name|
+          "permitted;" + name.serialize_name
+        }.join(",")
+        egns = R509::ASN1::GeneralNames.new
+        @excluded_names.each do |name|
+          egns.add_item(name)
+        end
+        excluded = egns.names.map { |name|
+          "excluded;" + name.serialize_name
+        }.join(",")
+        @extension_value = permitted + "," + excluded
+      end
+
+      it_should_behave_like "a correct R509 NameConstraints object", false
+      it_should_behave_like "a correct R509 NameConstraints object", true
+    end
+  end
 end

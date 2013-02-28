@@ -89,8 +89,21 @@ module R509
         when 7
           @type = :iPAddress
           @serial_prefix = IP_ADDRESS_PREFIX
-          ip = IPAddr.new_ntoh(value)
-          @value = ip.to_s
+          if value.size == 4 or value.size == 16
+            ip = IPAddr.new_ntoh(value)
+            @value = ip.to_s
+          elsif value.size == 8 #IPv4 with netmask
+            values = value.scan(/.{4}/)
+            ip = IPAddr.new_ntoh(values[0])
+            netmask = IPAddr.new_ntoh(values[1])
+            @value = ip.to_s + "/" + netmask.to_s
+          elsif value.size == 32 #IPv6 with netmask
+            values = value.scan(/.{16}/)
+            ip = IPAddr.new_ntoh(values[0])
+            netmask = IPAddr.new_ntoh(values[1])
+            @value = ip.to_s + "/" + netmask.to_s
+          end
+
         else
           raise R509::R509Error, "Unimplemented GeneralName type found. Tag: #{asn.tag}. At this time R509 does not support GeneralName types other than rfc822Name, dNSName, uniformResourceIdentifier, and iPAddress"
         end
@@ -106,6 +119,11 @@ module R509
       # required for #uniq comparisons
       def hash
         "#{self.type}#{self.tag}#{self.value}".hash
+      end
+
+      # @return [String] name serialized for OpenSSL extension creation
+      def serialize_name
+          self.serial_prefix + ":" + self.value
       end
     end
 
@@ -177,9 +195,9 @@ module R509
       end
 
       # @return [String] string of serialized names for OpenSSL extension creation
-      def openssl_serialized_names
+      def serialize_names
         @ordered_names.map { |item|
-          item.serial_prefix + ":" + item.value
+          item.serialize_name
         }.join(",")
       end
     end

@@ -491,6 +491,104 @@ module R509
         end
       end
 
+      # Implements the InhibitAnyPolicy certificate extension, with methods to
+      # provide access to the component and meaning of the extension's contents.
+      class InhibitAnyPolicy < OpenSSL::X509::Extension
+        # friendly name for CP OID
+        OID = "inhibitAnyPolicy"
+        Extensions.register_class(self)
+
+        attr_reader :skip_certs
+
+        def initialize(*args)
+          super(*args)
+
+          #   id-ce-inhibitAnyPolicy OBJECT IDENTIFIER ::=  { id-ce 54 }
+          #   InhibitAnyPolicy ::= SkipCerts
+          #   SkipCerts ::= INTEGER (0..MAX)
+          @skip_certs = R509::ASN1.get_extension_payload(self) # returns a non-negative integer
+        end
+      end
+
+      # Implements the PolicyConstraints certificate extension, with methods to
+      # provide access to the components and meaning of the extension's contents.
+      class PolicyConstraints < OpenSSL::X509::Extension
+        # friendly name for CP OID
+        OID = "policyConstraints"
+        Extensions.register_class(self)
+
+        attr_reader :require_explicit_policy
+        attr_reader :inhibit_policy_mapping
+
+        def initialize(*args)
+          super(*args)
+
+          #   id-ce-policyConstraints OBJECT IDENTIFIER ::=  { id-ce 36 }
+          #   PolicyConstraints ::= SEQUENCE {
+          #        requireExplicitPolicy           [0] SkipCerts OPTIONAL,
+          #        inhibitPolicyMapping            [1] SkipCerts OPTIONAL }
+          #
+          #   SkipCerts ::= INTEGER (0..MAX)
+          data = R509::ASN1.get_extension_payload(self)
+          data.each do |pc|
+            if pc.tag == 0
+              @require_explicit_policy = pc.value.bytes.to_a[0]
+            elsif pc.tag == 1
+              @inhibit_policy_mapping = pc.value.bytes.to_a[0]
+            end
+          end
+        end
+      end
+
+      # Implements the NameConstraints certificate extension, with methods to
+      # provide access to the components and meaning of the extension's contents.
+      class NameConstraints < OpenSSL::X509::Extension
+        # friendly name for CP OID
+        OID = "nameConstraints"
+        Extensions.register_class(self)
+
+        attr_reader :permitted_names, :excluded_names
+
+        #      id-ce-nameConstraints OBJECT IDENTIFIER ::=  { id-ce 30 }
+        #      NameConstraints ::= SEQUENCE {
+        #           permittedSubtrees       [0]     GeneralSubtrees OPTIONAL,
+        #           excludedSubtrees        [1]     GeneralSubtrees OPTIONAL }
+        #
+        #      GeneralSubtrees ::= SEQUENCE SIZE (1..MAX) OF GeneralSubtree
+        #
+        # per RFC 5280
+        # Within this profile, the minimum and maximum fields are not used with
+        # any name forms, thus, the minimum MUST be zero, and maximum MUST be
+        # absent
+        #      GeneralSubtree ::= SEQUENCE {
+        #           base                    GeneralName,
+        #           minimum         [0]     BaseDistance DEFAULT 0,
+        #           maximum         [1]     BaseDistance OPTIONAL }
+        #
+        #      BaseDistance ::= INTEGER (0..MAX)
+        def initialize(*args)
+          super(*args)
+
+          @permitted_names = []
+          @excluded_names = []
+
+          data = R509::ASN1.get_extension_payload(self)
+          data.each do |gs|
+            gs.value.each do |asn_data|
+              asn_data.value.each do |obj|
+                gn = R509::ASN1::GeneralName.new(obj)
+                if gs.tag == 0 # permittedSubtrees
+                @permitted_names << gn
+                elsif gs.tag == 1 #excludedSubtrees
+                  @excluded_names << gn
+                end
+              end
+            end
+          end
+        end
+      end
+
+
 
       #
       # Helper class methods

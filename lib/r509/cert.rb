@@ -418,6 +418,29 @@ module R509
       return extensions[R509::Cert::Extensions::CertificatePolicies]
     end
 
+    # Returns this object's InhibitAnyPolicy extension as an R509 extension
+    #
+    # @return [R509::Cert::Extensions::InhibitAnyPolicy] The object, or nil
+    # if this cert does not have a InhibitAnyPolicy extension.
+    def inhibit_any_policy
+      return extensions[R509::Cert::Extensions::InhibitAnyPolicy]
+    end
+
+    # Returns this object's PolicyConstraints extension as an R509 extension
+    #
+    # @return [R509::Cert::Extensions::PolicyConstraints] The object, or nil
+    # if this cert does not have a PolicyConstraints extension.
+    def policy_constraints
+      return extensions[R509::Cert::Extensions::PolicyConstraints]
+    end
+
+    # Returns this object's NameConstraints extension as an R509 extension
+    #
+    # @return [R509::Cert::Extensions::NameConstraints] The object, or nil
+    # if this cert does not have a NameConstraints extension.
+    def name_constraints
+      return extensions[R509::Cert::Extensions::NameConstraints]
+    end
 
     private
     # This method exists only to provide a friendlier error msg if you attempt to
