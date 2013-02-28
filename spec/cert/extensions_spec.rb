@@ -1013,7 +1013,7 @@ describe R509::Cert::Extensions do
     context "with one excluded name" do
       before :all do
         @permitted_names = []
-        @excluded_names = [{:tag => 7, :value => "\x7F\x00\x00\x01\xFF\xFF\xFF\xFF", :checked_value => "127.0.0.1/255.255.255.255"}]
+        @excluded_names = [{:tag => 7, :value => "\x7F\x00\x00\x01\xFF\xFF\xFF\xFF".force_encoding("BINARY"), :checked_value => "127.0.0.1/255.255.255.255"}]
         egns = R509::ASN1::GeneralNames.new
         @excluded_names.each do |name|
           egns.add_item(name)
@@ -1034,7 +1034,7 @@ describe R509::Cert::Extensions do
     context "with multiple excluded names" do
       before :all do
         @permitted_names = []
-        @excluded_names = [{:tag => 7, :value => "\x7F\x00\x00\x01\xFF\xFF\xFF\xFF", :checked_value => "127.0.0.1/255.255.255.255"}, {:tag => 1, :value => "emaildomain.com", :checked_value => "emaildomain.com" } ]
+        @excluded_names = [{:tag => 7, :value => "\x7F\x00\x00\x01\xFF\xFF\xFF\xFF".force_encoding("BINARY"), :checked_value => "127.0.0.1/255.255.255.255"}, {:tag => 1, :value => "emaildomain.com", :checked_value => "emaildomain.com" } ]
         @permitted_names = []
         egns = R509::ASN1::GeneralNames.new
         @excluded_names.each do |name|
@@ -1055,7 +1055,7 @@ describe R509::Cert::Extensions do
     end
     context "with both permitted and excluded names" do
       before :all do
-        @excluded_names = [{:tag => 7, :value => "\x7F\x00\x00\x01\xFF\xFF\xFF\xFF", :checked_value => "127.0.0.1/255.255.255.255"}, {:tag => 1, :value => "emaildomain.com", :checked_value => "emaildomain.com" } ]
+        @excluded_names = [{:tag => 7, :value => "\x7F\x00\x00\x01\xFF\xFF\xFF\xFF".force_encoding("BINARY"), :checked_value => "127.0.0.1/255.255.255.255"}, {:tag => 1, :value => "emaildomain.com", :checked_value => "emaildomain.com" } ]
         @permitted_names = [{:tag => 2, :value => ".whatever.com", :checked_value => ".whatever.com"}, {:tag => 1, :value => "user@emaildomain.com", :checked_value => "user@emaildomain.com"} ]
         gns = R509::ASN1::GeneralNames.new
         @permitted_names.each do |name|
