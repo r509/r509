@@ -18,6 +18,9 @@ describe R509::Cert do
     @test_ca_cert = TestFixtures::TEST_CA_CERT
     @cert_expired = TestFixtures::CERT_EXPIRED
     @cert_not_yet_valid = TestFixtures::CERT_NOT_YET_VALID
+    @cert_inhibit = TestFixtures::CERT_INHIBIT
+    @cert_policy_constraints = TestFixtures::CERT_POLICY_CONSTRAINTS
+    @cert_name_constraints = TestFixtures::CERT_NAME_CONSTRAINTS
   end
   it "raises error when no hash supplied" do
     expect { R509::Cert.new('no hash')}.to raise_error(ArgumentError, 'Must provide a hash of options')
@@ -247,6 +250,22 @@ describe R509::Cert do
   it "gets the right object from #crl_distribution_points" do
     cert = R509::Cert.new(:cert => @cert)
     cert.crl_distribution_points.class.should == R509::Cert::Extensions::CRLDistributionPoints
+  end
+  it "gets the right object from #certificate_policies" do
+    cert = R509::Cert.new(:cert => @cert)
+    cert.certificate_policies.class.should == R509::Cert::Extensions::CertificatePolicies
+  end
+  it "gets the right object from #inhibit_any_policy" do
+    cert = R509::Cert.new(:cert => @cert_inhibit)
+    cert.inhibit_any_policy.class.should == R509::Cert::Extensions::InhibitAnyPolicy
+  end
+  it "gets the right object from #policy_constraints" do
+    cert = R509::Cert.new(:cert => @cert_policy_constraints)
+    cert.policy_constraints.class.should == R509::Cert::Extensions::PolicyConstraints
+  end
+  it "gets the right object from #name_constraints" do
+    cert = R509::Cert.new(:cert => @cert_name_constraints)
+    cert.name_constraints.class.should == R509::Cert::Extensions::NameConstraints
   end
   it "returns true from #ocsp_no_check? when the extension is present" do
     cert = R509::Cert.new(:cert => @cert_ocsp_no_check)

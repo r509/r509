@@ -14,6 +14,10 @@ module TestFixtures
   #Trustwave cert for langui.sh
   CERT = read_fixture('cert1.pem')
 
+  CERT_INHIBIT = read_fixture('cert_inhibit.pem')
+  CERT_POLICY_CONSTRAINTS = read_fixture('cert_policy_constraints.pem')
+  CERT_NAME_CONSTRAINTS = read_fixture('cert_name_constraints.pem')
+
   #Trustwave root cert
   STCA_CERT = read_fixture('stca.pem')
 
