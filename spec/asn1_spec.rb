@@ -103,6 +103,13 @@ describe R509::ASN1::GeneralName do
     gn.type.should == :iPAddress
     gn.value.should == '10.1.2.3'
   end
+  it "handles directoryName" do
+    der = "\xA4`0^1\v0\t\u0006\u0003U\u0004\u0006\u0013\u0002US1\u00110\u000F\u0006\u0003U\u0004\b\f\bIllinois1\u00100\u000E\u0006\u0003U\u0004\a\f\aChicago1\u00180\u0016\u0006\u0003U\u0004\n\f\u000FRuby CA Project1\u00100\u000E\u0006\u0003U\u0004\u0003\f\aTest CA"
+    asn = OpenSSL::ASN1.decode der
+    gn = R509::ASN1::GeneralName.new(asn)
+    gn.type.should == :directoryName
+    gn.value.to_s.should == '/C=US/ST=Illinois/L=Chicago/O=Ruby CA Project/CN=Test CA'
+  end
   it "errors on unimplemented type" do
     # otherName type
     der = "\xA0\u0014\u0006\u0003*\u0003\u0004\xA0\r\u0016\vHello World"

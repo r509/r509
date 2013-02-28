@@ -416,6 +416,11 @@ module R509
           @general_names.uris
         end
 
+        # @return [Array<R509::Subject>] directory names
+        def directory_names
+          @general_names.directory_names
+        end
+
         # @return [Array] array of hashes of form { :type => "", :value => "" } that preserve the order found
         #   in the extension
         def names

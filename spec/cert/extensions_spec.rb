@@ -183,6 +183,7 @@ shared_examples_for "a correct R509 SubjectAlternativeName object" do |critical|
     extension_name = "subjectAltName"
     klass = SubjectAlternativeName
     ef = OpenSSL::X509::ExtensionFactory.new
+    ef.config = OpenSSL::Config.parse(@conf)
     openssl_ext = ef.create_extension( extension_name, @extension_value , critical )
     @r509_ext = klass.new( openssl_ext )
   end
@@ -203,8 +204,12 @@ shared_examples_for "a correct R509 SubjectAlternativeName object" do |critical|
     @r509_ext.uris.should == @uris
   end
 
+  it "dirNames should be correct critical:#{critical}" do
+    @r509_ext.directory_names.size.should == @directory_names.size
+  end
+
   it "ordered should be correct critical:#{critical}" do
-    @r509_ext.names.size.should == @dns_names.size + @ip_addresses.size + @rfc_822_names.size + @uris.size
+    @r509_ext.names.size.should == @dns_names.size + @ip_addresses.size + @rfc_822_names.size + @uris.size + @directory_names.size
   end
 
   it "reports #critical? properly" do
@@ -631,7 +636,12 @@ describe R509::Cert::Extensions do
         @ip_addresses = []
         @uris = []
         @rfc_822_names = []
-        @extension_value = "DNS:#{@dns_names.join(",DNS:")}"
+        @directory_names = []
+        total = [@dns_names,@ip_addresses,@uris,@rfc_822_names,@directory_names].flatten(1)
+        gns = R509::ASN1.general_name_parser(total)
+        serialized = gns.serialize_names
+        @conf = serialized[:conf]
+        @extension_value = serialized[:extension_string]
       end
 
       it_should_behave_like "a correct R509 SubjectAlternativeName object", false
@@ -644,7 +654,12 @@ describe R509::Cert::Extensions do
         @ip_addresses = []
         @uris = []
         @rfc_822_names = []
-        @extension_value = "DNS:#{@dns_names.join(",DNS:")}"
+        @directory_names = []
+        total = [@dns_names,@ip_addresses,@uris,@rfc_822_names,@directory_names].flatten(1)
+        gns = R509::ASN1.general_name_parser(total)
+        serialized = gns.serialize_names
+        @conf = serialized[:conf]
+        @extension_value = serialized[:extension_string]
       end
 
       it_should_behave_like "a correct R509 SubjectAlternativeName object", false
@@ -657,7 +672,12 @@ describe R509::Cert::Extensions do
         @ip_addresses = ["203.1.2.3"]
         @rfc_822_names = []
         @uris = []
-        @extension_value = "IP:#{@ip_addresses.join(",IP:")}"
+        @directory_names = []
+        total = [@dns_names,@ip_addresses,@uris,@rfc_822_names,@directory_names].flatten(1)
+        gns = R509::ASN1.general_name_parser(total)
+        serialized = gns.serialize_names
+        @conf = serialized[:conf]
+        @extension_value = serialized[:extension_string]
       end
 
       it_should_behave_like "a correct R509 SubjectAlternativeName object", false
@@ -670,7 +690,12 @@ describe R509::Cert::Extensions do
         @ip_addresses = ["10.1.2.3", "10.1.2.4"]
         @uris = []
         @rfc_822_names = []
-        @extension_value = "IP:#{@ip_addresses.join(",IP:")}"
+        @directory_names = []
+        total = [@dns_names,@ip_addresses,@uris,@rfc_822_names,@directory_names].flatten(1)
+        gns = R509::ASN1.general_name_parser(total)
+        serialized = gns.serialize_names
+        @conf = serialized[:conf]
+        @extension_value = serialized[:extension_string]
       end
 
       it_should_behave_like "a correct R509 SubjectAlternativeName object", false
@@ -683,7 +708,12 @@ describe R509::Cert::Extensions do
         @ip_addresses = []
         @rfc_822_names = ["some@guy.com"]
         @uris = []
-        @extension_value = "email:#{@rfc_822_names.join(",email:")}"
+        @directory_names = []
+        total = [@dns_names,@ip_addresses,@uris,@rfc_822_names,@directory_names].flatten(1)
+        gns = R509::ASN1.general_name_parser(total)
+        serialized = gns.serialize_names
+        @conf = serialized[:conf]
+        @extension_value = serialized[:extension_string]
       end
 
       it_should_behave_like "a correct R509 SubjectAlternativeName object", false
@@ -696,7 +726,12 @@ describe R509::Cert::Extensions do
         @ip_addresses = []
         @rfc_822_names = ["some@guy.com","other@guy.com"]
         @uris = []
-        @extension_value = "email:#{@rfc_822_names.join(",email:")}"
+        @directory_names = []
+        total = [@dns_names,@ip_addresses,@uris,@rfc_822_names,@directory_names].flatten(1)
+        gns = R509::ASN1.general_name_parser(total)
+        serialized = gns.serialize_names
+        @conf = serialized[:conf]
+        @extension_value = serialized[:extension_string]
       end
 
       it_should_behave_like "a correct R509 SubjectAlternativeName object", false
@@ -709,7 +744,12 @@ describe R509::Cert::Extensions do
         @ip_addresses = []
         @rfc_822_names = []
         @uris = ["http://www.test.local"]
-        @extension_value = "URI:#{@uris.join(",URI:")}"
+        @directory_names = []
+        total = [@dns_names,@ip_addresses,@uris,@rfc_822_names,@directory_names].flatten(1)
+        gns = R509::ASN1.general_name_parser(total)
+        serialized = gns.serialize_names
+        @conf = serialized[:conf]
+        @extension_value = serialized[:extension_string]
       end
 
       it_should_behave_like "a correct R509 SubjectAlternativeName object", false
@@ -722,7 +762,53 @@ describe R509::Cert::Extensions do
         @ip_addresses = []
         @rfc_822_names = []
         @uris = ["http://www.test.local","http://www2.test.local"]
-        @extension_value = "URI:#{@uris.join(",URI:")}"
+        @directory_names = []
+        total = [@dns_names,@ip_addresses,@uris,@rfc_822_names,@directory_names].flatten(1)
+        gns = R509::ASN1.general_name_parser(total)
+        serialized = gns.serialize_names
+        @conf = serialized[:conf]
+        @extension_value = serialized[:extension_string]
+      end
+
+      it_should_behave_like "a correct R509 SubjectAlternativeName object", false
+      it_should_behave_like "a correct R509 SubjectAlternativeName object", true
+    end
+
+    context "with a directoryName alternative name only" do
+      before :all do
+        @dns_names = []
+        @ip_addresses = []
+        @rfc_822_names = []
+        @uris = []
+        @directory_names = [
+          [['CN','langui.sh'],['O','org'],['L','locality']]
+        ]
+        total = [@dns_names,@ip_addresses,@uris,@rfc_822_names,@directory_names].flatten(1)
+        gns = R509::ASN1.general_name_parser(total)
+        serialized = gns.serialize_names
+        @conf = serialized[:conf]
+        @extension_value = serialized[:extension_string]
+      end
+
+      it_should_behave_like "a correct R509 SubjectAlternativeName object", false
+      it_should_behave_like "a correct R509 SubjectAlternativeName object", true
+    end
+
+    context "with multiple directoryName alternative names only" do
+      before :all do
+        @dns_names = []
+        @ip_addresses = []
+        @rfc_822_names = []
+        @uris = []
+        @directory_names = [
+          [['CN','langui.sh'],['O','org'],['L','locality']],
+          [['CN','otherdomain.com'],['O','org-like']]
+        ]
+        total = [@dns_names,@ip_addresses,@uris,@rfc_822_names,@directory_names].flatten(1)
+        gns = R509::ASN1.general_name_parser(total)
+        serialized = gns.serialize_names
+        @conf = serialized[:conf]
+        @extension_value = serialized[:extension_string]
       end
 
       it_should_behave_like "a correct R509 SubjectAlternativeName object", false
@@ -735,7 +821,14 @@ describe R509::Cert::Extensions do
         @ip_addresses = ["10.1.2.3"]
         @rfc_822_names = ["myemail@email.com"]
         @uris = ["http://www.test.local"]
-        @extension_value = "DNS:#{@dns_names.join(",DNS:")},IP:#{@ip_addresses.join(",IP:")},URI:#{@uris.join(",URI:")},email:#{@rfc_822_names.join(",email:")}"
+        @directory_names = [
+          [['CN','langui.sh'],['O','org'],['L','locality']]
+        ]
+        total = [@dns_names,@ip_addresses,@uris,@rfc_822_names,@directory_names].flatten(1)
+        gns = R509::ASN1.general_name_parser(total)
+        serialized = gns.serialize_names
+        @conf = serialized[:conf]
+        @extension_value = serialized[:extension_string]
       end
 
       it_should_behave_like "a correct R509 SubjectAlternativeName object", false
