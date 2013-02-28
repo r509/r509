@@ -44,6 +44,8 @@ module R509
       general_names
     end
 
+    # This class parses ASN.1 GeneralName objects. At the moment it supports
+    # rfc822Name, dNSName, directoryName, uniformResourceIdentifier, and iPAddress
     #   GeneralName ::= CHOICE {
     #        otherName                       [0]     OtherName,
     #        rfc822Name                      [1]     IA5String,
@@ -55,7 +57,14 @@ module R509
     #        iPAddress                       [7]     OCTET STRING,
     #        registeredID                    [8]     OBJECT IDENTIFIER }
     class GeneralName
-      attr_reader :type ,:serial_prefix, :value, :tag
+      # The type, represented as a symbolized version of the GeneralName (e.g. :dNSName)
+      attr_reader :type
+      # The prefix OpenSSL needs for this type when encoding it into an extension.
+      attr_reader :serial_prefix
+      # Value of the GeneralName
+      attr_reader :value
+      # Integer tag type. See GeneralName description at the top of this class
+      attr_reader :tag
 
       # these prefixes are what OpenSSL uses internally to encode when generating extension objects
       # dNSName prefix
@@ -122,6 +131,7 @@ module R509
         end
       end
 
+      # @private
       # required for #uniq comparisons
       # @return [Boolean] equality between objects
       def ==(other)
@@ -129,11 +139,13 @@ module R509
       end
       alias_method :eql?, :==
 
+      # @private
       # required for #uniq comparisons
       def hash
         "#{self.type}#{self.tag}#{self.value}".hash
       end
 
+      # Used to serialize GeneralName objects when issuing new certificates inside R509::CertificateAuthority::Signer
       # @return [Hash] conf section and name serialized for OpenSSL extension creation
       def serialize_name
         if self.type == :directoryName
