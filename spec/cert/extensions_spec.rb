@@ -176,6 +176,14 @@ shared_examples_for "a correct R509 AuthorityKeyIdentifier object" do
   it "has the expected type" do
     @r509_ext.oid.should == "authorityKeyIdentifier"
   end
+
+  it "contains the key identifier" do
+    @r509_ext.key_identifier.should == "79:75:BB:84:3A:CB:2C:DE:7A:09:BE:31:1B:43:BC:1C:2A:4D:53:58"
+  end
+  it "parses the authority cert issuer and serial number" do
+    @r509_ext.authority_cert_issuer.value.to_s.should == "/C=US/ST=Illinois/L=Chicago/O=Ruby CA Project/CN=Test CA"
+    @r509_ext.authority_cert_serial_number.should == 'FF:D9:C7:0B:87:37:D1:94'
+  end
 end
 
 shared_examples_for "a correct R509 SubjectAlternativeName object" do |critical|
@@ -616,7 +624,7 @@ describe R509::Cert::Extensions do
 
   context "AuthorityKeyIdentifier" do
     before :all do
-      @extension_value = "keyid:always"
+      @extension_value = "keyid:always,issuer:always"
     end
 
     it_should_behave_like "a correct R509 AuthorityKeyIdentifier object"
