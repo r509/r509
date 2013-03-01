@@ -128,9 +128,31 @@ module R509
             netmask = IPAddr.new_ntoh(value[16,16])
             @value = ip.to_s + "/" + netmask.to_s
           end
-
         else
           raise R509::R509Error, "Unimplemented GeneralName type found. Tag: #{asn.tag}. At this time R509 does not support GeneralName types other than rfc822Name, dNSName, uniformResourceIdentifier, iPAddress, and directoryName"
+        end
+      end
+
+      def self.map_type_to_tag(type)
+        #        otherName                       [0]     OtherName,
+        #        rfc822Name                      [1]     IA5String,
+        #        dNSName                         [2]     IA5String,
+        #        x400Address                     [3]     ORAddress,
+        #        directoryName                   [4]     Name,
+        #        ediPartyName                    [5]     EDIPartyName,
+        #        uniformResourceIdentifier       [6]     IA5String,
+        #        iPAddress                       [7]     OCTET STRING,
+        #        registeredID                    [8]     OBJECT IDENTIFIER }
+        case type
+        when "otherName", :otherName then 0
+        when "rfc822Name", :rfc822Name, RFC_822_NAME_PREFIX then 1
+        when "dNSName", :dNSName, DNSNAME_PREFIX then 2
+        when "x400Address", :x400Address then 3
+        when "directoryName", :directoryName, DIRECTORY_NAME_PREFIX then 4
+        when "ediPartyName", :ediPartyName  then 5
+        when "uniformResourceIdentifier", :uniformResourceIdentifier, URI_PREFIX then 6
+        when "iPAddress", :iPAddress, IP_ADDRESS_PREFIX then 7
+        when "registeredID", :registeredID  then 8
         end
       end
 
@@ -207,14 +229,28 @@ module R509
       # @param [Hash] hash A hash with :tag and :value keys. Allows you to build GeneralName objects and add
       #   them to the GeneralNames object. Unless you know what you're doing you should really stay away from this.
       def create_item(hash)
-        if not hash.respond_to?(:has_key?) or not hash.has_key?(:tag) or not hash.has_key?(:value)
-          raise ArgumentError, "Must be a hash with :tag and :value nodes"
+        if not hash.respond_to?(:has_key?) or (not hash.has_key?(:tag) and not hash.has_key?(:type)) or not hash.has_key?(:value)
+          raise ArgumentError, "Must be a hash with (:tag or :type) and :value nodes"
+        end
+        if hash[:type]
+          hash[:tag] = R509::ASN1::GeneralName.map_type_to_tag(hash[:type])
+          # TODO: refactor this into a more generic place
+          # we do some of this processing in R509::GeneralName
+          # this should be improved because it's lame
+          if hash[:tag] == 4 # directoryName
+            hash[:value] = R509::Subject.new(hash[:value])
+          elsif hash[:tag] == 7 # iPAddress
+            ip_netmask = hash[:value].split('/')
+            values = ip_netmask.map { |data| IPAddr.new(data).hton }
+            hash[:value] = values.join
+            puts hash[:value].size
+          end
         end
         gn = R509::ASN1::GeneralName.new(:tag => hash[:tag], :value => hash[:value])
         add_item(gn)
       end
 
-      # @return [Array] array of hashes of form { :type => "", :value => "" } that preserve the
+      # @return [Array] array of GeneralName objects
       # order found in the extension
       def names
         @ordered_names

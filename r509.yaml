@@ -72,7 +72,18 @@ certificate_authorities: {
           }
         ],
         inhibit_any_policy: 0,
-        policy_constraints: { require_explicit_policy: 0, inhibit_policy_mapping: 0}
+        policy_constraints: { require_explicit_policy: 0, inhibit_policy_mapping: 0},
+        name_constraints: {
+          permitted: [
+            {type: "IP", value: "192.168.0.0/255.255.0.0"},
+            {type: "dirName", value: [['CN','myCN'],['O','Org']]}
+          ],
+          excluded: [
+            {type: "email", value: "domain.com"},
+            {type: "URI", value: ".net"},
+            {type: "DNS", value: "test.us"}
+          ]
+        }
       },
       ocsp_delegate: {
         basic_constraints:  {"ca" : false},

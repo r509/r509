@@ -467,14 +467,14 @@ Example: '/path/to/my\_ca\_crl\_number.txt'
 Integer hours for CRL validity.
 
 ###ocsp\_location
-An array of URIs for client OCSP checks.
+An array of URIs for client OCSP checks. These strings will be scanned and automatically processed to determine their proper type in the certificate.
 
 ```yaml
 ['http://ocsp.r509.org']
 ```
 
 ###ca\_issuers\_location
-An array of ca issuer URIs
+An array of ca issuer locations. These strings will be scanned and automatically processed to determine their proper type in the certificate.
 
 ```yaml
 ['http://www.r509.org/some_roots.html']
@@ -589,6 +589,29 @@ or if you only need one of the keys
 
 ```yaml
   { inhibit_policy_mapping: 0 }
+```
+
+###name\_constraints
+From RFC 5280: "The name constraints extension, which MUST be used only in a CA certificate, indicates a name space within which all subject names in subsequent certificates in a certification path MUST be located.  Restrictions apply to the subject distinguished name and apply to subject alternative names.  Restrictions apply only when the specified name form is present.  If no name of the type is in the certificate, the certificate is acceptable.".
+
+This section is made up of a hash that contains permitted and excluded keys. Each (optional) key in turn has an array of hashes that declare a type and value. Types allowed are defined by R509::ASN1::GeneralName.map_type_to_tag. (examples: DNS, URI, IP, email, dirName)
+
+Notes:
+ * When supplying IP you _must_ supply a full netmask in addition to an IP.
+ * When supplying dirName the value is an array of arrays structured the same way as input to :subject in R509::CSR.new
+
+```yaml
+{
+  permitted: [
+    {type: "IP", value: "192.168.0.0/255.255.0.0"},
+    {type: "dirName", value: [['CN','myCN'],['O','Org']]}
+  ],
+  excluded: [
+    {type: "email", value: "domain.com"},
+    {type: "URI", value: ".net"},
+    {type: "DNS", value: "test.us"}
+  ]
+}
 ```
 
 ####subject\_item\_policy

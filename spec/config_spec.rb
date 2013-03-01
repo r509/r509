@@ -486,6 +486,41 @@ describe R509::Config::CAProfile do
       profile.policy_constraints["inhibit_policy_mapping"].should == 4
     end
   end
+  context "validate name constraints"do
+    it "raises an error when not a hash" do
+      expect { R509::Config::CAProfile.new( :name_constraints => 'a string' ) }.to raise_error(ArgumentError,'name_constraints must be provided as a hash')
+    end
+    it "raises an error when permitted and excluded are empty" do
+      expect { R509::Config::CAProfile.new( :name_constraints => {"permitted" => [], "excluded" => []} ) }.to raise_error(ArgumentError,'If name_constraints are supplied you must have at least one valid permitted or excluded element')
+    end
+    it "raises an error when permitted or excluded are not arrays" do
+      expect { R509::Config::CAProfile.new( :name_constraints => {"permitted" => 'string', "excluded" => 'string'} ) }.to raise_error(ArgumentError,'permitted must be an array')
+    end
+    it "raises an error when permitted or excluded elements are not hashes with the required values" do
+      expect { R509::Config::CAProfile.new( :name_constraints => {"permitted" => [{"type" => 'DNS'}]} ) }.to raise_error(ArgumentError,'Elements within the permitted array must be hashes with both type and value')
+      expect { R509::Config::CAProfile.new( :name_constraints => {"permitted" => [{'value' => '127'}]} ) }.to raise_error(ArgumentError,'Elements within the permitted array must be hashes with both type and value')
+    end
+    it "raises an error when an invalid type is specified" do
+      expect { R509::Config::CAProfile.new( :name_constraints => {"permitted" => [{'type' => 'invalid', 'value' => '127'}]} ) }.to raise_error(ArgumentError,'invalid is not an allowed type. Check R509::ASN1::GeneralName.map_type_to_tag to see a list of types')
+    end
+    it "loads a config with just permitted" do
+      profile = R509::Config::CAProfile.new(:name_constraints => {"permitted" => [ { 'type' => 'DNS', 'value' => 'domain.com' } ] } )
+      profile.name_constraints["permitted"][0]['type'] = 'DNS'
+      profile.name_constraints["permitted"][0]['value'] = 'domain.com'
+    end
+    it "loads a config with just excluded" do
+      profile = R509::Config::CAProfile.new(:name_constraints => {"excluded" => [ { 'type' => 'IP', 'value' => '127.0.0.1/255.255.255.255' } ] } )
+      profile.name_constraints["excluded"][0]['type'] = 'IP'
+      profile.name_constraints["excluded"][0]['value'] = '127.0.0.1/255.255.255.255'
+    end
+    it "loads a config with both permitted and excluded" do
+      profile = R509::Config::CAProfile.new(:name_constraints => {"permitted" => [ { 'type' => 'DNS', 'value' => 'domain.com' } ], "excluded" => [ { 'type' => 'IP', 'value' => '127.0.0.1/255.255.255.255' } ] } )
+      profile.name_constraints["permitted"][0]['type'] = 'DNS'
+      profile.name_constraints["permitted"][0]['value'] = 'domain.com'
+      profile.name_constraints["excluded"][0]['type'] = 'IP'
+      profile.name_constraints["excluded"][0]['value'] = '127.0.0.1/255.255.255.255'
+    end
+  end
   it "initializes and stores the options provided" do
     profile = R509::Config::CAProfile.new(
       :basic_constraints => {"ca" => true},

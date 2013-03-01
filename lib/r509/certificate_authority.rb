@@ -112,7 +112,8 @@ module R509::CertificateAuthority
         :certificate_policies => certificate_policies,
         :san_names => san_names,
         :inhibit_any_policy => profile.inhibit_any_policy,
-        :policy_constraints => profile.policy_constraints
+        :policy_constraints => profile.policy_constraints,
+        :name_constraints => profile.name_constraints
       )
 
 
@@ -334,6 +335,37 @@ module R509::CertificateAuthority
         constraints << "requireExplicitPolicy:#{pc["require_explicit_policy"]}" unless pc["require_explicit_policy"].nil?
         constraints << "inhibitPolicyMapping:#{pc["inhibit_policy_mapping"]}" unless pc["inhibit_policy_mapping"].nil?
         ext << ef.create_extension("policyConstraints",constraints.join(","),true) # must be set critical per RFC 5280
+      end
+
+      if options[:name_constraints]
+        nc = options[:name_constraints]
+        nc_data = []
+        nc_conf = []
+        if not nc["permitted"].nil?
+          gns = R509::ASN1::GeneralNames.new
+          nc["permitted"].each do |p|
+            gns.create_item(:type => p["type"], :value => p["value"])
+          end
+          gns.names.each do |permitted|
+            serialize = permitted.serialize_name
+            nc_data.push "permitted;#{serialize[:extension_string]}"
+            nc_conf.push serialize[:conf]
+          end
+        end
+        if not nc["excluded"].nil?
+          gns = R509::ASN1::GeneralNames.new
+          nc["excluded"].each do |p|
+            gns.create_item(:type => p["type"], :value => p["value"])
+          end
+          gns.names.each do |excluded|
+            serialize = excluded.serialize_name
+            nc_data.push "excluded;#{serialize[:extension_string]}"
+            nc_conf.push serialize[:conf]
+          end
+        end
+
+        ef.config = OpenSSL::Config.parse nc_conf.join("\n")
+        ext << ef.create_extension("nameConstraints",nc_data.join(","))
       end
 
       if options[:ocsp_no_check]

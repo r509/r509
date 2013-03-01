@@ -79,6 +79,49 @@ describe R509::ASN1 do
 end
 
 describe R509::ASN1::GeneralName do
+  context "parses types to tags within ::map_type_to_tag" do
+    it "handles otherName" do
+      R509::ASN1::GeneralName.map_type_to_tag(:otherName).should == 0
+      R509::ASN1::GeneralName.map_type_to_tag("otherName").should == 0
+    end
+    it "handles rfc822Name" do
+      R509::ASN1::GeneralName.map_type_to_tag(:rfc822Name).should == 1
+      R509::ASN1::GeneralName.map_type_to_tag("rfc822Name").should == 1
+      R509::ASN1::GeneralName.map_type_to_tag("email").should == 1
+    end
+    it "handles dNSName" do
+      R509::ASN1::GeneralName.map_type_to_tag(:dNSName).should == 2
+      R509::ASN1::GeneralName.map_type_to_tag("dNSName").should == 2
+      R509::ASN1::GeneralName.map_type_to_tag("DNS").should == 2
+    end
+    it "handles x400Address" do
+      R509::ASN1::GeneralName.map_type_to_tag(:x400Address).should == 3
+      R509::ASN1::GeneralName.map_type_to_tag("x400Address").should == 3
+    end
+    it "handles directoryName" do
+      R509::ASN1::GeneralName.map_type_to_tag(:directoryName).should == 4
+      R509::ASN1::GeneralName.map_type_to_tag("directoryName").should == 4
+      R509::ASN1::GeneralName.map_type_to_tag("dirName").should == 4
+    end
+    it "handles ediPartyName" do
+      R509::ASN1::GeneralName.map_type_to_tag(:ediPartyName).should == 5
+      R509::ASN1::GeneralName.map_type_to_tag("ediPartyName").should == 5
+    end
+    it "handles uniformResourceIdentifier" do
+      R509::ASN1::GeneralName.map_type_to_tag(:uniformResourceIdentifier).should == 6
+      R509::ASN1::GeneralName.map_type_to_tag("uniformResourceIdentifier").should == 6
+      R509::ASN1::GeneralName.map_type_to_tag("URI").should == 6
+    end
+    it "handles iPAddress" do
+      R509::ASN1::GeneralName.map_type_to_tag(:iPAddress).should == 7
+      R509::ASN1::GeneralName.map_type_to_tag("iPAddress").should == 7
+      R509::ASN1::GeneralName.map_type_to_tag("IP").should == 7
+    end
+    it "handles registeredID" do
+      R509::ASN1::GeneralName.map_type_to_tag(:registeredID).should == 8
+      R509::ASN1::GeneralName.map_type_to_tag("registeredID").should == 8
+    end
+  end
   it "handles rfc822Name" do
     der = "\x81\u0011myemail@email.com"
     asn = OpenSSL::ASN1.decode der
@@ -189,14 +232,20 @@ describe R509::ASN1::GeneralNames do
 
   it "errors with invalid params to #create_item" do
     gns = R509::ASN1::GeneralNames.new
-    expect { gns.create_item({}) }.to raise_error(ArgumentError,'Must be a hash with :tag and :value nodes')
+    expect { gns.create_item({}) }.to raise_error(ArgumentError,'Must be a hash with (:tag or :type) and :value nodes')
   end
 
-  it "allows addition of directoryNames with #create_item" do
+  it "allows addition of directoryNames with #create_item passing existing subject object" do
     gns = R509::ASN1::GeneralNames.new
     s = R509::Subject.new([['C','US'],['L','locality']])
     gns.directory_names.size.should == 0
     gns.create_item( :tag => 4, :value => s )
+    gns.directory_names.size.should == 1
+  end
+  it "allows addition of directoryNames with #create_item passing array" do
+    gns = R509::ASN1::GeneralNames.new
+    gns.directory_names.size.should == 0
+    gns.create_item( :tag => 4, :value => [['C','US'],['L','locality']] )
     gns.directory_names.size.should == 1
   end
 end

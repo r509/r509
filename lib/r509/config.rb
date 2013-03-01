@@ -14,7 +14,7 @@ module R509
     class CAProfile
       attr_reader :basic_constraints, :key_usage, :extended_key_usage,
         :certificate_policies, :subject_item_policy, :ocsp_no_check,
-        :inhibit_any_policy, :policy_constraints
+        :inhibit_any_policy, :policy_constraints, :name_constraints
 
       # All hash options for CAProfile are optional.
       # @option opts [String] :basic_constraints
@@ -24,6 +24,7 @@ module R509
       # @option opts [Boolean] :ocsp_no_check Sets OCSP No Check extension in the certificate if true
       # @option opts [Integer] :inhibit_any_policy Sets the value of the inhibitAnyPolicy extension
       # @option opts [Hash] :policy_constraints Sets the value of the policyConstriants extension
+      # @option opts [Hash] :name_constraints Sets the value of the nameConstraints extension
       # @option opts [R509::Config::SubjectItemPolicy] :subject_item_policy
       def initialize(opts = {})
         validate_basic_constraints opts[:basic_constraints]
@@ -32,6 +33,7 @@ module R509
         validate_certificate_policies opts[:certificate_policies]
         validate_inhibit_any_policy opts[:inhibit_any_policy]
         validate_policy_constraints opts[:policy_constraints]
+        validate_name_constraints opts[:name_constraints]
         @ocsp_no_check = (opts[:ocsp_no_check] == true or opts[:ocsp_no_check] == "true")?true:false
         validate_subject_item_policy opts[:subject_item_policy]
       end
@@ -135,6 +137,39 @@ module R509
             end
           end
           @certificate_policies = policies
+        end
+      end
+
+      # @private
+      def validate_name_constraints(nc)
+        if not nc.nil?
+          if not nc.kind_of?(Hash)
+            raise ArgumentError, "name_constraints must be provided as a hash"
+          end
+          ["permitted","excluded"].each do |key|
+            if not nc[key].nil?
+              validate_name_constraints_elements(key,nc[key])
+            end
+          end
+          if (nc["permitted"].nil? or nc["permitted"].empty?) and (nc["excluded"].nil? or nc["excluded"].empty?)
+            raise ArgumentError, "If name_constraints are supplied you must have at least one valid permitted or excluded element"
+          end
+        end
+        @name_constraints = nc
+      end
+
+      # @private
+      def validate_name_constraints_elements(type,arr)
+        if not arr.kind_of?(Array)
+          raise ArgumentError, "#{type} must be an array"
+        end
+        arr.each do |el|
+          if not el.kind_of?(Hash) or not el.has_key?("type") or not el.has_key?("value")
+            raise ArgumentError, "Elements within the #{type} array must be hashes with both type and value"
+          end
+          if R509::ASN1::GeneralName.map_type_to_tag(el["type"]) == nil
+            raise ArgumentError, "#{el["type"]} is not an allowed type. Check R509::ASN1::GeneralName.map_type_to_tag to see a list of types"
+          end
         end
       end
 
@@ -442,6 +477,7 @@ module R509
                              :ocsp_no_check => data["ocsp_no_check"],
                              :inhibit_any_policy => data["inhibit_any_policy"],
                              :policy_constraints => data["policy_constraints"],
+                             :name_constraints => data["name_constraints"],
                              :subject_item_policy => subject_item_policy)
         end unless conf['profiles'].nil?
         opts[:profiles] = profs

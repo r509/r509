@@ -253,6 +253,57 @@ describe R509::CertificateAuthority::Signer do
       cert.policy_constraints.inhibit_policy_mapping.should == 2
     end
   end
+  context "nameConstraints" do
+    it "issues with no constraints if not present in profile" do
+      csr = R509::CSR.new(:csr => @csr)
+      ca_cert = R509::Cert.new( :cert => TestFixtures::TEST_CA_CERT, :key => TestFixtures::TEST_CA_KEY )
+      config = R509::Config::CAConfig.new(:ca_cert => ca_cert)
+      profile = R509::Config::CAProfile.new
+      config.set_profile("default",profile)
+      ca = R509::CertificateAuthority::Signer.new(config)
+      cert = ca.sign(:csr => csr, :profile_name => 'default')
+      cert.name_constraints.should be_nil
+    end
+    it "issues with permitted constraints" do
+      csr = R509::CSR.new(:csr => @csr)
+      ca_cert = R509::Cert.new( :cert => TestFixtures::TEST_CA_CERT, :key => TestFixtures::TEST_CA_KEY )
+      config = R509::Config::CAConfig.new(:ca_cert => ca_cert)
+      profile = R509::Config::CAProfile.new(:name_constraints => { "permitted" => [ { "type" => "DNS", "value" => "domain.com" } , { "type" => "IP", "value" => "ff::/ff:ff:ff:ff:ff:ff:ff:ff" } ] } )
+      config.set_profile("default",profile)
+      ca = R509::CertificateAuthority::Signer.new(config)
+      cert = ca.sign(:csr => csr, :profile_name => 'default')
+      cert.name_constraints.permitted_names[0].type.should == :dNSName
+      cert.name_constraints.permitted_names[0].value.should == 'domain.com'
+      cert.name_constraints.permitted_names[1].type.should == :iPAddress
+      cert.name_constraints.permitted_names[1].value.should == 'ff::/ff:ff:ff:ff:ff:ff:ff:ff'
+    end
+    it "issues with excluded constraints" do
+      csr = R509::CSR.new(:csr => @csr)
+      ca_cert = R509::Cert.new( :cert => TestFixtures::TEST_CA_CERT, :key => TestFixtures::TEST_CA_KEY )
+      config = R509::Config::CAConfig.new(:ca_cert => ca_cert)
+      profile = R509::Config::CAProfile.new(:name_constraints => { "excluded" => [ { "type" => "dirName", "value" => [["CN","domain.com"]] }, { "type" => "URI", "value" => ".domain.com" } ] } )
+      config.set_profile("default",profile)
+      ca = R509::CertificateAuthority::Signer.new(config)
+      cert = ca.sign(:csr => csr, :profile_name => 'default')
+      cert.name_constraints.excluded_names[0].type.should == :directoryName
+      cert.name_constraints.excluded_names[0].value.to_s.should == '/CN=domain.com'
+      cert.name_constraints.excluded_names[1].type.should == :uniformResourceIdentifier
+      cert.name_constraints.excluded_names[1].value.to_s.should == '.domain.com'
+    end
+    it "issues with both constraints" do
+      csr = R509::CSR.new(:csr => @csr)
+      ca_cert = R509::Cert.new( :cert => TestFixtures::TEST_CA_CERT, :key => TestFixtures::TEST_CA_KEY )
+      config = R509::Config::CAConfig.new(:ca_cert => ca_cert)
+      profile = R509::Config::CAProfile.new(:name_constraints => { "permitted" => [ { "type" => "DNS", "value" => "domain.com" } ], "excluded" => [ { "type" => "dirName", "value" => [["CN","domain.com"]] } ] } )
+      config.set_profile("default",profile)
+      ca = R509::CertificateAuthority::Signer.new(config)
+      cert = ca.sign(:csr => csr, :profile_name => 'default')
+      cert.name_constraints.permitted_names[0].type.should == :dNSName
+      cert.name_constraints.permitted_names[0].value.should == 'domain.com'
+      cert.name_constraints.excluded_names[0].type.should == :directoryName
+      cert.name_constraints.excluded_names[0].value.to_s.should == '/CN=domain.com'
+    end
+  end
   context "authorityInfoAccess" do
     it "issues a certificate with a ca_issuers_location and ocsp_location" do
       csr = R509::CSR.new(:csr => @csr)
