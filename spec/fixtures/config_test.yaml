@@ -24,6 +24,19 @@ test_ca: {
     policy_constraints: {
       policy_constraints: { require_explicit_policy: 1, inhibit_policy_mapping: 0 }
     },
+    name_constraints: {
+      name_constraints: {
+        permitted: [
+          {type: "IP", value: "192.168.0.0/255.255.0.0"},
+          {type: "dirName", value: [['CN','myCN'],['O','Org']]}
+        ],
+        excluded: [
+          {type: "email", value: "domain.com"},
+          {type: "URI", value: ".net"},
+          {type: "DNS", value: "test.us"}
+        ]
+      }
+    },
     client: {
       basic_constraints: { "ca" : false },
       key_usage: [digitalSignature,keyEncipherment],

@@ -187,11 +187,12 @@ describe R509::Config::CAConfig do
     config.crl_validity_hours.should == 72
     config.ocsp_validity_hours.should == 96
     config.message_digest.should == "SHA1"
-    config.num_profiles.should == 6
+    config.num_profiles.should == 7
     config.profile("ocsp_delegate_with_no_check").ocsp_no_check.should == true
     config.profile("inhibit_policy").inhibit_any_policy.should == 2
     config.profile("policy_constraints").policy_constraints["require_explicit_policy"].should == 1
     config.profile("policy_constraints").policy_constraints["inhibit_policy_mapping"].should == 0
+    config.profile("name_constraints").name_constraints.should_not be_nil
   end
   it "loads OCSP cert/key from yaml" do
     config = R509::Config::CAConfig.from_yaml("ocsp_delegate_ca", File.read("#{File.dirname(__FILE__)}/fixtures/config_test_various.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"})
