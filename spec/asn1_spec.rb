@@ -11,6 +11,10 @@ describe R509::ASN1 do
   end
 
   context "general_name_parser" do
+    it "returns nil if passed nil" do
+      general_names = R509::ASN1.general_name_parser(nil)
+      general_names.should be_nil
+    end
     it "correctly parses dns names" do
       general_names = R509::ASN1.general_name_parser(['domain2.com','domain3.com'])
       general_names.dns_names.should == ["domain2.com", "domain3.com"]

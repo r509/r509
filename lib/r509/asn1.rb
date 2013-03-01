@@ -23,6 +23,9 @@ module R509
     #   You can also supply a directoryName, but this must be an R509::Subject or array of arrays
     # @return [R509::ASN1::GeneralNames]
     def self.general_name_parser(names)
+      if names.nil?
+        return nil
+      end
       general_names = R509::ASN1::GeneralNames.new
       names.map do |domain|
         if !(IPAddr.new(domain.strip) rescue nil).nil?
