@@ -186,6 +186,73 @@ describe R509::CertificateAuthority::Signer do
     cert = @ca.sign(:csr => csr, :profile_name => 'server')
     cert.authority_key_identifier.should_not be_nil
   end
+  context "inhibitAnyPolicy" do
+    it "issues without inhibit any policy when not present" do
+      csr = R509::CSR.new(:csr => @csr)
+      ca_cert = R509::Cert.new( :cert => TestFixtures::TEST_CA_CERT, :key => TestFixtures::TEST_CA_KEY )
+      config = R509::Config::CAConfig.new(:ca_cert => ca_cert)
+      profile = R509::Config::CAProfile.new
+      config.set_profile("default",profile)
+      ca = R509::CertificateAuthority::Signer.new(config)
+      cert = ca.sign(:csr => csr, :profile_name => 'default')
+      cert.inhibit_any_policy.should == nil
+    end
+    it "issues with inhibit any policy when present" do
+      csr = R509::CSR.new(:csr => @csr)
+      ca_cert = R509::Cert.new( :cert => TestFixtures::TEST_CA_CERT, :key => TestFixtures::TEST_CA_KEY )
+      config = R509::Config::CAConfig.new(:ca_cert => ca_cert)
+      profile = R509::Config::CAProfile.new(:inhibit_any_policy => 1)
+      config.set_profile("default",profile)
+      ca = R509::CertificateAuthority::Signer.new(config)
+      cert = ca.sign(:csr => csr, :profile_name => 'default')
+      cert.inhibit_any_policy.skip_certs.should == 1
+    end
+  end
+  context "policyConstraints" do
+    it "issues without policy constraints when not present" do
+      csr = R509::CSR.new(:csr => @csr)
+      ca_cert = R509::Cert.new( :cert => TestFixtures::TEST_CA_CERT, :key => TestFixtures::TEST_CA_KEY )
+      config = R509::Config::CAConfig.new(:ca_cert => ca_cert)
+      profile = R509::Config::CAProfile.new
+      config.set_profile("default",profile)
+      ca = R509::CertificateAuthority::Signer.new(config)
+      cert = ca.sign(:csr => csr, :profile_name => 'default')
+      cert.policy_constraints.should == nil
+    end
+    it "issues with require_explicit_policy" do
+      csr = R509::CSR.new(:csr => @csr)
+      ca_cert = R509::Cert.new( :cert => TestFixtures::TEST_CA_CERT, :key => TestFixtures::TEST_CA_KEY )
+      config = R509::Config::CAConfig.new(:ca_cert => ca_cert)
+      profile = R509::Config::CAProfile.new(:policy_constraints => {"require_explicit_policy" => 3})
+      config.set_profile("default",profile)
+      ca = R509::CertificateAuthority::Signer.new(config)
+      cert = ca.sign(:csr => csr, :profile_name => 'default')
+      cert.policy_constraints.require_explicit_policy.should == 3
+      cert.policy_constraints.inhibit_policy_mapping.should == nil
+    end
+    it "issues with inhibit_policy_mapping" do
+      csr = R509::CSR.new(:csr => @csr)
+      ca_cert = R509::Cert.new( :cert => TestFixtures::TEST_CA_CERT, :key => TestFixtures::TEST_CA_KEY )
+      config = R509::Config::CAConfig.new(:ca_cert => ca_cert)
+      profile = R509::Config::CAProfile.new(:policy_constraints => {"inhibit_policy_mapping" => 3})
+      config.set_profile("default",profile)
+      ca = R509::CertificateAuthority::Signer.new(config)
+      cert = ca.sign(:csr => csr, :profile_name => 'default')
+      cert.policy_constraints.require_explicit_policy.should == nil
+      cert.policy_constraints.inhibit_policy_mapping.should == 3
+    end
+    it "issues with both require and inhibit" do
+      csr = R509::CSR.new(:csr => @csr)
+      ca_cert = R509::Cert.new( :cert => TestFixtures::TEST_CA_CERT, :key => TestFixtures::TEST_CA_KEY )
+      config = R509::Config::CAConfig.new(:ca_cert => ca_cert)
+      profile = R509::Config::CAProfile.new(:policy_constraints => {"require_explicit_policy" => 3, "inhibit_policy_mapping" => 2})
+      config.set_profile("default",profile)
+      ca = R509::CertificateAuthority::Signer.new(config)
+      cert = ca.sign(:csr => csr, :profile_name => 'default')
+      cert.policy_constraints.require_explicit_policy.should == 3
+      cert.policy_constraints.inhibit_policy_mapping.should == 2
+    end
+  end
   context "authorityInfoAccess" do
     it "issues a certificate with a ca_issuers_location and ocsp_location" do
       csr = R509::CSR.new(:csr => @csr)

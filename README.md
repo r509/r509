@@ -575,6 +575,22 @@ or
 ####ocsp\_no\_check
 This is a boolean option that determines whether the OCSPNoCheck extension should be encoded in certificates issued by the profile. This flag is _only_ meaningful on certificates that contain the OCSPSigning EKU.
 
+####inhibit\_any\_policy
+A non-negative integer value. From RFC 5280: "The inhibit anyPolicy extension can be used in certificates issued to CAs.  The inhibit anyPolicy extension indicates that the special anyPolicy OID, with the value { 2 5 29 32 0 }, is not considered an explicit match for other certificate policies except when it appears in an intermediate self-issued CA certificate."
+
+####policy\_constraints
+A hash with two optional keys (one or both may be present). From RFC 5280: "The policy constraints extension can be used in certificates issued to CAs.  The policy constraints extension constrains path validation in two ways.  It can be used to prohibit policy mapping or require that each certificate in a path contain an acceptable policy identifier"
+
+```yaml
+  { require_explicit_policy: 0, inhibit_policy_mapping: 0 }
+```
+
+or if you only need one of the keys
+
+```yaml
+  { inhibit_policy_mapping: 0 }
+```
+
 ####subject\_item\_policy
 Hash of required/optional subject items. These must be in OpenSSL shortname format. If subject\_item\_policy is excluded from the profile then all subject items will be used. If it is included, __only items listed in the policy will be copied to the certificate__.
 Example:

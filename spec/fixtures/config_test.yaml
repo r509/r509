@@ -16,10 +16,13 @@ test_ca: {
       extended_key_usage: [serverAuth],
     },
     ocsp_delegate_with_no_check: {
-      basic_constraints: { "ca" : false },
-      key_usage: [digitalSignature],
-      extended_key_usage: [OCSPSigning],
       ocsp_no_check: true
+    },
+    inhibit_policy: {
+      inhibit_any_policy: 2
+    },
+    policy_constraints: {
+      policy_constraints: { require_explicit_policy: 1, inhibit_policy_mapping: 0 }
     },
     client: {
       basic_constraints: { "ca" : false },

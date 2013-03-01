@@ -117,13 +117,13 @@ describe R509::Config::CAConfig do
       expect { R509::Config::CAConfig.new( :ca_cert => TestFixtures.test_ca_cert, :ocsp_cert => R509::Cert.new( :cert => TestFixtures::TEST_CA_CERT) ) }.to raise_error ArgumentError, ':ocsp_cert must contain a private key, not just a certificate'
     end
     it "raises an error if you pass an ocsp_location that is not an array" do
-      expect { R509::Config::CAConfig.new( :ca_cert => TestFixtures.test_ca_cert, :ocsp_location => "some-url" ) }.to raise_error(R509::R509Error, 'ocsp_location must be an array if provided')
+      expect { R509::Config::CAConfig.new( :ca_cert => TestFixtures.test_ca_cert, :ocsp_location => "some-url" ) }.to raise_error(ArgumentError, 'ocsp_location must be an array if provided')
     end
     it "raises an error if you pass a ca_issuers_location that is not an array" do
-      expect { R509::Config::CAConfig.new( :ca_cert => TestFixtures.test_ca_cert, :ca_issuers_location => "some-url" ) }.to raise_error(R509::R509Error, 'ca_issuers_location must be an array if provided')
+      expect { R509::Config::CAConfig.new( :ca_cert => TestFixtures.test_ca_cert, :ca_issuers_location => "some-url" ) }.to raise_error(ArgumentError, 'ca_issuers_location must be an array if provided')
     end
     it "raises an error if you pass a cdp_location that is not an array" do
-      expect { R509::Config::CAConfig.new( :ca_cert => TestFixtures.test_ca_cert, :cdp_location => "some-url" ) }.to raise_error(R509::R509Error, 'cdp_location must be an array if provided')
+      expect { R509::Config::CAConfig.new( :ca_cert => TestFixtures.test_ca_cert, :cdp_location => "some-url" ) }.to raise_error(ArgumentError, 'cdp_location must be an array if provided')
     end
   end
   it "loads the config even if :ca_cert does not contain a private key" do
@@ -187,8 +187,11 @@ describe R509::Config::CAConfig do
     config.crl_validity_hours.should == 72
     config.ocsp_validity_hours.should == 96
     config.message_digest.should == "SHA1"
-    config.num_profiles.should == 4
+    config.num_profiles.should == 6
     config.profile("ocsp_delegate_with_no_check").ocsp_no_check.should == true
+    config.profile("inhibit_policy").inhibit_any_policy.should == 2
+    config.profile("policy_constraints").policy_constraints["require_explicit_policy"].should == 1
+    config.profile("policy_constraints").policy_constraints["inhibit_policy_mapping"].should == 0
   end
   it "loads OCSP cert/key from yaml" do
     config = R509::Config::CAConfig.from_yaml("ocsp_delegate_ca", File.read("#{File.dirname(__FILE__)}/fixtures/config_test_various.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"})
@@ -203,7 +206,7 @@ describe R509::Config::CAConfig do
   it "loads OCSP cert/key in engine from yaml" do
     #most of this code path is tested by loading ca_cert engine.
     #look there for the extensive doubling
-    expect { R509::Config::CAConfig.from_yaml("ocsp_engine_ca", File.read("#{File.dirname(__FILE__)}/fixtures/config_test_various.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"}) }.to raise_error(R509::R509Error,"You must supply a key_name with an engine")
+    expect { R509::Config::CAConfig.from_yaml("ocsp_engine_ca", File.read("#{File.dirname(__FILE__)}/fixtures/config_test_various.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"}) }.to raise_error(ArgumentError,"You must supply a key_name with an engine")
   end
   it "loads OCSP chain from yaml" do
     config = R509::Config::CAConfig.from_yaml("ocsp_chain_ca", File.read("#{File.dirname(__FILE__)}/fixtures/config_test_various.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"})
@@ -232,15 +235,15 @@ describe R509::Config::CAConfig do
   end
 
   it "raises error on YAML with pkcs12 and key" do
-    expect { R509::Config::CAConfig.from_yaml("pkcs12_key_ca", File.read("#{File.dirname(__FILE__)}/fixtures/config_test_various.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"}) }.to raise_error(R509::R509Error, "You can't specify both pkcs12 and key")
+    expect { R509::Config::CAConfig.from_yaml("pkcs12_key_ca", File.read("#{File.dirname(__FILE__)}/fixtures/config_test_various.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"}) }.to raise_error(ArgumentError, "You can't specify both pkcs12 and key")
   end
 
   it "raises error on YAML with pkcs12 and cert" do
-    expect { R509::Config::CAConfig.from_yaml("pkcs12_cert_ca", File.read("#{File.dirname(__FILE__)}/fixtures/config_test_various.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"}) }.to raise_error(R509::R509Error, "You can't specify both pkcs12 and cert")
+    expect { R509::Config::CAConfig.from_yaml("pkcs12_cert_ca", File.read("#{File.dirname(__FILE__)}/fixtures/config_test_various.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"}) }.to raise_error(ArgumentError, "You can't specify both pkcs12 and cert")
   end
 
   it "raises error on YAML with pkcs12 and engine" do
-    expect { R509::Config::CAConfig.from_yaml("pkcs12_engine_ca", File.read("#{File.dirname(__FILE__)}/fixtures/config_test_various.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"}) }.to raise_error(R509::R509Error, "You can't specify both engine and pkcs12")
+    expect { R509::Config::CAConfig.from_yaml("pkcs12_engine_ca", File.read("#{File.dirname(__FILE__)}/fixtures/config_test_various.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"}) }.to raise_error(ArgumentError, "You can't specify both engine and pkcs12")
   end
 
   it "loads config with cert and no key (useful in certain cases)" do
@@ -274,11 +277,11 @@ describe R509::Config::CAConfig do
   end
 
   it "should fail if YAML for ca_cert contains engine and key" do
-    expect { R509::Config::CAConfig.from_yaml("engine_and_key", File.read("#{File.dirname(__FILE__)}/fixtures/config_test_engine_key.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"}) }.to raise_error(R509::R509Error, "You can't specify both key and engine")
+    expect { R509::Config::CAConfig.from_yaml("engine_and_key", File.read("#{File.dirname(__FILE__)}/fixtures/config_test_engine_key.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"}) }.to raise_error(ArgumentError, "You can't specify both key and engine")
   end
 
   it "should fail if YAML for ca_cert contains engine but no key_name" do
-    expect { R509::Config::CAConfig.from_yaml("engine_no_key_name", File.read("#{File.dirname(__FILE__)}/fixtures/config_test_engine_no_key_name.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"}) }.to raise_error(R509::R509Error, 'You must supply a key_name with an engine')
+    expect { R509::Config::CAConfig.from_yaml("engine_no_key_name", File.read("#{File.dirname(__FILE__)}/fixtures/config_test_engine_no_key_name.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"}) }.to raise_error(ArgumentError, 'You must supply a key_name with an engine')
   end
 
   it "should fail if YAML config is null" do
@@ -369,38 +372,38 @@ end
 describe R509::Config::CAProfile do
   context "validate certificate policy structure" do
     it "must be an array" do
-      expect { R509::Config::CAProfile.new(:certificate_policies => "whatever") }.to raise_error(R509::R509Error,'Not a valid certificate policy structure. Must be an array of hashes')
+      expect { R509::Config::CAProfile.new(:certificate_policies => "whatever") }.to raise_error(ArgumentError,'Not a valid certificate policy structure. Must be an array of hashes')
     end
     it "require a policy identifier" do
-      expect { R509::Config::CAProfile.new(:certificate_policies => [{"stuff" => "thing"}]) }.to raise_error(R509::R509Error,'Each policy requires a policy identifier')
+      expect { R509::Config::CAProfile.new(:certificate_policies => [{"stuff" => "thing"}]) }.to raise_error(ArgumentError,'Each policy requires a policy identifier')
     end
     it "the cps uri must be array of strings" do
-      expect { R509::Config::CAProfile.new(:certificate_policies => [{"policy_identifier" => "1.2.3.4.5", "cps_uris" => "not an array"}]) }.to raise_error(R509::R509Error,'CPS URIs must be an array of strings')
+      expect { R509::Config::CAProfile.new(:certificate_policies => [{"policy_identifier" => "1.2.3.4.5", "cps_uris" => "not an array"}]) }.to raise_error(ArgumentError,'CPS URIs must be an array of strings')
     end
     it "user notices must be an array of hashes" do
-      expect { R509::Config::CAProfile.new(:certificate_policies => [{"policy_identifier" => "1.2.3.4.5", "user_notices" => "not an array"}]) }.to raise_error(R509::R509Error,'User notices must be an array of hashes')
+      expect { R509::Config::CAProfile.new(:certificate_policies => [{"policy_identifier" => "1.2.3.4.5", "user_notices" => "not an array"}]) }.to raise_error(ArgumentError,'User notices must be an array of hashes')
     end
     it "org in user notice requires notice numbers" do
-      expect { R509::Config::CAProfile.new(:certificate_policies => [{"policy_identifier" => "1.2.3.4.5", "user_notices" => [{"explicit_text" => "explicit", "organization" => "something"}]}]) }.to raise_error(R509::R509Error,'If you provide an organization you must provide notice numbers')
+      expect { R509::Config::CAProfile.new(:certificate_policies => [{"policy_identifier" => "1.2.3.4.5", "user_notices" => [{"explicit_text" => "explicit", "organization" => "something"}]}]) }.to raise_error(ArgumentError,'If you provide an organization you must provide notice numbers')
     end
     it "notice numbers in user notice requires org" do
-      expect { R509::Config::CAProfile.new(:certificate_policies => [{"policy_identifier" => "1.2.3.4.5", "user_notices" => [{"explicit_text" => "explicit", "notice_numbers" => "1,2,3"}]}]) }.to raise_error(R509::R509Error,'If you provide notice numbers you must provide an organization')
+      expect { R509::Config::CAProfile.new(:certificate_policies => [{"policy_identifier" => "1.2.3.4.5", "user_notices" => [{"explicit_text" => "explicit", "notice_numbers" => "1,2,3"}]}]) }.to raise_error(ArgumentError,'If you provide notice numbers you must provide an organization')
     end
   end
   context "validate basic constraints structure" do
     it "must be a hash with key \"ca\"" do
-      expect { R509::Config::CAProfile.new(:basic_constraints => 'string') }.to raise_error(R509::R509Error, "You must supply a hash with a key named \"ca\" with a boolean value")
-      expect { R509::Config::CAProfile.new(:basic_constraints => {}) }.to raise_error(R509::R509Error, "You must supply a hash with a key named \"ca\" with a boolean value")
+      expect { R509::Config::CAProfile.new(:basic_constraints => 'string') }.to raise_error(ArgumentError, "You must supply a hash with a key named \"ca\" with a boolean value")
+      expect { R509::Config::CAProfile.new(:basic_constraints => {}) }.to raise_error(ArgumentError, "You must supply a hash with a key named \"ca\" with a boolean value")
     end
     it "must have true or false for the ca key value" do
-      expect { R509::Config::CAProfile.new(:basic_constraints => {"ca" => 'truestring'}) }.to raise_error(R509::R509Error, "You must supply true/false for the ca key when specifying basic constraints")
+      expect { R509::Config::CAProfile.new(:basic_constraints => {"ca" => 'truestring'}) }.to raise_error(ArgumentError, "You must supply true/false for the ca key when specifying basic constraints")
     end
     it "must not pass a path_length if ca is false" do
-      expect { R509::Config::CAProfile.new(:basic_constraints => {"ca" => false, "path_length" => 5}) }.to raise_error(R509::R509Error, "path_length is not allowed when ca is false")
+      expect { R509::Config::CAProfile.new(:basic_constraints => {"ca" => false, "path_length" => 5}) }.to raise_error(ArgumentError, "path_length is not allowed when ca is false")
     end
     it "must pass a non-negative integer to path_length" do
-      expect { R509::Config::CAProfile.new(:basic_constraints => {"ca" => true, "path_length" => -1.5}) }.to raise_error(R509::R509Error, "Path length must be a non-negative integer (>= 0)")
-      expect { R509::Config::CAProfile.new(:basic_constraints => {"ca" => true, "path_length" => 1.5}) }.to raise_error(R509::R509Error, "Path length must be a non-negative integer (>= 0)")
+      expect { R509::Config::CAProfile.new(:basic_constraints => {"ca" => true, "path_length" => -1.5}) }.to raise_error(ArgumentError, "Path length must be a non-negative integer (>= 0)")
+      expect { R509::Config::CAProfile.new(:basic_constraints => {"ca" => true, "path_length" => 1.5}) }.to raise_error(ArgumentError, "Path length must be a non-negative integer (>= 0)")
     end
     it "does not require a path_length when ca is true" do
       ca_profile = R509::Config::CAProfile.new(:basic_constraints => {"ca" => true})
@@ -417,7 +420,7 @@ describe R509::Config::CAProfile do
   end
   context "validate key usage" do
     it "errors with non-array" do
-      expect { R509::Config::CAProfile.new( :key_usage => 'not an array' ) }.to raise_error(R509::R509Error, 'key_usage must be an array of strings (see README)')
+      expect { R509::Config::CAProfile.new( :key_usage => 'not an array' ) }.to raise_error(ArgumentError, 'key_usage must be an array of strings (see README)')
     end
     it "loads properly" do
       ku = ['digitalSignature']
@@ -427,7 +430,7 @@ describe R509::Config::CAProfile do
   end
   context "validate extended key usage" do
     it "errors with non-array" do
-      expect { R509::Config::CAProfile.new( :extended_key_usage => 'not an array' ) }.to raise_error(R509::R509Error, 'extended_key_usage must be an array of strings (see README)')
+      expect { R509::Config::CAProfile.new( :extended_key_usage => 'not an array' ) }.to raise_error(ArgumentError, 'extended_key_usage must be an array of strings (see README)')
     end
     it "loads properly" do
       eku = ['serverAuth']
@@ -437,11 +440,50 @@ describe R509::Config::CAProfile do
   end
   context "validate subject item policy" do
     it "raises an error with an invalid subject_item_policy" do
-      expect { R509::Config::CAProfile.new( :subject_item_policy => "lenient!" ) }.to raise_error(R509::R509Error,'subject_item_policy must be of type R509::Config::SubjectItemPolicy')
+      expect { R509::Config::CAProfile.new( :subject_item_policy => "lenient!" ) }.to raise_error(ArgumentError,'subject_item_policy must be of type R509::Config::SubjectItemPolicy')
     end
     it "stores a valid subject_item_policy" do
       policy = R509::Config::SubjectItemPolicy.new("CN" => "required")
       expect { R509::Config::CAProfile.new( :subject_item_policy => policy) }.to_not raise_error
+    end
+  end
+  context "validate inhibit any policy" do
+    it "raises an error when not a number" do
+      expect { R509::Config::CAProfile.new( :inhibit_any_policy => "string" ) }.to raise_error(ArgumentError,'Inhibit any policy must be a non-negative integer')
+    end
+    it "raises an error when not >= 0" do
+      expect { R509::Config::CAProfile.new( :inhibit_any_policy => -5 ) }.to raise_error(ArgumentError,'Inhibit any policy must be a non-negative integer')
+    end
+    it "loads when providing valid data" do
+      profile = R509::Config::CAProfile.new(:inhibit_any_policy => 3)
+      profile.inhibit_any_policy.should == 3
+    end
+  end
+  context "validate policy constraints" do
+    it "raises an error when not a hash" do
+      expect { R509::Config::CAProfile.new( :policy_constraints => "string" ) }.to raise_error(ArgumentError,'Policy constraints must be provided as a hash with at least one of the two allowed keys: "inhibit_policy_mapping" and "require_explicit_policy"')
+    end
+    it "raises an error when no keys" do
+      expect { R509::Config::CAProfile.new( :policy_constraints => {} ) }.to raise_error(ArgumentError,'Policy constraints must have at least one of two keys: "inhibit_policy_mapping" and "require_explicit_policy" and the value must be non-negative')
+    end
+    it "raises an error when inhibit_policy_mapping is not valid" do
+      expect { R509::Config::CAProfile.new( :policy_constraints => {"inhibit_policy_mapping" => -5} ) }.to raise_error(ArgumentError,'inhibit_policy_mapping must be a non-negative integer')
+    end
+    it "raises an error when require_explicit_policy is not valid" do
+      expect { R509::Config::CAProfile.new( :policy_constraints => {"require_explicit_policy" => -1} ) }.to raise_error(ArgumentError,'require_explicit_policy must be a non-negative integer')
+    end
+    it "loads when provided inhibit_policy_mapping" do
+      profile = R509::Config::CAProfile.new( :policy_constraints => {"require_explicit_policy" => 1} )
+      profile.policy_constraints["require_explicit_policy"].should == 1
+    end
+    it "loads when provided require_explicit_policy" do
+      profile = R509::Config::CAProfile.new( :policy_constraints => {"inhibit_policy_mapping" => 0} )
+      profile.policy_constraints["inhibit_policy_mapping"].should == 0
+    end
+    it "loads when provided values for both keys" do
+      profile = R509::Config::CAProfile.new( :policy_constraints => {"require_explicit_policy" => 1, "inhibit_policy_mapping" => 4} )
+      profile.policy_constraints["require_explicit_policy"].should == 1
+      profile.policy_constraints["inhibit_policy_mapping"].should == 4
     end
   end
   it "initializes and stores the options provided" do

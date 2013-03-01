@@ -110,7 +110,9 @@ module R509::CertificateAuthority
         :extended_key_usage => extended_key_usage,
         :ocsp_no_check => ocsp_no_check,
         :certificate_policies => certificate_policies,
-        :san_names => san_names
+        :san_names => san_names,
+        :inhibit_any_policy => profile.inhibit_any_policy,
+        :policy_constraints => profile.policy_constraints
       )
 
 
@@ -320,6 +322,18 @@ module R509::CertificateAuthority
           ef.config = OpenSSL::Config.parse(aia_conf.join("\n"))
           ext << ef.create_extension("authorityInfoAccess",aia.join(","))
         end
+      end
+
+      if options[:inhibit_any_policy]
+        ext << ef.create_extension("inhibitAnyPolicy",options[:inhibit_any_policy].to_s,true) # must be set critical per RFC 5280
+      end
+
+      if options[:policy_constraints]
+        pc = options[:policy_constraints]
+        constraints = []
+        constraints << "requireExplicitPolicy:#{pc["require_explicit_policy"]}" unless pc["require_explicit_policy"].nil?
+        constraints << "inhibitPolicyMapping:#{pc["inhibit_policy_mapping"]}" unless pc["inhibit_policy_mapping"].nil?
+        ext << ef.create_extension("policyConstraints",constraints.join(","),true) # must be set critical per RFC 5280
       end
 
       if options[:ocsp_no_check]
