@@ -262,7 +262,7 @@ module R509
         @crl_start_skew_seconds = opts[:crl_start_skew_seconds] || 3600
         @crl_number_file = opts[:crl_number_file] || nil
         @crl_list_file = opts[:crl_list_file] || nil
-        @cdp_location = opts[:cdp_location]
+        validate_cdp_location opts[:cdp_location]
         @message_digest = opts[:message_digest] || "SHA1"
 
 
@@ -492,6 +492,14 @@ module R509
       end
 
       private
+
+      # @private
+      def validate_cdp_location(location)
+        if not location.nil? and not location.kind_of?(Array)
+          raise R509Error, "cdp_location must be an array if provided"
+        end
+        @cdp_location = location
+      end
 
       # @private
       def validate_ocsp_location(location)

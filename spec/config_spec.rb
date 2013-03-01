@@ -122,6 +122,9 @@ describe R509::Config::CAConfig do
     it "raises an error if you pass a ca_issuers_location that is not an array" do
       expect { R509::Config::CAConfig.new( :ca_cert => TestFixtures.test_ca_cert, :ca_issuers_location => "some-url" ) }.to raise_error(R509::R509Error, 'ca_issuers_location must be an array if provided')
     end
+    it "raises an error if you pass a cdp_location that is not an array" do
+      expect { R509::Config::CAConfig.new( :ca_cert => TestFixtures.test_ca_cert, :cdp_location => "some-url" ) }.to raise_error(R509::R509Error, 'cdp_location must be an array if provided')
+    end
   end
   it "loads the config even if :ca_cert does not contain a private key" do
     config = R509::Config::CAConfig.new( :ca_cert => R509::Cert.new( :cert => TestFixtures::TEST_CA_CERT) )
