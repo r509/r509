@@ -106,37 +106,6 @@ ocsp_engine_ca: {
     engine: 'chil'
   }
 }
-ca_issuers_and_ocsp_ca: {
-  ca_cert: {
-    cert: 'test_ca.cer',
-    key: 'test_ca.key'
-  },
-  ocsp_location: ['http://ocsp.domain.com','http://ocsp.other.com'],
-  ca_issuers_location: ['http://domain.com/ca.html'],
-  message_digest: 'SHA1',
-  profiles: {
-    server: {
-      basic_constraints: { "ca" : false },
-      key_usage: [digitalSignature,keyEncipherment],
-      extended_key_usage: [serverAuth],
-    }
-  }
-}
-ca_issuers_ca: {
-  ca_cert: {
-    cert: 'test_ca.cer',
-    key: 'test_ca.key'
-  },
-  ca_issuers_location: ['http://domain.com/ca.html'],
-  message_digest: 'SHA1',
-  profiles: {
-    server: {
-      basic_constraints: { "ca" : false },
-      key_usage: [digitalSignature,keyEncipherment],
-      extended_key_usage: [serverAuth],
-    }
-  }
-}
 all_eku_ca: {
   ca_cert: {
     cert: 'test_ca.cer',

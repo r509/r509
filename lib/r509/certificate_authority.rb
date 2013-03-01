@@ -266,7 +266,7 @@ module R509::CertificateAuthority
 
       #attach the key identifier if it's not a self-sign
       if not ef.subject_certificate == ef.issuer_certificate and not R509::Cert.new(:cert=>options[:issuer_certificate]).authority_key_identifier.nil?
-        ext << ef.create_extension("authorityKeyIdentifier", "keyid:always,issuer:always")
+        ext << ef.create_extension("authorityKeyIdentifier", "keyid:always") # this could also be keyid:always,issuer:always
       end
 
       if not options[:certificate_policies].nil? and options[:certificate_policies].respond_to?(:each)
@@ -279,41 +279,47 @@ module R509::CertificateAuthority
         ef.config = OpenSSL::Config.parse(conf.join("\n"))
         ext << ef.create_extension("certificatePolicies", policy_names.join(","))
       end
-      #ef.config = OpenSSL::Config.parse(<<-_end_of_cnf_)
-      #[certPolicies]
-      #CPS.1 = http://www.example.com/cps
-      #_end_of_cnf_
 
-      if not options[:san_names].nil? and options[:san_names].respond_to?(:serialize_names)
+      if not options[:san_names].nil?
         serialize = options[:san_names].serialize_names
         ef.config = OpenSSL::Config.parse(serialize[:conf])
         ext << ef.create_extension("subjectAltName", serialize[:extension_string])
       end
 
-      if not @config.nil? and @config.cdp_location.respond_to?(:each)
-        cdps = []
-        @config.cdp_location.each do |cdp|
-          cdps << "URI:#{cdp}"
-        end
-        ext << ef.create_extension("crlDistributionPoints", cdps.join(","))
+      if not @config.nil? and not @config.cdp_location.nil?
+        gns = R509::ASN1.general_name_parser(@config.cdp_location)
+        serialize = gns.serialize_names
+        ef.config = OpenSSL::Config.parse(serialize[:conf])
+        ext << ef.create_extension("crlDistributionPoints", serialize[:extension_string])
       end
 
-      aia = []
+      #authorityInfoAccess processing
+      if not @config.nil?
+        aia = []
+        aia_conf = []
 
-      if not @config.nil? and @config.ocsp_location.respond_to?(:each)
-        @config.ocsp_location.each do |loc|
-          aia.push "OCSP;URI:#{loc}"
+        if not @config.ocsp_location.nil?
+          gns = R509::ASN1.general_name_parser(@config.ocsp_location)
+          gns.names.each do |ocsp|
+            serialize = ocsp.serialize_name
+            aia.push "OCSP;#{serialize[:extension_string]}"
+            aia_conf.push serialize[:conf]
+          end
         end
-      end
 
-      if not @config.nil? and @config.ca_issuers_location.respond_to?(:each)
-        @config.ca_issuers_location.each do |loc|
-          aia.push "caIssuers;URI:#{loc}"
+        if not @config.nil? and not @config.ca_issuers_location.nil?
+          gns = R509::ASN1.general_name_parser(@config.ca_issuers_location)
+          gns.names.each do |ca_issuers|
+            serialize = ca_issuers.serialize_name
+            aia.push "caIssuers;#{serialize[:extension_string]}"
+            aia_conf.push serialize[:conf]
+          end
         end
-      end
 
-      if not aia.empty?
-        ext << ef.create_extension("authorityInfoAccess",aia.join(","))
+        if not aia.empty?
+          ef.config = OpenSSL::Config.parse(aia_conf.join("\n"))
+          ext << ef.create_extension("authorityInfoAccess",aia.join(","))
+        end
       end
 
       if options[:ocsp_no_check]
