@@ -72,47 +72,6 @@ csr = R509::CSR.new(
 )
 ```
 
-###SPKI/SPKAC
-To generate a 2048-bit RSA SPKI
-
-```ruby
-key = R509::PrivateKey.new(:type => :rsa, :bit_strength => 1024)
-spki = R509::SPKI.new(:key => key)
-```
-
-###PrivateKey
-Generate a 1536-bit RSA key
-
-```ruby
-key = R509::PrivateKey.new(:type => :rsa, :bit_strength => 1536)
-```
-
-Encrypt the private key
-
-```ruby
-key = R509::PrivateKey.new(:type => :rsa, :bit_strength => 2048)
-encrypted_pem = key.to_encrypted_pem("aes256","my-password")
-# or write it to disk
-key.write_encrypted_pem("/tmp/path","aes256","my-password")
-```
-
-####Load Hardware Engines in PrivateKey
-
-The engine you want to load must already be available to OpenSSL. How to compile/install OpenSSL engines is outside the scope of this document.
-
-```ruby
-OpenSSL::Engine.load("engine_name")
-engine = OpenSSL::Engine.by_id("engine_name")
-key = R509::PrivateKey(
-  :engine => engine,
-  :key_name => "my_key_name"
-)
-```
-
-You can then use this key for signing.
-
-
-
 ###Cert
 To load an existing certificate
 
@@ -154,6 +113,45 @@ cert = R509::Cert.new(
   :pkcs12 => pkcs12_der,
   :password => "password"
 )
+```
+
+###PrivateKey
+Generate a 1536-bit RSA key
+
+```ruby
+key = R509::PrivateKey.new(:type => :rsa, :bit_strength => 1536)
+```
+
+Encrypt the private key
+
+```ruby
+key = R509::PrivateKey.new(:type => :rsa, :bit_strength => 2048)
+encrypted_pem = key.to_encrypted_pem("aes256","my-password")
+# or write it to disk
+key.write_encrypted_pem("/tmp/path","aes256","my-password")
+```
+
+####Load Hardware Engines in PrivateKey
+
+The engine you want to load must already be available to OpenSSL. How to compile/install OpenSSL engines is outside the scope of this document.
+
+```ruby
+OpenSSL::Engine.load("engine_name")
+engine = OpenSSL::Engine.by_id("engine_name")
+key = R509::PrivateKey(
+  :engine => engine,
+  :key_name => "my_key_name"
+)
+```
+
+You can then use this key for signing.
+
+###SPKI/SPKAC
+To generate a 2048-bit RSA SPKI
+
+```ruby
+key = R509::PrivateKey.new(:type => :rsa, :bit_strength => 1024)
+spki = R509::SPKI.new(:key => key)
 ```
 
 ###Self-Signed Certificate
@@ -384,16 +382,6 @@ R509::OIDMapper.batch_register([
   {:oid => "1.3.5.6.7.8.3.23.3", :short_name => "short_name", :long_name => "optional_long_name"},
   {:oid => "1.3.5.6.7.8.3.23.5", :short_name => "another_name"}
 ])
-```
-
-###HMAC Signing
-
-```ruby
-key = R509::HMAC.generate_key("sha256")
-data = "Some data to sign"
-signature = R509::HMAC.hexdigest(:key => key, :data => data, :message_digest => "sha256")
-# or
-binary_sig = R509::HMAC.digest(:key => key, :data => data, :message_digest => "sha256")
 ```
 
 ###Alternate Key Algorithms
