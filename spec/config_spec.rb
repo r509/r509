@@ -103,21 +103,29 @@ describe R509::Config::CAConfig do
     @config.ca_cert.key.to_pem.should == TestFixtures.test_ca_cert.key.to_pem
   end
 
-  it "raises an error if you don't pass :ca_cert" do
-    expect { R509::Config::CAConfig.new(:crl_validity_hours => 2) }.to raise_error ArgumentError, 'Config object requires that you pass :ca_cert'
-  end
-  it "raises an error if :ca_cert is not of type R509::Cert" do
-    expect { R509::Config::CAConfig.new(:ca_cert => 'not a cert, and not right type') }.to raise_error ArgumentError, ':ca_cert must be of type R509::Cert'
+  context "validates data" do
+    it "raises an error if you don't pass :ca_cert" do
+      expect { R509::Config::CAConfig.new(:crl_validity_hours => 2) }.to raise_error ArgumentError, 'Config object requires that you pass :ca_cert'
+    end
+    it "raises an error if :ca_cert is not of type R509::Cert" do
+      expect { R509::Config::CAConfig.new(:ca_cert => 'not a cert, and not right type') }.to raise_error ArgumentError, ':ca_cert must be of type R509::Cert'
+    end
+    it "raises an error if :ocsp_cert that is not R509::Cert" do
+      expect { R509::Config::CAConfig.new(:ca_cert => TestFixtures.test_ca_cert, :ocsp_cert => "not a cert") }.to raise_error ArgumentError, ':ocsp_cert, if provided, must be of type R509::Cert'
+    end
+    it "raises an error if :ocsp_cert does not contain a private key" do
+      expect { R509::Config::CAConfig.new( :ca_cert => TestFixtures.test_ca_cert, :ocsp_cert => R509::Cert.new( :cert => TestFixtures::TEST_CA_CERT) ) }.to raise_error ArgumentError, ':ocsp_cert must contain a private key, not just a certificate'
+    end
+    it "raises an error if you pass an ocsp_location that is not an array" do
+      expect { R509::Config::CAConfig.new( :ca_cert => TestFixtures.test_ca_cert, :ocsp_location => "some-url" ) }.to raise_error(R509::R509Error, 'ocsp_location must be an array if provided')
+    end
+    it "raises an error if you pass a ca_issuers_location that is not an array" do
+      expect { R509::Config::CAConfig.new( :ca_cert => TestFixtures.test_ca_cert, :ca_issuers_location => "some-url" ) }.to raise_error(R509::R509Error, 'ca_issuers_location must be an array if provided')
+    end
   end
   it "loads the config even if :ca_cert does not contain a private key" do
     config = R509::Config::CAConfig.new( :ca_cert => R509::Cert.new( :cert => TestFixtures::TEST_CA_CERT) )
     config.ca_cert.subject.to_s.should_not be_nil
-  end
-  it "raises an error if :ocsp_cert that is not R509::Cert" do
-    expect { R509::Config::CAConfig.new(:ca_cert => TestFixtures.test_ca_cert, :ocsp_cert => "not a cert") }.to raise_error ArgumentError, ':ocsp_cert, if provided, must be of type R509::Cert'
-  end
-  it "raises an error if :ocsp_cert does not contain a private key" do
-    expect { R509::Config::CAConfig.new( :ca_cert => TestFixtures.test_ca_cert, :ocsp_cert => R509::Cert.new( :cert => TestFixtures::TEST_CA_CERT) ) }.to raise_error ArgumentError, ':ocsp_cert must contain a private key, not just a certificate'
   end
   it "returns the correct cert object on #ocsp_cert if none is specified" do
     @config.ocsp_cert.should == @config.ca_cert
@@ -404,6 +412,35 @@ describe R509::Config::CAProfile do
       ca_profile.basic_constraints.should == {"ca" => true, "path_length" => 2 }
     end
   end
+  context "validate key usage" do
+    it "errors with non-array" do
+      expect { R509::Config::CAProfile.new( :key_usage => 'not an array' ) }.to raise_error(R509::R509Error, 'key_usage must be an array of strings (see README)')
+    end
+    it "loads properly" do
+      ku = ['digitalSignature']
+      profile = R509::Config::CAProfile.new( :key_usage => ku )
+      profile.key_usage.should == ku
+    end
+  end
+  context "validate extended key usage" do
+    it "errors with non-array" do
+      expect { R509::Config::CAProfile.new( :extended_key_usage => 'not an array' ) }.to raise_error(R509::R509Error, 'extended_key_usage must be an array of strings (see README)')
+    end
+    it "loads properly" do
+      eku = ['serverAuth']
+      profile = R509::Config::CAProfile.new( :extended_key_usage => eku )
+      profile.extended_key_usage.should == eku
+    end
+  end
+  context "validate subject item policy" do
+    it "raises an error with an invalid subject_item_policy" do
+      expect { R509::Config::CAProfile.new( :subject_item_policy => "lenient!" ) }.to raise_error(R509::R509Error,'subject_item_policy must be of type R509::Config::SubjectItemPolicy')
+    end
+    it "stores a valid subject_item_policy" do
+      policy = R509::Config::SubjectItemPolicy.new("CN" => "required")
+      expect { R509::Config::CAProfile.new( :subject_item_policy => policy) }.to_not raise_error
+    end
+  end
   it "initializes and stores the options provided" do
     profile = R509::Config::CAProfile.new(
       :basic_constraints => {"ca" => true},
@@ -431,9 +468,6 @@ describe R509::Config::CAProfile do
     profile.certificate_policies.should == nil
     profile.ocsp_no_check.should == false
     profile.subject_item_policy.should == nil
-  end
-  it "raises an error with an invalid subject_item_policy" do
-    expect { R509::Config::CAProfile.new( :subject_item_policy => "lenient!" ) }.to raise_error(R509::R509Error,'subject_item_policy must be of type R509::Config::SubjectItemPolicy')
   end
   it "loads profiles from YAML while setting expected defaults" do
     config = R509::Config::CAConfig.from_yaml("test_ca", File.read("#{File.dirname(__FILE__)}/fixtures/config_test.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"})

@@ -23,17 +23,41 @@ module R509
       # @option opts [R509::Config::SubjectItemPolicy] :subject_item_policy optional
       def initialize(opts = {})
         validate_basic_constraints opts[:basic_constraints]
-        @key_usage = opts[:key_usage]
-        @extended_key_usage = opts[:extended_key_usage]
+        validate_key_usage opts[:key_usage]
+        validate_extended_key_usage  opts[:extended_key_usage]
         validate_certificate_policies opts[:certificate_policies]
         @ocsp_no_check = (opts[:ocsp_no_check] == true or opts[:ocsp_no_check] == "true")?true:false
-        if opts.has_key?(:subject_item_policy) and not opts[:subject_item_policy].nil? and not opts[:subject_item_policy].kind_of?(R509::Config::SubjectItemPolicy)
-          raise R509Error, "subject_item_policy must be of type R509::Config::SubjectItemPolicy"
-        end
-        @subject_item_policy = opts[:subject_item_policy] || nil
+        validate_subject_item_policy opts[:subject_item_policy]
       end
 
       private
+      # @private
+      # validates subject item policy
+      def validate_subject_item_policy(sip)
+        if not sip.nil? and not sip.kind_of?(R509::Config::SubjectItemPolicy)
+          raise R509Error, "subject_item_policy must be of type R509::Config::SubjectItemPolicy"
+        end
+        @subject_item_policy = sip
+      end
+      # @private
+      # validates key usage array
+      def validate_key_usage(ku)
+        if not ku.nil? and not ku.kind_of?(Array)
+          raise R509Error, "key_usage must be an array of strings (see README)"
+        end
+        @key_usage = ku
+      end
+
+      # @private
+      # validates extended key usage array
+      def validate_extended_key_usage(eku)
+        if not eku.nil? and not eku.kind_of?(Array)
+          raise R509Error, "extended_key_usage must be an array of strings (see README)"
+        end
+        @extended_key_usage = eku
+      end
+
+
       # @private
       # validates the structure of the certificate policies array
       def validate_certificate_policies(policies)
@@ -228,8 +252,8 @@ module R509
           raise ArgumentError, ':ocsp_cert must contain a private key, not just a certificate'
         end
         @ocsp_cert = opts[:ocsp_cert] unless opts[:ocsp_cert].nil?
-        @ocsp_location = opts[:ocsp_location]
-        @ca_issuers_location = opts[:ca_issuers_location]
+        validate_ocsp_location opts[:ocsp_location]
+        validate_ca_issuers_location opts[:ca_issuers_location]
         @ocsp_chain = opts[:ocsp_chain] if opts[:ocsp_chain].kind_of?(Array)
         @ocsp_validity_hours = opts[:ocsp_validity_hours] || 168
         @ocsp_start_skew_seconds = opts[:ocsp_start_skew_seconds] || 3600
@@ -467,6 +491,23 @@ module R509
         ca_cert
       end
 
+      private
+
+      # @private
+      def validate_ocsp_location(location)
+        if not location.nil? and not location.kind_of?(Array)
+          raise R509Error, "ocsp_location must be an array if provided"
+        end
+        @ocsp_location = location
+      end
+
+      # @private
+      def validate_ca_issuers_location(location)
+        if not location.nil? and not location.kind_of?(Array)
+          raise R509Error, "ca_issuers_location must be an array if provided"
+        end
+        @ca_issuers_location = location
+      end
     end
   end
 end

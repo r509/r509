@@ -435,14 +435,14 @@ There is documentation available for every method and class in r509 available vi
 See the LICENSE file. Licensed under the Apache 2.0 License.
 
 #YAML Config Options
-r509 configs are nested hashes of key:values that define the behavior of each CA. See r509.yaml for a full example config.
+r509 configs are nested hashes of key:values that define the behavior of each CA. See r509.yaml for a full example config. These options can also be defined programmatically via R509::CAConfig and R509::CAProfile.
 
 ##ca\_name
 ###ca\_cert
 This hash defines the certificate + key that will be used to sign for the ca\_name. Depending on desired configuration various elements are optional. You can even supply just __cert__ (for example, if you are using an ocsp\_cert hash and only using the configured CA for OCSP responses)
 
 * cert (cannot use with pkcs12)
-* key (cannot use with key)
+* key (optional, cannot use with pkcs12)
 * engine (optional, cannot be used with key or pkcs12)
 * key\_name (required when using engine)
 * pkcs12 (optional, cannot be used with key or cert)
@@ -452,7 +452,7 @@ This hash defines the certificate + key that will be used to sign for the ca\_na
 This hash defines the certificate + key that will be used to sign for OCSP responses. OCSP responses cannot be directly created with r509, but require the ancillary gem [r509-ocsp-responder](https://github.com/reaperhulk/r509-ocsp-responder). This hash is optional and if not provided r509 will automatically use the ca\_cert as the OCSP certificate.
 
 * cert (cannot use with pkcs12)
-* key (cannot use with key)
+* key (optional, cannot use with pkcs12)
 * engine (optional, cannot be used with key or pkcs12)
 * key\_name (required when using engine)
 * pkcs12 (optional, cannot be used with key or cert)
@@ -520,7 +520,7 @@ All basic constraints are encoded with the critical bit set to true. The basic c
 #####ca
 The ca key is required and must be set to true (for an issuing CA) or false (everything else).
 
-#####path_length
+#####path\_length
 This option is only allowed if ca is set to TRUE. path_length allows you to define the maximum number of non-self-issued intermediate certificates that may follow this certificate in a valid certification path. For example, if you set this value to 0 then the certificate issued can only issue end entity certificates, not additional subroots. This must be a non-negative integer (>=0).
 
 ```yaml
@@ -583,6 +583,9 @@ or
   }
 ]
 ```
+
+####ocsp\_no\_check
+This is a boolean option that determines whether the OCSPNoCheck extension should be encoded in certificates issued by the profile. This flag is _only_ meaningful on certificates that contain the OCSPSigning EKU.
 
 ####subject\_item\_policy
 Hash of required/optional subject items. These must be in OpenSSL shortname format. If subject\_item\_policy is excluded from the profile then all subject items will be used. If it is included, __only items listed in the policy will be copied to the certificate__.
