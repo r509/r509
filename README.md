@@ -397,7 +397,11 @@ binary_sig = R509::HMAC.digest(:key => key, :data => data, :message_digest => "s
 ```
 
 ###Alternate Key Algorithms
-In addition to the default RSA objects that are created above, r509 supports DSA and elliptic curve (EC). EC support is present only if Ruby has been linked against a version of OpenSSL compiled with EC enabled. This excludes Red Hat-based distributions at this time (unless you build it yourself). Take a look at the documentation for R509::PrivateKey, R509::Cert, and R509::CSR to see how to create DSA and EC types.
+In addition to the default RSA objects that are created above, r509 supports DSA and elliptic curve (EC). EC support is present only if Ruby has been linked against a version of OpenSSL compiled with EC enabled. This excludes Red Hat-based distributions at this time (unless you build it yourself). Take a look at the documentation for R509::PrivateKey, R509::Cert, and R509::CSR to see how to create DSA and EC types. You can test if elliptic curve support is available in your Ruby with:
+
+```ruby
+R509.ec_supported?
+```
 
 ####NIST Recommended Elliptic Curves
 These curves are set via ```:curve_name```. The system defaults to using ```secp384r1```

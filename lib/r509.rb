@@ -16,6 +16,18 @@ module R509
   require('r509/ec-hack.rb')
   require('r509/asn1.rb')
   require('r509/version.rb')
+
+  # print version information to console
+  def self.print_debug
+    puts "r509 v#{R509::VERSION}"
+    puts OpenSSL::OPENSSL_VERSION
+    puts "Ruby #{RUBY_VERSION}-p#{RUBY_PATCHLEVEL}"
+    puts "Elliptic curve support: #{self.ec_supported?}"
+  end
+
+  def self.ec_supported?
+    (defined?(OpenSSL::PKey::EC) == 'constant' and OpenSSL::PKey::EC.class == Class)
+  end
 end
 
 #add some global mappings we want available throughout r509

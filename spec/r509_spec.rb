@@ -1,0 +1,25 @@
+require 'spec_helper'
+
+def capture_stdout(&block)
+  original_stdout = $stdout
+    $stdout = fake = StringIO.new
+    begin
+      yield
+    ensure
+      $stdout = original_stdout
+    end
+    fake.string
+end
+
+describe R509 do
+  it "prints version and feature info with ::print_debug" do
+    output = capture_stdout { R509.print_debug }
+    output.should match /^r509 v/
+    output.should match /^OpenSSL/
+    output.should match /^Ruby/
+    output.should match /^Elliptic/
+  end
+  it "checks if ec is supported" do
+    R509.ec_supported?.should == true
+  end
+end
