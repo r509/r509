@@ -448,7 +448,7 @@ module R509
     def csr_check(cert)
       begin
         csr = OpenSSL::X509::Request.new cert
-        raise R509Error, 'Cert provided is actually a certificate signing request.'
+        raise ArgumentError, 'Cert provided is actually a certificate signing request.'
       rescue OpenSSL::X509::RequestError
         # do nothing, it shouldn't be a CSR anyway!
       end
