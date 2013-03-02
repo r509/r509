@@ -122,6 +122,68 @@ describe R509::ASN1::GeneralName do
       R509::ASN1::GeneralName.map_type_to_tag("registeredID").should == 8
     end
   end
+  context "::map_tag_to_type" do
+    it "handles otherName" do
+      R509::ASN1::GeneralName.map_tag_to_type(0).should == :otherName
+    end
+    it "handles rfc822Name" do
+      R509::ASN1::GeneralName.map_tag_to_type(1).should == :rfc822Name
+    end
+    it "handles dNSName" do
+      R509::ASN1::GeneralName.map_tag_to_type(2).should == :dNSName
+    end
+    it "handles x400Address" do
+      R509::ASN1::GeneralName.map_tag_to_type(3).should == :x400Address
+    end
+    it "handles directoryName" do
+      R509::ASN1::GeneralName.map_tag_to_type(4).should == :directoryName
+    end
+    it "handles ediPartyName" do
+      R509::ASN1::GeneralName.map_tag_to_type(5).should == :ediPartyName
+    end
+    it "handles uniformResourceIdentifier" do
+      R509::ASN1::GeneralName.map_tag_to_type(6).should == :uniformResourceIdentifier
+    end
+    it "handles iPAddress" do
+      R509::ASN1::GeneralName.map_tag_to_type(7).should == :iPAddress
+    end
+    it "handles registeredID" do
+      R509::ASN1::GeneralName.map_tag_to_type(8).should == :registeredID
+    end
+    it "raises error with invalid tag" do
+      expect { R509::ASN1::GeneralName.map_tag_to_type(28) }.to raise_error(R509::R509Error,"Invalid tag 28")
+    end
+
+  end
+  context "::map_tag_to_serial_prefix" do
+    it "handles otherName" do
+      expect { R509::ASN1::GeneralName.map_tag_to_serial_prefix(0) }.to raise_error(R509::R509Error)
+    end
+    it "handles rfc822Name" do
+      R509::ASN1::GeneralName.map_tag_to_serial_prefix(1).should == "email"
+    end
+    it "handles dNSName" do
+      R509::ASN1::GeneralName.map_tag_to_serial_prefix(2).should == "DNS"
+    end
+    it "handles x400Address" do
+      expect { R509::ASN1::GeneralName.map_tag_to_serial_prefix(3) }.to raise_error(R509::R509Error)
+    end
+    it "handles directoryName" do
+      R509::ASN1::GeneralName.map_tag_to_serial_prefix(4).should == "dirName"
+    end
+    it "handles ediPartyName" do
+      expect { R509::ASN1::GeneralName.map_tag_to_serial_prefix(5) }.to raise_error(R509::R509Error)
+    end
+    it "handles uniformResourceIdentifier" do
+      R509::ASN1::GeneralName.map_tag_to_serial_prefix(6).should == "URI"
+    end
+    it "handles iPAddress" do
+      R509::ASN1::GeneralName.map_tag_to_serial_prefix(7).should == "IP"
+    end
+    it "handles registeredID" do
+      expect { R509::ASN1::GeneralName.map_tag_to_serial_prefix(8) }.to raise_error(R509::R509Error)
+    end
+  end
   it "handles rfc822Name" do
     der = "\x81\u0011myemail@email.com"
     asn = OpenSSL::ASN1.decode der
@@ -182,7 +244,7 @@ describe R509::ASN1::GeneralName do
     # otherName type
     der = "\xA0\u0014\u0006\u0003*\u0003\u0004\xA0\r\u0016\vHello World"
     asn = OpenSSL::ASN1.decode der
-    expect { R509::ASN1::GeneralName.new(asn) }.to raise_error(R509::R509Error, "Unimplemented GeneralName type found. Tag: 0. At this time R509 does not support GeneralName types other than rfc822Name, dNSName, uniformResourceIdentifier, iPAddress, and directoryName")
+    expect { R509::ASN1::GeneralName.new(asn) }.to raise_error(R509::R509Error, "Unimplemented GeneralName tag: 0. At this time R509 does not support GeneralName types other than rfc822Name, dNSName, uniformResourceIdentifier, iPAddress, and directoryName")
   end
 end
 
@@ -203,7 +265,7 @@ describe R509::ASN1::GeneralNames do
     gns = R509::ASN1::GeneralNames.new
     der = "\xA0\u0014\u0006\u0003*\u0003\u0004\xA0\r\u0016\vHello World"
     asn = OpenSSL::ASN1.decode der
-    expect { gns.add_item(asn) }.to raise_error(R509::R509Error, "Unimplemented GeneralName type found. Tag: 0. At this time R509 does not support GeneralName types other than rfc822Name, dNSName, uniformResourceIdentifier, iPAddress, and directoryName")
+    expect { gns.add_item(asn) }.to raise_error(R509::R509Error, "Unimplemented GeneralName tag: 0. At this time R509 does not support GeneralName types other than rfc822Name, dNSName, uniformResourceIdentifier, iPAddress, and directoryName")
   end
   it "preserves order" do
     asn = OpenSSL::ASN1.decode "\x82\u000Ewww.test.local"

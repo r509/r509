@@ -345,13 +345,13 @@ shared_examples_for "a correct R509 NameConstraints object" do |critical|
   it "should have the permitted names" do
     @permitted_names.each_with_index do |name,index|
       @r509_ext.permitted_names[index].tag.should == name[:tag]
-      @r509_ext.permitted_names[index].value.should == name[:checked_value]
+      @r509_ext.permitted_names[index].value.should == name[:value]
     end
   end
   it "should have the excluded names" do
     @excluded_names.each_with_index do |name,index|
       @r509_ext.excluded_names[index].tag.should == name[:tag]
-      @r509_ext.excluded_names[index].value.should == name[:checked_value]
+      @r509_ext.excluded_names[index].value.should == name[:value]
     end
   end
 end
@@ -635,7 +635,7 @@ describe R509::Cert::Extensions do
       it "errors as expected" do
         ef = OpenSSL::X509::ExtensionFactory.new
         ext = ef.create_extension("subjectAltName","otherName:1.2.3.4;IA5STRING:Hello World")
-        expect { R509::Cert::Extensions::SubjectAlternativeName.new ext }.to raise_error(R509::R509Error, 'Unimplemented GeneralName type found. Tag: 0. At this time R509 does not support GeneralName types other than rfc822Name, dNSName, uniformResourceIdentifier, iPAddress, and directoryName')
+        expect { R509::Cert::Extensions::SubjectAlternativeName.new ext }.to raise_error(R509::R509Error, 'Unimplemented GeneralName tag: 0. At this time R509 does not support GeneralName types other than rfc822Name, dNSName, uniformResourceIdentifier, iPAddress, and directoryName')
       end
     end
     context "with a DNS alternative name only" do
@@ -979,7 +979,7 @@ describe R509::Cert::Extensions do
     context "with one permitted name" do
       before :all do
         @excluded_names = []
-        @permitted_names = [{:tag => 2, :value => ".whatever.com", :checked_value => ".whatever.com"}]
+        @permitted_names = [{:tag => 2, :value => ".whatever.com"}]
         gns = R509::ASN1::GeneralNames.new
         @permitted_names.each do |name|
           gns.add_item(name)
@@ -1000,7 +1000,7 @@ describe R509::Cert::Extensions do
     context "with multiple permitted names" do
       before :all do
         @excluded_names = []
-        @permitted_names = [{:tag => 2, :value => ".whatever.com", :checked_value => ".whatever.com"}, {:tag => 1, :value => "user@emaildomain.com", :checked_value => "user@emaildomain.com" } ]
+        @permitted_names = [{:tag => 2, :value => ".whatever.com"}, {:tag => 1, :value => "user@emaildomain.com" } ]
         gns = R509::ASN1::GeneralNames.new
         @permitted_names.each do |name|
           gns.add_item(name)
@@ -1021,7 +1021,7 @@ describe R509::Cert::Extensions do
     context "with one excluded name" do
       before :all do
         @permitted_names = []
-        @excluded_names = [{:tag => 7, :value => "\x7F\x00\x00\x01\xFF\xFF\xFF\xFF".force_encoding("BINARY"), :checked_value => "127.0.0.1/255.255.255.255"}]
+        @excluded_names = [{:tag => 7, :value => "127.0.0.1/255.255.255.255"}]
         egns = R509::ASN1::GeneralNames.new
         @excluded_names.each do |name|
           egns.add_item(name)
@@ -1042,7 +1042,7 @@ describe R509::Cert::Extensions do
     context "with multiple excluded names" do
       before :all do
         @permitted_names = []
-        @excluded_names = [{:tag => 7, :value => "\x7F\x00\x00\x01\xFF\xFF\xFF\xFF".force_encoding("BINARY"), :checked_value => "127.0.0.1/255.255.255.255"}, {:tag => 1, :value => "emaildomain.com", :checked_value => "emaildomain.com" } ]
+        @excluded_names = [{:tag => 7, :value => "127.0.0.1/255.255.255.255"}, {:tag => 1, :value => "emaildomain.com" } ]
         @permitted_names = []
         egns = R509::ASN1::GeneralNames.new
         @excluded_names.each do |name|
@@ -1063,8 +1063,8 @@ describe R509::Cert::Extensions do
     end
     context "with both permitted and excluded names" do
       before :all do
-        @excluded_names = [{:tag => 7, :value => "\x7F\x00\x00\x01\xFF\xFF\xFF\xFF".force_encoding("BINARY"), :checked_value => "127.0.0.1/255.255.255.255"}, {:tag => 1, :value => "emaildomain.com", :checked_value => "emaildomain.com" } ]
-        @permitted_names = [{:tag => 2, :value => ".whatever.com", :checked_value => ".whatever.com"}, {:tag => 1, :value => "user@emaildomain.com", :checked_value => "user@emaildomain.com"} ]
+        @excluded_names = [{:tag => 7, :value => "127.0.0.1/255.255.255.255"}, {:tag => 1, :value => "emaildomain.com" } ]
+        @permitted_names = [{:tag => 2, :value => ".whatever.com"}, {:tag => 1, :value => "user@emaildomain.com"} ]
         gns = R509::ASN1::GeneralNames.new
         @permitted_names.each do |name|
           gns.add_item(name)

@@ -30,11 +30,12 @@ module R509
       names.map do |domain|
         if !(IPAddr.new(domain.strip) rescue nil).nil?
           ip = IPAddr.new(domain.strip)
-          general_names.create_item(:tag => 7, :value => ip.hton)
+          general_names.create_item(:tag => 7, :value => ip.to_s)
         else
           case domain
           when R509::Subject, Array
-            general_names.create_item(:tag => 4, :value => domain)
+            subject = R509::Subject.new(domain)
+            general_names.create_item(:tag => 4, :value => subject)
           when /:\/\// #URI
             general_names.create_item(:tag => 6, :value => domain.strip)
           when /@/ #rfc822Name
@@ -69,70 +70,44 @@ module R509
       # Integer tag type. See GeneralName description at the top of this class
       attr_reader :tag
 
-      # these prefixes are what OpenSSL uses internally to encode when generating extension objects
-      # dNSName prefix
-      DNSNAME_PREFIX = "DNS"
-      # iPAddress prefix
-      IP_ADDRESS_PREFIX = "IP"
-      # uniformResourceIdentifier prefix
-      URI_PREFIX = "URI"
-      # rfc822Name prefix
-      RFC_822_NAME_PREFIX = "email"
-      # directoryName prefix
-      DIRECTORY_NAME_PREFIX = "dirName"
-
       # @param [OpenSSL::ASN1::ASN1Data,Hash] asn ASN.1 input data. Can also pass a hash with :tag and :value keys
       def initialize(asn)
         if asn.kind_of?(Hash) and asn.has_key?(:tag) and asn.has_key?(:value)
+          # this is added via create_item
           @tag = asn[:tag]
-          value = asn[:value]
+          @type = R509::ASN1::GeneralName.map_tag_to_type(@tag)
+          @serial_prefix = R509::ASN1::GeneralName.map_tag_to_serial_prefix(@tag)
+          @value = asn[:value]
         else
           @tag = asn.tag
+          @type = R509::ASN1::GeneralName.map_tag_to_type(@tag)
+          @serial_prefix = R509::ASN1::GeneralName.map_tag_to_serial_prefix(@tag)
           value = asn.value
-        end
-        case @tag
-        when 1
-          @type = :rfc822Name
-          @serial_prefix = RFC_822_NAME_PREFIX
-          @value = value
-        when 2
-          @type = :dNSName
-          @serial_prefix = DNSNAME_PREFIX
-          @value = value
-        when 4
-          @type = :directoryName
-          @serial_prefix = DIRECTORY_NAME_PREFIX
-          if value.kind_of?(R509::Subject)
-            @value = value
-          elsif value.kind_of?(Array) and not value.first.respond_to?(:to_der)
-            @value = R509::Subject.new(value)
-          else
-            @value = R509::Subject.new(value.first.to_der)
+          case @tag
+          when 1 then @value = value
+          when 2 then @value = value
+          when 4 then @value = R509::Subject.new(value.first.to_der)
+          when 6 then @value = value
+          when 7
+            if value.size == 4 or value.size == 16
+              ip = IPAddr.new_ntoh(value)
+              @value = ip.to_s
+            elsif value.size == 8 #IPv4 with netmask
+              ip = IPAddr.new_ntoh(value[0,4])
+              netmask = IPAddr.new_ntoh(value[4,4])
+              @value = ip.to_s + "/" + netmask.to_s
+            elsif value.size == 32 #IPv6 with netmask
+              ip = IPAddr.new_ntoh(value[0,16])
+              netmask = IPAddr.new_ntoh(value[16,16])
+              @value = ip.to_s + "/" + netmask.to_s
+            end
           end
-        when 6
-          @type = :uniformResourceIdentifier
-          @serial_prefix = URI_PREFIX
-          @value = value
-        when 7
-          @type = :iPAddress
-          @serial_prefix = IP_ADDRESS_PREFIX
-          if value.size == 4 or value.size == 16
-            ip = IPAddr.new_ntoh(value)
-            @value = ip.to_s
-          elsif value.size == 8 #IPv4 with netmask
-            ip = IPAddr.new_ntoh(value[0,4])
-            netmask = IPAddr.new_ntoh(value[4,4])
-            @value = ip.to_s + "/" + netmask.to_s
-          elsif value.size == 32 #IPv6 with netmask
-            ip = IPAddr.new_ntoh(value[0,16])
-            netmask = IPAddr.new_ntoh(value[16,16])
-            @value = ip.to_s + "/" + netmask.to_s
-          end
-        else
-          raise R509::R509Error, "Unimplemented GeneralName type found. Tag: #{asn.tag}. At this time R509 does not support GeneralName types other than rfc822Name, dNSName, uniformResourceIdentifier, iPAddress, and directoryName"
         end
       end
 
+      # Maps a GeneralName type to the integer tag representation
+      # @param [String,Symbol] type of GeneralName
+      # @return [Integer] tag for the type
       def self.map_type_to_tag(type)
         #        otherName                       [0]     OtherName,
         #        rfc822Name                      [1]     IA5String,
@@ -145,14 +120,46 @@ module R509
         #        registeredID                    [8]     OBJECT IDENTIFIER }
         case type
         when "otherName", :otherName then 0
-        when "rfc822Name", :rfc822Name, RFC_822_NAME_PREFIX then 1
-        when "dNSName", :dNSName, DNSNAME_PREFIX then 2
+        when "rfc822Name", :rfc822Name, "email" then 1
+        when "dNSName", :dNSName, "DNS" then 2
         when "x400Address", :x400Address then 3
-        when "directoryName", :directoryName, DIRECTORY_NAME_PREFIX then 4
+        when "directoryName", :directoryName, "dirName" then 4
         when "ediPartyName", :ediPartyName  then 5
-        when "uniformResourceIdentifier", :uniformResourceIdentifier, URI_PREFIX then 6
-        when "iPAddress", :iPAddress, IP_ADDRESS_PREFIX then 7
+        when "uniformResourceIdentifier", :uniformResourceIdentifier, "URI" then 6
+        when "iPAddress", :iPAddress, "IP" then 7
         when "registeredID", :registeredID  then 8
+        end
+      end
+
+      # @param [Integer] tag
+      # @return [String] serial prefix
+      def self.map_tag_to_serial_prefix(tag)
+        case tag
+        when 1 then "email"
+        when 2 then "DNS"
+        when 4 then "dirName"
+        when 6 then "URI"
+        when 7 then "IP"
+        else
+          raise R509Error, "Unimplemented GeneralName tag: #{tag}. At this time R509 does not support GeneralName types other than rfc822Name, dNSName, uniformResourceIdentifier, iPAddress, and directoryName"
+        end
+      end
+
+      # @param [Integer] tag
+      # @return [Symbol] symbol type
+      def self.map_tag_to_type(tag)
+        case tag
+        when 0 then :otherName
+        when 1 then :rfc822Name
+        when 2 then :dNSName
+        when 3 then :x400Address
+        when 4 then :directoryName
+        when 5 then :ediPartyName
+        when 6 then :uniformResourceIdentifier
+        when 7 then :iPAddress
+        when 8 then :registeredID
+        else
+          raise R509Error, "Invalid tag #{tag}"
         end
       end
 
@@ -226,7 +233,7 @@ module R509
       end
 
       # @private
-      # @param [Hash] hash A hash with :tag and :value keys. Allows you to build GeneralName objects and add
+      # @param [Hash] hash A hash with (:tag or :type) and :value keys. Allows you to build GeneralName objects and add
       #   them to the GeneralNames object. Unless you know what you're doing you should really stay away from this.
       def create_item(hash)
         if not hash.respond_to?(:has_key?) or (not hash.has_key?(:tag) and not hash.has_key?(:type)) or not hash.has_key?(:value)
@@ -234,17 +241,6 @@ module R509
         end
         if hash[:type]
           hash[:tag] = R509::ASN1::GeneralName.map_type_to_tag(hash[:type])
-          # TODO: refactor this into a more generic place
-          # we do some of this processing in R509::GeneralName
-          # this should be improved because it's lame
-          if hash[:tag] == 4 # directoryName
-            hash[:value] = R509::Subject.new(hash[:value])
-          elsif hash[:tag] == 7 # iPAddress
-            ip_netmask = hash[:value].split('/')
-            values = ip_netmask.map { |data| IPAddr.new(data).hton }
-            hash[:value] = values.join
-            puts hash[:value].size
-          end
         end
         gn = R509::ASN1::GeneralName.new(:tag => hash[:tag], :value => hash[:value])
         add_item(gn)
