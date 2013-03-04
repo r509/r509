@@ -421,8 +421,7 @@ module R509
           @general_names.directory_names
         end
 
-        # @return [Array] array of hashes of form { :type => "", :value => "" } that preserve the order found
-        #   in the extension
+        # @return [Array] array of GeneralName objects preserving order found in the extension
         def names
           @general_names.names
         end
