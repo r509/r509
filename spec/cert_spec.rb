@@ -343,6 +343,14 @@ describe R509::Cert do
     cert = R509::Cert.load_from_file path
     cert.serial.to_i.should == 211653423715
   end
+  it "returns a hash for #extensions" do
+    cert = R509::Cert.new(:cert => @cert3)
+    cert.extensions.kind_of?(Hash).should == true
+  end
+  it "returns an array for #unknown_extensions" do
+    cert = R509::Cert.new(:cert => @cert3)
+    cert.unknown_extensions.should == []
+  end
 
   context "elliptic curve certs" do
     before :all do
