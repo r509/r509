@@ -198,7 +198,8 @@ profile = R509::Config::CAProfile.new(
     { "policy_identifier" => "2.16.840.1.99999.21.234",
       "cps_uris" => ["http://example.com/cps","http://haha.com"],
       "user_notices" => [ { "explicit_text" => "this is a great thing", "organization" => "my org", "notice_numbers" => "1,2,3" } ]
-    },
+    }
+  ],
   :subject_item_policy => nil,
   :ocsp_no_check => false # this should only be true if you are setting OCSPSigning EKU
 )
@@ -345,10 +346,8 @@ cert = ca.sign(
 Sign an SPKI/SPKAC object
 
 ```ruby
-spki = R509::SPKI.new(
-  :type => :rsa,
-  :bit_strength => 2048
-)
+key = R509::PrivateKey.new(:type => :rsa, :bit_strength => 2048)
+spki = R509::SPKI.new(:key => key)
 # SPKI objects do not contain subject or san name data so it must be specified
 subject = R509::Subject.new
 subject.CN = "mydomain.com"
