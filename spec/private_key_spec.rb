@@ -31,6 +31,11 @@ describe R509::PrivateKey do
     private_key.ec?.should == false
     private_key.dsa?.should == true
   end
+  it "generates a default 2048-bit RSA key when nothing is passed to the constructor" do
+    private_key = R509::PrivateKey.new
+    private_key.rsa?.should == true
+    private_key.bit_strength.should == 2048
+  end
   it "defaults to RSA" do
     private_key = R509::PrivateKey.new(:bit_strength=>1024)
     private_key.key.kind_of?(OpenSSL::PKey::RSA).should == true

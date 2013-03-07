@@ -14,7 +14,7 @@ module R509
     # @option opts [String,OpenSSL::PKey::RSA,OpenSSL::PKey::DSA,OpenSSL::PKey::EC] :key
     # @option opts [OpenSSL::Engine] :engine
     # @option opts [string] :key_name (used with engine)
-    def initialize(opts)
+    def initialize(opts={})
       if not opts.kind_of?(Hash)
         raise ArgumentError, 'Must provide a hash of options'
       end
