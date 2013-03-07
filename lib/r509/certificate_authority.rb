@@ -23,7 +23,7 @@ module R509::CertificateAuthority
     # Signs a CSR
     # @option options :csr [R509::CSR]
     # @option options :spki [R509::SPKI]
-    # @option options :profile_name [String] The CA profile you want to use (eg "server in your config)
+    # @option options :profile_name [String] The CA profile you want to use (eg "server" in your config)
     # @option options :subject [R509::Subject,OpenSSL::X509::Subject,Array] (optional for R509::CSR, required for R509::SPKI)
     # @option options :san_names [Array,R509::ASN1::GeneralNames] optional either an array of names that will be automatically parsed to determine their type, or an explicit R509::ASN1::GeneralNames object
     # @option options :message_digest [String] the message digest to use for this certificate instead of the config's default
