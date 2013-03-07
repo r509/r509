@@ -108,6 +108,11 @@ describe R509::CertificateAuthority::Signer do
     cert = @ca.sign(:csr => csr, :profile_name => 'server', :subject => csr.subject, :san_names => san_names )
     cert.san.dns_names.should == ['langui.sh','domain2.com']
   end
+  it "issues with empty san_names array" do
+    csr = R509::CSR.new(:subject => [['C','US'],['ST','Illinois'],['L','Chicago'],['O','Paul Kehrer'],['CN','langui.sh']], :bit_strength => 1024)
+    cert = @ca.sign(:csr => csr, :profile_name => 'server', :subject => csr.subject, :san_names => [] )
+    cert.san.should be_nil
+  end
   it "issues with specified (directoryName and dnsName) san domains in array" do
     name = [['C','US'],['ST','Illinois'],['L','Chicago'],['O','Paul Kehrer'],['CN','langui.sh']]
     csr = R509::CSR.new(:subject => name, :bit_strength => 1024)
@@ -371,6 +376,28 @@ describe R509::CertificateAuthority::Signer do
       cert.authority_info_access.ca_issuers.uris.should == []
       cert.authority_info_access.ocsp.uris.should == ["http://myocsp.jb.net"]
     end
+    it "issues a certificate with an empty array for ocsp_location" do
+      csr = R509::CSR.new(:csr => @csr)
+      ca_cert = R509::Cert.new( :cert => TestFixtures::TEST_CA_CERT, :key => TestFixtures::TEST_CA_KEY )
+      config = R509::Config::CAConfig.new(:ca_cert => ca_cert)
+      config.ocsp_location = []
+      profile = R509::Config::CAProfile.new
+      config.set_profile("default",profile)
+      ca = R509::CertificateAuthority::Signer.new(config)
+      cert = ca.sign( :csr => csr, :profile_name => 'default')
+      cert.authority_info_access.should be_nil
+    end
+    it "issues a certificate with an empty array for ca_issuers_location" do
+      csr = R509::CSR.new(:csr => @csr)
+      ca_cert = R509::Cert.new( :cert => TestFixtures::TEST_CA_CERT, :key => TestFixtures::TEST_CA_KEY )
+      config = R509::Config::CAConfig.new(:ca_cert => ca_cert)
+      config.ca_issuers_location = []
+      profile = R509::Config::CAProfile.new
+      config.set_profile("default",profile)
+      ca = R509::CertificateAuthority::Signer.new(config)
+      cert = ca.sign( :csr => csr, :profile_name => 'default')
+      cert.authority_info_access.should be_nil
+    end
   end
   it "issues a certificate with no CDP" do
     csr = R509::CSR.new(:csr => @csr)
@@ -381,6 +408,17 @@ describe R509::CertificateAuthority::Signer do
     ca = R509::CertificateAuthority::Signer.new(config)
     cert = ca.sign( :csr => csr, :profile_name => 'default')
     cert.crl_distribution_points.should == nil
+  end
+  it "issues a certificate with an empty array for CDP" do
+    csr = R509::CSR.new(:csr => @csr)
+    ca_cert = R509::Cert.new( :cert => TestFixtures::TEST_CA_CERT, :key => TestFixtures::TEST_CA_KEY )
+    config = R509::Config::CAConfig.new(:ca_cert => ca_cert)
+    config.cdp_location = []
+    profile = R509::Config::CAProfile.new
+    config.set_profile("default",profile)
+    ca = R509::CertificateAuthority::Signer.new(config)
+    cert = ca.sign( :csr => csr, :profile_name => 'default')
+    cert.crl_distribution_points.should be_nil
   end
   it "issues a certificate with a single CDP" do
     csr = R509::CSR.new(:csr => @csr)

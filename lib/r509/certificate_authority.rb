@@ -283,13 +283,13 @@ module R509::CertificateAuthority
         ext << ef.create_extension("certificatePolicies", policy_names.join(","))
       end
 
-      if not options[:san_names].nil?
+      if not options[:san_names].nil? and not options[:san_names].names.empty?
         serialize = options[:san_names].serialize_names
         ef.config = OpenSSL::Config.parse(serialize[:conf])
         ext << ef.create_extension("subjectAltName", serialize[:extension_string])
       end
 
-      if not @config.nil? and not @config.cdp_location.nil?
+      if not @config.nil? and not @config.cdp_location.nil? and not @config.cdp_location.empty?
         gns = R509::ASN1.general_name_parser(@config.cdp_location)
         serialize = gns.serialize_names
         ef.config = OpenSSL::Config.parse(serialize[:conf])
@@ -301,7 +301,7 @@ module R509::CertificateAuthority
         aia = []
         aia_conf = []
 
-        if not @config.ocsp_location.nil?
+        if not @config.ocsp_location.nil? and not @config.ocsp_location.empty?
           gns = R509::ASN1.general_name_parser(@config.ocsp_location)
           gns.names.each do |ocsp|
             serialize = ocsp.serialize_name
@@ -310,7 +310,7 @@ module R509::CertificateAuthority
           end
         end
 
-        if not @config.nil? and not @config.ca_issuers_location.nil?
+        if not @config.nil? and not @config.ca_issuers_location.nil? and not @config.ca_issuers_location.empty?
           gns = R509::ASN1.general_name_parser(@config.ca_issuers_location)
           gns.names.each do |ca_issuers|
             serialize = ca_issuers.serialize_name
