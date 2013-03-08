@@ -10,11 +10,12 @@ module R509
     class SignedList
       include R509::IOHelpers
 
-      attr_reader :crl
+      attr_reader :crl, :issuer
 
       # @param [String,OpenSSL::X509::CRL] crl
       def initialize(crl)
         @crl = OpenSSL::X509::CRL.new(crl)
+        @issuer = R509::Subject.new(@crl.issuer)
       end
 
       # Helper method to quickly load a CRL from the filesystem
@@ -23,23 +24,6 @@ module R509
       # @return [R509::CRL::SignedList] CRL object
       def self.load_from_file( filename )
         return R509::CRL::SignedList.new( IOHelpers.read_data(filename) )
-      end
-
-      # @return [OpenSSL::X509::Name]
-      def issuer
-        @crl.issuer
-      end
-
-      # @return [String] The common name (CN) component of the issuer
-      def issuer_cn
-        return nil if self.issuer.nil?
-
-        self.issuer.to_a.each do |part, value, length|
-          return value if part.upcase == 'CN'
-        end
-
-        # return nil if we didn't find a CN part
-        return nil
       end
 
       # @return [String]

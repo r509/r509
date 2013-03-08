@@ -69,7 +69,7 @@ describe R509::CRL::SignedList do
     @crl.write_pem(sio)
     parsed_crl = R509::CRL::SignedList.new(sio.string)
     parsed_crl.issuer.to_s.should == '/C=US/ST=Illinois/L=Chicago/O=Ruby CA Project/CN=Test CA'
-    parsed_crl.issuer_cn.should == 'Test CA'
+    parsed_crl.issuer.CN.should == 'Test CA'
   end
   it "writes to der" do
     sio = StringIO.new
@@ -77,7 +77,7 @@ describe R509::CRL::SignedList do
     @crl.write_der(sio)
     parsed_crl = R509::CRL::SignedList.new(sio.string)
     parsed_crl.issuer.to_s.should == '/C=US/ST=Illinois/L=Chicago/O=Ruby CA Project/CN=Test CA'
-    parsed_crl.issuer_cn.should == 'Test CA'
+    parsed_crl.issuer.CN.should == 'Test CA'
   end
 end
 
