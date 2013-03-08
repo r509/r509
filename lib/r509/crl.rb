@@ -247,7 +247,7 @@ module R509
         now = Time.at Time.now.to_i
         crl.last_update = now-@start_skew_seconds
         crl.next_update = now+@validity_hours*3600
-        crl.issuer = @config.ca_cert.subject
+        crl.issuer = @config.ca_cert.subject.name
 
         self.revoked_certs.each do |serial, reason, revoke_time|
           revoked = OpenSSL::X509::Revoked.new

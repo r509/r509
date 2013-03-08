@@ -8,7 +8,7 @@ module R509
   class Cert
   include R509::IOHelpers
 
-    attr_reader :cert, :key
+    attr_reader :cert, :key, :subject, :issuer
 
     # @option opts [String,OpenSSL::X509::Certificate] :cert a cert
     # @option opts [R509::PrivateKey,String] :key optional private key to supply. either an unencrypted PEM/DER string or an R509::PrivateKey object (use the latter if you need password/hardware support)
@@ -105,25 +105,6 @@ module R509
       @cert.public_key
     end
 
-    # Returns the issuer
-    #
-    # @return [OpenSSL::X509::Name] issuer object. Can be parsed as string easily
-    def issuer
-      @cert.issuer
-    end
-
-    # @return [String] The common name (CN) component of the issuer
-    def issuer_cn
-      return nil if self.issuer.nil?
-
-      self.issuer.to_a.each do |part, value, length|
-        return value if part.upcase == 'CN'
-      end
-
-      # return nil if we didn't find a CN part
-      return nil
-    end
-
     # Returns the certificate fingerprint with the specified algorithm (default sha1)
     #
     # @param [String] algorithm Which algorithm to use for the fingerprint. See R509::MessageDigest for supported algorithm names
@@ -159,13 +140,6 @@ module R509
       end
     end
 
-    # Returns the subject
-    #
-    # @return [OpenSSL::X509::Name] subject object. Can be parsed as string easily
-    def subject
-      @cert.subject
-    end
-
     # @return [Boolean] Boolean of whether the object contains a private key
     def has_private_key?
       if not @key.nil?
@@ -175,29 +149,13 @@ module R509
       end
     end
 
-    # Returns the CN component, if any, of the subject
-    #
-    # @return [String]
-    def subject_cn()
-      return self.subject_component('CN')
-    end
-
-    # Returns subject component
-    #
-    # @return [String] value of the subject component requested
-    def subject_component short_name
-      match = @cert.subject.to_a.find { |x| x[0] == short_name }
-      return nil if match.nil?
-      return match[1]
-    end
-
     # Return the CN, as well as all the subject alternative names (SANs).
     #
     # @return [Array] the array of names. Returns an empty array if
     #  there are no names, at all. Discards SAN types
     def all_names
       ret = []
-      ret << subject_cn unless subject_cn.nil?
+      ret << @subject.CN unless @subject.CN.nil?
       ret.concat( self.san.names.map { |n| n.value } ) unless self.san.nil?
 
       return ret.sort.uniq
@@ -456,6 +414,8 @@ module R509
 
     def parse_certificate(cert)
       @cert = OpenSSL::X509::Certificate.new cert
+      @subject = R509::Subject.new(@cert.subject)
+      @issuer = R509::Subject.new(@cert.issuer)
     end
 
     def associate_private_key(key)

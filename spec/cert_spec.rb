@@ -60,10 +60,6 @@ describe R509::Cert do
     cert = R509::Cert.new(:cert => @cert)
     cert.issuer.to_s.should == "/C=US/O=SecureTrust Corporation/CN=SecureTrust CA"
   end
-  it "has the right issuer CN" do
-    cert = R509::Cert.new(:cert => @cert)
-    cert.issuer_cn.to_s.should == "SecureTrust CA"
-  end
   it "generates certificate fingerprints" do
     cert = R509::Cert.new(:cert => @cert)
     cert.fingerprint.should == '863bbb58877b426eb10ccfd34d3056b8c961f627'
@@ -94,21 +90,6 @@ describe R509::Cert do
   it "has the right not_after" do
     cert = R509::Cert.new(:cert => @cert)
     cert.not_after.to_i.should == 1377267002
-  end
-  it "fetches a subject component" do
-    cert = R509::Cert.new(:cert => @cert)
-    cert.subject_component('CN').should == 'langui.sh'
-  end
-  it "fetches a subject component for mixed-case components" do
-    cert4 = R509::Cert.new(:cert => @cert4)
-    cert4.subject_component('emailAddress').should == 'support@polycom.com'
-
-    cert6 = R509::Cert.new(:cert => @cert6)
-    cert6.subject_component('serialNumber').should == 'a/3ILmX9qynk8f3WafoTTkKgWj0LAGRL'
-  end
-  it "returns nil when subject component not found" do
-    cert = R509::Cert.new(:cert => @cert)
-    cert.subject_component('OU').should be_nil
   end
   it "returns signature algorithm" do
     cert = R509::Cert.new(:cert => @cert)

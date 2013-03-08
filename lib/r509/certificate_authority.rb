@@ -89,7 +89,7 @@ module R509::CertificateAuthority
 
       cert = build_cert(
         :subject => validated_subject.name,
-        :issuer => @config.ca_cert.subject,
+        :issuer => @config.ca_cert.subject.name,
         :not_before => options[:not_before],
         :not_after => options[:not_after],
         :public_key => public_key,
