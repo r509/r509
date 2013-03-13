@@ -543,6 +543,14 @@ describe R509::CertificateAuthority::Signer do
   it "raises error when passing non-hash to selfsign method" do
     expect { @ca.selfsign(@csr) }.to raise_error(ArgumentError, "You must pass a hash of options consisting of at minimum :csr")
   end
+  it "raises error when passing invalid data for san_names" do
+    csr = R509::CSR.new(
+      :subject => [['C','US'],['O','r509 LLC'],['CN','r509 Self-Signed CA Test']],
+      :bit_strength => 1024
+    )
+    san_names = "invalid"
+    expect { @ca.selfsign(:csr => csr, :san_names => san_names) }.to raise_error(ArgumentError,'When passing SAN names it must be provided as either an array of strings or an R509::ASN1::GeneralNames object')
+  end
   it "issues a self-signed certificate with custom fields" do
     not_before = Time.now.to_i
     not_after = Time.now.to_i+3600*24*7300
@@ -567,6 +575,23 @@ describe R509::CertificateAuthority::Signer do
     cert.subject.to_s.should == '/C=US/O=r509 LLC/CN=r509 Self-Signed CA Test'
     cert.issuer.to_s.should == '/C=US/O=r509 LLC/CN=r509 Self-Signed CA Test'
     cert.basic_constraints.is_ca?.should == true
+    cert.san.dns_names.should include('sanname1','sanname2')
+  end
+  it "issues a self-signed certificate with san names provided as an array" do
+    not_before = Time.now.to_i
+    not_after = Time.now.to_i+3600*24*7300
+    csr = R509::CSR.new(
+      :subject => [['C','US'],['O','r509 LLC'],['CN','r509 Self-Signed CA Test']],
+      :bit_strength => 1024
+    )
+    san_names = ['sanname1','sanname2']
+    cert = @ca.selfsign(
+      :csr => csr,
+      :not_before => not_before,
+      :not_after => not_after,
+      :message_digest => 'sha256',
+      :san_names => san_names
+    )
     cert.san.dns_names.should include('sanname1','sanname2')
   end
   it "issues self-signed certificate with SAN in CSR" do

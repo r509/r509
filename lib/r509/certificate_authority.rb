@@ -38,37 +38,10 @@ module R509::CertificateAuthority
         raise R509::R509Error, "You must have at least one CAProfile on your CAConfig to issue"
       end
 
-      if options.has_key?(:csr) and options.has_key?(:spki)
-        raise ArgumentError, "You can't pass both :csr and :spki"
-      elsif not options.has_key?(:csr) and not options.has_key?(:spki)
-        raise ArgumentError, "You must supply either :csr or :spki"
-      elsif options.has_key?(:csr)
-        if not options[:csr].kind_of?(R509::CSR)
-          raise ArgumentError, "You must pass an R509::CSR object for :csr"
-        end
-      elsif not options.has_key?(:csr) and options.has_key?(:spki)
-        if not options[:spki].kind_of?(R509::SPKI)
-          raise ArgumentError, "You must pass an R509::SPKI object for :spki"
-        end
-      end
+      check_options(options)
 
-      if options.has_key?(:csr)
-        subject = (options.has_key?(:subject))? R509::Subject.new(options[:subject]) : options[:csr].subject
-        san_names = (options.has_key?(:san_names))? options[:san_names] : options[:csr].san
-        public_key = options[:csr].public_key
-      else
-        # spki
-        if not options.has_key?(:subject)
-          raise ArgumentError, "You must supply :subject when passing :spki"
-        end
-        public_key = options[:spki].public_key
-        subject = R509::Subject.new(options[:subject])
-        san_names = options[:san_names] # optional
-      end
+      subject, san_names, public_key = extract_public_key_subject_san(options)
 
-      if not san_names.nil? and san_names.respond_to?(:each)
-        san_names = R509::ASN1.general_name_parser(san_names)
-      end
 
       if options.has_key?(:csr) and not options[:csr].verify_signature
         raise R509::R509Error, "Certificate request signature is invalid."
@@ -77,11 +50,7 @@ module R509::CertificateAuthority
       # prior to OpenSSL 1.0 DSA could only use DSS1 (aka SHA1) signatures. post-1.0 anything
       # goes but at the moment we don't enforce this restriction so an OpenSSL error could
       # bubble up if they do it wrong.
-      if options.has_key?(:message_digest)
-        message_digest = R509::MessageDigest.new(options[:message_digest])
-      else
-        message_digest = R509::MessageDigest.new(@config.message_digest)
-      end
+      message_digest = (options.has_key?(:message_digest))? R509::MessageDigest.new(options[:message_digest]) : R509::MessageDigest.new(@config.message_digest)
 
       profile = @config.profile(options[:profile_name])
 
@@ -148,11 +117,8 @@ module R509::CertificateAuthority
         :serial => options[:serial]
       )
 
-      if options.has_key?(:san_names)
-        san_names = options[:san_names]
-      else
-        san_names = csr.san
-      end
+      sans = (options.has_key?(:san_names))? options[:san_names] : csr.san
+      san_names = parse_san_names(sans)
 
       build_extensions(
         :subject_certificate => cert,
@@ -174,6 +140,51 @@ module R509::CertificateAuthority
     end
 
     private
+
+    def check_options(options)
+      if options.has_key?(:csr) and options.has_key?(:spki)
+        raise ArgumentError, "You can't pass both :csr and :spki"
+      elsif not options.has_key?(:csr) and not options.has_key?(:spki)
+        raise ArgumentError, "You must supply either :csr or :spki"
+      elsif options.has_key?(:csr)
+        if not options[:csr].kind_of?(R509::CSR)
+          raise ArgumentError, "You must pass an R509::CSR object for :csr"
+        end
+      elsif not options.has_key?(:csr) and options.has_key?(:spki)
+        if not options[:spki].kind_of?(R509::SPKI)
+          raise ArgumentError, "You must pass an R509::SPKI object for :spki"
+        end
+      end
+    end
+
+    def extract_public_key_subject_san(options)
+      if options.has_key?(:csr)
+        subject = (options.has_key?(:subject))? R509::Subject.new(options[:subject]) : options[:csr].subject
+        sans = (options.has_key?(:san_names))? options[:san_names] : options[:csr].san
+        san_names = parse_san_names(sans)
+        public_key = options[:csr].public_key
+      else
+        # spki
+        if not options.has_key?(:subject)
+          raise ArgumentError, "You must supply :subject when passing :spki"
+        end
+        public_key = options[:spki].public_key
+        subject = R509::Subject.new(options[:subject])
+        san_names = parse_san_names(options[:san_names]) # optional
+      end
+
+      [subject,san_names,public_key]
+    end
+
+    def parse_san_names(sans)
+      case sans
+      when nil then nil
+      when R509::ASN1::GeneralNames then sans
+      when Array then R509::ASN1.general_name_parser(sans)
+      else
+        raise ArgumentError, "When passing SAN names it must be provided as either an array of strings or an R509::ASN1::GeneralNames object"
+      end
+    end
 
     def build_conf(section,hash,index)
       conf = ["[#{section}]"]
