@@ -633,7 +633,7 @@ describe R509::CertificateAuthority::Signer do
     expect { ca_signer.sign(:csr => csr, :profile_name => "server") }.to raise_error(R509::R509Error, "When instantiating the signer without a config you can only call #selfsign")
   end
 
-  context "issuing off an elliptic curve CA" do
+  context "issuing off an elliptic curve CA", :ec => true do
     before :all do
       @test_ca_ec = R509::Config::CAConfig.from_yaml("test_ca_ec", File.read("#{File.dirname(__FILE__)}/fixtures/config_test_ec.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"})
       @ca_ec = R509::CertificateAuthority::Signer.new(@test_ca_ec)

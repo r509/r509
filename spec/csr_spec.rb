@@ -250,11 +250,6 @@ describe R509::CSR do
       csr.message_digest.name.should == 'md5'
       csr.signature_algorithm.should == "md5WithRSAEncryption"
     end
-    it "sets alternate signature properly for EC" do
-      csr = R509::CSR.new(:message_digest => 'sha256', :type => :ec, :subject => [["CN","ec-signature-alg.test"]])
-      csr.message_digest.name.should == 'sha256'
-      csr.signature_algorithm.should == 'ecdsa-with-SHA256'
-    end
   end
   it "checks rsa?" do
     csr = R509::CSR.new({:csr => @csr})
@@ -320,6 +315,11 @@ describe R509::CSR do
     it "checks ec?" do
       csr = R509::CSR.new(:csr => @ec_csr2_pem)
       csr.ec?.should == true
+    end
+    it "sets alternate signature properly for EC" do
+      csr = R509::CSR.new(:message_digest => 'sha256', :type => :ec, :subject => [["CN","ec-signature-alg.test"]])
+      csr.message_digest.name.should == 'sha256'
+      csr.signature_algorithm.should == 'ecdsa-with-SHA256'
     end
   end
 
