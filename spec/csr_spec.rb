@@ -287,7 +287,7 @@ describe R509::CSR do
     csr.message_digest.name.should == 'sha1'
   end
 
-  context "when using elliptic curves" do
+  context "when using elliptic curves", :ec => true do
     it "loads a pre-existing EC CSR" do
       csr = R509::CSR.new(:csr => @ec_csr2_pem)
       csr.to_der.should == @ec_csr2_der

@@ -210,7 +210,7 @@ describe R509::PrivateKey do
     expect { private_key.curve_name }.to raise_error(R509::R509Error, 'Curve name is only available with EC private keys')
   end
 
-  context "elliptic curves" do
+  context "elliptic curves", :ec => true do
     it "loads a pre-existing EC key" do
       private_key = R509::PrivateKey.new(:key => @ec_key_pem)
       private_key.to_pem.should == @ec_key_pem

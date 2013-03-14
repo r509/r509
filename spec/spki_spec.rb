@@ -92,7 +92,7 @@ describe R509::SPKI do
       include_examples "spki + private key"
     end
   end
-  context "elliptic curve" do
+  context "elliptic curve", :ec => true do
     context "no existing spki" do
       before :all do
         @key = R509::PrivateKey.new(:type => :ec)

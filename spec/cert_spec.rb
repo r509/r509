@@ -333,7 +333,7 @@ describe R509::Cert do
     cert.unknown_extensions.should == []
   end
 
-  context "elliptic curve certs" do
+  context "elliptic curve certs", :ec => true do
     before :all do
       @cert_ec = TestFixtures::EC_EE_CERT
       @key_ec = TestFixtures::EC_EE_KEY
