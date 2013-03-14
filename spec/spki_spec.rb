@@ -212,4 +212,25 @@ describe R509::SPKI do
       spki.rsa?.should == false
     end
   end
+
+  context "when elliptic curve support is unavailable" do
+    before :all do
+      @ec = OpenSSL::PKey.send(:remove_const,:EC) # remove EC support for test!
+      load('r509/ec-hack.rb')
+    end
+    after :all do
+      OpenSSL::PKey.send(:remove_const,:EC) # remove stubbed EC
+      OpenSSL::PKey::EC = @ec # add the real one back
+    end
+    it "checks rsa?" do
+      spki = R509::SPKI.new( :spki => @spki )
+      spki.rsa?.should == true
+      spki.ec?.should == false
+      spki.dsa?.should == false
+    end
+    it "returns RSA key algorithm for RSA CSR" do
+      spki = R509::SPKI.new( :spki => @spki )
+      spki.key_algorithm.should == :rsa
+    end
+  end
 end

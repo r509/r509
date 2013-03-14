@@ -372,4 +372,25 @@ describe R509::Cert do
       cert.key_algorithm.should == :ec
     end
   end
+
+  context "when elliptic curve support is unavailable" do
+    before :all do
+      @ec = OpenSSL::PKey.send(:remove_const,:EC) # remove EC support for test!
+      load('r509/ec-hack.rb')
+    end
+    after :all do
+      OpenSSL::PKey.send(:remove_const,:EC) # remove stubbed EC
+      OpenSSL::PKey::EC = @ec # add the real one back
+    end
+    it "checks rsa?" do
+      cert = R509::Cert.new(:cert => @cert)
+      cert.rsa?.should == true
+      cert.ec?.should == false
+      cert.dsa?.should == false
+    end
+    it "returns RSA key algorithm for RSA CSR" do
+      cert = R509::Cert.new(:cert => @cert)
+      cert.key_algorithm.should == :rsa
+    end
+  end
 end

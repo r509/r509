@@ -25,7 +25,7 @@ module R509
   end
 
   def self.ec_supported?
-    (defined?(OpenSSL::PKey::EC) == 'constant' and OpenSSL::PKey::EC.class == Class)
+    (not defined?(OpenSSL::PKey::EC::UNSUPPORTED))
   end
 end
 
