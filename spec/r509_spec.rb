@@ -29,5 +29,7 @@ describe R509 do
     expect { OpenSSL::PKey::EC.new }.to raise_error(R509::R509Error)
     OpenSSL::PKey.send(:remove_const,:EC) # remove stubbed EC
     OpenSSL::PKey::EC = ec # add the real one back
+    # this pretty fragile. if the expectation fails then we don't fix the EC class assignment
+    # so any spec called after this will fail improperly.
   end
 end

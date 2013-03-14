@@ -87,7 +87,6 @@ describe R509::CRL::Administrator do
     @csr = TestFixtures::CSR
     @csr3 = TestFixtures::CSR3
     @test_ca_config = TestFixtures.test_ca_no_profile_config
-    @test_ca_ec_config = TestFixtures.test_ca_ec_no_profile_config
     @test_ca_dsa_config = TestFixtures.test_ca_dsa_no_profile_config
   end
   it "generates CRL with no entries in revocation list (RSA key)" do
@@ -102,11 +101,16 @@ describe R509::CRL::Administrator do
     crl_admin.crl.to_pem.should match(/BEGIN X509 CRL/)
     crl_admin.crl.signature_algorithm.should == 'dsaWithSHA1'
   end
-  it "generates CRL with no entries in revocation list (EC key)" do
-    crl_admin = R509::CRL::Administrator.new(@test_ca_ec_config)
-    crl_admin.generate_crl
-    crl_admin.crl.to_pem.should match(/BEGIN X509 CRL/)
-    crl_admin.crl.signature_algorithm.should == 'ecdsa-with-SHA1'
+  context "elliptic curve", :ec => true do
+    before :all do
+      @test_ca_ec_config = TestFixtures.test_ca_ec_no_profile_config
+    end
+    it "generates CRL with no entries in revocation list (EC key)" do
+      crl_admin = R509::CRL::Administrator.new(@test_ca_ec_config)
+      crl_admin.generate_crl
+      crl_admin.crl.to_pem.should match(/BEGIN X509 CRL/)
+      crl_admin.crl.signature_algorithm.should == 'ecdsa-with-SHA1'
+    end
   end
   it "raises exception when no R509::Config::CAConfig object is passed to the constructor" do
     expect { R509::CRL::Administrator.new(['random']) }.to raise_error(R509::R509Error)

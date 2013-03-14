@@ -184,7 +184,7 @@ describe R509::SPKI do
     spki.key_algorithm.should == :dsa
   end
 
-  context "elliptic curve" do
+  context "elliptic curve", :ec => true do
     it "loads an spkac" do
       spki = R509::SPKI.new( :spki => @spki_ec )
       spki.to_pem.should == @spki_ec
