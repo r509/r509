@@ -19,7 +19,7 @@ describe R509 do
     output.should match /^Ruby/
     output.should match /^Elliptic/
   end
-  it "checks if ec is supported" do
+  it "checks if ec is supported", :ec => true do
     R509.ec_supported?.should == true
   end
   it "checks if EC is unsupported" do
