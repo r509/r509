@@ -31,7 +31,8 @@ end
 
 #add some global mappings we want available throughout r509
 R509::OIDMapper.batch_register([
-  { :oid => "2.5.4.15", :short_name => "businessCategory" },
-  { :oid => "1.3.6.1.4.1.311.60.2.1.2", :short_name => "jurisdictionOfIncorporationStateOrProvinceName" },
-  { :oid => "1.3.6.1.4.1.311.60.2.1.3", :short_name => "jurisdictionOfIncorporationCountryName" }
+  { :oid => "2.5.4.15", :short_name => "businessCategory" }, # extended validation related
+  { :oid => "1.3.6.1.4.1.311.60.2.1.2", :short_name => "jurisdictionOfIncorporationStateOrProvinceName" }, # extended validation related
+  { :oid => "1.3.6.1.4.1.311.60.2.1.3", :short_name => "jurisdictionOfIncorporationCountryName" }, # extended validation related
+  { :oid => "2.5.29.37.0", :short_name => "anyExtendedKeyUsage", :long_name => "Any Extended Key Usage" } # an EKU older OpenSSL frequently lacks
 ])
