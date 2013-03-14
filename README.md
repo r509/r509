@@ -1,10 +1,19 @@
 #r509 [![Build Status](https://secure.travis-ci.org/reaperhulk/r509.png)](http://travis-ci.org/reaperhulk/r509)
 r509 is a Ruby gem built using OpenSSL that is designed to ease management of a public key infrastructure. The r509 API facilitates easy creation of CSRs, signing of certificates, revocation (CRL/OCSP), and much more. Together with projects like [r509-ocsp-responder](https://github.com/reaperhulk/r509-ocsp-responder) and [r509-ca-http](https://github.com/sirsean/r509-ca-http) it is intended to be a complete [RFC 5280](http://www.ietf.org/rfc/rfc5280.txt)-compliant certificate authority for use in production environments.
 
-##Requirements/Installation
+##Requirements
 
-r509 requires the Ruby OpenSSL bindings as well as yaml support (present by default in modern Ruby builds).
-To install the gem: ```gem install r509-(version).gem```
+r509 requires the Ruby OpenSSL bindings as well as yaml support (present by default in modern Ruby builds). It is recommended that you compile Ruby against OpenSSL 1.0.0+ (with elliptic curve support enabled). Red Hat-derived distributions ship with EC disabled in OpenSSL, so if you need EC support you will need to recompile.
+
+##Installation
+You can install via rubygems with ```gem install r509```
+
+To install the gem from your own clone (you will need to satisfy the dependencies via ```bundle install``` or other means):
+
+```bash
+rake gem:build
+rake gem:install
+```
 
 ##Running Tests/Building Gem
 If you want to run the tests for r509 you'll need rspec. Additionally, you may want to install rcov/simplecov (ruby 1.8/1.9 respectively) and yard for running the code coverage and documentation tasks in the Rakefile. ```rake -T``` for a complete list of rake tasks available.
