@@ -6,7 +6,7 @@
 <title>
   Class: R509::Cert::Extensions::ExtendedKeyUsage
   
-    &mdash; Documentation by YARD 0.8.3
+    &mdash; Documentation by YARD 0.8.5
   
 </title>
 
@@ -119,7 +119,18 @@ provide access to the components and meaning of the extension's contents.</p>
     <dl class="constants">
       
         <dt id="OID-constant" class="">OID =
-          
+          <div class="docstring">
+  <div class="discussion">
+    
+<p>friendly name for EKU OID</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
         </dt>
         <dd><pre class="code"><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>extendedKeyUsage</span><span class='tstring_end'>&quot;</span></span></pre></dd>
       
@@ -127,7 +138,7 @@ provide access to the components and meaning of the extension's contents.</p>
           <div class="docstring">
   <div class="discussion">
     
-<p>The OpenSSL friendly name for the "serverAuth" extended key use.</p>
+<p>The OpenSSL short name for TLS Web Server Authentication</p>
 
 
   </div>
@@ -137,13 +148,13 @@ provide access to the components and meaning of the extension's contents.</p>
 
 </div>
         </dt>
-        <dd><pre class="code"><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>TLS Web Server Authentication</span><span class='tstring_end'>&quot;</span></span></pre></dd>
+        <dd><pre class="code"><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>serverAuth</span><span class='tstring_end'>&quot;</span></span></pre></dd>
       
         <dt id="AU_WEB_CLIENT_AUTH-constant" class="">AU_WEB_CLIENT_AUTH =
           <div class="docstring">
   <div class="discussion">
     
-<p>The OpenSSL friendly name for the "clientAuth" extended key use.</p>
+<p>The OpenSSL short name for TLS Web Client Authentication</p>
 
 
   </div>
@@ -153,13 +164,13 @@ provide access to the components and meaning of the extension's contents.</p>
 
 </div>
         </dt>
-        <dd><pre class="code"><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>TLS Web Client Authentication</span><span class='tstring_end'>&quot;</span></span></pre></dd>
+        <dd><pre class="code"><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>clientAuth</span><span class='tstring_end'>&quot;</span></span></pre></dd>
       
         <dt id="AU_CODE_SIGNING-constant" class="">AU_CODE_SIGNING =
           <div class="docstring">
   <div class="discussion">
     
-<p>The OpenSSL friendly name for the "codeSigning" extended key use.</p>
+<p>The OpenSSL short name for Code Signing</p>
 
 
   </div>
@@ -169,13 +180,13 @@ provide access to the components and meaning of the extension's contents.</p>
 
 </div>
         </dt>
-        <dd><pre class="code"><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Code Signing</span><span class='tstring_end'>&quot;</span></span></pre></dd>
+        <dd><pre class="code"><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>codeSigning</span><span class='tstring_end'>&quot;</span></span></pre></dd>
       
         <dt id="AU_EMAIL_PROTECTION-constant" class="">AU_EMAIL_PROTECTION =
           <div class="docstring">
   <div class="discussion">
     
-<p>The OpenSSL friendly name for the "emailProtection" extended key use.</p>
+<p>The OpenSSL short name for E-mail Protection</p>
 
 
   </div>
@@ -185,7 +196,55 @@ provide access to the components and meaning of the extension's contents.</p>
 
 </div>
         </dt>
-        <dd><pre class="code"><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>E-mail Protection</span><span class='tstring_end'>&quot;</span></span></pre></dd>
+        <dd><pre class="code"><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>emailProtection</span><span class='tstring_end'>&quot;</span></span></pre></dd>
+      
+        <dt id="AU_OCSP_SIGNING-constant" class="">AU_OCSP_SIGNING =
+          <div class="docstring">
+  <div class="discussion">
+    
+<p>The OpenSSL short name for OCSP Signing</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
+        </dt>
+        <dd><pre class="code"><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>OCSPSigning</span><span class='tstring_end'>&quot;</span></span></pre></dd>
+      
+        <dt id="AU_TIME_STAMPING-constant" class="">AU_TIME_STAMPING =
+          <div class="docstring">
+  <div class="discussion">
+    
+<p>The OpenSSL short name for Time Stamping</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
+        </dt>
+        <dd><pre class="code"><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>timeStamping</span><span class='tstring_end'>&quot;</span></span></pre></dd>
+      
+        <dt id="AU_ANY_EXTENDED_KEY_USAGE-constant" class="">AU_ANY_EXTENDED_KEY_USAGE =
+          <div class="docstring">
+  <div class="discussion">
+    
+<p>The OpenSSL short name for Any Extended Key Usage</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
+        </dt>
+        <dd><pre class="code"><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>anyExtendedKeyUsage</span><span class='tstring_end'>&quot;</span></span></pre></dd>
       
     </dl>
   
@@ -219,7 +278,7 @@ provide access to the components and meaning of the extension's contents.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>An array of the key uses allowed.</p>
+<p>Returns the value of attribute allowed_uses.</p>
 </div></span>
   
 </li>
@@ -258,6 +317,28 @@ provide access to the components and meaning of the extension's contents.</p>
     <span class="summary_desc"><div class='inline'>
 <p>Returns true if the given use is allowed by this extension.</p>
 </div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#any_extended_key_usage%3F-instance_method" title="#any_extended_key_usage? (instance method)">- (Boolean) <strong>any_extended_key_usage?</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
   
 </li>
 
@@ -328,6 +409,50 @@ provide access to the components and meaning of the extension's contents.</p>
     <span class="summary_desc"><div class='inline'>
 <p>See OpenSSL::X509::Extension#initialize.</p>
 </div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#ocsp_signing%3F-instance_method" title="#ocsp_signing? (instance method)">- (Boolean) <strong>ocsp_signing?</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#time_stamping%3F-instance_method" title="#time_stamping? (instance method)">- (Boolean) <strong>time_stamping?</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
   
 </li>
 
@@ -409,19 +534,129 @@ provide access to the components and meaning of the extension's contents.</p>
       <pre class="lines">
 
 
-151
-152
-153
-154
-155</pre>
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271
+272
+273
+274
+275
+276
+277
+278
+279
+280
+281
+282
+283
+284
+285
+286
+287
+288</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 151</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 229</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='op'>*</span><span class='id identifier rubyid_args'>args</span><span class='rparen'>)</span>
   <span class='kw'>super</span><span class='lparen'>(</span><span class='op'>*</span><span class='id identifier rubyid_args'>args</span><span class='rparen'>)</span>
 
-  <span class='ivar'>@allowed_uses</span> <span class='op'>=</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_value'>value</span><span class='period'>.</span><span class='id identifier rubyid_split'>split</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>,</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_map'>map</span> <span class='lbrace'>{</span><span class='op'>|</span><span class='id identifier rubyid_use'>use</span><span class='op'>|</span> <span class='id identifier rubyid_use'>use</span><span class='period'>.</span><span class='id identifier rubyid_strip'>strip</span><span class='rbrace'>}</span>
+  <span class='ivar'>@allowed_uses</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
+  <span class='id identifier rubyid_data'>data</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>ASN1</span><span class='period'>.</span><span class='id identifier rubyid_get_extension_payload'>get_extension_payload</span><span class='lparen'>(</span><span class='kw'>self</span><span class='rparen'>)</span>
+
+  <span class='id identifier rubyid_data'>data</span><span class='period'>.</span><span class='id identifier rubyid_entries'>entries</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_eku'>eku</span><span class='op'>|</span>
+    <span class='comment'>#   The following key usage purposes are defined:
+</span>    <span class='comment'>#
+</span>    <span class='comment'>#   anyExtendedKeyUsage OBJECT IDENTIFIER ::= { id-ce-extKeyUsage 0 }
+</span>    <span class='comment'>#
+</span>    <span class='comment'>#   id-kp OBJECT IDENTIFIER ::= { id-pkix 3 }
+</span>    <span class='comment'>#   id-kp-serverAuth             OBJECT IDENTIFIER ::= { id-kp 1 }
+</span>    <span class='comment'>#   -- TLS WWW server authentication
+</span>    <span class='comment'>#   -- Key usage bits that may be consistent: digitalSignature,
+</span>    <span class='comment'>#   -- keyEncipherment or keyAgreement
+</span>    <span class='comment'>#
+</span>    <span class='comment'>#   id-kp-clientAuth             OBJECT IDENTIFIER ::= { id-kp 2 }
+</span>    <span class='comment'>#   -- TLS WWW client authentication
+</span>    <span class='comment'>#   -- Key usage bits that may be consistent: digitalSignature
+</span>    <span class='comment'>#   -- and/or keyAgreement
+</span>    <span class='comment'>#
+</span>    <span class='comment'>#   id-kp-codeSigning             OBJECT IDENTIFIER ::= { id-kp 3 }
+</span>    <span class='comment'>#   -- Signing of downloadable executable code
+</span>    <span class='comment'>#   -- Key usage bits that may be consistent: digitalSignature
+</span>    <span class='comment'>#
+</span>    <span class='comment'>#   id-kp-emailProtection         OBJECT IDENTIFIER ::= { id-kp 4 }
+</span>    <span class='comment'>#   -- Email protection
+</span>    <span class='comment'>#   -- Key usage bits that may be consistent: digitalSignature,
+</span>    <span class='comment'>#   -- nonRepudiation, and/or (keyEncipherment or keyAgreement)
+</span>    <span class='comment'>#
+</span>    <span class='comment'>#   id-kp-timeStamping            OBJECT IDENTIFIER ::= { id-kp 8 }
+</span>    <span class='comment'>#   -- Binding the hash of an object to a time
+</span>    <span class='comment'>#   -- Key usage bits that may be consistent: digitalSignature
+</span>    <span class='comment'>#   -- and/or nonRepudiation
+</span>    <span class='comment'>#
+</span>    <span class='comment'>#   id-kp-OCSPSigning            OBJECT IDENTIFIER ::= { id-kp 9 }
+</span>    <span class='comment'>#   -- Signing OCSP responses
+</span>    <span class='comment'>#   -- Key usage bits that may be consistent: digitalSignature
+</span>    <span class='comment'>#   -- and/or nonRepudiation
+</span>
+    <span class='kw'>case</span> <span class='id identifier rubyid_eku'>eku</span><span class='period'>.</span><span class='id identifier rubyid_value'>value</span>
+    <span class='kw'>when</span> <span class='const'>AU_WEB_SERVER_AUTH</span>
+      <span class='ivar'>@web_server_authentication</span> <span class='op'>=</span> <span class='kw'>true</span>
+    <span class='kw'>when</span> <span class='const'>AU_WEB_CLIENT_AUTH</span>
+      <span class='ivar'>@web_client_authentication</span> <span class='op'>=</span> <span class='kw'>true</span>
+    <span class='kw'>when</span> <span class='const'>AU_CODE_SIGNING</span>
+      <span class='ivar'>@code_signing</span> <span class='op'>=</span> <span class='kw'>true</span>
+    <span class='kw'>when</span> <span class='const'>AU_EMAIL_PROTECTION</span>
+      <span class='ivar'>@email_protection</span> <span class='op'>=</span> <span class='kw'>true</span>
+    <span class='kw'>when</span> <span class='const'>AU_OCSP_SIGNING</span>
+      <span class='ivar'>@ocsp_signing</span> <span class='op'>=</span> <span class='kw'>true</span>
+    <span class='kw'>when</span> <span class='const'>AU_TIME_STAMPING</span>
+      <span class='ivar'>@time_stamping</span> <span class='op'>=</span> <span class='kw'>true</span>
+    <span class='kw'>when</span> <span class='const'>AU_ANY_EXTENDED_KEY_USAGE</span>
+      <span class='ivar'>@any_extended_key_usage</span> <span class='op'>=</span> <span class='kw'>true</span>
+    <span class='kw'>end</span>
+    <span class='ivar'>@allowed_uses</span> <span class='op'>&lt;&lt;</span> <span class='id identifier rubyid_eku'>eku</span><span class='period'>.</span><span class='id identifier rubyid_value'>value</span>
+  <span class='kw'>end</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -447,7 +682,7 @@ provide access to the components and meaning of the extension's contents.</p>
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>An array of the key uses allowed. See the AU_* constants in this class.</p>
+<p>Returns the value of attribute allowed_uses</p>
 
 
   </div>
@@ -461,12 +696,12 @@ provide access to the components and meaning of the extension's contents.</p>
       <pre class="lines">
 
 
-148
-149
-150</pre>
+226
+227
+228</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 148</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 226</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_allowed_uses'>allowed_uses</span>
   <span class='ivar'>@allowed_uses</span>
@@ -542,15 +777,67 @@ provide access to the components and meaning of the extension's contents.</p>
       <pre class="lines">
 
 
-159
-160
-161</pre>
+292
+293
+294</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 159</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 292</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_allows?'>allows?</span><span class='lparen'>(</span> <span class='id identifier rubyid_friendly_use_name'>friendly_use_name</span> <span class='rparen'>)</span>
   <span class='ivar'>@allowed_uses</span><span class='period'>.</span><span class='id identifier rubyid_include?'>include?</span><span class='lparen'>(</span> <span class='id identifier rubyid_friendly_use_name'>friendly_use_name</span> <span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="any_extended_key_usage?-instance_method">
+  
+    - (<tt>Boolean</tt>) <strong>any_extended_key_usage?</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+320
+321
+322</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 320</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_any_extended_key_usage?'>any_extended_key_usage?</span>
+  <span class='lparen'>(</span><span class='ivar'>@any_extended_key_usage</span> <span class='op'>==</span> <span class='kw'>true</span><span class='rparen'>)</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -594,15 +881,15 @@ provide access to the components and meaning of the extension's contents.</p>
       <pre class="lines">
 
 
-171
-172
-173</pre>
+304
+305
+306</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 171</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 304</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_code_signing?'>code_signing?</span>
-  <span class='id identifier rubyid_allows?'>allows?</span><span class='lparen'>(</span> <span class='const'>AU_CODE_SIGNING</span> <span class='rparen'>)</span>
+  <span class='lparen'>(</span><span class='ivar'>@code_signing</span> <span class='op'>==</span> <span class='kw'>true</span><span class='rparen'>)</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -646,15 +933,119 @@ provide access to the components and meaning of the extension's contents.</p>
       <pre class="lines">
 
 
-175
-176
-177</pre>
+308
+309
+310</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 175</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 308</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_email_protection?'>email_protection?</span>
-  <span class='id identifier rubyid_allows?'>allows?</span><span class='lparen'>(</span> <span class='const'>AU_EMAIL_PROTECTION</span> <span class='rparen'>)</span>
+  <span class='lparen'>(</span><span class='ivar'>@email_protection</span> <span class='op'>==</span> <span class='kw'>true</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="ocsp_signing?-instance_method">
+  
+    - (<tt>Boolean</tt>) <strong>ocsp_signing?</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+312
+313
+314</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 312</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_ocsp_signing?'>ocsp_signing?</span>
+  <span class='lparen'>(</span><span class='ivar'>@ocsp_signing</span> <span class='op'>==</span> <span class='kw'>true</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="time_stamping?-instance_method">
+  
+    - (<tt>Boolean</tt>) <strong>time_stamping?</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+316
+317
+318</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 316</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_time_stamping?'>time_stamping?</span>
+  <span class='lparen'>(</span><span class='ivar'>@time_stamping</span> <span class='op'>==</span> <span class='kw'>true</span><span class='rparen'>)</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -698,15 +1089,15 @@ provide access to the components and meaning of the extension's contents.</p>
       <pre class="lines">
 
 
-167
-168
-169</pre>
+300
+301
+302</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 167</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 300</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_web_client_authentication?'>web_client_authentication?</span>
-  <span class='id identifier rubyid_allows?'>allows?</span><span class='lparen'>(</span> <span class='const'>AU_WEB_CLIENT_AUTH</span> <span class='rparen'>)</span>
+  <span class='lparen'>(</span><span class='ivar'>@web_client_authentication</span> <span class='op'>==</span> <span class='kw'>true</span><span class='rparen'>)</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -750,15 +1141,15 @@ provide access to the components and meaning of the extension's contents.</p>
       <pre class="lines">
 
 
-163
-164
-165</pre>
+296
+297
+298</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 163</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 296</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_web_server_authentication?'>web_server_authentication?</span>
-  <span class='id identifier rubyid_allows?'>allows?</span><span class='lparen'>(</span> <span class='const'>AU_WEB_SERVER_AUTH</span> <span class='rparen'>)</span>
+  <span class='lparen'>(</span><span class='ivar'>@web_server_authentication</span> <span class='op'>==</span> <span class='kw'>true</span><span class='rparen'>)</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -770,9 +1161,9 @@ provide access to the components and meaning of the extension's contents.</p>
 </div>
 
     <div id="footer">
-  Generated on Tue Oct 23 23:23:38 2012 by
+  Generated on Tue Apr 16 10:49:58 2013 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.8.3 (ruby-1.9.3).
+  0.8.5 (ruby-1.9.3).
 </div>
 
   </body>

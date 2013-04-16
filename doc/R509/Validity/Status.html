@@ -6,7 +6,7 @@
 <title>
   Class: R509::Validity::Status
   
-    &mdash; Documentation by YARD 0.8.3
+    &mdash; Documentation by YARD 0.8.5
   
 </title>
 
@@ -299,27 +299,27 @@
       <pre class="lines">
 
 
-14
-15
 16
 17
 18
 19
 20
 21
-22</pre>
+22
+23
+24</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/validity.rb', line 14</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/validity.rb', line 16</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span><span class='op'>=</span><span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
-    <span class='ivar'>@status</span> <span class='op'>=</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:status</span><span class='rbracket'>]</span>
-    <span class='ivar'>@revocation_time</span> <span class='op'>=</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:revocation_time</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='kw'>nil</span>
-    <span class='ivar'>@revocation_reason</span> <span class='op'>=</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:revocation_reason</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='int'>0</span>
+  <span class='ivar'>@status</span> <span class='op'>=</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:status</span><span class='rbracket'>]</span>
+  <span class='ivar'>@revocation_time</span> <span class='op'>=</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:revocation_time</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='kw'>nil</span>
+  <span class='ivar'>@revocation_reason</span> <span class='op'>=</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:revocation_reason</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='int'>0</span>
 
-    <span class='kw'>if</span> <span class='lparen'>(</span><span class='ivar'>@status</span> <span class='op'>==</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>Validity</span><span class='op'>::</span><span class='const'>REVOKED</span> <span class='kw'>and</span> <span class='ivar'>@revocation_time</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span><span class='rparen'>)</span>
-        <span class='ivar'>@revocation_time</span> <span class='op'>=</span> <span class='const'>Time</span><span class='period'>.</span><span class='id identifier rubyid_now'>now</span><span class='period'>.</span><span class='id identifier rubyid_to_i'>to_i</span>
-    <span class='kw'>end</span>
+  <span class='kw'>if</span> <span class='lparen'>(</span><span class='ivar'>@status</span> <span class='op'>==</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>Validity</span><span class='op'>::</span><span class='const'>REVOKED</span> <span class='kw'>and</span> <span class='ivar'>@revocation_time</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span><span class='rparen'>)</span>
+    <span class='ivar'>@revocation_time</span> <span class='op'>=</span> <span class='const'>Time</span><span class='period'>.</span><span class='id identifier rubyid_now'>now</span><span class='period'>.</span><span class='id identifier rubyid_to_i'>to_i</span>
+  <span class='kw'>end</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -359,12 +359,12 @@
       <pre class="lines">
 
 
-12
-13
-14</pre>
+14
+15
+16</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/validity.rb', line 12</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/validity.rb', line 14</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_revocation_reason'>revocation_reason</span>
   <span class='ivar'>@revocation_reason</span>
@@ -402,12 +402,12 @@
       <pre class="lines">
 
 
-12
-13
-14</pre>
+14
+15
+16</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/validity.rb', line 12</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/validity.rb', line 14</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_revocation_time'>revocation_time</span>
   <span class='ivar'>@revocation_time</span>
@@ -445,12 +445,12 @@
       <pre class="lines">
 
 
-12
-13
-14</pre>
+14
+15
+16</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/validity.rb', line 12</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/validity.rb', line 14</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_status'>status</span>
   <span class='ivar'>@status</span>
@@ -511,8 +511,6 @@
       <pre class="lines">
 
 
-25
-26
 27
 28
 29
@@ -522,22 +520,24 @@
 33
 34
 35
-36</pre>
+36
+37
+38</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/validity.rb', line 25</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/validity.rb', line 27</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_ocsp_status'>ocsp_status</span>
-    <span class='kw'>case</span> <span class='ivar'>@status</span>
-    <span class='kw'>when</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>Validity</span><span class='op'>::</span><span class='const'>VALID</span>
-        <span class='const'>OpenSSL</span><span class='op'>::</span><span class='const'>OCSP</span><span class='op'>::</span><span class='const'>V_CERTSTATUS_GOOD</span>
-    <span class='kw'>when</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>Validity</span><span class='op'>::</span><span class='const'>REVOKED</span>
-        <span class='const'>OpenSSL</span><span class='op'>::</span><span class='const'>OCSP</span><span class='op'>::</span><span class='const'>V_CERTSTATUS_REVOKED</span>
-    <span class='kw'>when</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>Validity</span><span class='op'>::</span><span class='const'>UNKNOWN</span>
-        <span class='const'>OpenSSL</span><span class='op'>::</span><span class='const'>OCSP</span><span class='op'>::</span><span class='const'>V_CERTSTATUS_UNKNOWN</span>
-    <span class='kw'>else</span>
-        <span class='const'>OpenSSL</span><span class='op'>::</span><span class='const'>OCSP</span><span class='op'>::</span><span class='const'>V_CERTSTATUS_UNKNOWN</span>
-    <span class='kw'>end</span>
+  <span class='kw'>case</span> <span class='ivar'>@status</span>
+  <span class='kw'>when</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>Validity</span><span class='op'>::</span><span class='const'>VALID</span>
+    <span class='const'>OpenSSL</span><span class='op'>::</span><span class='const'>OCSP</span><span class='op'>::</span><span class='const'>V_CERTSTATUS_GOOD</span>
+  <span class='kw'>when</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>Validity</span><span class='op'>::</span><span class='const'>REVOKED</span>
+    <span class='const'>OpenSSL</span><span class='op'>::</span><span class='const'>OCSP</span><span class='op'>::</span><span class='const'>V_CERTSTATUS_REVOKED</span>
+  <span class='kw'>when</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>Validity</span><span class='op'>::</span><span class='const'>UNKNOWN</span>
+    <span class='const'>OpenSSL</span><span class='op'>::</span><span class='const'>OCSP</span><span class='op'>::</span><span class='const'>V_CERTSTATUS_UNKNOWN</span>
+  <span class='kw'>else</span>
+    <span class='const'>OpenSSL</span><span class='op'>::</span><span class='const'>OCSP</span><span class='op'>::</span><span class='const'>V_CERTSTATUS_UNKNOWN</span>
+  <span class='kw'>end</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -549,9 +549,9 @@
 </div>
 
     <div id="footer">
-  Generated on Tue Oct 23 23:23:38 2012 by
+  Generated on Tue Apr 16 10:49:57 2013 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.8.3 (ruby-1.9.3).
+  0.8.5 (ruby-1.9.3).
 </div>
 
   </body>

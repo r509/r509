@@ -6,7 +6,7 @@
 <title>
   Module: R509::Cert::Extensions
   
-    &mdash; Documentation by YARD 0.8.3
+    &mdash; Documentation by YARD 0.8.5
   
 </title>
 
@@ -84,13 +84,24 @@
 </dl>
 <div class="clear"></div>
 
-<h2>Defined Under Namespace</h2>
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    
+<p>module to contain extension classes for R509::Cert</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><h2>Defined Under Namespace</h2>
 <p class="children">
   
     
   
     
-      <strong class="classes">Classes:</strong> <span class='object_link'><a href="Extensions/AuthorityInfoAccess.html" title="R509::Cert::Extensions::AuthorityInfoAccess (class)">AuthorityInfoAccess</a></span>, <span class='object_link'><a href="Extensions/AuthorityKeyIdentifier.html" title="R509::Cert::Extensions::AuthorityKeyIdentifier (class)">AuthorityKeyIdentifier</a></span>, <span class='object_link'><a href="Extensions/BasicConstraints.html" title="R509::Cert::Extensions::BasicConstraints (class)">BasicConstraints</a></span>, <span class='object_link'><a href="Extensions/CrlDistributionPoints.html" title="R509::Cert::Extensions::CrlDistributionPoints (class)">CrlDistributionPoints</a></span>, <span class='object_link'><a href="Extensions/ExtendedKeyUsage.html" title="R509::Cert::Extensions::ExtendedKeyUsage (class)">ExtendedKeyUsage</a></span>, <span class='object_link'><a href="Extensions/KeyUsage.html" title="R509::Cert::Extensions::KeyUsage (class)">KeyUsage</a></span>, <span class='object_link'><a href="Extensions/SubjectAlternativeName.html" title="R509::Cert::Extensions::SubjectAlternativeName (class)">SubjectAlternativeName</a></span>, <span class='object_link'><a href="Extensions/SubjectKeyIdentifier.html" title="R509::Cert::Extensions::SubjectKeyIdentifier (class)">SubjectKeyIdentifier</a></span>
+      <strong class="classes">Classes:</strong> <span class='object_link'><a href="Extensions/AuthorityInfoAccess.html" title="R509::Cert::Extensions::AuthorityInfoAccess (class)">AuthorityInfoAccess</a></span>, <span class='object_link'><a href="Extensions/AuthorityKeyIdentifier.html" title="R509::Cert::Extensions::AuthorityKeyIdentifier (class)">AuthorityKeyIdentifier</a></span>, <span class='object_link'><a href="Extensions/BasicConstraints.html" title="R509::Cert::Extensions::BasicConstraints (class)">BasicConstraints</a></span>, <span class='object_link'><a href="Extensions/CRLDistributionPoints.html" title="R509::Cert::Extensions::CRLDistributionPoints (class)">CRLDistributionPoints</a></span>, <span class='object_link'><a href="Extensions/CertificatePolicies.html" title="R509::Cert::Extensions::CertificatePolicies (class)">CertificatePolicies</a></span>, <span class='object_link'><a href="Extensions/ExtendedKeyUsage.html" title="R509::Cert::Extensions::ExtendedKeyUsage (class)">ExtendedKeyUsage</a></span>, <span class='object_link'><a href="Extensions/InhibitAnyPolicy.html" title="R509::Cert::Extensions::InhibitAnyPolicy (class)">InhibitAnyPolicy</a></span>, <span class='object_link'><a href="Extensions/KeyUsage.html" title="R509::Cert::Extensions::KeyUsage (class)">KeyUsage</a></span>, <span class='object_link'><a href="Extensions/NameConstraints.html" title="R509::Cert::Extensions::NameConstraints (class)">NameConstraints</a></span>, <span class='object_link'><a href="Extensions/OCSPNoCheck.html" title="R509::Cert::Extensions::OCSPNoCheck (class)">OCSPNoCheck</a></span>, <span class='object_link'><a href="Extensions/PolicyConstraints.html" title="R509::Cert::Extensions::PolicyConstraints (class)">PolicyConstraints</a></span>, <span class='object_link'><a href="Extensions/SubjectAlternativeName.html" title="R509::Cert::Extensions::SubjectAlternativeName (class)">SubjectAlternativeName</a></span>, <span class='object_link'><a href="Extensions/SubjectKeyIdentifier.html" title="R509::Cert::Extensions::SubjectKeyIdentifier (class)">SubjectKeyIdentifier</a></span>
     
   
 </p>
@@ -198,25 +209,25 @@ R509 implementation.</p>
       <pre class="lines">
 
 
-290
-291
-292
-293
-294
-295
-296
-297
-298
-299
-300
-301
-302
-303
-304
-305</pre>
+657
+658
+659
+660
+661
+662
+663
+664
+665
+666
+667
+668
+669
+670
+671
+672</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 290</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 657</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_unknown_extensions'>get_unknown_extensions</span><span class='lparen'>(</span> <span class='id identifier rubyid_extensions'>extensions</span> <span class='rparen'>)</span>
   <span class='id identifier rubyid_unknown_extensions'>unknown_extensions</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
@@ -268,26 +279,26 @@ implementation are ignored (see #get_unknown_extensions).</p>
       <pre class="lines">
 
 
-270
-271
-272
-273
-274
-275
-276
-277
-278
-279
-280
-281
-282
-283
-284
-285
-286</pre>
+637
+638
+639
+640
+641
+642
+643
+644
+645
+646
+647
+648
+649
+650
+651
+652
+653</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 270</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 637</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_wrap_openssl_extensions'>wrap_openssl_extensions</span><span class='lparen'>(</span> <span class='id identifier rubyid_extensions'>extensions</span> <span class='rparen'>)</span>
   <span class='id identifier rubyid_r509_extensions'>r509_extensions</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
@@ -297,7 +308,7 @@ implementation are ignored (see #get_unknown_extensions).</p>
         <span class='kw'>if</span> <span class='id identifier rubyid_r509_extensions'>r509_extensions</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span><span class='lparen'>(</span><span class='id identifier rubyid_r509_class'>r509_class</span><span class='rparen'>)</span>
           <span class='id identifier rubyid_raise'>raise</span> <span class='const'>ArgumentError</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Only one extension object allowed per OID</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
         <span class='kw'>end</span>
-        
+
         <span class='id identifier rubyid_r509_extensions'>r509_extensions</span><span class='lbracket'>[</span><span class='id identifier rubyid_r509_class'>r509_class</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_r509_class'>r509_class</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span> <span class='id identifier rubyid_openssl_extension'>openssl_extension</span> <span class='rparen'>)</span>
         <span class='kw'>break</span>
       <span class='kw'>end</span>
@@ -316,9 +327,9 @@ implementation are ignored (see #get_unknown_extensions).</p>
 </div>
 
     <div id="footer">
-  Generated on Tue Oct 23 23:23:36 2012 by
+  Generated on Tue Apr 16 10:49:55 2013 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.8.3 (ruby-1.9.3).
+  0.8.5 (ruby-1.9.3).
 </div>
 
   </body>

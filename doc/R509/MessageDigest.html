@@ -6,7 +6,7 @@
 <title>
   Class: R509::MessageDigest
   
-    &mdash; Documentation by YARD 0.8.3
+    &mdash; Documentation by YARD 0.8.5
   
 </title>
 
@@ -94,7 +94,7 @@
   
   
     <dt class="r2 last">Defined in:</dt>
-    <dd class="r2 last">lib/r509/messagedigest.rb</dd>
+    <dd class="r2 last">lib/r509/message_digest.rb</dd>
   
 </dl>
 <div class="clear"></div>
@@ -272,16 +272,16 @@
 17</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/messagedigest.rb', line 9</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/message_digest.rb', line 9</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='id identifier rubyid_arg'>arg</span><span class='rparen'>)</span>
-    <span class='kw'>if</span> <span class='id identifier rubyid_arg'>arg</span><span class='period'>.</span><span class='id identifier rubyid_kind_of?'>kind_of?</span><span class='lparen'>(</span><span class='const'>String</span><span class='rparen'>)</span>
-        <span class='ivar'>@name</span> <span class='op'>=</span> <span class='id identifier rubyid_arg'>arg</span><span class='period'>.</span><span class='id identifier rubyid_downcase'>downcase</span>
-        <span class='ivar'>@digest</span> <span class='op'>=</span> <span class='id identifier rubyid_translate_name_to_digest'>translate_name_to_digest</span>
-    <span class='kw'>else</span>
-        <span class='ivar'>@digest</span> <span class='op'>=</span> <span class='id identifier rubyid_arg'>arg</span>
-        <span class='ivar'>@name</span> <span class='op'>=</span> <span class='id identifier rubyid_translate_digest_to_name'>translate_digest_to_name</span>
-    <span class='kw'>end</span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_arg'>arg</span><span class='period'>.</span><span class='id identifier rubyid_kind_of?'>kind_of?</span><span class='lparen'>(</span><span class='const'>String</span><span class='rparen'>)</span>
+    <span class='ivar'>@name</span> <span class='op'>=</span> <span class='id identifier rubyid_arg'>arg</span><span class='period'>.</span><span class='id identifier rubyid_downcase'>downcase</span>
+    <span class='ivar'>@digest</span> <span class='op'>=</span> <span class='id identifier rubyid_translate_name_to_digest'>translate_name_to_digest</span>
+  <span class='kw'>else</span>
+    <span class='ivar'>@digest</span> <span class='op'>=</span> <span class='id identifier rubyid_arg'>arg</span>
+    <span class='ivar'>@name</span> <span class='op'>=</span> <span class='id identifier rubyid_translate_digest_to_name'>translate_digest_to_name</span>
+  <span class='kw'>end</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -326,7 +326,7 @@
 8</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/messagedigest.rb', line 6</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/message_digest.rb', line 6</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_digest'>digest</span>
   <span class='ivar'>@digest</span>
@@ -369,7 +369,7 @@
 8</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/messagedigest.rb', line 6</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/message_digest.rb', line 6</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_name'>name</span>
   <span class='ivar'>@name</span>
@@ -385,9 +385,9 @@
 </div>
 
     <div id="footer">
-  Generated on Tue Oct 23 23:23:38 2012 by
+  Generated on Tue Apr 16 10:49:57 2013 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.8.3 (ruby-1.9.3).
+  0.8.5 (ruby-1.9.3).
 </div>
 
   </body>

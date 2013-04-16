@@ -4,9 +4,9 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>
-  Class: R509::Csr
+  Class: R509::CSR
   
-    &mdash; Documentation by YARD 0.8.3
+    &mdash; Documentation by YARD 0.8.5
   
 </title>
 
@@ -34,7 +34,7 @@
     <a href="../_index.html">Index (C)</a> &raquo;
     <span class='title'><span class='object_link'><a href="../R509.html" title="R509 (module)">R509</a></span></span>
      &raquo; 
-    <span class="title">Csr</span>
+    <span class="title">CSR</span>
   
 
   <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
@@ -63,7 +63,7 @@
 
     <iframe id="search_frame"></iframe>
 
-    <div id="content"><h1>Class: R509::Csr
+    <div id="content"><h1>Class: R509::CSR
   
   
   
@@ -78,7 +78,7 @@
         <ul class="fullTree">
           <li>Object</li>
           
-            <li class="next">R509::Csr</li>
+            <li class="next">R509::CSR</li>
           
         </ul>
         <a href="#" class="inheritanceTree">show all</a>
@@ -240,7 +240,7 @@
       <li class="public ">
   <span class="summary_signature">
     
-      <a href="#san_names-instance_method" title="#san_names (instance method)">- (Object) <strong>san_names</strong> </a>
+      <a href="#san-instance_method" title="#san (instance method)">- (Object) <strong>san</strong> </a>
     
 
     
@@ -260,7 +260,7 @@
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Returns the value of attribute san_names.</p>
+<p>Returns the value of attribute san.</p>
 </div></span>
   
 </li>
@@ -311,7 +311,7 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#load_from_file-class_method" title="load_from_file (class method)">+ (R509::Csr) <strong>load_from_file</strong>(filename) </a>
+      <a href="#load_from_file-class_method" title="load_from_file (class method)">+ (R509::CSR) <strong>load_from_file</strong>(filename) </a>
     
 
     
@@ -368,6 +368,31 @@
         <li class="public ">
   <span class="summary_signature">
     
+      <a href="#curve_name-instance_method" title="#curve_name (instance method)">- (String) <strong>curve_name</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Returns the short name of the elliptic curve used to generate the public
+key if the key is EC.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
       <a href="#dsa%3F-instance_method" title="#dsa? (instance method)">- (Boolean) <strong>dsa?</strong> </a>
     
 
@@ -384,6 +409,30 @@
   
     <span class="summary_desc"><div class='inline'>
 <p>Returns whether the public key is DSA.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#ec%3F-instance_method" title="#ec? (instance method)">- (Boolean) <strong>ec?</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Returns whether the public key is EC.</p>
 </div></span>
   
 </li>
@@ -416,7 +465,7 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#initialize-instance_method" title="#initialize (instance method)">- (Csr) <strong>initialize</strong>(opts = {}) </a>
+      <a href="#initialize-instance_method" title="#initialize (instance method)">- (CSR) <strong>initialize</strong>(opts = {}) </a>
     
 
     
@@ -433,7 +482,7 @@
 
   
     <span class="summary_desc"><div class='inline'>
-<p>you can also pass OIDs (see tests).</p>
+<p>A new instance of CSR.</p>
 </div></span>
   
 </li>
@@ -442,7 +491,7 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#key_algorithm-instance_method" title="#key_algorithm (instance method)">- (String) <strong>key_algorithm</strong> </a>
+      <a href="#key_algorithm-instance_method" title="#key_algorithm (instance method)">- (Symbol) <strong>key_algorithm</strong> </a>
     
 
     
@@ -457,7 +506,7 @@
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Returns key algorithm (RSA/DSA).</p>
+<p>Returns key algorithm (RSA/DSA/EC).</p>
 </div></span>
   
 </li>
@@ -466,7 +515,7 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#public_key-instance_method" title="#public_key (instance method)">- (OpenSSL::PKey::RSA) <strong>public_key</strong> </a>
+      <a href="#public_key-instance_method" title="#public_key (instance method)">- (OpenSSL::PKey::RSA, ...) <strong>public_key</strong> </a>
     
 
     
@@ -578,30 +627,6 @@
   
     <span class="summary_desc"><div class='inline'>
 <p>Converts the CSR into the DER format.</p>
-</div></span>
-  
-</li>
-
-      
-        <li class="public ">
-  <span class="summary_signature">
-    
-      <a href="#to_hash-instance_method" title="#to_hash (instance method)">- (Hash) <strong>to_hash</strong> </a>
-    
-
-    
-  </span>
-  
-  
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'>
-<p>Returns a hash structure you can pass to the Ca.</p>
 </div></span>
   
 </li>
@@ -725,7 +750,7 @@
     <div class="method_details first">
   <h3 class="signature first" id="initialize-instance_method">
   
-    - (<tt><span class='object_link'><a href="" title="R509::Csr (class)">Csr</a></span></tt>) <strong>initialize</strong>(opts = {}) 
+    - (<tt><span class='object_link'><a href="" title="R509::CSR (class)">CSR</a></span></tt>) <strong>initialize</strong>(opts = {}) 
   
 
   
@@ -734,7 +759,7 @@
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>you can also pass OIDs (see tests)</p>
+<p>A new instance of CSR</p>
 
 
   </div>
@@ -745,11 +770,32 @@
     <p class="tag_title">Examples:</p>
     
       
-        <p class="example_title"><div class='inline'><dl class="rdoc-list"><dt>['<a href="http://'ST','Illinois'">CN','langui.sh'],</a>,['<a href="http://'C','US'">L','Chicago'],</a>,['emailAddress','ca@langui.sh']</dt>
-<dd></dd></dl>
+        <p class="example_title"><div class='inline'>
+<p>Generate a 4096-bit RSA key + CSR</p>
 </div></p>
       
-      <pre class="example code"></pre>
+      <pre class="example code"><code>:type =&gt; :rsa,
+:bit_strength =&gt; 4096,
+:subject =&gt; [
+  ['CN','somedomain.com'],
+  ['O','My Org'],
+  ['L','City'],
+  ['ST','State'],
+  ['C','US']
+]</code></pre>
+    
+      
+        <p class="example_title"><div class='inline'>
+<p>Generate an ECDSA key using the secp384r1 curve parameters + CSR and sign
+with SHA512</p>
+</div></p>
+      
+      <pre class="example code"><code>:type =&gt; :ec,
+:curve_name =&gt; 'secp384r1',
+:message_digest =&gt; 'sha512',
+:subject =&gt; [
+  ['CN','somedomain.com'],
+]</code></pre>
     
   </div>
 <p class="tag_title">Parameters:</p>
@@ -802,7 +848,23 @@
           </span>
           
             &mdash; <div class='inline'>
-<p>:rsa/:dsa</p>
+<p>:rsa/:dsa/:ec required if not providing existing :csr. Defaults to :rsa</p>
+</div>
+          
+        </li>
+      
+        <li>
+          <span class="name">:curve_name</span>
+          <span class="type">(<tt>String</tt>)</span>
+          <span class="default">
+            
+              &mdash; default:
+              <tt>&quot;secp384r1&quot;</tt>
+            
+          </span>
+          
+            &mdash; <div class='inline'>
+<p>Only used if :type is :ec</p>
 </div>
           
         </li>
@@ -812,7 +874,28 @@
           <span class="type">(<tt>Integer</tt>)</span>
           <span class="default">
             
+              &mdash; default:
+              <tt>2048</tt>
+            
           </span>
+          
+            &mdash; <div class='inline'>
+<p>Only used if :type is :rsa or :dsa</p>
+</div>
+          
+        </li>
+      
+        <li>
+          <span class="name">:message_digest</span>
+          <span class="type">(<tt>String</tt>)</span>
+          <span class="default">
+            
+          </span>
+          
+            &mdash; <div class='inline'>
+<p>Optional digest. sha1, sha224, sha256, sha384, sha512, md5. Defaults to
+sha1</p>
+</div>
           
         </li>
       
@@ -824,7 +907,9 @@
           </span>
           
             &mdash; <div class='inline'>
-<p>List of domains to encode as subjectAltNames</p>
+<p>List of domains, IPs, email addresses, or URIs to encode as
+subjectAltNames. The type is determined from the structure of the strings
+via the R509::ASN1.general_name_parser method</p>
 </div>
           
         </li>
@@ -838,19 +923,6 @@
           
             &mdash; <div class='inline'>
 <p>array of subject items</p>
-</div>
-          
-        </li>
-      
-        <li>
-          <span class="name">:cert</span>
-          <span class="type">(<tt>String</tt>, <tt><span class='object_link'><a href="Cert.html" title="R509::Cert (class)">R509::Cert</a></span></tt>, <tt>OpenSSL::X509::Certificate</tt>)</span>
-          <span class="default">
-            
-          </span>
-          
-            &mdash; <div class='inline'>
-<p>takes a cert (used for generating a CSR with the certificate's values)</p>
 </div>
           
         </li>
@@ -880,24 +952,6 @@ support)</p>
       <pre class="lines">
 
 
-21
-22
-23
-24
-25
-26
-27
-28
-29
-30
-31
-32
-33
-34
-35
-36
-37
-38
 39
 40
 41
@@ -941,71 +995,73 @@ support)</p>
 79
 80
 81
-82</pre>
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/csr.rb', line 21</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/csr.rb', line 39</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='id identifier rubyid_opts'>opts</span><span class='op'>=</span><span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
-    <span class='kw'>if</span> <span class='kw'>not</span> <span class='id identifier rubyid_opts'>opts</span><span class='period'>.</span><span class='id identifier rubyid_kind_of?'>kind_of?</span><span class='lparen'>(</span><span class='const'>Hash</span><span class='rparen'>)</span>
-        <span class='id identifier rubyid_raise'>raise</span> <span class='const'>ArgumentError</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>Must provide a hash of options</span><span class='tstring_end'>'</span></span>
-    <span class='kw'>end</span>
-    <span class='kw'>if</span> <span class='lparen'>(</span><span class='id identifier rubyid_opts'>opts</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span><span class='lparen'>(</span><span class='symbol'>:cert</span><span class='rparen'>)</span> <span class='kw'>and</span> <span class='id identifier rubyid_opts'>opts</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span><span class='lparen'>(</span><span class='symbol'>:subject</span><span class='rparen'>)</span><span class='rparen'>)</span> <span class='kw'>or</span>
-        <span class='lparen'>(</span><span class='id identifier rubyid_opts'>opts</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span><span class='lparen'>(</span><span class='symbol'>:cert</span><span class='rparen'>)</span> <span class='kw'>and</span> <span class='id identifier rubyid_opts'>opts</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span><span class='lparen'>(</span><span class='symbol'>:csr</span><span class='rparen'>)</span><span class='rparen'>)</span> <span class='kw'>or</span>
-        <span class='lparen'>(</span><span class='id identifier rubyid_opts'>opts</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span><span class='lparen'>(</span><span class='symbol'>:subject</span><span class='rparen'>)</span> <span class='kw'>and</span> <span class='id identifier rubyid_opts'>opts</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span><span class='lparen'>(</span><span class='symbol'>:csr</span><span class='rparen'>)</span><span class='rparen'>)</span>
-        <span class='id identifier rubyid_raise'>raise</span> <span class='const'>ArgumentError</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Can only provide one of cert, subject, or csr</span><span class='tstring_end'>&quot;</span></span>
-    <span class='kw'>end</span>
-    <span class='ivar'>@bit_strength</span> <span class='op'>=</span> <span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:bit_strength</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='int'>2048</span>
+  <span class='kw'>if</span> <span class='kw'>not</span> <span class='id identifier rubyid_opts'>opts</span><span class='period'>.</span><span class='id identifier rubyid_kind_of?'>kind_of?</span><span class='lparen'>(</span><span class='const'>Hash</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_raise'>raise</span> <span class='const'>ArgumentError</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>Must provide a hash of options</span><span class='tstring_end'>'</span></span>
+  <span class='kw'>end</span>
+    <span class='kw'>if</span> <span class='id identifier rubyid_opts'>opts</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span><span class='lparen'>(</span><span class='symbol'>:subject</span><span class='rparen'>)</span> <span class='kw'>and</span> <span class='id identifier rubyid_opts'>opts</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span><span class='lparen'>(</span><span class='symbol'>:csr</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_raise'>raise</span> <span class='const'>ArgumentError</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>You must provide :subject or :csr, not both</span><span class='tstring_end'>&quot;</span></span>
+  <span class='kw'>end</span>
+  <span class='ivar'>@bit_strength</span> <span class='op'>=</span> <span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:bit_strength</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='int'>2048</span>
+  <span class='ivar'>@curve_name</span> <span class='op'>=</span> <span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:curve_name</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>secp384r1</span><span class='tstring_end'>&quot;</span></span>
 
-    <span class='kw'>if</span> <span class='id identifier rubyid_opts'>opts</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span><span class='lparen'>(</span><span class='symbol'>:key</span><span class='rparen'>)</span>
-        <span class='kw'>if</span> <span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:key</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_kind_of?'>kind_of?</span><span class='lparen'>(</span><span class='const'>R509</span><span class='op'>::</span><span class='const'>PrivateKey</span><span class='rparen'>)</span>
-            <span class='ivar'>@key</span> <span class='op'>=</span> <span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:key</span><span class='rbracket'>]</span>
-        <span class='kw'>else</span>
-            <span class='ivar'>@key</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>PrivateKey</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='symbol'>:key</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:key</span><span class='rbracket'>]</span><span class='rparen'>)</span>
-        <span class='kw'>end</span>
-    <span class='kw'>end</span>
-
-    <span class='ivar'>@type</span> <span class='op'>=</span> <span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:type</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='symbol'>:rsa</span>
-    <span class='kw'>if</span> <span class='ivar'>@type</span> <span class='op'>!=</span> <span class='symbol'>:rsa</span> <span class='kw'>and</span> <span class='ivar'>@type</span> <span class='op'>!=</span> <span class='symbol'>:dsa</span> <span class='kw'>and</span> <span class='ivar'>@key</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
-        <span class='id identifier rubyid_raise'>raise</span> <span class='const'>ArgumentError</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>Must provide :rsa or :dsa as type when key is nil</span><span class='tstring_end'>'</span></span>
-    <span class='kw'>end</span>
-
-    <span class='kw'>if</span> <span class='id identifier rubyid_opts'>opts</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span><span class='lparen'>(</span><span class='symbol'>:cert</span><span class='rparen'>)</span>
-        <span class='id identifier rubyid_domains'>domains</span> <span class='op'>=</span> <span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:san_names</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
-        <span class='id identifier rubyid_parsed_domains'>parsed_domains</span> <span class='op'>=</span> <span class='id identifier rubyid_prefix_domains'>prefix_domains</span><span class='lparen'>(</span><span class='id identifier rubyid_domains'>domains</span><span class='rparen'>)</span>
-        <span class='id identifier rubyid_cert_data'>cert_data</span> <span class='op'>=</span> <span class='id identifier rubyid_parse_cert'>parse_cert</span><span class='lparen'>(</span><span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:cert</span><span class='rbracket'>]</span><span class='rparen'>)</span>
-        <span class='id identifier rubyid_merged_domains'>merged_domains</span> <span class='op'>=</span> <span class='id identifier rubyid_cert_data'>cert_data</span><span class='lbracket'>[</span><span class='symbol'>:subjectAltName</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_concat'>concat</span><span class='lparen'>(</span><span class='id identifier rubyid_parsed_domains'>parsed_domains</span><span class='rparen'>)</span>
-        <span class='id identifier rubyid_create_request'>create_request</span><span class='lparen'>(</span><span class='id identifier rubyid_cert_data'>cert_data</span><span class='lbracket'>[</span><span class='symbol'>:subject</span><span class='rbracket'>]</span><span class='comma'>,</span><span class='id identifier rubyid_merged_domains'>merged_domains</span><span class='rparen'>)</span> <span class='comment'>#sets @req
-</span>    <span class='kw'>elsif</span> <span class='id identifier rubyid_opts'>opts</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span><span class='lparen'>(</span><span class='symbol'>:subject</span><span class='rparen'>)</span>
-        <span class='id identifier rubyid_domains'>domains</span> <span class='op'>=</span> <span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:san_names</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
-        <span class='id identifier rubyid_parsed_domains'>parsed_domains</span> <span class='op'>=</span> <span class='id identifier rubyid_prefix_domains'>prefix_domains</span><span class='lparen'>(</span><span class='id identifier rubyid_domains'>domains</span><span class='rparen'>)</span>
-        <span class='id identifier rubyid_create_request'>create_request</span><span class='lparen'>(</span><span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:subject</span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='id identifier rubyid_parsed_domains'>parsed_domains</span><span class='rparen'>)</span> <span class='comment'>#sets @req
-</span>    <span class='kw'>elsif</span> <span class='id identifier rubyid_opts'>opts</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span><span class='lparen'>(</span><span class='symbol'>:csr</span><span class='rparen'>)</span>
-        <span class='kw'>if</span> <span class='id identifier rubyid_opts'>opts</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span><span class='lparen'>(</span><span class='symbol'>:san_names</span><span class='rparen'>)</span>
-            <span class='id identifier rubyid_raise'>raise</span> <span class='const'>ArgumentError</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>You can't add domains to an existing CSR</span><span class='tstring_end'>&quot;</span></span>
-        <span class='kw'>end</span>
-        <span class='id identifier rubyid_parse_csr'>parse_csr</span><span class='lparen'>(</span><span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:csr</span><span class='rbracket'>]</span><span class='rparen'>)</span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_opts'>opts</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span><span class='lparen'>(</span><span class='symbol'>:key</span><span class='rparen'>)</span>
+    <span class='kw'>if</span> <span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:key</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_kind_of?'>kind_of?</span><span class='lparen'>(</span><span class='const'>R509</span><span class='op'>::</span><span class='const'>PrivateKey</span><span class='rparen'>)</span>
+      <span class='ivar'>@key</span> <span class='op'>=</span> <span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:key</span><span class='rbracket'>]</span>
     <span class='kw'>else</span>
-        <span class='id identifier rubyid_raise'>raise</span> <span class='const'>ArgumentError</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Must provide one of cert, subject, or csr</span><span class='tstring_end'>&quot;</span></span>
+      <span class='ivar'>@key</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>PrivateKey</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='symbol'>:key</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:key</span><span class='rbracket'>]</span><span class='rparen'>)</span>
     <span class='kw'>end</span>
+  <span class='kw'>end</span>
 
-    <span class='kw'>if</span> <span class='id identifier rubyid_dsa?'>dsa?</span>
-        <span class='comment'>#only DSS1 is acceptable for DSA signing in OpenSSL &lt; 1.0
-</span>        <span class='comment'>#post-1.0 you can sign with anything, but let's be conservative
-</span>        <span class='comment'>#see: http://www.ruby-doc.org/stdlib-1.9.3/libdoc/openssl/rdoc/OpenSSL/PKey/DSA.html
-</span>        <span class='ivar'>@message_digest</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>MessageDigest</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>dss1</span><span class='tstring_end'>'</span></span><span class='rparen'>)</span>
-    <span class='kw'>elsif</span> <span class='id identifier rubyid_opts'>opts</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span><span class='lparen'>(</span><span class='symbol'>:message_digest</span><span class='rparen'>)</span>
-        <span class='ivar'>@message_digest</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>MessageDigest</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:message_digest</span><span class='rbracket'>]</span><span class='rparen'>)</span>
-    <span class='kw'>else</span>
-        <span class='ivar'>@message_digest</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>MessageDigest</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>sha1</span><span class='tstring_end'>'</span></span><span class='rparen'>)</span>
-    <span class='kw'>end</span>
+  <span class='ivar'>@type</span> <span class='op'>=</span> <span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:type</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='symbol'>:rsa</span>
+  <span class='kw'>if</span> <span class='kw'>not</span> <span class='lbracket'>[</span><span class='symbol'>:rsa</span><span class='comma'>,</span><span class='symbol'>:dsa</span><span class='comma'>,</span><span class='symbol'>:ec</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_include?'>include?</span><span class='lparen'>(</span><span class='ivar'>@type</span><span class='rparen'>)</span> <span class='kw'>and</span> <span class='ivar'>@key</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
+    <span class='id identifier rubyid_raise'>raise</span> <span class='const'>ArgumentError</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>Must provide :rsa, :dsa, or :ec as type when key is nil</span><span class='tstring_end'>'</span></span>
+  <span class='kw'>end</span>
 
-    <span class='kw'>if</span> <span class='kw'>not</span> <span class='id identifier rubyid_opts'>opts</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span><span class='lparen'>(</span><span class='symbol'>:csr</span><span class='rparen'>)</span>
-        <span class='ivar'>@req</span><span class='period'>.</span><span class='id identifier rubyid_sign'>sign</span><span class='lparen'>(</span><span class='ivar'>@key</span><span class='period'>.</span><span class='id identifier rubyid_key'>key</span><span class='comma'>,</span> <span class='ivar'>@message_digest</span><span class='period'>.</span><span class='id identifier rubyid_digest'>digest</span><span class='rparen'>)</span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_opts'>opts</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span><span class='lparen'>(</span><span class='symbol'>:subject</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_san_names'>san_names</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>ASN1</span><span class='period'>.</span><span class='id identifier rubyid_general_name_parser'>general_name_parser</span><span class='lparen'>(</span><span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:san_names</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='lbracket'>[</span><span class='rbracket'>]</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_create_request'>create_request</span><span class='lparen'>(</span><span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:subject</span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='id identifier rubyid_san_names'>san_names</span><span class='rparen'>)</span> <span class='comment'>#sets @req
+</span>  <span class='kw'>elsif</span> <span class='id identifier rubyid_opts'>opts</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span><span class='lparen'>(</span><span class='symbol'>:csr</span><span class='rparen'>)</span>
+    <span class='kw'>if</span> <span class='id identifier rubyid_opts'>opts</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span><span class='lparen'>(</span><span class='symbol'>:san_names</span><span class='rparen'>)</span>
+      <span class='id identifier rubyid_raise'>raise</span> <span class='const'>ArgumentError</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>You can't add domains to an existing CSR</span><span class='tstring_end'>&quot;</span></span>
     <span class='kw'>end</span>
-    <span class='kw'>if</span> <span class='kw'>not</span> <span class='ivar'>@key</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span> <span class='kw'>and</span> <span class='kw'>not</span> <span class='ivar'>@req</span><span class='period'>.</span><span class='id identifier rubyid_verify'>verify</span><span class='lparen'>(</span><span class='ivar'>@key</span><span class='period'>.</span><span class='id identifier rubyid_public_key'>public_key</span><span class='rparen'>)</span> <span class='kw'>then</span>
-        <span class='id identifier rubyid_raise'>raise</span> <span class='const'>R509Error</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>Key does not match request.</span><span class='tstring_end'>'</span></span>
-    <span class='kw'>end</span>
+    <span class='id identifier rubyid_parse_csr'>parse_csr</span><span class='lparen'>(</span><span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:csr</span><span class='rbracket'>]</span><span class='rparen'>)</span>
+  <span class='kw'>else</span>
+    <span class='id identifier rubyid_raise'>raise</span> <span class='const'>ArgumentError</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>You must provide :subject or :csr</span><span class='tstring_end'>&quot;</span></span>
+  <span class='kw'>end</span>
+
+  <span class='kw'>if</span> <span class='id identifier rubyid_dsa?'>dsa?</span>
+    <span class='comment'>#only DSS1 is acceptable for DSA signing in OpenSSL &lt; 1.0
+</span>    <span class='comment'>#post-1.0 you can sign with anything, but let's be conservative
+</span>    <span class='comment'>#see: http://www.ruby-doc.org/stdlib-1.9.3/libdoc/openssl/rdoc/OpenSSL/PKey/DSA.html
+</span>    <span class='ivar'>@message_digest</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>MessageDigest</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>dss1</span><span class='tstring_end'>'</span></span><span class='rparen'>)</span>
+  <span class='kw'>elsif</span> <span class='id identifier rubyid_opts'>opts</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span><span class='lparen'>(</span><span class='symbol'>:message_digest</span><span class='rparen'>)</span>
+    <span class='ivar'>@message_digest</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>MessageDigest</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:message_digest</span><span class='rbracket'>]</span><span class='rparen'>)</span>
+  <span class='kw'>else</span>
+    <span class='ivar'>@message_digest</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>MessageDigest</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>sha1</span><span class='tstring_end'>'</span></span><span class='rparen'>)</span>
+  <span class='kw'>end</span>
+
+  <span class='kw'>if</span> <span class='kw'>not</span> <span class='id identifier rubyid_opts'>opts</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span><span class='lparen'>(</span><span class='symbol'>:csr</span><span class='rparen'>)</span>
+    <span class='ivar'>@req</span><span class='period'>.</span><span class='id identifier rubyid_sign'>sign</span><span class='lparen'>(</span><span class='ivar'>@key</span><span class='period'>.</span><span class='id identifier rubyid_key'>key</span><span class='comma'>,</span> <span class='ivar'>@message_digest</span><span class='period'>.</span><span class='id identifier rubyid_digest'>digest</span><span class='rparen'>)</span>
+  <span class='kw'>end</span>
+  <span class='kw'>if</span> <span class='kw'>not</span> <span class='ivar'>@key</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span> <span class='kw'>and</span> <span class='kw'>not</span> <span class='ivar'>@req</span><span class='period'>.</span><span class='id identifier rubyid_verify'>verify</span><span class='lparen'>(</span><span class='ivar'>@key</span><span class='period'>.</span><span class='id identifier rubyid_public_key'>public_key</span><span class='rparen'>)</span> <span class='kw'>then</span>
+    <span class='id identifier rubyid_raise'>raise</span> <span class='const'>R509Error</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>Key does not match request.</span><span class='tstring_end'>'</span></span>
+  <span class='kw'>end</span>
 
 <span class='kw'>end</span></pre>
     </td>
@@ -1046,12 +1102,12 @@ support)</p>
       <pre class="lines">
 
 
-11
-12
-13</pre>
+13
+14
+15</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/csr.rb', line 11</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/csr.rb', line 13</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_attributes'>attributes</span>
   <span class='ivar'>@attributes</span>
@@ -1089,12 +1145,12 @@ support)</p>
       <pre class="lines">
 
 
-11
-12
-13</pre>
+13
+14
+15</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/csr.rb', line 11</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/csr.rb', line 13</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_key'>key</span>
   <span class='ivar'>@key</span>
@@ -1132,12 +1188,12 @@ support)</p>
       <pre class="lines">
 
 
-11
-12
-13</pre>
+13
+14
+15</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/csr.rb', line 11</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/csr.rb', line 13</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_message_digest'>message_digest</span>
   <span class='ivar'>@message_digest</span>
@@ -1175,12 +1231,12 @@ support)</p>
       <pre class="lines">
 
 
-11
-12
-13</pre>
+13
+14
+15</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/csr.rb', line 11</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/csr.rb', line 13</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_req'>req</span>
   <span class='ivar'>@req</span>
@@ -1193,9 +1249,9 @@ support)</p>
       
       <span id=""></span>
       <div class="method_details ">
-  <h3 class="signature " id="san_names-instance_method">
+  <h3 class="signature " id="san-instance_method">
   
-    - (<tt>Object</tt>) <strong>san_names</strong>  <span class="extras">(readonly)</span>
+    - (<tt>Object</tt>) <strong>san</strong>  <span class="extras">(readonly)</span>
   
 
   
@@ -1204,7 +1260,7 @@ support)</p>
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Returns the value of attribute san_names</p>
+<p>Returns the value of attribute san</p>
 
 
   </div>
@@ -1218,15 +1274,15 @@ support)</p>
       <pre class="lines">
 
 
-11
-12
-13</pre>
+13
+14
+15</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/csr.rb', line 11</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/csr.rb', line 13</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_san_names'>san_names</span>
-  <span class='ivar'>@san_names</span>
+<span class='kw'>def</span> <span class='id identifier rubyid_san'>san</span>
+  <span class='ivar'>@san</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -1261,12 +1317,12 @@ support)</p>
       <pre class="lines">
 
 
-11
-12
-13</pre>
+13
+14
+15</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/csr.rb', line 11</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/csr.rb', line 13</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_subject'>subject</span>
   <span class='ivar'>@subject</span>
@@ -1286,7 +1342,7 @@ support)</p>
       <div class="method_details first">
   <h3 class="signature first" id="load_from_file-class_method">
   
-    + (<tt><span class='object_link'><a href="" title="R509::Csr (class)">R509::Csr</a></span></tt>) <strong>load_from_file</strong>(filename) 
+    + (<tt><span class='object_link'><a href="" title="R509::CSR (class)">R509::CSR</a></span></tt>) <strong>load_from_file</strong>(filename) 
   
 
   
@@ -1328,13 +1384,13 @@ support)</p>
     <li>
       
       
-        <span class='type'>(<tt><span class='object_link'><a href="" title="R509::Csr (class)">R509::Csr</a></span></tt>)</span>
+        <span class='type'>(<tt><span class='object_link'><a href="" title="R509::CSR (class)">R509::CSR</a></span></tt>)</span>
       
       
       
         &mdash;
         <div class='inline'>
-<p>Csr object</p>
+<p>CSR object</p>
 </div>
       
     </li>
@@ -1347,15 +1403,15 @@ support)</p>
       <pre class="lines">
 
 
-88
-89
-90</pre>
+98
+99
+100</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/csr.rb', line 88</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/csr.rb', line 98</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_load_from_file'>load_from_file</span><span class='lparen'>(</span> <span class='id identifier rubyid_filename'>filename</span> <span class='rparen'>)</span>
-    <span class='kw'>return</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>Csr</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='symbol'>:csr</span> <span class='op'>=&gt;</span> <span class='const'>IOHelpers</span><span class='period'>.</span><span class='id identifier rubyid_read_data'>read_data</span><span class='lparen'>(</span><span class='id identifier rubyid_filename'>filename</span><span class='rparen'>)</span> <span class='rparen'>)</span>
+  <span class='kw'>return</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>CSR</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='symbol'>:csr</span> <span class='op'>=&gt;</span> <span class='const'>IOHelpers</span><span class='period'>.</span><span class='id identifier rubyid_read_data'>read_data</span><span class='lparen'>(</span><span class='id identifier rubyid_filename'>filename</span><span class='rparen'>)</span> <span class='rparen'>)</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -1412,23 +1468,95 @@ support)</p>
       <pre class="lines">
 
 
-162
-163
-164
-165
-166
-167
-168</pre>
+179
+180
+181
+182
+183
+184
+185
+186
+187</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/csr.rb', line 162</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/csr.rb', line 179</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_bit_strength'>bit_strength</span>
-    <span class='kw'>if</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_rsa?'>rsa?</span>
-        <span class='kw'>return</span> <span class='ivar'>@req</span><span class='period'>.</span><span class='id identifier rubyid_public_key'>public_key</span><span class='period'>.</span><span class='id identifier rubyid_n'>n</span><span class='period'>.</span><span class='id identifier rubyid_num_bits'>num_bits</span>
-    <span class='kw'>elsif</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_dsa?'>dsa?</span>
-        <span class='kw'>return</span> <span class='ivar'>@req</span><span class='period'>.</span><span class='id identifier rubyid_public_key'>public_key</span><span class='period'>.</span><span class='id identifier rubyid_p'>p</span><span class='period'>.</span><span class='id identifier rubyid_num_bits'>num_bits</span>
-    <span class='kw'>end</span>
+  <span class='kw'>if</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_rsa?'>rsa?</span>
+    <span class='kw'>return</span> <span class='ivar'>@req</span><span class='period'>.</span><span class='id identifier rubyid_public_key'>public_key</span><span class='period'>.</span><span class='id identifier rubyid_n'>n</span><span class='period'>.</span><span class='id identifier rubyid_num_bits'>num_bits</span>
+  <span class='kw'>elsif</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_dsa?'>dsa?</span>
+    <span class='kw'>return</span> <span class='ivar'>@req</span><span class='period'>.</span><span class='id identifier rubyid_public_key'>public_key</span><span class='period'>.</span><span class='id identifier rubyid_p'>p</span><span class='period'>.</span><span class='id identifier rubyid_num_bits'>num_bits</span>
+  <span class='kw'>elsif</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_ec?'>ec?</span>
+    <span class='id identifier rubyid_raise'>raise</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>R509Error</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>Bit strength is not available for EC at this time.</span><span class='tstring_end'>'</span></span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="curve_name-instance_method">
+  
+    - (<tt>String</tt>) <strong>curve_name</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns the short name of the elliptic curve used to generate the public
+key if the key is EC. If not, raises an error.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>elliptic curve name</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+193
+194
+195
+196
+197
+198
+199</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/r509/csr.rb', line 193</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_curve_name'>curve_name</span>
+  <span class='kw'>if</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_ec?'>ec?</span>
+    <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_public_key'>public_key</span><span class='period'>.</span><span class='id identifier rubyid_group'>group</span><span class='period'>.</span><span class='id identifier rubyid_curve_name'>curve_name</span>
+  <span class='kw'>else</span>
+    <span class='id identifier rubyid_raise'>raise</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>R509Error</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>Curve name is only available with EC CSRs</span><span class='tstring_end'>'</span></span>
+  <span class='kw'>end</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -1479,15 +1607,74 @@ support)</p>
       <pre class="lines">
 
 
-156
-157
-158</pre>
+166
+167
+168</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/csr.rb', line 156</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/csr.rb', line 166</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_dsa?'>dsa?</span>
-    <span class='ivar'>@req</span><span class='period'>.</span><span class='id identifier rubyid_public_key'>public_key</span><span class='period'>.</span><span class='id identifier rubyid_kind_of?'>kind_of?</span><span class='lparen'>(</span><span class='const'>OpenSSL</span><span class='op'>::</span><span class='const'>PKey</span><span class='op'>::</span><span class='const'>DSA</span><span class='rparen'>)</span>
+  <span class='ivar'>@req</span><span class='period'>.</span><span class='id identifier rubyid_public_key'>public_key</span><span class='period'>.</span><span class='id identifier rubyid_kind_of?'>kind_of?</span><span class='lparen'>(</span><span class='const'>OpenSSL</span><span class='op'>::</span><span class='const'>PKey</span><span class='op'>::</span><span class='const'>DSA</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="ec?-instance_method">
+  
+    - (<tt>Boolean</tt>) <strong>ec?</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns whether the public key is EC</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>true if the public key is EC, false otherwise</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+173
+174
+175</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/r509/csr.rb', line 173</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_ec?'>ec?</span>
+  <span class='ivar'>@req</span><span class='period'>.</span><span class='id identifier rubyid_public_key'>public_key</span><span class='period'>.</span><span class='id identifier rubyid_kind_of?'>kind_of?</span><span class='lparen'>(</span><span class='const'>OpenSSL</span><span class='op'>::</span><span class='const'>PKey</span><span class='op'>::</span><span class='const'>EC</span><span class='rparen'>)</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -1538,23 +1725,23 @@ support)</p>
       <pre class="lines">
 
 
-106
-107
-108
-109
-110
-111
-112</pre>
+116
+117
+118
+119
+120
+121
+122</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/csr.rb', line 106</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/csr.rb', line 116</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_has_private_key?'>has_private_key?</span>
-    <span class='kw'>if</span> <span class='kw'>not</span> <span class='ivar'>@key</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
-        <span class='kw'>true</span>
-    <span class='kw'>else</span>
-        <span class='kw'>false</span>
-    <span class='kw'>end</span>
+  <span class='kw'>if</span> <span class='kw'>not</span> <span class='ivar'>@key</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
+    <span class='kw'>true</span>
+  <span class='kw'>else</span>
+    <span class='kw'>false</span>
+  <span class='kw'>end</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -1564,7 +1751,7 @@ support)</p>
       <div class="method_details ">
   <h3 class="signature " id="key_algorithm-instance_method">
   
-    - (<tt>String</tt>) <strong>key_algorithm</strong> 
+    - (<tt>Symbol</tt>) <strong>key_algorithm</strong> 
   
 
   
@@ -1573,7 +1760,7 @@ support)</p>
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Returns key algorithm (RSA/DSA)</p>
+<p>Returns key algorithm (RSA/DSA/EC)</p>
 
 
   </div>
@@ -1586,13 +1773,13 @@ support)</p>
     <li>
       
       
-        <span class='type'>(<tt>String</tt>)</span>
+        <span class='type'>(<tt>Symbol</tt>)</span>
       
       
       
         &mdash;
         <div class='inline'>
-<p>value of the key algorithm. RSA or DSA</p>
+<p>value of the key algorithm. :rsa, :dsa, :ec</p>
 </div>
       
     </li>
@@ -1605,23 +1792,27 @@ support)</p>
       <pre class="lines">
 
 
-192
-193
-194
-195
-196
-197
-198</pre>
+223
+224
+225
+226
+227
+228
+229
+230
+231</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/csr.rb', line 192</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/csr.rb', line 223</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_key_algorithm'>key_algorithm</span>
-    <span class='kw'>if</span> <span class='ivar'>@req</span><span class='period'>.</span><span class='id identifier rubyid_public_key'>public_key</span><span class='period'>.</span><span class='id identifier rubyid_kind_of?'>kind_of?</span> <span class='const'>OpenSSL</span><span class='op'>::</span><span class='const'>PKey</span><span class='op'>::</span><span class='const'>RSA</span> <span class='kw'>then</span>
-        <span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>RSA</span><span class='tstring_end'>'</span></span>
-    <span class='kw'>elsif</span> <span class='ivar'>@req</span><span class='period'>.</span><span class='id identifier rubyid_public_key'>public_key</span><span class='period'>.</span><span class='id identifier rubyid_kind_of?'>kind_of?</span> <span class='const'>OpenSSL</span><span class='op'>::</span><span class='const'>PKey</span><span class='op'>::</span><span class='const'>DSA</span> <span class='kw'>then</span>
-        <span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>DSA</span><span class='tstring_end'>'</span></span>
-    <span class='kw'>end</span>
+  <span class='kw'>if</span> <span class='ivar'>@req</span><span class='period'>.</span><span class='id identifier rubyid_public_key'>public_key</span><span class='period'>.</span><span class='id identifier rubyid_kind_of?'>kind_of?</span> <span class='const'>OpenSSL</span><span class='op'>::</span><span class='const'>PKey</span><span class='op'>::</span><span class='const'>RSA</span> <span class='kw'>then</span>
+    <span class='symbol'>:rsa</span>
+  <span class='kw'>elsif</span> <span class='ivar'>@req</span><span class='period'>.</span><span class='id identifier rubyid_public_key'>public_key</span><span class='period'>.</span><span class='id identifier rubyid_kind_of?'>kind_of?</span> <span class='const'>OpenSSL</span><span class='op'>::</span><span class='const'>PKey</span><span class='op'>::</span><span class='const'>DSA</span> <span class='kw'>then</span>
+    <span class='symbol'>:dsa</span>
+  <span class='kw'>elsif</span> <span class='ivar'>@req</span><span class='period'>.</span><span class='id identifier rubyid_public_key'>public_key</span><span class='period'>.</span><span class='id identifier rubyid_kind_of?'>kind_of?</span> <span class='const'>OpenSSL</span><span class='op'>::</span><span class='const'>PKey</span><span class='op'>::</span><span class='const'>EC</span> <span class='kw'>then</span>
+    <span class='symbol'>:ec</span>
+  <span class='kw'>end</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -1631,7 +1822,7 @@ support)</p>
       <div class="method_details ">
   <h3 class="signature " id="public_key-instance_method">
   
-    - (<tt>OpenSSL::PKey::RSA</tt>) <strong>public_key</strong> 
+    - (<tt>OpenSSL::PKey::RSA</tt>, ...) <strong>public_key</strong> 
   
 
   
@@ -1653,7 +1844,7 @@ support)</p>
     <li>
       
       
-        <span class='type'>(<tt>OpenSSL::PKey::RSA</tt>)</span>
+        <span class='type'>(<tt>OpenSSL::PKey::RSA</tt>, <tt>OpenSSL::PKey::DSA</tt>, <tt><span class='object_link'>OpenSSL::PKey::EC</span></tt>)</span>
       
       
       
@@ -1672,19 +1863,19 @@ support)</p>
       <pre class="lines">
 
 
-93
-94
-95
-96
-97</pre>
+103
+104
+105
+106
+107</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/csr.rb', line 93</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/csr.rb', line 103</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_public_key'>public_key</span>
-    <span class='kw'>if</span><span class='lparen'>(</span><span class='ivar'>@req</span><span class='period'>.</span><span class='id identifier rubyid_kind_of?'>kind_of?</span><span class='lparen'>(</span><span class='const'>OpenSSL</span><span class='op'>::</span><span class='const'>X509</span><span class='op'>::</span><span class='const'>Request</span><span class='rparen'>)</span><span class='rparen'>)</span> <span class='kw'>then</span>
-        <span class='ivar'>@req</span><span class='period'>.</span><span class='id identifier rubyid_public_key'>public_key</span>
-    <span class='kw'>end</span>
+  <span class='kw'>if</span><span class='lparen'>(</span><span class='ivar'>@req</span><span class='period'>.</span><span class='id identifier rubyid_kind_of?'>kind_of?</span><span class='lparen'>(</span><span class='const'>OpenSSL</span><span class='op'>::</span><span class='const'>X509</span><span class='op'>::</span><span class='const'>Request</span><span class='rparen'>)</span><span class='rparen'>)</span> <span class='kw'>then</span>
+    <span class='ivar'>@req</span><span class='period'>.</span><span class='id identifier rubyid_public_key'>public_key</span>
+  <span class='kw'>end</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -1735,15 +1926,15 @@ support)</p>
       <pre class="lines">
 
 
-149
-150
-151</pre>
+159
+160
+161</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/csr.rb', line 149</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/csr.rb', line 159</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_rsa?'>rsa?</span>
-    <span class='ivar'>@req</span><span class='period'>.</span><span class='id identifier rubyid_public_key'>public_key</span><span class='period'>.</span><span class='id identifier rubyid_kind_of?'>kind_of?</span><span class='lparen'>(</span><span class='const'>OpenSSL</span><span class='op'>::</span><span class='const'>PKey</span><span class='op'>::</span><span class='const'>RSA</span><span class='rparen'>)</span>
+  <span class='ivar'>@req</span><span class='period'>.</span><span class='id identifier rubyid_public_key'>public_key</span><span class='period'>.</span><span class='id identifier rubyid_kind_of?'>kind_of?</span><span class='lparen'>(</span><span class='const'>OpenSSL</span><span class='op'>::</span><span class='const'>PKey</span><span class='op'>::</span><span class='const'>RSA</span><span class='rparen'>)</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -1795,15 +1986,15 @@ sha256WithRSAEncryption, md5WithRSAEncryption</p>
       <pre class="lines">
 
 
-185
-186
-187</pre>
+216
+217
+218</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/csr.rb', line 185</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/csr.rb', line 216</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_signature_algorithm'>signature_algorithm</span>
-    <span class='ivar'>@req</span><span class='period'>.</span><span class='id identifier rubyid_signature_algorithm'>signature_algorithm</span>
+  <span class='ivar'>@req</span><span class='period'>.</span><span class='id identifier rubyid_signature_algorithm'>signature_algorithm</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -1854,25 +2045,25 @@ sha256WithRSAEncryption, md5WithRSAEncryption</p>
       <pre class="lines">
 
 
-173
-174
-175
-176
-177
-178
-179
-180</pre>
+204
+205
+206
+207
+208
+209
+210
+211</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/csr.rb', line 173</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/csr.rb', line 204</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_subject_component'>subject_component</span> <span class='id identifier rubyid_short_name'>short_name</span>
-    <span class='ivar'>@req</span><span class='period'>.</span><span class='id identifier rubyid_subject'>subject</span><span class='period'>.</span><span class='id identifier rubyid_to_a'>to_a</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_element'>element</span><span class='op'>|</span>
-        <span class='kw'>if</span> <span class='id identifier rubyid_element'>element</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_downcase'>downcase</span> <span class='op'>==</span> <span class='id identifier rubyid_short_name'>short_name</span><span class='period'>.</span><span class='id identifier rubyid_downcase'>downcase</span> <span class='kw'>then</span>
-            <span class='kw'>return</span> <span class='id identifier rubyid_element'>element</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span>
-        <span class='kw'>end</span>
+  <span class='ivar'>@req</span><span class='period'>.</span><span class='id identifier rubyid_subject'>subject</span><span class='period'>.</span><span class='id identifier rubyid_to_a'>to_a</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_element'>element</span><span class='op'>|</span>
+    <span class='kw'>if</span> <span class='id identifier rubyid_element'>element</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_downcase'>downcase</span> <span class='op'>==</span> <span class='id identifier rubyid_short_name'>short_name</span><span class='period'>.</span><span class='id identifier rubyid_downcase'>downcase</span> <span class='kw'>then</span>
+      <span class='kw'>return</span> <span class='id identifier rubyid_element'>element</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span>
     <span class='kw'>end</span>
-    <span class='kw'>nil</span>
+  <span class='kw'>end</span>
+  <span class='kw'>nil</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -1923,76 +2114,15 @@ sha256WithRSAEncryption, md5WithRSAEncryption</p>
       <pre class="lines">
 
 
-126
-127
-128</pre>
+136
+137
+138</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/csr.rb', line 126</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/csr.rb', line 136</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_to_der'>to_der</span>
-    <span class='ivar'>@req</span><span class='period'>.</span><span class='id identifier rubyid_to_der'>to_der</span>
-<span class='kw'>end</span></pre>
-    </td>
-  </tr>
-</table>
-</div>
-    
-      <div class="method_details ">
-  <h3 class="signature " id="to_hash-instance_method">
-  
-    - (<tt>Hash</tt>) <strong>to_hash</strong> 
-  
-
-  
-
-  
-</h3><div class="docstring">
-  <div class="discussion">
-    
-<p>Returns a hash structure you can pass to the Ca. You will want to call this
-method if you intend to alter the values and then pass them to the Ca
-class.</p>
-
-
-  </div>
-</div>
-<div class="tags">
-  
-<p class="tag_title">Returns:</p>
-<ul class="return">
-  
-    <li>
-      
-      
-        <span class='type'>(<tt>Hash</tt>)</span>
-      
-      
-      
-        &mdash;
-        <div class='inline'>
-<p>:subject and :san_names you can pass to Ca</p>
-</div>
-      
-    </li>
-  
-</ul>
-
-</div><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-205
-206
-207</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/csr.rb', line 205</span>
-
-<span class='kw'>def</span> <span class='id identifier rubyid_to_hash'>to_hash</span>
-    <span class='lbrace'>{</span> <span class='symbol'>:subject</span> <span class='op'>=&gt;</span> <span class='ivar'>@subject</span><span class='period'>.</span><span class='id identifier rubyid_dup'>dup</span> <span class='comma'>,</span> <span class='symbol'>:san_names</span> <span class='op'>=&gt;</span> <span class='ivar'>@san_names</span><span class='period'>.</span><span class='id identifier rubyid_dup'>dup</span> <span class='rbrace'>}</span>
+  <span class='ivar'>@req</span><span class='period'>.</span><span class='id identifier rubyid_to_der'>to_der</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -2047,15 +2177,15 @@ class.</p>
       <pre class="lines">
 
 
-117
-118
-119</pre>
+127
+128
+129</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/csr.rb', line 117</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/csr.rb', line 127</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_to_pem'>to_pem</span>
-    <span class='ivar'>@req</span><span class='period'>.</span><span class='id identifier rubyid_to_pem'>to_pem</span>
+  <span class='ivar'>@req</span><span class='period'>.</span><span class='id identifier rubyid_to_pem'>to_pem</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -2101,15 +2231,15 @@ class.</p>
       <pre class="lines">
 
 
-101
-102
-103</pre>
+111
+112
+113</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/csr.rb', line 101</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/csr.rb', line 111</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_verify_signature'>verify_signature</span>
-    <span class='ivar'>@req</span><span class='period'>.</span><span class='id identifier rubyid_verify'>verify</span><span class='lparen'>(</span><span class='id identifier rubyid_public_key'>public_key</span><span class='rparen'>)</span>
+  <span class='ivar'>@req</span><span class='period'>.</span><span class='id identifier rubyid_verify'>verify</span><span class='lparen'>(</span><span class='id identifier rubyid_public_key'>public_key</span><span class='rparen'>)</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -2163,15 +2293,15 @@ IO-like object.</p>
       <pre class="lines">
 
 
-142
-143
-144</pre>
+152
+153
+154</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/csr.rb', line 142</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/csr.rb', line 152</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_write_der'>write_der</span><span class='lparen'>(</span><span class='id identifier rubyid_filename_or_io'>filename_or_io</span><span class='rparen'>)</span>
-    <span class='id identifier rubyid_write_data'>write_data</span><span class='lparen'>(</span><span class='id identifier rubyid_filename_or_io'>filename_or_io</span><span class='comma'>,</span> <span class='ivar'>@req</span><span class='period'>.</span><span class='id identifier rubyid_to_der'>to_der</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_write_data'>write_data</span><span class='lparen'>(</span><span class='id identifier rubyid_filename_or_io'>filename_or_io</span><span class='comma'>,</span> <span class='ivar'>@req</span><span class='period'>.</span><span class='id identifier rubyid_to_der'>to_der</span><span class='rparen'>)</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -2225,15 +2355,15 @@ IO-like object.</p>
       <pre class="lines">
 
 
-134
-135
-136</pre>
+144
+145
+146</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/csr.rb', line 134</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/csr.rb', line 144</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_write_pem'>write_pem</span><span class='lparen'>(</span><span class='id identifier rubyid_filename_or_io'>filename_or_io</span><span class='rparen'>)</span>
-    <span class='id identifier rubyid_write_data'>write_data</span><span class='lparen'>(</span><span class='id identifier rubyid_filename_or_io'>filename_or_io</span><span class='comma'>,</span> <span class='ivar'>@req</span><span class='period'>.</span><span class='id identifier rubyid_to_pem'>to_pem</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_write_data'>write_data</span><span class='lparen'>(</span><span class='id identifier rubyid_filename_or_io'>filename_or_io</span><span class='comma'>,</span> <span class='ivar'>@req</span><span class='period'>.</span><span class='id identifier rubyid_to_pem'>to_pem</span><span class='rparen'>)</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -2245,9 +2375,9 @@ IO-like object.</p>
 </div>
 
     <div id="footer">
-  Generated on Tue Oct 23 23:23:37 2012 by
+  Generated on Tue Apr 16 10:49:55 2013 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.8.3 (ruby-1.9.3).
+  0.8.5 (ruby-1.9.3).
 </div>
 
   </body>

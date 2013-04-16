@@ -4,9 +4,9 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>
-  Class: R509::Cert::Extensions::AuthorityInfoAccess
+  Class: R509::Cert::Extensions::PolicyConstraints
   
-    &mdash; Documentation by YARD 0.8.3
+    &mdash; Documentation by YARD 0.8.5
   
 </title>
 
@@ -31,10 +31,10 @@
     <div id="header">
       <div id="menu">
   
-    <a href="../../../_index.html">Index (A)</a> &raquo;
+    <a href="../../../_index.html">Index (P)</a> &raquo;
     <span class='title'><span class='object_link'><a href="../../../R509.html" title="R509 (module)">R509</a></span></span> &raquo; <span class='title'><span class='object_link'><a href="../../Cert.html" title="R509::Cert (class)">Cert</a></span></span> &raquo; <span class='title'><span class='object_link'><a href="../Extensions.html" title="R509::Cert::Extensions (module)">Extensions</a></span></span>
      &raquo; 
-    <span class="title">AuthorityInfoAccess</span>
+    <span class="title">PolicyConstraints</span>
   
 
   <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
@@ -63,7 +63,7 @@
 
     <iframe id="search_frame"></iframe>
 
-    <div id="content"><h1>Class: R509::Cert::Extensions::AuthorityInfoAccess
+    <div id="content"><h1>Class: R509::Cert::Extensions::PolicyConstraints
   
   
   
@@ -80,7 +80,7 @@
           
             <li class="next">OpenSSL::X509::Extension</li>
           
-            <li class="next">R509::Cert::Extensions::AuthorityInfoAccess</li>
+            <li class="next">R509::Cert::Extensions::PolicyConstraints</li>
           
         </ul>
         <a href="#" class="inheritanceTree">show all</a>
@@ -104,7 +104,7 @@
 <h2>Overview</h2><div class="docstring">
   <div class="discussion">
     
-<p>Implements the AuthorityInfoAccess certificate extension, with methods to
+<p>Implements the PolicyConstraints certificate extension, with methods to
 provide access to the components and meaning of the extension's contents.</p>
 
 
@@ -122,7 +122,7 @@ provide access to the components and meaning of the extension's contents.</p>
           <div class="docstring">
   <div class="discussion">
     
-<p>friendly name for AIA OID</p>
+<p>friendly name for CP OID</p>
 
 
   </div>
@@ -132,7 +132,7 @@ provide access to the components and meaning of the extension's contents.</p>
 
 </div>
         </dt>
-        <dd><pre class="code"><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>authorityInfoAccess</span><span class='tstring_end'>&quot;</span></span></pre></dd>
+        <dd><pre class="code"><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>policyConstraints</span><span class='tstring_end'>&quot;</span></span></pre></dd>
       
     </dl>
   
@@ -146,7 +146,7 @@ provide access to the components and meaning of the extension's contents.</p>
       <li class="public ">
   <span class="summary_signature">
     
-      <a href="#ca_issuers_uris-instance_method" title="#ca_issuers_uris (instance method)">- (Object) <strong>ca_issuers_uris</strong> </a>
+      <a href="#inhibit_policy_mapping-instance_method" title="#inhibit_policy_mapping (instance method)">- (Object) <strong>inhibit_policy_mapping</strong> </a>
     
 
     
@@ -166,7 +166,7 @@ provide access to the components and meaning of the extension's contents.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>An array of the CA issuers URIs, if any.</p>
+<p>Returns the value of attribute inhibit_policy_mapping.</p>
 </div></span>
   
 </li>
@@ -175,7 +175,7 @@ provide access to the components and meaning of the extension's contents.</p>
       <li class="public ">
   <span class="summary_signature">
     
-      <a href="#ocsp_uris-instance_method" title="#ocsp_uris (instance method)">- (Object) <strong>ocsp_uris</strong> </a>
+      <a href="#require_explicit_policy-instance_method" title="#require_explicit_policy (instance method)">- (Object) <strong>require_explicit_policy</strong> </a>
     
 
     
@@ -195,7 +195,7 @@ provide access to the components and meaning of the extension's contents.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>An array of the OCSP URIs, if any.</p>
+<p>Returns the value of attribute require_explicit_policy.</p>
 </div></span>
   
 </li>
@@ -217,7 +217,7 @@ provide access to the components and meaning of the extension's contents.</p>
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#initialize-instance_method" title="#initialize (instance method)">- (AuthorityInfoAccess) <strong>initialize</strong>(*args) </a>
+      <a href="#initialize-instance_method" title="#initialize (instance method)">- (PolicyConstraints) <strong>initialize</strong>(*args) </a>
     
 
     
@@ -234,7 +234,7 @@ provide access to the components and meaning of the extension's contents.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>See OpenSSL::X509::Extension#initialize.</p>
+<p>A new instance of PolicyConstraints.</p>
 </div></span>
   
 </li>
@@ -250,7 +250,7 @@ provide access to the components and meaning of the extension's contents.</p>
     <div class="method_details first">
   <h3 class="signature first" id="initialize-instance_method">
   
-    - (<tt><span class='object_link'><a href="" title="R509::Cert::Extensions::AuthorityInfoAccess (class)">AuthorityInfoAccess</a></span></tt>) <strong>initialize</strong>(*args) 
+    - (<tt><span class='object_link'><a href="" title="R509::Cert::Extensions::PolicyConstraints (class)">PolicyConstraints</a></span></tt>) <strong>initialize</strong>(*args) 
   
 
   
@@ -259,7 +259,7 @@ provide access to the components and meaning of the extension's contents.</p>
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>See OpenSSL::X509::Extension#initialize</p>
+<p>A new instance of PolicyConstraints</p>
 
 
   </div>
@@ -273,21 +273,45 @@ provide access to the components and meaning of the extension's contents.</p>
       <pre class="lines">
 
 
-245
-246
-247
-248
-249
-250</pre>
+559
+560
+561
+562
+563
+564
+565
+566
+567
+568
+569
+570
+571
+572
+573
+574
+575
+576</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 245</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 559</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='op'>*</span><span class='id identifier rubyid_args'>args</span><span class='rparen'>)</span>
   <span class='kw'>super</span><span class='lparen'>(</span><span class='op'>*</span><span class='id identifier rubyid_args'>args</span><span class='rparen'>)</span>
 
-  <span class='ivar'>@ocsp_uris</span> <span class='op'>=</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_value'>value</span><span class='period'>.</span><span class='id identifier rubyid_scan'>scan</span><span class='lparen'>(</span> <span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>OCSP - </span><span class='embexpr_beg'>#{</span><span class='const'>URI_REGEX</span><span class='rbrace'>}</span><span class='regexp_end'>/</span></span> <span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_map'>map</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_match'>match</span><span class='op'>|</span> <span class='id identifier rubyid_match'>match</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span> <span class='rbrace'>}</span>
-  <span class='ivar'>@ca_issuers_uris</span> <span class='op'>=</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_value'>value</span><span class='period'>.</span><span class='id identifier rubyid_scan'>scan</span><span class='lparen'>(</span> <span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>CA Issuers - </span><span class='embexpr_beg'>#{</span><span class='const'>URI_REGEX</span><span class='rbrace'>}</span><span class='regexp_end'>/</span></span> <span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_map'>map</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_match'>match</span><span class='op'>|</span> <span class='id identifier rubyid_match'>match</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span> <span class='rbrace'>}</span>
+  <span class='comment'>#   id-ce-policyConstraints OBJECT IDENTIFIER ::=  { id-ce 36 }
+</span>  <span class='comment'>#   PolicyConstraints ::= SEQUENCE {
+</span>  <span class='comment'>#        requireExplicitPolicy           [0] SkipCerts OPTIONAL,
+</span>  <span class='comment'>#        inhibitPolicyMapping            [1] SkipCerts OPTIONAL }
+</span>  <span class='comment'>#
+</span>  <span class='comment'>#   SkipCerts ::= INTEGER (0..MAX)
+</span>  <span class='id identifier rubyid_data'>data</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>ASN1</span><span class='period'>.</span><span class='id identifier rubyid_get_extension_payload'>get_extension_payload</span><span class='lparen'>(</span><span class='kw'>self</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_data'>data</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_pc'>pc</span><span class='op'>|</span>
+    <span class='kw'>if</span> <span class='id identifier rubyid_pc'>pc</span><span class='period'>.</span><span class='id identifier rubyid_tag'>tag</span> <span class='op'>==</span> <span class='int'>0</span>
+      <span class='ivar'>@require_explicit_policy</span> <span class='op'>=</span> <span class='id identifier rubyid_pc'>pc</span><span class='period'>.</span><span class='id identifier rubyid_value'>value</span><span class='period'>.</span><span class='id identifier rubyid_bytes'>bytes</span><span class='period'>.</span><span class='id identifier rubyid_to_a'>to_a</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span>
+    <span class='kw'>elsif</span> <span class='id identifier rubyid_pc'>pc</span><span class='period'>.</span><span class='id identifier rubyid_tag'>tag</span> <span class='op'>==</span> <span class='int'>1</span>
+      <span class='ivar'>@inhibit_policy_mapping</span> <span class='op'>=</span> <span class='id identifier rubyid_pc'>pc</span><span class='period'>.</span><span class='id identifier rubyid_value'>value</span><span class='period'>.</span><span class='id identifier rubyid_bytes'>bytes</span><span class='period'>.</span><span class='id identifier rubyid_to_a'>to_a</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span>
+    <span class='kw'>end</span>
+  <span class='kw'>end</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -302,9 +326,9 @@ provide access to the components and meaning of the extension's contents.</p>
       
       <span id=""></span>
       <div class="method_details first">
-  <h3 class="signature first" id="ca_issuers_uris-instance_method">
+  <h3 class="signature first" id="inhibit_policy_mapping-instance_method">
   
-    - (<tt>Object</tt>) <strong>ca_issuers_uris</strong>  <span class="extras">(readonly)</span>
+    - (<tt>Object</tt>) <strong>inhibit_policy_mapping</strong>  <span class="extras">(readonly)</span>
   
 
   
@@ -313,7 +337,7 @@ provide access to the components and meaning of the extension's contents.</p>
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>An array of the CA issuers URIs, if any</p>
+<p>Returns the value of attribute inhibit_policy_mapping</p>
 
 
   </div>
@@ -327,15 +351,15 @@ provide access to the components and meaning of the extension's contents.</p>
       <pre class="lines">
 
 
-242
-243
-244</pre>
+557
+558
+559</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 242</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 557</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_ca_issuers_uris'>ca_issuers_uris</span>
-  <span class='ivar'>@ca_issuers_uris</span>
+<span class='kw'>def</span> <span class='id identifier rubyid_inhibit_policy_mapping'>inhibit_policy_mapping</span>
+  <span class='ivar'>@inhibit_policy_mapping</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -345,9 +369,9 @@ provide access to the components and meaning of the extension's contents.</p>
       
       <span id=""></span>
       <div class="method_details ">
-  <h3 class="signature " id="ocsp_uris-instance_method">
+  <h3 class="signature " id="require_explicit_policy-instance_method">
   
-    - (<tt>Object</tt>) <strong>ocsp_uris</strong>  <span class="extras">(readonly)</span>
+    - (<tt>Object</tt>) <strong>require_explicit_policy</strong>  <span class="extras">(readonly)</span>
   
 
   
@@ -356,7 +380,7 @@ provide access to the components and meaning of the extension's contents.</p>
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>An array of the OCSP URIs, if any</p>
+<p>Returns the value of attribute require_explicit_policy</p>
 
 
   </div>
@@ -370,15 +394,15 @@ provide access to the components and meaning of the extension's contents.</p>
       <pre class="lines">
 
 
-240
-241
-242</pre>
+556
+557
+558</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 240</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 556</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_ocsp_uris'>ocsp_uris</span>
-  <span class='ivar'>@ocsp_uris</span>
+<span class='kw'>def</span> <span class='id identifier rubyid_require_explicit_policy'>require_explicit_policy</span>
+  <span class='ivar'>@require_explicit_policy</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -391,9 +415,9 @@ provide access to the components and meaning of the extension's contents.</p>
 </div>
 
     <div id="footer">
-  Generated on Fri Jan 25 13:45:23 2013 by
+  Generated on Tue Apr 16 10:49:58 2013 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.8.3 (ruby-1.9.3).
+  0.8.5 (ruby-1.9.3).
 </div>
 
   </body>

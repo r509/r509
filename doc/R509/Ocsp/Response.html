@@ -4,9 +4,9 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>
-  Class: R509::Ocsp::Response
+  Class: R509::OCSP::Response
   
-    &mdash; Documentation by YARD 0.8.3
+    &mdash; Documentation by YARD 0.8.5
   
 </title>
 
@@ -32,7 +32,7 @@
       <div id="menu">
   
     <a href="../../_index.html">Index (R)</a> &raquo;
-    <span class='title'><span class='object_link'><a href="../../R509.html" title="R509 (module)">R509</a></span></span> &raquo; <span class='title'><span class='object_link'><a href="../Ocsp.html" title="R509::Ocsp (module)">Ocsp</a></span></span>
+    <span class='title'><span class='object_link'><a href="../../R509.html" title="R509 (module)">R509</a></span></span> &raquo; <span class='title'><span class='object_link'><a href="../OCSP.html" title="R509::OCSP (module)">OCSP</a></span></span>
      &raquo; 
     <span class="title">Response</span>
   
@@ -63,7 +63,7 @@
 
     <iframe id="search_frame"></iframe>
 
-    <div id="content"><h1>Class: R509::Ocsp::Response
+    <div id="content"><h1>Class: R509::OCSP::Response
   
   
   
@@ -78,7 +78,7 @@
         <ul class="fullTree">
           <li>Object</li>
           
-            <li class="next">R509::Ocsp::Response</li>
+            <li class="next">R509::OCSP::Response</li>
           
         </ul>
         <a href="#" class="inheritanceTree">show all</a>
@@ -128,7 +128,7 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#parse-class_method" title="parse (class method)">+ (R509::Ocsp::Response) <strong>parse</strong>(ocsp_string) </a>
+      <a href="#parse-class_method" title="parse (class method)">+ (R509::OCSP::Response) <strong>parse</strong>(ocsp_string) </a>
     
 
     
@@ -181,7 +181,7 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#check_nonce-instance_method" title="#check_nonce (instance method)">- (R509::Ocsp::Request::Nonce::CONSTANT) <strong>check_nonce</strong>(ocsp_request) </a>
+      <a href="#check_nonce-instance_method" title="#check_nonce (instance method)">- (R509::OCSP::Request::Nonce::CONSTANT) <strong>check_nonce</strong>(ocsp_request) </a>
     
 
     
@@ -309,7 +309,7 @@
     <div class="method_details first">
   <h3 class="signature first" id="initialize-instance_method">
   
-    - (<tt><span class='object_link'><a href="" title="R509::Ocsp::Response (class)">Response</a></span></tt>) <strong>initialize</strong>(ocsp_response) 
+    - (<tt><span class='object_link'><a href="" title="R509::OCSP::Response (class)">Response</a></span></tt>) <strong>initialize</strong>(ocsp_response) 
   
 
   
@@ -358,10 +358,10 @@
       <pre class="code"><span class="info file"># File 'lib/r509/ocsp.rb', line 11</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='id identifier rubyid_ocsp_response'>ocsp_response</span><span class='rparen'>)</span>
-    <span class='kw'>if</span> <span class='kw'>not</span> <span class='id identifier rubyid_ocsp_response'>ocsp_response</span><span class='period'>.</span><span class='id identifier rubyid_kind_of?'>kind_of?</span><span class='lparen'>(</span><span class='const'>OpenSSL</span><span class='op'>::</span><span class='const'>OCSP</span><span class='op'>::</span><span class='const'>Response</span><span class='rparen'>)</span>
-        <span class='id identifier rubyid_raise'>raise</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>R509Error</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>You must pass an OpenSSL::OCSP::Response object to the constructor. See R509::Ocsp::Response.parse if you are trying to parse</span><span class='tstring_end'>'</span></span>
-    <span class='kw'>end</span>
-    <span class='ivar'>@ocsp_response</span> <span class='op'>=</span> <span class='id identifier rubyid_ocsp_response'>ocsp_response</span>
+  <span class='kw'>if</span> <span class='kw'>not</span> <span class='id identifier rubyid_ocsp_response'>ocsp_response</span><span class='period'>.</span><span class='id identifier rubyid_kind_of?'>kind_of?</span><span class='lparen'>(</span><span class='const'>OpenSSL</span><span class='op'>::</span><span class='const'>OCSP</span><span class='op'>::</span><span class='const'>Response</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_raise'>raise</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>R509Error</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>You must pass an OpenSSL::OCSP::Response object to the constructor. See R509::OCSP::Response.parse if you are trying to parse</span><span class='tstring_end'>'</span></span>
+  <span class='kw'>end</span>
+  <span class='ivar'>@ocsp_response</span> <span class='op'>=</span> <span class='id identifier rubyid_ocsp_response'>ocsp_response</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -378,7 +378,7 @@
       <div class="method_details first">
   <h3 class="signature first" id="parse-class_method">
   
-    + (<tt><span class='object_link'><a href="" title="R509::Ocsp::Response (class)">R509::Ocsp::Response</a></span></tt>) <strong>parse</strong>(ocsp_string) 
+    + (<tt><span class='object_link'><a href="" title="R509::OCSP::Response (class)">R509::OCSP::Response</a></span></tt>) <strong>parse</strong>(ocsp_string) 
   
 
   
@@ -418,7 +418,7 @@
     <li>
       
       
-        <span class='type'>(<tt><span class='object_link'><a href="" title="R509::Ocsp::Response (class)">R509::Ocsp::Response</a></span></tt>)</span>
+        <span class='type'>(<tt><span class='object_link'><a href="" title="R509::OCSP::Response (class)">R509::OCSP::Response</a></span></tt>)</span>
       
       
       
@@ -443,10 +443,10 @@
       <pre class="code"><span class="info file"># File 'lib/r509/ocsp.rb', line 19</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_parse'>parse</span><span class='lparen'>(</span><span class='id identifier rubyid_ocsp_string'>ocsp_string</span><span class='rparen'>)</span>
-    <span class='kw'>if</span> <span class='id identifier rubyid_ocsp_string'>ocsp_string</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
-        <span class='id identifier rubyid_raise'>raise</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>R509Error</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>You must pass a DER encoded OCSP response to this method</span><span class='tstring_end'>'</span></span>
-    <span class='kw'>end</span>
-    <span class='const'>R509</span><span class='op'>::</span><span class='const'>Ocsp</span><span class='op'>::</span><span class='const'>Response</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='const'>OpenSSL</span><span class='op'>::</span><span class='const'>OCSP</span><span class='op'>::</span><span class='const'>Response</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_ocsp_string'>ocsp_string</span><span class='rparen'>)</span><span class='rparen'>)</span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_ocsp_string'>ocsp_string</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
+    <span class='id identifier rubyid_raise'>raise</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>R509Error</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>You must pass a DER encoded OCSP response to this method</span><span class='tstring_end'>'</span></span>
+  <span class='kw'>end</span>
+  <span class='const'>R509</span><span class='op'>::</span><span class='const'>OCSP</span><span class='op'>::</span><span class='const'>Response</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='const'>OpenSSL</span><span class='op'>::</span><span class='const'>OCSP</span><span class='op'>::</span><span class='const'>Response</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_ocsp_string'>ocsp_string</span><span class='rparen'>)</span><span class='rparen'>)</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -504,7 +504,7 @@
       <pre class="code"><span class="info file"># File 'lib/r509/ocsp.rb', line 37</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_basic'>basic</span>
-    <span class='ivar'>@ocsp_response</span><span class='period'>.</span><span class='id identifier rubyid_basic'>basic</span>
+  <span class='ivar'>@ocsp_response</span><span class='period'>.</span><span class='id identifier rubyid_basic'>basic</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -514,7 +514,7 @@
       <div class="method_details ">
   <h3 class="signature " id="check_nonce-instance_method">
   
-    - (<tt>R509::Ocsp::Request::Nonce::CONSTANT</tt>) <strong>check_nonce</strong>(ocsp_request) 
+    - (<tt>R509::OCSP::Request::Nonce::CONSTANT</tt>) <strong>check_nonce</strong>(ocsp_request) 
   
 
   
@@ -556,7 +556,7 @@
     <li>
       
       
-        <span class='type'>(<tt>R509::Ocsp::Request::Nonce::CONSTANT</tt>)</span>
+        <span class='type'>(<tt>R509::OCSP::Request::Nonce::CONSTANT</tt>)</span>
       
       
       
@@ -583,7 +583,7 @@
       <pre class="code"><span class="info file"># File 'lib/r509/ocsp.rb', line 67</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_check_nonce'>check_nonce</span><span class='lparen'>(</span><span class='id identifier rubyid_ocsp_request'>ocsp_request</span><span class='rparen'>)</span>
-    <span class='id identifier rubyid_ocsp_request'>ocsp_request</span><span class='period'>.</span><span class='id identifier rubyid_check_nonce'>check_nonce</span><span class='lparen'>(</span><span class='ivar'>@ocsp_response</span><span class='period'>.</span><span class='id identifier rubyid_basic'>basic</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_ocsp_request'>ocsp_request</span><span class='period'>.</span><span class='id identifier rubyid_check_nonce'>check_nonce</span><span class='lparen'>(</span><span class='ivar'>@ocsp_response</span><span class='period'>.</span><span class='id identifier rubyid_basic'>basic</span><span class='rparen'>)</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -642,7 +642,7 @@
       <pre class="code"><span class="info file"># File 'lib/r509/ocsp.rb', line 27</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_status'>status</span>
-    <span class='ivar'>@ocsp_response</span><span class='period'>.</span><span class='id identifier rubyid_status'>status</span>
+  <span class='ivar'>@ocsp_response</span><span class='period'>.</span><span class='id identifier rubyid_status'>status</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -701,7 +701,7 @@
       <pre class="code"><span class="info file"># File 'lib/r509/ocsp.rb', line 32</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_to_der'>to_der</span>
-    <span class='ivar'>@ocsp_response</span><span class='period'>.</span><span class='id identifier rubyid_to_der'>to_der</span>
+  <span class='ivar'>@ocsp_response</span><span class='period'>.</span><span class='id identifier rubyid_to_der'>to_der</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -798,25 +798,25 @@
       <pre class="code"><span class="info file"># File 'lib/r509/ocsp.rb', line 43</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_verify'>verify</span><span class='lparen'>(</span><span class='id identifier rubyid_certs'>certs</span><span class='rparen'>)</span>
-    <span class='id identifier rubyid_store'>store</span> <span class='op'>=</span> <span class='const'>OpenSSL</span><span class='op'>::</span><span class='const'>X509</span><span class='op'>::</span><span class='const'>Store</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span>
-    <span class='kw'>if</span> <span class='id identifier rubyid_certs'>certs</span><span class='period'>.</span><span class='id identifier rubyid_kind_of?'>kind_of?</span><span class='lparen'>(</span><span class='const'>Array</span><span class='rparen'>)</span>
-        <span class='id identifier rubyid_stack'>stack</span> <span class='op'>=</span> <span class='id identifier rubyid_certs'>certs</span>
-        <span class='id identifier rubyid_certs'>certs</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_cert'>cert</span><span class='op'>|</span>
-            <span class='id identifier rubyid_store'>store</span><span class='period'>.</span><span class='id identifier rubyid_add_cert'>add_cert</span><span class='lparen'>(</span><span class='id identifier rubyid_cert'>cert</span><span class='rparen'>)</span>
-        <span class='kw'>end</span>
-    <span class='kw'>else</span>
-        <span class='id identifier rubyid_stack'>stack</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='id identifier rubyid_certs'>certs</span><span class='rbracket'>]</span>
-        <span class='id identifier rubyid_store'>store</span><span class='period'>.</span><span class='id identifier rubyid_add_cert'>add_cert</span><span class='lparen'>(</span><span class='id identifier rubyid_certs'>certs</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_store'>store</span> <span class='op'>=</span> <span class='const'>OpenSSL</span><span class='op'>::</span><span class='const'>X509</span><span class='op'>::</span><span class='const'>Store</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_certs'>certs</span><span class='period'>.</span><span class='id identifier rubyid_kind_of?'>kind_of?</span><span class='lparen'>(</span><span class='const'>Array</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_stack'>stack</span> <span class='op'>=</span> <span class='id identifier rubyid_certs'>certs</span>
+    <span class='id identifier rubyid_certs'>certs</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_cert'>cert</span><span class='op'>|</span>
+      <span class='id identifier rubyid_store'>store</span><span class='period'>.</span><span class='id identifier rubyid_add_cert'>add_cert</span><span class='lparen'>(</span><span class='id identifier rubyid_cert'>cert</span><span class='rparen'>)</span>
     <span class='kw'>end</span>
+  <span class='kw'>else</span>
+    <span class='id identifier rubyid_stack'>stack</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='id identifier rubyid_certs'>certs</span><span class='rbracket'>]</span>
+    <span class='id identifier rubyid_store'>store</span><span class='period'>.</span><span class='id identifier rubyid_add_cert'>add_cert</span><span class='lparen'>(</span><span class='id identifier rubyid_certs'>certs</span><span class='rparen'>)</span>
+  <span class='kw'>end</span>
 
-    <span class='comment'>#suppress verbosity since #verify will output a warning if it does not match
-</span>    <span class='comment'>#as well as returning false. we just want the boolean
-</span>    <span class='id identifier rubyid_original_verbosity'>original_verbosity</span> <span class='op'>=</span> <span class='gvar'>$VERBOSE</span>
-    <span class='gvar'>$VERBOSE</span> <span class='op'>=</span> <span class='kw'>nil</span>
-    <span class='comment'>#still a bit unclear on why we add to store and pass in array to verify
-</span>    <span class='id identifier rubyid_result'>result</span> <span class='op'>=</span> <span class='ivar'>@ocsp_response</span><span class='period'>.</span><span class='id identifier rubyid_basic'>basic</span><span class='period'>.</span><span class='id identifier rubyid_verify'>verify</span><span class='lparen'>(</span><span class='id identifier rubyid_stack'>stack</span><span class='comma'>,</span> <span class='id identifier rubyid_store'>store</span><span class='rparen'>)</span>
-    <span class='gvar'>$VERBOSE</span> <span class='op'>=</span> <span class='id identifier rubyid_original_verbosity'>original_verbosity</span>
-    <span class='kw'>return</span> <span class='id identifier rubyid_result'>result</span>
+  <span class='comment'>#suppress verbosity since #verify will output a warning if it does not match
+</span>  <span class='comment'>#as well as returning false. we just want the boolean
+</span>  <span class='id identifier rubyid_original_verbosity'>original_verbosity</span> <span class='op'>=</span> <span class='gvar'>$VERBOSE</span>
+  <span class='gvar'>$VERBOSE</span> <span class='op'>=</span> <span class='kw'>nil</span>
+  <span class='comment'>#still a bit unclear on why we add to store and pass in array to verify
+</span>  <span class='id identifier rubyid_result'>result</span> <span class='op'>=</span> <span class='ivar'>@ocsp_response</span><span class='period'>.</span><span class='id identifier rubyid_basic'>basic</span><span class='period'>.</span><span class='id identifier rubyid_verify'>verify</span><span class='lparen'>(</span><span class='id identifier rubyid_stack'>stack</span><span class='comma'>,</span> <span class='id identifier rubyid_store'>store</span><span class='rparen'>)</span>
+  <span class='gvar'>$VERBOSE</span> <span class='op'>=</span> <span class='id identifier rubyid_original_verbosity'>original_verbosity</span>
+  <span class='kw'>return</span> <span class='id identifier rubyid_result'>result</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -828,9 +828,9 @@
 </div>
 
     <div id="footer">
-  Generated on Tue Oct 23 23:23:37 2012 by
+  Generated on Tue Apr 16 10:49:56 2013 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.8.3 (ruby-1.9.3).
+  0.8.5 (ruby-1.9.3).
 </div>
 
   </body>
