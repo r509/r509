@@ -141,6 +141,17 @@ describe R509::CRL::Administrator do
     crl_admin.crl.crl.revoked[0].extensions[0].oid.should == "CRLReason"
     crl_admin.crl.crl.revoked[0].extensions[0].value.should == "Key Compromise"
   end
+  it "can revoke (without reason)" do
+    crl_admin = R509::CRL::Administrator.new(@test_ca_config)
+    crl_admin.revoked?(12345).should == false
+    crl_admin.revoke_cert(12345)
+    crl_admin.revoked?(12345).should == true
+    crl_admin.revoked_cert(12345)[:reason].should be_nil
+
+    crl_admin.crl.crl.revoked[0].serial.should == 12345
+    crl_admin.crl.crl.revoked[0].extensions.size.should == 0
+    puts crl_admin.crl_list_file.string
+  end
   it "cannot revoke the same serial twice" do
     crl = R509::CRL::Administrator.new(@test_ca_config)
     crl.revoked?(12345).should == false
@@ -175,7 +186,9 @@ describe R509::CRL::Administrator do
     crl.revoked?(12345).should == true
     crl.revoked_cert(12345)[:revoke_time].should == 1323983885
     crl.revoked_cert(12345)[:reason].should == 0
-
+    crl.revoked?(12346).should == true
+    crl.revoked_cert(12346)[:revoke_time].should == 1323983885
+    crl.revoked_cert(12346)[:reason].should == nil
   end
   it "when nil crl_list_file still call generate_crl" do
     config = R509::Config::CAConfig.new(
@@ -194,8 +207,7 @@ describe R509::CRL::Administrator do
   it "writes crl list" do
     crl = R509::CRL::Administrator.new(@test_ca_config)
     crl.revoke_cert(12345)
-    crl.save_crl_list
-    crl.crl_list_file.string.should match(/[0-9]+,[0-9]+,[0-9]+,[0-9]+,[0-9]+/)
+    crl.crl_list_file.string.should match(/[0-9]+,[0-9]+,/)
   end
   it "doesn't write the crl_number_file when it is nil" do
     config = R509::Config::CAConfig.new(

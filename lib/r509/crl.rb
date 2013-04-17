@@ -199,7 +199,9 @@ module R509
           reason = 0
         end
         serial = serial.to_i
-        reason = reason.to_i
+        if not reason.nil?
+          reason = reason.to_i
+        end
         revoke_time = revoke_time.to_i
         if revoked?(serial)
           raise R509::R509Error, "Cannot revoke a previously revoked certificate"
@@ -222,7 +224,7 @@ module R509
         nil
       end
 
-      # Remove serial from revocation list
+      # Generate the CRL
       #
       # @return [String] PEM encoded signed CRL
       def generate_crl
@@ -237,7 +239,7 @@ module R509
           revoked = OpenSSL::X509::Revoked.new
           revoked.serial = OpenSSL::BN.new serial.to_s
           revoked.time = Time.at(revoke_time)
-          if !reason.nil?
+          if not reason.nil?
             enum = OpenSSL::ASN1::Enumerated(reason) #see reason codes below
             ext = OpenSSL::X509::Extension.new("CRLReason", enum)
             revoked.add_extension(ext)
