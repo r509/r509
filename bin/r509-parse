@@ -23,7 +23,7 @@ else
       puts "Subject: #{cert.subject}"
       puts "Issuer: #{cert.issuer}"
       puts "Algorithm: #{cert.signature_algorithm}"
-      puts "SAN Names: #{cert.san.names.map { |n| n.value }.join(" , ")}"
+      puts "SAN Names: #{cert.san.names.map { |n| n.value }.join(" , ")}" unless cert.san.nil?
       puts "Not Before: #{cert.not_before}"
       puts "Not After: #{cert.not_after}"
       puts "Serial (Hex): #{cert.hexserial}"
