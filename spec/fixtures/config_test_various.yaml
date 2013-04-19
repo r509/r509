@@ -64,7 +64,8 @@ multi_policy_ca: {
         { policy_identifier: "2.16.840.1.99999.21.235",
           cps_uris: ["http://example.com/cps2"],
           user_notices: [ { explicit_text: "this is a bad thing", organization: "another org", notice_numbers: "3,2,1" },{ explicit_text: "another user notice"} ]
-        }
+        },
+        { policy_identifier: "2.16.840.1.99999.0" }
       ]
     }
   }

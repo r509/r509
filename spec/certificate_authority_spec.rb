@@ -165,7 +165,7 @@ describe R509::CertificateAuthority::Signer do
     ca = R509::CertificateAuthority::Signer.new(config)
     cert = ca.sign(:csr => csr, :profile_name => 'server')
     cert.certificate_policies.should_not be_nil
-    cert.certificate_policies.policies.count.should == 2
+    cert.certificate_policies.policies.count.should == 3
     p0 = cert.certificate_policies.policies[0]
     p0.policy_identifier.should == "2.16.840.1.99999.21.234"
     p0.policy_qualifiers.cps_uris.should == ["http://example.com/cps", "http://haha.com"]
@@ -185,6 +185,9 @@ describe R509::CertificateAuthority::Signer do
     un2 = p1.policy_qualifiers.user_notices[1]
     un2.notice_reference.should be_nil
     un2.explicit_text.should == "another user notice"
+    p2 = cert.certificate_policies.policies[2]
+    p2.policy_identifier.should == "2.16.840.1.99999.0"
+    p2.policy_qualifiers.should be_nil
   end
   it "issues a certificate with an authority key identifier" do
     csr = R509::CSR.new(:csr => @csr)
