@@ -330,12 +330,12 @@
       <pre class="lines">
 
 
-256
 257
-258</pre>
+258
+259</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/config.rb', line 256</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/config.rb', line 257</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='id identifier rubyid_configs'>configs</span><span class='rparen'>)</span>
   <span class='ivar'>@configs</span> <span class='op'>=</span> <span class='id identifier rubyid_configs'>configs</span>
@@ -415,17 +415,17 @@ contain more than one configuration.</p>
       <pre class="lines">
 
 
-279
 280
 281
 282
 283
 284
 285
-286</pre>
+286
+287</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/config.rb', line 279</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/config.rb', line 280</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_from_yaml'>from_yaml</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='id identifier rubyid_yaml_data'>yaml_data</span><span class='comma'>,</span> <span class='id identifier rubyid_opts'>opts</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_conf'>conf</span> <span class='op'>=</span> <span class='const'>YAML</span><span class='period'>.</span><span class='id identifier rubyid_load'>load</span><span class='lparen'>(</span><span class='id identifier rubyid_yaml_data'>yaml_data</span><span class='rparen'>)</span>
@@ -472,12 +472,12 @@ contain more than one configuration.</p>
       <pre class="lines">
 
 
-266
 267
-268</pre>
+268
+269</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/config.rb', line 266</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/config.rb', line 267</span>
 
 <span class='kw'>def</span> <span class='op'>[]</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span><span class='rparen'>)</span>
   <span class='ivar'>@configs</span><span class='lbracket'>[</span><span class='id identifier rubyid_name'>name</span><span class='rbracket'>]</span>
@@ -531,12 +531,12 @@ contain more than one configuration.</p>
       <pre class="lines">
 
 
-271
 272
-273</pre>
+273
+274</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/config.rb', line 271</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/config.rb', line 272</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_all'>all</span>
   <span class='ivar'>@configs</span><span class='period'>.</span><span class='id identifier rubyid_values'>values</span>
@@ -572,12 +572,12 @@ contain more than one configuration.</p>
       <pre class="lines">
 
 
-261
 262
-263</pre>
+263
+264</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/config.rb', line 261</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/config.rb', line 262</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_names'>names</span>
   <span class='ivar'>@configs</span><span class='period'>.</span><span class='id identifier rubyid_keys'>keys</span>
@@ -592,7 +592,7 @@ contain more than one configuration.</p>
 </div>
 
     <div id="footer">
-  Generated on Tue Apr 16 10:49:56 2013 by
+  Generated on Tue Apr 23 10:46:05 2013 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.5 (ruby-1.9.3).
 </div>
