@@ -145,7 +145,7 @@ key.write_encrypted_pem("/tmp/path","aes256","my-password")
 The engine you want to load must already be available to OpenSSL. How to compile/install OpenSSL engines is outside the scope of this document.
 
 ```ruby
-engine = R509::Engine.load("SO_PATH" => "/usr/lib64/openssl/engines/libchil.so", "ID" => "chil")
+engine = R509::Engine.instance.load("SO_PATH" => "/usr/lib64/openssl/engines/libchil.so", "ID" => "chil")
 key = R509::PrivateKey(
   :engine => engine,
   :key_name => "my_key_name"
