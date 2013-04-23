@@ -145,8 +145,7 @@ key.write_encrypted_pem("/tmp/path","aes256","my-password")
 The engine you want to load must already be available to OpenSSL. How to compile/install OpenSSL engines is outside the scope of this document.
 
 ```ruby
-OpenSSL::Engine.load("engine_name")
-engine = OpenSSL::Engine.by_id("engine_name")
+engine = R509::Engine.load("SO_PATH" => "/usr/lib64/openssl/engines/libchil.so", "ID" => "chil")
 key = R509::PrivateKey(
   :engine => engine,
   :key_name => "my_key_name"
@@ -439,7 +438,7 @@ This hash defines the certificate + key that will be used to sign for the ca\_na
 
 * cert (cannot use with pkcs12)
 * key (optional, cannot use with pkcs12)
-* engine (optional, cannot be used with key or pkcs12)
+* engine (optional, cannot be used with key or pkcs12. Must be a hash with SO_PATH and ID keys)
 * key\_name (required when using engine)
 * pkcs12 (optional, cannot be used with key or cert)
 * password (optional, used for pkcs12 or passworded private key)
@@ -449,7 +448,7 @@ This hash defines the certificate + key that will be used to sign for OCSP respo
 
 * cert (cannot use with pkcs12)
 * key (optional, cannot use with pkcs12)
-* engine (optional, cannot be used with key or pkcs12)
+* engine (optional, cannot be used with key or pkcs12. Must be a hash with SO_PATH and ID keys)
 * key\_name (required when using engine)
 * pkcs12 (optional, cannot be used with key or cert)
 * password (optional, used for pkcs12 or passworded private key)
