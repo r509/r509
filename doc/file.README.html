@@ -204,7 +204,7 @@ rake gem:install
 
 <p>The engine you want to load must already be available to OpenSSL. How to compile/install OpenSSL engines is outside the scope of this document.</p>
 
-<pre class="code ruby"><code class="ruby"><span class='id identifier rubyid_engine'>engine</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>Engine</span><span class='period'>.</span><span class='id identifier rubyid_load'>load</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>SO_PATH</span><span class='tstring_end'>&quot;</span></span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>/usr/lib64/openssl/engines/libchil.so</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>ID</span><span class='tstring_end'>&quot;</span></span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>chil</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+<pre class="code ruby"><code class="ruby"><span class='id identifier rubyid_engine'>engine</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>Engine</span><span class='period'>.</span><span class='id identifier rubyid_instance'>instance</span><span class='period'>.</span><span class='id identifier rubyid_load'>load</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>SO_PATH</span><span class='tstring_end'>&quot;</span></span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>/usr/lib64/openssl/engines/libchil.so</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>ID</span><span class='tstring_end'>&quot;</span></span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>chil</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
 <span class='id identifier rubyid_key'>key</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>PrivateKey</span><span class='lparen'>(</span>
   <span class='symbol'>:engine</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_engine'>engine</span><span class='comma'>,</span>
   <span class='symbol'>:key_name</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>my_key_name</span><span class='tstring_end'>&quot;</span></span>
@@ -721,7 +721,7 @@ emailAddress: &quot;optional&quot;
 </div></div>
 
     <div id="footer">
-  Generated on Tue Apr 23 10:46:04 2013 by
+  Generated on Tue Apr 23 10:51:06 2013 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.5 (ruby-1.9.3).
 </div>
