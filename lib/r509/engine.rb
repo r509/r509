@@ -2,6 +2,7 @@ require 'singleton'
 require 'openssl'
 
 module R509
+  # a singleton class to store loaded OpenSSL Engines
   class Engine
     include Singleton
 
@@ -9,6 +10,8 @@ module R509
       @engines = {}
     end
 
+    # @param hash Takes a hash with SO_PATH and ID
+    # @return OpenSSL::Engine object
     def load(hash)
       if not hash.has_key?("SO_PATH") or not hash.has_key?("ID")
         raise ArgumentError, "You must supply a hash with both SO_PATH and ID"
@@ -25,6 +28,7 @@ module R509
       end
     end
 
+    # Takes an engine ID and returns the engine object
     def [](key)
       @engines[key]
     end
