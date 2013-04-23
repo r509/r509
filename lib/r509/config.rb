@@ -4,6 +4,7 @@ require 'r509/exceptions'
 require 'r509/io_helpers'
 require 'r509/subject'
 require 'r509/private_key'
+require 'r509/engine'
 require 'fileutils'
 require 'pathname'
 
@@ -522,7 +523,7 @@ module R509
           engine = ca_cert_hash['engine']
         else
           #this path can't be tested by unit tests. bah!
-          engine = OpenSSL::Engine.by_id(ca_cert_hash['engine'])
+          engine = R509::Engine.instance.load(ca_cert_hash['engine'])
         end
         ca_key = R509::PrivateKey.new(
           :engine => engine,
