@@ -3,6 +3,13 @@ require 'openssl'
 module R509
   #MessageDigest allows you to specify MDs in a more friendly fashion
   class MessageDigest
+    # a list of message digests that this class understands
+    KNOWN_MDS = ['SHA1','SHA224','SHA256','SHA384','SHA512','DSS1','MD5']
+
+    # this constant defines the default message digest if it is not supplied
+    # or an invalid digest is passed
+    DEFAULT_MD = 'SHA1'
+
     attr_reader :name, :digest
 
     # @param [String,OpenSSL::Digest] arg
@@ -29,8 +36,8 @@ module R509
       when 'md5' then OpenSSL::Digest::MD5.new
       when 'dss1' then OpenSSL::Digest::DSS1.new
       else
-        @name = "sha1"
-        OpenSSL::Digest::SHA1.new
+        @name = DEFAULT_MD.downcase
+        translate_name_to_digest
       end
     end
 

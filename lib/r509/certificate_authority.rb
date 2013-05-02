@@ -26,7 +26,7 @@ module R509::CertificateAuthority
     # @option options :profile_name [String] The CA profile you want to use (eg "server" in your config)
     # @option options :subject [R509::Subject,OpenSSL::X509::Subject,Array] (optional for R509::CSR, required for R509::SPKI)
     # @option options :san_names [Array,R509::ASN1::GeneralNames] optional either an array of names that will be automatically parsed to determine their type, or an explicit R509::ASN1::GeneralNames object
-    # @option options :message_digest [String] the message digest to use for this certificate instead of the config's default
+    # @option options :message_digest [String] the message digest to use for this certificate instead of the config's default. If you have an allowed_message_digests array in your config then the passed value will be checked to see if it is allowed.
     # @option options :serial [String] the serial number you want to issue the certificate with
     # @option options :not_before [Time] the notBefore for the certificate
     # @option options :not_after [Time] the notAfter for the certificate
@@ -50,7 +50,18 @@ module R509::CertificateAuthority
       # prior to OpenSSL 1.0 DSA could only use DSS1 (aka SHA1) signatures. post-1.0 anything
       # goes but at the moment we don't enforce this restriction so an OpenSSL error could
       # bubble up if they do it wrong.
-      message_digest = (options.has_key?(:message_digest))? R509::MessageDigest.new(options[:message_digest]) : R509::MessageDigest.new(@config.message_digest)
+      #
+      # First let's check to see if the config restricts the allowed mds
+      if not @config.allowed_mds.nil? and not options[:message_digest].nil?
+        if @config.allowed_mds.include?(options[:message_digest].upcase)
+          message_digest = R509::MessageDigest.new(options[:message_digest])
+        else
+          raise R509::R509Error, "The message digest passed is not allowed by this configuration. Allowed digests: #{@config.allowed_mds.join(", ")}"
+        end
+      else
+        # it doesn't, so either use their md (if valid) or the default one
+        message_digest = (options.has_key?(:message_digest))? R509::MessageDigest.new(options[:message_digest]) : R509::MessageDigest.new(@config.default_md)
+      end
 
       profile = @config.profile(options[:profile_name])
 

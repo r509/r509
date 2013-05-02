@@ -451,40 +451,68 @@ describe R509::CertificateAuthority::Signer do
     cert.basic_constraints.is_ca?.should == true
     cert.basic_constraints.path_length.should == 0
   end
-  it "issues with md5" do
-    csr = R509::CSR.new(:csr => @csr3)
-    cert = @ca.sign(:csr => csr, :profile_name => 'server', :message_digest => 'md5')
-    cert.cert.signature_algorithm.should == 'md5WithRSAEncryption'
+  context "without an allowed_message_digests array in the config" do
+    it "issues with md5" do
+      csr = R509::CSR.new(:csr => @csr3)
+      cert = @ca.sign(:csr => csr, :profile_name => 'server', :message_digest => 'md5')
+      cert.cert.signature_algorithm.should == 'md5WithRSAEncryption'
+    end
+    it "issues with sha1" do
+      csr = R509::CSR.new(:csr => @csr3)
+      cert = @ca.sign(:csr => csr, :profile_name => 'server', :message_digest => 'sha1')
+      cert.cert.signature_algorithm.should == 'sha1WithRSAEncryption'
+    end
+    it "issues with sha224" do
+      csr = R509::CSR.new(:csr => @csr3)
+      cert = @ca.sign(:csr => csr, :profile_name => 'server', :message_digest => 'sha224')
+      cert.cert.signature_algorithm.should == 'sha224WithRSAEncryption'
+    end
+    it "issues with sha256" do
+      csr = R509::CSR.new(:csr => @csr3)
+      cert = @ca.sign(:csr => csr, :profile_name => 'server', :message_digest => 'sha256')
+      cert.cert.signature_algorithm.should == 'sha256WithRSAEncryption'
+    end
+    it "issues with sha384" do
+      csr = R509::CSR.new(:csr => @csr3)
+      cert = @ca.sign(:csr => csr, :profile_name => 'server', :message_digest => 'sha384')
+      cert.cert.signature_algorithm.should == 'sha384WithRSAEncryption'
+    end
+    it "issues with sha512" do
+      csr = R509::CSR.new(:csr => @csr3)
+      cert = @ca.sign(:csr => csr, :profile_name => 'server', :message_digest => 'sha512')
+      cert.cert.signature_algorithm.should == 'sha512WithRSAEncryption'
+    end
+    it "issues with invalid hash (sha1 fallback)" do
+      csr = R509::CSR.new(:csr => @csr3)
+      cert = @ca.sign(:csr => csr, :profile_name => 'server', :message_digest => 'invalid')
+      cert.cert.signature_algorithm.should == 'sha1WithRSAEncryption'
+    end
   end
-  it "issues with sha1" do
-    csr = R509::CSR.new(:csr => @csr3)
-    cert = @ca.sign(:csr => csr, :profile_name => 'server', :message_digest => 'sha1')
-    cert.cert.signature_algorithm.should == 'sha1WithRSAEncryption'
-  end
-  it "issues with sha224" do
-    csr = R509::CSR.new(:csr => @csr3)
-    cert = @ca.sign(:csr => csr, :profile_name => 'server', :message_digest => 'sha224')
-    cert.cert.signature_algorithm.should == 'sha224WithRSAEncryption'
-  end
-  it "issues with sha256" do
-    csr = R509::CSR.new(:csr => @csr3)
-    cert = @ca.sign(:csr => csr, :profile_name => 'server', :message_digest => 'sha256')
-    cert.cert.signature_algorithm.should == 'sha256WithRSAEncryption'
-  end
-  it "issues with sha384" do
-    csr = R509::CSR.new(:csr => @csr3)
-    cert = @ca.sign(:csr => csr, :profile_name => 'server', :message_digest => 'sha384')
-    cert.cert.signature_algorithm.should == 'sha384WithRSAEncryption'
-  end
-  it "issues with sha512" do
-    csr = R509::CSR.new(:csr => @csr3)
-    cert = @ca.sign(:csr => csr, :profile_name => 'server', :message_digest => 'sha512')
-    cert.cert.signature_algorithm.should == 'sha512WithRSAEncryption'
-  end
-  it "issues with invalid hash (sha1 fallback)" do
-    csr = R509::CSR.new(:csr => @csr3)
-    cert = @ca.sign(:csr => csr, :profile_name => 'server', :message_digest => 'invalid')
-    cert.cert.signature_algorithm.should == 'sha1WithRSAEncryption'
+  context "with an allowed_message_digests array in the config" do
+    before :each do
+      ca_cert = R509::Cert.new( :cert => TestFixtures::TEST_CA_CERT, :key => TestFixtures::TEST_CA_KEY )
+      config = R509::Config::CAConfig.new(:ca_cert => ca_cert, :allowed_mds => ['sha256','sha1','sha384'], :default_md => 'sha1')
+      profile = R509::Config::CAProfile.new(
+        :basic_constraints => {"ca" => false},
+        :key_usage => ["digitalSignature"]
+      )
+      config.set_profile("server",profile)
+      @allowed_ca = R509::CertificateAuthority::Signer.new(config)
+      @csr = R509::CSR.new(:csr => TestFixtures::CSR3)
+    end
+    it "attempts to issue with a disallowed hash" do
+      expect { @allowed_ca.sign(:csr => @csr, :profile_name => 'server', :message_digest => 'md5') }.to raise_error(R509::R509Error,'The message digest passed is not allowed by this configuration. Allowed digests: SHA256, SHA1, SHA384')
+    end
+    it "issues with an allowed hash (not default)" do
+      cert = @allowed_ca.sign(:csr => @csr, :profile_name => 'server', :message_digest => 'sha384')
+      cert.cert.signature_algorithm.should == 'sha384WithRSAEncryption'
+      cert = @allowed_ca.sign(:csr => @csr, :profile_name => 'server', :message_digest => 'SHa384')
+      cert.cert.signature_algorithm.should == 'sha384WithRSAEncryption'
+    end
+    it "issues when no hash override is specified" do
+      cert = @allowed_ca.sign(:csr => @csr, :profile_name => 'server')
+      cert.cert.signature_algorithm.should == 'sha1WithRSAEncryption'
+    end
   end
   it "generates random serial when serial is not specified and uses microtime as part of the serial to prevent collision" do
     now = Time.now

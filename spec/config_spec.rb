@@ -87,7 +87,8 @@ describe R509::Config::CAConfig do
 
   subject {@config}
 
-  its(:message_digest) {should == "SHA1"}
+  its(:default_md) {should == "SHA1"}
+  its(:allowed_mds) {should be_nil}
   its(:crl_validity_hours) {should == 168}
   its(:ocsp_validity_hours) {should == 168}
   its(:ocsp_start_skew_seconds) {should == 3600}
@@ -125,7 +126,50 @@ describe R509::Config::CAConfig do
     it "raises an error if you pass a cdp_location that is not an array" do
       expect { R509::Config::CAConfig.new( :ca_cert => TestFixtures.test_ca_cert, :cdp_location => "some-url" ) }.to raise_error(ArgumentError, 'cdp_location must be an array if provided')
     end
+
+    it "errors when supplying invalid default_md" do
+      expect { R509::Config::CAConfig.new( :ca_cert => TestFixtures.test_ca_cert, :default_md => "notahash" ) }.to raise_error(ArgumentError, "An unknown message digest was supplied. Permitted: #{R509::MessageDigest::KNOWN_MDS.join(", ")}")
+    end
+
   end
+
+  it "loads allowed_mds and adds default_md when not present" do
+    config = R509::Config::CAConfig.new(
+      :ca_cert => TestFixtures.test_ca_cert,
+      :allowed_mds => ['sha256','sha1'],
+      :default_md => 'sha384'
+    )
+    config.allowed_mds.should =~ ['SHA1','SHA256','SHA384']
+  end
+
+  it "loads allowed_mds without an explicit default_md" do
+    config = R509::Config::CAConfig.new(
+      :ca_cert => TestFixtures.test_ca_cert,
+      :allowed_mds => ['sha256','sha1']
+    )
+    config.allowed_mds.should =~ ['SHA1','SHA256']
+    config.default_md.should == R509::MessageDigest::DEFAULT_MD
+  end
+
+  it "loads allowed_mds with an explicit default_md" do
+    config = R509::Config::CAConfig.new(
+      :ca_cert => TestFixtures.test_ca_cert,
+      :allowed_mds => ['sha384','sha256'],
+      :default_md => "SHA256"
+    )
+    config.allowed_mds.should =~ ['SHA384','SHA256']
+    config.default_md.should == 'SHA256'
+  end
+
+  it "loads default_md with no explicit allowed_mds" do
+    config = R509::Config::CAConfig.new(
+      :ca_cert => TestFixtures.test_ca_cert,
+      :default_md => "sha256"
+    )
+    config.allowed_mds.should be_nil
+    config.default_md.should == 'SHA256'
+  end
+
   it "loads the config even if :ca_cert does not contain a private key" do
     config = R509::Config::CAConfig.new( :ca_cert => R509::Cert.new( :cert => TestFixtures::TEST_CA_CERT) )
     config.ca_cert.subject.to_s.should_not be_nil
@@ -186,7 +230,7 @@ describe R509::Config::CAConfig do
     config = R509::Config::CAConfig.from_yaml("test_ca", File.read("#{File.dirname(__FILE__)}/fixtures/config_test.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"})
     config.crl_validity_hours.should == 72
     config.ocsp_validity_hours.should == 96
-    config.message_digest.should == "SHA1"
+    config.default_md.should == "SHA512"
     config.num_profiles.should == 7
     config.profile("ocsp_delegate_with_no_check").ocsp_no_check.should == true
     config.profile("inhibit_policy").inhibit_any_policy.should == 2
@@ -301,7 +345,8 @@ describe R509::Config::CAConfig do
     config = R509::Config::CAConfig.load_yaml("test_ca", "#{File.dirname(__FILE__)}/fixtures/config_test.yaml", {:ca_root_path => "#{File.dirname(__FILE__)}/fixtures"})
     config.crl_validity_hours.should == 72
     config.ocsp_validity_hours.should == 96
-    config.message_digest.should == "SHA1"
+    config.default_md.should == "SHA512"
+    config.allowed_mds.should =~ ["SHA1","SHA256","SHA512"]
   end
 
   it "can specify crl_number_file" do

@@ -18,7 +18,7 @@ module R509
         :inhibit_any_policy, :policy_constraints, :name_constraints
 
       # All hash options for CAProfile are optional.
-      # @option opts [String] :basic_constraints
+      # @option opts [Hash] :basic_constraints
       # @option opts [Array] :key_usage
       # @option opts [Array] :extended_key_usage
       # @option opts [Array] :certificate_policies
@@ -291,16 +291,17 @@ module R509
     class CAConfig
       include R509::IOHelpers
       extend R509::IOHelpers
-      attr_accessor :ca_cert, :crl_validity_hours, :message_digest,
-        :cdp_location, :crl_start_skew_seconds, :ocsp_location, :ocsp_chain,
-        :ocsp_start_skew_seconds, :ocsp_validity_hours, :crl_number_file, :crl_list_file,
-        :ca_issuers_location
+      attr_accessor :ca_cert, :crl_validity_hours, :default_md,
+        :allowed_mds, :cdp_location, :crl_start_skew_seconds, :ocsp_location,
+        :ocsp_chain, :ocsp_start_skew_seconds, :ocsp_validity_hours, :crl_number_file,
+        :crl_list_file, :ca_issuers_location
 
       # @option opts [R509::Cert] :ca_cert Cert+Key pair
       # @option opts [Integer] :crl_validity_hours (168) The number of hours that
       #  a CRL will be valid. Defaults to 7 days.
       # @option opts [Hash<String, R509::Config::CAProfile>] :profiles
-      # @option opts [String] :message_digest (SHA1) The hashing algorithm to use.
+      # @option opts [String] :default_md (default:SHA1) The hashing algorithm to use.
+      # @option opts [Array] :allowed_mds (optional) Array of allowed hashes. default_md will be automatically added to this list if it isn't already listed.
       # @option opts [Array] :cdp_location array of strings (URLs)
       # @option opts [Array] :ocsp_location array of strings (URLs)
       # @option opts [Array] :ca_issuers_location array of strings (URLs)
@@ -332,8 +333,8 @@ module R509
           raise ArgumentError, ':ocsp_cert must contain a private key, not just a certificate'
         end
         @ocsp_cert = opts[:ocsp_cert] unless opts[:ocsp_cert].nil?
-        validate_ocsp_location opts[:ocsp_location]
-        validate_ca_issuers_location opts[:ca_issuers_location]
+        validate_ocsp_location(opts[:ocsp_location])
+        validate_ca_issuers_location(opts[:ca_issuers_location])
         @ocsp_chain = opts[:ocsp_chain] if opts[:ocsp_chain].kind_of?(Array)
         @ocsp_validity_hours = opts[:ocsp_validity_hours] || 168
         @ocsp_start_skew_seconds = opts[:ocsp_start_skew_seconds] || 3600
@@ -342,8 +343,9 @@ module R509
         @crl_start_skew_seconds = opts[:crl_start_skew_seconds] || 3600
         @crl_number_file = opts[:crl_number_file] || nil
         @crl_list_file = opts[:crl_list_file] || nil
-        validate_cdp_location opts[:cdp_location]
-        @message_digest = opts[:message_digest] || "SHA1"
+        validate_cdp_location(opts[:cdp_location])
+        @default_md = validate_md(opts[:default_md] || R509::MessageDigest::DEFAULT_MD)
+        validate_allowed_mds(opts[:allowed_mds])
 
 
 
@@ -453,7 +455,8 @@ module R509
           :ocsp_location => conf['ocsp_location'],
           :ca_issuers_location => conf['ca_issuers_location'],
           :cdp_location => conf['cdp_location'],
-          :message_digest => conf['message_digest'],
+          :default_md => conf['default_md'],
+          :allowed_mds => conf['allowed_mds'],
         }
 
         if conf.has_key?("crl_list")
@@ -575,6 +578,28 @@ module R509
       end
 
       private
+
+      # @private
+      def validate_allowed_mds(allowed_mds)
+        if allowed_mds.respond_to?(:each)
+          allowed_mds = allowed_mds.map { |md| validate_md(md) }
+          # case insensitively check if the default_md is in the allowed_mds
+          # and add it if it's not there.
+          if not allowed_mds.any?{ |s| s.casecmp(@default_md)==0 }
+            allowed_mds.push @default_md
+          end
+        end
+        @allowed_mds = allowed_mds
+      end
+
+      # @private
+      def validate_md(md)
+        md = md.upcase
+        if not R509::MessageDigest::KNOWN_MDS.include?(md)
+          raise ArgumentError, "An unknown message digest was supplied. Permitted: #{R509::MessageDigest::KNOWN_MDS.join(", ")}"
+        end
+        md
+      end
 
       # @private
       def validate_cdp_location(location)

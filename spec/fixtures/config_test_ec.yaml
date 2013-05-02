@@ -8,7 +8,7 @@ test_ca_ec: {
   crl_validity_hours: 72,
   ocsp_validity_hours: 96,
   ocsp_start_skew_seconds: 1800,
-  message_digest: 'SHA384', #SHA1, SHA224, SHA256, SHA384, SHA512 supported. MD5 too, but you really shouldn't use that unless you have a good reason
+  default_md: 'SHA384', #SHA1, SHA224, SHA256, SHA384, SHA512 supported. MD5 too, but you really shouldn't use that unless you have a good reason
   profiles: {
     server: {
       basic_constraints: { "ca" : false },
