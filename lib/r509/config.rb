@@ -521,13 +521,8 @@ module R509
           raise ArgumentError, "You must supply a key_name with an engine"
         end
 
-        if ca_cert_hash['engine'].respond_to?(:load_private_key)
-          #this path is only for testing...ugh
-          engine = ca_cert_hash['engine']
-        else
-          #this path can't be tested by unit tests. bah!
-          engine = R509::Engine.instance.load(ca_cert_hash['engine'])
-        end
+        engine = R509::Engine.instance.load(ca_cert_hash['engine'])
+
         ca_key = R509::PrivateKey.new(
           :engine => engine,
           :key_name => ca_cert_hash['key_name']

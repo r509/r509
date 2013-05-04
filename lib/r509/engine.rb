@@ -13,7 +13,7 @@ module R509
     # @param hash Takes a hash with SO_PATH and ID
     # @return OpenSSL::Engine object
     def load(hash)
-      if not hash.has_key?("SO_PATH") or not hash.has_key?("ID")
+      if not hash.respond_to?(:has_key?) or not hash.has_key?("SO_PATH") or not hash.has_key?("ID")
         raise ArgumentError, "You must supply a hash with both SO_PATH and ID"
       end
       if @engines.has_key?(hash["ID"])

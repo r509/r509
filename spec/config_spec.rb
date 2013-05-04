@@ -297,28 +297,15 @@ describe R509::Config::CAConfig do
   end
 
   it "should load YAML which has an engine" do
-    #i can test this, it's just gonna take a whole lot of floorin' it!
-    conf = double("conf")
-    engine = double("engine")
-    faux_key = double("faux_key")
+    fake_engine = double("fake_engine")
+    fake_engine.should_receive(:kind_of?).with(OpenSSL::Engine).and_return(true)
+    faux_key = OpenSSL::PKey::RSA.new(TestFixtures::TEST_CA_KEY)
+    fake_engine.should_receive(:load_private_key).twice.with("key").and_return(faux_key)
+    engine = {"SO_PATH" => "path", "ID" => "id"}
 
-    public_key = OpenSSL::PKey::RSA.new("-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAqLfP8948QEZMMkZNHLDP\nOHZVrPdVvecD6bp8dz96LalMQiWjgMkJf7mPHXoNMQ5rIpntiUOmhupu+sty30+C\ndbZZIbZohioTSYq9ZIC/LC9ME12F78GRMKhBGA+ZiouzWvXqOEdMnanfSgKrlSIS\nssF71dfmOEQ08fn9Vl5jAgWmGe+v615iHqBNGr64kYooTrZYLaPlTScO1UZ76vnB\nHfNQU+tsEZNXxtZXKQqkxHxLShCOj6qmYRNn/upTZoWWd04+zXjYGEC3eKvi9ctN\n9FY+KJ6QCCa8H0Kt3cU5qyw6pzdljhbG6NKhod7OMqlGjmHdsCAYAqe3xH+V/8oe\ndwIDAQAB\n-----END PUBLIC KEY-----\n")
+    R509::Engine.instance.should_receive(:load).with(engine).and_return(fake_engine)
 
-    conf.should_receive(:kind_of?).with(Hash).and_return(true)
-    conf.should_receive(:[]).with("ca_cert").and_return(
-      "cert" => "#{File.dirname(__FILE__)}/fixtures/test_ca.cer",
-      "engine" => engine,
-      "key_name" => "r509_key"
-    )
-    conf.should_receive(:[]).at_least(1).times.and_return(nil)
-    conf.should_receive(:has_key?).at_least(1).times.and_return(false)
-
-    engine.should_receive(:respond_to?).with(:load_private_key).and_return(true)
-    engine.should_receive(:kind_of?).with(OpenSSL::Engine).and_return(true)
-    faux_key.should_receive(:public_key).and_return(public_key)
-    engine.should_receive(:load_private_key).twice.with("r509_key").and_return(faux_key)
-
-    config = R509::Config::CAConfig.load_from_hash(conf)
+    config = R509::Config::CAConfig.load_from_hash({"ca_cert"=>{"cert"=>"#{File.dirname(__FILE__)}/fixtures/test_ca.cer", "engine"=>engine, "key_name" => "key"}, "default_md"=>"SHA512", "profiles"=>{}})
   end
 
   it "should fail if YAML for ca_cert contains engine and key" do
