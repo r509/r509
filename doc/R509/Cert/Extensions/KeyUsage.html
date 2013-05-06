@@ -1,0 +1,1355 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>
+  Class: R509::Cert::Extensions::KeyUsage
+  
+    &mdash; Documentation by YARD 0.8.6.1
+  
+</title>
+
+  <link rel="stylesheet" href="../../../css/style.css" type="text/css" charset="utf-8" />
+
+  <link rel="stylesheet" href="../../../css/common.css" type="text/css" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  hasFrames = window.top.frames.main ? true : false;
+  relpath = '../../../';
+  framesUrl = "../../../frames.html#!" + escape(window.location.href);
+</script>
+
+
+  <script type="text/javascript" charset="utf-8" src="../../../js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../../../js/app.js"></script>
+
+
+  </head>
+  <body>
+    <div id="header">
+      <div id="menu">
+  
+    <a href="../../../_index.html">Index (K)</a> &raquo;
+    <span class='title'><span class='object_link'><a href="../../../R509.html" title="R509 (module)">R509</a></span></span> &raquo; <span class='title'><span class='object_link'><a href="../../Cert.html" title="R509::Cert (class)">Cert</a></span></span> &raquo; <span class='title'><span class='object_link'><a href="../Extensions.html" title="R509::Cert::Extensions (module)">Extensions</a></span></span>
+     &raquo; 
+    <span class="title">KeyUsage</span>
+  
+
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  
+    <a class="full_list_link" id="class_list_link"
+        href="../../../class_list.html">
+      Class List
+    </a>
+  
+    <a class="full_list_link" id="method_list_link"
+        href="../../../method_list.html">
+      Method List
+    </a>
+  
+    <a class="full_list_link" id="file_list_link"
+        href="../../../file_list.html">
+      File List
+    </a>
+  
+</div>
+      <div class="clear"></div>
+    </div>
+
+    <iframe id="search_frame"></iframe>
+
+    <div id="content"><h1>Class: R509::Cert::Extensions::KeyUsage
+  
+  
+  
+</h1>
+
+<dl class="box">
+  
+    <dt class="r1">Inherits:</dt>
+    <dd class="r1">
+      <span class="inheritName">OpenSSL::X509::Extension</span>
+      
+        <ul class="fullTree">
+          <li>Object</li>
+          
+            <li class="next">OpenSSL::X509::Extension</li>
+          
+            <li class="next">R509::Cert::Extensions::KeyUsage</li>
+          
+        </ul>
+        <a href="#" class="inheritanceTree">show all</a>
+      
+      </dd>
+    
+  
+  
+    
+  
+    
+  
+  
+  
+    <dt class="r2 last">Defined in:</dt>
+    <dd class="r2 last">lib/r509/cert/extensions.rb</dd>
+  
+</dl>
+<div class="clear"></div>
+
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    
+<p>Implements the KeyUsage certificate extension, with methods to provide
+access to the components and meaning of the extension&#39;s contents.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
+  <h2>Constant Summary</h2>
+  
+    <dl class="constants">
+      
+        <dt id="OID-constant" class="">OID =
+          <div class="docstring">
+  <div class="discussion">
+    
+<p>friendly name for KeyUsage OID</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
+        </dt>
+        <dd><pre class="code"><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>keyUsage</span><span class='tstring_end'>&quot;</span></span></pre></dd>
+      
+        <dt id="AU_DIGITAL_SIGNATURE-constant" class="">AU_DIGITAL_SIGNATURE =
+          <div class="docstring">
+  <div class="discussion">
+    
+<p>OpenSSL short name for Digital Signature</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
+        </dt>
+        <dd><pre class="code"><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>digitalSignature</span><span class='tstring_end'>&quot;</span></span></pre></dd>
+      
+        <dt id="AU_NON_REPUDIATION-constant" class="">AU_NON_REPUDIATION =
+          <div class="docstring">
+  <div class="discussion">
+    
+<p>OpenSSL short name for Non Repudiation (also known as content commitment)</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
+        </dt>
+        <dd><pre class="code"><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>nonRepudiation</span><span class='tstring_end'>&quot;</span></span></pre></dd>
+      
+        <dt id="AU_KEY_ENCIPHERMENT-constant" class="">AU_KEY_ENCIPHERMENT =
+          <div class="docstring">
+  <div class="discussion">
+    
+<p>OpenSSL short name for Key Encipherment</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
+        </dt>
+        <dd><pre class="code"><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>keyEncipherment</span><span class='tstring_end'>&quot;</span></span></pre></dd>
+      
+        <dt id="AU_DATA_ENCIPHERMENT-constant" class="">AU_DATA_ENCIPHERMENT =
+          <div class="docstring">
+  <div class="discussion">
+    
+<p>OpenSSL short name for Data Encipherment</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
+        </dt>
+        <dd><pre class="code"><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>dataEncipherment</span><span class='tstring_end'>&quot;</span></span></pre></dd>
+      
+        <dt id="AU_KEY_AGREEMENT-constant" class="">AU_KEY_AGREEMENT =
+          <div class="docstring">
+  <div class="discussion">
+    
+<p>OpenSSL short name for Key Agreement</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
+        </dt>
+        <dd><pre class="code"><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>keyAgreement</span><span class='tstring_end'>&quot;</span></span></pre></dd>
+      
+        <dt id="AU_KEY_CERT_SIGN-constant" class="">AU_KEY_CERT_SIGN =
+          <div class="docstring">
+  <div class="discussion">
+    
+<p>OpenSSL short name for Certificate Sign</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
+        </dt>
+        <dd><pre class="code"><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>keyCertSign</span><span class='tstring_end'>&quot;</span></span></pre></dd>
+      
+        <dt id="AU_CRL_SIGN-constant" class="">AU_CRL_SIGN =
+          <div class="docstring">
+  <div class="discussion">
+    
+<p>OpenSSL short name for CRL Sign</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
+        </dt>
+        <dd><pre class="code"><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>cRLSign</span><span class='tstring_end'>&quot;</span></span></pre></dd>
+      
+        <dt id="AU_ENCIPHER_ONLY-constant" class="">AU_ENCIPHER_ONLY =
+          <div class="docstring">
+  <div class="discussion">
+    
+<p>OpenSSL short name for Encipher Only</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
+        </dt>
+        <dd><pre class="code"><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>encipherOnly</span><span class='tstring_end'>&quot;</span></span></pre></dd>
+      
+        <dt id="AU_DECIPHER_ONLY-constant" class="">AU_DECIPHER_ONLY =
+          <div class="docstring">
+  <div class="discussion">
+    
+<p>OpenSSL short name for Decipher Only</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
+        </dt>
+        <dd><pre class="code"><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>decipherOnly</span><span class='tstring_end'>&quot;</span></span></pre></dd>
+      
+    </dl>
+  
+
+
+
+
+  <h2>Instance Attribute Summary <small>(<a href="#" class="summary_toggle">collapse</a>)</small></h2>
+  <ul class="summary">
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#allowed_uses-instance_method" title="#allowed_uses (instance method)">- (Object) <strong>allowed_uses</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+    
+      <span class="note title readonly">readonly</span>
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>An array of the key uses allowed.</p>
+</div></span>
+  
+</li>
+
+    
+  </ul>
+
+
+
+
+  
+    <h2>
+      Instance Method Summary
+      <small>(<a href="#" class="summary_toggle">collapse</a>)</small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#allows%3F-instance_method" title="#allows? (instance method)">- (Boolean) <strong>allows?</strong>(friendly_use_name) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Returns true if the given use is allowed by this extension.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#crl_sign%3F-instance_method" title="#crl_sign? (instance method)">- (Boolean) <strong>crl_sign?</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#data_encipherment%3F-instance_method" title="#data_encipherment? (instance method)">- (Boolean) <strong>data_encipherment?</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#decipher_only%3F-instance_method" title="#decipher_only? (instance method)">- (Boolean) <strong>decipher_only?</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#digital_signature%3F-instance_method" title="#digital_signature? (instance method)">- (Boolean) <strong>digital_signature?</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#encipher_only%3F-instance_method" title="#encipher_only? (instance method)">- (Boolean) <strong>encipher_only?</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#initialize-instance_method" title="#initialize (instance method)">- (KeyUsage) <strong>initialize</strong>(*args) </a>
+    
+
+    
+  </span>
+  
+  
+    <span class="note title constructor">constructor</span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>See OpenSSL::X509::Extension#initialize.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#key_agreement%3F-instance_method" title="#key_agreement? (instance method)">- (Boolean) <strong>key_agreement?</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#key_cert_sign%3F-instance_method" title="#key_cert_sign? (instance method)">- (Boolean) <strong>key_cert_sign?</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#key_encipherment%3F-instance_method" title="#key_encipherment? (instance method)">- (Boolean) <strong>key_encipherment?</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#non_repudiation%3F-instance_method" title="#non_repudiation? (instance method)">- (Boolean) <strong>non_repudiation?</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+    </ul>
+  
+
+
+  <div id="constructor_details" class="method_details_list">
+  <h2>Constructor Details</h2>
+  
+    <div class="method_details first">
+  <h3 class="signature first" id="initialize-instance_method">
+  
+    - (<tt><span class='object_link'><a href="" title="R509::Cert::Extensions::KeyUsage (class)">KeyUsage</a></span></tt>) <strong>initialize</strong>(*args) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>See OpenSSL::X509::Extension#initialize</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 96</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='op'>*</span><span class='id identifier rubyid_args'>args</span><span class='rparen'>)</span>
+  <span class='kw'>super</span><span class='lparen'>(</span><span class='op'>*</span><span class='id identifier rubyid_args'>args</span><span class='rparen'>)</span>
+
+  <span class='id identifier rubyid_data'>data</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>ASN1</span><span class='period'>.</span><span class='id identifier rubyid_get_extension_payload'>get_extension_payload</span><span class='lparen'>(</span><span class='kw'>self</span><span class='rparen'>)</span>
+
+  <span class='comment'># There are 9 possible bits, which means we need 2 bytes
+</span>  <span class='comment'># to represent them all. When the last bit is not set
+</span>  <span class='comment'># the second byte is not encoded. let&#39;s add it back so we can
+</span>  <span class='comment'># have the full bitmask for comparison
+</span>  <span class='kw'>if</span> <span class='id identifier rubyid_data'>data</span><span class='period'>.</span><span class='id identifier rubyid_size'>size</span> <span class='op'>==</span> <span class='int'>1</span>
+    <span class='id identifier rubyid_data'>data</span> <span class='op'>=</span> <span class='id identifier rubyid_data'>data</span> <span class='op'>+</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>\0</span><span class='tstring_end'>&quot;</span></span>
+  <span class='kw'>end</span>
+  <span class='id identifier rubyid_bit_mask'>bit_mask</span> <span class='op'>=</span> <span class='id identifier rubyid_data'>data</span><span class='period'>.</span><span class='id identifier rubyid_unpack'>unpack</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>n</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span> <span class='comment'># treat it as a 16-bit unsigned big endian
+</span>  <span class='comment'>#      KeyUsage ::= BIT STRING {
+</span>  <span class='comment'>#           digitalSignature        (0),
+</span>  <span class='comment'>#           nonRepudiation          (1), -- recent editions of X.509 have
+</span>  <span class='comment'>#                                -- renamed this bit to contentCommitment
+</span>  <span class='comment'>#           keyEncipherment         (2),
+</span>  <span class='comment'>#           dataEncipherment        (3),
+</span>  <span class='comment'>#           keyAgreement            (4),
+</span>  <span class='comment'>#           keyCertSign             (5),
+</span>  <span class='comment'>#           cRLSign                 (6),
+</span>  <span class='comment'>#           encipherOnly            (7),
+</span>  <span class='comment'>#           decipherOnly            (8) }
+</span>  <span class='ivar'>@allowed_uses</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_bit_mask'>bit_mask</span> <span class='op'>&amp;</span> <span class='int'>0b1000000000000000</span> <span class='op'>&gt;</span> <span class='int'>0</span>
+    <span class='ivar'>@digital_signature</span> <span class='op'>=</span> <span class='kw'>true</span>
+    <span class='ivar'>@allowed_uses</span> <span class='op'>&lt;&lt;</span> <span class='const'>AU_DIGITAL_SIGNATURE</span>
+  <span class='kw'>end</span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_bit_mask'>bit_mask</span> <span class='op'>&amp;</span> <span class='int'>0b0100000000000000</span> <span class='op'>&gt;</span> <span class='int'>0</span>
+    <span class='ivar'>@non_repudiation</span> <span class='op'>=</span> <span class='kw'>true</span>
+    <span class='ivar'>@allowed_uses</span> <span class='op'>&lt;&lt;</span> <span class='const'>AU_NON_REPUDIATION</span>
+  <span class='kw'>end</span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_bit_mask'>bit_mask</span> <span class='op'>&amp;</span> <span class='int'>0b0010000000000000</span> <span class='op'>&gt;</span> <span class='int'>0</span>
+    <span class='ivar'>@key_encipherment</span> <span class='op'>=</span> <span class='kw'>true</span>
+    <span class='ivar'>@allowed_uses</span> <span class='op'>&lt;&lt;</span> <span class='const'>AU_KEY_ENCIPHERMENT</span>
+  <span class='kw'>end</span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_bit_mask'>bit_mask</span> <span class='op'>&amp;</span> <span class='int'>0b0001000000000000</span> <span class='op'>&gt;</span> <span class='int'>0</span>
+    <span class='ivar'>@data_encipherment</span> <span class='op'>=</span> <span class='kw'>true</span>
+    <span class='ivar'>@allowed_uses</span> <span class='op'>&lt;&lt;</span> <span class='const'>AU_DATA_ENCIPHERMENT</span>
+  <span class='kw'>end</span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_bit_mask'>bit_mask</span> <span class='op'>&amp;</span> <span class='int'>0b0000100000000000</span> <span class='op'>&gt;</span> <span class='int'>0</span>
+    <span class='ivar'>@key_agreement</span> <span class='op'>=</span> <span class='kw'>true</span>
+    <span class='ivar'>@allowed_uses</span> <span class='op'>&lt;&lt;</span> <span class='const'>AU_KEY_AGREEMENT</span>
+  <span class='kw'>end</span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_bit_mask'>bit_mask</span> <span class='op'>&amp;</span> <span class='int'>0b0000010000000000</span> <span class='op'>&gt;</span> <span class='int'>0</span>
+    <span class='ivar'>@key_cert_sign</span> <span class='op'>=</span> <span class='kw'>true</span>
+    <span class='ivar'>@allowed_uses</span> <span class='op'>&lt;&lt;</span> <span class='const'>AU_KEY_CERT_SIGN</span>
+  <span class='kw'>end</span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_bit_mask'>bit_mask</span> <span class='op'>&amp;</span> <span class='int'>0b0000001000000000</span> <span class='op'>&gt;</span> <span class='int'>0</span>
+    <span class='ivar'>@crl_sign</span> <span class='op'>=</span> <span class='kw'>true</span>
+    <span class='ivar'>@allowed_uses</span> <span class='op'>&lt;&lt;</span> <span class='const'>AU_CRL_SIGN</span>
+  <span class='kw'>end</span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_bit_mask'>bit_mask</span> <span class='op'>&amp;</span> <span class='int'>0b0000000100000000</span> <span class='op'>&gt;</span> <span class='int'>0</span>
+    <span class='ivar'>@encipher_only</span> <span class='op'>=</span> <span class='kw'>true</span>
+    <span class='ivar'>@allowed_uses</span> <span class='op'>&lt;&lt;</span> <span class='const'>AU_ENCIPHER_ONLY</span>
+  <span class='kw'>end</span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_bit_mask'>bit_mask</span> <span class='op'>&amp;</span> <span class='int'>0b0000000010000000</span> <span class='op'>&gt;</span> <span class='int'>0</span>
+    <span class='ivar'>@decipher_only</span> <span class='op'>=</span> <span class='kw'>true</span>
+    <span class='ivar'>@allowed_uses</span> <span class='op'>&lt;&lt;</span> <span class='const'>AU_DECIPHER_ONLY</span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+  
+</div>
+
+  <div id="instance_attr_details" class="attr_details">
+    <h2>Instance Attribute Details</h2>
+    
+      
+      <span id=""></span>
+      <div class="method_details first">
+  <h3 class="signature first" id="allowed_uses-instance_method">
+  
+    - (<tt>Object</tt>) <strong>allowed_uses</strong>  <span class="extras">(readonly)</span>
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>An array of the key uses allowed.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+74
+75
+76</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 74</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_allowed_uses'>allowed_uses</span>
+  <span class='ivar'>@allowed_uses</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+
+  <div id="instance_method_details" class="method_details_list">
+    <h2>Instance Method Details</h2>
+
+    
+      <div class="method_details first">
+  <h3 class="signature first" id="allows?-instance_method">
+  
+    - (<tt>Boolean</tt>) <strong>allows?</strong>(friendly_use_name) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns true if the given use is allowed by this extension.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>friendly_use_name</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>key usage short name (e.g. digitalSignature, cRLSign, etc) or one of the
+AU_* constants in this class</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+163
+164
+165</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 163</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_allows?'>allows?</span><span class='lparen'>(</span> <span class='id identifier rubyid_friendly_use_name'>friendly_use_name</span> <span class='rparen'>)</span>
+  <span class='ivar'>@allowed_uses</span><span class='period'>.</span><span class='id identifier rubyid_include?'>include?</span><span class='lparen'>(</span> <span class='id identifier rubyid_friendly_use_name'>friendly_use_name</span> <span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="crl_sign?-instance_method">
+  
+    - (<tt>Boolean</tt>) <strong>crl_sign?</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+191
+192
+193</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 191</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_crl_sign?'>crl_sign?</span>
+  <span class='lparen'>(</span><span class='ivar'>@crl_sign</span> <span class='op'>==</span> <span class='kw'>true</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="data_encipherment?-instance_method">
+  
+    - (<tt>Boolean</tt>) <strong>data_encipherment?</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+179
+180
+181</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 179</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_data_encipherment?'>data_encipherment?</span>
+  <span class='lparen'>(</span><span class='ivar'>@data_encipherment</span> <span class='op'>==</span> <span class='kw'>true</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="decipher_only?-instance_method">
+  
+    - (<tt>Boolean</tt>) <strong>decipher_only?</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+199
+200
+201</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 199</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_decipher_only?'>decipher_only?</span>
+  <span class='lparen'>(</span><span class='ivar'>@decipher_only</span> <span class='op'>==</span> <span class='kw'>true</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="digital_signature?-instance_method">
+  
+    - (<tt>Boolean</tt>) <strong>digital_signature?</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+167
+168
+169</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 167</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_digital_signature?'>digital_signature?</span>
+  <span class='lparen'>(</span><span class='ivar'>@digital_signature</span> <span class='op'>==</span> <span class='kw'>true</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="encipher_only?-instance_method">
+  
+    - (<tt>Boolean</tt>) <strong>encipher_only?</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+195
+196
+197</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 195</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_encipher_only?'>encipher_only?</span>
+  <span class='lparen'>(</span><span class='ivar'>@encipher_only</span> <span class='op'>==</span> <span class='kw'>true</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="key_agreement?-instance_method">
+  
+    - (<tt>Boolean</tt>) <strong>key_agreement?</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+183
+184
+185</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 183</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_key_agreement?'>key_agreement?</span>
+  <span class='lparen'>(</span><span class='ivar'>@key_agreement</span> <span class='op'>==</span> <span class='kw'>true</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="key_cert_sign?-instance_method">
+  
+    - (<tt>Boolean</tt>) <strong>key_cert_sign?</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+187
+188
+189</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 187</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_key_cert_sign?'>key_cert_sign?</span>
+  <span class='lparen'>(</span><span class='ivar'>@key_cert_sign</span> <span class='op'>==</span> <span class='kw'>true</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="key_encipherment?-instance_method">
+  
+    - (<tt>Boolean</tt>) <strong>key_encipherment?</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+175
+176
+177</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 175</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_key_encipherment?'>key_encipherment?</span>
+  <span class='lparen'>(</span><span class='ivar'>@key_encipherment</span> <span class='op'>==</span> <span class='kw'>true</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="non_repudiation?-instance_method">
+  
+    - (<tt>Boolean</tt>) <strong>non_repudiation?</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+171
+172
+173</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 171</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_non_repudiation?'>non_repudiation?</span>
+  <span class='lparen'>(</span><span class='ivar'>@non_repudiation</span> <span class='op'>==</span> <span class='kw'>true</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+</div>
+
+    <div id="footer">
+  Generated on Mon May  6 09:22:51 2013 by
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.8.6.1 (ruby-2.0.0).
+</div>
+
+  </body>
+</html>

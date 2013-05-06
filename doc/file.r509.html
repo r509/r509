@@ -1,0 +1,173 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>
+  File: r509
+  
+    &mdash; Documentation by YARD 0.8.6.1
+  
+</title>
+
+  <link rel="stylesheet" href="css/style.css" type="text/css" charset="utf-8" />
+
+  <link rel="stylesheet" href="css/common.css" type="text/css" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  hasFrames = window.top.frames.main ? true : false;
+  relpath = '';
+  framesUrl = "frames.html#!" + escape(window.location.href);
+</script>
+
+
+  <script type="text/javascript" charset="utf-8" src="js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="js/app.js"></script>
+
+
+  </head>
+  <body>
+    <div id="header">
+      <div id="menu">
+  
+    <a href="_index.html">Index</a> &raquo; 
+    <span class="title">File: r509</span>
+  
+
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  
+    <a class="full_list_link" id="class_list_link"
+        href="class_list.html">
+      Class List
+    </a>
+  
+    <a class="full_list_link" id="method_list_link"
+        href="method_list.html">
+      Method List
+    </a>
+  
+    <a class="full_list_link" id="file_list_link"
+        href="file_list.html">
+      File List
+    </a>
+  
+</div>
+      <div class="clear"></div>
+    </div>
+
+    <iframe id="search_frame"></iframe>
+
+    <div id="content"><div id='filecontents'>
+<p>certificate_authorities: {</p>
+
+<pre class="code ruby"><code class="ruby">test_ca: {
+  ca_cert: {
+    cert: &#39;spec/fixtures/test_ca.cer&#39;,
+    key: &#39;spec/fixtures/test_ca.key&#39;
+  },
+  ocsp_cert: {
+    pkcs12: &#39;spec/fixtures/test_ca_ocsp.p12&#39;,
+    password: &#39;r509&#39;
+  },
+  ocsp_location: [&#39;http://ocsp.domain.com&#39;],
+  ca_issuers_location: [&#39;http://domain.com/ca.html&#39;],
+  ocsp_chain: &#39;spec/fixtures/test_ca_ocsp_chain.txt&#39;,
+  ocsp_start_skew_seconds: 3600,
+  ocsp_validity_hours: 168,
+  cdp_location: [&#39;http://crl.domain.com/test_ca.crl&#39;],
+  crl_list: &#39;spec/fixtures/test_ca_crl_list.txt&#39;,
+  crl_number: &#39;spec/fixtures/test_ca_crl_number.txt&#39;,
+  crl_validity_hours: 168, #7 days
+  default_md: &#39;SHA1&#39;,
+  allowed_mds: [&#39;SHA256&#39;,&#39;SHA512&#39;,&#39;SHA1&#39;],
+  profiles: {
+    server: {
+      basic_constraints: {&quot;ca&quot; : false},
+      key_usage: [digitalSignature,keyEncipherment],
+      extended_key_usage: [serverAuth],
+      subject_item_policy: {
+        CN: &quot;required&quot;,
+        O:  &quot;required&quot;,
+        OU: &quot;optional&quot;,
+        ST: &quot;required&quot;,
+        C:  &quot;required&quot;,
+        L:  &quot;required&quot;
+      }
+    },
+    client: {
+      basic_constraints: {&quot;ca&quot; : false},
+      key_usage: [digitalSignature,keyEncipherment],
+      extended_key_usage: [clientAuth],
+    },
+    email: {
+      basic_constraints: {&quot;ca&quot; : false},
+      key_usage: [digitalSignature,keyEncipherment],
+      extended_key_usage: [emailProtection],
+    },
+    clientserver: {
+      basic_constraints:  {&quot;ca&quot; : false},
+      key_usage: [digitalSignature,keyEncipherment],
+      extended_key_usage: [serverAuth,clientAuth],
+    },
+    codesigning: {
+      basic_constraints:  {&quot;ca&quot; : false},
+      key_usage: [digitalSignature],
+      extended_key_usage: [codeSigning],
+    },
+    timestamping: {
+      basic_constraints:  {&quot;ca&quot; : false},
+      key_usage: [digitalSignature],
+      extended_key_usage: [timeStamping],
+    },
+    subroot: {
+      basic_constraints:  {&quot;ca&quot; : true, &quot;path_length&quot; : 0},
+      key_usage: [keyCertSign,cRLSign],
+      extended_key_usage: [],
+      certificate_policies: [
+        { policy_identifier: &quot;2.16.840.1.99999.21.234&quot;,
+          cps_uris: [&quot;http://example.com/cps&quot;,&quot;http://haha.com&quot;],
+          user_notices: [ { explicit_text: &quot;this is a great thing&quot;, organization: &quot;my org&quot;, notice_numbers: &quot;1,2,3&quot; } ]
+        },
+        { policy_identifier: &quot;2.16.840.1.99999.21.235&quot;,
+          cps_uris: [&quot;http://example.com/cps2&quot;],
+          user_notices: [ { explicit_text: &quot;this is a bad thing&quot;, organization: &quot;another org&quot;, notice_numbers: &quot;3,2,1&quot; },{ explicit_text: &quot;another user notice&quot;} ]
+        }
+      ],
+      inhibit_any_policy: 0,
+      policy_constraints: { require_explicit_policy: 0, inhibit_policy_mapping: 0},
+      name_constraints: {
+        permitted: [
+          {type: &quot;IP&quot;, value: &quot;192.168.0.0/255.255.0.0&quot;},
+          {type: &quot;dirName&quot;, value: [[&#39;CN&#39;,&#39;myCN&#39;],[&#39;O&#39;,&#39;Org&#39;]]}
+        ],
+        excluded: [
+          {type: &quot;email&quot;, value: &quot;domain.com&quot;},
+          {type: &quot;URI&quot;, value: &quot;.net&quot;},
+          {type: &quot;DNS&quot;, value: &quot;test.us&quot;}
+        ]
+      }
+    },
+    ocsp_delegate: {
+      basic_constraints:  {&quot;ca&quot; : false},
+      key_usage: [digitalSignature],
+      extended_key_usage: [OCSPSigning],
+      ocsp_no_check: true
+    }
+  }
+}</code></pre>
+
+<p>}</p>
+</div></div>
+
+    <div id="footer">
+  Generated on Mon May  6 09:22:48 2013 by
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.8.6.1 (ruby-2.0.0).
+</div>
+
+  </body>
+</html>

@@ -1,0 +1,730 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>
+  File: README
+  
+    &mdash; Documentation by YARD 0.8.6.1
+  
+</title>
+
+  <link rel="stylesheet" href="css/style.css" type="text/css" charset="utf-8" />
+
+  <link rel="stylesheet" href="css/common.css" type="text/css" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  hasFrames = window.top.frames.main ? true : false;
+  relpath = '';
+  framesUrl = "frames.html#!" + escape(window.location.href);
+</script>
+
+
+  <script type="text/javascript" charset="utf-8" src="js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="js/app.js"></script>
+
+
+  </head>
+  <body>
+    <div id="header">
+      <div id="menu">
+  
+    <a href="_index.html">Index</a> &raquo; 
+    <span class="title">File: README</span>
+  
+
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  
+    <a class="full_list_link" id="class_list_link"
+        href="class_list.html">
+      Class List
+    </a>
+  
+    <a class="full_list_link" id="method_list_link"
+        href="method_list.html">
+      Method List
+    </a>
+  
+    <a class="full_list_link" id="file_list_link"
+        href="file_list.html">
+      File List
+    </a>
+  
+</div>
+      <div class="clear"></div>
+    </div>
+
+    <iframe id="search_frame"></iframe>
+
+    <div id="content"><div id='filecontents'><h1>r509 <a href="http://travis-ci.org/reaperhulk/r509"><img src="https://secure.travis-ci.org/reaperhulk/r509.png" alt="Build Status"></a></h1>
+
+<p>r509 is a Ruby gem built using OpenSSL that is designed to ease management of a public key infrastructure. The r509 API facilitates easy creation of CSRs, signing of certificates, revocation (CRL/OCSP), and much more. Together with projects like <a href="https://github.com/reaperhulk/r509-ocsp-responder">r509-ocsp-responder</a> and <a href="https://github.com/sirsean/r509-ca-http">r509-ca-http</a> it is intended to be a complete <a href="http://www.ietf.org/rfc/rfc5280.txt">RFC 5280</a>-compliant certificate authority for use in production environments.</p>
+
+<h2>Requirements</h2>
+
+<p>r509 requires the Ruby OpenSSL bindings as well as yaml support (present by default in modern Ruby builds). It is recommended that you compile Ruby against OpenSSL 1.0.0+ (with elliptic curve support enabled). Red Hat-derived distributions ship with EC disabled in OpenSSL, so if you need EC support you will need to recompile.</p>
+
+<h2>Installation</h2>
+
+<p>You can install via rubygems with <code>gem install r509</code></p>
+
+<p>To install the gem from your own clone (you will need to satisfy the dependencies via <code>bundle install</code> or other means):</p>
+
+<pre class="code bash"><code class="bash">rake gem:build
+rake gem:install
+</code></pre>
+
+<h2>Running Tests/Building Gem</h2>
+
+<p>If you want to run the tests for r509 you&#39;ll need rspec. Additionally, you may want to install rcov/simplecov (ruby 1.8/1.9 respectively) and yard for running the code coverage and documentation tasks in the Rakefile. <code>rake -T</code> for a complete list of rake tasks available.</p>
+
+<h2>Continuous Integration</h2>
+
+<p>We run continuous integration tests (using Travis-CI) against 1.9.3, 2.0.0, ruby-head, and rubinius(rbx) 2.0 in 1.9 mode. 1.8.7 is no longer a supported configuration due to issues with its elliptic curve methods. 0.8.1 was the last official r509 release with 1.8.7 support.</p>
+
+<h2>Executable</h2>
+
+<p>Inside the gem there is a binary named <code>r509</code>. Type <code>r509 -h</code> to see a list of options.</p>
+
+<h2>Basic Certificate Authority Howto</h2>
+
+<p><a href="http://langui.sh/2012/11/02/building-a-ca-r509-howto/">This guide</a> provides instructions on building a basic CA using r509, <a href="https://github.com/sirsean/r509-ca-http">r509-ca-http</a>, and <a href="https://github.com/reaperhulk/r509-ocsp-responder">r509-ocsp-responder</a>. In it you will learn how to create a root, set up the configuration profiles, issue certificates, revoke certificates, and see responses from an OCSP responder.</p>
+
+<h2>Usage</h2>
+
+<h3>CSR</h3>
+
+<p>To generate a 2048-bit RSA CSR</p>
+
+<pre class="code ruby"><code class="ruby"><span class='id identifier rubyid_csr'>csr</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>CSR</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span>
+  <span class='symbol'>:subject</span> <span class='op'>=&gt;</span> <span class='lbracket'>[</span>
+    <span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>CN</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>somedomain.com</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='comma'>,</span>
+    <span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>O</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>My Org</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='comma'>,</span>
+    <span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>L</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>City</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='comma'>,</span>
+    <span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>ST</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>State</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='comma'>,</span>
+    <span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>C</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>US</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span>
+  <span class='rbracket'>]</span>
+<span class='rparen'>)</span>
+</code></pre>
+
+<p>Another way to build the subject:</p>
+
+<pre class="code ruby"><code class="ruby"><span class='id identifier rubyid_subject'>subject</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>Subject</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span>
+<span class='id identifier rubyid_subject'>subject</span><span class='period'>.</span><span class='const'>CN</span><span class='op'>=</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>somedomain.com</span><span class='tstring_end'>&quot;</span></span>
+<span class='id identifier rubyid_subject'>subject</span><span class='period'>.</span><span class='const'>O</span><span class='op'>=</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>My Org</span><span class='tstring_end'>&quot;</span></span>
+<span class='id identifier rubyid_subject'>subject</span><span class='period'>.</span><span class='const'>L</span><span class='op'>=</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>City</span><span class='tstring_end'>&quot;</span></span>
+<span class='id identifier rubyid_subject'>subject</span><span class='period'>.</span><span class='const'>ST</span><span class='op'>=</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>State</span><span class='tstring_end'>&quot;</span></span>
+<span class='id identifier rubyid_subject'>subject</span><span class='period'>.</span><span class='const'>C</span><span class='op'>=</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>US</span><span class='tstring_end'>&quot;</span></span>
+<span class='id identifier rubyid_csr'>csr</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>CSR</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span> <span class='symbol'>:subject</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_subject'>subject</span> <span class='rparen'>)</span>
+</code></pre>
+
+<p>To load an existing CSR (without private key)</p>
+
+<pre class="code ruby"><code class="ruby"><span class='id identifier rubyid_csr_pem'>csr_pem</span> <span class='op'>=</span> <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_read'>read</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>/path/to/csr</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+<span class='id identifier rubyid_csr'>csr</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>CSR</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='symbol'>:csr</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_csr_pem'>csr_pem</span><span class='rparen'>)</span>
+<span class='comment'># or
+</span><span class='id identifier rubyid_csr'>csr</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>CSR</span><span class='period'>.</span><span class='id identifier rubyid_load_from_file'>load_from_file</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>/path/to/csr</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+</code></pre>
+
+<p>To create a new CSR from the subject of a certificate</p>
+
+<pre class="code ruby"><code class="ruby"><span class='id identifier rubyid_cert_pem'>cert_pem</span> <span class='op'>=</span> <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_read'>read</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>/path/to/cert</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+<span class='id identifier rubyid_csr'>csr</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>CSR</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='symbol'>:cert</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_cert_pem'>cert_pem</span><span class='rparen'>)</span>
+</code></pre>
+
+<p>To create a CSR with SAN names</p>
+
+<pre class="code ruby"><code class="ruby"><span class='id identifier rubyid_csr'>csr</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>CSR</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span>
+  <span class='symbol'>:subject</span> <span class='op'>=&gt;</span> <span class='lbracket'>[</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>CN</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>something.com</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='rbracket'>]</span><span class='comma'>,</span>
+  <span class='symbol'>:san_names</span> <span class='op'>=&gt;</span> <span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>something2.com</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>something3.com</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span>
+<span class='rparen'>)</span>
+</code></pre>
+
+<h3>Cert</h3>
+
+<p>To load an existing certificate</p>
+
+<pre class="code ruby"><code class="ruby"><span class='id identifier rubyid_cert_pem'>cert_pem</span> <span class='op'>=</span> <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_read'>read</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>/path/to/cert</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+<span class='id identifier rubyid_cert'>cert</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>Cert</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='symbol'>:cert</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_cert_pem'>cert_pem</span><span class='rparen'>)</span>
+<span class='comment'># or
+</span><span class='id identifier rubyid_cert'>cert</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>Cert</span><span class='period'>.</span><span class='id identifier rubyid_load_from_file'>load_from_file</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>/path/to/cert</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+</code></pre>
+
+<p>Load a cert and key</p>
+
+<pre class="code ruby"><code class="ruby"><span class='id identifier rubyid_cert_pem'>cert_pem</span> <span class='op'>=</span> <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_read'>read</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>/path/to/cert</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+<span class='id identifier rubyid_key_pem'>key_pem</span> <span class='op'>=</span> <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_read'>read</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>/path/to/key</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+<span class='id identifier rubyid_cert'>cert</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>Cert</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span>
+  <span class='symbol'>:cert</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_cert_pem'>cert_pem</span><span class='comma'>,</span>
+  <span class='symbol'>:key</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_key_pem'>key_pem</span>
+<span class='rparen'>)</span>
+</code></pre>
+
+<p>Load an encrypted private key</p>
+
+<pre class="code ruby"><code class="ruby"><span class='id identifier rubyid_cert_pem'>cert_pem</span> <span class='op'>=</span> <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_read'>read</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>/path/to/cert</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+<span class='id identifier rubyid_key_pem'>key_pem</span> <span class='op'>=</span> <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_read'>read</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>/path/to/key</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+<span class='id identifier rubyid_cert'>cert</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>Cert</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span>
+  <span class='symbol'>:cert</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_cert_pem'>cert_pem</span><span class='comma'>,</span>
+  <span class='symbol'>:key</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_key_pem'>key_pem</span><span class='comma'>,</span>
+  <span class='symbol'>:password</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>private_key_password</span><span class='tstring_end'>&quot;</span></span>
+<span class='rparen'>)</span>
+</code></pre>
+
+<p>Load a PKCS12 file</p>
+
+<pre class="code ruby"><code class="ruby"><span class='id identifier rubyid_pkcs12_der'>pkcs12_der</span> <span class='op'>=</span> <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_read'>read</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>/path/to/p12</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+<span class='id identifier rubyid_cert'>cert</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>Cert</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span>
+  <span class='symbol'>:pkcs12</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_pkcs12_der'>pkcs12_der</span><span class='comma'>,</span>
+  <span class='symbol'>:password</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>password</span><span class='tstring_end'>&quot;</span></span>
+<span class='rparen'>)</span>
+</code></pre>
+
+<h3>PrivateKey</h3>
+
+<p>Generate a 1536-bit RSA key</p>
+
+<pre class="code ruby"><code class="ruby"><span class='id identifier rubyid_key'>key</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>PrivateKey</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='symbol'>:type</span> <span class='op'>=&gt;</span> <span class='symbol'>:rsa</span><span class='comma'>,</span> <span class='symbol'>:bit_strength</span> <span class='op'>=&gt;</span> <span class='int'>1536</span><span class='rparen'>)</span>
+</code></pre>
+
+<p>Encrypt the private key</p>
+
+<pre class="code ruby"><code class="ruby"><span class='id identifier rubyid_key'>key</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>PrivateKey</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='symbol'>:type</span> <span class='op'>=&gt;</span> <span class='symbol'>:rsa</span><span class='comma'>,</span> <span class='symbol'>:bit_strength</span> <span class='op'>=&gt;</span> <span class='int'>2048</span><span class='rparen'>)</span>
+<span class='id identifier rubyid_encrypted_pem'>encrypted_pem</span> <span class='op'>=</span> <span class='id identifier rubyid_key'>key</span><span class='period'>.</span><span class='id identifier rubyid_to_encrypted_pem'>to_encrypted_pem</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>aes256</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>my-password</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+<span class='comment'># or write it to disk
+</span><span class='id identifier rubyid_key'>key</span><span class='period'>.</span><span class='id identifier rubyid_write_encrypted_pem'>write_encrypted_pem</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>/tmp/path</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>aes256</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>my-password</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+</code></pre>
+
+<h4>Load Hardware Engines in PrivateKey</h4>
+
+<p>The engine you want to load must already be available to OpenSSL. How to compile/install OpenSSL engines is outside the scope of this document.</p>
+
+<pre class="code ruby"><code class="ruby"><span class='id identifier rubyid_engine'>engine</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>Engine</span><span class='period'>.</span><span class='id identifier rubyid_instance'>instance</span><span class='period'>.</span><span class='id identifier rubyid_load'>load</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>SO_PATH</span><span class='tstring_end'>&quot;</span></span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>/usr/lib64/openssl/engines/libchil.so</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>ID</span><span class='tstring_end'>&quot;</span></span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>chil</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+<span class='id identifier rubyid_key'>key</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>PrivateKey</span><span class='lparen'>(</span>
+  <span class='symbol'>:engine</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_engine'>engine</span><span class='comma'>,</span>
+  <span class='symbol'>:key_name</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>my_key_name</span><span class='tstring_end'>&quot;</span></span>
+<span class='rparen'>)</span>
+</code></pre>
+
+<p>You can then use this key for signing.</p>
+
+<h3>SPKI/SPKAC</h3>
+
+<p>To generate a 2048-bit RSA SPKI</p>
+
+<pre class="code ruby"><code class="ruby"><span class='id identifier rubyid_key'>key</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>PrivateKey</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='symbol'>:type</span> <span class='op'>=&gt;</span> <span class='symbol'>:rsa</span><span class='comma'>,</span> <span class='symbol'>:bit_strength</span> <span class='op'>=&gt;</span> <span class='int'>1024</span><span class='rparen'>)</span>
+<span class='id identifier rubyid_spki'>spki</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>SPKI</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='symbol'>:key</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_key'>key</span><span class='rparen'>)</span>
+</code></pre>
+
+<h3>Self-Signed Certificate</h3>
+
+<p>To create a self-signed certificate</p>
+
+<pre class="code ruby"><code class="ruby"><span class='id identifier rubyid_not_before'>not_before</span> <span class='op'>=</span> <span class='const'>Time</span><span class='period'>.</span><span class='id identifier rubyid_now'>now</span><span class='period'>.</span><span class='id identifier rubyid_to_i'>to_i</span>
+<span class='id identifier rubyid_not_after'>not_after</span> <span class='op'>=</span> <span class='const'>Time</span><span class='period'>.</span><span class='id identifier rubyid_now'>now</span><span class='period'>.</span><span class='id identifier rubyid_to_i'>to_i</span><span class='op'>+</span><span class='int'>3600</span><span class='op'>*</span><span class='int'>24</span><span class='op'>*</span><span class='int'>7300</span>
+<span class='id identifier rubyid_csr'>csr</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>CSR</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span>
+  <span class='symbol'>:subject</span> <span class='op'>=&gt;</span> <span class='lbracket'>[</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>C</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>US</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='comma'>,</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>O</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>r509 LLC</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='comma'>,</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>CN</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>r509 Self-Signed CA Test</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='rbracket'>]</span>
+<span class='rparen'>)</span>
+<span class='id identifier rubyid_ca'>ca</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>CertificateAuthority</span><span class='op'>::</span><span class='const'>Signer</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span>
+<span class='id identifier rubyid_cert'>cert</span> <span class='op'>=</span> <span class='id identifier rubyid_ca'>ca</span><span class='period'>.</span><span class='id identifier rubyid_selfsign'>selfsign</span><span class='lparen'>(</span>
+  <span class='symbol'>:csr</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_csr'>csr</span><span class='comma'>,</span>
+  <span class='symbol'>:not_before</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_not_before'>not_before</span><span class='comma'>,</span>
+  <span class='symbol'>:not_after</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_not_after'>not_after</span>
+<span class='rparen'>)</span>
+</code></pre>
+
+<h3>Config</h3>
+
+<p>Create a basic CAConfig object</p>
+
+<pre class="code ruby"><code class="ruby"><span class='id identifier rubyid_cert_pem'>cert_pem</span> <span class='op'>=</span> <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_read'>read</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>/path/to/cert</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+<span class='id identifier rubyid_key_pem'>key_pem</span> <span class='op'>=</span> <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_read'>read</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>/path/to/key</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+<span class='id identifier rubyid_cert'>cert</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>Cert</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span>
+  <span class='symbol'>:cert</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_cert_pem'>cert_pem</span><span class='comma'>,</span>
+  <span class='symbol'>:key</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_key_pem'>key_pem</span>
+<span class='rparen'>)</span>
+<span class='id identifier rubyid_config'>config</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>Config</span><span class='op'>::</span><span class='const'>CAConfig</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span>
+  <span class='symbol'>:ca_cert</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_cert'>cert</span>
+<span class='rparen'>)</span>
+</code></pre>
+
+<p>Add a signing profile named &quot;server&quot; (CAProfile) to a config object</p>
+
+<pre class="code ruby"><code class="ruby">profile = R509::Config::CAProfile.new(
+  :basic_constraints =&gt; {&quot;ca&quot; : false},
+  :key_usage =&gt; [&quot;digitalSignature&quot;,&quot;keyEncipherment&quot;],
+  :extended_key_usage =&gt; [&quot;serverAuth&quot;],
+  :certificate_policies =&gt; [
+    { &quot;policy_identifier&quot; =&gt; &quot;2.16.840.1.99999.21.234&quot;,
+      &quot;cps_uris&quot; =&gt; [&quot;http://example.com/cps&quot;,&quot;http://haha.com&quot;],
+      &quot;user_notices&quot; =&gt; [ { &quot;explicit_text&quot; =&gt; &quot;this is a great thing&quot;, &quot;organization&quot; =&gt; &quot;my org&quot;, &quot;notice_numbers&quot; =&gt; &quot;1,2,3&quot; } ]
+    }
+  ],
+  :subject_item_policy =&gt; nil,
+  :ocsp_no_check =&gt; false # this should only be true if you are setting OCSPSigning EKU
+)
+# config object from above assumed
+config.set_profile(&quot;server&quot;,profile)
+</code></pre>
+
+<p>Set up a subject item policy (required/optional). The keys must match OpenSSL&#39;s shortnames!</p>
+
+<pre class="code ruby"><code class="ruby">profile = R509::Config::CAProfile.new(
+  :basic_constraints =&gt; {&quot;ca&quot; : false},
+  :key_usage =&gt; [&quot;digitalSignature&quot;,&quot;keyEncipherment&quot;],
+  :extended_key_usage =&gt; [&quot;serverAuth&quot;],
+  :subject_item_policy =&gt; {
+    &quot;CN&quot; =&gt; &quot;required&quot;,
+    &quot;O&quot; =&gt; &quot;optional&quot;
+  }
+)
+# config object from above assumed
+config.set_profile(&quot;server&quot;,profile)
+</code></pre>
+
+<p>Load CAConfig + Profile from YAML</p>
+
+<pre class="code ruby"><code class="ruby"><span class='id identifier rubyid_config'>config</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>Config</span><span class='op'>::</span><span class='const'>CAConfig</span><span class='period'>.</span><span class='id identifier rubyid_from_yaml'>from_yaml</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>test_ca</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>config_test.yaml</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+</code></pre>
+
+<p>Example YAML (more options are supported than this example)</p>
+
+<pre class="code yaml"><code class="yaml">test_ca: {
+  ca_cert: {
+    cert: &#39;/path/to/test_ca.cer&#39;,
+    key: &#39;/path/to/test_ca.key&#39;
+  },
+  crl_list: &quot;crl_list_file.txt&quot;,
+  crl_number: &quot;crl_number_file.txt&quot;,
+  cdp_location: [&#39;http://crl.domain.com/test_ca.crl&#39;],
+  crl_validity_hours: 168, #7 days
+  ocsp_location: [&#39;http://ocsp.domain.com&#39;],
+  ca_issuers_location: [&#39;http://www.domain.com/my_roots.html&#39;],
+  message_digest: &#39;SHA1&#39;, #SHA1, SHA224, SHA256, SHA384, SHA512 supported. MD5 too, but you really shouldn&#39;t use that unless you have a good reason
+  profiles: {
+    server: {
+      basic_constraints: {&quot;ca&quot; : false},
+      key_usage: [digitalSignature,keyEncipherment],
+      extended_key_usage: [serverAuth],
+      certificate_policies: [
+        { policy_identifier: &quot;2.16.840.1.99999.21.234&quot;,
+          cps_uris: [&quot;http://example.com/cps&quot;,&quot;http://haha.com&quot;],
+          user_notices: [ { explicit_text: &quot;this is a great thing&quot;, organization: &quot;my org&quot;, notice_numbers: &quot;1,2,3&quot; } ]
+        },
+        { policy_identifier: &quot;2.16.840.1.99999.21.235&quot;,
+          cps_uris: [&quot;http://example.com/cps2&quot;],
+          user_notices: [ { explicit_text: &quot;this is a bad thing&quot;, organization: &quot;another org&quot;, notice_numbers: &quot;3,2,1&quot; },{ explicit_text: &quot;another user notice&quot;} ]
+        }
+      ],
+      subject_item_policy: {
+        &quot;CN&quot; : &quot;required&quot;,
+        &quot;O&quot; : &quot;optional&quot;,
+        &quot;ST&quot; : &quot;required&quot;,
+        &quot;C&quot; : &quot;required&quot;,
+        &quot;OU&quot; : &quot;optional&quot; }
+    }
+  }
+}
+</code></pre>
+
+<p>Load multiple CAConfigs using a CAConfigPool</p>
+
+<pre class="code ruby"><code class="ruby"><span class='id identifier rubyid_pool'>pool</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>Config</span><span class='op'>::</span><span class='const'>CAConfigPool</span><span class='period'>.</span><span class='id identifier rubyid_from_yaml'>from_yaml</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>certificate_authorities</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>config_pool.yaml</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+</code></pre>
+
+<p>Example (Minimal) Config Pool YAML</p>
+
+<pre class="code yaml"><code class="yaml">certificate_authorities: {
+  test_ca: {
+    ca_cert: {
+      cert: &#39;test_ca.cer&#39;,
+      key: &#39;test_ca.key&#39;
+    }
+  },
+  second_ca: {
+    ca_cert: {
+      cert: &#39;second_ca.cer&#39;,
+      key: &#39;second_ca.key&#39;
+    }
+  }
+}
+</code></pre>
+
+<h3>CertificateAuthority</h3>
+
+<p>Sign a CSR</p>
+
+<pre class="code ruby"><code class="ruby"><span class='id identifier rubyid_csr'>csr</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>CSR</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span>
+  <span class='symbol'>:subject</span> <span class='op'>=&gt;</span> <span class='lbracket'>[</span>
+    <span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>CN</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>somedomain.com</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='comma'>,</span>
+    <span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>O</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>My Org</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='comma'>,</span>
+    <span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>L</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>City</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='comma'>,</span>
+    <span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>ST</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>State</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='comma'>,</span>
+    <span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>C</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>US</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span>
+  <span class='rbracket'>]</span>
+<span class='rparen'>)</span>
+<span class='comment'># assume config from yaml load above
+</span><span class='id identifier rubyid_ca'>ca</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>CertificateAuthority</span><span class='op'>::</span><span class='const'>Signer</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_config'>config</span><span class='rparen'>)</span>
+<span class='id identifier rubyid_cert'>cert</span> <span class='op'>=</span> <span class='id identifier rubyid_ca'>ca</span><span class='period'>.</span><span class='id identifier rubyid_sign'>sign</span><span class='lparen'>(</span>
+  <span class='symbol'>:profile_name</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>server</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span>
+  <span class='symbol'>:csr</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_csr'>csr</span>
+<span class='rparen'>)</span>
+</code></pre>
+
+<p>Override a CSR&#39;s subject or SAN names when signing</p>
+
+<pre class="code ruby"><code class="ruby"><span class='id identifier rubyid_csr'>csr</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>CSR</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span>
+  <span class='symbol'>:subject</span> <span class='op'>=&gt;</span> <span class='lbracket'>[</span>
+    <span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>CN</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>somedomain.com</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='comma'>,</span>
+    <span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>O</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>My Org</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='comma'>,</span>
+    <span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>L</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>City</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='comma'>,</span>
+    <span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>ST</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>State</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='comma'>,</span>
+    <span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>C</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>US</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span>
+  <span class='rbracket'>]</span>
+<span class='rparen'>)</span>
+<span class='id identifier rubyid_subject'>subject</span> <span class='op'>=</span> <span class='id identifier rubyid_csr'>csr</span><span class='period'>.</span><span class='id identifier rubyid_subject'>subject</span><span class='period'>.</span><span class='id identifier rubyid_dup'>dup</span>
+<span class='id identifier rubyid_san_names'>san_names</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>sannames.com</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>domain2.com</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>128.128.128.128</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span>
+<span class='id identifier rubyid_subject'>subject</span><span class='period'>.</span><span class='id identifier rubyid_common_name'>common_name</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>newdomain.com</span><span class='tstring_end'>&quot;</span></span>
+<span class='id identifier rubyid_subject'>subject</span><span class='period'>.</span><span class='id identifier rubyid_organization'>organization</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Org 2.0</span><span class='tstring_end'>&quot;</span></span>
+<span class='comment'># assume config from yaml load above
+</span><span class='id identifier rubyid_ca'>ca</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>CertificateAuthority</span><span class='op'>::</span><span class='const'>Signer</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_config'>config</span><span class='rparen'>)</span>
+<span class='id identifier rubyid_cert'>cert</span> <span class='op'>=</span> <span class='id identifier rubyid_ca'>ca</span><span class='period'>.</span><span class='id identifier rubyid_sign'>sign</span><span class='lparen'>(</span>
+  <span class='symbol'>:profile_name</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>server</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span>
+  <span class='symbol'>:csr</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_csr'>csr</span><span class='comma'>,</span>
+  <span class='symbol'>:subject</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_subject'>subject</span><span class='comma'>,</span>
+  <span class='symbol'>:san_names</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_san_names'>san_names</span>
+<span class='rparen'>)</span>
+</code></pre>
+
+<p>Sign an SPKI/SPKAC object</p>
+
+<pre class="code ruby"><code class="ruby"><span class='id identifier rubyid_key'>key</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>PrivateKey</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='symbol'>:type</span> <span class='op'>=&gt;</span> <span class='symbol'>:rsa</span><span class='comma'>,</span> <span class='symbol'>:bit_strength</span> <span class='op'>=&gt;</span> <span class='int'>2048</span><span class='rparen'>)</span>
+<span class='id identifier rubyid_spki'>spki</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>SPKI</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='symbol'>:key</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_key'>key</span><span class='rparen'>)</span>
+<span class='comment'># SPKI objects do not contain subject or san name data so it must be specified
+</span><span class='id identifier rubyid_subject'>subject</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>Subject</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span>
+<span class='id identifier rubyid_subject'>subject</span><span class='period'>.</span><span class='const'>CN</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>mydomain.com</span><span class='tstring_end'>&quot;</span></span>
+<span class='id identifier rubyid_subject'>subject</span><span class='period'>.</span><span class='const'>L</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Locality</span><span class='tstring_end'>&quot;</span></span>
+<span class='id identifier rubyid_subject'>subject</span><span class='period'>.</span><span class='const'>ST</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>State</span><span class='tstring_end'>&quot;</span></span>
+<span class='id identifier rubyid_subject'>subject</span><span class='period'>.</span><span class='const'>C</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>US</span><span class='tstring_end'>&quot;</span></span>
+<span class='id identifier rubyid_san_names'>san_names</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>domain2.com</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>128.128.128.128</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span>
+<span class='comment'># assume config from yaml load above
+</span><span class='id identifier rubyid_ca'>ca</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>CertificateAuthority</span><span class='op'>::</span><span class='const'>Signer</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_config'>config</span><span class='rparen'>)</span>
+<span class='id identifier rubyid_cert'>cert</span> <span class='op'>=</span> <span class='id identifier rubyid_ca'>ca</span><span class='period'>.</span><span class='id identifier rubyid_sign'>sign</span><span class='lparen'>(</span>
+  <span class='symbol'>:profile_name</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>server</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span>
+  <span class='symbol'>:spki</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_spki'>spki</span><span class='comma'>,</span>
+  <span class='symbol'>:subject</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_subject'>subject</span><span class='comma'>,</span>
+  <span class='symbol'>:san_names</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_san_names'>san_names</span>
+<span class='rparen'>)</span>
+
+</code></pre>
+
+<h3>OID Mapping</h3>
+
+<p>Register one</p>
+
+<pre class="code ruby"><code class="ruby"><span class='const'>R509</span><span class='op'>::</span><span class='const'>OIDMapper</span><span class='period'>.</span><span class='id identifier rubyid_register'>register</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>1.3.5.6.7.8.3.23.3</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>short_name</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>optional_long_name</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+</code></pre>
+
+<p>Register in batch</p>
+
+<pre class="code ruby"><code class="ruby"><span class='const'>R509</span><span class='op'>::</span><span class='const'>OIDMapper</span><span class='period'>.</span><span class='id identifier rubyid_batch_register'>batch_register</span><span class='lparen'>(</span><span class='lbracket'>[</span>
+  <span class='lbrace'>{</span><span class='symbol'>:oid</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>1.3.5.6.7.8.3.23.3</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span> <span class='symbol'>:short_name</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>short_name</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span> <span class='symbol'>:long_name</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>optional_long_name</span><span class='tstring_end'>&quot;</span></span><span class='rbrace'>}</span><span class='comma'>,</span>
+  <span class='lbrace'>{</span><span class='symbol'>:oid</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>1.3.5.6.7.8.3.23.5</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span> <span class='symbol'>:short_name</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>another_name</span><span class='tstring_end'>&quot;</span></span><span class='rbrace'>}</span>
+<span class='rbracket'>]</span><span class='rparen'>)</span>
+</code></pre>
+
+<h3>Alternate Key Algorithms</h3>
+
+<p>In addition to the default RSA objects that are created above, r509 supports DSA and elliptic curve (EC). EC support is present only if Ruby has been linked against a version of OpenSSL compiled with EC enabled. This excludes Red Hat-based distributions at this time (unless you build it yourself). Take a look at the documentation for R509::PrivateKey, R509::Cert, and R509::CSR to see how to create DSA and EC types. You can test if elliptic curve support is available in your Ruby with:</p>
+
+<pre class="code ruby"><code class="ruby"><span class='const'>R509</span><span class='period'>.</span><span class='id identifier rubyid_ec_supported?'>ec_supported?</span>
+</code></pre>
+
+<h4>NIST Recommended Elliptic Curves</h4>
+
+<p>These curves are set via <code>:curve_name</code>. The system defaults to using <code>secp384r1</code></p>
+
+<ul>
+<li>secp224r1 -- NIST/SECG curve over a 224 bit prime field</li>
+<li>secp384r1 -- NIST/SECG curve over a 384 bit prime field</li>
+<li>secp521r1 -- NIST/SECG curve over a 521 bit prime field</li>
+<li>prime192v1 -- NIST/X9.62/SECG curve over a 192 bit prime field</li>
+<li>sect163k1 -- NIST/SECG/WTLS curve over a 163 bit binary field</li>
+<li>sect163r2 -- NIST/SECG curve over a 163 bit binary field</li>
+<li>sect233k1 -- NIST/SECG/WTLS curve over a 233 bit binary field</li>
+<li>sect233r1 -- NIST/SECG/WTLS curve over a 233 bit binary field</li>
+<li>sect283k1 -- NIST/SECG curve over a 283 bit binary field</li>
+<li>sect283r1 -- NIST/SECG curve over a 283 bit binary field</li>
+<li>sect409k1 -- NIST/SECG curve over a 409 bit binary field</li>
+<li>sect409r1 -- NIST/SECG curve over a 409 bit binary field</li>
+<li>sect571k1 -- NIST/SECG curve over a 571 bit binary field</li>
+<li>sect571r1 -- NIST/SECG curve over a 571 bit binary field</li>
+</ul>
+
+<h2>Documentation</h2>
+
+<p>There is documentation available for every method and class in r509 available via yardoc. If you installed via gem it should be pre-generated in the doc directory. If you cloned this repo, just type <code>rake yard</code> with the yard gem installed. You will also need the redcarpet and github-markup gems to properly parse the Readme.md. Alternately you can view pre-generated documentation at <a href="http://r509.org">r509.org</a></p>
+
+<h2>Created by...</h2>
+
+<p><a href="https://github.com/reaperhulk">Paul Kehrer</a></p>
+
+<h2>Thanks to...</h2>
+
+<ul>
+<li><a href="https://github.com/sirsean">Sean Schulte</a></li>
+<li><a href="https://github.com/justfalter">Mike Ryan</a></li>
+</ul>
+
+<h2>License</h2>
+
+<p>See the LICENSE file. Licensed under the Apache 2.0 License.</p>
+
+<h1>YAML Config Options</h1>
+
+<p>r509 configs are nested hashes of key:values that define the behavior of each CA. See r509.yaml for a full example config. These options can also be defined programmatically via R509::CAConfig and R509::CAProfile.</p>
+
+<h2>ca_name</h2>
+
+<h3>ca_cert</h3>
+
+<p>This hash defines the certificate + key that will be used to sign for the ca_name. Depending on desired configuration various elements are optional. You can even supply just <strong>cert</strong> (for example, if you are using an ocsp_cert hash and only using the configured CA for OCSP responses)</p>
+
+<ul>
+<li>cert (cannot use with pkcs12)</li>
+<li>key (optional, cannot use with pkcs12)</li>
+<li>engine (optional, cannot be used with key or pkcs12. Must be a hash with SO_PATH and ID keys)</li>
+<li>key_name (required when using engine)</li>
+<li>pkcs12 (optional, cannot be used with key or cert)</li>
+<li>password (optional, used for pkcs12 or passworded private key)</li>
+</ul>
+
+<h3>ocsp_cert</h3>
+
+<p>This hash defines the certificate + key that will be used to sign for OCSP responses. OCSP responses cannot be directly created with r509, but require the ancillary gem <a href="https://github.com/reaperhulk/r509-ocsp-responder">r509-ocsp-responder</a>. This hash is optional and if not provided r509 will automatically use the ca_cert as the OCSP certificate.</p>
+
+<ul>
+<li>cert (cannot use with pkcs12)</li>
+<li>key (optional, cannot use with pkcs12)</li>
+<li>engine (optional, cannot be used with key or pkcs12. Must be a hash with SO_PATH and ID keys)</li>
+<li>key_name (required when using engine)</li>
+<li>pkcs12 (optional, cannot be used with key or cert)</li>
+<li>password (optional, used for pkcs12 or passworded private key)</li>
+</ul>
+
+<h3>cdp_location</h3>
+
+<p>An array of CRL distribution points for certificates issued from this CA.</p>
+
+<pre class="code yaml"><code class="yaml">[&#39;http://crl.r509.org/myca.crl&#39;]
+</code></pre>
+
+<h3>crl_list</h3>
+
+<p>The path on the filesystem of the list of revoked certificates for this CA.</p>
+
+<p>Example: &#39;/path/to/my_ca_crl_list.txt&#39;</p>
+
+<h3>crl_number</h3>
+
+<p>The path on the filesystem of the current CRL number for this CA.</p>
+
+<p>Example: &#39;/path/to/my_ca_crl_number.txt&#39;</p>
+
+<h3>crl_validity_hours</h3>
+
+<p>Integer hours for CRL validity.</p>
+
+<h3>ocsp_location</h3>
+
+<p>An array of URIs for client OCSP checks. These strings will be scanned and automatically processed to determine their proper type in the certificate.</p>
+
+<pre class="code yaml"><code class="yaml">[&#39;http://ocsp.r509.org&#39;]
+</code></pre>
+
+<h3>ca_issuers_location</h3>
+
+<p>An array of ca issuer locations. These strings will be scanned and automatically processed to determine their proper type in the certificate.</p>
+
+<pre class="code yaml"><code class="yaml">[&#39;http://www.r509.org/some_roots.html&#39;]
+</code></pre>
+
+<h3>ocsp_chain</h3>
+
+<p>An optional path to a concatenated text file of PEMs that should be attached to OCSP responses</p>
+
+<h3>ocsp_validity_hours</h3>
+
+<p>Integer hours for OCSP response validity.</p>
+
+<h3>ocsp_start_skew_seconds</h3>
+
+<p>Integer seconds to skew back the &quot;thisUpdate&quot; field. This prevents issues where the OCSP responder signs a response and the client rejects it because the response is &quot;not yet valid&quot; due to slight clock synchronization problems.</p>
+
+<h3>message_digest</h3>
+
+<p>String value of the message digest to use for signing (both CRL and certificates). Allowed values are:</p>
+
+<ul>
+<li>SHA1 (default)</li>
+<li>SHA224</li>
+<li>SHA256</li>
+<li>SHA384</li>
+<li>SHA512</li>
+<li>MD5 (Don&#39;t use this unless you have a really, really good reason. Even then, you shouldn&#39;t)</li>
+</ul>
+
+<h3>profiles</h3>
+
+<p>Each CA can have an arbitrary number of issuance profiles (with arbitrary names). For example, a CA named <strong>test_ca</strong> might have 3 issuance profiles: server, email, clientserver. Each of these profiles then has a set of options that define the encoded data in the certificate for that profile. If no profiles are defined the root cannot issue certs, but can still issue CRLs.</p>
+
+<h4>basic_constraints</h4>
+
+<p>All basic constraints are encoded with the critical bit set to true. The basic constraints config expects a hash with between one and two keys.</p>
+
+<h5>ca</h5>
+
+<p>The ca key is required and must be set to true (for an issuing CA) or false (everything else).</p>
+
+<h5>path_length</h5>
+
+<p>This option is only allowed if ca is set to TRUE. path_length allows you to define the maximum number of non-self-issued intermediate certificates that may follow this certificate in a valid certification path. For example, if you set this value to 0 then the certificate issued can only issue end entity certificates, not additional subroots. This must be a non-negative integer (&gt;=0).</p>
+
+<pre class="code yaml"><code class="yaml">{ca : true}
+{ca : false}
+{ca : true, path_length: 3}
+</code></pre>
+
+<h4>key_usage</h4>
+
+<p>An array of strings that conform to the OpenSSL naming scheme for available key usage OIDs.</p>
+
+<ul>
+<li>digitalSignature</li>
+<li>nonRepudiation</li>
+<li>keyEncipherment</li>
+<li>dataEncipherment</li>
+<li>keyAgreement</li>
+<li>keyCertSign</li>
+<li>cRLSign</li>
+<li>encipherOnly</li>
+<li>decipherOnly</li>
+</ul>
+
+<h4>extended_key_usage</h4>
+
+<p>An array of strings that conform to the OpenSSL naming scheme for available EKU OIDs. The following list of allowed shortnames is taken from the OpenSSL docs. Depending on your OpenSSL version there may be more than this list.</p>
+
+<ul>
+<li>serverAuth</li>
+<li>clientAuth</li>
+<li>codeSigning</li>
+<li>emailProtection</li>
+<li>OCSPSigning</li>
+<li>timeStamping</li>
+<li>msCodeInd (not part of RFC 5280)</li>
+<li>msCodeCom (not part of RFC 5280)</li>
+<li>msCTLSign (not part of RFC 5280)</li>
+<li>msSGC (not part of RFC 5280)</li>
+<li>msEFS (not part of RFC 5280)</li>
+<li>nsSGC (not part of RFC 5280)</li>
+</ul>
+
+<h4>certificate_policies</h4>
+
+<p>An array of hashes containing policy identifiers, CPS URI(s), and user notice(s)</p>
+
+<pre class="code yaml"><code class="yaml">[
+  { policy_identifier: &quot;2.16.840.1.99999.21.234&quot;,
+    cps_uris: [&quot;http://example.com/cps&quot;]
+  }
+]
+</code></pre>
+
+<p>or</p>
+
+<pre class="code yaml"><code class="yaml">[
+  { policy_identifier: &quot;2.16.840.1.99999.21.234&quot;,
+    cps_uris: [&quot;http://example.com/cps&quot;,&quot;http://haha.com&quot;],
+    user_notices: [ { explicit_text: &quot;this is a great thing&quot;, organization: &quot;my org&quot;, notice_numbers: &quot;1,2,3&quot; } ]
+  },
+  { policy_identifier: &quot;2.16.840.1.99999.21.235&quot;,
+    cps_uris: [&quot;http://example.com/cps2&quot;],
+    user_notices: [ { explicit_text: &quot;this is a bad thing&quot;, organization: &quot;another org&quot;, notice_numbers: &quot;3,2,1&quot; },{ explicit_text: &quot;another user notice&quot;} ]
+  }
+]
+</code></pre>
+
+<h4>ocsp_no_check</h4>
+
+<p>This is a boolean option that determines whether the OCSPNoCheck extension should be encoded in certificates issued by the profile. This flag is <em>only</em> meaningful on certificates that contain the OCSPSigning EKU.</p>
+
+<h4>inhibit_any_policy</h4>
+
+<p>A non-negative integer value. From RFC 5280: &quot;The inhibit anyPolicy extension can be used in certificates issued to CAs.  The inhibit anyPolicy extension indicates that the special anyPolicy OID, with the value { 2 5 29 32 0 }, is not considered an explicit match for other certificate policies except when it appears in an intermediate self-issued CA certificate.&quot;</p>
+
+<h4>policy_constraints</h4>
+
+<p>A hash with two optional keys (one or both may be present). From RFC 5280: &quot;The policy constraints extension can be used in certificates issued to CAs.  The policy constraints extension constrains path validation in two ways.  It can be used to prohibit policy mapping or require that each certificate in a path contain an acceptable policy identifier&quot;</p>
+
+<pre class="code yaml"><code class="yaml">  { require_explicit_policy: 0, inhibit_policy_mapping: 0 }
+</code></pre>
+
+<p>or if you only need one of the keys</p>
+
+<pre class="code yaml"><code class="yaml">  { inhibit_policy_mapping: 0 }
+</code></pre>
+
+<h3>name_constraints</h3>
+
+<p>From RFC 5280: &quot;The name constraints extension, which MUST be used only in a CA certificate, indicates a name space within which all subject names in subsequent certificates in a certification path MUST be located.  Restrictions apply to the subject distinguished name and apply to subject alternative names.  Restrictions apply only when the specified name form is present.  If no name of the type is in the certificate, the certificate is acceptable.&quot;.</p>
+
+<p>This section is made up of a hash that contains permitted and excluded keys. Each (optional) key in turn has an array of hashes that declare a type and value. Types allowed are defined by R509::ASN1::GeneralName.map_type_to_tag. (examples: DNS, URI, IP, email, dirName)</p>
+
+<p>Notes:
+ * When supplying IP you <em>must</em> supply a full netmask in addition to an IP.
+ * When supplying dirName the value is an array of arrays structured the same way as input to :subject in R509::CSR.new</p>
+
+<pre class="code yaml"><code class="yaml">{
+  permitted: [
+    {type: &quot;IP&quot;, value: &quot;192.168.0.0/255.255.0.0&quot;},
+    {type: &quot;dirName&quot;, value: [[&#39;CN&#39;,&#39;myCN&#39;],[&#39;O&#39;,&#39;Org&#39;]]}
+  ],
+  excluded: [
+    {type: &quot;email&quot;, value: &quot;domain.com&quot;},
+    {type: &quot;URI&quot;, value: &quot;.net&quot;},
+    {type: &quot;DNS&quot;, value: &quot;test.us&quot;}
+  ]
+}
+</code></pre>
+
+<h4>subject_item_policy</h4>
+
+<p>Hash of required/optional subject items. These must be in OpenSSL shortname format. If subject_item_policy is excluded from the profile then all subject items will be used. If it is included, <strong>only items listed in the policy will be copied to the certificate</strong>.
+Example:</p>
+
+<pre class="code yaml"><code class="yaml">CN : &quot;required&quot;,
+O: &quot;required&quot;,
+OU: &quot;optional&quot;,
+ST: &quot;required&quot;,
+C: &quot;required&quot;,
+L: &quot;required&quot;,
+emailAddress: &quot;optional&quot;
+</code></pre>
+
+<p>If you use the R509::OIDMapper you can create new shortnames that are allowed within this directive.</p>
+</div></div>
+
+    <div id="footer">
+  Generated on Mon May  6 09:22:47 2013 by
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.8.6.1 (ruby-2.0.0).
+</div>
+
+  </body>
+</html>
