@@ -291,7 +291,7 @@ module R509
     class CAConfig
       include R509::IOHelpers
       extend R509::IOHelpers
-      attr_accessor :ca_cert, :crl_validity_hours, :default_md,
+      attr_reader :ca_cert, :crl_validity_hours, :default_md,
         :allowed_mds, :cdp_location, :crl_start_skew_seconds, :ocsp_location,
         :ocsp_chain, :ocsp_start_skew_seconds, :ocsp_validity_hours, :crl_number_file,
         :crl_list_file, :ca_issuers_location
@@ -301,18 +301,19 @@ module R509
       #  a CRL will be valid. Defaults to 7 days.
       # @option opts [Hash<String, R509::Config::CAProfile>] :profiles
       # @option opts [String] :default_md (default:SHA1) The hashing algorithm to use.
-      # @option opts [Array] :allowed_mds (optional) Array of allowed hashes. default_md will be automatically added to this list if it isn't already listed.
+      # @option opts [Array] :allowed_mds (optional) Array of allowed hashes.
+      #  default_md will be automatically added to this list if it isn't already listed.
       # @option opts [Array] :cdp_location array of strings (URLs)
       # @option opts [Array] :ocsp_location array of strings (URLs)
       # @option opts [Array] :ca_issuers_location array of strings (URLs)
       # @option opts [String] :crl_number_file The file that we will save
-      #  the CRL numbers to. defaults to a StringIO object if not provided
+      #  the CRL numbers to.
       # @option opts [String] :crl_list_file The file that we will save
-      #  the CRL list data to. defaults to a StringIO object if not provided
+      #  the CRL list data to.
       # @option opts [R509::Cert] :ocsp_cert An optional cert+key pair
       # OCSP signing delegate
       # @option opts [Array<OpenSSL::X509::Certificate>] :ocsp_chain An optional array
-      # that constitutes the chain to attach to an OCSP response
+      #  that constitutes the chain to attach to an OCSP response
       #
       def initialize(opts = {} )
         if not opts.has_key?(:ca_cert) then

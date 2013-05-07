@@ -316,9 +316,11 @@ describe R509::CertificateAuthority::Signer do
     it "issues a certificate with a ca_issuers_location and ocsp_location" do
       csr = R509::CSR.new(:csr => @csr)
       ca_cert = R509::Cert.new( :cert => TestFixtures::TEST_CA_CERT, :key => TestFixtures::TEST_CA_KEY )
-      config = R509::Config::CAConfig.new(:ca_cert => ca_cert)
-      config.ca_issuers_location = ['http://domain.com/ca.html']
-      config.ocsp_location = ['http://ocsp.domain.com','http://ocsp.other.com']
+      config = R509::Config::CAConfig.new(
+        :ca_cert => ca_cert,
+        :ca_issuers_location => ['http://domain.com/ca.html'],
+        :ocsp_location => ['http://ocsp.domain.com','http://ocsp.other.com']
+      )
       profile = R509::Config::CAProfile.new
       config.set_profile("default",profile)
       ca = R509::CertificateAuthority::Signer.new(config)
@@ -329,9 +331,11 @@ describe R509::CertificateAuthority::Signer do
     it "issues a certificate with a ca_issuers_location and ocsp_location (dirName,URI,DNS)" do
       csr = R509::CSR.new(:csr => @csr)
       ca_cert = R509::Cert.new( :cert => TestFixtures::TEST_CA_CERT, :key => TestFixtures::TEST_CA_KEY )
-      config = R509::Config::CAConfig.new(:ca_cert => ca_cert)
-      config.ca_issuers_location = ['http://domain.com/ca.html','domain.com',R509::Subject.new([['CN','myDir'],['C','US']])]
-      config.ocsp_location = ['http://ocsp.domain.com/','ocsp.domain.com',R509::Subject.new([['CN','ocsp'],['L','Locality']])]
+      config = R509::Config::CAConfig.new(
+        :ca_cert => ca_cert,
+        :ca_issuers_location => ['http://domain.com/ca.html','domain.com',R509::Subject.new([['CN','myDir'],['C','US']])],
+        :ocsp_location => ['http://ocsp.domain.com/','ocsp.domain.com',R509::Subject.new([['CN','ocsp'],['L','Locality']])]
+      )
       profile = R509::Config::CAProfile.new
       config.set_profile("default",profile)
       ca = R509::CertificateAuthority::Signer.new(config)
@@ -346,8 +350,10 @@ describe R509::CertificateAuthority::Signer do
     it "issues a certificate with a ca_issuers_location and no ocsp_location" do
       csr = R509::CSR.new(:csr => @csr)
       ca_cert = R509::Cert.new( :cert => TestFixtures::TEST_CA_CERT, :key => TestFixtures::TEST_CA_KEY )
-      config = R509::Config::CAConfig.new(:ca_cert => ca_cert)
-      config.ca_issuers_location = ['http://domain.com/ca.html']
+      config = R509::Config::CAConfig.new(
+        :ca_cert => ca_cert,
+        :ca_issuers_location => ['http://domain.com/ca.html']
+      )
       profile = R509::Config::CAProfile.new
       config.set_profile("default",profile)
       ca = R509::CertificateAuthority::Signer.new(config)
@@ -358,8 +364,10 @@ describe R509::CertificateAuthority::Signer do
     it "issues a certificate with multiple ca_issuer_locations" do
       csr = R509::CSR.new(:csr => @csr)
       ca_cert = R509::Cert.new( :cert => TestFixtures::TEST_CA_CERT, :key => TestFixtures::TEST_CA_KEY )
-      config = R509::Config::CAConfig.new(:ca_cert => ca_cert)
-      config.ca_issuers_location = ["http://somelocation.com/c.html","http://other.com/d.html"]
+      config = R509::Config::CAConfig.new(
+        :ca_cert => ca_cert,
+        :ca_issuers_location => ["http://somelocation.com/c.html","http://other.com/d.html"]
+      )
       profile = R509::Config::CAProfile.new
       config.set_profile("default",profile)
       ca = R509::CertificateAuthority::Signer.new(config)
@@ -370,8 +378,10 @@ describe R509::CertificateAuthority::Signer do
     it "issues a certificate with ocsp_location" do
       csr = R509::CSR.new(:csr => @csr)
       ca_cert = R509::Cert.new( :cert => TestFixtures::TEST_CA_CERT, :key => TestFixtures::TEST_CA_KEY )
-      config = R509::Config::CAConfig.new(:ca_cert => ca_cert)
-      config.ocsp_location = ["http://myocsp.jb.net"]
+      config = R509::Config::CAConfig.new(
+        :ca_cert => ca_cert,
+        :ocsp_location => ["http://myocsp.jb.net"]
+      )
       profile = R509::Config::CAProfile.new
       config.set_profile("default",profile)
       ca = R509::CertificateAuthority::Signer.new(config)
@@ -382,8 +392,10 @@ describe R509::CertificateAuthority::Signer do
     it "issues a certificate with an empty array for ocsp_location" do
       csr = R509::CSR.new(:csr => @csr)
       ca_cert = R509::Cert.new( :cert => TestFixtures::TEST_CA_CERT, :key => TestFixtures::TEST_CA_KEY )
-      config = R509::Config::CAConfig.new(:ca_cert => ca_cert)
-      config.ocsp_location = []
+      config = R509::Config::CAConfig.new(
+        :ca_cert => ca_cert,
+        :ocsp_location => []
+      )
       profile = R509::Config::CAProfile.new
       config.set_profile("default",profile)
       ca = R509::CertificateAuthority::Signer.new(config)
@@ -393,8 +405,10 @@ describe R509::CertificateAuthority::Signer do
     it "issues a certificate with an empty array for ca_issuers_location" do
       csr = R509::CSR.new(:csr => @csr)
       ca_cert = R509::Cert.new( :cert => TestFixtures::TEST_CA_CERT, :key => TestFixtures::TEST_CA_KEY )
-      config = R509::Config::CAConfig.new(:ca_cert => ca_cert)
-      config.ca_issuers_location = []
+      config = R509::Config::CAConfig.new(
+        :ca_cert => ca_cert,
+        :ca_issuers_location => []
+      )
       profile = R509::Config::CAProfile.new
       config.set_profile("default",profile)
       ca = R509::CertificateAuthority::Signer.new(config)
@@ -415,8 +429,7 @@ describe R509::CertificateAuthority::Signer do
   it "issues a certificate with an empty array for CDP" do
     csr = R509::CSR.new(:csr => @csr)
     ca_cert = R509::Cert.new( :cert => TestFixtures::TEST_CA_CERT, :key => TestFixtures::TEST_CA_KEY )
-    config = R509::Config::CAConfig.new(:ca_cert => ca_cert)
-    config.cdp_location = []
+    config = R509::Config::CAConfig.new(:ca_cert => ca_cert, :cdp_location => [])
     profile = R509::Config::CAProfile.new
     config.set_profile("default",profile)
     ca = R509::CertificateAuthority::Signer.new(config)
@@ -426,8 +439,7 @@ describe R509::CertificateAuthority::Signer do
   it "issues a certificate with a single CDP" do
     csr = R509::CSR.new(:csr => @csr)
     ca_cert = R509::Cert.new( :cert => TestFixtures::TEST_CA_CERT, :key => TestFixtures::TEST_CA_KEY )
-    config = R509::Config::CAConfig.new(:ca_cert => ca_cert)
-    config.cdp_location = ["http://mycdp.com/x.crl"]
+    config = R509::Config::CAConfig.new(:ca_cert => ca_cert, :cdp_location => ["http://mycdp.com/x.crl"])
     profile = R509::Config::CAProfile.new
     config.set_profile("default",profile)
     ca = R509::CertificateAuthority::Signer.new(config)
@@ -437,8 +449,7 @@ describe R509::CertificateAuthority::Signer do
   it "issues a certificate with multiple CDPs" do
     csr = R509::CSR.new(:csr => @csr)
     ca_cert = R509::Cert.new( :cert => TestFixtures::TEST_CA_CERT, :key => TestFixtures::TEST_CA_KEY )
-    config = R509::Config::CAConfig.new(:ca_cert => ca_cert)
-    config.cdp_location = ["http://mycdp.com/x.crl","http://anothercrl.com/x.crl"]
+    config = R509::Config::CAConfig.new(:ca_cert => ca_cert, :cdp_location => ["http://mycdp.com/x.crl","http://anothercrl.com/x.crl"])
     profile = R509::Config::CAProfile.new
     config.set_profile("default",profile)
     ca = R509::CertificateAuthority::Signer.new(config)
