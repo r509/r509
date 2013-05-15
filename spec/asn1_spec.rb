@@ -15,6 +15,11 @@ describe R509::ASN1 do
       general_names = R509::ASN1.general_name_parser(nil)
       general_names.should be_nil
     end
+    it "when passed an existing generalname object, return the same object" do
+      general_names = R509::ASN1::GeneralNames.new
+      names = R509::ASN1.general_name_parser(general_names)
+      names.should == general_names
+    end
     it "correctly parses dns names" do
       general_names = R509::ASN1.general_name_parser(['domain2.com','domain3.com'])
       general_names.dns_names.should == ["domain2.com", "domain3.com"]

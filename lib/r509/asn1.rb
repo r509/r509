@@ -25,6 +25,8 @@ module R509
     def self.general_name_parser(names)
       if names.nil?
         return nil
+      elsif names.kind_of?(R509::ASN1::GeneralNames)
+        return names
       end
       general_names = R509::ASN1::GeneralNames.new
       names.map do |domain|
