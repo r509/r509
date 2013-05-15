@@ -54,7 +54,7 @@ module R509
         elsif opts.has_key?(:message_digest)
           message_digest = R509::MessageDigest.new(opts[:message_digest])
         else
-          message_digest = R509::MessageDigest.new('sha1')
+          message_digest = R509::MessageDigest.new
         end
         @spki.sign(@key.key,message_digest.digest)
       end
