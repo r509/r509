@@ -30,7 +30,7 @@ if opts[:interactive] == true or opts[:subject].nil? then
     exit
   end
 
-  print "Message Digest (sha1):"
+  print "Message Digest (#{R509::MessageDigest::DEFAULT_MD}):"
   md = gets.chomp
   opts[:message_digest] = case md
     when 'sha1' then 'sha1'
@@ -39,7 +39,7 @@ if opts[:interactive] == true or opts[:subject].nil? then
     when 'sha384' then 'sha384'
     when 'sha512' then 'sha512'
     when 'md5' then 'md5'
-    else 'sha1'
+    else R509::MessageDigest::DEFAULT_MD
   end
 
   subject = []
