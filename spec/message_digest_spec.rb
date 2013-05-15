@@ -103,6 +103,12 @@ describe R509::MessageDigest do
     md.name.should == "dss1"
     md.digest.kind_of?(OpenSSL::Digest::DSS1).should == true
   end
+  it "creates a default digest with no params or nil" do
+    md = R509::MessageDigest.new
+    md.name.should == R509::MessageDigest::DEFAULT_MD.downcase
+    md = R509::MessageDigest.new(nil)
+    md.name.should == R509::MessageDigest::DEFAULT_MD.downcase
+  end
   it "exception on unknown digest -> name" do
     expect{ R509::MessageDigest.new(12345) }.to raise_error(ArgumentError)
   end

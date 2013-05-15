@@ -13,9 +13,12 @@ module R509
     attr_reader :name, :digest
 
     # @param [String,OpenSSL::Digest] arg
-    def initialize(arg)
+    def initialize(arg=nil)
       if arg.kind_of?(String)
         @name = arg.downcase
+        @digest = translate_name_to_digest
+      elsif arg.nil?
+        @name = DEFAULT_MD
         @digest = translate_name_to_digest
       else
         @digest = arg
