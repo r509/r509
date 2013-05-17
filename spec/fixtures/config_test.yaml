@@ -8,13 +8,20 @@ test_ca: {
   crl_validity_hours: 72,
   ocsp_validity_hours: 96,
   ocsp_start_skew_seconds: 1800,
-  default_md: 'SHA512',
-  allowed_mds: ['SHA256','SHA512','SHA1'],
   profiles: {
     server: {
       basic_constraints: { "ca" : false },
       key_usage: [digitalSignature,keyEncipherment],
       extended_key_usage: [serverAuth],
+    },
+    mds: {
+      default_md: 'SHA512',
+      allowed_mds: ['SHA512','SHA1']
+    },
+    aia_cdp: {
+      ocsp_location: ['http://ocsp.domain.com'],
+      ca_issuers_location: ['http://www.domain.com/cert.cer'],
+      cdp_location: ['http://crl.domain.com/something.crl'],
     },
     ocsp_delegate_with_no_check: {
       ocsp_no_check: true

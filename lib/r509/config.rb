@@ -9,15 +9,17 @@ require 'fileutils'
 require 'pathname'
 
 module R509
-  # Module to contain all configuration related classes (e.g. CAConfig, CAProfile, SubjectItemPolicy)
+  # Module to contain all configuration related classes (e.g. CAConfig, CertProfile, SubjectItemPolicy)
   module Config
     # Provides access to configuration profiles
-    class CAProfile
+    class CertProfile
       attr_reader :basic_constraints, :key_usage, :extended_key_usage,
         :certificate_policies, :subject_item_policy, :ocsp_no_check,
-        :inhibit_any_policy, :policy_constraints, :name_constraints
+        :inhibit_any_policy, :policy_constraints, :name_constraints,
+        :ocsp_location, :cdp_location, :ca_issuers_location, :default_md,
+        :allowed_mds
 
-      # All hash options for CAProfile are optional.
+      # All hash options for CertProfile are optional.
       # @option opts [Hash] :basic_constraints
       # @option opts [Array] :key_usage
       # @option opts [Array] :extended_key_usage
@@ -27,6 +29,12 @@ module R509
       # @option opts [Hash] :policy_constraints Sets the value of the policyConstriants extension
       # @option opts [Hash] :name_constraints Sets the value of the nameConstraints extension
       # @option opts [R509::Config::SubjectItemPolicy] :subject_item_policy
+      # @option opts [String] :default_md (default:SHA1) The hashing algorithm to use.
+      # @option opts [Array] :allowed_mds (optional) Array of allowed hashes.
+      #  default_md will be automatically added to this list if it isn't already listed.
+      # @option opts [Array] :cdp_location array of strings (URLs)
+      # @option opts [Array] :ocsp_location array of strings (URLs)
+      # @option opts [Array] :ca_issuers_location array of strings (URLs)
       def initialize(opts = {})
         validate_basic_constraints opts[:basic_constraints]
         validate_key_usage opts[:key_usage]
@@ -37,6 +45,11 @@ module R509
         validate_name_constraints opts[:name_constraints]
         @ocsp_no_check = (opts[:ocsp_no_check] == true or opts[:ocsp_no_check] == "true")?true:false
         validate_subject_item_policy opts[:subject_item_policy]
+        validate_ocsp_location(opts[:ocsp_location])
+        validate_ca_issuers_location(opts[:ca_issuers_location])
+        validate_cdp_location(opts[:cdp_location])
+        @default_md = validate_md(opts[:default_md] || R509::MessageDigest::DEFAULT_MD)
+        validate_allowed_mds(opts[:allowed_mds])
       end
 
       private
@@ -193,6 +206,52 @@ module R509
         end
         @basic_constraints = constraints
       end
+
+      # @private
+      def validate_allowed_mds(allowed_mds)
+        if allowed_mds.respond_to?(:each)
+          allowed_mds = allowed_mds.map { |md| validate_md(md) }
+          # case insensitively check if the default_md is in the allowed_mds
+          # and add it if it's not there.
+          if not allowed_mds.any?{ |s| s.casecmp(@default_md)==0 }
+            allowed_mds.push @default_md
+          end
+        end
+        @allowed_mds = allowed_mds
+      end
+
+      # @private
+      def validate_md(md)
+        md = md.upcase
+        if not R509::MessageDigest::KNOWN_MDS.include?(md)
+          raise ArgumentError, "An unknown message digest was supplied. Permitted: #{R509::MessageDigest::KNOWN_MDS.join(", ")}"
+        end
+        md
+      end
+
+      # @private
+      def validate_cdp_location(location)
+        if not location.nil? and not location.kind_of?(Array)
+          raise ArgumentError, "cdp_location must be an array if provided"
+        end
+        @cdp_location = location
+      end
+
+      # @private
+      def validate_ocsp_location(location)
+        if not location.nil? and not location.kind_of?(Array)
+          raise ArgumentError, "ocsp_location must be an array if provided"
+        end
+        @ocsp_location = location
+      end
+
+      # @private
+      def validate_ca_issuers_location(location)
+        if not location.nil? and not location.kind_of?(Array)
+          raise ArgumentError, "ca_issuers_location must be an array if provided"
+        end
+        @ca_issuers_location = location
+      end
     end
 
     # returns information about the subject item policy for a profile
@@ -291,21 +350,14 @@ module R509
     class CAConfig
       include R509::IOHelpers
       extend R509::IOHelpers
-      attr_reader :ca_cert, :crl_validity_hours, :default_md,
-        :allowed_mds, :cdp_location, :crl_start_skew_seconds, :ocsp_location,
-        :ocsp_chain, :ocsp_start_skew_seconds, :ocsp_validity_hours, :crl_number_file,
-        :crl_list_file, :ca_issuers_location
+      attr_reader :ca_cert, :crl_validity_hours, :crl_start_skew_seconds, :ocsp_chain,
+        :ocsp_start_skew_seconds, :ocsp_validity_hours, :crl_number_file,
+        :crl_list_file
 
       # @option opts [R509::Cert] :ca_cert Cert+Key pair
       # @option opts [Integer] :crl_validity_hours (168) The number of hours that
       #  a CRL will be valid. Defaults to 7 days.
-      # @option opts [Hash<String, R509::Config::CAProfile>] :profiles
-      # @option opts [String] :default_md (default:SHA1) The hashing algorithm to use.
-      # @option opts [Array] :allowed_mds (optional) Array of allowed hashes.
-      #  default_md will be automatically added to this list if it isn't already listed.
-      # @option opts [Array] :cdp_location array of strings (URLs)
-      # @option opts [Array] :ocsp_location array of strings (URLs)
-      # @option opts [Array] :ca_issuers_location array of strings (URLs)
+      # @option opts [Hash<String, R509::Config::CertProfile>] :profiles
       # @option opts [String] :crl_number_file The file that we will save
       #  the CRL numbers to.
       # @option opts [String] :crl_list_file The file that we will save
@@ -334,8 +386,6 @@ module R509
           raise ArgumentError, ':ocsp_cert must contain a private key, not just a certificate'
         end
         @ocsp_cert = opts[:ocsp_cert] unless opts[:ocsp_cert].nil?
-        validate_ocsp_location(opts[:ocsp_location])
-        validate_ca_issuers_location(opts[:ca_issuers_location])
         @ocsp_chain = opts[:ocsp_chain] if opts[:ocsp_chain].kind_of?(Array)
         @ocsp_validity_hours = opts[:ocsp_validity_hours] || 168
         @ocsp_start_skew_seconds = opts[:ocsp_start_skew_seconds] || 3600
@@ -344,9 +394,6 @@ module R509
         @crl_start_skew_seconds = opts[:crl_start_skew_seconds] || 3600
         @crl_number_file = opts[:crl_number_file] || nil
         @crl_list_file = opts[:crl_list_file] || nil
-        validate_cdp_location(opts[:cdp_location])
-        @default_md = validate_md(opts[:default_md] || R509::MessageDigest::DEFAULT_MD)
-        validate_allowed_mds(opts[:allowed_mds])
 
 
 
@@ -365,16 +412,16 @@ module R509
       end
 
       # @param [String] name The name of the profile
-      # @param [R509::Config::CAProfile] prof The profile configuration
+      # @param [R509::Config::CertProfile] prof The profile configuration
       def set_profile(name, prof)
-        unless prof.is_a?(R509::Config::CAProfile)
-          raise TypeError, "profile is supposed to be a R509::Config::CAProfile"
+        unless prof.is_a?(R509::Config::CertProfile)
+          raise TypeError, "profile is supposed to be a R509::Config::CertProfile"
         end
         @profiles[name] = prof
       end
 
       # @param [String] prof
-      # @return [R509::Config::CAProfile] The config profile.
+      # @return [R509::Config::CertProfile] The config profile.
       def profile(prof)
         if !@profiles.has_key?(prof)
           raise R509::R509Error, "unknown profile '#{prof}'"
@@ -453,11 +500,6 @@ module R509
           :crl_validity_hours => conf['crl_validity_hours'],
           :ocsp_validity_hours => conf['ocsp_validity_hours'],
           :ocsp_start_skew_seconds => conf['ocsp_start_skew_seconds'],
-          :ocsp_location => conf['ocsp_location'],
-          :ca_issuers_location => conf['ca_issuers_location'],
-          :cdp_location => conf['cdp_location'],
-          :default_md => conf['default_md'],
-          :allowed_mds => conf['allowed_mds'],
         }
 
         if conf.has_key?("crl_list")
@@ -475,7 +517,7 @@ module R509
           if not data["subject_item_policy"].nil?
             subject_item_policy = R509::Config::SubjectItemPolicy.new(data["subject_item_policy"])
           end
-          profs[profile] = R509::Config::CAProfile.new(:key_usage => data["key_usage"],
+          profs[profile] = R509::Config::CertProfile.new(:key_usage => data["key_usage"],
                              :extended_key_usage => data["extended_key_usage"],
                              :basic_constraints => data["basic_constraints"],
                              :certificate_policies => data["certificate_policies"],
@@ -483,6 +525,11 @@ module R509
                              :inhibit_any_policy => data["inhibit_any_policy"],
                              :policy_constraints => data["policy_constraints"],
                              :name_constraints => data["name_constraints"],
+                             :cdp_location => data["cdp_location"],
+                             :ocsp_location => data["ocsp_location"],
+                             :ca_issuers_location => data["ca_issuers_location"],
+                             :default_md => data["default_md"],
+                             :allowed_mds => data["allowed_mds"],
                              :subject_item_policy => subject_item_policy)
         end unless conf['profiles'].nil?
         opts[:profiles] = profs
@@ -573,53 +620,6 @@ module R509
         ca_cert
       end
 
-      private
-
-      # @private
-      def validate_allowed_mds(allowed_mds)
-        if allowed_mds.respond_to?(:each)
-          allowed_mds = allowed_mds.map { |md| validate_md(md) }
-          # case insensitively check if the default_md is in the allowed_mds
-          # and add it if it's not there.
-          if not allowed_mds.any?{ |s| s.casecmp(@default_md)==0 }
-            allowed_mds.push @default_md
-          end
-        end
-        @allowed_mds = allowed_mds
-      end
-
-      # @private
-      def validate_md(md)
-        md = md.upcase
-        if not R509::MessageDigest::KNOWN_MDS.include?(md)
-          raise ArgumentError, "An unknown message digest was supplied. Permitted: #{R509::MessageDigest::KNOWN_MDS.join(", ")}"
-        end
-        md
-      end
-
-      # @private
-      def validate_cdp_location(location)
-        if not location.nil? and not location.kind_of?(Array)
-          raise ArgumentError, "cdp_location must be an array if provided"
-        end
-        @cdp_location = location
-      end
-
-      # @private
-      def validate_ocsp_location(location)
-        if not location.nil? and not location.kind_of?(Array)
-          raise ArgumentError, "ocsp_location must be an array if provided"
-        end
-        @ocsp_location = location
-      end
-
-      # @private
-      def validate_ca_issuers_location(location)
-        if not location.nil? and not location.kind_of?(Array)
-          raise ArgumentError, "ca_issuers_location must be an array if provided"
-        end
-        @ca_issuers_location = location
-      end
     end
   end
 end

@@ -174,7 +174,7 @@ module TestFixtures
   end
 
   def self.test_ca_server_profile
-    R509::Config::CAProfile.new(
+    R509::Config::CertProfile.new(
         :basic_constraints => {"ca" => false },
         :key_usage => ["digitalSignature","keyEncipherment"],
         :extended_key_usage => ["serverAuth"],
@@ -196,7 +196,7 @@ module TestFixtures
       "C" => "required",
       "OU" => "optional"
     )
-    R509::Config::CAProfile.new(
+    R509::Config::CertProfile.new(
       :basic_constraints => {"ca" => false },
       :key_usage => ["digitalSignature","keyEncipherment"],
       :extended_key_usage => ["serverAuth"],
@@ -211,7 +211,7 @@ module TestFixtures
   end
 
   def self.test_ca_subroot_profile
-    R509::Config::CAProfile.new(
+    R509::Config::CertProfile.new(
           :basic_constraints => {"ca" => true, "path_length" => 0 },
           :key_usage => ["keyCertSign","cRLSign"],
           :extended_key_usage => [],
@@ -219,7 +219,7 @@ module TestFixtures
   end
 
   def self.test_ca_ocspsigner_profile
-    R509::Config::CAProfile.new(
+    R509::Config::CertProfile.new(
           :basic_constraints => { "ca" => false },
           :key_usage => ["digitalSignature"],
           :extended_key_usage => ["OCSPSigning"],

@@ -8,17 +8,12 @@ certificate_authorities: {
       pkcs12: 'spec/fixtures/test_ca_ocsp.p12',
       password: 'r509'
     },
-    ocsp_location: ['http://ocsp.domain.com'],
-    ca_issuers_location: ['http://domain.com/ca.html'],
     ocsp_chain: 'spec/fixtures/test_ca_ocsp_chain.txt',
     ocsp_start_skew_seconds: 3600,
     ocsp_validity_hours: 168,
-    cdp_location: ['http://crl.domain.com/test_ca.crl'],
     crl_list: 'spec/fixtures/test_ca_crl_list.txt',
     crl_number: 'spec/fixtures/test_ca_crl_number.txt',
     crl_validity_hours: 168, #7 days
-    default_md: 'SHA1',
-    allowed_mds: ['SHA256','SHA512','SHA1'],
     profiles: {
       server: {
         basic_constraints: {"ca" : false},
@@ -31,32 +26,62 @@ certificate_authorities: {
           ST: "required",
           C:  "required",
           L:  "required"
-        }
+        },
+        ocsp_location: ['http://ocsp.domain.com'],
+        ca_issuers_location: ['http://domain.com/ca.html'],
+        cdp_location: ['http://crl.domain.com/test_ca.crl'],
+        default_md: 'SHA1',
+        allowed_mds: ['SHA256','SHA512','SHA1'],
       },
       client: {
         basic_constraints: {"ca" : false},
         key_usage: [digitalSignature,keyEncipherment],
         extended_key_usage: [clientAuth],
+        ocsp_location: ['http://ocsp.domain.com'],
+        ca_issuers_location: ['http://domain.com/ca.html'],
+        cdp_location: ['http://crl.domain.com/test_ca.crl'],
+        default_md: 'SHA1',
+        allowed_mds: ['SHA256','SHA512','SHA1'],
       },
       email: {
         basic_constraints: {"ca" : false},
         key_usage: [digitalSignature,keyEncipherment],
         extended_key_usage: [emailProtection],
+        ocsp_location: ['http://ocsp.domain.com'],
+        ca_issuers_location: ['http://domain.com/ca.html'],
+        cdp_location: ['http://crl.domain.com/test_ca.crl'],
+        default_md: 'SHA1',
+        allowed_mds: ['SHA256','SHA512','SHA1'],
       },
       clientserver: {
         basic_constraints:  {"ca" : false},
         key_usage: [digitalSignature,keyEncipherment],
         extended_key_usage: [serverAuth,clientAuth],
+        ocsp_location: ['http://ocsp.domain.com'],
+        ca_issuers_location: ['http://domain.com/ca.html'],
+        cdp_location: ['http://crl.domain.com/test_ca.crl'],
+        default_md: 'SHA1',
+        allowed_mds: ['SHA256','SHA512','SHA1'],
       },
       codesigning: {
         basic_constraints:  {"ca" : false},
         key_usage: [digitalSignature],
         extended_key_usage: [codeSigning],
+        ocsp_location: ['http://ocsp.domain.com'],
+        ca_issuers_location: ['http://domain.com/ca.html'],
+        cdp_location: ['http://crl.domain.com/test_ca.crl'],
+        default_md: 'SHA1',
+        allowed_mds: ['SHA256','SHA512','SHA1'],
       },
       timestamping: {
         basic_constraints:  {"ca" : false},
         key_usage: [digitalSignature],
         extended_key_usage: [timeStamping],
+        ocsp_location: ['http://ocsp.domain.com'],
+        ca_issuers_location: ['http://domain.com/ca.html'],
+        cdp_location: ['http://crl.domain.com/test_ca.crl'],
+        default_md: 'SHA1',
+        allowed_mds: ['SHA256','SHA512','SHA1'],
       },
       subroot: {
         basic_constraints:  {"ca" : true, "path_length" : 0},
@@ -84,13 +109,23 @@ certificate_authorities: {
             {type: "URI", value: ".net"},
             {type: "DNS", value: "test.us"}
           ]
-        }
+        },
+        ocsp_location: ['http://ocsp.domain.com'],
+        ca_issuers_location: ['http://domain.com/ca.html'],
+        cdp_location: ['http://crl.domain.com/test_ca.crl'],
+        default_md: 'SHA1',
+        allowed_mds: ['SHA256','SHA512','SHA1'],
       },
       ocsp_delegate: {
         basic_constraints:  {"ca" : false},
         key_usage: [digitalSignature],
         extended_key_usage: [OCSPSigning],
-        ocsp_no_check: true
+        ocsp_no_check: true,
+        ocsp_location: ['http://ocsp.domain.com'],
+        ca_issuers_location: ['http://domain.com/ca.html'],
+        cdp_location: ['http://crl.domain.com/test_ca.crl'],
+        default_md: 'SHA1',
+        allowed_mds: ['SHA256','SHA512','SHA1'],
       }
     }
   }

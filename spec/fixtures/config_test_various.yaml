@@ -36,7 +36,6 @@ missing_key_identifier_ca: {
     cert: 'missing_key_identifier_ca.cer',
     key: 'missing_key_identifier_ca.key'
   },
-  default_md: 'SHA1',
   profiles: {
     server: {
       basic_constraints: { "ca" : false },
@@ -50,7 +49,6 @@ multi_policy_ca: {
     cert: 'test_ca.cer',
     key: 'test_ca.key'
   },
-  default_md: 'SHA1',
   profiles: {
     server: {
       basic_constraints: { "ca" : false },
@@ -112,7 +110,6 @@ all_eku_ca: {
     cert: 'test_ca.cer',
     key: 'test_ca.key'
   },
-  default_md: 'SHA1',
   profiles: {
     smorgasbord: {
       basic_constraints: { "ca" : false },
@@ -126,7 +123,6 @@ ocsp_no_check_ca: {
     cert: 'test_ca.cer',
     key: 'test_ca.key'
   },
-  default_md: 'SHA1',
   profiles: {
     ocsp_no_check_delegate: {
       basic_constraints: { "ca" : false },
