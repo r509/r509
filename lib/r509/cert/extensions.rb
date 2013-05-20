@@ -353,7 +353,7 @@ module R509
         Extensions.register_class(self)
 
         # takes an existing object, DER-encoded string, or hash with :public_key
-        #   in OpenSSL::PKey format. You can get this format from R509::PrivateKey#public_key
+        #   in OpenSSL::PKey format. You can get this format from various #public_key methods
         def initialize(arg)
           if arg.kind_of?(Hash)
             ef = OpenSSL::X509::ExtensionFactory.new
@@ -599,7 +599,7 @@ module R509
         Extensions.register_class(self)
 
         def initialize(arg=nil)
-          if arg.nil?
+          if not arg.nil? and arg != false
             ef = OpenSSL::X509::ExtensionFactory.new
             arg = ef.create_extension("noCheck","yes")
           end
@@ -700,8 +700,8 @@ module R509
         def initialize(arg)
           if arg.kind_of?(Hash)
             constraints = []
-            constraints << "requireExplicitPolicy:#{arg[:require_explicit_policy]}" unless arg[:require_explicit_policy].nil?
-            constraints << "inhibitPolicyMapping:#{arg[:inhibit_policy_mapping]}" unless arg[:inhibit_policy_mapping].nil?
+            constraints << "requireExplicitPolicy:#{arg['require_explicit_policy']}" unless arg['require_explicit_policy'].nil?
+            constraints << "inhibitPolicyMapping:#{arg['inhibit_policy_mapping']}" unless arg['inhibit_policy_mapping'].nil?
             ef = OpenSSL::X509::ExtensionFactory.new
             arg = ef.create_extension("policyConstraints",constraints.join(","),true) # must be set critical per RFC 5280
           end

@@ -122,7 +122,7 @@ module R509
       # validates the structure of the certificate policies array
       def validate_certificate_policies(policies)
         if not policies.nil?
-          if not policies.respond_to?(:each)
+          if not policies.kind_of?(Array)
             raise ArgumentError, "Not a valid certificate policy structure. Must be an array of hashes"
           else
             policies.each do |policy|
