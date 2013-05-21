@@ -8,14 +8,19 @@ module R509::CertificateAuthority
       @config = config
     end
 
-    # @param [Hash] options Options hash
-    # @param [String] profile Name of profile to use
-    # @return [Hash] Hash of enforced md, subject, and extensions
-    def enforce(options,profile)
-      profile = @config.profile(profile)
+    # @option options :profile_name [String] Name of profile to use
+    # @option options :csr [R509::CSR]
+    # @option options :spki [R509::SPKI]
+    # @option options :subject [R509::Subject,OpenSSL::X509::Subject,Array] (optional for R509::CSR, required for R509::SPKI)
+    # @option options :message_digest [String] the message digest to use for this certificate instead of the default (see R509::MessageDigest::DEFAULT_MD).
+    # @option options :san_names [Array,R509::ASN1::GeneralNames] List of domains, IPs, email addresses, or URIs to encode as subjectAltNames. The type is determined from the structure of the strings via the R509::ASN1.general_name_parser method. You can also pass an explicit R509::ASN1::GeneralNames object
+    # @return [Hash] Hash of enforced :message_digest, :subject, :extensions, and :csr/:spki
+    def enforce(options)
+      profile = @config.profile(options[:profile_name])
 
-      if options.has_key?(:csr) and not options[:csr].verify_signature
-        raise R509::R509Error, "Certificate request signature is invalid."
+      if (options.has_key?(:csr) and not options[:csr].verify_signature) or
+         (options.has_key?(:spki) and not options[:spki].verify_signature)
+        raise R509::R509Error, "Request signature is invalid."
       end
 
       raw_subject, public_key = R509::CertificateAuthority::Signer.extract_public_key_subject(options)
@@ -26,11 +31,14 @@ module R509::CertificateAuthority
 
       subject = enforce_subject_item_policy(raw_subject,profile)
 
-      {
+      return_hash = {
         :subject => subject,
         :extensions => extensions,
-        :message_digest => message_digest
+        :message_digest => message_digest,
       }
+      return_hash[:csr] = options[:csr] unless options[:csr].nil?
+      return_hash[:spki] = options[:spki] unless options[:spki].nil?
+      return_hash
     end
 
     private
