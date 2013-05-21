@@ -18,6 +18,8 @@ module R509::CertificateAuthority
     def enforce(options)
       profile = @config.profile(options[:profile_name])
 
+      R509::CertificateAuthority::Signer.check_options(options)
+
       if (options.has_key?(:csr) and not options[:csr].verify_signature) or
          (options.has_key?(:spki) and not options[:spki].verify_signature)
         raise R509::R509Error, "Request signature is invalid."

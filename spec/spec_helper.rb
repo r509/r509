@@ -21,3 +21,7 @@ if not R509.ec_supported?
     c.filter_run_excluding :ec => true
   end
 end
+
+RSpec.configure do |config|
+  config.alias_it_should_behave_like_to :it_validates, "it validates"
+end

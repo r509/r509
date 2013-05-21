@@ -384,12 +384,12 @@ module R509
         attr_reader :key_identifier, :authority_cert_issuer, :authority_cert_serial_number
 
         # takes an existing object, DER-encoded string, or hash with :value and :issuer_certificate
-        #  :issuer_certificate must be R509::Cert. For the rules of :value see: http://www.openssl.org/docs/apps/x509v3_config.html#Authority_Key_Identifier_. Defaults to keyid:always
+        #  :issuer_certificate must be R509::Cert. For the rules of :value see: http://www.openssl.org/docs/apps/x509v3_config.html#Authority_Key_Identifier_. Defaults to keyid
         def initialize(arg)
           if arg.kind_of?(Hash)
             ef = OpenSSL::X509::ExtensionFactory.new
             ef.issuer_certificate = arg[:issuer_certificate].cert
-            arg = ef.create_extension("authorityKeyIdentifier", arg[:value] || "keyid:always") # this could also be keyid:always,issuer:always
+            arg = ef.create_extension("authorityKeyIdentifier", arg[:value] || "keyid") # this could also be keyid:always,issuer:always
           end
 
           super(arg)
@@ -599,7 +599,7 @@ module R509
         Extensions.register_class(self)
 
         def initialize(arg=nil)
-          if not arg.nil? and arg != false
+          if not arg.nil? and arg != false and not arg.kind_of?(OpenSSL::X509::Extension)
             ef = OpenSSL::X509::ExtensionFactory.new
             arg = ef.create_extension("noCheck","yes")
           end

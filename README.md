@@ -195,11 +195,11 @@ config = R509::Config::CAConfig.new(
 )
 ```
 
-Add a signing profile named "server" (CAProfile) to a config object
+Add a certificate profile named "server" (CertProfile) to a config object. Certificate profiles are optional. For examples of how to use them (or not) check the ProfileEnforcer section.
 
 ```ruby
-profile = R509::Config::CAProfile.new(
-  :basic_constraints => {"ca" : false},
+profile = R509::Config::CertProfile.new(
+  :basic_constraints => {"ca" => false},
   :key_usage => ["digitalSignature","keyEncipherment"],
   :extended_key_usage => ["serverAuth"],
   :certificate_policies => [
@@ -209,7 +209,10 @@ profile = R509::Config::CAProfile.new(
     }
   ],
   :subject_item_policy => nil,
-  :ocsp_no_check => false # this should only be true if you are setting OCSPSigning EKU
+  :ocsp_no_check => false, # this should only be true if you are setting OCSPSigning EKU
+  :cdp_location => ["http://crl.myca.net/ca.crl"],
+  :ocsp_location => ["http://ocsp.myca.net/"],
+  :ca_issuers_location => ["http://www.myca.net/some_ca.cer"]
 )
 # config object from above assumed
 config.set_profile("server",profile)
@@ -218,7 +221,7 @@ config.set_profile("server",profile)
 Set up a subject item policy (required/optional). The keys must match OpenSSL's shortnames!
 
 ```ruby
-profile = R509::Config::CAProfile.new(
+profile = R509::Config::CertProfile.new(
   :basic_constraints => {"ca" : false},
   :key_usage => ["digitalSignature","keyEncipherment"],
   :extended_key_usage => ["serverAuth"],
@@ -247,11 +250,7 @@ test_ca: {
   },
   crl_list: "crl_list_file.txt",
   crl_number: "crl_number_file.txt",
-  cdp_location: ['http://crl.domain.com/test_ca.crl'],
   crl_validity_hours: 168, #7 days
-  ocsp_location: ['http://ocsp.domain.com'],
-  ca_issuers_location: ['http://www.domain.com/my_roots.html'],
-  message_digest: 'SHA1', #SHA1, SHA224, SHA256, SHA384, SHA512 supported. MD5 too, but you really shouldn't use that unless you have a good reason
   profiles: {
     server: {
       basic_constraints: {"ca" : false},
@@ -272,7 +271,12 @@ test_ca: {
         "O" : "optional",
         "ST" : "required",
         "C" : "required",
-        "OU" : "optional" }
+        "OU" : "optional" },
+      cdp_location: ['http://crl.domain.com/test_ca.crl'],
+      ocsp_location: ['http://ocsp.domain.com'],
+      ca_issuers_location: ['http://www.domain.com/my_roots.html'],
+      default_md: 'SHA1',
+      allowed_mds: ['SHA256','SHA1']
     }
   }
 }
@@ -303,7 +307,7 @@ certificate_authorities: {
 }
 ```
 
-###CertificateAuthority
+###CertificateAuthority::Signer (sans CertProfile)
 
 Sign a CSR
 
@@ -319,9 +323,13 @@ csr = R509::CSR.new(
 )
 # assume config from yaml load above
 ca = R509::CertificateAuthority::Signer.new(config)
+ext = []
+# you can add extensions in an array. See R509::Cert::Extensions::*
+ext << R509::Cert::Extensions::BasicConstraints.new({"ca" => false})
+
 cert = ca.sign(
-  :profile_name => "server",
-  :csr => csr
+  :csr => csr,
+  :extensions => ext
 )
 ```
 
@@ -341,13 +349,15 @@ subject = csr.subject.dup
 san_names = ["sannames.com","domain2.com","128.128.128.128"]
 subject.common_name = "newdomain.com"
 subject.organization = "Org 2.0"
+ext = []
+ext << R509::Cert::Extensions::BasicConstraints.new({"ca" => false})
+ext << R509::Cert::Extensions::SubjectAlternativeName.new(san_names)
 # assume config from yaml load above
 ca = R509::CertificateAuthority::Signer.new(config)
 cert = ca.sign(
-  :profile_name => "server",
   :csr => csr,
   :subject => subject,
-  :san_names => san_names
+  :extensions => ext
 )
 ```
 
@@ -363,14 +373,44 @@ subject.L = "Locality"
 subject.ST = "State"
 subject.C = "US"
 san_names = ["domain2.com","128.128.128.128"]
+ext = []
+ext << R509::Cert::Extensions::BasicConstraints.new({"ca" => false})
+ext << R509::Cert::Extensions::SubjectAlternativeName.new(san_names)
 # assume config from yaml load above
 ca = R509::CertificateAuthority::Signer.new(config)
 cert = ca.sign(
-  :profile_name => "server",
   :spki => spki,
   :subject => subject,
-  :san_names => san_names
+  :extensions => ext
 )
+
+```
+
+###CertificateAuthority::ProfileEnforcer
+The ProfileEnforcer takes in a CAConfig with CertProfiles. You then call #enforce to have it enforce a profile's constraints and build the specified set of extensions.
+
+```ruby
+# assume config from yaml load above
+csr = R509::CSR.new(
+  :subject => [
+    ['CN','somedomain.com'],
+    ['O','My Org'],
+    ['L','City'],
+    ['ST','State'],
+    ['C','US']
+  ]
+)
+enforcer = R509::CertificateAuthority::ProfileEnforcer.new(config)
+scrubbed_data = enforcer.enforce(
+  :csr => csr,
+  :profile_name => "server",
+  :subject => [['CN','rewritten.com']],
+  :san_names => ['r509.org'],
+  :message_digest => 'SHA256'
+)
+# this returns a hash with keys :subject, :extensions, and :message_digest
+signer = R509::CertificateAuthority::Signer.new(config)
+cert = signer.sign(scrubbed_data)
 
 ```
 
@@ -417,7 +457,7 @@ These curves are set via ```:curve_name```. The system defaults to using ```secp
  * sect571r1 -- NIST/SECG curve over a 571 bit binary field
 
 ##Documentation
-There is documentation available for every method and class in r509 available via yardoc. If you installed via gem it should be pre-generated in the doc directory. If you cloned this repo, just type ```rake yard``` with the yard gem installed. You will also need the redcarpet and github-markup gems to properly parse the Readme.md. Alternately you can view pre-generated documentation at [r509.org](http://r509.org)
+There is documentation available for every method and class in r509 available via yardoc. You can view the latest release docs at [r509.org](http://r509.org). If you installed via gem it should be pre-generated in the doc directory. If you cloned this repo, just type ```rake yard``` with the yard gem installed. You will also need the redcarpet and github-markup gems to properly parse the README.md.
 
 ##Created by...
 [Paul Kehrer](https://github.com/reaperhulk)
@@ -430,7 +470,7 @@ There is documentation available for every method and class in r509 available vi
 See the LICENSE file. Licensed under the Apache 2.0 License.
 
 #YAML Config Options
-r509 configs are nested hashes of key:values that define the behavior of each CA. See r509.yaml for a full example config. These options can also be defined programmatically via R509::CAConfig and R509::CAProfile.
+r509 configs are nested hashes of key:values that define the behavior of each CA. See r509.yaml for a full example config. These options can also be defined programmatically via R509::Config::CAConfig and R509::Config::CertProfile.
 
 ##ca\_name
 ###ca\_cert
