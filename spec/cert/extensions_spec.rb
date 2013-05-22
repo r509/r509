@@ -343,15 +343,15 @@ shared_examples_for "a correct R509 NameConstraints object" do |critical|
   end
 
   it "should have the permitted names" do
-    @permitted_names.each_with_index do |name,index|
-      @r509_ext.permitted_names[index].tag.should == name[:tag]
-      @r509_ext.permitted_names[index].value.should == name[:value]
+    @permitted.each_with_index do |name,index|
+      @r509_ext.permitted[index].tag.should == name[:tag]
+      @r509_ext.permitted[index].value.should == name[:value]
     end
   end
   it "should have the excluded names" do
-    @excluded_names.each_with_index do |name,index|
-      @r509_ext.excluded_names[index].tag.should == name[:tag]
-      @r509_ext.excluded_names[index].value.should == name[:value]
+    @excluded.each_with_index do |name,index|
+      @r509_ext.excluded[index].tag.should == name[:tag]
+      @r509_ext.excluded[index].value.should == name[:value]
     end
   end
 end
@@ -483,6 +483,43 @@ describe R509::Cert::Extensions do
   end
 
   context "BasicConstraints" do
+    context "creation" do
+      it "creates CA:TRUE without pathlen" do
+        bc = R509::Cert::Extensions::BasicConstraints.new(:ca => true)
+        bc.is_ca?.should be_true
+        bc.path_length.should be_nil
+      end
+
+      it "creates CA:TRUE with path_length" do
+        bc = R509::Cert::Extensions::BasicConstraints.new(:ca => true, :path_length => 3)
+        bc.is_ca?.should be_true
+        bc.path_length.should == 3
+      end
+
+      it "creates CA:FALSE" do
+        bc = R509::Cert::Extensions::BasicConstraints.new(:ca => false)
+        bc.is_ca?.should be_false
+        bc.path_length.should be_nil
+      end
+
+      it "ignores path_length if CA:FALSE" do
+        bc = R509::Cert::Extensions::BasicConstraints.new(:ca => false, :path_length => 4)
+        bc.is_ca?.should be_false
+        bc.path_length.should be_nil
+      end
+
+      it "creates with default criticality" do
+        bc = R509::Cert::Extensions::BasicConstraints.new(:ca => false)
+        bc.critical?.should be_true
+      end
+
+      it "creates with non-default criticality" do
+        bc = R509::Cert::Extensions::BasicConstraints.new(:ca => false, :critical => false)
+        bc.critical?.should be_false
+      end
+
+    end
+
     context "with constraints for a CA certificate" do
       before :all do
         @extension_value = "CA:TRUE,pathlen:3"
@@ -521,6 +558,29 @@ describe R509::Cert::Extensions do
   end
 
   context "KeyUsage" do
+    context "creation" do
+      it "creates with single KU" do
+        ku = R509::Cert::Extensions::KeyUsage.new(:key_usage => ['digitalSignature'])
+        ku.allowed_uses.should == ['digitalSignature']
+      end
+
+      it "creates with multiple KU" do
+        ku = R509::Cert::Extensions::KeyUsage.new(:key_usage => ['digitalSignature','keyAgreement'])
+        ku.allowed_uses.should == ['digitalSignature','keyAgreement']
+      end
+
+      it "creates with default criticality" do
+        ku = R509::Cert::Extensions::KeyUsage.new(:key_usage => ['keyAgreement'])
+        ku.critical?.should be_false
+      end
+
+      it "creates with non-default criticality" do
+        ku = R509::Cert::Extensions::KeyUsage.new(:key_usage => ['keyAgreement'], :critical => true)
+        ku.critical?.should be_true
+      end
+
+    end
+
     context "with one allowed use" do
       before :all do
         @allowed_uses = [ KeyUsage::AU_DIGITAL_SIGNATURE ]
@@ -568,6 +628,29 @@ describe R509::Cert::Extensions do
   end
 
   context "ExtendedKeyUsage" do
+    context "creation" do
+      it "creates with single EKU" do
+        eku = R509::Cert::Extensions::ExtendedKeyUsage.new(:extended_key_usage => ['serverAuth'])
+        eku.allowed_uses.should == ['serverAuth']
+      end
+
+      it "creates with multiple EKU" do
+        eku = R509::Cert::Extensions::ExtendedKeyUsage.new(:extended_key_usage => ['serverAuth','codeSigning'])
+        eku.allowed_uses.should == ['serverAuth','codeSigning']
+      end
+
+      it "creates with default criticality" do
+        eku = R509::Cert::Extensions::ExtendedKeyUsage.new(:extended_key_usage => ['serverAuth'])
+        eku.critical?.should be_false
+      end
+
+      it "creates with non-default criticality" do
+        eku = R509::Cert::Extensions::ExtendedKeyUsage.new(:extended_key_usage => ['serverAuth'], :critical => true)
+        eku.critical?.should be_true
+      end
+
+    end
+
     context "with one allowed use" do
       before :all do
         @allowed_uses = [ ExtendedKeyUsage::AU_WEB_SERVER_AUTH ]
@@ -619,6 +702,27 @@ describe R509::Cert::Extensions do
       @key = @extension_value
     end
 
+    context "creation" do
+      before :all do
+        @pk = R509::PrivateKey.new(:bit_strength => 768)
+      end
+      it "creates successfully" do
+        ski = R509::Cert::Extensions::SubjectKeyIdentifier.new(:public_key => @pk.public_key)
+        ski.key.should_not be_nil
+      end
+
+      it "creates with default criticality" do
+        ski = R509::Cert::Extensions::SubjectKeyIdentifier.new(:public_key => @pk.public_key)
+        ski.critical?.should be_false
+      end
+
+      it "creates with non-default criticality" do
+        ski = R509::Cert::Extensions::SubjectKeyIdentifier.new(:public_key => @pk.public_key, :critical => true)
+        ski.critical?.should be_true
+      end
+
+    end
+
     it_should_behave_like "a correct R509 SubjectKeyIdentifier object"
   end
 
@@ -627,10 +731,77 @@ describe R509::Cert::Extensions do
       @extension_value = "keyid:always,issuer:always"
     end
 
+    context "creation" do
+      before :all do
+        @cert = TestFixtures.test_ca_cert
+      end
+
+      it "creates successfully with default value" do
+        aki = R509::Cert::Extensions::AuthorityKeyIdentifier.new(:issuer_certificate => @cert)
+        aki.key_identifier.should_not be_nil
+        aki.authority_cert_issuer.should be_nil
+      end
+
+      it "creates successfully with issuer value" do
+        aki = R509::Cert::Extensions::AuthorityKeyIdentifier.new(:issuer_certificate => @cert, :value => "issuer:always")
+        aki.authority_cert_issuer.should_not be_nil
+        aki.authority_cert_serial_number.should_not be_nil
+      end
+
+      it "creates successfully with issuer+keyid value" do
+        aki = R509::Cert::Extensions::AuthorityKeyIdentifier.new(:issuer_certificate => @cert, :value => "issuer:always,keyid:always")
+        aki.authority_cert_issuer.should_not be_nil
+        aki.authority_cert_serial_number.should_not be_nil
+        aki.key_identifier.should_not be_nil
+      end
+
+      it "creates with default criticality" do
+        aki = R509::Cert::Extensions::AuthorityKeyIdentifier.new(:issuer_certificate => @cert)
+        aki.critical?.should be_false
+      end
+
+      it "creates with non-default criticality" do
+        aki = R509::Cert::Extensions::AuthorityKeyIdentifier.new(:issuer_certificate => @cert, :critical => true)
+        aki.critical?.should be_true
+      end
+
+    end
+
     it_should_behave_like "a correct R509 AuthorityKeyIdentifier object"
   end
 
   context "SubjectAlternativeName" do
+    context "creation" do
+      it "creates with GeneralNames object" do
+        gns = R509::ASN1::GeneralNames.new
+        gns.create_item(:type => "rfc822Name", :value => "random string")
+        san = R509::Cert::Extensions::SubjectAlternativeName.new(:names => gns)
+        san.rfc_822_names.should == ['random string']
+      end
+
+      it "creates with a single name" do
+        san = R509::Cert::Extensions::SubjectAlternativeName.new(:names => ['domain.com'])
+        san.dns_names.should == ['domain.com']
+      end
+
+      it "creates with multiple names" do
+        san = R509::Cert::Extensions::SubjectAlternativeName.new(:names => ['domain.com','127.0.0.1'])
+        san.dns_names.should == ['domain.com']
+        san.ip_addresses.should == ['127.0.0.1']
+      end
+
+      it "creates with default criticality" do
+        san = R509::Cert::Extensions::SubjectAlternativeName.new(:names => ['domain.com'])
+        san.critical?.should be_false
+      end
+
+      it "creates with non-default criticality" do
+        san = R509::Cert::Extensions::SubjectAlternativeName.new(:names => ['domain.com'], :critical => true)
+        san.critical?.should be_true
+      end
+
+    end
+
     context "with an unimplemented GeneralName type" do
       it "errors as expected" do
         ef = OpenSSL::X509::ExtensionFactory.new
@@ -844,6 +1015,72 @@ describe R509::Cert::Extensions do
     end
   end
   context "AuthorityInfoAccess" do
+    context "creation" do
+      it "creates with GeneralNames object" do
+        gns = R509::ASN1::GeneralNames.new
+        gns.create_item(:type => "rfc822Name", :value => "random string")
+        aia = R509::Cert::Extensions::AuthorityInfoAccess.new(
+          :ocsp_location => gns,
+          :ca_issuers_location => gns
+        )
+        aia.ocsp.rfc_822_names.should == ['random string']
+        aia.ca_issuers.rfc_822_names.should == ['random string']
+      end
+
+      it "creates with one OCSP" do
+        aia = R509::Cert::Extensions::AuthorityInfoAccess.new(
+          :ocsp_location => ['http://ocsp.domain.com']
+        )
+        aia.ocsp.uris.should == ['http://ocsp.domain.com']
+      end
+
+      it "creates with multiple OCSP" do
+        aia = R509::Cert::Extensions::AuthorityInfoAccess.new(
+          :ocsp_location => ['http://ocsp.domain.com','http://ocsp2.domain.com']
+        )
+        aia.ocsp.uris.should == ['http://ocsp.domain.com','http://ocsp2.domain.com']
+      end
+
+      it "creates with one caIssuers" do
+        aia = R509::Cert::Extensions::AuthorityInfoAccess.new(
+          :ca_issuers_location => ['http://www.domain.com']
+        )
+        aia.ca_issuers.uris.should == ['http://www.domain.com']
+      end
+
+      it "creates with multiple caIssuers" do
+        aia = R509::Cert::Extensions::AuthorityInfoAccess.new(
+          :ca_issuers_location => ['http://www.domain.com','http://www2.domain.com']
+        )
+        aia.ca_issuers.uris.should == ['http://www.domain.com','http://www2.domain.com']
+      end
+
+      it "creates with caIssuers+OCSP" do
+        aia = R509::Cert::Extensions::AuthorityInfoAccess.new(
+          :ca_issuers_location => ['http://www.domain.com'],
+          :ocsp_location => ['http://ocsp.domain.com']
+        )
+        aia.ca_issuers.uris.should == ['http://www.domain.com']
+        aia.ocsp.uris.should == ['http://ocsp.domain.com']
+      end
+
+      it "creates with default criticality" do
+        aia = R509::Cert::Extensions::AuthorityInfoAccess.new(
+          :ocsp_location => ['http://ocsp.domain.com']
+        )
+        aia.critical?.should be_false
+      end
+
+      it "creates with non-default criticality" do
+        aia = R509::Cert::Extensions::AuthorityInfoAccess.new(
+          :ocsp_location => ['http://ocsp.domain.com'],
+          :critical => true
+        )
+        aia.critical?.should be_true
+      end
+
+    end
+
     context "with a CA Issuers URI only" do
       before :all do
         @ca_issuers_uris = ["http://www.test.local/ca.cert"]
@@ -901,6 +1138,36 @@ describe R509::Cert::Extensions do
   end
 
   context "CRLDistributionPoints" do
+    context "creation" do
+      it "creates with GeneralNames object" do
+        gns = R509::ASN1::GeneralNames.new
+        gns.create_item(:type => "rfc822Name", :value => "random string")
+        cdp = R509::Cert::Extensions::CRLDistributionPoints.new(:cdp_location => gns)
+        cdp.crl.rfc_822_names.should == ['random string']
+      end
+
+      it "creates with one CDP" do
+        cdp = R509::Cert::Extensions::CRLDistributionPoints.new(:cdp_location => ['http://crl.r509.org/ca.crl'])
+        cdp.crl.uris.should == ['http://crl.r509.org/ca.crl']
+      end
+
+      it "creates with multiple CDP" do
+        cdp = R509::Cert::Extensions::CRLDistributionPoints.new(:cdp_location => ['http://crl.r509.org/ca.crl','http://2.com/test.crl'])
+        cdp.crl.uris.should == ['http://crl.r509.org/ca.crl','http://2.com/test.crl']
+      end
+
+      it "creates with default criticality" do
+        cdp = R509::Cert::Extensions::CRLDistributionPoints.new(:cdp_location => ['http://crl.r509.org/ca.crl'])
+        cdp.critical?.should be_false
+      end
+
+      it "creates with non-default criticality" do
+        cdp = R509::Cert::Extensions::CRLDistributionPoints.new(:cdp_location => ['http://crl.r509.org/ca.crl'], :critical => true)
+        cdp.critical?.should be_true
+      end
+
+    end
+
     context "with a single CRL URI" do
       before :all do
         @crl_uris = ["http://www.test.local/ca.crl"]
@@ -923,6 +1190,24 @@ describe R509::Cert::Extensions do
   end
 
   context "OCSPNoCheck" do
+    context "creation" do
+      it "creates an extension when passed a hash" do
+        no_check = R509::Cert::Extensions::OCSPNoCheck.new({})
+        no_check.should_not be_nil
+      end
+
+      it "creates with default criticality" do
+        no_check = R509::Cert::Extensions::OCSPNoCheck.new({})
+        no_check.critical?.should be_false
+      end
+
+      it "creates with non-default criticality" do
+        no_check = R509::Cert::Extensions::OCSPNoCheck.new(:critical => true)
+        no_check.critical?.should be_true
+      end
+
+    end
+
     it_should_behave_like "a correct R509 OCSPNoCheck object", false
     it_should_behave_like "a correct R509 OCSPNoCheck object", true
   end
@@ -930,6 +1215,83 @@ describe R509::Cert::Extensions do
   context "CertificatePolicies" do
     before :all do
       @policy_data = "0\x81\x90\x06\x03U\x1D \x04\x81\x880\x81\x850\x81\x82\x06\v`\x86H\x01\xE09\x01\x02\x03\x04\x010s0\"\x06\b+\x06\x01\x05\x05\a\x02\x01\x16\x16http://example.com/cps0 \x06\b+\x06\x01\x05\x05\a\x02\x01\x16\x14http://other.com/cps0+\x06\b+\x06\x01\x05\x05\a\x02\x020\x1F0\x16\x16\x06my org0\f\x02\x01\x01\x02\x01\x02\x02\x01\x03\x02\x01\x04\x1A\x05thing"
+    end
+
+    context "creation" do
+      it "creates with one policy" do
+        cp = R509::Cert::Extensions::CertificatePolicies.new(
+          :policies => [{ :policy_identifier => "2.16.840.1.12345.1.2.3.4.1",
+            :cps_uris => ["http://example.com/cps","http://other.com/cps"],
+            :user_notices => [ {:explicit_text => "thing", :organization => "my org", :notice_numbers => "1,2,3,4"} ]
+          }]
+        )
+        cp.should_not be_nil
+        cp.policies.count.should == 1
+        cp.policies[0].policy_identifier.should == "2.16.840.1.12345.1.2.3.4.1"
+        cp.policies[0].policy_qualifiers.cps_uris.should == ["http://example.com/cps", "http://other.com/cps"]
+        cp.policies[0].policy_qualifiers.user_notices.count.should == 1
+        un = cp.policies[0].policy_qualifiers.user_notices[0]
+        un.notice_reference.notice_numbers.should == [1,2,3,4]
+        un.notice_reference.organization.should == 'my org'
+        un.explicit_text.should == "thing"
+      end
+
+      it "creates with multiple policies" do
+        cp = R509::Cert::Extensions::CertificatePolicies.new(
+          :policies => [{ :policy_identifier => "2.16.840.1.99999.21.234",
+            :cps_uris => ["http://example.com/cps","http://other.com/cps"],
+            :user_notices => [ {:explicit_text => "this is a great thing", :organization => "my org", :notice_numbers => "1,2,3,4"} ]
+          },
+          {
+            :policy_identifier => "2.16.840.1.99999.21.235",
+            :cps_uris => ["http://example.com/cps2"],
+            :user_notices => [{:explicit_text => "this is a bad thing", :organization => "another org", :notice_numbers => "3,2,1"}, {:explicit_text => "another user notice"}]
+          },
+          {
+            :policy_identifier => "2.16.840.1.99999.0"
+          }]
+        )
+        cp.should_not be_nil
+        cp.policies.count.should == 3
+        p0 = cp.policies[0]
+        p0.policy_identifier.should == "2.16.840.1.99999.21.234"
+        p0.policy_qualifiers.cps_uris.should == ["http://example.com/cps", "http://other.com/cps"]
+        p0.policy_qualifiers.user_notices.count.should == 1
+        un0 = p0.policy_qualifiers.user_notices[0]
+        un0.notice_reference.notice_numbers.should == [1,2,3,4]
+        un0.notice_reference.organization.should == "my org"
+        un0.explicit_text.should == "this is a great thing"
+        p1 = cp.policies[1]
+        p1.policy_identifier.should == "2.16.840.1.99999.21.235"
+        p1.policy_qualifiers.cps_uris.should == ["http://example.com/cps2"]
+        p1.policy_qualifiers.user_notices.count.should == 2
+        un1 = p1.policy_qualifiers.user_notices[0]
+        un1.notice_reference.notice_numbers.should == [3,2,1]
+        un1.notice_reference.organization.should == "another org"
+        un1.explicit_text.should == 'this is a bad thing'
+        un2 = p1.policy_qualifiers.user_notices[1]
+        un2.notice_reference.should be_nil
+        un2.explicit_text.should == "another user notice"
+        p2 = cp.policies[2]
+        p2.policy_identifier.should == "2.16.840.1.99999.0"
+        p2.policy_qualifiers.should be_nil
+      end
+
+      it "creates with default criticality" do
+        cp = R509::Cert::Extensions::CertificatePolicies.new(
+          :policies => [{ :policy_identifier => "2.16.840.1.12345.1.2.3.4.1" }]
+        )
+        cp.critical?.should be_false
+      end
+
+      it "creates with non-default criticality" do
+        cp = R509::Cert::Extensions::CertificatePolicies.new(
+          :policies => [{ :policy_identifier => "2.16.840.1.12345.1.2.3.4.1" }],
+          :critical => true
+        )
+        cp.critical?.should be_true
+      end
+
     end
 
     it_should_behave_like "a correct R509 CertificatePolicies object"
@@ -940,11 +1302,69 @@ describe R509::Cert::Extensions do
       @skip_certs = 3
     end
 
+    context "creation" do
+      it "creates with a positive skip #" do
+        iap = R509::Cert::Extensions::InhibitAnyPolicy.new(:skip_certs => 1)
+        iap.skip_certs.should == 1
+      end
+
+      it "creates with default criticality" do
+        iap = R509::Cert::Extensions::InhibitAnyPolicy.new(:skip_certs => 1)
+        iap.critical?.should == true
+      end
+
+      it "creates with non-default criticality" do
+        iap = R509::Cert::Extensions::InhibitAnyPolicy.new(:skip_certs => 1, :critical => false)
+        iap.critical?.should == false
+      end
+
+    end
+
     it_should_behave_like "a correct R509 InhibitAnyPolicy object", false
     it_should_behave_like "a correct R509 InhibitAnyPolicy object", true
   end
 
   context "PolicyConstraints" do
+    context "creation" do
+      it "creates with require explicit policy" do
+        pc = R509::Cert::Extensions::PolicyConstraints.new(
+          :require_explicit_policy => 1
+        )
+        pc.require_explicit_policy.should == 1
+      end
+
+      it "creates with inhibit policy mapping" do
+        pc = R509::Cert::Extensions::PolicyConstraints.new(
+          :inhibit_policy_mapping => 1
+        )
+        pc.inhibit_policy_mapping.should == 1
+      end
+
+      it "creates with both" do
+        pc = R509::Cert::Extensions::PolicyConstraints.new(
+          :inhibit_policy_mapping => 1,
+          :require_explicit_policy => 3
+        )
+        pc.inhibit_policy_mapping.should == 1
+        pc.require_explicit_policy.should == 3
+      end
+
+      it "creates with default criticality" do
+        pc = R509::Cert::Extensions::PolicyConstraints.new(
+          :inhibit_policy_mapping => 1
+        )
+        pc.critical?.should == true
+      end
+
+      it "creates with non-default criticality" do
+        pc = R509::Cert::Extensions::PolicyConstraints.new(
+          :inhibit_policy_mapping => 1,
+          :critical => false
+        )
+        pc.critical?.should == false
+      end
+
+    end
     context "with just require" do
       before :all do
         @require_explicit_policy = 2
@@ -976,12 +1396,89 @@ describe R509::Cert::Extensions do
   end
 
   context "NameConstraints" do
+    context "creation" do
+      it "creates with one permitted" do
+        nc = R509::Cert::Extensions::NameConstraints.new(
+          :permitted => [ { :type => 'dNSName', :value => 'domain.com' }]
+        )
+        nc.permitted.size.should == 1
+        nc.permitted[0].value.should == 'domain.com'
+      end
+
+      it "creates with multiple permitted" do
+        nc = R509::Cert::Extensions::NameConstraints.new(
+          :permitted => [
+            { :type => 'dNSName', :value => 'domain.com' },
+            { :type => 'iPAddress', :value => '127.0.0.1/255.255.255.255' }
+          ]
+        )
+        nc.permitted.size.should == 2
+        nc.permitted[0].value.should == 'domain.com'
+        nc.permitted[1].value.should == '127.0.0.1/255.255.255.255'
+      end
+
+      it "creates with one excluded" do
+        nc = R509::Cert::Extensions::NameConstraints.new(
+          :excluded => [ { :type => 'dNSName', :value => 'domain.com' }]
+        )
+        nc.excluded.size.should == 1
+        nc.excluded[0].value.should == 'domain.com'
+      end
+
+      it "creates with multiple excluded" do
+        nc = R509::Cert::Extensions::NameConstraints.new(
+          :excluded => [
+            { :type => 'dNSName', :value => 'domain.com' },
+            { :type => 'iPAddress', :value => '127.0.0.1/255.255.255.255' }
+          ]
+        )
+        nc.excluded.size.should == 2
+        nc.excluded[0].value.should == 'domain.com'
+        nc.excluded[1].value.should == '127.0.0.1/255.255.255.255'
+      end
+
+      it "creates with both" do
+        nc = R509::Cert::Extensions::NameConstraints.new(
+          :permitted => [
+            { :type => 'dNSName', :value => 'domain.com' },
+            { :type => 'iPAddress', :value => '127.0.0.1/255.255.255.255' }
+          ],
+          :excluded => [
+            { :type => 'dNSName', :value => 'domain.com' },
+            { :type => 'iPAddress', :value => '127.0.0.1/255.255.255.255' }
+          ]
+        )
+        nc.excluded.size.should == 2
+        nc.excluded[0].value.should == 'domain.com'
+        nc.excluded[1].value.should == '127.0.0.1/255.255.255.255'
+        nc.permitted.size.should == 2
+        nc.permitted[0].value.should == 'domain.com'
+        nc.permitted[1].value.should == '127.0.0.1/255.255.255.255'
+      end
+
+      it "creates with default criticality" do
+        nc = R509::Cert::Extensions::NameConstraints.new(
+          :excluded => [ { :type => 'dNSName', :value => 'domain.com' }]
+        )
+        nc.critical?.should == true
+      end
+
+      it "creates with non-default criticality" do
+        nc = R509::Cert::Extensions::NameConstraints.new(
+          :excluded => [ { :type => 'dNSName', :value => 'domain.com' }],
+          :critical => false
+        )
+        nc.critical?.should == false
+      end
+
+    end
+
     context "with one permitted name" do
       before :all do
-        @excluded_names = []
-        @permitted_names = [{:tag => 2, :value => ".whatever.com"}]
+        @excluded = []
+        @permitted = [{:tag => 2, :value => ".whatever.com"}]
         gns = R509::ASN1::GeneralNames.new
-        @permitted_names.each do |name|
+        @permitted.each do |name|
           gns.add_item(name)
         end
         @conf = []
@@ -999,10 +1496,10 @@ describe R509::Cert::Extensions do
     end
     context "with multiple permitted names" do
       before :all do
-        @excluded_names = []
-        @permitted_names = [{:tag => 2, :value => ".whatever.com"}, {:tag => 1, :value => "user@emaildomain.com" } ]
+        @excluded = []
+        @permitted = [{:tag => 2, :value => ".whatever.com"}, {:tag => 1, :value => "user@emaildomain.com" } ]
         gns = R509::ASN1::GeneralNames.new
-        @permitted_names.each do |name|
+        @permitted.each do |name|
           gns.add_item(name)
         end
         @conf = []
@@ -1020,10 +1517,10 @@ describe R509::Cert::Extensions do
     end
     context "with one excluded name" do
       before :all do
-        @permitted_names = []
-        @excluded_names = [{:tag => 7, :value => "127.0.0.1/255.255.255.255"}]
+        @permitted = []
+        @excluded = [{:tag => 7, :value => "127.0.0.1/255.255.255.255"}]
         egns = R509::ASN1::GeneralNames.new
-        @excluded_names.each do |name|
+        @excluded.each do |name|
           egns.add_item(name)
         end
         @conf = []
@@ -1041,11 +1538,11 @@ describe R509::Cert::Extensions do
     end
     context "with multiple excluded names" do
       before :all do
-        @permitted_names = []
-        @excluded_names = [{:tag => 7, :value => "127.0.0.1/255.255.255.255"}, {:tag => 1, :value => "emaildomain.com" } ]
-        @permitted_names = []
+        @permitted = []
+        @excluded = [{:tag => 7, :value => "127.0.0.1/255.255.255.255"}, {:tag => 1, :value => "emaildomain.com" } ]
+        @permitted = []
         egns = R509::ASN1::GeneralNames.new
-        @excluded_names.each do |name|
+        @excluded.each do |name|
           egns.add_item(name)
         end
         @conf = []
@@ -1063,10 +1560,10 @@ describe R509::Cert::Extensions do
     end
     context "with both permitted and excluded names" do
       before :all do
-        @excluded_names = [{:tag => 7, :value => "127.0.0.1/255.255.255.255"}, {:tag => 1, :value => "emaildomain.com" } ]
-        @permitted_names = [{:tag => 2, :value => ".whatever.com"}, {:tag => 1, :value => "user@emaildomain.com"} ]
+        @excluded = [{:tag => 7, :value => "127.0.0.1/255.255.255.255"}, {:tag => 1, :value => "emaildomain.com" } ]
+        @permitted = [{:tag => 2, :value => ".whatever.com"}, {:tag => 1, :value => "user@emaildomain.com"} ]
         gns = R509::ASN1::GeneralNames.new
-        @permitted_names.each do |name|
+        @permitted.each do |name|
           gns.add_item(name)
         end
         @conf = []
@@ -1076,7 +1573,7 @@ describe R509::Cert::Extensions do
           "permitted;" + serialized[:extension_string]
         }.join(",")
         egns = R509::ASN1::GeneralNames.new
-        @excluded_names.each do |name|
+        @excluded.each do |name|
           egns.add_item(name)
         end
         excluded = egns.names.map { |name|

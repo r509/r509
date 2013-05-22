@@ -199,13 +199,13 @@ Add a certificate profile named "server" (CertProfile) to a config object. Certi
 
 ```ruby
 profile = R509::Config::CertProfile.new(
-  :basic_constraints => {"ca" => false},
+  :basic_constraints => {:ca => false},
   :key_usage => ["digitalSignature","keyEncipherment"],
   :extended_key_usage => ["serverAuth"],
   :certificate_policies => [
-    { "policy_identifier" => "2.16.840.1.99999.21.234",
-      "cps_uris" => ["http://example.com/cps","http://haha.com"],
-      "user_notices" => [ { "explicit_text" => "this is a great thing", "organization" => "my org", "notice_numbers" => "1,2,3" } ]
+    { :policy_identifier => "2.16.840.1.99999.21.234",
+      :cps_uris => ["http://example.com/cps","http://haha.com"],
+      :user_notices => [ { :explicit_text => "this is a great thing", :organization => "my org", :notice_numbers => "1,2,3" } ]
     }
   ],
   :subject_item_policy => nil,
@@ -222,7 +222,7 @@ Set up a subject item policy (required/optional). The keys must match OpenSSL's 
 
 ```ruby
 profile = R509::Config::CertProfile.new(
-  :basic_constraints => {"ca" : false},
+  :basic_constraints => {:ca => false},
   :key_usage => ["digitalSignature","keyEncipherment"],
   :extended_key_usage => ["serverAuth"],
   :subject_item_policy => {
@@ -350,8 +350,8 @@ san_names = ["sannames.com","domain2.com","128.128.128.128"]
 subject.common_name = "newdomain.com"
 subject.organization = "Org 2.0"
 ext = []
-ext << R509::Cert::Extensions::BasicConstraints.new({"ca" => false})
-ext << R509::Cert::Extensions::SubjectAlternativeName.new(san_names)
+ext << R509::Cert::Extensions::BasicConstraints.new(:ca => false)
+ext << R509::Cert::Extensions::SubjectAlternativeName.new(:names => san_names)
 # assume config from yaml load above
 ca = R509::CertificateAuthority::Signer.new(config)
 cert = ca.sign(
@@ -374,8 +374,8 @@ subject.ST = "State"
 subject.C = "US"
 san_names = ["domain2.com","128.128.128.128"]
 ext = []
-ext << R509::Cert::Extensions::BasicConstraints.new({"ca" => false})
-ext << R509::Cert::Extensions::SubjectAlternativeName.new(san_names)
+ext << R509::Cert::Extensions::BasicConstraints.new(:ca => false)
+ext << R509::Cert::Extensions::SubjectAlternativeName.new(:names => san_names)
 # assume config from yaml load above
 ca = R509::CertificateAuthority::Signer.new(config)
 cert = ca.sign(
@@ -552,10 +552,10 @@ Each CA can have an arbitrary number of issuance profiles (with arbitrary names)
 ####basic\_constraints
 All basic constraints are encoded with the critical bit set to true. The basic constraints config expects a hash with between one and two keys.
 
-#####ca
+#####:ca
 The ca key is required and must be set to true (for an issuing CA) or false (everything else).
 
-#####path\_length
+#####:path\_length
 This option is only allowed if ca is set to TRUE. path_length allows you to define the maximum number of non-self-issued intermediate certificates that may follow this certificate in a valid certification path. For example, if you set this value to 0 then the certificate issued can only issue end entity certificates, not additional subroots. This must be a non-negative integer (>=0).
 
 ```yaml

@@ -150,7 +150,6 @@ describe R509::CRL::Administrator do
 
     crl_admin.crl.crl.revoked[0].serial.should == 12345
     crl_admin.crl.crl.revoked[0].extensions.size.should == 0
-    puts crl_admin.crl_list_file.string
   end
   it "cannot revoke the same serial twice" do
     crl = R509::CRL::Administrator.new(@test_ca_config)

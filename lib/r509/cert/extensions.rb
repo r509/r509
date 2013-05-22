@@ -18,6 +18,14 @@ module R509
         R509_EXTENSION_CLASSES << r509_ext_class
       end
 
+      # @private
+      def self.calculate_critical(critical,default)
+        if critical.kind_of?(TrueClass) or critical.kind_of?(FalseClass)
+          critical
+        else
+          default
+        end
+      end
 
       public
       # Implements the BasicConstraints certificate extension, with methods to
@@ -29,7 +37,10 @@ module R509
 
         attr_reader :path_length
 
-        # See OpenSSL::X509::Extension#initialize
+        # This method takes a hash or an existing Extension object to parse
+        # @option arg :ca [Boolean]
+        # @option arg :path_length [Integer]
+        # @option arg :critical [Boolean] (default: true)
         def initialize(arg)
           if arg.kind_of?(Hash)
             ef = OpenSSL::X509::ExtensionFactory.new
@@ -41,7 +52,8 @@ module R509
             else
               bc_value = "CA:FALSE"
             end
-            arg = ef.create_extension("basicConstraints", bc_value, true)
+            critical = R509::Cert::Extensions.calculate_critical(arg[:critical], true)
+            arg = ef.create_extension("basicConstraints", bc_value, critical)
           end
 
           super(arg)
@@ -105,11 +117,14 @@ module R509
         # OpenSSL short name for Decipher Only
         AU_DECIPHER_ONLY = "decipherOnly"
 
-        # See OpenSSL::X509::Extension#initialize
+        # This method takes a hash or an existing Extension object to parse
+        # @option arg :key_usage [Array]
+        # @option arg :critical [Boolean] (default: false)
         def initialize(arg)
-          if arg.kind_of?(Array)
+          if arg.kind_of?(Hash)
             ef = OpenSSL::X509::ExtensionFactory.new
-            arg = ef.create_extension("keyUsage", arg.join(","),false)
+            critical = R509::Cert::Extensions.calculate_critical(arg[:critical], false)
+            arg = ef.create_extension("keyUsage", arg[:key_usage].join(","),critical)
           end
 
           super(arg)
@@ -243,11 +258,14 @@ module R509
 
         attr_reader :allowed_uses
 
-        # See OpenSSL::X509::Extension#initialize
+        # This method takes a hash or an existing Extension object to parse
+        # @option arg :extended_key_usage [Array]
+        # @option arg :critical [Boolean] (default: false)
         def initialize(arg)
-          if arg.kind_of?(Array)
+          if arg.kind_of?(Hash)
             ef = OpenSSL::X509::ExtensionFactory.new
-            arg = ef.create_extension("extendedKeyUsage", arg.join(","),false)
+            critical = R509::Cert::Extensions.calculate_critical(arg[:critical], false)
+            arg = ef.create_extension("extendedKeyUsage", arg[:extended_key_usage].join(","),critical)
           end
 
           super(arg)
@@ -352,15 +370,17 @@ module R509
         OID = "subjectKeyIdentifier"
         Extensions.register_class(self)
 
-        # takes an existing object, DER-encoded string, or hash with :public_key
-        #   in OpenSSL::PKey format. You can get this format from various #public_key methods
+        # This method takes a hash or an existing Extension object to parse
+        # @option arg :public_key [OpenSSL::PKey] (Cert/CSR/PrivateKey return this type from #public_key)
+        # @option arg :critical [Boolean] (default: false)
         def initialize(arg)
           if arg.kind_of?(Hash)
             ef = OpenSSL::X509::ExtensionFactory.new
             cert = OpenSSL::X509::Certificate.new
             cert.public_key = arg[:public_key]
             ef.subject_certificate = cert
-            arg = ef.create_extension("subjectKeyIdentifier", "hash")
+            critical = R509::Cert::Extensions.calculate_critical(arg[:critical], false)
+            arg = ef.create_extension("subjectKeyIdentifier", "hash",critical)
           end
           super(arg)
         end
@@ -383,13 +403,16 @@ module R509
         # authority_cert_serial_number, if present, will be a hex string delimited by colons
         attr_reader :key_identifier, :authority_cert_issuer, :authority_cert_serial_number
 
-        # takes an existing object, DER-encoded string, or hash with :value and :issuer_certificate
-        #  :issuer_certificate must be R509::Cert. For the rules of :value see: http://www.openssl.org/docs/apps/x509v3_config.html#Authority_Key_Identifier_. Defaults to keyid
+        # This method takes a hash or an existing Extension object to parse
+        # @option arg :issuer_certificate [R509::Cert]
+        # @option arg :value [String] For the rules of :value see: http://www.openssl.org/docs/apps/x509v3_config.html#Authority_Key_Identifier_. Defaults to keyid
+        # @option arg :critical [Boolean] (default: false)
         def initialize(arg)
           if arg.kind_of?(Hash)
             ef = OpenSSL::X509::ExtensionFactory.new
             ef.issuer_certificate = arg[:issuer_certificate].cert
-            arg = ef.create_extension("authorityKeyIdentifier", arg[:value] || "keyid") # this could also be keyid:always,issuer:always
+            critical = R509::Cert::Extensions.calculate_critical(arg[:critical], false)
+            arg = ef.create_extension("authorityKeyIdentifier", arg[:value] || "keyid",critical) # this could also be keyid:always,issuer:always
           end
 
           super(arg)
@@ -429,16 +452,20 @@ module R509
 
         attr_reader :general_names
 
-        # takes an existing object, DER-encoded string, array, or R509::ASN1::GeneralNames object.
-        #  If you supply an Array it will be parsed by R509::ASN1.general_name_parser to
-        #  determine the type of each element. If you prefer to specify it yourself you
-        #  can pass a pre-existing GeneralNames object.
+        # This method takes a hash or an existing Extension object to parse
+        #
+        # @option arg :names [Array,R509::ASN1::GeneralNames] If you supply an Array
+        #   it will be parsed by R509::ASN1.general_name_parser to
+        #   determine the type of each element. If you prefer to specify it yourself you
+        #   can pass a pre-existing GeneralNames object.
+        # @option arg :critical [Boolean] (default: false)
         def initialize(arg)
-          if arg.kind_of?(Array) or arg.kind_of?(R509::ASN1::GeneralNames)
-            serialize = parse_san_names(arg).serialize_names
+          if arg.kind_of?(Hash)
+            serialize = R509::ASN1.general_name_parser(arg[:names]).serialize_names
             ef = OpenSSL::X509::ExtensionFactory.new
             ef.config = OpenSSL::Config.parse(serialize[:conf])
-            arg = ef.create_extension("subjectAltName", serialize[:extension_string])
+            critical = R509::Cert::Extensions.calculate_critical(arg[:critical], false)
+            arg = ef.create_extension("subjectAltName", serialize[:extension_string],critical)
           end
           super(arg)
 
@@ -478,17 +505,6 @@ module R509
         def names
           @general_names.names
         end
-
-        private
-
-
-        # @private
-        def parse_san_names(sans)
-          case sans
-          when R509::ASN1::GeneralNames then sans
-          when Array then R509::ASN1.general_name_parser(sans)
-          end
-        end
       end
 
       # Implements the AuthorityInfoAccess certificate extension, with methods to
@@ -498,20 +514,22 @@ module R509
         OID = "authorityInfoAccess"
         Extensions.register_class(self)
 
-        # An array of the OCSP data, if any
+        # An R509::ASN1::GeneralNames object of OCSP endpoints (or nil if not present)
         attr_reader :ocsp
-        # An array of the CA issuers data, if any
+        # An R509::ASN1::GeneralNames object of CA Issuers (or nil if not present)
         attr_reader :ca_issuers
 
-        # takes an existing object, DER-encoded string, or Hash. When supplying a hash
-        #  it must have an :ocsp_location and/or :ca_issuers_location. Each of these must be
-        #  an array of strings.
+        # This method takes a hash or an existing Extension object to parse
+        #
+        # @option arg :ocsp_location [Array,R509::ASN1::GeneralNames] Array of strings (eg ["http://somedomain.com/something"]) or GeneralNames object
+        # @option arg :ca_issuers_location [Array] Array of strings or GeneralNames object
+        # @option arg :critical [Boolean] (default: false)
         def initialize(arg)
           if arg.kind_of?(Hash)
             aia = []
             aia_conf = []
 
-            if not arg[:ocsp_location].nil? and not arg[:ocsp_location].empty?
+            if arg[:ocsp_location].kind_of?(R509::ASN1::GeneralNames) or (not arg[:ocsp_location].nil? and not arg[:ocsp_location].empty?)
               gns = R509::ASN1.general_name_parser(arg[:ocsp_location])
               gns.names.each do |ocsp|
                 serialize = ocsp.serialize_name
@@ -520,7 +538,7 @@ module R509
               end
             end
 
-            if not arg[:ca_issuers_location].nil? and not arg[:ca_issuers_location].empty?
+            if arg[:ca_issuers_location].kind_of?(R509::ASN1::GeneralNames) or (not arg[:ca_issuers_location].nil? and not arg[:ca_issuers_location].empty?)
               gns = R509::ASN1.general_name_parser(arg[:ca_issuers_location])
               gns.names.each do |ca_issuers|
                 serialize = ca_issuers.serialize_name
@@ -532,7 +550,8 @@ module R509
             if not aia.empty?
               ef = OpenSSL::X509::ExtensionFactory.new
               ef.config = OpenSSL::Config.parse(aia_conf.join("\n"))
-              arg = ef.create_extension("authorityInfoAccess",aia.join(","))
+              critical = R509::Cert::Extensions.calculate_critical(arg[:critical], false)
+              arg = ef.create_extension("authorityInfoAccess",aia.join(","),critical)
             end
           end
           super(arg)
@@ -564,13 +583,17 @@ module R509
         # An array of the CRL URIs, if any
         attr_reader :crl
 
-        # See OpenSSL::X509::Extension#initialize
+        # This method takes a hash or an existing Extension object to parse
+        #
+        # @option arg :cdp_location [Array,R509::ASN1::GeneralNames] Array of strings (eg ["http://crl.what.com/crl.crl"]) or GeneralNames object
+        # @option arg :critical [Boolean] (default: false)
         def initialize(arg)
-          if arg.kind_of?(Array)
-            serialize = R509::ASN1.general_name_parser(arg).serialize_names
+          if arg.kind_of?(Hash)
+            serialize = R509::ASN1.general_name_parser(arg[:cdp_location]).serialize_names
             ef = OpenSSL::X509::ExtensionFactory.new
             ef.config = OpenSSL::Config.parse(serialize[:conf])
-            arg = ef.create_extension("crlDistributionPoints", serialize[:extension_string])
+            critical = R509::Cert::Extensions.calculate_critical(arg[:critical], false)
+            arg = ef.create_extension("crlDistributionPoints", serialize[:extension_string],critical)
           end
           super(arg)
 
@@ -598,10 +621,15 @@ module R509
         OID = "noCheck"
         Extensions.register_class(self)
 
-        def initialize(arg=nil)
-          if not arg.nil? and arg != false and not arg.kind_of?(OpenSSL::X509::Extension)
+        # This method takes a hash or an existing Extension object to parse
+        #
+        # @option arg :ocsp_no_check [Any] Pass any value. It's irrelevant.
+        # @option arg :critical [Boolean] (default: false)
+        def initialize(arg)
+          if arg.kind_of?(Hash)
             ef = OpenSSL::X509::ExtensionFactory.new
-            arg = ef.create_extension("noCheck","yes")
+            critical = R509::Cert::Extensions.calculate_critical(arg[:critical], false)
+            arg = ef.create_extension("noCheck","yes",critical)
           end
           super(arg)
         end
@@ -616,17 +644,22 @@ module R509
         Extensions.register_class(self)
         attr_reader :policies
 
+        # This method takes a hash or an existing Extension object to parse
+        #
+        # @option arg :policies [Array] Array of hashes in the same format as passed to R509::Config::CertProfile for certificate policies
+        # @option arg :critical [Boolean] (default: false)
         def initialize(arg)
-          if arg.kind_of?(Array)
+          if arg.kind_of?(Hash)
             conf = []
             policy_names = ["ia5org"]
-            arg.each_with_index do |policy,i|
+            arg[:policies].each_with_index do |policy,i|
               conf << build_conf("certPolicies#{i}",policy,i)
               policy_names << "@certPolicies#{i}"
             end
             ef = OpenSSL::X509::ExtensionFactory.new
             ef.config = OpenSSL::Config.parse(conf.join("\n"))
-            arg = ef.create_extension("certificatePolicies", policy_names.join(","))
+            critical = R509::Cert::Extensions.calculate_critical(arg[:critical], false)
+            arg = ef.create_extension("certificatePolicies", policy_names.join(","),critical)
           end
           @policies = []
           super(arg)
@@ -643,20 +676,20 @@ module R509
         private
         def build_conf(section,hash,index)
           conf = ["[#{section}]"]
-          conf.push "policyIdentifier=#{hash["policy_identifier"]}" unless hash["policy_identifier"].nil?
-          hash["cps_uris"].each_with_index do |cps,idx|
+          conf.push "policyIdentifier=#{hash[:policy_identifier]}" unless hash[:policy_identifier].nil?
+          hash[:cps_uris].each_with_index do |cps,idx|
             conf.push "CPS.#{idx+1}=\"#{cps}\""
-          end if hash["cps_uris"].respond_to?(:each_with_index)
+          end if hash[:cps_uris].respond_to?(:each_with_index)
 
           user_notice_confs = []
-          hash["user_notices"].each_with_index do |un,k|
+          hash[:user_notices].each_with_index do |un,k|
             conf.push "userNotice.#{k+1}=@user_notice#{k+1}#{index}"
             user_notice_confs.push "[user_notice#{k+1}#{index}]"
-            user_notice_confs.push "explicitText=\"#{un["explicit_text"]}\"" unless un["explicit_text"].nil?
+            user_notice_confs.push "explicitText=\"#{un[:explicit_text]}\"" unless un[:explicit_text].nil?
             # if org is supplied notice numbers is also required (and vice versa). enforced in CAProfile
-            user_notice_confs.push "organization=\"#{un["organization"]}\"" unless un["organization"].nil?
-            user_notice_confs.push "noticeNumbers=\"#{un["notice_numbers"]}\"" unless un["notice_numbers"].nil?
-          end unless not hash["user_notices"].kind_of?(Array)
+            user_notice_confs.push "organization=\"#{un[:organization]}\"" unless un[:organization].nil?
+            user_notice_confs.push "noticeNumbers=\"#{un[:notice_numbers]}\"" unless un[:notice_numbers].nil?
+          end unless not hash[:user_notices].kind_of?(Array)
 
           conf.concat(user_notice_confs)
           conf.join "\n"
@@ -672,11 +705,16 @@ module R509
 
         attr_reader :skip_certs
 
+        # This method takes a hash or an existing Extension object to parse
+        #
+        # @option arg :skip_certs [Integer]
+        # @option arg :critical [Boolean] (default: true)
         def initialize(arg)
-          if arg.kind_of?(Fixnum)
+          if arg.kind_of?(Hash)
             ef = OpenSSL::X509::ExtensionFactory.new
+            critical = R509::Cert::Extensions.calculate_critical(arg[:critical], true)
             # must be set critical per RFC 5280
-            arg = ef.create_extension("inhibitAnyPolicy",arg.to_s,true)
+            arg = ef.create_extension("inhibitAnyPolicy",arg[:skip_certs].to_s,critical)
           end
           super(arg)
 
@@ -697,13 +735,20 @@ module R509
         attr_reader :require_explicit_policy
         attr_reader :inhibit_policy_mapping
 
+        # This method takes a hash or an existing Extension object to parse
+        #
+        # @option arg :require_explicit_policy [Integer]
+        # @option arg :inhibit_policy_mapping [Integer]
+        # @option arg :critical [Boolean] (default: true)
         def initialize(arg)
           if arg.kind_of?(Hash)
             constraints = []
-            constraints << "requireExplicitPolicy:#{arg['require_explicit_policy']}" unless arg['require_explicit_policy'].nil?
-            constraints << "inhibitPolicyMapping:#{arg['inhibit_policy_mapping']}" unless arg['inhibit_policy_mapping'].nil?
+            constraints << "requireExplicitPolicy:#{arg[:require_explicit_policy]}" unless arg[:require_explicit_policy].nil?
+            constraints << "inhibitPolicyMapping:#{arg[:inhibit_policy_mapping]}" unless arg[:inhibit_policy_mapping].nil?
             ef = OpenSSL::X509::ExtensionFactory.new
-            arg = ef.create_extension("policyConstraints",constraints.join(","),true) # must be set critical per RFC 5280
+            critical = R509::Cert::Extensions.calculate_critical(arg[:critical], true)
+            # must be set critical per RFC 5280
+            arg = ef.create_extension("policyConstraints",constraints.join(","),critical)
           end
           super(arg)
 
@@ -731,7 +776,7 @@ module R509
         OID = "nameConstraints"
         Extensions.register_class(self)
 
-        attr_reader :permitted_names, :excluded_names
+        attr_reader :permitted, :excluded
 
         #      id-ce-nameConstraints OBJECT IDENTIFIER ::=  { id-ce 30 }
         #      NameConstraints ::= SEQUENCE {
@@ -754,10 +799,10 @@ module R509
           if arg.kind_of?(Hash)
             nc_data = []
             nc_conf = []
-            if not arg["permitted"].nil?
+            if not arg[:permitted].nil?
               gns = R509::ASN1::GeneralNames.new
-              arg["permitted"].each do |p|
-                gns.create_item(:type => p["type"], :value => p["value"])
+              arg[:permitted].each do |p|
+                gns.create_item(:type => p[:type], :value => p[:value])
               end
               gns.names.each do |permitted|
                 serialize = permitted.serialize_name
@@ -765,10 +810,10 @@ module R509
                 nc_conf.push serialize[:conf]
               end
             end
-            if not arg["excluded"].nil?
+            if not arg[:excluded].nil?
               gns = R509::ASN1::GeneralNames.new
-              arg["excluded"].each do |p|
-                gns.create_item(:type => p["type"], :value => p["value"])
+              arg[:excluded].each do |p|
+                gns.create_item(:type => p[:type], :value => p[:value])
               end
               gns.names.each do |excluded|
                 serialize = excluded.serialize_name
@@ -779,12 +824,14 @@ module R509
 
             ef = OpenSSL::X509::ExtensionFactory.new
             ef.config = OpenSSL::Config.parse nc_conf.join("\n")
-            arg = ef.create_extension("nameConstraints",nc_data.join(","))
+            critical = R509::Cert::Extensions.calculate_critical(arg[:critical], true)
+            # must be set critical per RFC 5280
+            arg = ef.create_extension("nameConstraints",nc_data.join(","),critical)
           end
           super(arg)
 
-          @permitted_names = []
-          @excluded_names = []
+          @permitted = []
+          @excluded = []
 
           data = R509::ASN1.get_extension_payload(self)
           data.each do |gs|
@@ -792,9 +839,9 @@ module R509
               asn_data.value.each do |obj|
                 gn = R509::ASN1::GeneralName.new(obj)
                 if gs.tag == 0 # permittedSubtrees
-                @permitted_names << gn
+                @permitted << gn
                 elsif gs.tag == 1 #excludedSubtrees
-                  @excluded_names << gn
+                  @excluded << gn
                 end
               end
             end

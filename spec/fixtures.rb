@@ -177,13 +177,13 @@ module TestFixtures
 
   def self.test_ca_server_profile
     R509::Config::CertProfile.new(
-        :basic_constraints => {"ca" => false },
+        :basic_constraints => {:ca => false },
         :key_usage => ["digitalSignature","keyEncipherment"],
         :extended_key_usage => ["serverAuth"],
         :certificate_policies => [
-          { "policy_identifier" => "2.16.840.1.12345.1.2.3.4.1",
-  "cps_uris" => ["http://example.com/cps","http://other.com/cps"],
-  "user_notices" => [ {"explicit_text" => "thing", "organization" => "my org", "notice_numbers" => "1,2,3,4"} ]
+          { :policy_identifier => "2.16.840.1.12345.1.2.3.4.1",
+  :cps_uris => ["http://example.com/cps","http://other.com/cps"],
+  :user_notices => [ {:explicit_text => "thing", :organization => "my org", :notice_numbers => "1,2,3,4"} ]
           }
         ]
     )
@@ -199,13 +199,13 @@ module TestFixtures
       "OU" => "optional"
     )
     R509::Config::CertProfile.new(
-      :basic_constraints => {"ca" => false },
+      :basic_constraints => {:ca => false },
       :key_usage => ["digitalSignature","keyEncipherment"],
       :extended_key_usage => ["serverAuth"],
       :certificate_policies => [
-        { "policy_identifier" => "2.16.840.1.12345.1.2.3.4.1",
-"cps_uris" => ["http://example.com/cps","http://other.com/cps"],
-"user_notices" => [ {"explicit_text" => "thing", "organization" => "my org", "notice_numbers" => "1,2,3,4"} ]
+          { :policy_identifier => "2.16.840.1.12345.1.2.3.4.1",
+  :cps_uris => ["http://example.com/cps","http://other.com/cps"],
+  :user_notices => [ {:explicit_text => "thing", :organization => "my org", :notice_numbers => "1,2,3,4"} ]
         }
       ],
       :subject_item_policy => subject_item_policy
@@ -214,7 +214,7 @@ module TestFixtures
 
   def self.test_ca_subroot_profile
     R509::Config::CertProfile.new(
-          :basic_constraints => {"ca" => true, "path_length" => 0 },
+          :basic_constraints => {:ca => true, :path_length => 0 },
           :key_usage => ["keyCertSign","cRLSign"],
           :extended_key_usage => [],
           :certificate_policies => nil)
@@ -222,7 +222,7 @@ module TestFixtures
 
   def self.test_ca_ocspsigner_profile
     R509::Config::CertProfile.new(
-          :basic_constraints => { "ca" => false },
+          :basic_constraints => { :ca => false },
           :key_usage => ["digitalSignature"],
           :extended_key_usage => ["OCSPSigning"],
           :certificate_policies => nil)

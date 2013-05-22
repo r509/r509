@@ -89,19 +89,19 @@ module R509::CertificateAuthority
       )
 
       if present?(profile.key_usage)
-        extensions << R509::Cert::Extensions::KeyUsage.new(profile.key_usage)
+        extensions << R509::Cert::Extensions::KeyUsage.new(:key_usage => profile.key_usage)
       end
 
       if present?(profile.extended_key_usage)
-        extensions << R509::Cert::Extensions::ExtendedKeyUsage.new(profile.extended_key_usage)
+        extensions << R509::Cert::Extensions::ExtendedKeyUsage.new(:extended_key_usage => profile.extended_key_usage)
       end
 
       if present?(profile.certificate_policies)
-        extensions << R509::Cert::Extensions::CertificatePolicies.new(profile.certificate_policies)
+        extensions << R509::Cert::Extensions::CertificatePolicies.new(:policies => profile.certificate_policies)
       end
 
       if present?(profile.cdp_location)
-        extensions << R509::Cert::Extensions::CRLDistributionPoints.new(profile.cdp_location)
+        extensions << R509::Cert::Extensions::CRLDistributionPoints.new(:cdp_location => profile.cdp_location)
       end
 
       if present?(profile.ocsp_location) or present?(profile.ca_issuers_location)
@@ -112,7 +112,7 @@ module R509::CertificateAuthority
       end
 
       if profile.inhibit_any_policy
-        extensions << R509::Cert::Extensions::InhibitAnyPolicy.new(profile.inhibit_any_policy)
+        extensions << R509::Cert::Extensions::InhibitAnyPolicy.new(:skip_certs => profile.inhibit_any_policy)
       end
 
       if present?(profile.policy_constraints)
@@ -124,10 +124,10 @@ module R509::CertificateAuthority
       end
 
       if profile.ocsp_no_check
-        extensions << R509::Cert::Extensions::OCSPNoCheck.new(profile.ocsp_no_check)
+        extensions << R509::Cert::Extensions::OCSPNoCheck.new({:ocsp_no_check => true})
       end
       if present?(options[:san_names])
-        extensions << R509::Cert::Extensions::SubjectAlternativeName.new(options[:san_names])
+        extensions << R509::Cert::Extensions::SubjectAlternativeName.new(:names => options[:san_names])
       end
 
       extensions

@@ -61,8 +61,8 @@ shared_examples_for "signing" do |selfsign|
 
   it "with multiple extensions (selfsign:#{selfsign})" do
     exts = []
-    exts << R509::Cert::Extensions::BasicConstraints.new("ca" => false)
-    exts << R509::Cert::Extensions::InhibitAnyPolicy.new(4)
+    exts << R509::Cert::Extensions::BasicConstraints.new(:ca => false)
+    exts << R509::Cert::Extensions::InhibitAnyPolicy.new(:skip_certs => 4)
     @options[:extensions] = exts
     if selfsign
       cert = R509::CertificateAuthority::Signer.selfsign(@options)

@@ -1,67 +1,81 @@
-test_ca: {
-  ca_cert: {
-    cert: 'test_ca.cer',
-    key: 'test_ca.key'
-  },
-  crl_list: "crl_list_file.txt",
-  crl_number: "crl_number_file.txt",
-  crl_validity_hours: 72,
-  ocsp_validity_hours: 96,
-  ocsp_start_skew_seconds: 1800,
-  profiles: {
-    server: {
-      basic_constraints: { "ca" : false },
-      key_usage: [digitalSignature,keyEncipherment],
-      extended_key_usage: [serverAuth],
-    },
-    mds: {
-      default_md: 'SHA512',
-      allowed_mds: ['SHA512','SHA1']
-    },
-    aia_cdp: {
-      ocsp_location: ['http://ocsp.domain.com'],
-      ca_issuers_location: ['http://www.domain.com/cert.cer'],
-      cdp_location: ['http://crl.domain.com/something.crl'],
-    },
-    ocsp_delegate_with_no_check: {
+---
+test_ca:
+  ca_cert:
+    cert: test_ca.cer
+    key: test_ca.key
+  crl_list: crl_list_file.txt
+  crl_number: crl_number_file.txt
+  crl_validity_hours: 72
+  ocsp_validity_hours: 96
+  ocsp_start_skew_seconds: 1800
+  profiles:
+    server:
+      basic_constraints:
+        :ca: false
+      key_usage:
+      - digitalSignature
+      - keyEncipherment
+      extended_key_usage:
+      - serverAuth
+    mds:
+      default_md: SHA512
+      allowed_mds:
+      - SHA512
+      - SHA1
+    aia_cdp:
+      ocsp_location:
+      - http://ocsp.domain.com
+      ca_issuers_location:
+      - http://www.domain.com/cert.cer
+      cdp_location:
+      - http://crl.domain.com/something.crl
+    ocsp_delegate_with_no_check:
       ocsp_no_check: true
-    },
-    inhibit_policy: {
+    inhibit_policy:
       inhibit_any_policy: 2
-    },
-    policy_constraints: {
-      policy_constraints: { require_explicit_policy: 1, inhibit_policy_mapping: 0 }
-    },
-    name_constraints: {
-      name_constraints: {
-        permitted: [
-          {type: "IP", value: "192.168.0.0/255.255.0.0"},
-          {type: "dirName", value: [['CN','myCN'],['O','Org']]}
-        ],
-        excluded: [
-          {type: "email", value: "domain.com"},
-          {type: "URI", value: ".net"},
-          {type: "DNS", value: "test.us"}
-        ]
-      }
-    },
-    client: {
-      basic_constraints: { "ca" : false },
-      key_usage: [digitalSignature,keyEncipherment],
-      extended_key_usage: [clientAuth],
+    policy_constraints:
+      policy_constraints:
+        :require_explicit_policy: 1
+        :inhibit_policy_mapping: 0
+    name_constraints:
+      name_constraints:
+        :permitted:
+        - :type: IP
+          :value: 192.168.0.0/255.255.0.0
+        - :type: dirName
+          :value:
+          - - CN
+            - myCN
+          - - O
+            - Org
+        :excluded:
+        - :type: email
+          :value: domain.com
+        - :type: URI
+          :value: .net
+        - :type: DNS
+          :value: test.us
+    client:
+      basic_constraints:
+        :ca: false
+      key_usage:
+      - digitalSignature
+      - keyEncipherment
+      extended_key_usage:
+      - clientAuth
       ocsp_no_check: false
-    },
-    server_with_subject_item_policy: {
-      basic_constraints: { "ca" : false },
-      key_usage: [digitalSignature,keyEncipherment],
-      extended_key_usage: [serverAuth],
-      subject_item_policy: {
-        "CN" : "required",
-        "O" : "optional",
-        "ST" : "required",
-        "C" : "required",
-        "OU" : "optional" }
-    }
-  }
-}
-config_is_string: "this is bogus"
+    server_with_subject_item_policy:
+      basic_constraints:
+        :ca: false
+      key_usage:
+      - digitalSignature
+      - keyEncipherment
+      extended_key_usage:
+      - serverAuth
+      subject_item_policy:
+        CN: required
+        O: optional
+        ST: required
+        C: required
+        OU: optional
+config_is_string: this is bogus

@@ -220,7 +220,6 @@ module R509
         @ordered_names = []
       end
 
-      # @private
       # @param [OpenSSL::ASN1::ASN1Data] asn Takes ASN.1 data in for parsing GeneralName structures
       def add_item(asn)
         # map general names into our hash of arrays
@@ -234,7 +233,6 @@ module R509
         end
       end
 
-      # @private
       # @param [Hash] hash A hash with (:tag or :type) and :value keys. Allows you to build GeneralName objects and add
       #   them to the GeneralNames object. Unless you know what you're doing you should really stay away from this.
       def create_item(hash)
@@ -364,7 +362,7 @@ module R509
           if notice_reference.kind_of?(OpenSSL::ASN1::Sequence)
             @notice_numbers = []
             notice_reference.each do |ints|
-              @notice_numbers << ints.value
+              @notice_numbers << ints.value.to_i
             end
           else
             @organization = notice_reference.value

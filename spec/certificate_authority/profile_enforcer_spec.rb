@@ -52,7 +52,7 @@ describe R509::CertificateAuthority::ProfileEnforcer do
 
     it "creates basic constraints" do
       profile = R509::Config::CertProfile.new(
-        :basic_constraints => {"ca" => false}
+        :basic_constraints => {:ca => false}
       )
       @config.set_profile("profile",profile)
       enforcer = R509::CertificateAuthority::ProfileEnforcer.new(@config)
@@ -98,7 +98,7 @@ describe R509::CertificateAuthority::ProfileEnforcer do
 
     it "creates certificate policies" do
       profile = R509::Config::CertProfile.new(
-        :certificate_policies => [{"policy_identifier" => "2.16.840.1.99999.21.234"}]
+        :certificate_policies => [{:policy_identifier => "2.16.840.1.99999.21.234"}]
       )
       @config.set_profile("profile",profile)
       enforcer = R509::CertificateAuthority::ProfileEnforcer.new(@config)
@@ -139,7 +139,7 @@ describe R509::CertificateAuthority::ProfileEnforcer do
 
     it "creates policy constraints" do
       profile = R509::Config::CertProfile.new(
-        :policy_constraints => {'inhibit_policy_mapping' => 1}
+        :policy_constraints => {:inhibit_policy_mapping => 1}
       )
       @config.set_profile("profile",profile)
       enforcer = R509::CertificateAuthority::ProfileEnforcer.new(@config)
@@ -149,7 +149,7 @@ describe R509::CertificateAuthority::ProfileEnforcer do
 
     it "creates name constraints" do
       profile = R509::Config::CertProfile.new(
-        :name_constraints => { "permitted" => [{"type" => "URI", "value" => "domain.com"}] }
+        :name_constraints => { :permitted => [{:type => "URI", :value => "domain.com"}] }
       )
       @config.set_profile("profile",profile)
       enforcer = R509::CertificateAuthority::ProfileEnforcer.new(@config)
@@ -202,7 +202,7 @@ describe R509::CertificateAuthority::ProfileEnforcer do
     before :all do
       config = R509::Config::CAConfig.new( :ca_cert => R509::Cert.new( :cert => TestFixtures::TEST_CA_CERT) )
       profile = R509::Config::CertProfile.new(
-        :basic_constraints => {"ca" => false},
+        :basic_constraints => {:ca => false},
         :key_usage => ["digitalSignature"],
         :allowed_mds => ['sha256','sha1','sha384'],
         :default_md => 'sha1'
