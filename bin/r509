@@ -108,8 +108,7 @@ elsif not opts[:subject].nil?
 end
 
 if selfsign > 0
-  ca = R509::CertificateAuthority::Signer.new
-  cert = ca.selfsign(
+  cert = R509::CertificateAuthority::Signer.selfsign(
     :csr => csr,
     :not_after => Time.now.to_i+86400*selfsign,
     :message_digest => opts[:message_digest]
