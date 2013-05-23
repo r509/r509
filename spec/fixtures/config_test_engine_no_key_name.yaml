@@ -1,6 +1,6 @@
-engine_no_key_name: {
-  ca_cert: {
-    cert: 'test_ca.cer',
-    engine: 'chil'
-  }
-}
+engine_no_key_name:
+  ca_cert:
+    cert: 'test_ca.cer'
+    engine:
+      :so_path: '/path'
+      :id: chil

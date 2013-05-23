@@ -1,134 +1,128 @@
-pkcs12_ca: {
-  ca_cert: {
-    pkcs12: "test_ca.p12",
-    password: "r509"
-  }
-}
-pkcs12_key_ca: {
-  ca_cert: {
-    pkcs12: "test_ca.p12",
-    password: "r509",
-    key: "test_ca.cer"
-  }
-}
-pkcs12_cert_ca: {
-  ca_cert: {
-    pkcs12: "test_ca.p12",
-    password: "r509",
-    cert: "test_ca.cer"
-  }
-}
-pkcs12_engine_ca: {
-  ca_cert: {
-    pkcs12: "test_ca.p12",
-    password: "r509",
-    engine: "chil",
-    key_name: "r509_key"
-  }
-}
-cert_no_key_ca: {
-  ca_cert: {
-    cert: "test_ca.cer"
-  }
-}
-missing_key_identifier_ca: {
-  ca_cert: {
-    cert: 'missing_key_identifier_ca.cer',
-    key: 'missing_key_identifier_ca.key'
-  },
-  profiles: {
-    server: {
-      basic_constraints: { "ca" : false },
-      key_usage: [digitalSignature,keyEncipherment],
-      extended_key_usage: [serverAuth],
-    }
-  }
-}
-multi_policy_ca: {
-  ca_cert: {
-    cert: 'test_ca.cer',
-    key: 'test_ca.key'
-  },
-  profiles: {
-    server: {
-      basic_constraints: { "ca" : false },
-      key_usage: [digitalSignature,keyEncipherment],
-      extended_key_usage: [serverAuth],
-      certificate_policies: [
-        { policy_identifier: "2.16.840.1.99999.21.234",
-          cps_uris: ["http://example.com/cps","http://haha.com"],
-          user_notices: [ { explicit_text: "this is a great thing", organization: "my org", notice_numbers: "1,2,3" } ]
-        },
-        { policy_identifier: "2.16.840.1.99999.21.235",
-          cps_uris: ["http://example.com/cps2"],
-          user_notices: [ { explicit_text: "this is a bad thing", organization: "another org", notice_numbers: "3,2,1" },{ explicit_text: "another user notice"} ]
-        },
-        { policy_identifier: "2.16.840.1.99999.0" }
-      ]
-    }
-  }
-}
-ocsp_delegate_ca: {
-  ca_cert: {
-    cert: 'test_ca.cer'
-  },
-  ocsp_cert: {
-    cert: 'test_ca_ocsp.cer',
-    key: 'test_ca_ocsp.key'
-  }
-}
-ocsp_chain_ca: {
-  ca_cert: {
-    cert: 'test_ca.cer'
-  },
-  ocsp_cert: {
-    cert: 'test_ca_ocsp.cer',
-    key: 'test_ca_ocsp.key'
-  },
-  ocsp_chain: 'test_ca_ocsp_chain.txt'
-}
-ocsp_pkcs12_ca: {
-  ca_cert: {
-    cert: 'test_ca.cer'
-  },
-  ocsp_cert: {
-    pkcs12: 'test_ca_ocsp.p12',
-    password: 'r509'
-  }
-}
-ocsp_engine_ca: {
-  ca_cert: {
-    cert: 'test_ca.cer'
-  },
-  ocsp_cert: {
-    cert: 'test_ca_ocsp.cer',
-    engine: 'chil'
-  }
-}
-all_eku_ca: {
-  ca_cert: {
-    cert: 'test_ca.cer',
-    key: 'test_ca.key'
-  },
-  profiles: {
-    smorgasbord: {
-      basic_constraints: { "ca" : false },
-      key_usage: [digitalSignature,keyEncipherment],
-      extended_key_usage: [serverAuth,clientAuth,codeSigning,emailProtection,OCSPSigning,timeStamping],
-    }
-  }
-}
-ocsp_no_check_ca: {
-  ca_cert: {
-    cert: 'test_ca.cer',
-    key: 'test_ca.key'
-  },
-  profiles: {
-    ocsp_no_check_delegate: {
-      basic_constraints: { "ca" : false },
-      key_usage: [digitalSignature],
-      extended_key_usage: [OCSPSigning],
+---
+pkcs12_ca:
+  ca_cert:
+    pkcs12: test_ca.p12
+    password: r509
+pkcs12_key_ca:
+  ca_cert:
+    pkcs12: test_ca.p12
+    password: r509
+    key: test_ca.cer
+pkcs12_cert_ca:
+  ca_cert:
+    pkcs12: test_ca.p12
+    password: r509
+    cert: test_ca.cer
+pkcs12_engine_ca:
+  ca_cert:
+    pkcs12: test_ca.p12
+    password: r509
+    engine:
+      :so_path: '/some/path'
+      :id: chil
+    key_name: r509_key
+cert_no_key_ca:
+  ca_cert:
+    cert: test_ca.cer
+missing_key_identifier_ca:
+  ca_cert:
+    cert: missing_key_identifier_ca.cer
+    key: missing_key_identifier_ca.key
+  profiles:
+    server:
+      basic_constraints:
+        ca: false
+      key_usage:
+      - digitalSignature
+      - keyEncipherment
+      extended_key_usage:
+      - serverAuth
+multi_policy_ca:
+  ca_cert:
+    cert: test_ca.cer
+    key: test_ca.key
+  profiles:
+    server:
+      basic_constraints:
+        :ca: false
+      key_usage:
+      - digitalSignature
+      - keyEncipherment
+      extended_key_usage:
+      - serverAuth
+      certificate_policies:
+      - :policy_identifier: 2.16.840.1.99999.21.234
+        :cps_uris:
+        - http://example.com/cps
+        - http://haha.com
+        :user_notices:
+        - :explicit_text: this is a great thing
+          :organization: my org
+          :notice_numbers: '1,2,3'
+      - :policy_identifier: 2.16.840.1.99999.21.235
+        :cps_uris:
+        - http://example.com/cps2
+        :user_notices:
+        - :explicit_text: this is a bad thing
+          :organization: another org
+          :notice_numbers: '3,2,1'
+        - :explicit_text: another user notice
+      - :policy_identifier: 2.16.840.1.99999.0
+ocsp_delegate_ca:
+  ca_cert:
+    cert: test_ca.cer
+  ocsp_cert:
+    cert: test_ca_ocsp.cer
+    key: test_ca_ocsp.key
+ocsp_chain_ca:
+  ca_cert:
+    cert: test_ca.cer
+  ocsp_cert:
+    cert: test_ca_ocsp.cer
+    key: test_ca_ocsp.key
+  ocsp_chain: test_ca_ocsp_chain.txt
+ocsp_pkcs12_ca:
+  ca_cert:
+    cert: test_ca.cer
+  ocsp_cert:
+    pkcs12: test_ca_ocsp.p12
+    password: r509
+ocsp_engine_ca:
+  ca_cert:
+    cert: test_ca.cer
+  ocsp_cert:
+    cert: test_ca_ocsp.cer
+    engine:
+      :so_path: '/some/path'
+      :id: chil
+all_eku_ca:
+  ca_cert:
+    cert: test_ca.cer
+    key: test_ca.key
+  profiles:
+    smorgasbord:
+      basic_constraints:
+        :ca: false
+      key_usage:
+      - digitalSignature
+      - keyEncipherment
+      extended_key_usage:
+      - serverAuth
+      - clientAuth
+      - codeSigning
+      - emailProtection
+      - OCSPSigning
+      - timeStamping
+ocsp_no_check_ca:
+  ca_cert:
+    cert: test_ca.cer
+    key: test_ca.key
+  profiles:
+    ocsp_no_check_delegate:
+      basic_constraints:
+        :ca: false
+      key_usage:
+      - digitalSignature
+      extended_key_usage:
+      - OCSPSigning
       ocsp_no_check: true
-    }
-  }
-}
