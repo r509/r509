@@ -49,6 +49,17 @@ shared_examples_for "signing" do |selfsign|
     cert.signature_algorithm.should match(/sha256/i)
   end
 
+  it "with no :extensions in options hash (selfsign:#{selfsign})" do
+    if selfsign
+      cert = R509::CertificateAuthority::Signer.selfsign(@options)
+      size = 1
+    else
+      cert = @ca.sign(@options)
+      size = 0
+    end
+    cert.extensions.size.should == size
+  end
+
   it "with empty extensions array (selfsign:#{selfsign})" do
     @options[:extensions] = []
     if selfsign
