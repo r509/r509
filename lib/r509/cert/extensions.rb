@@ -28,21 +28,32 @@ module R509
       end
 
       public
-      # Implements the BasicConstraints certificate extension, with methods to
-      # provide access to the components and meaning of the extension's contents.
+      # RFC 5280 Description (see: http://www.ietf.org/rfc/rfc5280.txt)
+      #
+      # The basic constraints extension identifies whether the subject of the
+      # certificate is a CA and the maximum depth of valid certification
+      # paths that include this certificate.
+      #
+      # You can use this extension to parse an existing extension for easy access
+      # to the contents or create a new one.
       class BasicConstraints < OpenSSL::X509::Extension
+        include R509::ValidationMixin
+
         # friendly name for BasicConstraints OID
         OID = "basicConstraints"
         Extensions.register_class(self)
 
+        # returns the path length (if present)
+        # @return [Integer,nil]
         attr_reader :path_length
 
         # This method takes a hash or an existing Extension object to parse
         # @option arg :ca [Boolean]
         # @option arg :path_length [Integer]
-        # @option arg :critical [Boolean] (default: true)
+        # @option arg :critical [Boolean] (true)
         def initialize(arg)
           if arg.kind_of?(Hash)
+            validate_basic_constraints(arg)
             ef = OpenSSL::X509::ExtensionFactory.new
             if arg[:ca] == true
               bc_value = "CA:TRUE"
@@ -75,27 +86,45 @@ module R509
           end
         end
 
-        def is_ca?()
+        # Check whether the extension value would make the parent certificate a CA
+        # @return [Boolean]
+        def is_ca?
           return @is_ca == true
         end
 
         # Returns true if the path length allows this certificate to be used to
         # create subordinate signing certificates beneath it. Does not check if
         # there is a pathlen restriction in the cert chain above the current cert
-        def allows_sub_ca?()
+        # @return [Boolean]
+        def allows_sub_ca?
           return false if @path_length.nil?
           return @path_length > 0
         end
       end
 
-      # Implements the KeyUsage certificate extension, with methods to
-      # provide access to the components and meaning of the extension's contents.
+      # RFC 5280 Description (see: http://www.ietf.org/rfc/rfc5280.txt)
+      #
+      # The key usage extension defines the purpose (e.g., encipherment,
+      # signature, certificate signing) of the key contained in the
+      # certificate.  The usage restriction might be employed when a key that
+      # could be used for more than one operation is to be restricted.  For
+      # example, when an RSA key should be used only to verify signatures on
+      # objects other than public key certificates and CRLs, the
+      # digitalSignature and/or nonRepudiation bits would be asserted.
+      # Likewise, when an RSA key should be used only for key management, the
+      # keyEncipherment bit would be asserted.
+      #
+      # You can use this extension to parse an existing extension for easy access
+      # to the contents or create a new one.
       class KeyUsage < OpenSSL::X509::Extension
+        include R509::ValidationMixin
+
         # friendly name for KeyUsage OID
         OID = "keyUsage"
         Extensions.register_class(self)
 
-        # An array of the key uses allowed.
+        # An array (of strings) of the key uses allowed.
+        # @return [Array,nil]
         attr_reader :allowed_uses
 
         # OpenSSL short name for Digital Signature
@@ -119,9 +148,10 @@ module R509
 
         # This method takes a hash or an existing Extension object to parse
         # @option arg :key_usage [Array]
-        # @option arg :critical [Boolean] (default: false)
+        # @option arg :critical [Boolean] (false)
         def initialize(arg)
           if arg.kind_of?(Hash)
+            validate_key_usage(arg[:key_usage])
             ef = OpenSSL::X509::ExtensionFactory.new
             critical = R509::Cert::Extensions.calculate_critical(arg[:critical], false)
             arg = ef.create_extension("keyUsage", arg[:key_usage].join(","),critical)
@@ -234,9 +264,18 @@ module R509
         end
       end
 
-      # Implements the ExtendedKeyUsage certificate extension, with methods to
-      # provide access to the components and meaning of the extension's contents.
+      # RFC 5280 Description (see: http://www.ietf.org/rfc/rfc5280.txt)
+      #
+      # This extension indicates one or more purposes for which the certified
+      # public key may be used, in addition to or in place of the basic
+      # purposes indicated in the key usage extension.  In general, this
+      # extension will appear only in end entity certificates.
+      #
+      # You can use this extension to parse an existing extension for easy access
+      # to the contents or create a new one.
       class ExtendedKeyUsage < OpenSSL::X509::Extension
+        include R509::ValidationMixin
+
         # friendly name for EKU OID
         OID = "extendedKeyUsage"
         Extensions.register_class(self)
@@ -256,13 +295,16 @@ module R509
         # The OpenSSL short name for Any Extended Key Usage
         AU_ANY_EXTENDED_KEY_USAGE = "anyExtendedKeyUsage"
 
+        # an array (of strings) of the extended key uses allowed
+        # @return [Array,nil]
         attr_reader :allowed_uses
 
         # This method takes a hash or an existing Extension object to parse
         # @option arg :extended_key_usage [Array]
-        # @option arg :critical [Boolean] (default: false)
+        # @option arg :critical [Boolean] (false)
         def initialize(arg)
           if arg.kind_of?(Hash)
+            validate_extended_key_usage(arg[:extended_key_usage])
             ef = OpenSSL::X509::ExtensionFactory.new
             critical = R509::Cert::Extensions.calculate_critical(arg[:critical], false)
             arg = ef.create_extension("extendedKeyUsage", arg[:extended_key_usage].join(","),critical)
@@ -363,18 +405,26 @@ module R509
         end
       end
 
-      # Implements the SubjectKeyIdentifier certificate extension, with methods to
-      # provide access to the components and meaning of the extension's contents.
+      # RFC 5280 Description (see: http://www.ietf.org/rfc/rfc5280.txt)
+      #
+      # The subject key identifier extension provides a means of identifying
+      # certificates that contain a particular public key.
+      #
+      # You can use this extension to parse an existing extension for easy access
+      # to the contents or create a new one.
       class SubjectKeyIdentifier < OpenSSL::X509::Extension
+        include R509::ValidationMixin
+
         # friendly name for Subject Key Identifier OID
         OID = "subjectKeyIdentifier"
         Extensions.register_class(self)
 
         # This method takes a hash or an existing Extension object to parse
         # @option arg :public_key [OpenSSL::PKey] (Cert/CSR/PrivateKey return this type from #public_key)
-        # @option arg :critical [Boolean] (default: false)
+        # @option arg :critical [Boolean] (false)
         def initialize(arg)
           if arg.kind_of?(Hash)
+            validate_subject_key_identifier(arg)
             ef = OpenSSL::X509::ExtensionFactory.new
             cert = OpenSSL::X509::Certificate.new
             cert.public_key = arg[:public_key]
@@ -391,24 +441,42 @@ module R509
         end
       end
 
-      # Implements the AuthorityKeyIdentifier certificate extension, with methods to
-      # provide access to the components and meaning of the extension's contents.
+      # RFC 5280 Description (see: http://www.ietf.org/rfc/rfc5280.txt)
+      #
+      # The authority key identifier extension provides a means of
+      # identifying the public key corresponding to the private key used to
+      # sign a certificate.  This extension is used where an issuer has
+      # multiple signing keys (either due to multiple concurrent key pairs or
+      # due to changeover).  The identification MAY be based on either the
+      # key identifier (the subject key identifier in the issuer's
+      # certificate) or the issuer name and serial number.
+      #
+      # You can use this extension to parse an existing extension for easy access
+      # to the contents or create a new one.
       class AuthorityKeyIdentifier < OpenSSL::X509::Extension
+        include R509::ValidationMixin
+
         # friendly name for Authority Key Identifier OID
         OID = "authorityKeyIdentifier"
         Extensions.register_class(self)
 
         # key_identifier, if present, will be a hex string delimited by colons
+        # @return [String,nil]
+        attr_reader :key_identifier
         # authority_cert_issuer, if present, will be a GeneralName object
+        # @return [R509::ASN1::GeneralName,nil]
+        attr_reader :authority_cert_issuer
         # authority_cert_serial_number, if present, will be a hex string delimited by colons
-        attr_reader :key_identifier, :authority_cert_issuer, :authority_cert_serial_number
+        # @return [String,nil]
+        attr_reader :authority_cert_serial_number
 
         # This method takes a hash or an existing Extension object to parse
         # @option arg :issuer_certificate [R509::Cert]
-        # @option arg :value [String] For the rules of :value see: http://www.openssl.org/docs/apps/x509v3_config.html#Authority_Key_Identifier_. Defaults to keyid
-        # @option arg :critical [Boolean] (default: false)
+        # @option arg :value [String] (keyid) For the rules of :value see: http://www.openssl.org/docs/apps/x509v3_config.html#Authority_Key_Identifier_.
+        # @option arg :critical [Boolean] (false)
         def initialize(arg)
           if arg.kind_of?(Hash)
+            validate_authority_key_identifier(arg)
             ef = OpenSSL::X509::ExtensionFactory.new
             ef.issuer_certificate = arg[:issuer_certificate].cert
             critical = R509::Cert::Extensions.calculate_critical(arg[:critical], false)
@@ -443,13 +511,33 @@ module R509
 
       end
 
-      # Implements the SubjectAlternativeName certificate extension, with methods to
-      # provide access to the components and meaning of the extension's contents.
+      # RFC 5280 Description (see: http://www.ietf.org/rfc/rfc5280.txt)
+      #
+      # The subject alternative name extension allows identities to be bound
+      # to the subject of the certificate.  These identities may be included
+      # in addition to or in place of the identity in the subject field of
+      # the certificate.  Defined options include an Internet electronic mail
+      # address, a DNS name, an IP address, and a Uniform Resource Identifier
+      # (URI).  Other options exist, including completely local definitions.
+      # Multiple name forms, and multiple instances of each name form, MAY be
+      # included.  Whenever such identities are to be bound into a
+      # certificate, the subject alternative name (or issuer alternative
+      # name) extension MUST be used; however, a DNS name MAY also be
+      # represented in the subject field using the domainComponent attribute
+      # as described in Section 4.1.2.4.  Note that where such names are
+      # represented in the subject field implementations are not required to
+      # convert them into DNS names.
+      #
+      # You can use this extension to parse an existing extension for easy access
+      # to the contents or create a new one.
       class SubjectAlternativeName < OpenSSL::X509::Extension
+        include R509::ValidationMixin
+
         # friendly name for SAN OID
         OID = "subjectAltName"
         Extensions.register_class(self)
 
+        # @return [R509::ASN1::GeneralNames]
         attr_reader :general_names
 
         # This method takes a hash or an existing Extension object to parse
@@ -458,9 +546,10 @@ module R509
         #   it will be parsed by R509::ASN1.general_name_parser to
         #   determine the type of each element. If you prefer to specify it yourself you
         #   can pass a pre-existing GeneralNames object.
-        # @option arg :critical [Boolean] (default: false)
+        # @option arg :critical [Boolean] (false)
         def initialize(arg)
           if arg.kind_of?(Hash)
+            validate_subject_alternative_name(arg[:names])
             serialize = R509::ASN1.general_name_parser(arg[:names]).serialize_names
             ef = OpenSSL::X509::ExtensionFactory.new
             ef.config = OpenSSL::Config.parse(serialize[:conf])
@@ -507,29 +596,44 @@ module R509
         end
       end
 
-      # Implements the AuthorityInfoAccess certificate extension, with methods to
-      # provide access to the components and meaning of the extension's contents.
+      # RFC 5280 Description (see: http://www.ietf.org/rfc/rfc5280.txt)
+      #
+      # The authority information access extension indicates how to access
+      # information and services for the issuer of the certificate in which
+      # the extension appears.  Information and services may include on-line
+      # validation services and CA policy data.  (The location of CRLs is not
+      # specified in this extension; that information is provided by the
+      # cRLDistributionPoints extension.)  This extension may be included in
+      # end entity or CA certificates.  Conforming CAs MUST mark this
+      # extension as non-critical.
+      # You can use this extension to parse an existing extension for easy access
+      # to the contents or create a new one.
       class AuthorityInfoAccess < OpenSSL::X509::Extension
+        include R509::ValidationMixin
+
         # friendly name for AIA OID
         OID = "authorityInfoAccess"
         Extensions.register_class(self)
 
         # An R509::ASN1::GeneralNames object of OCSP endpoints (or nil if not present)
+        # @return [R509::ASN1::GeneralNames,nil]
         attr_reader :ocsp
         # An R509::ASN1::GeneralNames object of CA Issuers (or nil if not present)
+        # @return [R509::ASN1::GeneralNames,nil]
         attr_reader :ca_issuers
 
         # This method takes a hash or an existing Extension object to parse
         #
         # @option arg :ocsp_location [Array,R509::ASN1::GeneralNames] Array of strings (eg ["http://somedomain.com/something"]) or GeneralNames object
         # @option arg :ca_issuers_location [Array] Array of strings or GeneralNames object
-        # @option arg :critical [Boolean] (default: false)
+        # @option arg :critical [Boolean] (false)
         def initialize(arg)
           if arg.kind_of?(Hash)
             aia = []
             aia_conf = []
 
-            if arg[:ocsp_location].kind_of?(R509::ASN1::GeneralNames) or (not arg[:ocsp_location].nil? and not arg[:ocsp_location].empty?)
+            validate_ocsp_location(arg[:ocsp_location])
+            if not arg[:ocsp_location].nil?
               gns = R509::ASN1.general_name_parser(arg[:ocsp_location])
               gns.names.each do |ocsp|
                 serialize = ocsp.serialize_name
@@ -538,7 +642,8 @@ module R509
               end
             end
 
-            if arg[:ca_issuers_location].kind_of?(R509::ASN1::GeneralNames) or (not arg[:ca_issuers_location].nil? and not arg[:ca_issuers_location].empty?)
+            validate_ca_issuers_location(arg[:ca_issuers_location])
+            if not arg[:ca_issuers_location].nil?
               gns = R509::ASN1.general_name_parser(arg[:ca_issuers_location])
               gns.names.each do |ca_issuers|
                 serialize = ca_issuers.serialize_name
@@ -573,22 +678,32 @@ module R509
         end
       end
 
-      # Implements the CRLDistributionPoints certificate extension, with methods to
-      # provide access to the components and meaning of the extension's contents.
+      # RFC 5280 Description (see: http://www.ietf.org/rfc/rfc5280.txt)
+      #
+      # The CRL distribution points extension identifies how CRL information
+      # is obtained.  The extension SHOULD be non-critical, but this profile
+      # RECOMMENDS support for this extension by CAs and applications.
+      # Further discussion of CRL management is contained in Section 5.
+      #
+      # You can use this extension to parse an existing extension for easy access
+      # to the contents or create a new one.
       class CRLDistributionPoints < OpenSSL::X509::Extension
+        include R509::ValidationMixin
+
         # friendly name for CDP OID
         OID = "crlDistributionPoints"
         Extensions.register_class(self)
 
-        # An array of the CRL URIs, if any
+        # @return [R509::ASN1::GeneralNames,nil]
         attr_reader :crl
 
         # This method takes a hash or an existing Extension object to parse
         #
         # @option arg :cdp_location [Array,R509::ASN1::GeneralNames] Array of strings (eg ["http://crl.what.com/crl.crl"]) or GeneralNames object
-        # @option arg :critical [Boolean] (default: false)
+        # @option arg :critical [Boolean] (false)
         def initialize(arg)
           if arg.kind_of?(Hash)
+            validate_cdp_location(arg[:cdp_location])
             serialize = R509::ASN1.general_name_parser(arg[:cdp_location]).serialize_names
             ef = OpenSSL::X509::ExtensionFactory.new
             ef.config = OpenSSL::Config.parse(serialize[:conf])
@@ -615,8 +730,23 @@ module R509
         end
       end
 
-      # Implements the OCSP noCheck certificate extension
+      # RFC 2560 Description (see: http://www.ietf.org/rfc/rfc2560.txt)
+      #
+      # A CA may specify that an OCSP client can trust a responder for the
+      # lifetime of the responder's certificate. The CA does so by including
+      # the extension id-pkix-ocsp-nocheck. This SHOULD be a non-critical
+      # extension. The value of the extension should be NULL. CAs issuing
+      # such a certificate should realized that a compromise of the
+      # responder's key, is as serious as the compromise of a CA key used to
+      # sign CRLs, at least for the validity period of this certificate. CA's
+      # may choose to issue this type of certificate with a very short
+      # lifetime and renew it frequently.
+      #
+      # You can use this extension to parse an existing extension for easy access
+      # to the contents or create a new one.
       class OCSPNoCheck < OpenSSL::X509::Extension
+        include R509::ValidationMixin
+
         # friendly name for OCSP No Check
         OID = "noCheck"
         Extensions.register_class(self)
@@ -624,7 +754,7 @@ module R509
         # This method takes a hash or an existing Extension object to parse
         #
         # @option arg :ocsp_no_check [Any] Pass any value. It's irrelevant.
-        # @option arg :critical [Boolean] (default: false)
+        # @option arg :critical [Boolean] (false)
         def initialize(arg)
           if arg.kind_of?(Hash)
             ef = OpenSSL::X509::ExtensionFactory.new
@@ -636,20 +766,33 @@ module R509
       end
 
 
-      # Implements the CertificatePolicies certificate extension, with methods to
-      # provide access to the components and meaning of the extension's contents.
+      # RFC 5280 Description (see: http://www.ietf.org/rfc/rfc5280.txt)
+      #
+      # The certificate policies extension contains a sequence of one or more
+      # policy information terms, each of which consists of an object
+      # identifier (OID) and optional qualifiers.  Optional qualifiers, which
+      # MAY be present, are not expected to change the definition of the
+      # policy.  A certificate policy OID MUST NOT appear more than once in a
+      # certificate policies extension.
+      #
+      # You can use this extension to parse an existing extension for easy access
+      # to the contents or create a new one.
       class CertificatePolicies < OpenSSL::X509::Extension
+        include R509::ValidationMixin
+
         # friendly name for CP OID
         OID = "certificatePolicies"
         Extensions.register_class(self)
+        # @return [Array] Array of R509::ASN1::PolicyInformation objects
         attr_reader :policies
 
         # This method takes a hash or an existing Extension object to parse
         #
         # @option arg :policies [Array] Array of hashes in the same format as passed to R509::Config::CertProfile for certificate policies
-        # @option arg :critical [Boolean] (default: false)
+        # @option arg :critical [Boolean] (false)
         def initialize(arg)
           if arg.kind_of?(Hash)
+            validate_certificate_policies(arg[:policies])
             conf = []
             policy_names = ["ia5org"]
             arg[:policies].each_with_index do |policy,i|
@@ -696,21 +839,35 @@ module R509
         end
       end
 
-      # Implements the InhibitAnyPolicy certificate extension, with methods to
-      # provide access to the component and meaning of the extension's contents.
+      # The inhibit anyPolicy extension indicates that the special
+      # anyPolicy OID, with the value { 2 5 29 32 0 }, is not considered an
+      # explicit match for other certificate policies except when it appears
+      # in an intermediate self-issued CA certificate.  The value indicates
+      # the number of additional non-self-issued certificates that may appear
+      # in the path before anyPolicy is no longer permitted.  For example, a
+      # value of one indicates that anyPolicy may be processed in
+      # certificates issued by the subject of this certificate, but not in
+      # additional certificates in the path.
+      #
+      # You can use this extension to parse an existing extension for easy access
+      # to the contents or create a new one.
       class InhibitAnyPolicy < OpenSSL::X509::Extension
+        include R509::ValidationMixin
+
         # friendly name for CP OID
         OID = "inhibitAnyPolicy"
         Extensions.register_class(self)
 
+        # @return [Integer]
         attr_reader :skip_certs
 
         # This method takes a hash or an existing Extension object to parse
         #
         # @option arg :skip_certs [Integer]
-        # @option arg :critical [Boolean] (default: true)
+        # @option arg :critical [Boolean] (true)
         def initialize(arg)
           if arg.kind_of?(Hash)
+            validate_inhibit_any_policy(arg[:skip_certs])
             ef = OpenSSL::X509::ExtensionFactory.new
             critical = R509::Cert::Extensions.calculate_critical(arg[:critical], true)
             # must be set critical per RFC 5280
@@ -725,23 +882,53 @@ module R509
         end
       end
 
-      # Implements the PolicyConstraints certificate extension, with methods to
-      # provide access to the components and meaning of the extension's contents.
+      # RFC 5280 Description (see: http://www.ietf.org/rfc/rfc5280.txt)
+      #
+      # The policy constraints extension can be used in certificates issued
+      # to CAs.  The policy constraints extension constrains path validation
+      # in two ways.  It can be used to prohibit policy mapping or require
+      # that each certificate in a path contain an acceptable policy
+      # identifier.
+      #
+      # If the inhibitPolicyMapping field is present, the value indicates the
+      # number of additional certificates that may appear in the path before
+      # policy mapping is no longer permitted.  For example, a value of one
+      # indicates that policy mapping may be processed in certificates issued
+      # by the subject of this certificate, but not in additional
+      # certificates in the path.
+      #
+      # If the requireExplicitPolicy field is present, the value of
+      # requireExplicitPolicy indicates the number of additional certificates
+      # that may appear in the path before an explicit policy is required for
+      # the entire path.  When an explicit policy is required, it is
+      # necessary for all certificates in the path to contain an acceptable
+      # policy identifier in the certificate policies extension.  An
+      # acceptable policy identifier is the identifier of a policy required
+      # by the user of the certification path or the identifier of a policy
+      # that has been declared equivalent through policy mapping.
+      #
+      # You can use this extension to parse an existing extension for easy access
+      # to the contents or create a new one.
       class PolicyConstraints < OpenSSL::X509::Extension
+        include R509::ValidationMixin
+
         # friendly name for CP OID
         OID = "policyConstraints"
         Extensions.register_class(self)
 
+        # @return [Integer,nil]
         attr_reader :require_explicit_policy
+        # @return [Integer,nil]
         attr_reader :inhibit_policy_mapping
 
         # This method takes a hash or an existing Extension object to parse
         #
         # @option arg :require_explicit_policy [Integer]
         # @option arg :inhibit_policy_mapping [Integer]
-        # @option arg :critical [Boolean] (default: true)
+        # @option arg :critical [Boolean] (true)
         def initialize(arg)
           if arg.kind_of?(Hash)
+            validate_policy_constraints(arg)
             constraints = []
             constraints << "requireExplicitPolicy:#{arg[:require_explicit_policy]}" unless arg[:require_explicit_policy].nil?
             constraints << "inhibitPolicyMapping:#{arg[:inhibit_policy_mapping]}" unless arg[:inhibit_policy_mapping].nil?
@@ -769,13 +956,41 @@ module R509
         end
       end
 
-      # Implements the NameConstraints certificate extension, with methods to
-      # provide access to the components and meaning of the extension's contents.
+      # RFC 5280 Description (see: http://www.ietf.org/rfc/rfc5280.txt)
+      #
+      # The name constraints extension, which MUST be used only in a CA
+      # certificate, indicates a name space within which all subject names in
+      # subsequent certificates in a certification path MUST be located.
+      # Restrictions apply to the subject distinguished name and apply to
+      # subject alternative names.  Restrictions apply only when the
+      # specified name form is present.  If no name of the type is in the
+      # certificate, the certificate is acceptable.
+      #
+      # Name constraints are not applied to self-issued certificates (unless
+      # the certificate is the final certificate in the path).  (This could
+      # prevent CAs that use name constraints from employing self-issued
+      # certificates to implement key rollover.)
+      #
+      # Restrictions are defined in terms of permitted or excluded name
+      # subtrees.  Any name matching a restriction in the excludedSubtrees
+      # field is invalid regardless of information appearing in the
+      # permittedSubtrees.  Conforming CAs MUST mark this extension as
+      # critical and SHOULD NOT impose name constraints on the x400Address,
+      # ediPartyName, or registeredID name forms.  Conforming CAs MUST NOT
+      # issue certificates where name constraints is an empty sequence.  That
+      # is, either the permittedSubtrees field or the excludedSubtrees MUST
+      # be present.
+      #
+      # You can use this extension to parse an existing extension for easy access
+      # to the contents or create a new one.
       class NameConstraints < OpenSSL::X509::Extension
+        include R509::ValidationMixin
+
         # friendly name for CP OID
         OID = "nameConstraints"
         Extensions.register_class(self)
 
+        # @return [R509::ASN1::GeneralNames,nil]
         attr_reader :permitted, :excluded
 
         #      id-ce-nameConstraints OBJECT IDENTIFIER ::=  { id-ce 30 }
@@ -797,6 +1012,7 @@ module R509
         #      BaseDistance ::= INTEGER (0..MAX)
         def initialize(arg)
           if arg.kind_of?(Hash)
+            validate_name_constraints(arg)
             nc_data = []
             nc_conf = []
             if not arg[:permitted].nil?

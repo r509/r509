@@ -23,12 +23,12 @@ module R509::CertificateAuthority
     # Signs a CSR
     # @option options :csr [R509::CSR]
     # @option options :spki [R509::SPKI]
-    # @option options :subject [R509::Subject,OpenSSL::X509::Subject,Array] (optional for R509::CSR, required for R509::SPKI)
+    # @option options :subject [R509::Subject,OpenSSL::X509::Subject,Array] This is optional when passing a :csr but required for :spki
     # @option options :message_digest [String] the message digest to use for this certificate instead of the default (see R509::MessageDigest::DEFAULT_MD).
-    # @option options :serial [String] the serial number you want to issue the certificate with (optional, default: random)
+    # @option options :serial [String] (random serial) the serial number you want to issue the certificate with
     # @option options :extensions [Array] An array of R509::Cert::Extensions::* objects that represent the extensions you want to embed in the final certificate
-    # @option options :not_before [Time] the notBefore for the certificate (optional, default: 6 hours before Time.now)
-    # @option options :not_after [Time] the notAfter for the certificate (optional, default: 365 days)
+    # @option options :not_before [Time] (Time.now - 6 hours) the notBefore for the certificate
+    # @option options :not_after [Time] (Time.now + 365 days) the notAfter for the certificate
     # @return [R509::Cert] the signed cert object
     def sign(options)
       R509::CertificateAuthority::Signer.check_options(options)
@@ -57,10 +57,10 @@ module R509::CertificateAuthority
     # Self-signs a CSR
     # @option options :csr [R509::CSR]
     # @option options :message_digest [String] the message digest to use for this certificate (defaults to R509::MessageDigest::DEFAULT_MD)
-    # @option options :serial [String] the serial number you want to issue the certificate with (defaults to random)
+    # @option options :serial [String] (random serial) the serial number you want to issue the certificate with
     # @option options :extensions [Array] An array of R509::Cert::Extensions::* objects that represent the extensions you want to embed in the final certificate
-    # @option options :not_before [Time] the notBefore for the certificate (defaults to now)
-    # @option options :not_after [Time] the notAfter for the certificate (defaults to 1 year)
+    # @option options :not_before [Time] (Time.now - 6 hours) the notBefore for the certificate
+    # @option options :not_after [Time] (Time.now + 365 days) the notAfter for the certificate
     # @return [R509::Cert] the signed cert object
     def self.selfsign(options)
       if not options.kind_of?(Hash)

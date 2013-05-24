@@ -179,7 +179,7 @@ module R509
       # @param serial [Integer] serial number of the certificate to revoke
       # @param reason [Integer] reason for revocation
       # @param revoke_time [Integer]
-      # @param generate_and_save [Boolean] whether we want to generate the CRL and save its file (default=true)
+      # @param generate_and_save [Boolean] whether we want to generate the CRL and save its file
       #
       # reason codes defined by rfc 5280
       #

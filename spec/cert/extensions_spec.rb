@@ -502,10 +502,10 @@ describe R509::Cert::Extensions do
         bc.path_length.should be_nil
       end
 
-      it "ignores path_length if CA:FALSE" do
-        bc = R509::Cert::Extensions::BasicConstraints.new(:ca => false, :path_length => 4)
-        bc.is_ca?.should be_false
-        bc.path_length.should be_nil
+      it "errors when supplying path_length if CA:FALSE" do
+        expect {
+          R509::Cert::Extensions::BasicConstraints.new(:ca => false, :path_length => 4)
+        }.to raise_error(ArgumentError, ":path_length is not allowed when :ca is false")
       end
 
       it "creates with default criticality" do
@@ -706,6 +706,13 @@ describe R509::Cert::Extensions do
       before :all do
         @pk = R509::PrivateKey.new(:bit_strength => 768)
       end
+
+      it "errors when not supplying a public key" do
+        expect {
+          R509::Cert::Extensions::SubjectKeyIdentifier.new({})
+        }.to raise_error(ArgumentError,"You must supply a :public_key")
+      end
+
       it "creates successfully" do
         ski = R509::Cert::Extensions::SubjectKeyIdentifier.new(:public_key => @pk.public_key)
         ski.key.should_not be_nil
@@ -734,6 +741,12 @@ describe R509::Cert::Extensions do
     context "creation" do
       before :all do
         @cert = TestFixtures.test_ca_cert
+      end
+
+      it "errors when not supplying an issuer certificate" do
+        expect {
+          R509::Cert::Extensions::AuthorityKeyIdentifier.new({})
+        }.to raise_error(ArgumentError,"You must supply an R509::Cert object to :issuer_certificate")
       end
 
       it "creates successfully with default value" do
@@ -772,6 +785,13 @@ describe R509::Cert::Extensions do
 
   context "SubjectAlternativeName" do
     context "creation" do
+
+      it "errors when not supplying :names" do
+        expect {
+          R509::Cert::Extensions::SubjectAlternativeName.new({})
+        }.to raise_error(ArgumentError,"You must supply an array or R509::ASN1::GeneralNames object to :names")
+      end
+
       it "creates with GeneralNames object" do
         gns = R509::ASN1::GeneralNames.new
         gns.create_item(:type => "rfc822Name", :value => "random string")

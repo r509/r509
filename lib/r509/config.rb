@@ -32,12 +32,12 @@ module R509
       # @option opts [Hash] :policy_constraints Sets the value of the policyConstriants extension
       # @option opts [Hash] :name_constraints Sets the value of the nameConstraints extension
       # @option opts [R509::Config::SubjectItemPolicy] :subject_item_policy
-      # @option opts [String] :default_md (default:SHA1) The hashing algorithm to use.
-      # @option opts [Array] :allowed_mds (optional) Array of allowed hashes.
+      # @option opts [String] :default_md (SHA1) The hashing algorithm to use.
+      # @option opts [Array] :allowed_mds (nil) Array of allowed hashes.
       #  default_md will be automatically added to this list if it isn't already listed.
-      # @option opts [Array] :cdp_location array of strings (URLs)
-      # @option opts [Array] :ocsp_location array of strings (URLs)
-      # @option opts [Array] :ca_issuers_location array of strings (URLs)
+      # @option opts [Array,R509::ASN1::GeneralNames] :cdp_location
+      # @option opts [Array,R509::ASN1::GeneralNames] :ocsp_location
+      # @option opts [Array,R509::ASN1::GeneralNames] :ca_issuers_location
       def initialize(opts = {})
         @basic_constraints = validate_basic_constraints opts[:basic_constraints]
         @key_usage = validate_key_usage opts[:key_usage]
@@ -59,6 +59,7 @@ module R509
 
     # returns information about the subject item policy for a profile
     class SubjectItemPolicy
+      # @return [Array]
       attr_reader :required, :optional
 
       # @param [Hash] hash of required/optional subject items. These must be in OpenSSL shortname format.

@@ -503,13 +503,13 @@ describe R509::Config::CertProfile do
   end
 
   it "raises an error if you pass an ocsp_location that is not an array" do
-    expect { R509::Config::CertProfile.new( :ocsp_location => "some-url" ) }.to raise_error(ArgumentError, 'ocsp_location must be an array if provided')
+    expect { R509::Config::CertProfile.new( :ocsp_location => "some-url" ) }.to raise_error(ArgumentError, 'ocsp_location must be an array or R509::ASN1::GeneralNames object if provided')
   end
   it "raises an error if you pass a ca_issuers_location that is not an array" do
-    expect { R509::Config::CertProfile.new( :ca_issuers_location => "some-url" ) }.to raise_error(ArgumentError, 'ca_issuers_location must be an array if provided')
+    expect { R509::Config::CertProfile.new( :ca_issuers_location => "some-url" ) }.to raise_error(ArgumentError, 'ca_issuers_location must be an array or R509::ASN1::GeneralNames object if provided')
   end
   it "raises an error if you pass a cdp_location that is not an array" do
-    expect { R509::Config::CertProfile.new( :cdp_location => "some-url" ) }.to raise_error(ArgumentError, 'cdp_location must be an array if provided')
+    expect { R509::Config::CertProfile.new( :cdp_location => "some-url" ) }.to raise_error(ArgumentError, 'cdp_location must be an array or R509::ASN1::GeneralNames object if provided')
   end
 
   context "validates allowed_mds and default_md" do

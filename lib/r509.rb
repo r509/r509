@@ -19,6 +19,7 @@ module R509
   require('r509/version.rb')
 
   # print version information to console
+  # @return [nil]
   def self.print_debug
     puts "r509 v#{R509::VERSION}"
     puts OpenSSL::OPENSSL_VERSION
@@ -26,6 +27,7 @@ module R509
     puts "Elliptic curve support: #{self.ec_supported?}"
   end
 
+  # Helper method to check if EC support is built-in
   def self.ec_supported?
     (not defined?(OpenSSL::PKey::EC::UNSUPPORTED))
   end

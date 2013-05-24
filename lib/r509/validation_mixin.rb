@@ -1,3 +1,5 @@
+# @private
+# Intended as a mixin for Extensions and CertProfile to validate inbound data
 module R509::ValidationMixin
   private
   # @private
@@ -178,25 +180,48 @@ module R509::ValidationMixin
 
   # @private
   def validate_cdp_location(location)
-    if not location.nil? and not location.kind_of?(Array)
-      raise ArgumentError, "cdp_location must be an array if provided"
+    if not location.nil? and not (location.kind_of?(Array) or location.kind_of?(R509::ASN1::GeneralNames))
+      raise ArgumentError, "cdp_location must be an array or R509::ASN1::GeneralNames object if provided"
     end
     location
   end
 
   # @private
   def validate_ocsp_location(location)
-    if not location.nil? and not location.kind_of?(Array)
-      raise ArgumentError, "ocsp_location must be an array if provided"
+    if not location.nil? and not (location.kind_of?(Array) or location.kind_of?(R509::ASN1::GeneralNames))
+      raise ArgumentError, "ocsp_location must be an array or R509::ASN1::GeneralNames object if provided"
     end
     location
   end
 
   # @private
   def validate_ca_issuers_location(location)
-    if not location.nil? and not location.kind_of?(Array)
-      raise ArgumentError, "ca_issuers_location must be an array if provided"
+    if not location.nil? and not (location.kind_of?(Array) or location.kind_of?(R509::ASN1::GeneralNames))
+      raise ArgumentError, "ca_issuers_location must be an array or R509::ASN1::GeneralNames object if provided"
     end
     location
+  end
+
+  # @private
+  def validate_subject_key_identifier(ski)
+    if ski[:public_key].nil?
+      raise ArgumentError, "You must supply a :public_key"
+    end
+    ski
+  end
+
+  # @private
+  def validate_authority_key_identifier(aki)
+    if aki[:issuer_certificate].nil? or not aki[:issuer_certificate].kind_of?(R509::Cert)
+      raise ArgumentError, "You must supply an R509::Cert object to :issuer_certificate"
+    end
+    aki
+  end
+
+  # @private
+  def validate_subject_alternative_name(san)
+    if san.nil? or not (san.kind_of?(R509::ASN1::GeneralNames) or san.kind_of?(Array))
+      raise ArgumentError, "You must supply an array or R509::ASN1::GeneralNames object to :names"
+    end
   end
 end

@@ -145,7 +145,7 @@ key.write_encrypted_pem("/tmp/path","aes256","my-password")
 The engine you want to load must already be available to OpenSSL. How to compile/install OpenSSL engines is outside the scope of this document.
 
 ```ruby
-engine = R509::Engine.instance.load("SO_PATH" => "/usr/lib64/openssl/engines/libchil.so", "ID" => "chil")
+engine = R509::Engine.instance.load(:so_path => "/usr/lib64/openssl/engines/libchil.so", :id => "chil")
 key = R509::PrivateKey(
   :engine => engine,
   :key_name => "my_key_name"
@@ -171,8 +171,8 @@ not_after = Time.now.to_i+3600*24*7300
 csr = R509::CSR.new(
   :subject => [['C','US'],['O','r509 LLC'],['CN','r509 Self-Signed CA Test']]
 )
-ca = R509::CertificateAuthority::Signer.new
-cert = ca.selfsign(
+# if you do not pass :extensions it will add basic constraints CA:TRUE and nothing else
+cert = R509::CertificateAuthoirty::Signer.selfsign(
   :csr => csr,
   :not_before => not_before,
   :not_after => not_after
@@ -243,43 +243,55 @@ config = R509::Config::CAConfig.from_yaml("test_ca", "config_test.yaml")
 Example YAML (more options are supported than this example)
 
 ```yaml
-test_ca: {
-  ca_cert: {
-    cert: '/path/to/test_ca.cer',
-    key: '/path/to/test_ca.key'
-  },
-  crl_list: "crl_list_file.txt",
-  crl_number: "crl_number_file.txt",
-  crl_validity_hours: 168, #7 days
-  profiles: {
-    server: {
-      basic_constraints: {"ca" : false},
-      key_usage: [digitalSignature,keyEncipherment],
-      extended_key_usage: [serverAuth],
-      certificate_policies: [
-        { policy_identifier: "2.16.840.1.99999.21.234",
-          cps_uris: ["http://example.com/cps","http://haha.com"],
-          user_notices: [ { explicit_text: "this is a great thing", organization: "my org", notice_numbers: "1,2,3" } ]
-        },
-        { policy_identifier: "2.16.840.1.99999.21.235",
-          cps_uris: ["http://example.com/cps2"],
-          user_notices: [ { explicit_text: "this is a bad thing", organization: "another org", notice_numbers: "3,2,1" },{ explicit_text: "another user notice"} ]
-        }
-      ],
-      subject_item_policy: {
-        "CN" : "required",
-        "O" : "optional",
-        "ST" : "required",
-        "C" : "required",
-        "OU" : "optional" },
-      cdp_location: ['http://crl.domain.com/test_ca.crl'],
-      ocsp_location: ['http://ocsp.domain.com'],
-      ca_issuers_location: ['http://www.domain.com/my_roots.html'],
-      default_md: 'SHA1',
-      allowed_mds: ['SHA256','SHA1']
-    }
-  }
-}
+test_ca:
+  ca_cert:
+    cert: /path/to/test_ca.cer
+    key: /path/to/test_ca.key
+  crl_list: crl_list_file.txt
+  crl_number: crl_number_file.txt
+  crl_validity_hours: 168
+  profiles:
+    server:
+      basic_constraints:
+        :ca: false
+      key_usage:
+      - digitalSignature
+      - keyEncipherment
+      extended_key_usage:
+      - serverAuth
+      certificate_policies:
+      - :policy_identifier: 2.16.840.1.99999.21.234
+        :cps_uris:
+        - http://example.com/cps
+        - http://haha.com
+        :user_notices:
+        - :explicit_text: this is a great thing
+          :organization: my org
+          :notice_numbers: '1,2,3'
+      - :policy_identifier: 2.16.840.1.99999.21.235
+        :cps_uris:
+        - http://example.com/cps2
+        :user_notices:
+        - :explicit_text: this is a bad thing
+          :organization: another org
+          :notice_numbers: '3,2,1'
+        - :explicit_text: another user notice
+      subject_item_policy:
+        CN: required
+        O: optional
+        ST: required
+        C: required
+        OU: optional
+      cdp_location:
+      - http://crl.domain.com/test_ca.crl
+      ocsp_location:
+      - http://ocsp.domain.com
+      ca_issuers_location:
+      - http://www.domain.com/my_roots.html
+      default_md: SHA1
+      allowed_mds:
+      - SHA256
+      - SHA1
 ```
 
 Load multiple CAConfigs using a CAConfigPool
@@ -291,20 +303,15 @@ pool = R509::Config::CAConfigPool.from_yaml("certificate_authorities", "config_p
 Example (Minimal) Config Pool YAML
 
 ```yaml
-certificate_authorities: {
-  test_ca: {
-    ca_cert: {
-      cert: 'test_ca.cer',
-      key: 'test_ca.key'
-    }
-  },
-  second_ca: {
-    ca_cert: {
-      cert: 'second_ca.cer',
-      key: 'second_ca.key'
-    }
-  }
-}
+certificate_authorities:
+  test_ca:
+    ca_cert:
+      cert: test_ca.cer
+      key: test_ca.key
+  second_ca:
+    ca_cert:
+      cert: second_ca.cer
+      key: second_ca.key
 ```
 
 ###CertificateAuthority::Signer (sans CertProfile)
@@ -325,7 +332,7 @@ csr = R509::CSR.new(
 ca = R509::CertificateAuthority::Signer.new(config)
 ext = []
 # you can add extensions in an array. See R509::Cert::Extensions::*
-ext << R509::Cert::Extensions::BasicConstraints.new({"ca" => false})
+ext << R509::Cert::Extensions::BasicConstraints.new(:ca => false)
 
 cert = ca.sign(
   :csr => csr,
@@ -408,7 +415,7 @@ scrubbed_data = enforcer.enforce(
   :san_names => ['r509.org'],
   :message_digest => 'SHA256'
 )
-# this returns a hash with keys :subject, :extensions, and :message_digest
+# this returns a hash with keys :csr/:pki, :subject, :extensions, and :message_digest
 signer = R509::CertificateAuthority::Signer.new(config)
 cert = signer.sign(scrubbed_data)
 
@@ -478,7 +485,7 @@ This hash defines the certificate + key that will be used to sign for the ca\_na
 
 * cert (cannot use with pkcs12)
 * key (optional, cannot use with pkcs12)
-* engine (optional, cannot be used with key or pkcs12. Must be a hash with SO_PATH and ID keys)
+* engine (optional, cannot be used with key or pkcs12. Must be a hash with :so_path and :id keys)
 * key\_name (required when using engine)
 * pkcs12 (optional, cannot be used with key or cert)
 * password (optional, used for pkcs12 or passworded private key)
@@ -493,13 +500,6 @@ This hash defines the certificate + key that will be used to sign for OCSP respo
 * pkcs12 (optional, cannot be used with key or cert)
 * password (optional, used for pkcs12 or passworded private key)
 
-###cdp\_location
-An array of CRL distribution points for certificates issued from this CA.
-
-```yaml
-['http://crl.r509.org/myca.crl']
-```
-
 ###crl\_list
 The path on the filesystem of the list of revoked certificates for this CA.
 
@@ -512,20 +512,6 @@ Example: '/path/to/my\_ca\_crl\_number.txt'
 
 ###crl\_validity\_hours
 Integer hours for CRL validity.
-
-###ocsp\_location
-An array of URIs for client OCSP checks. These strings will be scanned and automatically processed to determine their proper type in the certificate.
-
-```yaml
-['http://ocsp.r509.org']
-```
-
-###ca\_issuers\_location
-An array of ca issuer locations. These strings will be scanned and automatically processed to determine their proper type in the certificate.
-
-```yaml
-['http://www.r509.org/some_roots.html']
-```
 
 ###ocsp\_chain
 An optional path to a concatenated text file of PEMs that should be attached to OCSP responses
@@ -564,6 +550,27 @@ This option is only allowed if ca is set to TRUE. path_length allows you to defi
 {ca : true, path_length: 3}
 ```
 
+####cdp\_location
+An array of CRL distribution points for certificates issued from this CA.
+
+```yaml
+['http://crl.r509.org/myca.crl']
+```
+
+####ocsp\_location
+An array of URIs for client OCSP checks. These strings will be scanned and automatically processed to determine their proper type in the certificate.
+
+```yaml
+['http://ocsp.r509.org']
+```
+
+####ca\_issuers\_location
+An array of ca issuer locations. These strings will be scanned and automatically processed to determine their proper type in the certificate.
+
+```yaml
+['http://www.r509.org/some_roots.html']
+```
+
 ####key\_usage
 An array of strings that conform to the OpenSSL naming scheme for available key usage OIDs.
 
@@ -597,26 +604,31 @@ An array of strings that conform to the OpenSSL naming scheme for available EKU 
 An array of hashes containing policy identifiers, CPS URI(s), and user notice(s)
 
 ```yaml
-[
-  { policy_identifier: "2.16.840.1.99999.21.234",
-    cps_uris: ["http://example.com/cps"]
-  }
-]
+      - :policy_identifier: 2.16.840.1.99999.21.234
+        :cps_uris:
+        - http://example.com/cps
 ```
 
 or
 
 ```yaml
-[
-  { policy_identifier: "2.16.840.1.99999.21.234",
-    cps_uris: ["http://example.com/cps","http://haha.com"],
-    user_notices: [ { explicit_text: "this is a great thing", organization: "my org", notice_numbers: "1,2,3" } ]
-  },
-  { policy_identifier: "2.16.840.1.99999.21.235",
-    cps_uris: ["http://example.com/cps2"],
-    user_notices: [ { explicit_text: "this is a bad thing", organization: "another org", notice_numbers: "3,2,1" },{ explicit_text: "another user notice"} ]
-  }
-]
+      - :policy_identifier: 2.16.840.1.99999.21.234
+        :cps_uris:
+        - http://example.com/cps
+        - http://haha.com
+        :user_notices:
+        - :explicit_text: this is a great thing
+          :organization: my org
+          :notice_numbers: '1,2,3'
+      - :policy_identifier: 2.16.840.1.99999.21.235
+        :cps_uris:
+        - http://example.com/cps2
+        :user_notices:
+        - :explicit_text: this is a bad thing
+          :organization: another org
+          :notice_numbers: '3,2,1'
+        - :explicit_text: another user notice
+      - :policy_identifier: 2.16.840.1.99999.0
 ```
 
 ####ocsp\_no\_check
@@ -629,13 +641,8 @@ A non-negative integer value. From RFC 5280: "The inhibit anyPolicy extension ca
 A hash with two optional keys (one or both may be present). From RFC 5280: "The policy constraints extension can be used in certificates issued to CAs.  The policy constraints extension constrains path validation in two ways.  It can be used to prohibit policy mapping or require that each certificate in a path contain an acceptable policy identifier"
 
 ```yaml
-  { require_explicit_policy: 0, inhibit_policy_mapping: 0 }
-```
-
-or if you only need one of the keys
-
-```yaml
-  { inhibit_policy_mapping: 0 }
+  :require_explicit_policy: 0
+  :inhibit_policy_mapping: 0
 ```
 
 ###name\_constraints
@@ -644,21 +651,26 @@ From RFC 5280: "The name constraints extension, which MUST be used only in a CA 
 This section is made up of a hash that contains permitted and excluded keys. Each (optional) key in turn has an array of hashes that declare a type and value. Types allowed are defined by R509::ASN1::GeneralName.map_type_to_tag. (examples: DNS, URI, IP, email, dirName)
 
 Notes:
- * When supplying IP you _must_ supply a full netmask in addition to an IP.
+ * When supplying IP you _must_ supply a full netmask in addition to an IP. (both IPv4 and IPv6 supported)
  * When supplying dirName the value is an array of arrays structured the same way as input to :subject in R509::CSR.new
 
 ```yaml
-{
-  permitted: [
-    {type: "IP", value: "192.168.0.0/255.255.0.0"},
-    {type: "dirName", value: [['CN','myCN'],['O','Org']]}
-  ],
-  excluded: [
-    {type: "email", value: "domain.com"},
-    {type: "URI", value: ".net"},
-    {type: "DNS", value: "test.us"}
-  ]
-}
+  :permitted:
+  - :type: IP
+    :value: 192.168.0.0/255.255.0.0
+  - :type: dirName
+    :value:
+    - - CN
+      - myCN
+    - - O
+      - Org
+  :excluded:
+  - :type: email
+    :value: domain.com
+  - :type: URI
+    :value: .net
+  - :type: DNS
+    :value: test.us
 ```
 
 ####subject\_item\_policy
