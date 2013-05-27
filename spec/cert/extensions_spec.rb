@@ -532,6 +532,18 @@ describe R509::Cert::Extensions do
       it_should_behave_like "a correct R509 BasicConstraints object", true
     end
 
+    context "with constraints for a CA certificate with no path length" do
+      before :all do
+        @extension_value = "CA:TRUE"
+        @is_ca = true
+        @pathlen = nil
+        @allows_sub_ca = true
+      end
+
+      it_should_behave_like "a correct R509 BasicConstraints object", false
+      it_should_behave_like "a correct R509 BasicConstraints object", true
+    end
+
     context "with constraints for a sub-CA certificate" do
       before :all do
         @extension_value = "CA:TRUE,pathlen:0"

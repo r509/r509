@@ -97,7 +97,8 @@ module R509
         # there is a pathlen restriction in the cert chain above the current cert
         # @return [Boolean]
         def allows_sub_ca?
-          return false if @path_length.nil?
+          return false unless is_ca?
+          return true if @path_length.nil?
           return @path_length > 0
         end
       end
