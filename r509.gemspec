@@ -3,6 +3,7 @@ require "r509/version"
 
 spec = Gem::Specification.new do |s|
   s.name = 'r509'
+  s.license = 'Apache 2.0'
   s.version = R509::VERSION
   s.platform = Gem::Platform::RUBY
   s.summary = "A (relatively) simple X.509 certification authority"
