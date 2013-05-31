@@ -256,7 +256,7 @@ module R509
         crlnum = OpenSSL::ASN1::Integer(crl_number)
         crl.add_extension(OpenSSL::X509::Extension.new("crlNumber", crlnum))
         extensions = []
-        extensions << ["authorityKeyIdentifier", "keyid:always,issuer:always", false]
+        extensions << ["authorityKeyIdentifier", "keyid", false]
         extensions.each{|oid, value, critical|
           crl.add_extension(ef.create_extension(oid, value, critical))
         }
