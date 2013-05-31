@@ -82,7 +82,7 @@ module R509::CertificateAuthority
         :serial => options[:serial]
       )
 
-      cert.extensions = options[:extensions] || [R509::Cert::Extensions::BasicConstraints.new(:ca => true)]
+      cert.extensions = options[:extensions] || [R509::Cert::Extensions::BasicConstraints.new(:ca => true), R509::Cert::Extensions::SubjectKeyIdentifier.new(:public_key => public_key)]
 
       if options.has_key?(:message_digest)
         message_digest = R509::MessageDigest.new(options[:message_digest])
