@@ -6,13 +6,13 @@
 <title>
   Class: R509::Cert::Extensions::AuthorityInfoAccess
   
-    &mdash; Documentation by YARD 0.8.6.1
+    &mdash; Documentation by YARD 0.8.4.1
   
 </title>
 
-  <link rel="stylesheet" href="../../../css/style.css" type="text/css" charset="utf-8" />
+  <link rel="stylesheet" href="../../../css/style.css" type="text/css" media="screen" charset="utf-8" />
 
-  <link rel="stylesheet" href="../../../css/common.css" type="text/css" charset="utf-8" />
+  <link rel="stylesheet" href="../../../css/common.css" type="text/css" media="screen" charset="utf-8" />
 
 <script type="text/javascript" charset="utf-8">
   hasFrames = window.top.frames.main ? true : false;
@@ -104,9 +104,18 @@
 <h2>Overview</h2><div class="docstring">
   <div class="discussion">
     
-<p>Implements the AuthorityInfoAccess certificate extension, with methods to
-provide access to the components and meaning of the extension&#39;s
-contents.</p>
+<p>RFC 5280 Description (see: <a
+href="http://www.ietf.org/rfc/rfc5280.txt">www.ietf.org/rfc/rfc5280.txt</a>)</p>
+
+<p>The authority information access extension indicates how to access
+information and services for the issuer of the certificate in which the
+extension appears.  Information and services may include on-line validation
+services and CA policy data.  (The location of CRLs is not specified in
+this extension; that information is provided by the cRLDistributionPoints
+extension.)  This extension may be included in end entity or CA
+certificates.  Conforming CAs MUST mark this extension as non-critical. You
+can use this extension to parse an existing extension for easy access to
+the contents or create a new one.</p>
 
 
   </div>
@@ -147,7 +156,7 @@ contents.</p>
       <li class="public ">
   <span class="summary_signature">
     
-      <a href="#ca_issuers-instance_method" title="#ca_issuers (instance method)">- (Object) <strong>ca_issuers</strong> </a>
+      <a href="#ca_issuers-instance_method" title="#ca_issuers (instance method)">- (R509::ASN1::GeneralNames<sup>?</sup>) <strong>ca_issuers</strong> </a>
     
 
     
@@ -167,7 +176,7 @@ contents.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>An array of the CA issuers data, if any.</p>
+<p>An R509::ASN1::GeneralNames object of CA Issuers (or nil if not present).</p>
 </div></span>
   
 </li>
@@ -176,7 +185,7 @@ contents.</p>
       <li class="public ">
   <span class="summary_signature">
     
-      <a href="#ocsp-instance_method" title="#ocsp (instance method)">- (Object) <strong>ocsp</strong> </a>
+      <a href="#ocsp-instance_method" title="#ocsp (instance method)">- (R509::ASN1::GeneralNames<sup>?</sup>) <strong>ocsp</strong> </a>
     
 
     
@@ -196,7 +205,8 @@ contents.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>An array of the OCSP data, if any.</p>
+<p>An R509::ASN1::GeneralNames object of OCSP endpoints (or nil if not
+present).</p>
 </div></span>
   
 </li>
@@ -218,7 +228,7 @@ contents.</p>
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#initialize-instance_method" title="#initialize (instance method)">- (AuthorityInfoAccess) <strong>initialize</strong>(*args) </a>
+      <a href="#initialize-instance_method" title="#initialize (instance method)">- (AuthorityInfoAccess) <strong>initialize</strong>(arg) </a>
     
 
     
@@ -235,7 +245,7 @@ contents.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>See OpenSSL::X509::Extension#initialize.</p>
+<p>This method takes a hash or an existing Extension object to parse.</p>
 </div></span>
   
 </li>
@@ -245,13 +255,19 @@ contents.</p>
   
 
 
+  
+  
+  
+  
+  
+  
   <div id="constructor_details" class="method_details_list">
   <h2>Constructor Details</h2>
   
     <div class="method_details first">
   <h3 class="signature first" id="initialize-instance_method">
   
-    - (<tt><span class='object_link'><a href="" title="R509::Cert::Extensions::AuthorityInfoAccess (class)">AuthorityInfoAccess</a></span></tt>) <strong>initialize</strong>(*args) 
+    - (<tt><span class='object_link'><a href="" title="R509::Cert::Extensions::AuthorityInfoAccess (class)">AuthorityInfoAccess</a></span></tt>) <strong>initialize</strong>(arg) 
   
 
   
@@ -260,13 +276,82 @@ contents.</p>
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>See OpenSSL::X509::Extension#initialize</p>
+<p>This method takes a hash or an existing Extension object to parse</p>
 
 
   </div>
 </div>
 <div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
   
+    <li>
+      
+        <span class='name'>arg</span>
+      
+      
+        <span class='type'>(<tt>Hash</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>a customizable set of options</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+  
+    
+    
+    <p class="tag_title">Options Hash (<tt>arg</tt>):</p>
+    <ul class="option">
+      
+        <li>
+          <span class="name">:ocsp_location</span>
+          <span class="type">(<tt>Array</tt>, <tt><span class='object_link'><a href="../../ASN1/GeneralNames.html" title="R509::ASN1::GeneralNames (class)">R509::ASN1::GeneralNames</a></span></tt>)</span>
+          <span class="default">
+            
+          </span>
+          
+            &mdash; <div class='inline'>
+<p>Array of strings (eg ["<a
+href="http://somedomain.com/something">somedomain.com/something</a>"]) or
+GeneralNames object</p>
+</div>
+          
+        </li>
+      
+        <li>
+          <span class="name">:ca_issuers_location</span>
+          <span class="type">(<tt>Array</tt>)</span>
+          <span class="default">
+            
+          </span>
+          
+            &mdash; <div class='inline'>
+<p>Array of strings or GeneralNames object</p>
+</div>
+          
+        </li>
+      
+        <li>
+          <span class="name">:critical</span>
+          <span class="type">(<tt>Boolean</tt>)</span>
+          <span class="default">
+            
+              &mdash; default:
+              <tt>false</tt>
+            
+          </span>
+          
+        </li>
+      
+    </ul>
+  
+
 
 </div><table class="source_code">
   <tr>
@@ -274,30 +359,92 @@ contents.</p>
       <pre class="lines">
 
 
-443
-444
-445
-446
-447
-448
-449
-450
-451
-452
-453
-454
-455
-456
-457
-458
-459
-460</pre>
+631
+632
+633
+634
+635
+636
+637
+638
+639
+640
+641
+642
+643
+644
+645
+646
+647
+648
+649
+650
+651
+652
+653
+654
+655
+656
+657
+658
+659
+660
+661
+662
+663
+664
+665
+666
+667
+668
+669
+670
+671
+672
+673
+674
+675
+676
+677
+678
+679</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 443</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 631</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='op'>*</span><span class='id identifier rubyid_args'>args</span><span class='rparen'>)</span>
-  <span class='kw'>super</span><span class='lparen'>(</span><span class='op'>*</span><span class='id identifier rubyid_args'>args</span><span class='rparen'>)</span>
+<span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='id identifier rubyid_arg'>arg</span><span class='rparen'>)</span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_arg'>arg</span><span class='period'>.</span><span class='id identifier rubyid_kind_of?'>kind_of?</span><span class='lparen'>(</span><span class='const'>Hash</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_aia'>aia</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
+    <span class='id identifier rubyid_aia_conf'>aia_conf</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
+
+    <span class='id identifier rubyid_validate_ocsp_location'>validate_ocsp_location</span><span class='lparen'>(</span><span class='id identifier rubyid_arg'>arg</span><span class='lbracket'>[</span><span class='symbol'>:ocsp_location</span><span class='rbracket'>]</span><span class='rparen'>)</span>
+    <span class='kw'>if</span> <span class='kw'>not</span> <span class='id identifier rubyid_arg'>arg</span><span class='lbracket'>[</span><span class='symbol'>:ocsp_location</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
+      <span class='id identifier rubyid_gns'>gns</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>ASN1</span><span class='period'>.</span><span class='id identifier rubyid_general_name_parser'>general_name_parser</span><span class='lparen'>(</span><span class='id identifier rubyid_arg'>arg</span><span class='lbracket'>[</span><span class='symbol'>:ocsp_location</span><span class='rbracket'>]</span><span class='rparen'>)</span>
+      <span class='id identifier rubyid_gns'>gns</span><span class='period'>.</span><span class='id identifier rubyid_names'>names</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_ocsp'>ocsp</span><span class='op'>|</span>
+        <span class='id identifier rubyid_serialize'>serialize</span> <span class='op'>=</span> <span class='id identifier rubyid_ocsp'>ocsp</span><span class='period'>.</span><span class='id identifier rubyid_serialize_name'>serialize_name</span>
+        <span class='id identifier rubyid_aia'>aia</span><span class='period'>.</span><span class='id identifier rubyid_push'>push</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>OCSP;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_serialize'>serialize</span><span class='lbracket'>[</span><span class='symbol'>:extension_string</span><span class='rbracket'>]</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
+        <span class='id identifier rubyid_aia_conf'>aia_conf</span><span class='period'>.</span><span class='id identifier rubyid_push'>push</span> <span class='id identifier rubyid_serialize'>serialize</span><span class='lbracket'>[</span><span class='symbol'>:conf</span><span class='rbracket'>]</span>
+      <span class='kw'>end</span>
+    <span class='kw'>end</span>
+
+    <span class='id identifier rubyid_validate_ca_issuers_location'>validate_ca_issuers_location</span><span class='lparen'>(</span><span class='id identifier rubyid_arg'>arg</span><span class='lbracket'>[</span><span class='symbol'>:ca_issuers_location</span><span class='rbracket'>]</span><span class='rparen'>)</span>
+    <span class='kw'>if</span> <span class='kw'>not</span> <span class='id identifier rubyid_arg'>arg</span><span class='lbracket'>[</span><span class='symbol'>:ca_issuers_location</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
+      <span class='id identifier rubyid_gns'>gns</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>ASN1</span><span class='period'>.</span><span class='id identifier rubyid_general_name_parser'>general_name_parser</span><span class='lparen'>(</span><span class='id identifier rubyid_arg'>arg</span><span class='lbracket'>[</span><span class='symbol'>:ca_issuers_location</span><span class='rbracket'>]</span><span class='rparen'>)</span>
+      <span class='id identifier rubyid_gns'>gns</span><span class='period'>.</span><span class='id identifier rubyid_names'>names</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_ca_issuers'>ca_issuers</span><span class='op'>|</span>
+        <span class='id identifier rubyid_serialize'>serialize</span> <span class='op'>=</span> <span class='id identifier rubyid_ca_issuers'>ca_issuers</span><span class='period'>.</span><span class='id identifier rubyid_serialize_name'>serialize_name</span>
+        <span class='id identifier rubyid_aia'>aia</span><span class='period'>.</span><span class='id identifier rubyid_push'>push</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>caIssuers;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_serialize'>serialize</span><span class='lbracket'>[</span><span class='symbol'>:extension_string</span><span class='rbracket'>]</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
+        <span class='id identifier rubyid_aia_conf'>aia_conf</span><span class='period'>.</span><span class='id identifier rubyid_push'>push</span> <span class='id identifier rubyid_serialize'>serialize</span><span class='lbracket'>[</span><span class='symbol'>:conf</span><span class='rbracket'>]</span>
+      <span class='kw'>end</span>
+    <span class='kw'>end</span>
+
+    <span class='kw'>if</span> <span class='kw'>not</span> <span class='id identifier rubyid_aia'>aia</span><span class='period'>.</span><span class='id identifier rubyid_empty?'>empty?</span>
+      <span class='id identifier rubyid_ef'>ef</span> <span class='op'>=</span> <span class='const'>OpenSSL</span><span class='op'>::</span><span class='const'>X509</span><span class='op'>::</span><span class='const'>ExtensionFactory</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span>
+      <span class='id identifier rubyid_ef'>ef</span><span class='period'>.</span><span class='id identifier rubyid_config'>config</span> <span class='op'>=</span> <span class='const'>OpenSSL</span><span class='op'>::</span><span class='const'>Config</span><span class='period'>.</span><span class='id identifier rubyid_parse'>parse</span><span class='lparen'>(</span><span class='id identifier rubyid_aia_conf'>aia_conf</span><span class='period'>.</span><span class='id identifier rubyid_join'>join</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>\n</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='rparen'>)</span>
+      <span class='id identifier rubyid_critical'>critical</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>Cert</span><span class='op'>::</span><span class='const'>Extensions</span><span class='period'>.</span><span class='id identifier rubyid_calculate_critical'>calculate_critical</span><span class='lparen'>(</span><span class='id identifier rubyid_arg'>arg</span><span class='lbracket'>[</span><span class='symbol'>:critical</span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='kw'>false</span><span class='rparen'>)</span>
+      <span class='id identifier rubyid_arg'>arg</span> <span class='op'>=</span> <span class='id identifier rubyid_ef'>ef</span><span class='period'>.</span><span class='id identifier rubyid_create_extension'>create_extension</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>authorityInfoAccess</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='id identifier rubyid_aia'>aia</span><span class='period'>.</span><span class='id identifier rubyid_join'>join</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>,</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='comma'>,</span><span class='id identifier rubyid_critical'>critical</span><span class='rparen'>)</span>
+    <span class='kw'>end</span>
+  <span class='kw'>end</span>
+  <span class='kw'>super</span><span class='lparen'>(</span><span class='id identifier rubyid_arg'>arg</span><span class='rparen'>)</span>
 
   <span class='id identifier rubyid_data'>data</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>ASN1</span><span class='period'>.</span><span class='id identifier rubyid_get_extension_payload'>get_extension_payload</span><span class='lparen'>(</span><span class='kw'>self</span><span class='rparen'>)</span>
   <span class='ivar'>@ocsp</span><span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>ASN1</span><span class='op'>::</span><span class='const'>GeneralNames</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span>
@@ -329,7 +476,7 @@ contents.</p>
       <div class="method_details first">
   <h3 class="signature first" id="ca_issuers-instance_method">
   
-    - (<tt>Object</tt>) <strong>ca_issuers</strong>  <span class="extras">(readonly)</span>
+    - (<tt><span class='object_link'><a href="../../ASN1/GeneralNames.html" title="R509::ASN1::GeneralNames (class)">R509::ASN1::GeneralNames</a></span></tt><sup>?</sup>) <strong>ca_issuers</strong>  <span class="extras">(readonly)</span>
   
 
   
@@ -338,13 +485,26 @@ contents.</p>
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>An array of the CA issuers data, if any</p>
+<p>An R509::ASN1::GeneralNames object of CA Issuers (or nil if not present)</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../../ASN1/GeneralNames.html" title="R509::ASN1::GeneralNames (class)">R509::ASN1::GeneralNames</a></span></tt>, <tt>nil</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
 
 </div><table class="source_code">
   <tr>
@@ -352,12 +512,12 @@ contents.</p>
       <pre class="lines">
 
 
-440
-441
-442</pre>
+624
+625
+626</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 440</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 624</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_ca_issuers'>ca_issuers</span>
   <span class='ivar'>@ca_issuers</span>
@@ -372,7 +532,7 @@ contents.</p>
       <div class="method_details ">
   <h3 class="signature " id="ocsp-instance_method">
   
-    - (<tt>Object</tt>) <strong>ocsp</strong>  <span class="extras">(readonly)</span>
+    - (<tt><span class='object_link'><a href="../../ASN1/GeneralNames.html" title="R509::ASN1::GeneralNames (class)">R509::ASN1::GeneralNames</a></span></tt><sup>?</sup>) <strong>ocsp</strong>  <span class="extras">(readonly)</span>
   
 
   
@@ -381,13 +541,27 @@ contents.</p>
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>An array of the OCSP data, if any</p>
+<p>An R509::ASN1::GeneralNames object of OCSP endpoints (or nil if not
+present)</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../../ASN1/GeneralNames.html" title="R509::ASN1::GeneralNames (class)">R509::ASN1::GeneralNames</a></span></tt>, <tt>nil</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
 
 </div><table class="source_code">
   <tr>
@@ -395,12 +569,12 @@ contents.</p>
       <pre class="lines">
 
 
-438
-439
-440</pre>
+621
+622
+623</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 438</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 621</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_ocsp'>ocsp</span>
   <span class='ivar'>@ocsp</span>
@@ -416,9 +590,9 @@ contents.</p>
 </div>
 
     <div id="footer">
-  Generated on Mon May  6 09:22:52 2013 by
+  Generated on Sun Jun  9 10:03:38 2013 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.8.6.1 (ruby-2.0.0).
+  0.8.4.1 (ruby-2.0.0).
 </div>
 
   </body>

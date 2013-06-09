@@ -6,13 +6,13 @@
 <title>
   File: r509
   
-    &mdash; Documentation by YARD 0.8.6.1
+    &mdash; Documentation by YARD 0.8.4.1
   
 </title>
 
-  <link rel="stylesheet" href="css/style.css" type="text/css" charset="utf-8" />
+  <link rel="stylesheet" href="css/style.css" type="text/css" media="screen" charset="utf-8" />
 
-  <link rel="stylesheet" href="css/common.css" type="text/css" charset="utf-8" />
+  <link rel="stylesheet" href="css/common.css" type="text/css" media="screen" charset="utf-8" />
 
 <script type="text/javascript" charset="utf-8">
   hasFrames = window.top.frames.main ? true : false;
@@ -61,112 +61,226 @@
 
     <iframe id="search_frame"></iframe>
 
-    <div id="content"><div id='filecontents'>
-<p>certificate_authorities: {</p>
+    <div id="content"><div id='filecontents'><hr style="height: 1px">
 
-<pre class="code ruby"><code class="ruby">test_ca: {
-  ca_cert: {
-    cert: &#39;spec/fixtures/test_ca.cer&#39;,
-    key: &#39;spec/fixtures/test_ca.key&#39;
-  },
-  ocsp_cert: {
-    pkcs12: &#39;spec/fixtures/test_ca_ocsp.p12&#39;,
-    password: &#39;r509&#39;
-  },
-  ocsp_location: [&#39;http://ocsp.domain.com&#39;],
-  ca_issuers_location: [&#39;http://domain.com/ca.html&#39;],
-  ocsp_chain: &#39;spec/fixtures/test_ca_ocsp_chain.txt&#39;,
-  ocsp_start_skew_seconds: 3600,
-  ocsp_validity_hours: 168,
-  cdp_location: [&#39;http://crl.domain.com/test_ca.crl&#39;],
-  crl_list: &#39;spec/fixtures/test_ca_crl_list.txt&#39;,
-  crl_number: &#39;spec/fixtures/test_ca_crl_number.txt&#39;,
-  crl_validity_hours: 168, #7 days
-  default_md: &#39;SHA1&#39;,
-  allowed_mds: [&#39;SHA256&#39;,&#39;SHA512&#39;,&#39;SHA1&#39;],
-  profiles: {
-    server: {
-      basic_constraints: {&quot;ca&quot; : false},
-      key_usage: [digitalSignature,keyEncipherment],
-      extended_key_usage: [serverAuth],
-      subject_item_policy: {
-        CN: &quot;required&quot;,
-        O:  &quot;required&quot;,
-        OU: &quot;optional&quot;,
-        ST: &quot;required&quot;,
-        C:  &quot;required&quot;,
-        L:  &quot;required&quot;
-      }
-    },
-    client: {
-      basic_constraints: {&quot;ca&quot; : false},
-      key_usage: [digitalSignature,keyEncipherment],
-      extended_key_usage: [clientAuth],
-    },
-    email: {
-      basic_constraints: {&quot;ca&quot; : false},
-      key_usage: [digitalSignature,keyEncipherment],
-      extended_key_usage: [emailProtection],
-    },
-    clientserver: {
-      basic_constraints:  {&quot;ca&quot; : false},
-      key_usage: [digitalSignature,keyEncipherment],
-      extended_key_usage: [serverAuth,clientAuth],
-    },
-    codesigning: {
-      basic_constraints:  {&quot;ca&quot; : false},
-      key_usage: [digitalSignature],
-      extended_key_usage: [codeSigning],
-    },
-    timestamping: {
-      basic_constraints:  {&quot;ca&quot; : false},
-      key_usage: [digitalSignature],
-      extended_key_usage: [timeStamping],
-    },
-    subroot: {
-      basic_constraints:  {&quot;ca&quot; : true, &quot;path_length&quot; : 0},
-      key_usage: [keyCertSign,cRLSign],
-      extended_key_usage: [],
-      certificate_policies: [
-        { policy_identifier: &quot;2.16.840.1.99999.21.234&quot;,
-          cps_uris: [&quot;http://example.com/cps&quot;,&quot;http://haha.com&quot;],
-          user_notices: [ { explicit_text: &quot;this is a great thing&quot;, organization: &quot;my org&quot;, notice_numbers: &quot;1,2,3&quot; } ]
-        },
-        { policy_identifier: &quot;2.16.840.1.99999.21.235&quot;,
-          cps_uris: [&quot;http://example.com/cps2&quot;],
-          user_notices: [ { explicit_text: &quot;this is a bad thing&quot;, organization: &quot;another org&quot;, notice_numbers: &quot;3,2,1&quot; },{ explicit_text: &quot;another user notice&quot;} ]
-        }
-      ],
-      inhibit_any_policy: 0,
-      policy_constraints: { require_explicit_policy: 0, inhibit_policy_mapping: 0},
-      name_constraints: {
-        permitted: [
-          {type: &quot;IP&quot;, value: &quot;192.168.0.0/255.255.0.0&quot;},
-          {type: &quot;dirName&quot;, value: [[&#39;CN&#39;,&#39;myCN&#39;],[&#39;O&#39;,&#39;Org&#39;]]}
-        ],
-        excluded: [
-          {type: &quot;email&quot;, value: &quot;domain.com&quot;},
-          {type: &quot;URI&quot;, value: &quot;.net&quot;},
-          {type: &quot;DNS&quot;, value: &quot;test.us&quot;}
-        ]
-      }
-    },
-    ocsp_delegate: {
-      basic_constraints:  {&quot;ca&quot; : false},
-      key_usage: [digitalSignature],
-      extended_key_usage: [OCSPSigning],
+<p>certificate_authorities:</p>
+
+<pre class="code ruby"><code class="ruby">test_ca:
+  ca_cert:
+    cert: spec/fixtures/test_ca.cer
+    key: spec/fixtures/test_ca.key
+  ocsp_cert:
+    pkcs12: spec/fixtures/test_ca_ocsp.p12
+    password: r509
+  ocsp_chain: spec/fixtures/test_ca_ocsp_chain.txt
+  ocsp_start_skew_seconds: 3600
+  ocsp_validity_hours: 168
+  crl_list: spec/fixtures/test_ca_crl_list.txt
+  crl_number: spec/fixtures/test_ca_crl_number.txt
+  crl_validity_hours: 168
+  profiles:
+    server:
+      basic_constraints:
+        :ca: false
+      key_usage:
+      - digitalSignature
+      - keyEncipherment
+      extended_key_usage:
+      - serverAuth
+      subject_item_policy:
+        CN: required
+        O: required
+        OU: optional
+        ST: required
+        C: required
+        L: required
+      ocsp_location:
+      - http://ocsp.domain.com
+      ca_issuers_location:
+      - http://domain.com/ca.html
+      cdp_location:
+      - http://crl.domain.com/test_ca.crl
+      default_md: SHA1
+      allowed_mds:
+      - SHA256
+      - SHA512
+      - SHA1
+    client:
+      basic_constraints:
+        :ca: false
+      key_usage:
+      - digitalSignature
+      - keyEncipherment
+      extended_key_usage:
+      - clientAuth
+      ocsp_location:
+      - http://ocsp.domain.com
+      ca_issuers_location:
+      - http://domain.com/ca.html
+      cdp_location:
+      - http://crl.domain.com/test_ca.crl
+      default_md: SHA1
+      allowed_mds:
+      - SHA256
+      - SHA512
+      - SHA1
+    email:
+      basic_constraints:
+        :ca: false
+      key_usage:
+      - digitalSignature
+      - keyEncipherment
+      extended_key_usage:
+      - emailProtection
+      ocsp_location:
+      - http://ocsp.domain.com
+      ca_issuers_location:
+      - http://domain.com/ca.html
+      cdp_location:
+      - http://crl.domain.com/test_ca.crl
+      default_md: SHA1
+      allowed_mds:
+      - SHA256
+      - SHA512
+      - SHA1
+    clientserver:
+      basic_constraints:
+        :ca: false
+      key_usage:
+      - digitalSignature
+      - keyEncipherment
+      extended_key_usage:
+      - serverAuth
+      - clientAuth
+      ocsp_location:
+      - http://ocsp.domain.com
+      ca_issuers_location:
+      - http://domain.com/ca.html
+      cdp_location:
+      - http://crl.domain.com/test_ca.crl
+      default_md: SHA1
+      allowed_mds:
+      - SHA256
+      - SHA512
+      - SHA1
+    codesigning:
+      basic_constraints:
+        :ca: false
+      key_usage:
+      - digitalSignature
+      extended_key_usage:
+      - codeSigning
+      ocsp_location:
+      - http://ocsp.domain.com
+      ca_issuers_location:
+      - http://domain.com/ca.html
+      cdp_location:
+      - http://crl.domain.com/test_ca.crl
+      default_md: SHA1
+      allowed_mds:
+      - SHA256
+      - SHA512
+      - SHA1
+    timestamping:
+      basic_constraints:
+        :ca: false
+      key_usage:
+      - digitalSignature
+      extended_key_usage:
+      - timeStamping
+      ocsp_location:
+      - http://ocsp.domain.com
+      ca_issuers_location:
+      - http://domain.com/ca.html
+      cdp_location:
+      - http://crl.domain.com/test_ca.crl
+      default_md: SHA1
+      allowed_mds:
+      - SHA256
+      - SHA512
+      - SHA1
+    subroot:
+      basic_constraints:
+        :ca: true
+        :path_length: 0
+      key_usage:
+      - keyCertSign
+      - cRLSign
+      extended_key_usage: []
+      certificate_policies:
+      - :policy_identifier: 2.16.840.1.99999.21.234
+        :cps_uris:
+        - http://example.com/cps
+        - http://haha.com
+        :user_notices:
+        - :explicit_text: this is a great thing
+          :organization: my org
+          :notice_numbers: &#39;1,2,3&#39;
+      - :policy_identifier: 2.16.840.1.99999.21.235
+        :cps_uris:
+        - http://example.com/cps2
+        :user_notices:
+        - :explicit_text: this is a bad thing
+          :organization: another org
+          :notice_numbers: &#39;3,2,1&#39;
+        - :explicit_text: another user notice
+      inhibit_any_policy: 0
+      policy_constraints:
+        :require_explicit_policy: 0
+        :inhibit_policy_mapping: 0
+      name_constraints:
+        :permitted:
+        - :type: IP
+          :value: 192.168.0.0/255.255.0.0
+        - :type: dirName
+          :value:
+          - - CN
+            - myCN
+          - - O
+            - Org
+        :excluded:
+        - :type: email
+          :value: domain.com
+        - :type: URI
+          :value: .net
+        - :type: DNS
+          :value: test.us
+      ocsp_location:
+      - http://ocsp.domain.com
+      ca_issuers_location:
+      - http://domain.com/ca.html
+      cdp_location:
+      - http://crl.domain.com/test_ca.crl
+      default_md: SHA1
+      allowed_mds:
+      - SHA256
+      - SHA512
+      - SHA1
+    ocsp_delegate:
+      basic_constraints:
+        :ca: false
+      key_usage:
+      - digitalSignature
+      extended_key_usage:
+      - OCSPSigning
       ocsp_no_check: true
-    }
-  }
-}</code></pre>
-
-<p>}</p>
+      ocsp_location:
+      - http://ocsp.domain.com
+      ca_issuers_location:
+      - http://domain.com/ca.html
+      cdp_location:
+      - http://crl.domain.com/test_ca.crl
+      default_md: SHA1
+      allowed_mds:
+      - SHA256
+      - SHA512
+      - SHA1</code></pre>
 </div></div>
 
     <div id="footer">
-  Generated on Mon May  6 09:22:48 2013 by
+  Generated on Sun Jun  9 10:03:34 2013 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.8.6.1 (ruby-2.0.0).
+  0.8.4.1 (ruby-2.0.0).
 </div>
 
   </body>

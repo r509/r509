@@ -6,13 +6,13 @@
 <title>
   Module: R509
   
-    &mdash; Documentation by YARD 0.8.6.1
+    &mdash; Documentation by YARD 0.8.4.1
   
 </title>
 
-  <link rel="stylesheet" href="css/style.css" type="text/css" charset="utf-8" />
+  <link rel="stylesheet" href="css/style.css" type="text/css" media="screen" charset="utf-8" />
 
-  <link rel="stylesheet" href="css/common.css" type="text/css" charset="utf-8" />
+  <link rel="stylesheet" href="css/common.css" type="text/css" media="screen" charset="utf-8" />
 
 <script type="text/javascript" charset="utf-8">
   hasFrames = window.top.frames.main ? true : false;
@@ -80,7 +80,7 @@
   
     <dt class="r1 last">Defined in:</dt>
     <dd class="r1 last">lib/r509.rb<span class="defines">,<br />
-  lib/r509/csr.rb,<br /> lib/r509/crl.rb,<br /> lib/r509/cert.rb,<br /> lib/r509/spki.rb,<br /> lib/r509/asn1.rb,<br /> lib/r509/config.rb,<br /> lib/r509/engine.rb,<br /> lib/r509/version.rb,<br /> lib/r509/subject.rb,<br /> lib/r509/oid_mapper.rb,<br /> lib/r509/io_helpers.rb,<br /> lib/r509/exceptions.rb,<br /> lib/r509/private_key.rb,<br /> lib/r509/message_digest.rb,<br /> lib/r509/cert/extensions.rb</span>
+  lib/r509/crl.rb,<br /> lib/r509/csr.rb,<br /> lib/r509/cert.rb,<br /> lib/r509/spki.rb,<br /> lib/r509/asn1.rb,<br /> lib/r509/config.rb,<br /> lib/r509/engine.rb,<br /> lib/r509/version.rb,<br /> lib/r509/subject.rb,<br /> lib/r509/oid_mapper.rb,<br /> lib/r509/io_helpers.rb,<br /> lib/r509/exceptions.rb,<br /> lib/r509/private_key.rb,<br /> lib/r509/message_digest.rb,<br /> lib/r509/cert/extensions.rb</span>
 </dd>
   
 </dl>
@@ -165,7 +165,9 @@ support.</p>
   
 
   
-    <span class="summary_desc"><div class='inline'></div></span>
+    <span class="summary_desc"><div class='inline'>
+<p>Helper method to check if EC support is built-in.</p>
+</div></span>
   
 </li>
 
@@ -173,7 +175,7 @@ support.</p>
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#print_debug-class_method" title="print_debug (class method)">+ (Object) <strong>print_debug</strong> </a>
+      <a href="#print_debug-class_method" title="print_debug (class method)">+ (nil) <strong>print_debug</strong> </a>
     
 
     
@@ -215,6 +217,8 @@ support.</p>
 </h3><div class="docstring">
   <div class="discussion">
     
+<p>Helper method to check if EC support is built-in</p>
+
 
   </div>
 </div>
@@ -240,12 +244,12 @@ support.</p>
       <pre class="lines">
 
 
-28
-29
-30</pre>
+31
+32
+33</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509.rb', line 28</span>
+      <pre class="code"><span class="info file"># File 'lib/r509.rb', line 31</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_ec_supported?'>ec_supported?</span>
   <span class='lparen'>(</span><span class='kw'>not</span> <span class='kw'>defined?</span><span class='lparen'>(</span><span class='const'>OpenSSL</span><span class='op'>::</span><span class='const'>PKey</span><span class='op'>::</span><span class='const'>EC</span><span class='op'>::</span><span class='const'>UNSUPPORTED</span><span class='rparen'>)</span><span class='rparen'>)</span>
@@ -258,7 +262,7 @@ support.</p>
       <div class="method_details ">
   <h3 class="signature " id="print_debug-class_method">
   
-    + (<tt>Object</tt>) <strong>print_debug</strong> 
+    + (<tt>nil</tt>) <strong>print_debug</strong> 
   
 
   
@@ -274,6 +278,19 @@ support.</p>
 </div>
 <div class="tags">
   
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>nil</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
 
 </div><table class="source_code">
   <tr>
@@ -281,15 +298,15 @@ support.</p>
       <pre class="lines">
 
 
-21
-22
 23
 24
 25
-26</pre>
+26
+27
+28</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509.rb', line 21</span>
+      <pre class="code"><span class="info file"># File 'lib/r509.rb', line 23</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_print_debug'>print_debug</span>
   <span class='id identifier rubyid_puts'>puts</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>r509 v</span><span class='embexpr_beg'>#{</span><span class='const'>R509</span><span class='op'>::</span><span class='const'>VERSION</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
@@ -307,9 +324,9 @@ support.</p>
 </div>
 
     <div id="footer">
-  Generated on Mon May  6 09:22:48 2013 by
+  Generated on Sun Jun  9 10:03:34 2013 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.8.6.1 (ruby-2.0.0).
+  0.8.4.1 (ruby-2.0.0).
 </div>
 
   </body>

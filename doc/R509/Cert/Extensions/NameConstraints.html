@@ -6,13 +6,13 @@
 <title>
   Class: R509::Cert::Extensions::NameConstraints
   
-    &mdash; Documentation by YARD 0.8.6.1
+    &mdash; Documentation by YARD 0.8.4.1
   
 </title>
 
-  <link rel="stylesheet" href="../../../css/style.css" type="text/css" charset="utf-8" />
+  <link rel="stylesheet" href="../../../css/style.css" type="text/css" media="screen" charset="utf-8" />
 
-  <link rel="stylesheet" href="../../../css/common.css" type="text/css" charset="utf-8" />
+  <link rel="stylesheet" href="../../../css/common.css" type="text/css" media="screen" charset="utf-8" />
 
 <script type="text/javascript" charset="utf-8">
   hasFrames = window.top.frames.main ? true : false;
@@ -104,9 +104,33 @@
 <h2>Overview</h2><div class="docstring">
   <div class="discussion">
     
-<p>Implements the NameConstraints certificate extension, with methods to
-provide access to the components and meaning of the extension&#39;s
-contents.</p>
+<p>RFC 5280 Description (see: <a
+href="http://www.ietf.org/rfc/rfc5280.txt">www.ietf.org/rfc/rfc5280.txt</a>)</p>
+
+<p>The name constraints extension, which MUST be used only in a CA
+certificate, indicates a name space within which all subject names in
+subsequent certificates in a certification path MUST be located.
+Restrictions apply to the subject distinguished name and apply to subject
+alternative names.  Restrictions apply only when the specified name form is
+present.  If no name of the type is in the certificate, the certificate is
+acceptable.</p>
+
+<p>Name constraints are not applied to self-issued certificates (unless the
+certificate is the final certificate in the path).  (This could prevent CAs
+that use name constraints from employing self-issued certificates to
+implement key rollover.)</p>
+
+<p>Restrictions are defined in terms of permitted or excluded name subtrees. 
+Any name matching a restriction in the excludedSubtrees field is invalid
+regardless of information appearing in the permittedSubtrees.  Conforming
+CAs MUST mark this extension as critical and SHOULD NOT impose name
+constraints on the x400Address, ediPartyName, or registeredID name forms. 
+Conforming CAs MUST NOT issue certificates where name constraints is an
+empty sequence.  That is, either the permittedSubtrees field or the
+excludedSubtrees MUST be present.</p>
+
+<p>You can use this extension to parse an existing extension for easy access
+to the contents or create a new one.</p>
 
 
   </div>
@@ -147,7 +171,7 @@ contents.</p>
       <li class="public ">
   <span class="summary_signature">
     
-      <a href="#excluded_names-instance_method" title="#excluded_names (instance method)">- (Object) <strong>excluded_names</strong> </a>
+      <a href="#excluded-instance_method" title="#excluded (instance method)">- (R509::ASN1::GeneralNames<sup>?</sup>) <strong>excluded</strong> </a>
     
 
     
@@ -166,9 +190,7 @@ contents.</p>
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>Returns the value of attribute excluded_names.</p>
-</div></span>
+    <span class="summary_desc"><div class='inline'></div></span>
   
 </li>
 
@@ -176,7 +198,7 @@ contents.</p>
       <li class="public ">
   <span class="summary_signature">
     
-      <a href="#permitted_names-instance_method" title="#permitted_names (instance method)">- (Object) <strong>permitted_names</strong> </a>
+      <a href="#permitted-instance_method" title="#permitted (instance method)">- (R509::ASN1::GeneralNames<sup>?</sup>) <strong>permitted</strong> </a>
     
 
     
@@ -195,9 +217,7 @@ contents.</p>
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>Returns the value of attribute permitted_names.</p>
-</div></span>
+    <span class="summary_desc"><div class='inline'></div></span>
   
 </li>
 
@@ -218,7 +238,7 @@ contents.</p>
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#initialize-instance_method" title="#initialize (instance method)">- (NameConstraints) <strong>initialize</strong>(*args) </a>
+      <a href="#initialize-instance_method" title="#initialize (instance method)">- (NameConstraints) <strong>initialize</strong>(arg) </a>
     
 
     
@@ -245,13 +265,19 @@ contents.</p>
   
 
 
+  
+  
+  
+  
+  
+  
   <div id="constructor_details" class="method_details_list">
   <h2>Constructor Details</h2>
   
     <div class="method_details first">
   <h3 class="signature first" id="initialize-instance_method">
   
-    - (<tt><span class='object_link'><a href="" title="R509::Cert::Extensions::NameConstraints (class)">NameConstraints</a></span></tt>) <strong>initialize</strong>(*args) 
+    - (<tt><span class='object_link'><a href="" title="R509::Cert::Extensions::NameConstraints (class)">NameConstraints</a></span></tt>) <strong>initialize</strong>(arg) 
   
 
   
@@ -291,35 +317,101 @@ BaseDistance ::= INTEGER (0..MAX)</code></pre>
       <pre class="lines">
 
 
-605
-606
-607
-608
-609
-610
-611
-612
-613
-614
-615
-616
-617
-618
-619
-620
-621
-622
-623
-624</pre>
+1014
+1015
+1016
+1017
+1018
+1019
+1020
+1021
+1022
+1023
+1024
+1025
+1026
+1027
+1028
+1029
+1030
+1031
+1032
+1033
+1034
+1035
+1036
+1037
+1038
+1039
+1040
+1041
+1042
+1043
+1044
+1045
+1046
+1047
+1048
+1049
+1050
+1051
+1052
+1053
+1054
+1055
+1056
+1057
+1058
+1059
+1060
+1061
+1062
+1063
+1064
+1065
+1066</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 605</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 1014</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='op'>*</span><span class='id identifier rubyid_args'>args</span><span class='rparen'>)</span>
-  <span class='kw'>super</span><span class='lparen'>(</span><span class='op'>*</span><span class='id identifier rubyid_args'>args</span><span class='rparen'>)</span>
+<span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='id identifier rubyid_arg'>arg</span><span class='rparen'>)</span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_arg'>arg</span><span class='period'>.</span><span class='id identifier rubyid_kind_of?'>kind_of?</span><span class='lparen'>(</span><span class='const'>Hash</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_validate_name_constraints'>validate_name_constraints</span><span class='lparen'>(</span><span class='id identifier rubyid_arg'>arg</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_nc_data'>nc_data</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
+    <span class='id identifier rubyid_nc_conf'>nc_conf</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
+    <span class='kw'>if</span> <span class='kw'>not</span> <span class='id identifier rubyid_arg'>arg</span><span class='lbracket'>[</span><span class='symbol'>:permitted</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
+      <span class='id identifier rubyid_gns'>gns</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>ASN1</span><span class='op'>::</span><span class='const'>GeneralNames</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span>
+      <span class='id identifier rubyid_arg'>arg</span><span class='lbracket'>[</span><span class='symbol'>:permitted</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_p'>p</span><span class='op'>|</span>
+        <span class='id identifier rubyid_gns'>gns</span><span class='period'>.</span><span class='id identifier rubyid_create_item'>create_item</span><span class='lparen'>(</span><span class='symbol'>:type</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_p'>p</span><span class='lbracket'>[</span><span class='symbol'>:type</span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='symbol'>:value</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_p'>p</span><span class='lbracket'>[</span><span class='symbol'>:value</span><span class='rbracket'>]</span><span class='rparen'>)</span>
+      <span class='kw'>end</span>
+      <span class='id identifier rubyid_gns'>gns</span><span class='period'>.</span><span class='id identifier rubyid_names'>names</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_permitted'>permitted</span><span class='op'>|</span>
+        <span class='id identifier rubyid_serialize'>serialize</span> <span class='op'>=</span> <span class='id identifier rubyid_permitted'>permitted</span><span class='period'>.</span><span class='id identifier rubyid_serialize_name'>serialize_name</span>
+        <span class='id identifier rubyid_nc_data'>nc_data</span><span class='period'>.</span><span class='id identifier rubyid_push'>push</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>permitted;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_serialize'>serialize</span><span class='lbracket'>[</span><span class='symbol'>:extension_string</span><span class='rbracket'>]</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
+        <span class='id identifier rubyid_nc_conf'>nc_conf</span><span class='period'>.</span><span class='id identifier rubyid_push'>push</span> <span class='id identifier rubyid_serialize'>serialize</span><span class='lbracket'>[</span><span class='symbol'>:conf</span><span class='rbracket'>]</span>
+      <span class='kw'>end</span>
+    <span class='kw'>end</span>
+    <span class='kw'>if</span> <span class='kw'>not</span> <span class='id identifier rubyid_arg'>arg</span><span class='lbracket'>[</span><span class='symbol'>:excluded</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
+      <span class='id identifier rubyid_gns'>gns</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>ASN1</span><span class='op'>::</span><span class='const'>GeneralNames</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span>
+      <span class='id identifier rubyid_arg'>arg</span><span class='lbracket'>[</span><span class='symbol'>:excluded</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_p'>p</span><span class='op'>|</span>
+        <span class='id identifier rubyid_gns'>gns</span><span class='period'>.</span><span class='id identifier rubyid_create_item'>create_item</span><span class='lparen'>(</span><span class='symbol'>:type</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_p'>p</span><span class='lbracket'>[</span><span class='symbol'>:type</span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='symbol'>:value</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_p'>p</span><span class='lbracket'>[</span><span class='symbol'>:value</span><span class='rbracket'>]</span><span class='rparen'>)</span>
+      <span class='kw'>end</span>
+      <span class='id identifier rubyid_gns'>gns</span><span class='period'>.</span><span class='id identifier rubyid_names'>names</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_excluded'>excluded</span><span class='op'>|</span>
+        <span class='id identifier rubyid_serialize'>serialize</span> <span class='op'>=</span> <span class='id identifier rubyid_excluded'>excluded</span><span class='period'>.</span><span class='id identifier rubyid_serialize_name'>serialize_name</span>
+        <span class='id identifier rubyid_nc_data'>nc_data</span><span class='period'>.</span><span class='id identifier rubyid_push'>push</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>excluded;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_serialize'>serialize</span><span class='lbracket'>[</span><span class='symbol'>:extension_string</span><span class='rbracket'>]</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
+        <span class='id identifier rubyid_nc_conf'>nc_conf</span><span class='period'>.</span><span class='id identifier rubyid_push'>push</span> <span class='id identifier rubyid_serialize'>serialize</span><span class='lbracket'>[</span><span class='symbol'>:conf</span><span class='rbracket'>]</span>
+      <span class='kw'>end</span>
+    <span class='kw'>end</span>
 
-  <span class='ivar'>@permitted_names</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
-  <span class='ivar'>@excluded_names</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
+    <span class='id identifier rubyid_ef'>ef</span> <span class='op'>=</span> <span class='const'>OpenSSL</span><span class='op'>::</span><span class='const'>X509</span><span class='op'>::</span><span class='const'>ExtensionFactory</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span>
+    <span class='id identifier rubyid_ef'>ef</span><span class='period'>.</span><span class='id identifier rubyid_config'>config</span> <span class='op'>=</span> <span class='const'>OpenSSL</span><span class='op'>::</span><span class='const'>Config</span><span class='period'>.</span><span class='id identifier rubyid_parse'>parse</span> <span class='id identifier rubyid_nc_conf'>nc_conf</span><span class='period'>.</span><span class='id identifier rubyid_join'>join</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>\n</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_critical'>critical</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>Cert</span><span class='op'>::</span><span class='const'>Extensions</span><span class='period'>.</span><span class='id identifier rubyid_calculate_critical'>calculate_critical</span><span class='lparen'>(</span><span class='id identifier rubyid_arg'>arg</span><span class='lbracket'>[</span><span class='symbol'>:critical</span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='kw'>true</span><span class='rparen'>)</span>
+    <span class='comment'># must be set critical per RFC 5280
+</span>    <span class='id identifier rubyid_arg'>arg</span> <span class='op'>=</span> <span class='id identifier rubyid_ef'>ef</span><span class='period'>.</span><span class='id identifier rubyid_create_extension'>create_extension</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>nameConstraints</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='id identifier rubyid_nc_data'>nc_data</span><span class='period'>.</span><span class='id identifier rubyid_join'>join</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>,</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='comma'>,</span><span class='id identifier rubyid_critical'>critical</span><span class='rparen'>)</span>
+  <span class='kw'>end</span>
+  <span class='kw'>super</span><span class='lparen'>(</span><span class='id identifier rubyid_arg'>arg</span><span class='rparen'>)</span>
+
+  <span class='ivar'>@permitted</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
+  <span class='ivar'>@excluded</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
 
   <span class='id identifier rubyid_data'>data</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>ASN1</span><span class='period'>.</span><span class='id identifier rubyid_get_extension_payload'>get_extension_payload</span><span class='lparen'>(</span><span class='kw'>self</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_data'>data</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_gs'>gs</span><span class='op'>|</span>
@@ -327,9 +419,9 @@ BaseDistance ::= INTEGER (0..MAX)</code></pre>
       <span class='id identifier rubyid_asn_data'>asn_data</span><span class='period'>.</span><span class='id identifier rubyid_value'>value</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_obj'>obj</span><span class='op'>|</span>
         <span class='id identifier rubyid_gn'>gn</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>ASN1</span><span class='op'>::</span><span class='const'>GeneralName</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_obj'>obj</span><span class='rparen'>)</span>
         <span class='kw'>if</span> <span class='id identifier rubyid_gs'>gs</span><span class='period'>.</span><span class='id identifier rubyid_tag'>tag</span> <span class='op'>==</span> <span class='int'>0</span> <span class='comment'># permittedSubtrees
-</span>        <span class='ivar'>@permitted_names</span> <span class='op'>&lt;&lt;</span> <span class='id identifier rubyid_gn'>gn</span>
+</span>        <span class='ivar'>@permitted</span> <span class='op'>&lt;&lt;</span> <span class='id identifier rubyid_gn'>gn</span>
         <span class='kw'>elsif</span> <span class='id identifier rubyid_gs'>gs</span><span class='period'>.</span><span class='id identifier rubyid_tag'>tag</span> <span class='op'>==</span> <span class='int'>1</span> <span class='comment'>#excludedSubtrees
-</span>          <span class='ivar'>@excluded_names</span> <span class='op'>&lt;&lt;</span> <span class='id identifier rubyid_gn'>gn</span>
+</span>          <span class='ivar'>@excluded</span> <span class='op'>&lt;&lt;</span> <span class='id identifier rubyid_gn'>gn</span>
         <span class='kw'>end</span>
       <span class='kw'>end</span>
     <span class='kw'>end</span>
@@ -348,9 +440,9 @@ BaseDistance ::= INTEGER (0..MAX)</code></pre>
       
       <span id=""></span>
       <div class="method_details first">
-  <h3 class="signature first" id="excluded_names-instance_method">
+  <h3 class="signature first" id="excluded-instance_method">
   
-    - (<tt>Object</tt>) <strong>excluded_names</strong>  <span class="extras">(readonly)</span>
+    - (<tt><span class='object_link'><a href="../../ASN1/GeneralNames.html" title="R509::ASN1::GeneralNames (class)">R509::ASN1::GeneralNames</a></span></tt><sup>?</sup>) <strong>excluded</strong>  <span class="extras">(readonly)</span>
   
 
   
@@ -359,13 +451,24 @@ BaseDistance ::= INTEGER (0..MAX)</code></pre>
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Returns the value of attribute excluded_names</p>
-
 
   </div>
 </div>
 <div class="tags">
   
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../../ASN1/GeneralNames.html" title="R509::ASN1::GeneralNames (class)">R509::ASN1::GeneralNames</a></span></tt>, <tt>nil</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
 
 </div><table class="source_code">
   <tr>
@@ -373,15 +476,15 @@ BaseDistance ::= INTEGER (0..MAX)</code></pre>
       <pre class="lines">
 
 
-586
-587
-588</pre>
+995
+996
+997</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 586</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 995</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_excluded_names'>excluded_names</span>
-  <span class='ivar'>@excluded_names</span>
+<span class='kw'>def</span> <span class='id identifier rubyid_excluded'>excluded</span>
+  <span class='ivar'>@excluded</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -391,9 +494,9 @@ BaseDistance ::= INTEGER (0..MAX)</code></pre>
       
       <span id=""></span>
       <div class="method_details ">
-  <h3 class="signature " id="permitted_names-instance_method">
+  <h3 class="signature " id="permitted-instance_method">
   
-    - (<tt>Object</tt>) <strong>permitted_names</strong>  <span class="extras">(readonly)</span>
+    - (<tt><span class='object_link'><a href="../../ASN1/GeneralNames.html" title="R509::ASN1::GeneralNames (class)">R509::ASN1::GeneralNames</a></span></tt><sup>?</sup>) <strong>permitted</strong>  <span class="extras">(readonly)</span>
   
 
   
@@ -402,13 +505,24 @@ BaseDistance ::= INTEGER (0..MAX)</code></pre>
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Returns the value of attribute permitted_names</p>
-
 
   </div>
 </div>
 <div class="tags">
   
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../../ASN1/GeneralNames.html" title="R509::ASN1::GeneralNames (class)">R509::ASN1::GeneralNames</a></span></tt>, <tt>nil</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
 
 </div><table class="source_code">
   <tr>
@@ -416,15 +530,15 @@ BaseDistance ::= INTEGER (0..MAX)</code></pre>
       <pre class="lines">
 
 
-586
-587
-588</pre>
+995
+996
+997</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 586</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 995</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_permitted_names'>permitted_names</span>
-  <span class='ivar'>@permitted_names</span>
+<span class='kw'>def</span> <span class='id identifier rubyid_permitted'>permitted</span>
+  <span class='ivar'>@permitted</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -437,9 +551,9 @@ BaseDistance ::= INTEGER (0..MAX)</code></pre>
 </div>
 
     <div id="footer">
-  Generated on Mon May  6 09:22:52 2013 by
+  Generated on Sun Jun  9 10:03:39 2013 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.8.6.1 (ruby-2.0.0).
+  0.8.4.1 (ruby-2.0.0).
 </div>
 
   </body>

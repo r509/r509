@@ -6,13 +6,13 @@
 <title>
   Class: R509::Cert::Extensions::AuthorityKeyIdentifier
   
-    &mdash; Documentation by YARD 0.8.6.1
+    &mdash; Documentation by YARD 0.8.4.1
   
 </title>
 
-  <link rel="stylesheet" href="../../../css/style.css" type="text/css" charset="utf-8" />
+  <link rel="stylesheet" href="../../../css/style.css" type="text/css" media="screen" charset="utf-8" />
 
-  <link rel="stylesheet" href="../../../css/common.css" type="text/css" charset="utf-8" />
+  <link rel="stylesheet" href="../../../css/common.css" type="text/css" media="screen" charset="utf-8" />
 
 <script type="text/javascript" charset="utf-8">
   hasFrames = window.top.frames.main ? true : false;
@@ -104,9 +104,19 @@
 <h2>Overview</h2><div class="docstring">
   <div class="discussion">
     
-<p>Implements the AuthorityKeyIdentifier certificate extension, with methods
-to provide access to the components and meaning of the extension&#39;s
-contents.</p>
+<p>RFC 5280 Description (see: <a
+href="http://www.ietf.org/rfc/rfc5280.txt">www.ietf.org/rfc/rfc5280.txt</a>)</p>
+
+<p>The authority key identifier extension provides a means of identifying the
+public key corresponding to the private key used to sign a certificate. 
+This extension is used where an issuer has multiple signing keys (either
+due to multiple concurrent key pairs or due to changeover).  The
+identification MAY be based on either the key identifier (the subject key
+identifier in the issuer&#39;s certificate) or the issuer name and serial
+number.</p>
+
+<p>You can use this extension to parse an existing extension for easy access
+to the contents or create a new one.</p>
 
 
   </div>
@@ -147,7 +157,7 @@ contents.</p>
       <li class="public ">
   <span class="summary_signature">
     
-      <a href="#authority_cert_issuer-instance_method" title="#authority_cert_issuer (instance method)">- (Object) <strong>authority_cert_issuer</strong> </a>
+      <a href="#authority_cert_issuer-instance_method" title="#authority_cert_issuer (instance method)">- (R509::ASN1::GeneralName<sup>?</sup>) <strong>authority_cert_issuer</strong> </a>
     
 
     
@@ -167,9 +177,36 @@ contents.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>key_identifier, if present, will be a hex string delimited by colons
-authority_cert_issuer, if present, will be a GeneralName object
-authority_cert_serial_number, if present, will be a hex string delimited by
+<p>authority_cert_issuer, if present, will be a GeneralName object.</p>
+</div></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#authority_cert_serial_number-instance_method" title="#authority_cert_serial_number (instance method)">- (String<sup>?</sup>) <strong>authority_cert_serial_number</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+    
+      <span class="note title readonly">readonly</span>
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>authority_cert_serial_number, if present, will be a hex string delimited by
 colons.</p>
 </div></span>
   
@@ -179,7 +216,7 @@ colons.</p>
       <li class="public ">
   <span class="summary_signature">
     
-      <a href="#authority_cert_serial_number-instance_method" title="#authority_cert_serial_number (instance method)">- (Object) <strong>authority_cert_serial_number</strong> </a>
+      <a href="#key_identifier-instance_method" title="#key_identifier (instance method)">- (String<sup>?</sup>) <strong>key_identifier</strong> </a>
     
 
     
@@ -199,42 +236,7 @@ colons.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>key_identifier, if present, will be a hex string delimited by colons
-authority_cert_issuer, if present, will be a GeneralName object
-authority_cert_serial_number, if present, will be a hex string delimited by
-colons.</p>
-</div></span>
-  
-</li>
-
-    
-      <li class="public ">
-  <span class="summary_signature">
-    
-      <a href="#key_identifier-instance_method" title="#key_identifier (instance method)">- (Object) <strong>key_identifier</strong> </a>
-    
-
-    
-  </span>
-  
-  
-  
-    
-      <span class="note title readonly">readonly</span>
-    
-    
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'>
-<p>key_identifier, if present, will be a hex string delimited by colons
-authority_cert_issuer, if present, will be a GeneralName object
-authority_cert_serial_number, if present, will be a hex string delimited by
-colons.</p>
+<p>key_identifier, if present, will be a hex string delimited by colons.</p>
 </div></span>
   
 </li>
@@ -256,7 +258,7 @@ colons.</p>
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#initialize-instance_method" title="#initialize (instance method)">- (AuthorityKeyIdentifier) <strong>initialize</strong>(*args) </a>
+      <a href="#initialize-instance_method" title="#initialize (instance method)">- (AuthorityKeyIdentifier) <strong>initialize</strong>(arg) </a>
     
 
     
@@ -273,7 +275,7 @@ colons.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>A new instance of AuthorityKeyIdentifier.</p>
+<p>This method takes a hash or an existing Extension object to parse.</p>
 </div></span>
   
 </li>
@@ -283,13 +285,19 @@ colons.</p>
   
 
 
+  
+  
+  
+  
+  
+  
   <div id="constructor_details" class="method_details_list">
   <h2>Constructor Details</h2>
   
     <div class="method_details first">
   <h3 class="signature first" id="initialize-instance_method">
   
-    - (<tt><span class='object_link'><a href="" title="R509::Cert::Extensions::AuthorityKeyIdentifier (class)">AuthorityKeyIdentifier</a></span></tt>) <strong>initialize</strong>(*args) 
+    - (<tt><span class='object_link'><a href="" title="R509::Cert::Extensions::AuthorityKeyIdentifier (class)">AuthorityKeyIdentifier</a></span></tt>) <strong>initialize</strong>(arg) 
   
 
   
@@ -298,13 +306,80 @@ colons.</p>
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>A new instance of AuthorityKeyIdentifier</p>
+<p>This method takes a hash or an existing Extension object to parse</p>
 
 
   </div>
 </div>
 <div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
   
+    <li>
+      
+        <span class='name'>arg</span>
+      
+      
+        <span class='type'>(<tt>Hash</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>a customizable set of options</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+  
+    
+    
+    <p class="tag_title">Options Hash (<tt>arg</tt>):</p>
+    <ul class="option">
+      
+        <li>
+          <span class="name">:issuer_certificate</span>
+          <span class="type">(<tt><span class='object_link'><a href="../../Cert.html" title="R509::Cert (class)">R509::Cert</a></span></tt>)</span>
+          <span class="default">
+            
+          </span>
+          
+        </li>
+      
+        <li>
+          <span class="name">:value</span>
+          <span class="type">(<tt>String</tt>)</span>
+          <span class="default">
+            
+              &mdash; default:
+              <tt>keyid</tt>
+            
+          </span>
+          
+            &mdash; <div class='inline'>
+<p>For the rules of :value see: <a
+href="http://www.openssl.org/docs/apps/x509v3_config.html#Authority_Key_Identifier_">www.openssl.org/docs/apps/x509v3_config.html#Authority_Key_Identifier_</a>.</p>
+</div>
+          
+        </li>
+      
+        <li>
+          <span class="name">:critical</span>
+          <span class="type">(<tt>Boolean</tt>)</span>
+          <span class="default">
+            
+              &mdash; default:
+              <tt>false</tt>
+            
+          </span>
+          
+        </li>
+      
+    </ul>
+  
+
 
 </div><table class="source_code">
   <tr>
@@ -312,38 +387,54 @@ colons.</p>
       <pre class="lines">
 
 
-350
-351
-352
-353
-354
-355
-356
-357
-358
-359
-360
-361
-362
-363
-364
-365
-366
-367
-368
-369
-370
-371
-372
-373
-374
-375</pre>
+478
+479
+480
+481
+482
+483
+484
+485
+486
+487
+488
+489
+490
+491
+492
+493
+494
+495
+496
+497
+498
+499
+500
+501
+502
+503
+504
+505
+506
+507
+508
+509
+510
+511</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 350</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 478</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='op'>*</span><span class='id identifier rubyid_args'>args</span><span class='rparen'>)</span>
-  <span class='kw'>super</span><span class='lparen'>(</span><span class='op'>*</span><span class='id identifier rubyid_args'>args</span><span class='rparen'>)</span>
+<span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='id identifier rubyid_arg'>arg</span><span class='rparen'>)</span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_arg'>arg</span><span class='period'>.</span><span class='id identifier rubyid_kind_of?'>kind_of?</span><span class='lparen'>(</span><span class='const'>Hash</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_validate_authority_key_identifier'>validate_authority_key_identifier</span><span class='lparen'>(</span><span class='id identifier rubyid_arg'>arg</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_ef'>ef</span> <span class='op'>=</span> <span class='const'>OpenSSL</span><span class='op'>::</span><span class='const'>X509</span><span class='op'>::</span><span class='const'>ExtensionFactory</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span>
+    <span class='id identifier rubyid_ef'>ef</span><span class='period'>.</span><span class='id identifier rubyid_issuer_certificate'>issuer_certificate</span> <span class='op'>=</span> <span class='id identifier rubyid_arg'>arg</span><span class='lbracket'>[</span><span class='symbol'>:issuer_certificate</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_cert'>cert</span>
+    <span class='id identifier rubyid_critical'>critical</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>Cert</span><span class='op'>::</span><span class='const'>Extensions</span><span class='period'>.</span><span class='id identifier rubyid_calculate_critical'>calculate_critical</span><span class='lparen'>(</span><span class='id identifier rubyid_arg'>arg</span><span class='lbracket'>[</span><span class='symbol'>:critical</span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='kw'>false</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_arg'>arg</span> <span class='op'>=</span> <span class='id identifier rubyid_ef'>ef</span><span class='period'>.</span><span class='id identifier rubyid_create_extension'>create_extension</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>authorityKeyIdentifier</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_arg'>arg</span><span class='lbracket'>[</span><span class='symbol'>:value</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>keyid</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='id identifier rubyid_critical'>critical</span><span class='rparen'>)</span> <span class='comment'># this could also be keyid:always,issuer:always
+</span>  <span class='kw'>end</span>
+
+  <span class='kw'>super</span><span class='lparen'>(</span><span class='id identifier rubyid_arg'>arg</span><span class='rparen'>)</span>
 
   <span class='id identifier rubyid_data'>data</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>ASN1</span><span class='period'>.</span><span class='id identifier rubyid_get_extension_payload'>get_extension_payload</span><span class='lparen'>(</span><span class='kw'>self</span><span class='rparen'>)</span>
   <span class='comment'>#   AuthorityKeyIdentifier ::= SEQUENCE {
@@ -383,7 +474,7 @@ colons.</p>
       <div class="method_details first">
   <h3 class="signature first" id="authority_cert_issuer-instance_method">
   
-    - (<tt>Object</tt>) <strong>authority_cert_issuer</strong>  <span class="extras">(readonly)</span>
+    - (<tt><span class='object_link'><a href="../../ASN1/GeneralName.html" title="R509::ASN1::GeneralName (class)">R509::ASN1::GeneralName</a></span></tt><sup>?</sup>) <strong>authority_cert_issuer</strong>  <span class="extras">(readonly)</span>
   
 
   
@@ -392,16 +483,26 @@ colons.</p>
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>key_identifier, if present, will be a hex string delimited by colons
-authority_cert_issuer, if present, will be a GeneralName object
-authority_cert_serial_number, if present, will be a hex string delimited by
-colons</p>
+<p>authority_cert_issuer, if present, will be a GeneralName object</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../../ASN1/GeneralName.html" title="R509::ASN1::GeneralName (class)">R509::ASN1::GeneralName</a></span></tt>, <tt>nil</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
 
 </div><table class="source_code">
   <tr>
@@ -409,12 +510,12 @@ colons</p>
       <pre class="lines">
 
 
-348
-349
-350</pre>
+469
+470
+471</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 348</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 469</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_authority_cert_issuer'>authority_cert_issuer</span>
   <span class='ivar'>@authority_cert_issuer</span>
@@ -429,7 +530,7 @@ colons</p>
       <div class="method_details ">
   <h3 class="signature " id="authority_cert_serial_number-instance_method">
   
-    - (<tt>Object</tt>) <strong>authority_cert_serial_number</strong>  <span class="extras">(readonly)</span>
+    - (<tt>String</tt><sup>?</sup>) <strong>authority_cert_serial_number</strong>  <span class="extras">(readonly)</span>
   
 
   
@@ -438,9 +539,7 @@ colons</p>
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>key_identifier, if present, will be a hex string delimited by colons
-authority_cert_issuer, if present, will be a GeneralName object
-authority_cert_serial_number, if present, will be a hex string delimited by
+<p>authority_cert_serial_number, if present, will be a hex string delimited by
 colons</p>
 
 
@@ -448,6 +547,19 @@ colons</p>
 </div>
 <div class="tags">
   
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>String</tt>, <tt>nil</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
 
 </div><table class="source_code">
   <tr>
@@ -455,12 +567,12 @@ colons</p>
       <pre class="lines">
 
 
-348
-349
-350</pre>
+472
+473
+474</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 348</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 472</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_authority_cert_serial_number'>authority_cert_serial_number</span>
   <span class='ivar'>@authority_cert_serial_number</span>
@@ -475,7 +587,7 @@ colons</p>
       <div class="method_details ">
   <h3 class="signature " id="key_identifier-instance_method">
   
-    - (<tt>Object</tt>) <strong>key_identifier</strong>  <span class="extras">(readonly)</span>
+    - (<tt>String</tt><sup>?</sup>) <strong>key_identifier</strong>  <span class="extras">(readonly)</span>
   
 
   
@@ -484,16 +596,26 @@ colons</p>
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>key_identifier, if present, will be a hex string delimited by colons
-authority_cert_issuer, if present, will be a GeneralName object
-authority_cert_serial_number, if present, will be a hex string delimited by
-colons</p>
+<p>key_identifier, if present, will be a hex string delimited by colons</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>String</tt>, <tt>nil</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
 
 </div><table class="source_code">
   <tr>
@@ -501,12 +623,12 @@ colons</p>
       <pre class="lines">
 
 
-348
-349
-350</pre>
+466
+467
+468</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 348</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 466</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_key_identifier'>key_identifier</span>
   <span class='ivar'>@key_identifier</span>
@@ -522,9 +644,9 @@ colons</p>
 </div>
 
     <div id="footer">
-  Generated on Mon May  6 09:22:51 2013 by
+  Generated on Sun Jun  9 10:03:38 2013 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.8.6.1 (ruby-2.0.0).
+  0.8.4.1 (ruby-2.0.0).
 </div>
 
   </body>

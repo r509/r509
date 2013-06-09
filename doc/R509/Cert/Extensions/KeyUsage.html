@@ -6,13 +6,13 @@
 <title>
   Class: R509::Cert::Extensions::KeyUsage
   
-    &mdash; Documentation by YARD 0.8.6.1
+    &mdash; Documentation by YARD 0.8.4.1
   
 </title>
 
-  <link rel="stylesheet" href="../../../css/style.css" type="text/css" charset="utf-8" />
+  <link rel="stylesheet" href="../../../css/style.css" type="text/css" media="screen" charset="utf-8" />
 
-  <link rel="stylesheet" href="../../../css/common.css" type="text/css" charset="utf-8" />
+  <link rel="stylesheet" href="../../../css/common.css" type="text/css" media="screen" charset="utf-8" />
 
 <script type="text/javascript" charset="utf-8">
   hasFrames = window.top.frames.main ? true : false;
@@ -104,8 +104,20 @@
 <h2>Overview</h2><div class="docstring">
   <div class="discussion">
     
-<p>Implements the KeyUsage certificate extension, with methods to provide
-access to the components and meaning of the extension&#39;s contents.</p>
+<p>RFC 5280 Description (see: <a
+href="http://www.ietf.org/rfc/rfc5280.txt">www.ietf.org/rfc/rfc5280.txt</a>)</p>
+
+<p>The key usage extension defines the purpose (e.g., encipherment, signature,
+certificate signing) of the key contained in the certificate.  The usage
+restriction might be employed when a key that could be used for more than
+one operation is to be restricted.  For example, when an RSA key should be
+used only to verify signatures on objects other than public key
+certificates and CRLs, the digitalSignature and/or nonRepudiation bits
+would be asserted. Likewise, when an RSA key should be used only for key
+management, the keyEncipherment bit would be asserted.</p>
+
+<p>You can use this extension to parse an existing extension for easy access
+to the contents or create a new one.</p>
 
 
   </div>
@@ -290,7 +302,7 @@ access to the components and meaning of the extension&#39;s contents.</p>
       <li class="public ">
   <span class="summary_signature">
     
-      <a href="#allowed_uses-instance_method" title="#allowed_uses (instance method)">- (Object) <strong>allowed_uses</strong> </a>
+      <a href="#allowed_uses-instance_method" title="#allowed_uses (instance method)">- (Array<sup>?</sup>) <strong>allowed_uses</strong> </a>
     
 
     
@@ -310,7 +322,7 @@ access to the components and meaning of the extension&#39;s contents.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>An array of the key uses allowed.</p>
+<p>An array (of strings) of the key uses allowed.</p>
 </div></span>
   
 </li>
@@ -466,7 +478,7 @@ access to the components and meaning of the extension&#39;s contents.</p>
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#initialize-instance_method" title="#initialize (instance method)">- (KeyUsage) <strong>initialize</strong>(*args) </a>
+      <a href="#initialize-instance_method" title="#initialize (instance method)">- (KeyUsage) <strong>initialize</strong>(arg) </a>
     
 
     
@@ -483,7 +495,7 @@ access to the components and meaning of the extension&#39;s contents.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>See OpenSSL::X509::Extension#initialize.</p>
+<p>This method takes a hash or an existing Extension object to parse.</p>
 </div></span>
   
 </li>
@@ -581,13 +593,19 @@ access to the components and meaning of the extension&#39;s contents.</p>
   
 
 
+  
+  
+  
+  
+  
+  
   <div id="constructor_details" class="method_details_list">
   <h2>Constructor Details</h2>
   
     <div class="method_details first">
   <h3 class="signature first" id="initialize-instance_method">
   
-    - (<tt><span class='object_link'><a href="" title="R509::Cert::Extensions::KeyUsage (class)">KeyUsage</a></span></tt>) <strong>initialize</strong>(*args) 
+    - (<tt><span class='object_link'><a href="" title="R509::Cert::Extensions::KeyUsage (class)">KeyUsage</a></span></tt>) <strong>initialize</strong>(arg) 
   
 
   
@@ -596,13 +614,63 @@ access to the components and meaning of the extension&#39;s contents.</p>
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>See OpenSSL::X509::Extension#initialize</p>
+<p>This method takes a hash or an existing Extension object to parse</p>
 
 
   </div>
 </div>
 <div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
   
+    <li>
+      
+        <span class='name'>arg</span>
+      
+      
+        <span class='type'>(<tt>Hash</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>a customizable set of options</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+  
+    
+    
+    <p class="tag_title">Options Hash (<tt>arg</tt>):</p>
+    <ul class="option">
+      
+        <li>
+          <span class="name">:key_usage</span>
+          <span class="type">(<tt>Array</tt>)</span>
+          <span class="default">
+            
+          </span>
+          
+        </li>
+      
+        <li>
+          <span class="name">:critical</span>
+          <span class="type">(<tt>Boolean</tt>)</span>
+          <span class="default">
+            
+              &mdash; default:
+              <tt>false</tt>
+            
+          </span>
+          
+        </li>
+      
+    </ul>
+  
+
 
 </div><table class="source_code">
   <tr>
@@ -610,74 +678,88 @@ access to the components and meaning of the extension&#39;s contents.</p>
       <pre class="lines">
 
 
-96
-97
-98
-99
-100
-101
-102
-103
-104
-105
-106
-107
-108
-109
-110
-111
-112
-113
-114
-115
-116
-117
-118
-119
-120
-121
-122
-123
-124
-125
-126
-127
-128
-129
-130
-131
-132
-133
-134
-135
-136
-137
-138
-139
-140
-141
-142
-143
-144
-145
-146
-147
-148
-149
-150
-151
-152
 153
 154
 155
 156
-157</pre>
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 96</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 153</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='op'>*</span><span class='id identifier rubyid_args'>args</span><span class='rparen'>)</span>
-  <span class='kw'>super</span><span class='lparen'>(</span><span class='op'>*</span><span class='id identifier rubyid_args'>args</span><span class='rparen'>)</span>
+<span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='id identifier rubyid_arg'>arg</span><span class='rparen'>)</span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_arg'>arg</span><span class='period'>.</span><span class='id identifier rubyid_kind_of?'>kind_of?</span><span class='lparen'>(</span><span class='const'>Hash</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_validate_key_usage'>validate_key_usage</span><span class='lparen'>(</span><span class='id identifier rubyid_arg'>arg</span><span class='lbracket'>[</span><span class='symbol'>:key_usage</span><span class='rbracket'>]</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_ef'>ef</span> <span class='op'>=</span> <span class='const'>OpenSSL</span><span class='op'>::</span><span class='const'>X509</span><span class='op'>::</span><span class='const'>ExtensionFactory</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span>
+    <span class='id identifier rubyid_critical'>critical</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>Cert</span><span class='op'>::</span><span class='const'>Extensions</span><span class='period'>.</span><span class='id identifier rubyid_calculate_critical'>calculate_critical</span><span class='lparen'>(</span><span class='id identifier rubyid_arg'>arg</span><span class='lbracket'>[</span><span class='symbol'>:critical</span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='kw'>false</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_arg'>arg</span> <span class='op'>=</span> <span class='id identifier rubyid_ef'>ef</span><span class='period'>.</span><span class='id identifier rubyid_create_extension'>create_extension</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>keyUsage</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_arg'>arg</span><span class='lbracket'>[</span><span class='symbol'>:key_usage</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_join'>join</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>,</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='comma'>,</span><span class='id identifier rubyid_critical'>critical</span><span class='rparen'>)</span>
+  <span class='kw'>end</span>
+
+  <span class='kw'>super</span><span class='lparen'>(</span><span class='id identifier rubyid_arg'>arg</span><span class='rparen'>)</span>
 
   <span class='id identifier rubyid_data'>data</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>ASN1</span><span class='period'>.</span><span class='id identifier rubyid_get_extension_payload'>get_extension_payload</span><span class='lparen'>(</span><span class='kw'>self</span><span class='rparen'>)</span>
 
@@ -753,7 +835,7 @@ access to the components and meaning of the extension&#39;s contents.</p>
       <div class="method_details first">
   <h3 class="signature first" id="allowed_uses-instance_method">
   
-    - (<tt>Object</tt>) <strong>allowed_uses</strong>  <span class="extras">(readonly)</span>
+    - (<tt>Array</tt><sup>?</sup>) <strong>allowed_uses</strong>  <span class="extras">(readonly)</span>
   
 
   
@@ -762,13 +844,26 @@ access to the components and meaning of the extension&#39;s contents.</p>
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>An array of the key uses allowed.</p>
+<p>An array (of strings) of the key uses allowed.</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Array</tt>, <tt>nil</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
 
 </div><table class="source_code">
   <tr>
@@ -776,12 +871,12 @@ access to the components and meaning of the extension&#39;s contents.</p>
       <pre class="lines">
 
 
-74
-75
-76</pre>
+129
+130
+131</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 74</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 129</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_allowed_uses'>allowed_uses</span>
   <span class='ivar'>@allowed_uses</span>
@@ -858,12 +953,12 @@ AU_* constants in this class</p>
       <pre class="lines">
 
 
-163
-164
-165</pre>
+227
+228
+229</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 163</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 227</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_allows?'>allows?</span><span class='lparen'>(</span> <span class='id identifier rubyid_friendly_use_name'>friendly_use_name</span> <span class='rparen'>)</span>
   <span class='ivar'>@allowed_uses</span><span class='period'>.</span><span class='id identifier rubyid_include?'>include?</span><span class='lparen'>(</span> <span class='id identifier rubyid_friendly_use_name'>friendly_use_name</span> <span class='rparen'>)</span>
@@ -910,12 +1005,12 @@ AU_* constants in this class</p>
       <pre class="lines">
 
 
-191
-192
-193</pre>
+255
+256
+257</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 191</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 255</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_crl_sign?'>crl_sign?</span>
   <span class='lparen'>(</span><span class='ivar'>@crl_sign</span> <span class='op'>==</span> <span class='kw'>true</span><span class='rparen'>)</span>
@@ -962,12 +1057,12 @@ AU_* constants in this class</p>
       <pre class="lines">
 
 
-179
-180
-181</pre>
+243
+244
+245</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 179</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 243</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_data_encipherment?'>data_encipherment?</span>
   <span class='lparen'>(</span><span class='ivar'>@data_encipherment</span> <span class='op'>==</span> <span class='kw'>true</span><span class='rparen'>)</span>
@@ -1014,12 +1109,12 @@ AU_* constants in this class</p>
       <pre class="lines">
 
 
-199
-200
-201</pre>
+263
+264
+265</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 199</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 263</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_decipher_only?'>decipher_only?</span>
   <span class='lparen'>(</span><span class='ivar'>@decipher_only</span> <span class='op'>==</span> <span class='kw'>true</span><span class='rparen'>)</span>
@@ -1066,12 +1161,12 @@ AU_* constants in this class</p>
       <pre class="lines">
 
 
-167
-168
-169</pre>
+231
+232
+233</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 167</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 231</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_digital_signature?'>digital_signature?</span>
   <span class='lparen'>(</span><span class='ivar'>@digital_signature</span> <span class='op'>==</span> <span class='kw'>true</span><span class='rparen'>)</span>
@@ -1118,12 +1213,12 @@ AU_* constants in this class</p>
       <pre class="lines">
 
 
-195
-196
-197</pre>
+259
+260
+261</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 195</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 259</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_encipher_only?'>encipher_only?</span>
   <span class='lparen'>(</span><span class='ivar'>@encipher_only</span> <span class='op'>==</span> <span class='kw'>true</span><span class='rparen'>)</span>
@@ -1170,12 +1265,12 @@ AU_* constants in this class</p>
       <pre class="lines">
 
 
-183
-184
-185</pre>
+247
+248
+249</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 183</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 247</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_key_agreement?'>key_agreement?</span>
   <span class='lparen'>(</span><span class='ivar'>@key_agreement</span> <span class='op'>==</span> <span class='kw'>true</span><span class='rparen'>)</span>
@@ -1222,12 +1317,12 @@ AU_* constants in this class</p>
       <pre class="lines">
 
 
-187
-188
-189</pre>
+251
+252
+253</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 187</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 251</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_key_cert_sign?'>key_cert_sign?</span>
   <span class='lparen'>(</span><span class='ivar'>@key_cert_sign</span> <span class='op'>==</span> <span class='kw'>true</span><span class='rparen'>)</span>
@@ -1274,12 +1369,12 @@ AU_* constants in this class</p>
       <pre class="lines">
 
 
-175
-176
-177</pre>
+239
+240
+241</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 175</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 239</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_key_encipherment?'>key_encipherment?</span>
   <span class='lparen'>(</span><span class='ivar'>@key_encipherment</span> <span class='op'>==</span> <span class='kw'>true</span><span class='rparen'>)</span>
@@ -1326,12 +1421,12 @@ AU_* constants in this class</p>
       <pre class="lines">
 
 
-171
-172
-173</pre>
+235
+236
+237</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 171</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 235</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_non_repudiation?'>non_repudiation?</span>
   <span class='lparen'>(</span><span class='ivar'>@non_repudiation</span> <span class='op'>==</span> <span class='kw'>true</span><span class='rparen'>)</span>
@@ -1346,9 +1441,9 @@ AU_* constants in this class</p>
 </div>
 
     <div id="footer">
-  Generated on Mon May  6 09:22:51 2013 by
+  Generated on Sun Jun  9 10:03:37 2013 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.8.6.1 (ruby-2.0.0).
+  0.8.4.1 (ruby-2.0.0).
 </div>
 
   </body>

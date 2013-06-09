@@ -6,13 +6,13 @@
 <title>
   Class: R509::ASN1::NoticeReference
   
-    &mdash; Documentation by YARD 0.8.6.1
+    &mdash; Documentation by YARD 0.8.4.1
   
 </title>
 
-  <link rel="stylesheet" href="../../css/style.css" type="text/css" charset="utf-8" />
+  <link rel="stylesheet" href="../../css/style.css" type="text/css" media="screen" charset="utf-8" />
 
-  <link rel="stylesheet" href="../../css/common.css" type="text/css" charset="utf-8" />
+  <link rel="stylesheet" href="../../css/common.css" type="text/css" media="screen" charset="utf-8" />
 
 <script type="text/javascript" charset="utf-8">
   hasFrames = window.top.frames.main ? true : false;
@@ -274,7 +274,7 @@ noticeNumbers    SEQUENCE OF INTEGER }</code></pre>
 </span>    <span class='kw'>if</span> <span class='id identifier rubyid_notice_reference'>notice_reference</span><span class='period'>.</span><span class='id identifier rubyid_kind_of?'>kind_of?</span><span class='lparen'>(</span><span class='const'>OpenSSL</span><span class='op'>::</span><span class='const'>ASN1</span><span class='op'>::</span><span class='const'>Sequence</span><span class='rparen'>)</span>
       <span class='ivar'>@notice_numbers</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
       <span class='id identifier rubyid_notice_reference'>notice_reference</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_ints'>ints</span><span class='op'>|</span>
-        <span class='ivar'>@notice_numbers</span> <span class='op'>&lt;&lt;</span> <span class='id identifier rubyid_ints'>ints</span><span class='period'>.</span><span class='id identifier rubyid_value'>value</span>
+        <span class='ivar'>@notice_numbers</span> <span class='op'>&lt;&lt;</span> <span class='id identifier rubyid_ints'>ints</span><span class='period'>.</span><span class='id identifier rubyid_value'>value</span><span class='period'>.</span><span class='id identifier rubyid_to_i'>to_i</span>
       <span class='kw'>end</span>
     <span class='kw'>else</span>
       <span class='ivar'>@organization</span> <span class='op'>=</span> <span class='id identifier rubyid_notice_reference'>notice_reference</span><span class='period'>.</span><span class='id identifier rubyid_value'>value</span>
@@ -383,9 +383,9 @@ noticeNumbers    SEQUENCE OF INTEGER }</code></pre>
 </div>
 
     <div id="footer">
-  Generated on Mon May  6 09:22:50 2013 by
+  Generated on Sun Jun  9 10:03:36 2013 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.8.6.1 (ruby-2.0.0).
+  0.8.4.1 (ruby-2.0.0).
 </div>
 
   </body>

@@ -6,13 +6,13 @@
 <title>
   Class: R509::Config::SubjectItemPolicy
   
-    &mdash; Documentation by YARD 0.8.6.1
+    &mdash; Documentation by YARD 0.8.4.1
   
 </title>
 
-  <link rel="stylesheet" href="../../css/style.css" type="text/css" charset="utf-8" />
+  <link rel="stylesheet" href="../../css/style.css" type="text/css" media="screen" charset="utf-8" />
 
-  <link rel="stylesheet" href="../../css/common.css" type="text/css" charset="utf-8" />
+  <link rel="stylesheet" href="../../css/common.css" type="text/css" media="screen" charset="utf-8" />
 
 <script type="text/javascript" charset="utf-8">
   hasFrames = window.top.frames.main ? true : false;
@@ -120,7 +120,7 @@
       <li class="public ">
   <span class="summary_signature">
     
-      <a href="#optional-instance_method" title="#optional (instance method)">- (Object) <strong>optional</strong> </a>
+      <a href="#optional-instance_method" title="#optional (instance method)">- (Array) <strong>optional</strong> </a>
     
 
     
@@ -139,9 +139,7 @@
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>Returns the value of attribute optional.</p>
-</div></span>
+    <span class="summary_desc"><div class='inline'></div></span>
   
 </li>
 
@@ -149,7 +147,7 @@
       <li class="public ">
   <span class="summary_signature">
     
-      <a href="#required-instance_method" title="#required (instance method)">- (Object) <strong>required</strong> </a>
+      <a href="#required-instance_method" title="#required (instance method)">- (Array) <strong>required</strong> </a>
     
 
     
@@ -168,9 +166,7 @@
   
 
   
-    <span class="summary_desc"><div class='inline'>
-<p>Returns the value of attribute required.</p>
-</div></span>
+    <span class="summary_desc"><div class='inline'></div></span>
   
 </li>
 
@@ -311,27 +307,27 @@ format.</p>
       <pre class="lines">
 
 
-211
-212
-213
-214
-215
-216
-217
-218
-219
-220
-221
-222
-223
-224
-225
-226
-227
-228</pre>
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/config.rb', line 211</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/config.rb', line 74</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='id identifier rubyid_hash'>hash</span><span class='op'>=</span><span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='kw'>not</span> <span class='id identifier rubyid_hash'>hash</span><span class='period'>.</span><span class='id identifier rubyid_kind_of?'>kind_of?</span><span class='lparen'>(</span><span class='const'>Hash</span><span class='rparen'>)</span>
@@ -366,7 +362,7 @@ format.</p>
       <div class="method_details first">
   <h3 class="signature first" id="optional-instance_method">
   
-    - (<tt>Object</tt>) <strong>optional</strong>  <span class="extras">(readonly)</span>
+    - (<tt>Array</tt>) <strong>optional</strong>  <span class="extras">(readonly)</span>
   
 
   
@@ -375,13 +371,24 @@ format.</p>
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Returns the value of attribute optional</p>
-
 
   </div>
 </div>
 <div class="tags">
   
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Array</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
 
 </div><table class="source_code">
   <tr>
@@ -389,12 +396,12 @@ format.</p>
       <pre class="lines">
 
 
-200
-201
-202</pre>
+63
+64
+65</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/config.rb', line 200</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/config.rb', line 63</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_optional'>optional</span>
   <span class='ivar'>@optional</span>
@@ -409,7 +416,7 @@ format.</p>
       <div class="method_details ">
   <h3 class="signature " id="required-instance_method">
   
-    - (<tt>Object</tt>) <strong>required</strong>  <span class="extras">(readonly)</span>
+    - (<tt>Array</tt>) <strong>required</strong>  <span class="extras">(readonly)</span>
   
 
   
@@ -418,13 +425,24 @@ format.</p>
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Returns the value of attribute required</p>
-
 
   </div>
 </div>
 <div class="tags">
   
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Array</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
 
 </div><table class="source_code">
   <tr>
@@ -432,12 +450,12 @@ format.</p>
       <pre class="lines">
 
 
-200
-201
-202</pre>
+63
+64
+65</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/config.rb', line 200</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/config.rb', line 63</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_required'>required</span>
   <span class='ivar'>@required</span>
@@ -513,29 +531,29 @@ format.</p>
       <pre class="lines">
 
 
-232
-233
-234
-235
-236
-237
-238
-239
-240
-241
-242
-243
-244
-245
-246
-247
-248
-249
-250
-251</pre>
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/config.rb', line 232</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/config.rb', line 95</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_validate_subject'>validate_subject</span><span class='lparen'>(</span><span class='id identifier rubyid_subject'>subject</span><span class='rparen'>)</span>
   <span class='comment'># convert the subject components into an array of component names that match
@@ -567,9 +585,9 @@ format.</p>
 </div>
 
     <div id="footer">
-  Generated on Mon May  6 09:22:50 2013 by
+  Generated on Sun Jun  9 10:03:36 2013 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.8.6.1 (ruby-2.0.0).
+  0.8.4.1 (ruby-2.0.0).
 </div>
 
   </body>
