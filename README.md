@@ -545,9 +545,15 @@ The ca key is required and must be set to true (for an issuing CA) or false (eve
 This option is only allowed if ca is set to TRUE. path_length allows you to define the maximum number of non-self-issued intermediate certificates that may follow this certificate in a valid certification path. For example, if you set this value to 0 then the certificate issued can only issue end entity certificates, not additional subroots. This must be a non-negative integer (>=0).
 
 ```yaml
-{ca : true}
-{ca : false}
-{ca : true, path_length: 3}
+basic_constraints:
+  :ca : true
+
+basic_constraints:
+  :ca : false
+
+basic_constraints:
+  :ca : true
+  :path_length: 3
 ```
 
 ####cdp\_location
@@ -593,6 +599,7 @@ An array of strings that conform to the OpenSSL naming scheme for available EKU 
 * emailProtection
 * OCSPSigning
 * timeStamping
+* anyExtendedKeyUsage
 * msCodeInd (not part of RFC 5280)
 * msCodeCom (not part of RFC 5280)
 * msCTLSign (not part of RFC 5280)
