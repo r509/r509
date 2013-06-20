@@ -195,13 +195,13 @@ module R509
       #     privilegeWithdrawn    (9),
       #     aACompromise       (10) }
       def revoke_cert(serial,reason=nil, revoke_time=Time.now.to_i, generate_and_save=true)
-        if not reason.to_i.between?(0,10)
-          reason = 0
-        end
-        serial = serial.to_i
         if not reason.nil?
-          reason = reason.to_i
+          if not reason.kind_of?(Integer) or not reason.between?(0,10) or reason == 7
+            raise ArgumentError, "Revocation reason must be integer 0-10 (excluding 7) or nil"
+          end
         end
+
+        serial = serial.to_i
         revoke_time = revoke_time.to_i
         if revoked?(serial)
           raise R509::R509Error, "Cannot revoke a previously revoked certificate"

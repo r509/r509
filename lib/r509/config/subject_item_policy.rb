@@ -14,7 +14,7 @@ module R509
   module Config
     # The Subject Item Policy allows you to define what subject fields are allowed in a certificate.
     # Required means that field *must* be supplied, optional means it will be encoded if provided, and
-    # match means the field must be present and must match the CA certificate's value for that OID.
+    # match means the field must be present and must match the value specified.
     class SubjectItemPolicy
       # @return [Array]
       attr_reader :required, :optional, :match, :match_values

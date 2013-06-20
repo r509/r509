@@ -162,10 +162,9 @@ describe R509::CRL::Administrator do
   end
   it "adds a cert to the revocation list with an invalid reason code" do
     crl = R509::CRL::Administrator.new(@test_ca_config)
-    crl.revoke_cert(383834832,15)
-    crl.generate_crl.should match(/BEGIN X509 CRL/)
-    crl.revoked?(383834832).should == true
-    crl.revoked_cert(383834832)[:reason].should == 0
+    expect { crl.revoke_cert(383834832,15) }.to raise_error(ArgumentError, 'Revocation reason must be integer 0-10 (excluding 7) or nil')
+    expect { crl.revoke_cert(383834832,7) }.to raise_error(ArgumentError, 'Revocation reason must be integer 0-10 (excluding 7) or nil')
+    expect { crl.revoke_cert(383834832,'string') }.to raise_error(ArgumentError, 'Revocation reason must be integer 0-10 (excluding 7) or nil')
   end
   it "removes a cert from the revocation list" do
     crl_admin = R509::CRL::Administrator.new(@test_ca_config)
