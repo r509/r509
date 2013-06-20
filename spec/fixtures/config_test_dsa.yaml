@@ -25,17 +25,3 @@ test_ca_dsa:
       - keyEncipherment
       extended_key_usage:
       - clientAuth
-    server_with_subject_item_policy:
-      basic_constraints:
-        :ca: false
-      key_usage:
-      - digitalSignature
-      - keyEncipherment
-      extended_key_usage:
-      - serverAuth
-      subject_item_policy:
-        CN: required
-        O: optional
-        ST: required
-        C: required
-        OU: optional

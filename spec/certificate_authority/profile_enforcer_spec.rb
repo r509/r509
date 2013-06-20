@@ -10,7 +10,7 @@ describe R509::CertificateAuthority::ProfileEnforcer do
   context "enforces subject item policies" do
     before :all do
       config = R509::Config::CAConfig.new( :ca_cert => R509::Cert.new( :cert => TestFixtures::TEST_CA_CERT) )
-      subject_item_policy = R509::Config::SubjectItemPolicy.new("CN" => "required", "O" => "required", "OU" => "optional", "L" => "required")
+      subject_item_policy = R509::Config::SubjectItemPolicy.new("CN" => {:policy => "required"} , "O" => {:policy => "required"}, "OU" => {:policy => "optional"}, "L" => {:policy => "required"})
       profile = R509::Config::CertProfile.new(
         :default_md => "SHA512",
         :subject_item_policy => subject_item_policy

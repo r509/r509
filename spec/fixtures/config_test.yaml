@@ -73,9 +73,14 @@ test_ca:
       extended_key_usage:
       - serverAuth
       subject_item_policy:
-        CN: required
-        O: optional
-        ST: required
-        C: required
-        OU: optional
+        CN:
+          :policy: required
+        O:
+          :policy: optional
+        ST:
+          :policy: required
+        C:
+          :policy: required
+        OU:
+          :policy: optional
 config_is_string: this is bogus

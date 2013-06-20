@@ -23,12 +23,19 @@ certificate_authorities:
         extended_key_usage:
         - serverAuth
         subject_item_policy:
-          CN: required
-          O: required
-          OU: optional
-          ST: required
-          C: required
-          L: required
+          CN:
+            :policy: required
+          O:
+            :policy: required
+          OU:
+            :policy: optional
+          ST:
+            :policy: required
+          C:
+            :policy: required
+          L:
+            :policy: match
+            :value: My Locality Requirement
         ocsp_location:
         - http://ocsp.domain.com
         ca_issuers_location:

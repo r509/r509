@@ -192,11 +192,11 @@ module TestFixtures
 
   def self.test_ca_server_profile_with_subject_item_policy
     subject_item_policy = R509::Config::SubjectItemPolicy.new(
-      "CN" => "required",
-      "O" => "optional",
-      "ST" => "required",
-      "C" => "required",
-      "OU" => "optional"
+      "CN" => { :policy => "required"},
+      "O" => { :policy => "optional"},
+      "ST" => { :policy => "required"},
+      "C" => { :policy => "required"},
+      "OU" => { :policy => "optional"}
     )
     R509::Config::CertProfile.new(
       :basic_constraints => {:ca => false },

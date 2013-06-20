@@ -218,7 +218,8 @@ profile = R509::Config::CertProfile.new(
 config.set_profile("server",profile)
 ```
 
-Set up a subject item policy (required/optional). The keys must match OpenSSL's shortnames!
+Subject Item Policy allows you to define what subject fields are allowed in a certificate. Required means that field *must* be supplied, optional means it will be encoded if provided, and match means the field must be present and must match the value specified. The keys must match OpenSSL's short names.
+
 
 ```ruby
 profile = R509::Config::CertProfile.new(
@@ -226,8 +227,9 @@ profile = R509::Config::CertProfile.new(
   :key_usage => ["digitalSignature","keyEncipherment"],
   :extended_key_usage => ["serverAuth"],
   :subject_item_policy => {
-    "CN" => "required",
-    "O" => "optional"
+    "CN" => {:policy => "required"},
+    "O" => {:policy => "optional"},
+    "OU" => {:policy => "match", :value => "Engineering" }
   }
 )
 # config object from above assumed
@@ -277,11 +279,19 @@ test_ca:
           :notice_numbers: '3,2,1'
         - :explicit_text: another user notice
       subject_item_policy:
-        CN: required
-        O: optional
-        ST: required
-        C: required
-        OU: optional
+          CN:
+            :policy: required
+          O:
+            :policy: required
+          OU:
+            :policy: match
+            :value: Engineering
+          ST:
+            :policy: required
+          C:
+            :policy: required
+          L:
+            :policy: optional
       cdp_location:
       - http://crl.domain.com/test_ca.crl
       ocsp_location:
