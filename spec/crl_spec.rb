@@ -81,6 +81,7 @@ describe R509::CRL::SignedList do
   end
 end
 
+
 describe R509::CRL::Administrator do
   before :each do
     @cert = TestFixtures::CERT
@@ -89,6 +90,45 @@ describe R509::CRL::Administrator do
     @test_ca_config = TestFixtures.test_ca_no_profile_config
     @test_ca_dsa_config = TestFixtures.test_ca_dsa_no_profile_config
   end
+
+  it "signs CRL with no delegate certificate" do
+    config = R509::Config::CAConfig.new(
+      :ca_cert => TestFixtures.test_ca_cert,
+    )
+    crl_admin = R509::CRL::Administrator.new(config)
+    crl_admin.generate_crl
+    crl_admin.crl.issuer.to_s.should == '/C=US/ST=Illinois/L=Chicago/O=Ruby CA Project/CN=Test CA'
+  end
+
+  it "signs CRL with delegate certificate" do
+    config = R509::Config::CAConfig.new(
+      :ca_cert => TestFixtures.test_ca_cert,
+      :crl_cert => TestFixtures.test_ca_crl_delegate,
+    )
+    crl_admin = R509::CRL::Administrator.new(config)
+    crl_admin.generate_crl
+    crl_admin.crl.issuer.to_s.should == '/C=US/ST=Illinois/L=Chicago/O=r509 LLC/CN=r509 CRL Delegate'
+  end
+
+  it "signs CRL with non-default message digest" do
+    config = R509::Config::CAConfig.new(
+      :ca_cert => TestFixtures.test_ca_cert,
+      :crl_md => 'sha256'
+    )
+    crl_admin = R509::CRL::Administrator.new(config)
+    crl_admin.generate_crl
+    crl_admin.crl.signature_algorithm.should == 'sha256WithRSAEncryption'
+  end
+
+  it "signs CRL with default message digest" do
+    config = R509::Config::CAConfig.new(
+      :ca_cert => TestFixtures.test_ca_cert,
+    )
+    crl_admin = R509::CRL::Administrator.new(config)
+    crl_admin.generate_crl
+    crl_admin.crl.signature_algorithm.should == 'sha1WithRSAEncryption'
+  end
+
   it "generates CRL with no entries in revocation list (RSA key)" do
     crl_admin = R509::CRL::Administrator.new(@test_ca_config)
     crl_admin.generate_crl
@@ -117,6 +157,7 @@ describe R509::CRL::Administrator do
   end
   it "can write the crl_number_file" do
     crl = R509::CRL::Administrator.new(@test_ca_config)
+    crl.generate_crl
     crl.crl_number_file.string.should == "1"
     crl.crl_number_file.reopen("")
     crl.save_crl_number
@@ -188,13 +229,12 @@ describe R509::CRL::Administrator do
     crl.revoked_cert(12346)[:revoke_time].should == 1323983885
     crl.revoked_cert(12346)[:reason].should == nil
   end
-  it "when nil crl_list_file still call generate_crl" do
+  it "load when nil crl_list_file" do
     config = R509::Config::CAConfig.new(
       :ca_cert => TestFixtures.test_ca_cert,
       :crl_list_file => nil
     )
-    crl_admin = R509::CRL::Administrator.new(config)
-    crl_admin.crl.to_pem.should match(/BEGIN X509 CRL/)
+    expect { crl_admin = R509::CRL::Administrator.new(config) }.to_not raise_error
   end
   it "sets validity via yaml" do
     crl_admin = R509::CRL::Administrator.new(@test_ca_config)

@@ -317,6 +317,7 @@ describe R509::Cert do
   it "is not revoked by crl" do
     cert = R509::Cert.new(:cert => @cert3)
     crl_admin = R509::CRL::Administrator.new(TestFixtures.test_ca_config)
+    crl_admin.generate_crl
     cert.is_revoked_by_crl?(crl_admin.crl).should == false
   end
   it "loads a cert with load_from_file" do

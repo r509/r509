@@ -54,9 +54,9 @@ module R509
     class CAConfig
       include R509::IOHelpers
       extend R509::IOHelpers
-      attr_reader :ca_cert, :crl_validity_hours, :crl_start_skew_seconds, :ocsp_chain,
-        :ocsp_start_skew_seconds, :ocsp_validity_hours, :crl_number_file,
-        :crl_list_file
+      attr_reader :ca_cert, :crl_validity_hours, :crl_start_skew_seconds,
+        :crl_number_file, :crl_list_file, :crl_md,
+        :ocsp_chain, :ocsp_start_skew_seconds, :ocsp_validity_hours
 
       # @option opts [R509::Cert] :ca_cert Cert+Key pair
       # @option opts [Integer] :crl_validity_hours (168) The number of hours that
@@ -64,10 +64,13 @@ module R509
       # @option opts [Hash<String, R509::Config::CertProfile>] :profiles
       # @option opts [String] :crl_number_file The file that we will save
       #  the CRL numbers to.
+    # @option opts [String] :crl_md Optional digest for signing CRLs. sha1, sha224, sha256, sha384, sha512, md5. Defaults to R509::MessageDigest::DEFAULT_MD
       # @option opts [String] :crl_list_file The file that we will save
       #  the CRL list data to.
       # @option opts [R509::Cert] :ocsp_cert An optional cert+key pair
-      # OCSP signing delegate
+      #  OCSP signing delegate
+      # @option opts [R509::Cert] :crl_cert An optional cert+key pair
+      #  CRL signing delegate
       # @option opts [Array<OpenSSL::X509::Certificate>] :ocsp_chain An optional array
       #  that constitutes the chain to attach to an OCSP response
       #
@@ -83,21 +86,23 @@ module R509
         end
 
         #ocsp data
-        if opts.has_key?(:ocsp_cert) and not opts[:ocsp_cert].kind_of?(R509::Cert) and not opts[:ocsp_cert].nil?
-          raise ArgumentError, ':ocsp_cert, if provided, must be of type R509::Cert'
-        end
-        if opts.has_key?(:ocsp_cert) and not opts[:ocsp_cert].nil? and not opts[:ocsp_cert].has_private_key?
-          raise ArgumentError, ':ocsp_cert must contain a private key, not just a certificate'
+        if opts.has_key?(:ocsp_cert)
+          check_ocsp_crl_delegate(opts[:ocsp_cert],'ocsp_cert')
         end
         @ocsp_cert = opts[:ocsp_cert] unless opts[:ocsp_cert].nil?
         @ocsp_chain = opts[:ocsp_chain] if opts[:ocsp_chain].kind_of?(Array)
         @ocsp_validity_hours = opts[:ocsp_validity_hours] || 168
         @ocsp_start_skew_seconds = opts[:ocsp_start_skew_seconds] || 3600
 
+        if opts.has_key?(:crl_cert)
+          check_ocsp_crl_delegate(opts[:crl_cert],'crl_cert')
+        end
+        @crl_cert = opts[:crl_cert] unless opts[:crl_cert].nil?
         @crl_validity_hours = opts[:crl_validity_hours] || 168
         @crl_start_skew_seconds = opts[:crl_start_skew_seconds] || 3600
         @crl_number_file = opts[:crl_number_file] || nil
         @crl_list_file = opts[:crl_list_file] || nil
+        @crl_md = opts[:crl_md] || R509::MessageDigest::DEFAULT_MD
 
 
 
@@ -113,6 +118,11 @@ module R509
       # @return [R509::Cert] either a custom OCSP cert or the ca_cert
       def ocsp_cert
         if @ocsp_cert.nil? then @ca_cert else @ocsp_cert end
+      end
+
+      # @return [R509::Cert] either a custom CRL cert or the ca_cert
+      def crl_cert
+        if @crl_cert.nil? then @ca_cert else @crl_cert end
       end
 
       # @param [String] name The name of the profile
@@ -160,32 +170,14 @@ module R509
           raise R509Error, "ca_root_path is not a directory: #{ca_root_path}"
         end
 
-        ca_cert_hash = conf['ca_cert']
-
-        if ca_cert_hash.has_key?('engine')
-          ca_cert = self.load_with_engine(ca_cert_hash,ca_root_path)
-        end
-
-        if ca_cert.nil? and ca_cert_hash.has_key?('pkcs12')
-          ca_cert = self.load_with_pkcs12(ca_cert_hash,ca_root_path)
-        end
-
-        if ca_cert.nil? and ca_cert_hash.has_key?('cert')
-          ca_cert = self.load_with_key(ca_cert_hash,ca_root_path)
-        end
+        ca_cert = self.load_ca_cert(conf['ca_cert'],ca_root_path)
 
         if conf.has_key?("ocsp_cert")
-          if conf["ocsp_cert"].has_key?('engine')
-            ocsp_cert = self.load_with_engine(conf["ocsp_cert"],ca_root_path)
-          end
+          ocsp_cert = self.load_ca_cert(conf['ocsp_cert'],ca_root_path)
+        end
 
-          if ocsp_cert.nil? and conf["ocsp_cert"].has_key?('pkcs12')
-            ocsp_cert = self.load_with_pkcs12(conf["ocsp_cert"],ca_root_path)
-          end
-
-          if ocsp_cert.nil? and conf["ocsp_cert"].has_key?('cert')
-            ocsp_cert = self.load_with_key(conf["ocsp_cert"],ca_root_path)
-          end
+        if conf.has_key?("crl_cert")
+          crl_cert = self.load_ca_cert(conf['crl_cert'],ca_root_path)
         end
 
         ocsp_chain = []
@@ -200,10 +192,12 @@ module R509
         opts = {
           :ca_cert => ca_cert,
           :ocsp_cert => ocsp_cert,
+          :crl_cert => crl_cert,
           :ocsp_chain => ocsp_chain,
           :crl_validity_hours => conf['crl_validity_hours'],
           :ocsp_validity_hours => conf['ocsp_validity_hours'],
           :ocsp_start_skew_seconds => conf['ocsp_start_skew_seconds'],
+          :crl_md => conf['crl_md'],
         }
 
         if conf.has_key?("crl_list")
@@ -261,6 +255,22 @@ module R509
       end
 
       private
+
+      def self.load_ca_cert(ca_cert_hash,ca_root_path)
+        if ca_cert_hash.has_key?('engine')
+          ca_cert = self.load_with_engine(ca_cert_hash,ca_root_path)
+        end
+
+        if ca_cert.nil? and ca_cert_hash.has_key?('pkcs12')
+          ca_cert = self.load_with_pkcs12(ca_cert_hash,ca_root_path)
+        end
+
+        if ca_cert.nil? and ca_cert_hash.has_key?('cert')
+          ca_cert = self.load_with_key(ca_cert_hash,ca_root_path)
+        end
+
+        return ca_cert
+      end
 
       def self.load_with_engine(ca_cert_hash,ca_root_path)
         if ca_cert_hash.has_key?('key')
@@ -322,6 +332,15 @@ module R509
           ca_cert = R509::Cert.new(:cert => read_data(ca_cert_file))
         end
         ca_cert
+      end
+
+      def check_ocsp_crl_delegate(cert,kind)
+        if not cert.kind_of?(R509::Cert) and not cert.nil?
+          raise ArgumentError, ":#{kind}, if provided, must be of type R509::Cert"
+        end
+        if not cert.nil? and not cert.has_private_key?
+          raise ArgumentError, ":#{kind} must contain a private key, not just a certificate"
+        end
       end
 
     end

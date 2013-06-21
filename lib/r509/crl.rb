@@ -147,6 +147,7 @@ module R509
 
         @validity_hours = @config.crl_validity_hours
         @start_skew_seconds = @config.crl_start_skew_seconds
+        @crl_md = R509::MessageDigest.new(@config.crl_md)
         @crl = nil
 
         @crl_number_file = @config.crl_number_file
@@ -233,7 +234,7 @@ module R509
         now = Time.at Time.now.to_i
         crl.last_update = now-@start_skew_seconds
         crl.next_update = now+@validity_hours*3600
-        crl.issuer = @config.ca_cert.subject.name
+        crl.issuer = @config.crl_cert.subject.name
 
         self.revoked_certs.each do |serial, reason, revoke_time|
           revoked = OpenSSL::X509::Revoked.new
@@ -249,7 +250,7 @@ module R509
         end
 
         ef = OpenSSL::X509::ExtensionFactory.new
-        ef.issuer_certificate = @config.ca_cert.cert
+        ef.issuer_certificate = @config.crl_cert.cert
         ef.crl = crl
         #grab crl number from file, increment, write back
         crl_number = increment_crl_number
@@ -260,7 +261,7 @@ module R509
         extensions.each{|oid, value, critical|
           crl.add_extension(ef.create_extension(oid, value, critical))
         }
-        crl.sign(@config.ca_cert.key.key, OpenSSL::Digest::SHA1.new)
+        crl.sign(@config.crl_cert.key.key, @crl_md.digest)
         @crl = R509::CRL::SignedList.new crl
         @crl.to_pem
       end
@@ -326,7 +327,6 @@ module R509
         @revoked_certs = {}
 
         if filename_or_io.nil?
-          generate_crl
           return nil
         end
 
@@ -340,8 +340,6 @@ module R509
           revoke_time = (revoke_time == '') ? nil : revoke_time.to_i
           self.revoke_cert(serial, reason, revoke_time, false)
         end
-        generate_crl
-        save_crl_list
         nil
       end
 

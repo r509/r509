@@ -510,6 +510,16 @@ This hash defines the certificate + key that will be used to sign for OCSP respo
 * pkcs12 (optional, cannot be used with key or cert)
 * password (optional, used for pkcs12 or passworded private key)
 
+###crl\_cert
+This hash defines the certificate + key that will be used to sign CRLs. This hash is optional and if not provided r509 will automatically use the ca\_cert as the CRL delegate certificate.
+
+* cert (cannot use with pkcs12)
+* key (optional, cannot use with pkcs12)
+* engine (optional, cannot be used with key or pkcs12. Must be a hash with SO_PATH and ID keys)
+* key\_name (required when using engine)
+* pkcs12 (optional, cannot be used with key or cert)
+* password (optional, used for pkcs12 or passworded private key)
+
 ###crl\_list
 The path on the filesystem of the list of revoked certificates for this CA.
 

@@ -130,6 +130,9 @@ module TestFixtures
   TEST_CA_OCSP_CERT = read_fixture('test_ca_ocsp.cer')
   TEST_CA_OCSP_KEY  = read_fixture('test_ca_ocsp.key')
 
+  TEST_CA_CRL_CERT = read_fixture('test_ca_crl.cer')
+  TEST_CA_CRL_KEY  = read_fixture('test_ca_crl.key')
+
   TEST_CA_SUBROOT_CERT = read_fixture('test_ca_subroot.cer')
   TEST_CA_SUBROOT_KEY  = read_fixture('test_ca_subroot.key')
 
@@ -161,6 +164,10 @@ module TestFixtures
 
   def self.test_ca_cert
     R509::Cert.new(:cert => TEST_CA_CERT, :key => TEST_CA_KEY)
+  end
+
+  def self.test_ca_crl_delegate
+    R509::Cert.new(:cert => TEST_CA_CRL_CERT, :key => TEST_CA_CRL_KEY)
   end
 
   def self.test_ca_ec_cert

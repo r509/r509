@@ -95,6 +95,26 @@ ocsp_engine_ca:
     engine:
       :so_path: '/some/path'
       :id: chil
+crl_delegate_ca:
+  ca_cert:
+    cert: test_ca.cer
+  crl_cert:
+    cert: test_ca_crl.cer
+    key: test_ca_crl.key
+crl_pkcs12_ca:
+  ca_cert:
+    cert: test_ca.cer
+  crl_cert:
+    pkcs12: test_ca_crl.p12
+    password: r509
+crl_engine_ca:
+  ca_cert:
+    cert: test_ca.cer
+  crl_cert:
+    cert: test_ca_crl.cer
+    engine:
+      :so_path: '/some/path'
+      :id: chil
 all_eku_ca:
   ca_cert:
     cert: test_ca.cer

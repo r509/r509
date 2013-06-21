@@ -113,6 +113,12 @@ describe R509::Config::CAConfig do
     it "raises an error if :ocsp_cert does not contain a private key" do
       expect { R509::Config::CAConfig.new( :ca_cert => TestFixtures.test_ca_cert, :ocsp_cert => R509::Cert.new( :cert => TestFixtures::TEST_CA_CERT) ) }.to raise_error ArgumentError, ':ocsp_cert must contain a private key, not just a certificate'
     end
+    it "raises an error if :crl_cert that is not R509::Cert" do
+      expect { R509::Config::CAConfig.new(:ca_cert => TestFixtures.test_ca_cert, :crl_cert => "not a cert") }.to raise_error ArgumentError, ':crl_cert, if provided, must be of type R509::Cert'
+    end
+    it "raises an error if :crl_cert does not contain a private key" do
+      expect { R509::Config::CAConfig.new( :ca_cert => TestFixtures.test_ca_cert, :crl_cert => R509::Cert.new( :cert => TestFixtures::TEST_CA_CERT) ) }.to raise_error ArgumentError, ':crl_cert must contain a private key, not just a certificate'
+    end
   end
 
   it "loads the config even if :ca_cert does not contain a private key" do
@@ -133,6 +139,21 @@ describe R509::Config::CAConfig do
     )
 
     config.ocsp_cert.should == ocsp_cert
+  end
+  it "returns the correct cert object on #crl_cert if none is specified" do
+    @config.crl_cert.should == @config.ca_cert
+  end
+  it "returns the correct cert object on #crl_cert if an crl_cert was specified" do
+    crl_cert = R509::Cert.new(
+      :cert => TestFixtures::TEST_CA_OCSP_CERT,
+      :key => TestFixtures::TEST_CA_OCSP_KEY
+    )
+    config = R509::Config::CAConfig.new(
+      :ca_cert => TestFixtures.test_ca_cert,
+      :crl_cert => crl_cert
+    )
+
+    config.crl_cert.should == crl_cert
   end
   it "fails to specify a non-Config::CertProfile as the profile" do
     config = R509::Config::CAConfig.new(
@@ -186,6 +207,19 @@ describe R509::Config::CAConfig do
     config.profile("policy_constraints").policy_constraints[:require_explicit_policy].should == 1
     config.profile("policy_constraints").policy_constraints[:inhibit_policy_mapping].should == 0
     config.profile("name_constraints").name_constraints.should_not be_nil
+  end
+  it "loads CRL cert/key from yaml" do
+    config = R509::Config::CAConfig.from_yaml("crl_delegate_ca", File.read("#{File.dirname(__FILE__)}/../fixtures/config_test_various.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/../fixtures"})
+    config.crl_cert.has_private_key?.should == true
+    config.crl_cert.subject.to_s.should == "/C=US/ST=Illinois/L=Chicago/O=r509 LLC/CN=r509 CRL Delegate"
+  end
+  it "loads CRL pkcs12 from yaml" do
+    config = R509::Config::CAConfig.from_yaml("crl_pkcs12_ca", File.read("#{File.dirname(__FILE__)}/../fixtures/config_test_various.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/../fixtures"})
+    config.crl_cert.has_private_key?.should == true
+    config.crl_cert.subject.to_s.should == "/C=US/ST=Illinois/L=Chicago/O=r509 LLC/CN=r509 CRL Delegate"
+  end
+  it "loads CRL cert/key in engine from yaml" do
+    expect { R509::Config::CAConfig.from_yaml("crl_engine_ca", File.read("#{File.dirname(__FILE__)}/../fixtures/config_test_various.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/../fixtures"}) }.to raise_error(ArgumentError,"You must supply a key_name with an engine")
   end
   it "loads OCSP cert/key from yaml" do
     config = R509::Config::CAConfig.from_yaml("ocsp_delegate_ca", File.read("#{File.dirname(__FILE__)}/../fixtures/config_test_various.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/../fixtures"})
