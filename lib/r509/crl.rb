@@ -72,7 +72,7 @@ module R509
       # @param [Integer] serial number
       # @return [Boolean]
       def revoked?(serial)
-        if @crl.revoked.find { |revoked| revoked.serial == serial }
+        if @crl.revoked.find { |revoked| revoked.serial == serial.to_i }
           true
         else
           false
@@ -167,7 +167,7 @@ module R509
       # @param [Integer] serial The serial number we want to check
       # @return [Boolean] True if the serial number was revoked. False, otherwise.
       def revoked?(serial)
-        @revoked_certs.has_key?(serial)
+        @revoked_certs.has_key?(serial.to_i)
       end
 
       # @return [Array] serial, reason, revoke_time tuple

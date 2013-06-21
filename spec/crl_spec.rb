@@ -37,7 +37,9 @@ describe R509::CRL::SignedList do
 
   it "checks if a serial is revoked?" do
     @crl.revoked?(111111).should == false
+    @crl.revoked?('111111').should == false
     @crl.revoked?(12345).should == true
+    @crl.revoked?('12345').should == true
   end
 
   it "returns a hash of all revoked certs" do
@@ -168,6 +170,7 @@ describe R509::CRL::Administrator do
     crl_admin.revoked?(383834832).should == false
     crl_admin.revoke_cert(383834832)
     crl_admin.revoked?(383834832).should == true
+    crl_admin.revoked?('383834832').should == true
     crl_admin.crl.revoked[383834832].should_not be_nil
     crl_admin.crl.crl.revoked[0].serial.should == 383834832
   end
