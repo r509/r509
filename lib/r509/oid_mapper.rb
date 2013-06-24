@@ -28,5 +28,19 @@ module R509
       end
       nil
     end
+
+    # Load YAML and register OIDs
+    # @param [String] name Name of the config within the file
+    # @param [String] yaml_data YAML data to load
+    # @example
+    #  custom_oids:
+    #    - :oid: 1.4.3.2.1.2.3.4.4.4.5
+    #      :short_name: testOIDName
+    #    - :oid: 1.4.3.2.1.2.5.4.4.4.5
+    #      :short_name: anotherOIDName
+    def self.register_from_yaml(name, yaml_data)
+      conf = YAML.load(yaml_data)
+      self.batch_register(conf[name])
+    end
   end
 end
