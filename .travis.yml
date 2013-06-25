@@ -5,3 +5,4 @@ rvm:
  - 2.0.0
  - ruby-head
  - rbx-19mode
+before_install: gem install bundler #this is needed since ruby-head is broken on travis-ci right now
