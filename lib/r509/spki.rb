@@ -26,37 +26,10 @@ module R509
         end
       end
       if opts.has_key?(:spki)
-        spki = opts[:spki]
-        # first let's try cleaning up the input a bit so OpenSSL is happy with it
-        # OpenSSL hates SPKAC=
-        spki.sub!("SPKAC=","")
-        # it really hates newlines (Firefox loves 'em)
-        # so let's normalize line endings
-        spki.gsub!(/\r\n?/, "\n")
-        # and nuke 'em
-        spki.gsub!("\n", "")
-        # ...and leading/trailing whitespace
-        spki.strip!
-        @spki = OpenSSL::Netscape::SPKI.new(spki)
-        if not @key.nil? and not @spki.verify(@key.public_key) then
-          raise R509Error, 'Key does not match SPKI.'
-        end
-      end
+        @spki = parse_spki(opts[:spki])
+      else
       # create the SPKI from the private key if it wasn't passed in
-      if @spki.nil?
-        @spki = OpenSSL::Netscape::SPKI.new
-        @spki.public_key = @key.public_key
-        if @key.dsa?
-          #only DSS1 is acceptable for DSA signing in OpenSSL < 1.0
-          #post-1.0 you can sign with anything, but let's be conservative
-          #see: http://www.ruby-doc.org/stdlib-1.9.3/libdoc/openssl/rdoc/OpenSSL/PKey/DSA.html
-          message_digest = R509::MessageDigest.new('dss1')
-        elsif opts.has_key?(:message_digest)
-          message_digest = R509::MessageDigest.new(opts[:message_digest])
-        else
-          message_digest = R509::MessageDigest.new
-        end
-        @spki.sign(@key.key,message_digest.digest)
+        @spki = build_spki(opts[:message_digest])
       end
     end
 
@@ -160,5 +133,55 @@ module R509
         :ec
       end
     end
+
+    # Returns the signature algorithm (e.g., RSA-SHA1, ecdsa-with-SHA256)
+    #
+    # @return [String] signature algorithm string
+    def signature_algorithm
+      data = OpenSSL::ASN1.decode(self.to_der)
+      return data.entries[1].value.entries[0].value
+    end
+
+    private
+
+    # Tries to clean and parse an inbound SPKI
+    # @param [String] spki string
+    # @return [OpenSSL::Netscape::SPKI] spki object
+    def parse_spki(spki)
+      # first let's try cleaning up the input a bit so OpenSSL is happy with it
+      # OpenSSL hates SPKAC=
+      spki.sub!("SPKAC=","")
+      # it really hates newlines (Firefox loves 'em)
+      # so let's normalize line endings
+      spki.gsub!(/\r\n?/, "\n")
+      # and nuke 'em
+      spki.gsub!("\n", "")
+      # ...and leading/trailing whitespace
+      spki.strip!
+      spki = OpenSSL::Netscape::SPKI.new(spki)
+      if not @key.nil? and not spki.verify(@key.public_key) then
+        raise R509Error, 'Key does not match SPKI.'
+      end
+      return spki
+    end
+
+    # Tries to build an SPKI using an existing private key
+    # @param [String] md optional message digest
+    # @return [OpenSSL::Netscape::SPKI] spki object
+    def build_spki(md)
+      spki = OpenSSL::Netscape::SPKI.new
+      spki.public_key = @key.public_key
+      if @key.dsa?
+        #only DSS1 is acceptable for DSA signing in OpenSSL < 1.0
+        #post-1.0 you can sign with anything, but let's be conservative
+        #see: http://www.ruby-doc.org/stdlib-1.9.3/libdoc/openssl/rdoc/OpenSSL/PKey/DSA.html
+        message_digest = R509::MessageDigest.new('dss1')
+      else
+        message_digest = R509::MessageDigest.new(md)
+      end
+      spki.sign(@key.key,message_digest.digest)
+      return spki
+    end
+
   end
 end

@@ -18,6 +18,12 @@ shared_examples_for "create spki with private key" do
     it "generates a spki with custom digest" do
       spki = R509::SPKI.new(:key => @key, :message_digest => "sha256")
       spki.to_pem.should_not be_nil
+      case
+      when @key.rsa?
+        spki.signature_algorithm.should match /sha256/i
+      when @key.dsa?
+        spki.signature_algorithm.should match /sha1/i
+      end
       spki.verify_signature
     end
 
@@ -35,6 +41,18 @@ end
 shared_examples_for "spki + private key" do
   it "verifies they match" do
       expect { R509::SPKI.new(:key => @key, :spki => @spki) }.to_not raise_error
+  end
+
+  it "returns the correct signature_algorithm" do
+    spki = R509::SPKI.new( :spki => @spki, :key => @key )
+    case
+    when @key.rsa?
+      spki.signature_algorithm.should match /RSA/i
+    when @key.dsa?
+      spki.signature_algorithm.should match /DSA/i
+    when @key.ec?
+      spki.signature_algorithm.should match /ecdsa/i
+    end
   end
 
   it "errors if they don't match" do
