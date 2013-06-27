@@ -55,7 +55,7 @@ module R509
     # @return [String] the Cert converted into PEM format.
     def to_pem
       if @cert.kind_of?(OpenSSL::X509::Certificate)
-        return @cert.to_pem.chomp
+        return @cert.to_pem
       end
     end
 
