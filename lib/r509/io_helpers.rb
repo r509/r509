@@ -1,5 +1,6 @@
 module R509
   # helper methods for I/O
+  # @private
   module IOHelpers
     # Writes data into an IO or file
     # @param [String, #write] filename_or_io Either a string of the path for

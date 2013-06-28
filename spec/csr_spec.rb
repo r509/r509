@@ -263,7 +263,7 @@ describe R509::CSR do
   end
   it "returns an error for curve_name for dsa/rsa CSRs" do
     csr = R509::CSR.new(:csr => @csr)
-    expect { csr.curve_name }.to raise_error(R509::R509Error, 'Curve name is only available with EC CSRs')
+    expect { csr.curve_name }.to raise_error(R509::R509Error, 'Curve name is only available with EC')
   end
   it "checks dsa?" do
     csr = R509::CSR.new({:csr => @csr_dsa})

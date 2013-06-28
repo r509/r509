@@ -1,12 +1,14 @@
 require 'openssl'
 require 'r509/exceptions'
 require 'r509/io_helpers'
+require 'r509/helpers'
 require 'r509/cert/extensions'
 
 module R509
   # The primary certificate object.
   class Cert
   include R509::IOHelpers
+  include R509::Helpers
 
     attr_reader :cert, :key, :subject, :issuer
 
@@ -49,26 +51,7 @@ module R509
       return R509::Cert.new(:cert => IOHelpers.read_data(filename) )
     end
 
-
-    # Converts the Cert into the PEM format
-    #
-    # @return [String] the Cert converted into PEM format.
-    def to_pem
-      if @cert.kind_of?(OpenSSL::X509::Certificate)
-        return @cert.to_pem
-      end
-    end
-
     alias :to_s :to_pem
-
-    # Converts the Cert into the DER format
-    #
-    # @return [String] the Cert converted into DER format.
-    def to_der
-      if @cert.kind_of?(OpenSSL::X509::Certificate)
-        return @cert.to_der
-      end
-    end
 
     # Returns beginning (notBefore) of certificate validity period
     #
@@ -161,84 +144,11 @@ module R509
       return ret.sort.uniq
     end
 
-    # Returns whether the public key is RSA
-    #
-    # @return [Boolean] true if the public key is RSA, false otherwise
-    def rsa?
-      @cert.public_key.kind_of?(OpenSSL::PKey::RSA)
-    end
-
-    # Returns whether the public key is DSA
-    #
-    # @return [Boolean] true if the public key is DSA, false otherwise
-    def dsa?
-      @cert.public_key.kind_of?(OpenSSL::PKey::DSA)
-    end
-
-    # Returns whether the public key is EC
-    #
-    # @return [Boolean] true if the public key is EC, false otherwise
-    def ec?
-      @cert.public_key.kind_of?(OpenSSL::PKey::EC)
-    end
-
-    # Returns the bit strength of the key used to create the certificate
-    #
-    # @return [Integer] integer value of bit strength
-    def bit_strength
-      if self.rsa?
-        return @cert.public_key.n.num_bits
-      elsif self.dsa?
-        return @cert.public_key.p.num_bits
-      elsif self.ec?
-        raise R509::R509Error, 'Bit strength is not available for EC at this time.'
-      end
-    end
-
-    # Returns the short name of the elliptic curve used to generate the public key
-    # if the key is EC. If not, raises an error.
-    #
-    # @return [String] elliptic curve name
-    def curve_name
-      if self.ec?
-        @cert.public_key.group.curve_name
-      else
-        raise R509::R509Error, 'Curve name is only available with EC certs'
-      end
-    end
-
     # Returns signature algorithm
     #
     # @return [String] value of the signature algorithm. E.g. sha1WithRSAEncryption, sha256WithRSAEncryption, md5WithRSAEncryption, et cetera
     def signature_algorithm
       @cert.signature_algorithm
-    end
-
-    # Returns key algorithm (RSA, DSA, EC)
-    #
-    # @return [Symbol] value of the key algorithm. :rsa, :dsa, :ec
-    def key_algorithm
-      if self.rsa?
-        :rsa
-      elsif self.dsa?
-        :dsa
-      elsif self.ec?
-        :ec
-      end
-    end
-
-    # Writes the Cert into the PEM format
-    # @param [String, #write] filename_or_io Either a string of the path for
-    #  the file that you'd like to write, or an IO-like object.
-    def write_pem(filename_or_io)
-      write_data(filename_or_io, @cert.to_pem)
-    end
-
-    # Writes the Cert into the DER format
-    # @param [String, #write] filename_or_io Either a string of the path for
-    #  the file that you'd like to write, or an IO-like object.
-    def write_der(filename_or_io)
-      write_data(filename_or_io, @cert.to_der)
     end
 
     # Writes cert and key into PKCS12 format using OpenSSL defaults for encryption (des3)
@@ -425,6 +335,11 @@ module R509
         end
         @key = key
       end
+    end
+
+    # Returns the proper instance variable
+    def internal_obj
+      @cert
     end
 
   end

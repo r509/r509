@@ -174,7 +174,7 @@ describe R509::SPKI do
   end
   it "returns error when asking for curve_name on non-ec" do
     spki = R509::SPKI.new( :spki => @spki )
-    expect { spki.curve_name }.to raise_error(R509::R509Error,'Curve name is only available with EC SPKIs')
+    expect { spki.curve_name }.to raise_error(R509::R509Error,'Curve name is only available with EC')
   end
   it "returns RSA key algorithm for RSA" do
     spki = R509::SPKI.new( :spki => @spki )

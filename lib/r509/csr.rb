@@ -1,6 +1,7 @@
 require 'openssl'
 require 'r509/exceptions'
 require 'r509/io_helpers'
+require 'r509/helpers'
 require 'r509/private_key'
 require 'r509/ec-hack'
 require 'r509/asn1'
@@ -9,6 +10,7 @@ module R509
   # The primary certificate signing request object
   class CSR
     include R509::IOHelpers
+    include R509::Helpers
 
     attr_reader :san, :key, :subject, :req, :attributes, :message_digest
     # @option opts [String,OpenSSL::X509::Request] :csr a csr
@@ -46,13 +48,8 @@ module R509
       @bit_strength = opts[:bit_strength] || 2048
       @curve_name = opts[:curve_name] || "secp384r1"
 
-      if opts.has_key?(:key)
-        if opts[:key].kind_of?(R509::PrivateKey)
-          @key = opts[:key]
-        else
-          @key = R509::PrivateKey.new(:key => opts[:key])
-        end
-      end
+      @key = load_private_key(opts)
+
 
       @type = opts[:type] || :rsa
       if not [:rsa,:dsa,:ec].include?(@type) and @key.nil?
@@ -119,82 +116,7 @@ module R509
       end
     end
 
-    # Converts the CSR into the PEM format
-    #
-    # @return [String] the CSR converted into PEM format.
-    def to_pem
-      @req.to_pem
-    end
-
     alias :to_s :to_pem
-
-    # Converts the CSR into the DER format
-    #
-    # @return [String] the CSR converted into DER format.
-    def to_der
-      @req.to_der
-    end
-
-    # Writes the CSR into the PEM format
-    #
-    # @param [String, #write] filename_or_io Either a string of the path for
-    #  the file that you'd like to write, or an IO-like object.
-    def write_pem(filename_or_io)
-      write_data(filename_or_io, @req.to_pem)
-    end
-
-    # Writes the CSR into the DER format
-    #
-    # @param [String, #write] filename_or_io Either a string of the path for
-    #  the file that you'd like to write, or an IO-like object.
-    def write_der(filename_or_io)
-      write_data(filename_or_io, @req.to_der)
-    end
-
-    # Returns whether the public key is RSA
-    #
-    # @return [Boolean] true if the public key is RSA, false otherwise
-    def rsa?
-      @req.public_key.kind_of?(OpenSSL::PKey::RSA)
-    end
-
-    # Returns whether the public key is DSA
-    #
-    # @return [Boolean] true if the public key is DSA, false otherwise
-    def dsa?
-      @req.public_key.kind_of?(OpenSSL::PKey::DSA)
-    end
-
-    # Returns whether the public key is EC
-    #
-    # @return [Boolean] true if the public key is EC, false otherwise
-    def ec?
-      @req.public_key.kind_of?(OpenSSL::PKey::EC)
-    end
-
-    # Returns the bit strength of the key used to create the CSR
-    # @return [Integer] the integer bit strength.
-    def bit_strength
-      if self.rsa?
-        return @req.public_key.n.num_bits
-      elsif self.dsa?
-        return @req.public_key.p.num_bits
-      elsif self.ec?
-        raise R509::R509Error, 'Bit strength is not available for EC at this time.'
-      end
-    end
-
-    # Returns the short name of the elliptic curve used to generate the public key
-    # if the key is EC. If not, raises an error.
-    #
-    # @return [String] elliptic curve name
-    def curve_name
-      if self.ec?
-        self.public_key.group.curve_name
-      else
-        raise R509::R509Error, 'Curve name is only available with EC CSRs'
-      end
-    end
 
     # Returns subject component
     #
@@ -306,6 +228,9 @@ module R509
       end
     end
 
+    def internal_obj
+      @req
+    end
 
   end
 end

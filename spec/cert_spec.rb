@@ -269,7 +269,7 @@ describe R509::Cert do
   end
   it "returns an error for curve_name for DSA/RSA" do
     cert = R509::Cert.new(:cert => @cert)
-    expect { cert.curve_name }.to raise_error(R509::R509Error, 'Curve name is only available with EC certs')
+    expect { cert.curve_name }.to raise_error(R509::R509Error, 'Curve name is only available with EC')
   end
   it "checks dsa?" do
     cert = R509::Cert.new(:cert => @cert6)
