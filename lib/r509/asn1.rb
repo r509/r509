@@ -183,22 +183,25 @@ module R509
       # @return [Hash] conf section and name serialized for OpenSSL extension creation
       def serialize_name
         if self.type == :directoryName
-          conf_name = OpenSSL::Random.random_bytes(16).unpack("H*")[0]
-          conf = []
-          conf << "[#{conf_name}]"
-          @value.to_a.each do |el|
-            conf << "#{el[0]}=#{el[1]}"
-          end
-          conf = conf.join("\n")
-          extension_string = self.serial_prefix + ":" + conf_name
+          return serialize_directory_name
         else
-          conf = nil
           extension_string = self.serial_prefix + ":" + self.value
+          return { :conf => nil, :extension_string => extension_string }
         end
-        {
-          :conf => conf,
-          :extension_string => extension_string
-        }
+      end
+
+      private
+      # @private
+      # Serializes directory names.
+      def serialize_directory_name
+        conf_name = OpenSSL::Random.random_bytes(16).unpack("H*")[0]
+        conf = ["[#{conf_name}]"]
+        @value.to_a.each do |el|
+          conf << "#{el[0]}=#{el[1]}"
+        end
+        conf = conf.join("\n")
+        extension_string = self.serial_prefix + ":" + conf_name
+        { :conf => conf, :extension_string => extension_string }
       end
     end
 

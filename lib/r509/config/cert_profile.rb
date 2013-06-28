@@ -48,9 +48,9 @@ module R509
         @name_constraints = validate_name_constraints opts[:name_constraints]
         @ocsp_no_check = (opts[:ocsp_no_check] == true or opts[:ocsp_no_check] == "true")?true:false
         @subject_item_policy = validate_subject_item_policy opts[:subject_item_policy]
-        @ocsp_location = validate_ocsp_location(opts[:ocsp_location])
-        @ca_issuers_location = validate_ca_issuers_location(opts[:ca_issuers_location])
-        @cdp_location = validate_cdp_location(opts[:cdp_location])
+        @ocsp_location = validate_location("ocsp_location",opts[:ocsp_location])
+        @ca_issuers_location = validate_location("ca_issuers_location",opts[:ca_issuers_location])
+        @cdp_location = validate_location("cdp_location",opts[:cdp_location])
         @default_md = validate_md(opts[:default_md] || R509::MessageDigest::DEFAULT_MD)
         @allowed_mds = validate_allowed_mds(opts[:allowed_mds])
       end

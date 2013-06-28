@@ -194,20 +194,17 @@ module R509
 
     # @return [Array] array of GeneralName objects
     def parse_san_attribute_from_csr(req)
-      san = nil
-      set = nil
       req.attributes.each do |attribute|
         if attribute.oid == 'extReq'
           set = OpenSSL::ASN1.decode attribute.value
           extensions = set.value[0].value.collect{|asn1ext| OpenSSL::X509::Extension.new(asn1ext) }
           r509_extensions = R509::Cert::Extensions.wrap_openssl_extensions( extensions )
           if not r509_extensions[R509::Cert::Extensions::SubjectAlternativeName].nil?
-            san = r509_extensions[R509::Cert::Extensions::SubjectAlternativeName].general_names
+            @san = r509_extensions[R509::Cert::Extensions::SubjectAlternativeName].general_names
           end
           break
         end
       end
-      @san = san
     end
 
     def add_san_extension(san_names)

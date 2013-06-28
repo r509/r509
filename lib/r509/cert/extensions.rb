@@ -633,7 +633,7 @@ module R509
             aia = []
             aia_conf = []
 
-            validate_ocsp_location(arg[:ocsp_location])
+            validate_location('ocsp_location',arg[:ocsp_location])
             if not arg[:ocsp_location].nil?
               gns = R509::ASN1.general_name_parser(arg[:ocsp_location])
               gns.names.each do |ocsp|
@@ -643,7 +643,7 @@ module R509
               end
             end
 
-            validate_ca_issuers_location(arg[:ca_issuers_location])
+            validate_location('ca_issuers_location',arg[:ca_issuers_location])
             if not arg[:ca_issuers_location].nil?
               gns = R509::ASN1.general_name_parser(arg[:ca_issuers_location])
               gns.names.each do |ca_issuers|
@@ -704,7 +704,7 @@ module R509
         # @option arg :critical [Boolean] (false)
         def initialize(arg)
           if arg.kind_of?(Hash)
-            validate_cdp_location(arg[:cdp_location])
+            validate_location('cdp_location',arg[:cdp_location])
             serialize = R509::ASN1.general_name_parser(arg[:cdp_location]).serialize_names
             ef = OpenSSL::X509::ExtensionFactory.new
             ef.config = OpenSSL::Config.parse(serialize[:conf])
@@ -1016,26 +1016,17 @@ module R509
             validate_name_constraints(arg)
             nc_data = []
             nc_conf = []
-            if not arg[:permitted].nil?
-              gns = R509::ASN1::GeneralNames.new
-              arg[:permitted].each do |p|
-                gns.create_item(:type => p[:type], :value => p[:value])
-              end
-              gns.names.each do |permitted|
-                serialize = permitted.serialize_name
-                nc_data.push "permitted;#{serialize[:extension_string]}"
-                nc_conf.push serialize[:conf]
-              end
-            end
-            if not arg[:excluded].nil?
-              gns = R509::ASN1::GeneralNames.new
-              arg[:excluded].each do |p|
-                gns.create_item(:type => p[:type], :value => p[:value])
-              end
-              gns.names.each do |excluded|
-                serialize = excluded.serialize_name
-                nc_data.push "excluded;#{serialize[:extension_string]}"
-                nc_conf.push serialize[:conf]
+            [:permitted,:excluded].each do |permit_exclude|
+              if not arg[permit_exclude].nil?
+                gns = R509::ASN1::GeneralNames.new
+                arg[permit_exclude].each do |p|
+                  gns.create_item(:type => p[:type], :value => p[:value])
+                end
+                gns.names.each do |name|
+                  serialize = name.serialize_name
+                  nc_data.push "#{permit_exclude.to_s};#{serialize[:extension_string]}"
+                  nc_conf.push serialize[:conf]
+                end
               end
             end
 
@@ -1064,6 +1055,7 @@ module R509
             end
           end
         end
+
       end
 
 

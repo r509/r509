@@ -179,25 +179,9 @@ module R509::ValidationMixin
   end
 
   # @private
-  def validate_cdp_location(location)
+  def validate_location(type,location)
     if not location.nil? and not (location.kind_of?(Array) or location.kind_of?(R509::ASN1::GeneralNames))
-      raise ArgumentError, "cdp_location must be an array or R509::ASN1::GeneralNames object if provided"
-    end
-    location
-  end
-
-  # @private
-  def validate_ocsp_location(location)
-    if not location.nil? and not (location.kind_of?(Array) or location.kind_of?(R509::ASN1::GeneralNames))
-      raise ArgumentError, "ocsp_location must be an array or R509::ASN1::GeneralNames object if provided"
-    end
-    location
-  end
-
-  # @private
-  def validate_ca_issuers_location(location)
-    if not location.nil? and not (location.kind_of?(Array) or location.kind_of?(R509::ASN1::GeneralNames))
-      raise ArgumentError, "ca_issuers_location must be an array or R509::ASN1::GeneralNames object if provided"
+      raise ArgumentError, "#{type} must be an array or R509::ASN1::GeneralNames object if provided"
     end
     location
   end
