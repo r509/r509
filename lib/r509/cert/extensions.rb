@@ -633,23 +633,20 @@ module R509
             aia = []
             aia_conf = []
 
-            validate_location('ocsp_location',arg[:ocsp_location])
-            if not arg[:ocsp_location].nil?
-              gns = R509::ASN1.general_name_parser(arg[:ocsp_location])
-              gns.names.each do |ocsp|
-                serialize = ocsp.serialize_name
-                aia.push "OCSP;#{serialize[:extension_string]}"
-                aia_conf.push serialize[:conf]
-              end
-            end
+            locations = [
+              { :key => :ocsp_location, :short_name => 'OCSP' },
+              { :key => :ca_issuers_location, :short_name => 'caIssuers' }
+            ]
 
-            validate_location('ca_issuers_location',arg[:ca_issuers_location])
-            if not arg[:ca_issuers_location].nil?
-              gns = R509::ASN1.general_name_parser(arg[:ca_issuers_location])
-              gns.names.each do |ca_issuers|
-                serialize = ca_issuers.serialize_name
-                aia.push "caIssuers;#{serialize[:extension_string]}"
-                aia_conf.push serialize[:conf]
+            locations.each do |pair|
+              validate_location(pair[:key].to_s,arg[pair[:key]])
+              if not arg[pair[:key]].nil?
+                gns = R509::ASN1.general_name_parser(arg[pair[:key]])
+                gns.names.each do |name|
+                  serialize = name.serialize_name
+                  aia.push "#{pair[:short_name]};#{serialize[:extension_string]}"
+                  aia_conf.push serialize[:conf]
+                end
               end
             end
 
