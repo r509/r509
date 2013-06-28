@@ -145,7 +145,7 @@ describe R509::Cert do
     sio = StringIO.new
     sio.set_encoding("BINARY") if sio.respond_to?(:set_encoding)
     cert.write_pem(sio)
-    sio.string.should == @cert + "\n"
+    sio.string.should == @cert
   end
   it "writes to der" do
     cert = R509::Cert.new(:cert => @cert)
