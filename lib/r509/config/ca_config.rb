@@ -172,22 +172,11 @@ module R509
 
         ca_cert = self.load_ca_cert(conf['ca_cert'],ca_root_path)
 
-        if conf.has_key?("ocsp_cert")
-          ocsp_cert = self.load_ca_cert(conf['ocsp_cert'],ca_root_path)
-        end
+        ocsp_cert = self.load_ca_cert(conf['ocsp_cert'],ca_root_path)
 
-        if conf.has_key?("crl_cert")
-          crl_cert = self.load_ca_cert(conf['crl_cert'],ca_root_path)
-        end
+        crl_cert = self.load_ca_cert(conf['crl_cert'],ca_root_path)
 
-        ocsp_chain = []
-        if conf.has_key?("ocsp_chain")
-          ocsp_chain_data = read_data(ca_root_path+conf["ocsp_chain"])
-          cert_regex = /-----BEGIN CERTIFICATE-----.+?-----END CERTIFICATE-----/m
-          ocsp_chain_data.scan(cert_regex) do |cert|
-            ocsp_chain.push(OpenSSL::X509::Certificate.new(cert))
-          end
-        end
+        ocsp_chain = build_ocsp_chain(conf['ocsp_chain'],ca_root_path)
 
         opts = {
           :ca_cert => ca_cert,
@@ -257,6 +246,7 @@ module R509
       private
 
       def self.load_ca_cert(ca_cert_hash,ca_root_path)
+        return nil if ca_cert_hash.nil?
         if ca_cert_hash.has_key?('engine')
           ca_cert = self.load_with_engine(ca_cert_hash,ca_root_path)
         end
@@ -341,6 +331,18 @@ module R509
         if not cert.nil? and not cert.has_private_key?
           raise ArgumentError, ":#{kind} must contain a private key, not just a certificate"
         end
+      end
+
+      def self.build_ocsp_chain(ocsp_chain_path,ca_root_path)
+        ocsp_chain = []
+        if not ocsp_chain_path.nil?
+          ocsp_chain_data = read_data(ca_root_path+ocsp_chain_path)
+          cert_regex = /-----BEGIN CERTIFICATE-----.+?-----END CERTIFICATE-----/m
+          ocsp_chain_data.scan(cert_regex) do |cert|
+            ocsp_chain.push(OpenSSL::X509::Certificate.new(cert))
+          end
+        end
+        ocsp_chain
       end
 
     end
