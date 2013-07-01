@@ -19,13 +19,11 @@ module R509
       OpenSSL::ASN1.decode(asn.entries.last.value).value
     end
 
-    # @param [Array] names An array of strings. Can be dNSName, iPAddress, URI, or rfc822Name.
+    # @param [Array,R509::ASN1::GeneralNames] names An array of strings. Can be dNSName, iPAddress, URI, or rfc822Name.
     #   You can also supply a directoryName, but this must be an R509::Subject or array of arrays
     # @return [R509::ASN1::GeneralNames]
     def self.general_name_parser(names)
-      if names.nil?
-        return nil
-      elsif names.kind_of?(R509::ASN1::GeneralNames)
+      if names.nil? or names.kind_of?(R509::ASN1::GeneralNames)
         return names
       elsif not names.kind_of?(Array)
         raise ArgumentError, "You must supply an array or existing R509::ASN1 GeneralNames object to general_name_parser"
@@ -95,18 +93,23 @@ module R509
           when 6 then @value = value
           when 7
             if value.size == 4 or value.size == 16
-              ip = IPAddr.new_ntoh(value)
-              @value = ip.to_s
+              @value = parse_ip(value)
             elsif value.size == 8 #IPv4 with netmask
-              ip = IPAddr.new_ntoh(value[0,4])
-              netmask = IPAddr.new_ntoh(value[4,4])
-              @value = ip.to_s + "/" + netmask.to_s
+              @value = parse_ip(value[0,4],value[4,4])
             elsif value.size == 32 #IPv6 with netmask
-              ip = IPAddr.new_ntoh(value[0,16])
-              netmask = IPAddr.new_ntoh(value[16,16])
-              @value = ip.to_s + "/" + netmask.to_s
+              @value = parse_ip(value[0,16],value[16,16])
             end
           end
+        end
+      end
+
+      def parse_ip(value,mask=nil)
+        ip = IPAddr.new_ntoh(value)
+        if mask.nil?
+          return ip.to_s
+        else
+          netmask = IPAddr.new_ntoh(mask)
+          return ip.to_s + "/" + netmask.to_s
         end
       end
 
