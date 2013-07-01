@@ -13,9 +13,9 @@ module R509::ValidationMixin
 
   # @private
   # validates key usage array
-  def validate_key_usage(ku)
+  def validate_usage(ku,type)
     if not ku.nil? and not ku.kind_of?(Array)
-      raise ArgumentError, "key_usage must be an array of strings (see README)"
+      raise ArgumentError, "#{type} must be an array of strings (see README)"
     end
     ku
   end
@@ -56,16 +56,6 @@ module R509::ValidationMixin
       end
       value
   end
-
-  # @private
-  # validates extended key usage array
-  def validate_extended_key_usage(eku)
-    if not eku.nil? and not eku.kind_of?(Array)
-      raise ArgumentError, "extended_key_usage must be an array of strings (see README)"
-    end
-    eku
-  end
-
 
   # @private
   # validates the structure of the certificate policies array

@@ -40,8 +40,8 @@ module R509
       # @option opts [Array,R509::ASN1::GeneralNames] :ca_issuers_location
       def initialize(opts = {})
         @basic_constraints = validate_basic_constraints opts[:basic_constraints]
-        @key_usage = validate_key_usage opts[:key_usage]
-        @extended_key_usage = validate_extended_key_usage opts[:extended_key_usage]
+        @key_usage = validate_usage(opts[:key_usage],'key_usage')
+        @extended_key_usage = validate_usage(opts[:extended_key_usage],'extended_key_usage')
         @certificate_policies = validate_certificate_policies opts[:certificate_policies]
         @inhibit_any_policy = validate_inhibit_any_policy opts[:inhibit_any_policy]
         @policy_constraints = validate_policy_constraints opts[:policy_constraints]
