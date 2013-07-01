@@ -18,7 +18,7 @@ module R509
     # @option opts [String] :curve_name ("secp384r1") Only used if :type is :ec
     # @option opts [Integer] :bit_strength (2048) Only used if :type is :rsa or :dsa
     # @option opts [String] :message_digest Optional digest. sha1, sha224, sha256, sha384, sha512, md5. Defaults to sha1
-    # @option opts [Array,R509::ASN1::GeneralNames] :san_names List of domains, IPs, email addresses, or URIs to encode as subjectAltNames. The type is determined from the structure of the strings via the R509::ASN1.general_name_parser method. You can also pass an explicit R509::ASN1::GeneralNames object
+    # @option opts [Array,R509::ASN1::GeneralNames] :san_names List of domains, IPs, email addresses, or URIs to encode as subjectAltNames. The type is determined from the structure of the strings via the R509::ASN1.general_name_parser method. You can also pass an explicit R509::ASN1::GeneralNames object. Parsed names will be uniqued, but a GeneralNames object will not be touched.
     # @option opts [R509::Subject,Array,OpenSSL::X509::Name] :subject array of subject items
     # @option opts [R509::PrivateKey,String] :key optional private key to supply. either an unencrypted PEM/DER string or an R509::PrivateKey object (use the latter if you need password/hardware support)
     # @example Generate a 4096-bit RSA key + CSR
@@ -57,7 +57,7 @@ module R509
       end
 
       if opts.has_key?(:subject)
-        san_names = R509::ASN1.general_name_parser(opts[:san_names] || [])
+        san_names = R509::ASN1.general_name_parser(opts[:san_names])
         create_request(opts[:subject], san_names) #sets @req
       elsif opts.has_key?(:csr)
         if opts.has_key?(:san_names)
@@ -189,7 +189,6 @@ module R509
       end
       @req.public_key = @key.public_key
       add_san_extension(san_names)
-      parse_san_attribute_from_csr(@req)
     end
 
     # @return [Array] array of GeneralName objects
@@ -208,14 +207,9 @@ module R509
     end
 
     def add_san_extension(san_names)
-      if not san_names.nil? and not san_names.names.empty?
-        names = san_names.names.uniq
-        general_names = R509::ASN1::GeneralNames.new
-        names.each do |domain|
-          general_names.add_item(domain)
-        end
+      if san_names.kind_of?(R509::ASN1::GeneralNames) and not san_names.names.empty?
         ef = OpenSSL::X509::ExtensionFactory.new
-        serialized = general_names.serialize_names
+        serialized = san_names.serialize_names
         ef.config = OpenSSL::Config.parse(serialized[:conf])
         ex = []
         ex << ef.create_extension("subjectAltName", serialized[:extension_string])

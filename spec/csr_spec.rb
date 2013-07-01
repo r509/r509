@@ -121,6 +121,13 @@ describe R509::CSR do
     csr = R509::CSR.new( :bit_strength => 512, :subject => [['CN','test2345.com']], :san_names => ["test2.local","test.local","test.local"] )
     csr.san.dns_names.should == ["test2.local", "test.local"]
   end
+  it "existing GeneralNames object passed to CSR should be used" do
+    gn = R509::ASN1::GeneralNames.new
+    gn.create_item(:type => 'dNSName', :value => '127.0.0.1')
+    gn.create_item(:type => 'dNSName', :value => '127.0.0.2')
+    csr = R509::CSR.new( :bit_strength => 512, :subject => [['CN','test2345.com']], :san_names => gn )
+    csr.san.dns_names.should == ["127.0.0.1", "127.0.0.2"]
+  end
   it "san is nil when there are no SAN names" do
     csr = R509::CSR.new( :subject => [['CN','langui.sh'],['emailAddress','ca@langui.sh']], :bit_strength => 512)
     csr.san.nil?.should == true

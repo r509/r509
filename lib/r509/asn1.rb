@@ -27,8 +27,11 @@ module R509
         return nil
       elsif names.kind_of?(R509::ASN1::GeneralNames)
         return names
+      elsif not names.kind_of?(Array)
+        raise ArgumentError, "You must supply an array or existing R509::ASN1 GeneralNames object to general_name_parser"
       end
       general_names = R509::ASN1::GeneralNames.new
+      names.uniq!
       names.map do |domain|
         if !(IPAddr.new(domain.strip) rescue nil).nil?
           ip = IPAddr.new(domain.strip)

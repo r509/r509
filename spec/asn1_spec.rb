@@ -80,6 +80,10 @@ describe R509::ASN1 do
       general_names.names.size.should == 0
     end
 
+    it "errors on non-array" do
+      expect { R509::ASN1.general_name_parser("string!") }.to raise_error(ArgumentError, "You must supply an array or existing R509::ASN1 GeneralNames object to general_name_parser")
+    end
+
   end
 end
 
