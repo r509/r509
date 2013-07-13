@@ -128,13 +128,13 @@ cert = R509::Cert.new(
 Generate a 1536-bit RSA key
 
 ```ruby
-key = R509::PrivateKey.new(:type => :rsa, :bit_strength => 1536)
+key = R509::PrivateKey.new(:type => "RSA", :bit_strength => 1536)
 ```
 
 Encrypt the private key
 
 ```ruby
-key = R509::PrivateKey.new(:type => :rsa, :bit_strength => 2048)
+key = R509::PrivateKey.new(:type => "RSA", :bit_strength => 2048)
 encrypted_pem = key.to_encrypted_pem("aes256","my-password")
 # or write it to disk
 key.write_encrypted_pem("/tmp/path","aes256","my-password")
@@ -158,7 +158,7 @@ You can then use this key for signing.
 To generate a 2048-bit RSA SPKI
 
 ```ruby
-key = R509::PrivateKey.new(:type => :rsa, :bit_strength => 1024)
+key = R509::PrivateKey.new(:type => "RSA", :bit_strength => 1024)
 spki = R509::SPKI.new(:key => key)
 ```
 
@@ -381,7 +381,7 @@ cert = ca.sign(
 Sign an SPKI/SPKAC object
 
 ```ruby
-key = R509::PrivateKey.new(:type => :rsa, :bit_strength => 2048)
+key = R509::PrivateKey.new(:type => "RSA", :bit_strength => 2048)
 spki = R509::SPKI.new(:key => key)
 # SPKI objects do not contain subject or san name data so it must be specified
 subject = R509::Subject.new

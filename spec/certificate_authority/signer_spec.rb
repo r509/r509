@@ -212,7 +212,7 @@ describe R509::CertificateAuthority::Signer do
     before :all do
       test_ca_ec = R509::Config::CAConfig.from_yaml("test_ca_ec", File.read("#{File.dirname(__FILE__)}/../fixtures/config_test_ec.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/../fixtures"})
       @ca = R509::CertificateAuthority::Signer.new(test_ca_ec)
-      @csr = R509::CSR.new(:subject => [['CN','elliptic curves']], :type => :ec)
+      @csr = R509::CSR.new(:subject => [['CN','elliptic curves']], :type => "ec")
     end
 
     it_validates "signing", false
@@ -223,7 +223,7 @@ describe R509::CertificateAuthority::Signer do
     before :all do
       test_ca_ec = R509::Config::CAConfig.from_yaml("test_ca_ec", File.read("#{File.dirname(__FILE__)}/../fixtures/config_test_ec.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/../fixtures"})
       @ca = R509::CertificateAuthority::Signer.new(test_ca_ec)
-      private_key = R509::PrivateKey.new(:type => :ec)
+      private_key = R509::PrivateKey.new(:type => "ec")
       @spki = R509::SPKI.new(:key => private_key)
     end
 
@@ -235,7 +235,7 @@ describe R509::CertificateAuthority::Signer do
       test_ca_dsa = R509::Config::CAConfig.from_yaml("test_ca_dsa", File.read("#{File.dirname(__FILE__)}/../fixtures/config_test_dsa.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/../fixtures"})
 
       @ca = R509::CertificateAuthority::Signer.new(test_ca_dsa)
-      @csr = R509::CSR.new(:subject => [['CN','elliptic curves']], :type => :dsa, :bit_strength => 512)
+      @csr = R509::CSR.new(:subject => [['CN','elliptic curves']], :type => "dsa", :bit_strength => 512)
     end
 
     it_validates "signing", false
@@ -246,7 +246,7 @@ describe R509::CertificateAuthority::Signer do
     before :all do
       test_ca_dsa = R509::Config::CAConfig.from_yaml("test_ca_dsa", File.read("#{File.dirname(__FILE__)}/../fixtures/config_test_dsa.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/../fixtures"})
       @ca = R509::CertificateAuthority::Signer.new(test_ca_dsa)
-      private_key = R509::PrivateKey.new(:type => :dsa, :bit_strength => 512)
+      private_key = R509::PrivateKey.new(:type => "dsa", :bit_strength => 512)
       @spki = R509::SPKI.new(:key => private_key)
     end
 

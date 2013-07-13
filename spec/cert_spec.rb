@@ -97,11 +97,11 @@ describe R509::Cert do
   end
   it "returns the RSA key algorithm" do
     cert = R509::Cert.new(:cert => @cert)
-    cert.key_algorithm.should == :rsa
+    cert.key_algorithm.should == "RSA"
   end
   it "returns the DSA key algorithm" do
     cert = R509::Cert.new(:cert => @cert6)
-    cert.key_algorithm.should == :dsa
+    cert.key_algorithm.should == "DSA"
   end
   it "returns list of san names when it is a san cert" do
     cert = R509::Cert.new(:cert => @cert_san)
@@ -370,7 +370,7 @@ describe R509::Cert do
     end
     it "returns the key algorithm" do
       cert = R509::Cert.new(:cert => @cert_ec)
-      cert.key_algorithm.should == :ec
+      cert.key_algorithm.should == "EC"
     end
   end
 
@@ -391,7 +391,7 @@ describe R509::Cert do
     end
     it "returns RSA key algorithm for RSA CSR" do
       cert = R509::Cert.new(:cert => @cert)
-      cert.key_algorithm.should == :rsa
+      cert.key_algorithm.should == "RSA"
     end
   end
 end

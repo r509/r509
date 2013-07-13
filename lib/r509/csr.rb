@@ -14,15 +14,15 @@ module R509
 
     attr_reader :san, :key, :subject, :req, :attributes, :message_digest
     # @option opts [String,OpenSSL::X509::Request] :csr a csr
-    # @option opts [Symbol] :type :rsa/:dsa/:ec required if not providing existing :csr. Defaults to :rsa
-    # @option opts [String] :curve_name ("secp384r1") Only used if :type is :ec
-    # @option opts [Integer] :bit_strength (2048) Only used if :type is :rsa or :dsa
+    # @option opts [String] :type Required if not providing existing :csr. Defaults to R509::PrivateKey::DEFAULT_TYPE. Allows R509::PrivateKey::KNOWN_TYPES.
+    # @option opts [String] :curve_name ("secp384r1") Only used if :type is EC
+    # @option opts [Integer] :bit_strength (2048) Only used if :type is RSA or DSA
     # @option opts [String] :message_digest Optional digest. sha1, sha224, sha256, sha384, sha512, md5. Defaults to sha1
     # @option opts [Array,R509::ASN1::GeneralNames] :san_names List of domains, IPs, email addresses, or URIs to encode as subjectAltNames. The type is determined from the structure of the strings via the R509::ASN1.general_name_parser method. You can also pass an explicit R509::ASN1::GeneralNames object. Parsed names will be uniqued, but a GeneralNames object will not be touched.
     # @option opts [R509::Subject,Array,OpenSSL::X509::Name] :subject array of subject items
     # @option opts [R509::PrivateKey,String] :key optional private key to supply. either an unencrypted PEM/DER string or an R509::PrivateKey object (use the latter if you need password/hardware support)
     # @example Generate a 4096-bit RSA key + CSR
-    #   :type => :rsa,
+    #   :type => "RSA",
     #   :bit_strength => 4096,
     #   :subject => [
     #     ['CN','somedomain.com'],
@@ -32,7 +32,7 @@ module R509
     #     ['C','US']
     #   ]
     # @example Generate an ECDSA key using the secp384r1 curve parameters + CSR and sign with SHA512
-    #   :type => :ec,
+    #   :type => "EC",
     #   :curve_name => 'secp384r1',
     #   :message_digest => 'sha512',
     #   :subject => [
@@ -42,18 +42,18 @@ module R509
       if not opts.kind_of?(Hash)
         raise ArgumentError, 'Must provide a hash of options'
       end
-        if opts.has_key?(:subject) and opts.has_key?(:csr)
+      if opts.has_key?(:subject) and opts.has_key?(:csr)
         raise ArgumentError, "You must provide :subject or :csr, not both"
       end
-      @bit_strength = opts[:bit_strength] || 2048
-      @curve_name = opts[:curve_name] || "secp384r1"
+      @bit_strength = opts[:bit_strength] || R509::PrivateKey::DEFAULT_STRENGTH
+      @curve_name = opts[:curve_name] || R509::PrivateKey::DEFAULT_CURVE
 
       @key = load_private_key(opts)
 
 
-      @type = opts[:type] || :rsa
-      if not [:rsa,:dsa,:ec].include?(@type) and @key.nil?
-        raise ArgumentError, 'Must provide :rsa, :dsa, or :ec as type when key is nil'
+      @type = opts[:type] || R509::PrivateKey::DEFAULT_TYPE
+      if not R509::PrivateKey::KNOWN_TYPES.include?(@type.upcase) and @key.nil?
+        raise ArgumentError, "Must provide #{R509::PrivateKey::KNOWN_TYPES.join(", ")} as type when key is nil"
       end
 
       if opts.has_key?(:subject)
@@ -139,14 +139,14 @@ module R509
 
     # Returns key algorithm (RSA/DSA/EC)
     #
-    # @return [Symbol] value of the key algorithm. :rsa, :dsa, :ec
+    # @return [String] value of the key algorithm. RSA, DSA, or EC
     def key_algorithm
       if @req.public_key.kind_of? OpenSSL::PKey::RSA then
-        :rsa
+        "RSA"
       elsif @req.public_key.kind_of? OpenSSL::PKey::DSA then
-        :dsa
+        "DSA"
       elsif @req.public_key.kind_of? OpenSSL::PKey::EC then
-        :ec
+        "EC"
       end
     end
 

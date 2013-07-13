@@ -71,7 +71,7 @@ describe R509::CSR do
     expect { R509::CSR.new(:subject => [['CN','error.com']], :csr => @csr) }.to raise_error(ArgumentError,'You must provide :subject or :csr, not both')
   end
   it "raises an exception for not providing valid type when key is nil" do
-    expect { R509::CSR.new(:subject => [['CN','error.com']], :type => :invalid_symbol) }.to raise_error(ArgumentError,'Must provide :rsa, :dsa, or :ec as type when key is nil')
+    expect { R509::CSR.new(:subject => [['CN','error.com']], :type => :invalid_symbol) }.to raise_error(ArgumentError,"Must provide #{R509::PrivateKey::KNOWN_TYPES.join(", ")} as type when key is nil")
   end
   it "raises an exception when you don't provide :subject or :csr" do
     expect { R509::CSR.new(:bit_strength => 1024) }.to raise_error(ArgumentError,'You must provide :subject or :csr')
@@ -88,7 +88,7 @@ describe R509::CSR do
     #see http://www.ruby-doc.org/stdlib-1.9.3/libdoc/openssl/rdoc/OpenSSL/PKey/DSA.html
   end
   it "changes the message_digest to DSS1 when creating a DSA key" do
-    csr = R509::CSR.new(:subject => [["CN","dsasigned.com"]], :type => :dsa, :bit_strength => 512)
+    csr = R509::CSR.new(:subject => [["CN","dsasigned.com"]], :type => "dsa", :bit_strength => 512)
     csr.message_digest.name.should == 'dss1'
     csr.signature_algorithm.should == 'dsaWithSHA1'
     #dss1 is actually the same as SHA1
@@ -100,7 +100,7 @@ describe R509::CSR do
     csr.verify_signature.should == true
   end
   it "signs a CSR properly when creating a DSA key" do
-    csr = R509::CSR.new(:subject => [["CN","dsasigned.com"]], :type => :dsa, :bit_strength => 512)
+    csr = R509::CSR.new(:subject => [["CN","dsasigned.com"]], :type => "dsa", :bit_strength => 512)
     csr.verify_signature.should == true
   end
   it "writes to pem" do
@@ -190,11 +190,11 @@ describe R509::CSR do
     end
     it "returns RSA key algorithm for RSA CSR" do
       csr = R509::CSR.new({ :csr => @csr })
-      csr.key_algorithm.should == :rsa
+      csr.key_algorithm.should == "RSA"
     end
     it "returns DSA key algorithm for DSA CSR" do
       csr = R509::CSR.new({ :csr => @csr_dsa })
-      csr.key_algorithm.should == :dsa
+      csr.key_algorithm.should == "DSA"
     end
     it "returns the public key" do
       #this is more complex than it should have to be. diff versions of openssl
@@ -299,11 +299,11 @@ describe R509::CSR do
       csr.curve_name.should == "secp384r1"
     end
     it "generates a CSR with default curve" do
-      csr = R509::CSR.new(:type => :ec, :subject => [["CN","ec-test.local"]])
+      csr = R509::CSR.new(:type => "EC", :subject => [["CN","ec-test.local"]])
       csr.curve_name.should == "secp384r1"
     end
     it "generates a CSR with explicit curve" do
-      csr = R509::CSR.new(:type => :ec, :curve_name => "sect283r1", :subject => [["CN","ec-test.local"]])
+      csr = R509::CSR.new(:type => "EC", :curve_name => "sect283r1", :subject => [["CN","ec-test.local"]])
       csr.curve_name.should == "sect283r1"
     end
     it "raises error on bit strength" do
@@ -312,7 +312,7 @@ describe R509::CSR do
     end
     it "returns the key algorithm" do
       csr = R509::CSR.new(:csr => @ec_csr2_pem)
-      csr.key_algorithm.should == :ec
+      csr.key_algorithm.should == "EC"
     end
     it "returns the public key" do
       csr = R509::CSR.new(:csr => @ec_csr2_pem)
@@ -324,7 +324,7 @@ describe R509::CSR do
       csr.ec?.should == true
     end
     it "sets alternate signature properly for EC" do
-      csr = R509::CSR.new(:message_digest => 'sha256', :type => :ec, :subject => [["CN","ec-signature-alg.test"]])
+      csr = R509::CSR.new(:message_digest => 'sha256', :type => "EC", :subject => [["CN","ec-signature-alg.test"]])
       csr.message_digest.name.should == 'sha256'
       csr.signature_algorithm.should == 'ecdsa-with-SHA256'
     end
@@ -347,7 +347,7 @@ describe R509::CSR do
     end
     it "returns RSA key algorithm for RSA CSR" do
       csr = R509::CSR.new({ :csr => @csr })
-      csr.key_algorithm.should == :rsa
+      csr.key_algorithm.should == "RSA"
     end
   end
 

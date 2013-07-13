@@ -46,12 +46,12 @@ describe R509::PrivateKey do
     @key_csr.should_not == nil
   end
   it "generates an RSA key at the default bit strength (2048)" do
-    private_key = R509::PrivateKey.new(:type => :rsa)
+    private_key = R509::PrivateKey.new(:type => "rsa")
     private_key.bit_strength.should == 2048
     private_key.key.n.to_i.to_s(2).size.should == 2048
   end
   it "generates an RSA key at a custom bit strength" do
-    private_key = R509::PrivateKey.new(:type => :rsa, :bit_strength => 512)
+    private_key = R509::PrivateKey.new(:type => "rsa", :bit_strength => 512)
     private_key.bit_strength.should == 512
     private_key.key.n.to_i.to_s(2).size.should == 512
   end
@@ -62,20 +62,20 @@ describe R509::PrivateKey do
     @dsa_key.should_not == nil
   end
   it "generates a DSA key at the default bit strength (2048)" do
-    private_key = R509::PrivateKey.new(:type => :dsa)
+    private_key = R509::PrivateKey.new(:type => "dsa")
     private_key.dsa?.should == true
     private_key.bit_strength.should == 2048
     private_key.key.p.to_i.to_s(2).size.should == 2048
   end
   it "generates a DSA key at a custom bit strength" do
-    private_key = R509::PrivateKey.new(:type => :dsa, :bit_strength => 512)
+    private_key = R509::PrivateKey.new(:type => "dsa", :bit_strength => 512)
     private_key.bit_strength.should == 512
     private_key.key.p.to_i.to_s(2).size.should == 512
   end
   it "has an exponent of 65537 for new RSA keys" do
     #this test actually checks ruby's underlying libs to make sure they're
     #doing what they're supposed to be doing.
-    private_key = R509::PrivateKey.new(:type => :rsa, :bit_strength => 512)
+    private_key = R509::PrivateKey.new(:type => "rsa", :bit_strength => 512)
     private_key.key.e.should == 65537
   end
   it "returns the public key" do
@@ -238,12 +238,12 @@ describe R509::PrivateKey do
     end
 
     it "generates an elliptic curve key using the default curve (secp384r1)" do
-      private_key = R509::PrivateKey.new(:type => :ec)
+      private_key = R509::PrivateKey.new(:type => "ec")
       private_key.curve_name.should == 'secp384r1'
     end
 
     it "generates an elliptic curve key using a specified curve" do
-      private_key = R509::PrivateKey.new(:type => :ec, :curve_name => 'sect283r1')
+      private_key = R509::PrivateKey.new(:type => "ec", :curve_name => 'sect283r1')
       private_key.curve_name.should == 'sect283r1'
     end
 

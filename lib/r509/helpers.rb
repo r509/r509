@@ -26,14 +26,14 @@ module R509
 
     # Returns key algorithm (RSA/DSA/EC)
     #
-    # @return [Symbol] value of the key algorithm.
+    # @return [String] value of the key algorithm.
     def key_algorithm
       if self.rsa?
-        :rsa
+        "RSA"
       elsif self.dsa?
-        :dsa
+        "DSA"
       elsif self.ec?
-        :ec
+        "EC"
       end
     end
 

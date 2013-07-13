@@ -20,9 +20,9 @@ shared_examples_for "create spki with private key" do
       spki.to_pem.should_not be_nil
       case
       when @key.rsa?
-        spki.signature_algorithm.should match /sha256/i
+        spki.signature_algorithm.should(match(/sha256/i))
       when @key.dsa?
-        spki.signature_algorithm.should match /sha1/i
+        spki.signature_algorithm.should(match(/sha1/i))
       end
       spki.verify_signature
     end
@@ -47,11 +47,11 @@ shared_examples_for "spki + private key" do
     spki = R509::SPKI.new( :spki => @spki, :key => @key )
     case
     when @key.rsa?
-      spki.signature_algorithm.should match /RSA/i
+      spki.signature_algorithm.should(match(/RSA/i))
     when @key.dsa?
-      spki.signature_algorithm.should match /DSA/i
+      spki.signature_algorithm.should(match(/DSA/i))
     when @key.ec?
-      spki.signature_algorithm.should match /ecdsa/i
+      spki.signature_algorithm.should(match(/ecdsa/i))
     end
   end
 
@@ -79,14 +79,14 @@ describe R509::SPKI do
   context "rsa" do
     context "no existing spki" do
       before :all do
-        @key = R509::PrivateKey.new(:type => :rsa, :bit_strength => 1024)
+        @key = R509::PrivateKey.new(:type => "rsa", :bit_strength => 1024)
       end
       include_examples "create spki with private key"
     end
     context "existing spki + private key" do
       before :all do
-        @key = R509::PrivateKey.new(:type => :rsa, :bit_strength => 512)
-        @key2 = R509::PrivateKey.new(:type => :rsa, :bit_strength => 512)
+        @key = R509::PrivateKey.new(:type => "rsa", :bit_strength => 512)
+        @key2 = R509::PrivateKey.new(:type => "rsa", :bit_strength => 512)
         @spki = R509::SPKI.new(:key => @key).to_pem
         @spki2 = R509::SPKI.new(:key => @key2).to_pem
       end
@@ -96,14 +96,14 @@ describe R509::SPKI do
   context "dsa" do
     context "no existing spki" do
       before :all do
-        @key = R509::PrivateKey.new(:type => :dsa, :bit_strength => 1024)
+        @key = R509::PrivateKey.new(:type => "dsa", :bit_strength => 1024)
       end
       include_examples "create spki with private key"
     end
     context "existing spki + private key" do
       before :all do
-        @key = R509::PrivateKey.new(:type => :dsa, :bit_strength => 512)
-        @key2 = R509::PrivateKey.new(:type => :dsa, :bit_strength => 512)
+        @key = R509::PrivateKey.new(:type => "dsa", :bit_strength => 512)
+        @key2 = R509::PrivateKey.new(:type => "dsa", :bit_strength => 512)
         @spki = R509::SPKI.new(:key => @key).to_pem
         @spki2 = R509::SPKI.new(:key => @key2).to_pem
       end
@@ -113,14 +113,14 @@ describe R509::SPKI do
   context "elliptic curve", :ec => true do
     context "no existing spki" do
       before :all do
-        @key = R509::PrivateKey.new(:type => :ec)
+        @key = R509::PrivateKey.new(:type => "EC")
       end
       include_examples "create spki with private key"
     end
     context "existing spki + private key" do
       before :all do
-        @key = R509::PrivateKey.new(:type => :ec)
-        @key2 = R509::PrivateKey.new(:type => :ec)
+        @key = R509::PrivateKey.new(:type => "ec")
+        @key2 = R509::PrivateKey.new(:type => "ec")
         @spki = R509::SPKI.new(:key => @key).to_pem
         @spki2 = R509::SPKI.new(:key => @key2).to_pem
       end
@@ -178,7 +178,7 @@ describe R509::SPKI do
   end
   it "returns RSA key algorithm for RSA" do
     spki = R509::SPKI.new( :spki => @spki )
-    spki.key_algorithm.should == :rsa
+    spki.key_algorithm.should == "RSA"
   end
   it "gets RSA bit strength" do
     spki = R509::SPKI.new( :spki => @spki )
@@ -199,7 +199,7 @@ describe R509::SPKI do
   end
   it "returns DSA key algorithm for DSA" do
     spki = R509::SPKI.new( :spki => @spki_dsa )
-    spki.key_algorithm.should == :dsa
+    spki.key_algorithm.should == "DSA"
   end
 
   context "elliptic curve", :ec => true do
@@ -217,7 +217,7 @@ describe R509::SPKI do
     end
     it "returns the key algorithm" do
       spki = R509::SPKI.new( :spki => @spki_ec )
-      spki.key_algorithm.should == :ec
+      spki.key_algorithm.should == "EC"
     end
     it "returns the public key" do
       spki = R509::SPKI.new( :spki => @spki_ec )
@@ -248,7 +248,7 @@ describe R509::SPKI do
     end
     it "returns RSA key algorithm for RSA CSR" do
       spki = R509::SPKI.new( :spki => @spki )
-      spki.key_algorithm.should == :rsa
+      spki.key_algorithm.should == "RSA"
     end
   end
 end

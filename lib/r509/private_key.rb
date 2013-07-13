@@ -7,9 +7,18 @@ module R509
   class PrivateKey
     include R509::IOHelpers
 
-    # @option opts [Symbol] :type :rsa/:dsa/:ec
-    # @option opts [String] :curve_name ("secp384r1") Only used if :type is :ec
-    # @option opts [Integer] :bit_strength (2048) Only used if :type is :rsa or :dsa.
+    # a list of key types
+    KNOWN_TYPES = ["RSA","DSA","EC"]
+    # the default type
+    DEFAULT_TYPE = "RSA"
+    # default bit length for DSA/RSA
+    DEFAULT_STRENGTH = 2048
+    # default curve name for EC
+    DEFAULT_CURVE = "secp384r1"
+
+    # @option opts [Symbol] :type Defaults to R509::PrivateKey::DEFAULT_TYPE. Allows R509::PrivateKey::KNOWN_TYPES.
+    # @option opts [String] :curve_name ("secp384r1") Only used if :type is EC
+    # @option opts [Integer] :bit_strength (2048) Only used if :type is RSA or DSA
     # @option opts [String] :password
     # @option opts [String,OpenSSL::PKey::RSA,OpenSSL::PKey::DSA,OpenSSL::PKey::EC] :key
     # @option opts [OpenSSL::Engine] :engine
@@ -51,19 +60,19 @@ module R509
           end
         end
       else
-        bit_strength = opts[:bit_strength] || 2048
-        type = opts[:type] || :rsa
-        case type
-        when :rsa
+        bit_strength = opts[:bit_strength] || DEFAULT_STRENGTH
+        type = opts[:type] || DEFAULT_TYPE
+        case type.upcase
+        when "RSA"
           @key = OpenSSL::PKey::RSA.new(bit_strength)
-        when :dsa
+        when "DSA"
           @key = OpenSSL::PKey::DSA.new(bit_strength)
-        when :ec
-          curve_name = opts[:curve_name] || "secp384r1"
+        when "EC"
+          curve_name = opts[:curve_name] || DEFAULT_CURVE
           @key = OpenSSL::PKey::EC.new(curve_name)
           @key.generate_key
         else
-          raise ArgumentError, 'Must provide :rsa, :dsa , or :ec as type when key or engine is nil'
+          raise ArgumentError, "Must provide #{KNOWN_TYPES.join(", ")} as type when key or engine is nil"
         end
       end
     end
