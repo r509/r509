@@ -237,13 +237,29 @@ describe R509::CRL::Administrator do
       :ca_cert => TestFixtures.test_ca_cert,
       :crl_list_file => nil
     )
-    expect { crl_admin = R509::CRL::Administrator.new(config) }.to_not raise_error
+    expect { R509::CRL::Administrator.new(config) }.to_not raise_error
   end
   it "sets validity via yaml" do
     crl_admin = R509::CRL::Administrator.new(@test_ca_config)
+    t = Time.at Time.now.to_i
+    Time.should_receive(:now).twice.and_return(t)
+    crl_admin.generate_crl
+    crl_admin.crl.next_update.should == (t.utc+168*3600) #default 168 hours (7 days)
+  end
+  it "has proper defaults for last_update and next_update" do
+    crl_admin = R509::CRL::Administrator.new(@test_ca_config)
     now = Time.at Time.now.to_i
     crl_admin.generate_crl
-    crl_admin.crl.next_update.should == (now+168*3600) #default 168 hours (7 days)
+    crl_admin.crl.last_update.should == now-@test_ca_config.crl_start_skew_seconds
+    crl_admin.crl.next_update.should == now+crl_admin.validity_hours*3600
+  end
+  it "takes custom last_update and next_update" do
+    crl_admin = R509::CRL::Administrator.new(@test_ca_config)
+    last = Time.at Time.now.to_i - 86400
+    nex = Time.at Time.now.to_i + 5
+    crl_admin.generate_crl(last,nex)
+    crl_admin.crl.last_update.should == last
+    crl_admin.crl.next_update.should == nex
   end
   it "writes crl list" do
     crl = R509::CRL::Administrator.new(@test_ca_config)

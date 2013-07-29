@@ -109,7 +109,7 @@ module R509
       # @param [Integer] serial number
       # @return [Hash] hash with :time and :reason
       def revoked_cert(serial)
-        revoked = @crl.revoked.find { |revoked| revoked.serial == serial }
+        revoked = @crl.revoked.find { |r| r.serial == serial }
         if revoked
           reason = get_reason(revoked)
           { :time => revoked.time, :reason => reason }
@@ -226,14 +226,17 @@ module R509
       end
 
       # Generate the CRL
+      # @param last_update [Time] the lastUpdate for the CRL
+      # @param next_update [Time] the nextUpdate for the CRL
       #
       # @return [String] PEM encoded signed CRL
-      def generate_crl
+      def generate_crl(last_update=Time.at(Time.now.to_i)-@start_skew_seconds,next_update=Time.at(Time.now)+@validity_hours*3600)
+        # Time.at(Time.now.to_i) removes sub-second precision. Subsecond precision is irrelevant
+        # for CRL update times and makes testing harder.
         crl = OpenSSL::X509::CRL.new
         crl.version = 1
-        now = Time.at Time.now.to_i
-        crl.last_update = now-@start_skew_seconds
-        crl.next_update = now+@validity_hours*3600
+        crl.last_update = last_update
+        crl.next_update = next_update
         crl.issuer = @config.crl_cert.subject.name
 
         self.revoked_certs.each do |serial, reason, revoke_time|
