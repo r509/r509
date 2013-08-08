@@ -34,10 +34,11 @@ describe R509::PrivateKey do
   it "generates a default 2048-bit RSA key when nothing is passed to the constructor" do
     private_key = R509::PrivateKey.new
     private_key.rsa?.should == true
+    private_key.bit_length.should == 2048
     private_key.bit_strength.should == 2048
   end
   it "defaults to RSA" do
-    private_key = R509::PrivateKey.new(:bit_strength=>1024)
+    private_key = R509::PrivateKey.new(:bit_length=>1024)
     private_key.key.kind_of?(OpenSSL::PKey::RSA).should == true
   end
   it "loads a pre-existing RSA key" do
@@ -45,14 +46,14 @@ describe R509::PrivateKey do
     private_key.to_pem.should == @key_csr
     @key_csr.should_not == nil
   end
-  it "generates an RSA key at the default bit strength (2048)" do
+  it "generates an RSA key at the default bit length (2048)" do
     private_key = R509::PrivateKey.new(:type => "rsa")
-    private_key.bit_strength.should == 2048
+    private_key.bit_length.should == 2048
     private_key.key.n.to_i.to_s(2).size.should == 2048
   end
-  it "generates an RSA key at a custom bit strength" do
-    private_key = R509::PrivateKey.new(:type => "rsa", :bit_strength => 512)
-    private_key.bit_strength.should == 512
+  it "generates an RSA key at a custom bit length" do
+    private_key = R509::PrivateKey.new(:type => "rsa", :bit_length => 512)
+    private_key.bit_length.should == 512
     private_key.key.n.to_i.to_s(2).size.should == 512
   end
   it "loads a pre-existing DSA key" do
@@ -61,21 +62,21 @@ describe R509::PrivateKey do
     private_key.key.to_pem.should == @dsa_key
     @dsa_key.should_not == nil
   end
-  it "generates a DSA key at the default bit strength (2048)" do
+  it "generates a DSA key at the default bit length (2048)" do
     private_key = R509::PrivateKey.new(:type => "dsa")
     private_key.dsa?.should == true
-    private_key.bit_strength.should == 2048
+    private_key.bit_length.should == 2048
     private_key.key.p.to_i.to_s(2).size.should == 2048
   end
-  it "generates a DSA key at a custom bit strength" do
-    private_key = R509::PrivateKey.new(:type => "dsa", :bit_strength => 512)
-    private_key.bit_strength.should == 512
+  it "generates a DSA key at a custom bit length" do
+    private_key = R509::PrivateKey.new(:type => "dsa", :bit_length => 512)
+    private_key.bit_length.should == 512
     private_key.key.p.to_i.to_s(2).size.should == 512
   end
   it "has an exponent of 65537 for new RSA keys" do
     #this test actually checks ruby's underlying libs to make sure they're
     #doing what they're supposed to be doing.
-    private_key = R509::PrivateKey.new(:type => "rsa", :bit_strength => 512)
+    private_key = R509::PrivateKey.new(:type => "rsa", :bit_length => 512)
     private_key.key.e.should == 65537
   end
   it "returns the public key" do
@@ -264,9 +265,9 @@ describe R509::PrivateKey do
       private_key.to_der.should == @ec_key_der
     end
 
-    it "returns error for bit_strength" do
+    it "returns error for bit_length" do
       private_key = R509::PrivateKey.new(:key => @ec_key_pem)
-      expect { private_key.bit_strength }.to raise_error(R509::R509Error,'Bit strength is not available for EC at this time.')
+      expect { private_key.bit_length }.to raise_error(R509::R509Error,'Bit length is not available for EC at this time.')
     end
 
 

@@ -19,8 +19,8 @@ end
 if opts[:interactive] == true or opts[:subject].nil? then
   if opts[:type].upcase == "RSA" or opts[:type].upcase == "DSA"
     print "CSR Bit Strength (2048):"
-    bit_strength = gets.chomp
-    bit_strength = (bit_strength.to_i > 0)? bit_strength.to_i : 2048
+    bit_length = gets.chomp
+    bit_length = (bit_length.to_i > 0)? bit_length.to_i : 2048
   elsif opts[:type].upcase == "EC"
     print "Curve Name (secp384r1):"
     curve_name = gets.chomp
@@ -76,8 +76,8 @@ if opts[:interactive] == true or opts[:subject].nil? then
   san_domains = gets.chomp.split(',').collect { |domain| domain.strip }
   csr = R509::CSR.new(
     :subject => subject,
-    :bit_strength => bit_strength,
-    :type => opts[:type].downcase.to_sym,
+    :bit_length => bit_length,
+    :type => opts[:type].upcase,
     :curve_name => curve_name,
     :san_names => san_domains,
     :message_digest => opts[:message_digest]
@@ -99,7 +99,7 @@ elsif not opts[:subject].nil?
   }
   csr = R509::CSR.new(
     :subject => subject,
-    :bit_strength => opts[:bits],
+    :bit_length => opts[:bits],
     :type => opts[:type].downcase.to_sym,
     :curve_name => opts[:curve_name],
     :message_digest => opts[:message_digest]

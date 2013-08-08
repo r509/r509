@@ -28,7 +28,7 @@ describe R509::CSR do
     expect { R509::CSR.new('invalid') }.to raise_error(ArgumentError, 'Must provide a hash of options')
   end
   it "key creation defaults to RSA when no type or key is passed" do
-    csr = R509::CSR.new(:subject => [['CN','testing.rsa']], :bit_strength => 1024)
+    csr = R509::CSR.new(:subject => [['CN','testing.rsa']], :bit_length => 1024)
     csr.rsa?.should == true
     csr.dsa?.should == false
     csr.ec?.should == false
@@ -46,19 +46,19 @@ describe R509::CSR do
     csr.to_pem.should match(/-----BEGIN CERTIFICATE REQUEST-----/)
   end
   it "returns true from #has_private_key? when private key is present" do
-    csr = R509::CSR.new(:bit_strength => 512, :subject => [['CN','private-key-check.com']])
+    csr = R509::CSR.new(:bit_length => 512, :subject => [['CN','private-key-check.com']])
     csr.has_private_key?.should == true
   end
   it "returns false from #has_private_key? when private key is not present" do
     csr = R509::CSR.new(:csr => @csr)
     csr.has_private_key?.should == false
   end
-  it "key creation defaults to 2048 when no bit strength or key is passed" do
+  it "key creation defaults to 2048 when no bit length or key is passed" do
     csr = R509::CSR.new(:subject => [['CN','testing2048.rsa']])
-    csr.bit_strength.should == 2048
+    csr.bit_length.should == 2048
   end
   it "creates a CSR when a key is provided" do
-    csr = R509::CSR.new(:key => @key3, :subject => [['CN','pregenerated.com']], :bit_strength => 1024)
+    csr = R509::CSR.new(:key => @key3, :subject => [['CN','pregenerated.com']], :bit_length => 1024)
     csr.to_pem.should match(/CERTIFICATE REQUEST/)
     #validate the CSR matches the key
     csr.req.verify(csr.key.public_key).should == true
@@ -74,7 +74,7 @@ describe R509::CSR do
     expect { R509::CSR.new(:subject => [['CN','error.com']], :type => :invalid_symbol) }.to raise_error(ArgumentError,"Must provide #{R509::PrivateKey::KNOWN_TYPES.join(", ")} as type when key is nil")
   end
   it "raises an exception when you don't provide :subject or :csr" do
-    expect { R509::CSR.new(:bit_strength => 1024) }.to raise_error(ArgumentError,'You must provide :subject or :csr')
+    expect { R509::CSR.new(:bit_length => 1024) }.to raise_error(ArgumentError,'You must provide :subject or :csr')
   end
   it "raises an exception if you provide a list of domains with an existing CSR" do
     expect { R509::CSR.new(:csr => @csr, :san_names => ['moredomainsiwanttoadd.com']) }.to raise_error(ArgumentError,'You can\'t add domains to an existing CSR')
@@ -88,7 +88,7 @@ describe R509::CSR do
     #see http://www.ruby-doc.org/stdlib-1.9.3/libdoc/openssl/rdoc/OpenSSL/PKey/DSA.html
   end
   it "changes the message_digest to DSS1 when creating a DSA key" do
-    csr = R509::CSR.new(:subject => [["CN","dsasigned.com"]], :type => "dsa", :bit_strength => 512)
+    csr = R509::CSR.new(:subject => [["CN","dsasigned.com"]], :type => "dsa", :bit_length => 512)
     csr.message_digest.name.should == 'dss1'
     csr.signature_algorithm.should == 'dsaWithSHA1'
     #dss1 is actually the same as SHA1
@@ -100,7 +100,7 @@ describe R509::CSR do
     csr.verify_signature.should == true
   end
   it "signs a CSR properly when creating a DSA key" do
-    csr = R509::CSR.new(:subject => [["CN","dsasigned.com"]], :type => "dsa", :bit_strength => 512)
+    csr = R509::CSR.new(:subject => [["CN","dsasigned.com"]], :type => "dsa", :bit_length => 512)
     csr.verify_signature.should == true
   end
   it "writes to pem" do
@@ -118,18 +118,18 @@ describe R509::CSR do
     sio.string.should == @csr_der
   end
   it "duplicate SAN names should be removed" do
-    csr = R509::CSR.new( :bit_strength => 512, :subject => [['CN','test2345.com']], :san_names => ["test2.local","test.local","test.local"] )
+    csr = R509::CSR.new( :bit_length => 512, :subject => [['CN','test2345.com']], :san_names => ["test2.local","test.local","test.local"] )
     csr.san.dns_names.should == ["test2.local", "test.local"]
   end
   it "existing GeneralNames object passed to CSR should be used" do
     gn = R509::ASN1::GeneralNames.new
     gn.create_item(:type => 'dNSName', :value => '127.0.0.1')
     gn.create_item(:type => 'dNSName', :value => '127.0.0.2')
-    csr = R509::CSR.new( :bit_strength => 512, :subject => [['CN','test2345.com']], :san_names => gn )
+    csr = R509::CSR.new( :bit_length => 512, :subject => [['CN','test2345.com']], :san_names => gn )
     csr.san.dns_names.should == ["127.0.0.1", "127.0.0.2"]
   end
   it "san is nil when there are no SAN names" do
-    csr = R509::CSR.new( :subject => [['CN','langui.sh'],['emailAddress','ca@langui.sh']], :bit_strength => 512)
+    csr = R509::CSR.new( :subject => [['CN','langui.sh'],['emailAddress','ca@langui.sh']], :bit_length => 512)
     csr.san.nil?.should == true
   end
   context "when initialized" do
@@ -142,15 +142,15 @@ describe R509::CSR do
   end
   context "when passing a subject array" do
     it "generates a matching CSR" do
-      csr = R509::CSR.new( :subject=> [['CN','langui.sh'],['ST','Illinois'],['L','Chicago'],['C','US'],['emailAddress','ca@langui.sh']], :bit_strength => 1024)
+      csr = R509::CSR.new( :subject=> [['CN','langui.sh'],['ST','Illinois'],['L','Chicago'],['C','US'],['emailAddress','ca@langui.sh']], :bit_length => 1024)
       csr.subject.to_s.should == '/CN=langui.sh/ST=Illinois/L=Chicago/C=US/emailAddress=ca@langui.sh'
     end
     it "generates a matching csr when supplying raw oids" do
-      csr = R509::CSR.new( :subject => [['2.5.4.3','common name'],['2.5.4.15','business category'],['2.5.4.7','locality'],['1.3.6.1.4.1.311.60.2.1.3','jurisdiction oid openssl typically does not know']], :bit_strength => 1024 )
+      csr = R509::CSR.new( :subject => [['2.5.4.3','common name'],['2.5.4.15','business category'],['2.5.4.7','locality'],['1.3.6.1.4.1.311.60.2.1.3','jurisdiction oid openssl typically does not know']], :bit_length => 1024 )
       csr.subject.to_s.should == "/CN=common name/businessCategory=business category/L=locality/jurisdictionOfIncorporationCountryName=jurisdiction oid openssl typically does not know"
     end
     it "adds SAN names to a generated CSR" do
-      csr = R509::CSR.new( :subject => [['CN','test']], :bit_strength => 1024, :san_names => ['1.2.3.4','http://langui.sh','email@address.local','domain.internal','2.3.4.5',[['CN','dirnametest']]])
+      csr = R509::CSR.new( :subject => [['CN','test']], :bit_length => 1024, :san_names => ['1.2.3.4','http://langui.sh','email@address.local','domain.internal','2.3.4.5',[['CN','dirnametest']]])
       csr.san.ip_addresses.should == ['1.2.3.4','2.3.4.5']
       csr.san.dns_names.should == ['domain.internal']
       csr.san.uris.should == ['http://langui.sh']
@@ -160,9 +160,9 @@ describe R509::CSR do
     end
   end
   context "when supplying an existing csr" do
-    it "populates the bit_strength" do
+    it "populates the bit_length" do
       csr = R509::CSR.new({ :csr => @csr })
-      csr.bit_strength.should == 2048
+      csr.bit_length.should == 2048
     end
     it "populates the subject" do
       csr = R509::CSR.new({ :csr => @csr })
@@ -228,32 +228,32 @@ describe R509::CSR do
   end
   context "when setting alternate signature algorithms" do
     it "sets sha1 if you pass an invalid message digest" do
-      csr = R509::CSR.new(:message_digest => 'sha88', :bit_strength => 512, :subject => [['CN','langui.sh']])
+      csr = R509::CSR.new(:message_digest => 'sha88', :bit_length => 512, :subject => [['CN','langui.sh']])
       csr.message_digest.name.should == 'sha1'
       csr.signature_algorithm.should == "sha1WithRSAEncryption"
     end
     it "sets sha224 properly" do
-      csr = R509::CSR.new(:message_digest => 'sha224', :bit_strength => 512, :subject => [['CN','sha224-signature-alg.test']])
+      csr = R509::CSR.new(:message_digest => 'sha224', :bit_length => 512, :subject => [['CN','sha224-signature-alg.test']])
       csr.message_digest.name.should == 'sha224'
       csr.signature_algorithm.should == "sha224WithRSAEncryption"
     end
     it "sets sha256 properly" do
-      csr = R509::CSR.new(:message_digest => 'sha256', :bit_strength => 512, :subject => [['CN','sha256-signature-alg.test']])
+      csr = R509::CSR.new(:message_digest => 'sha256', :bit_length => 512, :subject => [['CN','sha256-signature-alg.test']])
       csr.message_digest.name.should == 'sha256'
       csr.signature_algorithm.should == "sha256WithRSAEncryption"
     end
     it "sets sha384 properly" do
-      csr = R509::CSR.new(:message_digest => 'sha384', :bit_strength => 768, :subject => [['CN','sha384-signature-alg.test']])
+      csr = R509::CSR.new(:message_digest => 'sha384', :bit_length => 768, :subject => [['CN','sha384-signature-alg.test']])
       csr.message_digest.name.should == 'sha384'
       csr.signature_algorithm.should == "sha384WithRSAEncryption"
     end
     it "sets sha512 properly" do
-      csr = R509::CSR.new(:message_digest => 'sha512', :bit_strength => 1024, :subject => [['CN','sha512-signature-alg.test']])
+      csr = R509::CSR.new(:message_digest => 'sha512', :bit_length => 1024, :subject => [['CN','sha512-signature-alg.test']])
       csr.message_digest.name.should == 'sha512'
       csr.signature_algorithm.should == "sha512WithRSAEncryption"
     end
     it "sets md5 properly" do
-      csr = R509::CSR.new(:message_digest => 'md5', :bit_strength => 512, :subject => [['CN','md5-signature-alg.test']])
+      csr = R509::CSR.new(:message_digest => 'md5', :bit_length => 512, :subject => [['CN','md5-signature-alg.test']])
       csr.message_digest.name.should == 'md5'
       csr.signature_algorithm.should == "md5WithRSAEncryption"
     end
@@ -264,9 +264,9 @@ describe R509::CSR do
     csr.ec?.should == false
     csr.dsa?.should == false
   end
-  it "gets RSA bit strength" do
+  it "gets RSA bit length" do
     csr = R509::CSR.new({:csr => @csr})
-    csr.bit_strength.should == 2048
+    csr.bit_length.should == 2048
   end
   it "returns an error for curve_name for dsa/rsa CSRs" do
     csr = R509::CSR.new(:csr => @csr)
@@ -278,9 +278,9 @@ describe R509::CSR do
     csr.ec?.should == false
     csr.dsa?.should == true
   end
-  it "gets DSA bit strength" do
+  it "gets DSA bit length" do
     csr = R509::CSR.new({:csr => @csr_dsa})
-    csr.bit_strength.should == 1024
+    csr.bit_length.should == 1024
   end
 
   it "loads a csr with load_from_file" do
@@ -306,9 +306,9 @@ describe R509::CSR do
       csr = R509::CSR.new(:type => "EC", :curve_name => "sect283r1", :subject => [["CN","ec-test.local"]])
       csr.curve_name.should == "sect283r1"
     end
-    it "raises error on bit strength" do
+    it "raises error on bit length" do
       csr = R509::CSR.new(:csr => @ec_csr2_der)
-      expect { csr.bit_strength }.to raise_error(R509::R509Error,'Bit strength is not available for EC at this time.')
+      expect { csr.bit_length }.to raise_error(R509::R509Error,'Bit length is not available for EC at this time.')
     end
     it "returns the key algorithm" do
       csr = R509::CSR.new(:csr => @ec_csr2_pem)

@@ -49,17 +49,18 @@ module R509
       end
     end
 
-    # Returns the bit strength of the key used to create the SPKI
-    # @return [Integer] the integer bit strength.
-    def bit_strength
+    # Returns the bit length of the key
+    # @return [Integer] the integer bit length.
+    def bit_length
       if self.rsa?
         return internal_obj.public_key.n.num_bits
       elsif self.dsa?
         return internal_obj.public_key.p.num_bits
       elsif self.ec?
-        raise R509::R509Error, 'Bit strength is not available for EC at this time.'
+        raise R509::R509Error, 'Bit length is not available for EC at this time.'
       end
     end
+    alias :bit_strength :bit_length
 
     # Writes the object into PEM format
     # @param [String, #write] filename_or_io Either a string of the path for

@@ -352,7 +352,7 @@ describe R509::Cert do
     end
     it "raises error on bit strength" do
       cert = R509::Cert.new(:cert => @cert_ec)
-      expect { cert.bit_strength }.to raise_error(R509::R509Error,'Bit strength is not available for EC at this time.')
+      expect { cert.bit_strength }.to raise_error(R509::R509Error,'Bit length is not available for EC at this time.')
     end
     it "returns curve name" do
       cert = R509::Cert.new(:cert => @cert_ec)

@@ -18,7 +18,8 @@ module R509
 
     # @option opts [Symbol] :type Defaults to R509::PrivateKey::DEFAULT_TYPE. Allows R509::PrivateKey::KNOWN_TYPES.
     # @option opts [String] :curve_name ("secp384r1") Only used if :type is EC
-    # @option opts [Integer] :bit_strength (2048) Only used if :type is RSA or DSA
+    # @option opts [Integer] :bit_length (2048) Only used if :type is RSA or DSA
+    # @option opts [Integer] :bit_strength (2048) Deprecated, identical to bit_length.
     # @option opts [String] :password
     # @option opts [String,OpenSSL::PKey::RSA,OpenSSL::PKey::DSA,OpenSSL::PKey::EC] :key
     # @option opts [OpenSSL::Engine] :engine
@@ -60,13 +61,13 @@ module R509
           end
         end
       else
-        bit_strength = opts[:bit_strength] || DEFAULT_STRENGTH
+        bit_length = opts[:bit_length] || opts[:bit_strength] || DEFAULT_STRENGTH
         type = opts[:type] || DEFAULT_TYPE
         case type.upcase
         when "RSA"
-          @key = OpenSSL::PKey::RSA.new(bit_strength)
+          @key = OpenSSL::PKey::RSA.new(bit_length)
         when "DSA"
-          @key = OpenSSL::PKey::DSA.new(bit_strength)
+          @key = OpenSSL::PKey::DSA.new(bit_length)
         when "EC"
           curve_name = opts[:curve_name] || DEFAULT_CURVE
           @key = OpenSSL::PKey::EC.new(curve_name)
@@ -86,18 +87,19 @@ module R509
     end
 
 
-    # Returns the bit strength of the key
+    # Returns the bit length of the key
     #
     # @return [Integer]
-    def bit_strength
+    def bit_length
       if self.rsa?
         return self.public_key.n.num_bits
       elsif self.dsa?
         return self.public_key.p.num_bits
       elsif self.ec?
-        raise R509::R509Error, 'Bit strength is not available for EC at this time.'
+        raise R509::R509Error, 'Bit length is not available for EC at this time.'
       end
     end
+    alias :bit_strength :bit_length
 
     # Returns the short name of the elliptic curve used to generate the private key
     # if the key is EC. If not, raises an error.

@@ -79,14 +79,14 @@ describe R509::SPKI do
   context "rsa" do
     context "no existing spki" do
       before :all do
-        @key = R509::PrivateKey.new(:type => "rsa", :bit_strength => 1024)
+        @key = R509::PrivateKey.new(:type => "rsa", :bit_length => 1024)
       end
       include_examples "create spki with private key"
     end
     context "existing spki + private key" do
       before :all do
-        @key = R509::PrivateKey.new(:type => "rsa", :bit_strength => 512)
-        @key2 = R509::PrivateKey.new(:type => "rsa", :bit_strength => 512)
+        @key = R509::PrivateKey.new(:type => "rsa", :bit_length => 512)
+        @key2 = R509::PrivateKey.new(:type => "rsa", :bit_length => 512)
         @spki = R509::SPKI.new(:key => @key).to_pem
         @spki2 = R509::SPKI.new(:key => @key2).to_pem
       end
@@ -96,14 +96,14 @@ describe R509::SPKI do
   context "dsa" do
     context "no existing spki" do
       before :all do
-        @key = R509::PrivateKey.new(:type => "dsa", :bit_strength => 1024)
+        @key = R509::PrivateKey.new(:type => "dsa", :bit_length => 1024)
       end
       include_examples "create spki with private key"
     end
     context "existing spki + private key" do
       before :all do
-        @key = R509::PrivateKey.new(:type => "dsa", :bit_strength => 512)
-        @key2 = R509::PrivateKey.new(:type => "dsa", :bit_strength => 512)
+        @key = R509::PrivateKey.new(:type => "dsa", :bit_length => 512)
+        @key2 = R509::PrivateKey.new(:type => "dsa", :bit_length => 512)
         @spki = R509::SPKI.new(:key => @key).to_pem
         @spki2 = R509::SPKI.new(:key => @key2).to_pem
       end
@@ -180,17 +180,18 @@ describe R509::SPKI do
     spki = R509::SPKI.new( :spki => @spki )
     spki.key_algorithm.should == "RSA"
   end
-  it "gets RSA bit strength" do
+  it "gets RSA bit length" do
     spki = R509::SPKI.new( :spki => @spki )
+    spki.bit_length.should == 2048
     spki.bit_strength.should == 2048
   end
   it "loads a DSA spkac" do
     spki = R509::SPKI.new( :spki => @spki_dsa )
     spki.to_pem.should == @spki_dsa
   end
-  it "gets DSA bit strength" do
+  it "gets DSA bit length" do
     spki = R509::SPKI.new( :spki => @spki_dsa )
-    spki.bit_strength.should == 2048
+    spki.bit_length.should == 2048
   end
   it "dsa?" do
     spki = R509::SPKI.new( :spki => @spki_dsa )
@@ -211,9 +212,9 @@ describe R509::SPKI do
       spki = R509::SPKI.new( :spki => @spki_ec )
       spki.curve_name.should == 'secp384r1'
     end
-    it "raises error on bit strength" do
+    it "raises error on bit length" do
       spki = R509::SPKI.new( :spki => @spki_ec )
-      expect { spki.bit_strength }.to raise_error(R509::R509Error,'Bit strength is not available for EC at this time.')
+      expect { spki.bit_length }.to raise_error(R509::R509Error,'Bit length is not available for EC at this time.')
     end
     it "returns the key algorithm" do
       spki = R509::SPKI.new( :spki => @spki_ec )

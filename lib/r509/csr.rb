@@ -16,14 +16,15 @@ module R509
     # @option opts [String,OpenSSL::X509::Request] :csr a csr
     # @option opts [String] :type Required if not providing existing :csr. Defaults to R509::PrivateKey::DEFAULT_TYPE. Allows R509::PrivateKey::KNOWN_TYPES.
     # @option opts [String] :curve_name ("secp384r1") Only used if :type is EC
-    # @option opts [Integer] :bit_strength (2048) Only used if :type is RSA or DSA
+    # @option opts [Integer] :bit_length (2048) Only used if :type is RSA or DSA
+    # @option opts [Integer] :bit_strength (2048) Deprecated, identical to bit_length.
     # @option opts [String] :message_digest Optional digest. sha1, sha224, sha256, sha384, sha512, md5. Defaults to sha1
     # @option opts [Array,R509::ASN1::GeneralNames] :san_names List of domains, IPs, email addresses, or URIs to encode as subjectAltNames. The type is determined from the structure of the strings via the R509::ASN1.general_name_parser method. You can also pass an explicit R509::ASN1::GeneralNames object. Parsed names will be uniqued, but a GeneralNames object will not be touched.
     # @option opts [R509::Subject,Array,OpenSSL::X509::Name] :subject array of subject items
     # @option opts [R509::PrivateKey,String] :key optional private key to supply. either an unencrypted PEM/DER string or an R509::PrivateKey object (use the latter if you need password/hardware support)
     # @example Generate a 4096-bit RSA key + CSR
     #   :type => "RSA",
-    #   :bit_strength => 4096,
+    #   :bit_length => 4096,
     #   :subject => [
     #     ['CN','somedomain.com'],
     #     ['O','My Org'],
@@ -45,7 +46,7 @@ module R509
       if opts.has_key?(:subject) and opts.has_key?(:csr)
         raise ArgumentError, "You must provide :subject or :csr, not both"
       end
-      @bit_strength = opts[:bit_strength] || R509::PrivateKey::DEFAULT_STRENGTH
+      @bit_length = opts[:bit_length] || opts[:bit_strength] || R509::PrivateKey::DEFAULT_STRENGTH
       @curve_name = opts[:curve_name] || R509::PrivateKey::DEFAULT_CURVE
 
       @key = load_private_key(opts)
@@ -185,7 +186,7 @@ module R509
       @subject = R509::Subject.new(subject)
       @req.subject = @subject.name
       if @key.nil?
-        @key = R509::PrivateKey.new(:type => @type, :bit_strength => @bit_strength, :curve_name => @curve_name)
+        @key = R509::PrivateKey.new(:type => @type, :bit_length => @bit_length, :curve_name => @curve_name)
       end
       @req.public_key = @key.public_key
       add_san_extension(san_names)
