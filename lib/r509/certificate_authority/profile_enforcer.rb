@@ -85,7 +85,8 @@ module R509::CertificateAuthority
       )
 
       extensions << R509::Cert::Extensions::AuthorityKeyIdentifier.new(
-        :issuer_certificate => @config.ca_cert
+        :public_key => @config.ca_cert.public_key,
+        :issuer_subject => @config.ca_cert.subject
       )
 
       if present?(profile.key_usage)

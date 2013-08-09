@@ -425,6 +425,8 @@ module R509
 
         # friendly name for Subject Key Identifier OID
         OID = "subjectKeyIdentifier"
+        # default extension behavior when generating
+        SKI_EXTENSION_DEFAULT = "hash"
         Extensions.register_class(self)
 
         # This method takes a hash or an existing Extension object to parse
@@ -438,7 +440,7 @@ module R509
             cert.public_key = arg[:public_key]
             ef.subject_certificate = cert
             critical = R509::Cert::Extensions.calculate_critical(arg[:critical], false)
-            arg = ef.create_extension("subjectKeyIdentifier", "hash",critical)
+            arg = ef.create_extension("subjectKeyIdentifier", SKI_EXTENSION_DEFAULT, critical)
           end
           super(arg)
         end
@@ -466,6 +468,8 @@ module R509
 
         # friendly name for Authority Key Identifier OID
         OID = "authorityKeyIdentifier"
+        # default extension behavior when generating
+        AKI_EXTENSION_DEFAULT = "keyid"
         Extensions.register_class(self)
 
         # key_identifier, if present, will be a hex string delimited by colons
@@ -478,9 +482,10 @@ module R509
         # @return [String,nil]
         attr_reader :authority_cert_serial_number
 
-        # This method takes a hash or an existing Extension object to parse
-        # @option arg :issuer_certificate [R509::Cert]
-        # @option arg :value [String] (keyid) For the rules of :value see: http://www.openssl.org/docs/apps/x509v3_config.html#Authority_Key_Identifier_.
+
+        # @option arg :public_key [OpenSSL::PKey] Required if embedding keyid
+        # @option arg :issuer_subject [R509::Subject] Required if embedding issuer
+        # @option arg :value [String] (keyid) For the rules of :value see: http://www.openssl.org/docs/apps/x509v3_config.html#Authority_Key_Identifier_. If you want to embed issuer you MUST supply :issuer_certificate and not :public_key
         # @option arg :critical [Boolean] (false)
         def initialize(arg)
           if arg.kind_of?(Hash)
@@ -517,11 +522,15 @@ module R509
 
         # @private
         def build_extension(arg)
+          arg[:value] = AKI_EXTENSION_DEFAULT unless not arg[:value].nil?
           validate_authority_key_identifier(arg)
           ef = OpenSSL::X509::ExtensionFactory.new
-          ef.issuer_certificate = arg[:issuer_certificate].cert
+          fake_cert = OpenSSL::X509::Certificate.new
+          fake_cert.extensions = [R509::Cert::Extensions::SubjectKeyIdentifier.new(:public_key => arg[:public_key])] unless arg[:public_key].nil?
+          fake_cert.subject = arg[:issuer_subject].name unless arg[:issuer_subject].nil?
+          ef.issuer_certificate = fake_cert
           critical = R509::Cert::Extensions.calculate_critical(arg[:critical], false)
-          return ef.create_extension("authorityKeyIdentifier", arg[:value] || "keyid",critical) # this could also be keyid:always,issuer:always
+          return ef.create_extension("authorityKeyIdentifier", arg[:value], critical) # this could also be keyid:always,issuer:always
         end
 
       end

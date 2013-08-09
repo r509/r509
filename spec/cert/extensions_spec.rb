@@ -758,35 +758,35 @@ describe R509::Cert::Extensions do
       it "errors when not supplying an issuer certificate" do
         expect {
           R509::Cert::Extensions::AuthorityKeyIdentifier.new({})
-        }.to raise_error(ArgumentError,"You must supply an R509::Cert object to :issuer_certificate")
+        }.to raise_error(ArgumentError,'You must supply an OpenSSL::PKey object to :public_key if aki value contains keyid (present by default)')
       end
 
       it "creates successfully with default value" do
-        aki = R509::Cert::Extensions::AuthorityKeyIdentifier.new(:issuer_certificate => @cert)
+        aki = R509::Cert::Extensions::AuthorityKeyIdentifier.new(:public_key => @cert.public_key)
         aki.key_identifier.should_not be_nil
         aki.authority_cert_issuer.should be_nil
       end
 
       it "creates successfully with issuer value" do
-        aki = R509::Cert::Extensions::AuthorityKeyIdentifier.new(:issuer_certificate => @cert, :value => "issuer:always")
+        aki = R509::Cert::Extensions::AuthorityKeyIdentifier.new(:issuer_subject => @cert.subject, :value => "issuer:always")
         aki.authority_cert_issuer.should_not be_nil
         aki.authority_cert_serial_number.should_not be_nil
       end
 
       it "creates successfully with issuer+keyid value" do
-        aki = R509::Cert::Extensions::AuthorityKeyIdentifier.new(:issuer_certificate => @cert, :value => "issuer:always,keyid:always")
+        aki = R509::Cert::Extensions::AuthorityKeyIdentifier.new(:issuer_subject => @cert.subject, :public_key => @cert.public_key, :value => "issuer:always,keyid:always")
         aki.authority_cert_issuer.should_not be_nil
         aki.authority_cert_serial_number.should_not be_nil
         aki.key_identifier.should_not be_nil
       end
 
       it "creates with default criticality" do
-        aki = R509::Cert::Extensions::AuthorityKeyIdentifier.new(:issuer_certificate => @cert)
+        aki = R509::Cert::Extensions::AuthorityKeyIdentifier.new(:public_key => @cert.public_key)
         aki.critical?.should be_false
       end
 
       it "creates with non-default criticality" do
-        aki = R509::Cert::Extensions::AuthorityKeyIdentifier.new(:issuer_certificate => @cert, :critical => true)
+        aki = R509::Cert::Extensions::AuthorityKeyIdentifier.new(:public_key => @cert.public_key, :critical => true)
         aki.critical?.should be_true
       end
 

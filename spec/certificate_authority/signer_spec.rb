@@ -52,10 +52,10 @@ shared_examples_for "signing" do |selfsign|
   it "with no :extensions in options hash (selfsign:#{selfsign})" do
     if selfsign
       cert = R509::CertificateAuthority::Signer.selfsign(@options)
-      size = 2
+      size = 3
     else
       cert = @ca.sign(@options)
-      size = 0
+      size = 2
     end
     cert.extensions.size.should == size
   end

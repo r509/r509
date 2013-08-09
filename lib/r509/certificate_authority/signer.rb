@@ -46,7 +46,10 @@ module R509::CertificateAuthority
         :serial => options[:serial]
       )
 
-      cert.extensions = options[:extensions] || []
+      cert.extensions = options[:extensions] || [
+        R509::Cert::Extensions::SubjectKeyIdentifier.new(:public_key => public_key),
+        R509::Cert::Extensions::AuthorityKeyIdentifier.new(:public_key => @config.ca_cert.public_key)
+      ]
 
       #@config.ca_cert.key.key ... ugly. ca_cert returns R509::Cert
       # #key returns R509::PrivateKey and #key on that returns OpenSSL object we need
@@ -82,7 +85,11 @@ module R509::CertificateAuthority
         :serial => options[:serial]
       )
 
-      cert.extensions = options[:extensions] || [R509::Cert::Extensions::BasicConstraints.new(:ca => true), R509::Cert::Extensions::SubjectKeyIdentifier.new(:public_key => public_key)]
+      cert.extensions = options[:extensions] || [
+        R509::Cert::Extensions::BasicConstraints.new(:ca => true),
+        R509::Cert::Extensions::SubjectKeyIdentifier.new(:public_key => public_key),
+        R509::Cert::Extensions::AuthorityKeyIdentifier.new(:public_key => public_key)
+      ]
 
       if options.has_key?(:message_digest)
         message_digest = R509::MessageDigest.new(options[:message_digest])

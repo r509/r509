@@ -186,8 +186,11 @@ module R509::ValidationMixin
 
   # @private
   def validate_authority_key_identifier(aki)
-    if aki[:issuer_certificate].nil? or not aki[:issuer_certificate].kind_of?(R509::Cert)
-      raise ArgumentError, "You must supply an R509::Cert object to :issuer_certificate"
+    if aki[:value].downcase.include?("keyid") and aki[:public_key].nil?
+      raise ArgumentError, "You must supply an OpenSSL::PKey object to :public_key if aki value contains keyid (present by default)"
+    end
+    if aki[:value].downcase.include?("issuer") and not aki[:issuer_subject].kind_of?(R509::Subject)
+      raise ArgumentError, "You must supply an R509::Subject object to :issuer_subject if aki value contains issuer"
     end
     aki
   end
