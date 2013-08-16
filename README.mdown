@@ -172,7 +172,7 @@ csr = R509::CSR.new(
   :subject => [['C','US'],['O','r509 LLC'],['CN','r509 Self-Signed CA Test']]
 )
 # if you do not pass :extensions it will add basic constraints CA:TRUE and nothing else
-cert = R509::CertificateAuthoirty::Signer.selfsign(
+cert = R509::CertificateAuthority::Signer.selfsign(
   :csr => csr,
   :not_before => not_before,
   :not_after => not_after
