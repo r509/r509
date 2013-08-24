@@ -1,5 +1,6 @@
 require 'openssl'
 require 'r509/asn1'
+require 'r509/cert/mixins'
 require 'set'
 
 module R509
@@ -91,6 +92,16 @@ module R509
           return @path_length > 0
         end
 
+        def to_h
+          hash = { :ca => @is_ca, :critical => self.critical? }
+          hash[:path_length] = @path_length unless @path_length.nil? or not is_ca?
+          hash
+        end
+
+        def to_yaml
+          self.to_h.to_yaml
+        end
+
         private
 
         # @private
@@ -155,14 +166,14 @@ module R509
         AU_DECIPHER_ONLY = "decipherOnly"
 
         # This method takes a hash or an existing Extension object to parse
-        # @option arg :key_usage [Array]
+        # @option arg :value [Array]
         # @option arg :critical [Boolean] (false)
         def initialize(arg)
           if arg.kind_of?(Hash)
-            validate_usage(arg[:key_usage],'key_usage')
+            validate_usage(arg[:value],'key_usage')
             ef = OpenSSL::X509::ExtensionFactory.new
             critical = R509::Cert::Extensions.calculate_critical(arg[:critical], false)
-            arg = ef.create_extension("keyUsage", arg[:key_usage].join(","),critical)
+            arg = ef.create_extension("keyUsage", arg[:value].join(","),critical)
           end
 
           super(arg)
@@ -270,6 +281,17 @@ module R509
         def decipher_only?
           (@decipher_only == true)
         end
+
+        def to_h
+          {
+            :value => @allowed_uses,
+            :critical => self.critical?
+          }
+        end
+
+        def to_yaml
+          self.to_h.to_yaml
+        end
       end
 
       # RFC 5280 Description (see: http://www.ietf.org/rfc/rfc5280.txt)
@@ -308,14 +330,14 @@ module R509
         attr_reader :allowed_uses
 
         # This method takes a hash or an existing Extension object to parse
-        # @option arg :extended_key_usage [Array]
+        # @option arg :value [Array]
         # @option arg :critical [Boolean] (false)
         def initialize(arg)
           if arg.kind_of?(Hash)
-            validate_usage(arg[:extended_key_usage],'extended_key_usage')
+            validate_usage(arg[:value],'extended_key_usage')
             ef = OpenSSL::X509::ExtensionFactory.new
             critical = R509::Cert::Extensions.calculate_critical(arg[:critical], false)
-            arg = ef.create_extension("extendedKeyUsage", arg[:extended_key_usage].join(","),critical)
+            arg = ef.create_extension("extendedKeyUsage", arg[:value].join(","),critical)
           end
 
           super(arg)
@@ -410,6 +432,14 @@ module R509
 
         def any_extended_key_usage?
           (@any_extended_key_usage == true)
+        end
+
+        def to_h
+          { :value => @allowed_uses, :critical => self.critical?  }
+        end
+
+        def to_yaml
+          self.to_h.to_yaml
         end
       end
 
@@ -566,7 +596,7 @@ module R509
 
         # This method takes a hash or an existing Extension object to parse
         #
-        # @option arg :names [Array,R509::ASN1::GeneralNames] If you supply an Array
+        # @option arg :value [Array,R509::ASN1::GeneralNames] If you supply an Array
         #   it will be parsed by R509::ASN1.general_name_parser to
         #   determine the type of each element. If you prefer to specify it yourself you
         #   can pass a pre-existing GeneralNames object.
@@ -584,42 +614,14 @@ module R509
           end
         end
 
-        # @return [Array<String>] DNS names
-        def dns_names
-          @general_names.dns_names
-        end
-
-        # @return [Array<String>] IP addresses formatted as dotted quad
-        def ip_addresses
-          @general_names.ip_addresses
-        end
-
-        # @return [Array<String>] email addresses
-        def rfc_822_names
-          @general_names.rfc_822_names
-        end
-
-        # @return [Array<String>] URIs (not typically found in SAN extensions)
-        def uris
-          @general_names.uris
-        end
-
-        # @return [Array<R509::Subject>] directory names
-        def directory_names
-          @general_names.directory_names
-        end
-
-        # @return [Array] array of GeneralName objects preserving order found in the extension
-        def names
-          @general_names.names
-        end
+        include R509::Cert::Extensions::GeneralNamesMixin
 
         private
 
         # @private
         def build_extension(arg)
-          validate_subject_alternative_name(arg[:names])
-          serialize = R509::ASN1.general_name_parser(arg[:names]).serialize_names
+          validate_subject_alternative_name(arg[:value])
+          serialize = R509::ASN1.general_name_parser(arg[:value]).serialize_names
           ef = OpenSSL::X509::ExtensionFactory.new
           ef.config = OpenSSL::Config.parse(serialize[:conf])
           critical = R509::Cert::Extensions.calculate_critical(arg[:critical], false)
@@ -680,6 +682,17 @@ module R509
           end
         end
 
+        def to_h
+          hash = { :critical => self.critical? }
+          hash[:ocsp_location] = R509::Cert::Extensions.names_to_h(@ocsp.names) unless @ocsp.names.empty?
+          hash[:ca_issuers_location] = R509::Cert::Extensions.names_to_h(@ca_issuers.names) unless @ca_issuers.names.empty?
+          hash
+        end
+
+        def to_yaml
+          self.to_h.to_yaml
+        end
+
         private
 
         # @private
@@ -694,9 +707,14 @@ module R509
 
           locations.each do |pair|
             validate_location(pair[:key].to_s,arg[pair[:key]])
-            if not arg[pair[:key]].nil?
-              gns = R509::ASN1.general_name_parser(arg[pair[:key]])
-              gns.names.each do |name|
+            data = arg[pair[:key]]
+            if not data.nil?
+              if data.kind_of?(R509::ASN1::GeneralNames)
+                elements = data.names
+              else
+                elements = data.map { |node| R509::ASN1::GeneralName.new(node) }
+              end
+              elements.each do |name|
                 serialize = name.serialize_name
                 aia.push "#{pair[:short_name]};#{serialize[:extension_string]}"
                 aia_conf.push serialize[:conf]
@@ -729,12 +747,9 @@ module R509
         OID = "crlDistributionPoints"
         Extensions.register_class(self)
 
-        # @return [R509::ASN1::GeneralNames,nil]
-        attr_reader :crl
-
         # This method takes a hash or an existing Extension object to parse
         #
-        # @option arg :cdp_location [Array,R509::ASN1::GeneralNames] Array of strings (eg ["http://crl.what.com/crl.crl"]) or GeneralNames object
+        # @option arg :value [Array,R509::ASN1::GeneralNames] Array of strings (eg ["http://crl.what.com/crl.crl"]) or GeneralNames object
         # @option arg :critical [Boolean] (false)
         def initialize(arg)
           if arg.kind_of?(Hash)
@@ -742,7 +757,7 @@ module R509
           end
           super(arg)
 
-          @crl= R509::ASN1::GeneralNames.new
+          @general_names= R509::ASN1::GeneralNames.new
           data = R509::ASN1.get_extension_payload(self)
           data.entries.each do |distribution_point|
             #   DistributionPoint ::= SEQUENCE {
@@ -755,16 +770,37 @@ module R509
             # We're only going to handle DistributionPointName [0] for now
             # so grab entries[0] and then get the fullName with value[0]
             # and the value of that ASN1Data with value[0] again
-            @crl.add_item(distribution_point.entries[0].value[0].value[0])
+            @general_names.add_item(distribution_point.entries[0].value[0].value[0])
           end
+        end
+
+        include R509::Cert::Extensions::GeneralNamesMixin
+
+        def to_h
+          {
+            :critical => self.critical?,
+            :value => R509::Cert::Extensions.names_to_h(@general_names.names)
+          }
+        end
+
+        def to_yaml
+          self.to_h.to_yaml
         end
 
         private
 
         # @private
         def build_extension(arg)
-          validate_location('cdp_location',arg[:cdp_location])
-          serialize = R509::ASN1.general_name_parser(arg[:cdp_location]).serialize_names
+          validate_location('cdp_location',arg[:value])
+          if not arg[:value].kind_of?(R509::ASN1::GeneralNames)
+            gns = R509::ASN1::GeneralNames.new
+            arg[:value].each do |val|
+              gns.create_item(val)
+            end
+            serialize = gns.serialize_names
+          else
+            serialize = arg[:value].serialize_names
+          end
           ef = OpenSSL::X509::ExtensionFactory.new
           ef.config = OpenSSL::Config.parse(serialize[:conf])
           critical = R509::Cert::Extensions.calculate_critical(arg[:critical], false)
@@ -805,6 +841,14 @@ module R509
           end
           super(arg)
         end
+
+        def to_h
+          { :critical => self.critical?  }
+        end
+
+        def to_yaml
+          self.to_h.to_yaml
+        end
       end
 
 
@@ -830,7 +874,7 @@ module R509
 
         # This method takes a hash or an existing Extension object to parse
         #
-        # @option arg :policies [Array] Array of hashes in the same format as passed to R509::Config::CertProfile for certificate policies
+        # @option arg :value [Array] Array of hashes in the same format as passed to R509::Config::CertProfile for certificate policies
         # @option arg :critical [Boolean] (false)
         def initialize(arg)
           if arg.kind_of?(Hash)
@@ -848,14 +892,25 @@ module R509
           end if data.respond_to?(:each)
         end
 
+        def to_h
+          {
+            :critical => self.critical?,
+            :value => @policies.map { |policy| policy.to_h }
+          }
+        end
+
+        def to_yaml
+          self.to_h.to_yaml
+        end
+
         private
 
         # @private
         def build_extension(arg)
-          validate_certificate_policies(arg[:policies])
+          validate_certificate_policies(arg[:value])
           conf = []
           policy_names = ["ia5org"]
-          arg[:policies].each_with_index do |policy,i|
+          arg[:value].each_with_index do |policy,i|
             conf << build_conf("certPolicies#{i}",policy,i)
             policy_names << "@certPolicies#{i}"
           end
@@ -880,7 +935,7 @@ module R509
             user_notice_confs.push "explicitText=\"#{un[:explicit_text]}\"" unless un[:explicit_text].nil?
             # if org is supplied notice numbers is also required (and vice versa). enforced in CAProfile
             user_notice_confs.push "organization=\"#{un[:organization]}\"" unless un[:organization].nil?
-            user_notice_confs.push "noticeNumbers=\"#{un[:notice_numbers]}\"" unless un[:notice_numbers].nil?
+            user_notice_confs.push "noticeNumbers=\"#{un[:notice_numbers].join(",")}\"" unless un[:notice_numbers].nil?
           end unless not hash[:user_notices].kind_of?(Array)
 
           conf.concat(user_notice_confs)
@@ -908,26 +963,34 @@ module R509
         Extensions.register_class(self)
 
         # @return [Integer]
-        attr_reader :skip_certs
+        attr_reader :value
 
         # This method takes a hash or an existing Extension object to parse
         #
-        # @option arg :skip_certs [Integer]
+        # @option arg :value [Integer]
         # @option arg :critical [Boolean] (true)
         def initialize(arg)
           if arg.kind_of?(Hash)
-            validate_inhibit_any_policy(arg[:skip_certs])
+            validate_inhibit_any_policy(arg[:value])
             ef = OpenSSL::X509::ExtensionFactory.new
             critical = R509::Cert::Extensions.calculate_critical(arg[:critical], true)
             # must be set critical per RFC 5280
-            arg = ef.create_extension("inhibitAnyPolicy",arg[:skip_certs].to_s,critical)
+            arg = ef.create_extension("inhibitAnyPolicy",arg[:value].to_s,critical)
           end
           super(arg)
 
           #   id-ce-inhibitAnyPolicy OBJECT IDENTIFIER ::=  { id-ce 54 }
           #   InhibitAnyPolicy ::= SkipCerts
           #   SkipCerts ::= INTEGER (0..MAX)
-          @skip_certs = R509::ASN1.get_extension_payload(self).to_i # returns a non-negative integer
+          @value = R509::ASN1.get_extension_payload(self).to_i # returns a non-negative integer
+        end
+
+        def to_h
+          { :critical => self.critical?, :value => @value }
+        end
+
+        def to_yaml
+          self.to_h.to_yaml
         end
       end
 
@@ -995,6 +1058,19 @@ module R509
               @inhibit_policy_mapping = pc.value.bytes.to_a[0]
             end
           end
+        end
+
+        def to_h
+          hash = {
+            :critical => self.critical?
+          }
+          hash[:require_explicit_policy] = @require_explicit_policy unless @require_explicit_policy.nil?
+          hash[:inhibit_policy_mapping] = @inhibit_policy_mapping unless @inhibit_policy_mapping.nil?
+          hash
+        end
+
+        def to_yaml
+          self.to_h.to_yaml
         end
 
         private
@@ -1072,8 +1148,8 @@ module R509
           end
           super(arg)
 
-          @permitted = []
-          @excluded = []
+          @permitted = R509::ASN1::GeneralNames.new
+          @excluded = R509::ASN1::GeneralNames.new
 
           data = R509::ASN1.get_extension_payload(self)
           data.each do |gs|
@@ -1081,13 +1157,24 @@ module R509
               asn_data.value.each do |obj|
                 gn = R509::ASN1::GeneralName.new(obj)
                 if gs.tag == 0 # permittedSubtrees
-                @permitted << gn
+                  @permitted.add_item(gn)
                 elsif gs.tag == 1 #excludedSubtrees
-                  @excluded << gn
+                  @excluded.add_item(gn)
                 end
               end
             end
           end
+        end
+
+        def to_h
+          hash = { :critical => self.critical?  }
+          hash[:permitted] = R509::Cert::Extensions.names_to_h(@permitted.names) unless @permitted.names.empty?
+          hash[:excluded] = R509::Cert::Extensions.names_to_h(@excluded.names) unless @excluded.names.empty?
+          hash
+        end
+
+        def to_yaml
+          self.to_h.to_yaml
         end
 
         private
@@ -1165,6 +1252,24 @@ module R509
         end
 
         return unknown_extensions
+      end
+
+
+      # @private
+      # Takes an array of R509::ASN1::GeneralName objects and returns a hash that can be
+      # encoded to YAML (used by #to_yaml methods)
+      def self.names_to_h(array)
+        data = []
+        array.each do |name|
+          value = (name.value.kind_of?(R509::Subject))? name.value.to_h : name.value
+          data.push(
+            {
+              :type => name.short_type,
+              :value => value
+            }
+          )
+        end
+        data
       end
     end
   end

@@ -164,33 +164,33 @@ describe R509::ASN1::GeneralName do
     end
 
   end
-  context "::map_tag_to_serial_prefix" do
+  context "::map_tag_to_short_type" do
     it "handles otherName" do
-      expect { R509::ASN1::GeneralName.map_tag_to_serial_prefix(0) }.to raise_error(R509::R509Error)
+      expect { R509::ASN1::GeneralName.map_tag_to_short_type(0) }.to raise_error(R509::R509Error)
     end
     it "handles rfc822Name" do
-      R509::ASN1::GeneralName.map_tag_to_serial_prefix(1).should == "email"
+      R509::ASN1::GeneralName.map_tag_to_short_type(1).should == "email"
     end
     it "handles dNSName" do
-      R509::ASN1::GeneralName.map_tag_to_serial_prefix(2).should == "DNS"
+      R509::ASN1::GeneralName.map_tag_to_short_type(2).should == "DNS"
     end
     it "handles x400Address" do
-      expect { R509::ASN1::GeneralName.map_tag_to_serial_prefix(3) }.to raise_error(R509::R509Error)
+      expect { R509::ASN1::GeneralName.map_tag_to_short_type(3) }.to raise_error(R509::R509Error)
     end
     it "handles directoryName" do
-      R509::ASN1::GeneralName.map_tag_to_serial_prefix(4).should == "dirName"
+      R509::ASN1::GeneralName.map_tag_to_short_type(4).should == "dirName"
     end
     it "handles ediPartyName" do
-      expect { R509::ASN1::GeneralName.map_tag_to_serial_prefix(5) }.to raise_error(R509::R509Error)
+      expect { R509::ASN1::GeneralName.map_tag_to_short_type(5) }.to raise_error(R509::R509Error)
     end
     it "handles uniformResourceIdentifier" do
-      R509::ASN1::GeneralName.map_tag_to_serial_prefix(6).should == "URI"
+      R509::ASN1::GeneralName.map_tag_to_short_type(6).should == "URI"
     end
     it "handles iPAddress" do
-      R509::ASN1::GeneralName.map_tag_to_serial_prefix(7).should == "IP"
+      R509::ASN1::GeneralName.map_tag_to_short_type(7).should == "IP"
     end
     it "handles registeredID" do
-      expect { R509::ASN1::GeneralName.map_tag_to_serial_prefix(8) }.to raise_error(R509::R509Error)
+      expect { R509::ASN1::GeneralName.map_tag_to_short_type(8) }.to raise_error(R509::R509Error)
     end
   end
   it "handles rfc822Name" do

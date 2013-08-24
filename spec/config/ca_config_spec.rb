@@ -199,13 +199,15 @@ describe R509::Config::CAConfig do
     config.num_profiles.should == 9
     config.profile("mds").default_md.should == "SHA512"
     config.profile("mds").allowed_mds.should == ['SHA512','SHA1']
-    config.profile("aia_cdp").ocsp_location.should == ['http://ocsp.domain.com']
-    config.profile("aia_cdp").cdp_location.should == ['http://crl.domain.com/something.crl']
-    config.profile("aia_cdp").ca_issuers_location.should == ['http://www.domain.com/cert.cer']
-    config.profile("ocsp_delegate_with_no_check").ocsp_no_check.should == true
-    config.profile("inhibit_policy").inhibit_any_policy.should == 2
-    config.profile("policy_constraints").policy_constraints[:require_explicit_policy].should == 1
-    config.profile("policy_constraints").policy_constraints[:inhibit_policy_mapping].should == 0
+    aia = config.profile("aia_cdp").authority_info_access
+    aia.ocsp.uris.should == ['http://ocsp.domain.com']
+    aia.ca_issuers.uris.should == ['http://www.domain.com/cert.cer']
+    cdp = config.profile("aia_cdp").crl_distribution_points
+    cdp.uris.should == ['http://crl.domain.com/something.crl']
+    config.profile("ocsp_delegate_with_no_check").ocsp_no_check.should_not be_nil
+    config.profile("inhibit_policy").inhibit_any_policy.value.should == 2
+    config.profile("policy_constraints").policy_constraints.require_explicit_policy.should == 1
+    config.profile("policy_constraints").policy_constraints.inhibit_policy_mapping.should == 0
     config.profile("name_constraints").name_constraints.should_not be_nil
   end
   it "loads CRL cert/key from yaml" do
@@ -287,7 +289,7 @@ describe R509::Config::CAConfig do
 
     R509::Engine.instance.should_receive(:load).with(engine).and_return(fake_engine)
 
-    config = R509::Config::CAConfig.load_from_hash({"ca_cert"=>{"cert"=>"#{File.dirname(__FILE__)}/../fixtures/test_ca.cer", "engine"=>engine, "key_name" => "key"}, "default_md"=>"SHA512", "profiles"=>{}})
+    R509::Config::CAConfig.load_from_hash({"ca_cert"=>{"cert"=>"#{File.dirname(__FILE__)}/../fixtures/test_ca.cer", "engine"=>engine, "key_name" => "key"}, "default_md"=>"SHA512", "profiles"=>{}})
   end
 
   it "should fail if YAML for ca_cert contains engine and key" do

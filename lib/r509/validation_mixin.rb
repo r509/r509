@@ -14,7 +14,7 @@ module R509::ValidationMixin
   # @private
   # validates key usage array
   def validate_usage(ku,type)
-    if not ku.nil? and not ku.kind_of?(Array)
+    if not ku.kind_of?(Array)
       raise ArgumentError, "#{type} must be an array of strings (see README)"
     end
     ku
@@ -173,6 +173,11 @@ module R509::ValidationMixin
     if not location.nil? and not (location.kind_of?(Array) or location.kind_of?(R509::ASN1::GeneralNames))
       raise ArgumentError, "#{type} must be an array or R509::ASN1::GeneralNames object if provided"
     end
+    location.each do |loc|
+      if not loc.kind_of?(Hash) or loc[:type].nil? or loc[:value].nil?
+        raise ArgumentError, "All elements of the array must be hashes with a :type and :value"
+      end
+    end unless not location.respond_to?(:each)
     location
   end
 
@@ -198,7 +203,7 @@ module R509::ValidationMixin
   # @private
   def validate_subject_alternative_name(san)
     if san.nil? or not (san.kind_of?(R509::ASN1::GeneralNames) or san.kind_of?(Array))
-      raise ArgumentError, "You must supply an array or R509::ASN1::GeneralNames object to :names"
+      raise ArgumentError, "You must supply an array or R509::ASN1::GeneralNames object to :value"
     end
   end
 end

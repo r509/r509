@@ -9,6 +9,8 @@ module R509
   # @example
   #   subject = R509::Subject.new([['CN','test.test'],['O','r509 LLC']])
   # @example
+  #   subject = R509::Subject.new(:CN => 'test.test', :O => 'r509 LLC')
+  # @example
   #   # you can also use the friendly getter/setters with custom OIDs
   #   R509::OIDMapper.register("1.2.3.4.5.6.7.8","COI","customOID")
   #   subject = R509::Subject.new
@@ -18,10 +20,12 @@ module R509
   #   # or
   #   subject.custom_oid="test"
   class Subject
-    # @param [Array, OpenSSL::X509::Name, R509::Subject, DER, nil] arg
+    # @param [Array, OpenSSL::X509::Name, R509::Subject, DER, Hash, nil] arg
     def initialize(arg=nil)
       if arg.kind_of?(Array)
         @array = arg
+      elsif arg.kind_of?(Hash)
+        @array = arg.map { |k,v| [k.to_s.upcase,v] }
       elsif arg.kind_of?(OpenSSL::X509::Name)
         sanitizer = R509::NameSanitizer.new
         @array = sanitizer.sanitize(arg)
@@ -95,6 +99,18 @@ module R509
     # @return [Array] Array of form [['CN','langui.sh']]
     def to_a
       @array
+    end
+
+    def to_h
+      hash = {}
+      @array.each do |el|
+        hash[el[0].to_sym] = el[1]
+      end
+      hash
+    end
+
+    def to_yaml
+      self.to_h.to_yaml
     end
 
     # @private

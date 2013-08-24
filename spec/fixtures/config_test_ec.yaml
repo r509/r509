@@ -13,15 +13,19 @@ test_ca_ec:
       basic_constraints:
         :ca: false
       key_usage:
-      - digitalSignature
-      - keyEncipherment
+        :value:
+        - digitalSignature
+        - keyEncipherment
       extended_key_usage:
-      - serverAuth
+        :value:
+        - serverAuth
     client:
       basic_constraints:
         :ca: false
       key_usage:
-      - digitalSignature
-      - keyEncipherment
+        :value:
+        - digitalSignature
+        - keyEncipherment
       extended_key_usage:
-      - clientAuth
+        :value:
+        - clientAuth

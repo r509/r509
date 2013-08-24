@@ -169,7 +169,7 @@ shared_examples_for "a correct R509 AuthorityKeyIdentifier object" do
     klass = AuthorityKeyIdentifier
     ef = OpenSSL::X509::ExtensionFactory.new
     ef.issuer_certificate = OpenSSL::X509::Certificate.new TestFixtures::TEST_CA_CERT
-    openssl_ext = ef.create_extension( "authorityKeyIdentifier", @extension_value )
+    openssl_ext = ef.create_extension( extension_name, @extension_value )
     @r509_ext = klass.new( openssl_ext )
   end
 
@@ -257,7 +257,7 @@ shared_examples_for "a correct R509 CRLDistributionPoints object" do |critical|
   end
 
   it "crl_uri should be correct critical:#{critical}" do
-    @r509_ext.crl.uris.should == @crl_uris
+    @r509_ext.uris.should == @crl_uris
   end
 
   it "reports #critical? properly" do
@@ -302,12 +302,12 @@ shared_examples_for "a correct R509 InhibitAnyPolicy object" do |critical|
     extension_name = "inhibitAnyPolicy"
     klass = InhibitAnyPolicy
     ef = OpenSSL::X509::ExtensionFactory.new
-    openssl_ext = ef.create_extension( extension_name, @skip_certs.to_s,critical)
+    openssl_ext = ef.create_extension( extension_name, @value.to_s,critical)
     @r509_ext = klass.new( openssl_ext )
   end
 
   it "should parse the integer value out of the extension" do
-    @r509_ext.skip_certs.should == @skip_certs
+    @r509_ext.value.should == @value
   end
 
   it "reports #critical? properly" do
@@ -344,14 +344,14 @@ shared_examples_for "a correct R509 NameConstraints object" do |critical|
 
   it "should have the permitted names" do
     @permitted.each_with_index do |name,index|
-      @r509_ext.permitted[index].tag.should == name[:tag]
-      @r509_ext.permitted[index].value.should == name[:value]
+      @r509_ext.permitted.names[index].tag.should == name[:tag]
+      @r509_ext.permitted.names[index].value.should == name[:value]
     end
   end
   it "should have the excluded names" do
     @excluded.each_with_index do |name,index|
-      @r509_ext.excluded[index].tag.should == name[:tag]
-      @r509_ext.excluded[index].value.should == name[:value]
+      @r509_ext.excluded.names[index].tag.should == name[:tag]
+      @r509_ext.excluded.names[index].value.should == name[:value]
     end
   end
 end
@@ -483,39 +483,90 @@ describe R509::Cert::Extensions do
   end
 
   context "BasicConstraints" do
-    context "creation" do
-      it "creates CA:TRUE without pathlen" do
-        bc = R509::Cert::Extensions::BasicConstraints.new(:ca => true)
-        bc.is_ca?.should be_true
-        bc.path_length.should be_nil
+    context "creation & yaml generation" do
+      context "CA:true without pathlen" do
+
+        before :all do
+          @args = { :ca => true, :critical => true }
+          @bc = R509::Cert::Extensions::BasicConstraints.new(@args)
+        end
+
+        it "creates extension" do
+          @bc.is_ca?.should be_true
+          @bc.path_length.should be_nil
+        end
+
+        it "builds yaml" do
+          YAML.load(@bc.to_yaml).should == @args
+        end
       end
 
-      it "creates CA:TRUE with path_length" do
-        bc = R509::Cert::Extensions::BasicConstraints.new(:ca => true, :path_length => 3)
-        bc.is_ca?.should be_true
-        bc.path_length.should == 3
+      context "CA:TRUE with path_length" do
+        before :all do
+          @args = { :ca => true, :path_length => 3, :critical => true }
+          @bc = R509::Cert::Extensions::BasicConstraints.new(@args)
+        end
+
+        it "creates extension" do
+          @bc.is_ca?.should be_true
+          @bc.path_length.should == 3
+        end
+
+        it "builds yaml" do
+          YAML.load(@bc.to_yaml).should == @args
+        end
       end
 
-      it "creates CA:FALSE" do
-        bc = R509::Cert::Extensions::BasicConstraints.new(:ca => false)
-        bc.is_ca?.should be_false
-        bc.path_length.should be_nil
+      context "CA:FALSE" do
+        before :all do
+          @args = { :ca => false, :critical => true }
+          @bc = R509::Cert::Extensions::BasicConstraints.new(@args)
+        end
+
+        it "creates extension" do
+          @bc.is_ca?.should be_false
+          @bc.path_length.should be_nil
+        end
+
+        it "builds yaml" do
+          YAML.load(@bc.to_yaml).should == @args
+        end
+      end
+
+      context "default criticality" do
+        before :all do
+          @args = { :ca => false }
+          @bc = R509::Cert::Extensions::BasicConstraints.new(@args)
+        end
+
+        it "creates extension" do
+          @bc.critical?.should be_true
+        end
+
+        it "builds yaml" do
+          YAML.load(@bc.to_yaml).should == @args.merge(:critical => true)
+        end
+      end
+
+      context "non-default criticality" do
+        before :all do
+          @args = { :ca => false, :critical => false }
+          @bc = R509::Cert::Extensions::BasicConstraints.new(@args)
+        end
+
+        it "creates extension" do
+          @bc.critical?.should be_false
+        end
+
+        it "builds yaml" do
+          YAML.load(@bc.to_yaml).should == @args
+        end
       end
 
       it "errors when supplying path_length if CA:FALSE" do
         expect {
           R509::Cert::Extensions::BasicConstraints.new(:ca => false, :path_length => 4)
         }.to raise_error(ArgumentError, ":path_length is not allowed when :ca is false")
-      end
-
-      it "creates with default criticality" do
-        bc = R509::Cert::Extensions::BasicConstraints.new(:ca => false)
-        bc.critical?.should be_true
-      end
-
-      it "creates with non-default criticality" do
-        bc = R509::Cert::Extensions::BasicConstraints.new(:ca => false, :critical => false)
-        bc.critical?.should be_false
       end
 
     end
@@ -570,25 +621,66 @@ describe R509::Cert::Extensions do
   end
 
   context "KeyUsage" do
-    context "creation" do
-      it "creates with single KU" do
-        ku = R509::Cert::Extensions::KeyUsage.new(:key_usage => ['digitalSignature'])
-        ku.allowed_uses.should == ['digitalSignature']
+    context "creation & yaml generation" do
+      context "single KU" do
+        before :all do
+          @args = { :value => ['digitalSignature'] }
+          @ku = R509::Cert::Extensions::KeyUsage.new(@args)
+        end
+
+        it "creates extension" do
+          @ku.allowed_uses.should == ['digitalSignature']
+        end
+
+        it "builds yaml" do
+          YAML.load(@ku.to_yaml).should == @args.merge(:critical => false)
+        end
       end
 
-      it "creates with multiple KU" do
-        ku = R509::Cert::Extensions::KeyUsage.new(:key_usage => ['digitalSignature','keyAgreement'])
-        ku.allowed_uses.should == ['digitalSignature','keyAgreement']
+
+      context "multiple KU" do
+        before :all do
+          @args = { :value => ['digitalSignature','keyAgreement'] }
+          @ku = R509::Cert::Extensions::KeyUsage.new(@args)
+        end
+
+        it "creates extension" do
+          @ku.allowed_uses.should == ['digitalSignature','keyAgreement']
+        end
+
+        it "builds_yaml" do
+          YAML.load(@ku.to_yaml).should == @args.merge(:critical => false)
+        end
       end
 
-      it "creates with default criticality" do
-        ku = R509::Cert::Extensions::KeyUsage.new(:key_usage => ['keyAgreement'])
-        ku.critical?.should be_false
+      context "default criticality" do
+        before :all do
+          @args = { :value => ['keyAgreement'] }
+          @ku = R509::Cert::Extensions::KeyUsage.new(@args)
+        end
+
+        it "creates extension" do
+          @ku.critical?.should be_false
+        end
+
+        it "builds yaml" do
+          YAML.load(@ku.to_yaml).should == @args.merge(:critical => false)
+        end
       end
 
-      it "creates with non-default criticality" do
-        ku = R509::Cert::Extensions::KeyUsage.new(:key_usage => ['keyAgreement'], :critical => true)
-        ku.critical?.should be_true
+      context "non-default criticality" do
+        before :all do
+          @args = { :value => ['keyAgreement'], :critical => true }
+          @ku = R509::Cert::Extensions::KeyUsage.new(@args)
+        end
+
+        it "creates extension" do
+          @ku.critical?.should be_true
+        end
+
+        it "builds yaml" do
+          YAML.load(@ku.to_yaml).should == @args
+        end
       end
 
     end
@@ -640,25 +732,65 @@ describe R509::Cert::Extensions do
   end
 
   context "ExtendedKeyUsage" do
-    context "creation" do
-      it "creates with single EKU" do
-        eku = R509::Cert::Extensions::ExtendedKeyUsage.new(:extended_key_usage => ['serverAuth'])
-        eku.allowed_uses.should == ['serverAuth']
+    context "creation & yaml generation" do
+      context "single EKU" do
+        before :all do
+          @args = { :value => ['serverAuth'], :critical => false }
+          @eku = R509::Cert::Extensions::ExtendedKeyUsage.new(@args)
+        end
+
+        it "creates extension" do
+          @eku.allowed_uses.should == ['serverAuth']
+        end
+
+        it "builds yaml" do
+          YAML.load(@eku.to_yaml).should == @args
+        end
       end
 
-      it "creates with multiple EKU" do
-        eku = R509::Cert::Extensions::ExtendedKeyUsage.new(:extended_key_usage => ['serverAuth','codeSigning'])
-        eku.allowed_uses.should == ['serverAuth','codeSigning']
+      context "multiple EKU" do
+        before :all do
+          @args = { :value => ['serverAuth','codeSigning'], :critical => false }
+          @eku = R509::Cert::Extensions::ExtendedKeyUsage.new(@args)
+        end
+
+        it "creates extension" do
+          @eku.allowed_uses.should == ['serverAuth','codeSigning']
+        end
+
+        it "builds yaml" do
+          YAML.load(@eku.to_yaml).should == @args
+        end
       end
 
-      it "creates with default criticality" do
-        eku = R509::Cert::Extensions::ExtendedKeyUsage.new(:extended_key_usage => ['serverAuth'])
-        eku.critical?.should be_false
+      context "default criticality" do
+        before :all do
+          @args = { :value => ['serverAuth'] }
+          @eku = R509::Cert::Extensions::ExtendedKeyUsage.new(@args)
+        end
+
+        it "creates extension" do
+          @eku.critical?.should be_false
+        end
+
+        it "builds yaml" do
+          YAML.load(@eku.to_yaml).should == @args.merge(:critical => false)
+        end
       end
 
-      it "creates with non-default criticality" do
-        eku = R509::Cert::Extensions::ExtendedKeyUsage.new(:extended_key_usage => ['serverAuth'], :critical => true)
-        eku.critical?.should be_true
+      context "non-default criticality" do
+        before :all do
+          @args = { :value => ['serverAuth'], :critical => true }
+          @eku = R509::Cert::Extensions::ExtendedKeyUsage.new(@args)
+        end
+
+        it "creates extension" do
+          @eku.critical?.should be_true
+        end
+
+        it "builds yaml" do
+          YAML.load(@eku.to_yaml).should == @args
+        end
       end
 
     end
@@ -798,37 +930,37 @@ describe R509::Cert::Extensions do
   context "SubjectAlternativeName" do
     context "creation" do
 
-      it "errors when not supplying :names" do
+      it "errors when not supplying :value" do
         expect {
           R509::Cert::Extensions::SubjectAlternativeName.new({})
-        }.to raise_error(ArgumentError,"You must supply an array or R509::ASN1::GeneralNames object to :names")
+        }.to raise_error(ArgumentError,"You must supply an array or R509::ASN1::GeneralNames object to :value")
       end
 
       it "creates with GeneralNames object" do
         gns = R509::ASN1::GeneralNames.new
         gns.create_item(:type => "rfc822Name", :value => "random string")
-        san = R509::Cert::Extensions::SubjectAlternativeName.new(:names => gns)
+        san = R509::Cert::Extensions::SubjectAlternativeName.new(:value => gns)
         san.rfc_822_names.should == ['random string']
       end
 
       it "creates with a single name" do
-        san = R509::Cert::Extensions::SubjectAlternativeName.new(:names => ['domain.com'])
+        san = R509::Cert::Extensions::SubjectAlternativeName.new(:value => ['domain.com'])
         san.dns_names.should == ['domain.com']
       end
 
       it "creates with multiple names" do
-        san = R509::Cert::Extensions::SubjectAlternativeName.new(:names => ['domain.com','127.0.0.1'])
+        san = R509::Cert::Extensions::SubjectAlternativeName.new(:value => ['domain.com','127.0.0.1'])
         san.dns_names.should == ['domain.com']
         san.ip_addresses.should == ['127.0.0.1']
       end
 
       it "creates with default criticality" do
-        san = R509::Cert::Extensions::SubjectAlternativeName.new(:names => ['domain.com'])
+        san = R509::Cert::Extensions::SubjectAlternativeName.new(:value => ['domain.com'])
         san.critical?.should be_false
       end
 
       it "creates with non-default criticality" do
-        san = R509::Cert::Extensions::SubjectAlternativeName.new(:names => ['domain.com'], :critical => true)
+        san = R509::Cert::Extensions::SubjectAlternativeName.new(:value => ['domain.com'], :critical => true)
         san.critical?.should be_true
       end
 
@@ -1047,68 +1179,133 @@ describe R509::Cert::Extensions do
     end
   end
   context "AuthorityInfoAccess" do
-    context "creation" do
-      it "creates with GeneralNames object" do
-        gns = R509::ASN1::GeneralNames.new
-        gns.create_item(:type => "rfc822Name", :value => "random string")
-        aia = R509::Cert::Extensions::AuthorityInfoAccess.new(
-          :ocsp_location => gns,
-          :ca_issuers_location => gns
-        )
-        aia.ocsp.rfc_822_names.should == ['random string']
-        aia.ca_issuers.rfc_822_names.should == ['random string']
+    context "creation & yaml generation" do
+      context "using GeneralNames object" do
+        before :all do
+          gns = R509::ASN1::GeneralNames.new
+          gns.create_item(:type => "rfc822Name", :value => "random string")
+          gns.create_item(:type => "directoryName", :value => R509::Subject.new(:CN => "test", :O => "myOrg", :C => "US"))
+          @aia = R509::Cert::Extensions::AuthorityInfoAccess.new(
+            :ocsp_location => gns,
+            :ca_issuers_location => gns
+          )
+        end
+
+        it "creates extension" do
+          @aia.ocsp.rfc_822_names.should == ['random string']
+          @aia.ocsp.directory_names[0].to_s.should == '/CN=test/O=myOrg/C=US'
+          @aia.ca_issuers.rfc_822_names.should == ['random string']
+        end
+
+        it "builds yaml" do
+          YAML.load(@aia.to_yaml).should == {:critical=>false, :ocsp_location=>[{:type=>"email", :value=>"random string"}, {:type=>"dirName", :value=>{:CN=>"test", :O=>"myOrg", :C=>"US"}}], :ca_issuers_location=>[{:type=>"email", :value=>"random string"}, {:type=>"dirName", :value=>{:CN=>"test", :O=>"myOrg", :C=>"US"}}]}
+        end
       end
 
-      it "creates with one OCSP" do
-        aia = R509::Cert::Extensions::AuthorityInfoAccess.new(
-          :ocsp_location => ['http://ocsp.domain.com']
-        )
-        aia.ocsp.uris.should == ['http://ocsp.domain.com']
+      context "one OCSP location" do
+        before :all do
+          @args = { :ocsp_location => [{:type => "URI", :value => 'http://ocsp.domain.com' }], :critical => false }
+          @aia = R509::Cert::Extensions::AuthorityInfoAccess.new(@args)
+        end
+
+        it "creates extension" do
+          @aia.ocsp.uris.should == ['http://ocsp.domain.com']
+        end
+
+        it "builds yaml" do
+          YAML.load(@aia.to_yaml).should == @args
+        end
       end
 
-      it "creates with multiple OCSP" do
-        aia = R509::Cert::Extensions::AuthorityInfoAccess.new(
-          :ocsp_location => ['http://ocsp.domain.com','http://ocsp2.domain.com']
-        )
-        aia.ocsp.uris.should == ['http://ocsp.domain.com','http://ocsp2.domain.com']
+      context " multiple OCSP locations" do
+        before :all do
+          @args = { :ocsp_location => [ { :type => 'URI', :value => 'http://ocsp.domain.com' }, { :type => "URI", :value => 'http://ocsp2.domain.com' }], :critical => false }
+          @aia = R509::Cert::Extensions::AuthorityInfoAccess.new(@args)
+        end
+
+        it "creates extension" do
+          @aia.ocsp.uris.should == ['http://ocsp.domain.com','http://ocsp2.domain.com']
+        end
+
+        it "builds yaml" do
+          YAML.load(@aia.to_yaml).should == @args
+        end
       end
 
-      it "creates with one caIssuers" do
-        aia = R509::Cert::Extensions::AuthorityInfoAccess.new(
-          :ca_issuers_location => ['http://www.domain.com']
-        )
-        aia.ca_issuers.uris.should == ['http://www.domain.com']
+      context "one caIssuers" do
+        before :all do
+          @args = { :ca_issuers_location => [ { :type => 'URI', :value => 'http://www.domain.com' } ], :critical => false }
+          @aia = R509::Cert::Extensions::AuthorityInfoAccess.new(@args)
+        end
+
+        it "creates extension" do
+          @aia.ca_issuers.uris.should == ['http://www.domain.com']
+        end
+
+        it "builds yaml" do
+          YAML.load(@aia.to_yaml).should == @args
+        end
       end
 
-      it "creates with multiple caIssuers" do
-        aia = R509::Cert::Extensions::AuthorityInfoAccess.new(
-          :ca_issuers_location => ['http://www.domain.com','http://www2.domain.com']
-        )
-        aia.ca_issuers.uris.should == ['http://www.domain.com','http://www2.domain.com']
+      context "multiple caIssuers" do
+        before :all do
+          @args = { :ca_issuers_location => [ { :type => 'URI', :value => 'http://www.domain.com' }, { :type => "URI", :value => 'http://www2.domain.com' }], :critical => false }
+          @aia = R509::Cert::Extensions::AuthorityInfoAccess.new(@args)
+        end
+
+        it "creates extension" do
+          @aia.ca_issuers.uris.should == ['http://www.domain.com','http://www2.domain.com']
+        end
+
+        it "builds yaml" do
+          YAML.load(@aia.to_yaml).should == @args
+        end
       end
 
-      it "creates with caIssuers+OCSP" do
-        aia = R509::Cert::Extensions::AuthorityInfoAccess.new(
-          :ca_issuers_location => ['http://www.domain.com'],
-          :ocsp_location => ['http://ocsp.domain.com']
-        )
-        aia.ca_issuers.uris.should == ['http://www.domain.com']
-        aia.ocsp.uris.should == ['http://ocsp.domain.com']
+      context "caIssuers+OCSP" do
+        before :all do
+          @args = { :ca_issuers_location => [{ :type => 'URI', :value => 'http://www.domain.com' }], :ocsp_location => [{ :type => 'URI', :value => 'http://ocsp.domain.com' }], :critical => false }
+          @aia = R509::Cert::Extensions::AuthorityInfoAccess.new(@args)
+        end
+
+        it "creates extension" do
+          @aia.ca_issuers.uris.should == ['http://www.domain.com']
+          @aia.ocsp.uris.should == ['http://ocsp.domain.com']
+        end
+
+        it "builds yaml" do
+          YAML.load(@aia.to_yaml).should == @args
+        end
       end
 
-      it "creates with default criticality" do
-        aia = R509::Cert::Extensions::AuthorityInfoAccess.new(
-          :ocsp_location => ['http://ocsp.domain.com']
-        )
-        aia.critical?.should be_false
+      context "default criticality" do
+        before :all do
+        @args = { :ocsp_location => [{ :type => 'URI', :value => 'http://ocsp.domain.com' }]}
+        @aia = R509::Cert::Extensions::AuthorityInfoAccess.new(@args)
+        end
+
+        it "creates extension" do
+          @aia.critical?.should be_false
+        end
+
+        it "builds yaml" do
+          YAML.load(@aia.to_yaml).should == @args.merge(:critical => false)
+        end
       end
 
-      it "creates with non-default criticality" do
-        aia = R509::Cert::Extensions::AuthorityInfoAccess.new(
-          :ocsp_location => ['http://ocsp.domain.com'],
-          :critical => true
-        )
-        aia.critical?.should be_true
+      context "non-default criticality" do
+        before :all do
+        @args = { :ocsp_location => [{ :type => 'URI', :value => 'http://ocsp.domain.com' }], :critical => true}
+        @aia = R509::Cert::Extensions::AuthorityInfoAccess.new(@args)
+        end
+
+        it "creates extension" do
+          @aia.critical?.should be_true
+        end
+
+        it "builds yaml" do
+          YAML.load(@aia.to_yaml).should == @args
+        end
       end
 
     end
@@ -1170,32 +1367,83 @@ describe R509::Cert::Extensions do
   end
 
   context "CRLDistributionPoints" do
-    context "creation" do
-      it "creates with GeneralNames object" do
-        gns = R509::ASN1::GeneralNames.new
-        gns.create_item(:type => "rfc822Name", :value => "random string")
-        cdp = R509::Cert::Extensions::CRLDistributionPoints.new(:cdp_location => gns)
-        cdp.crl.rfc_822_names.should == ['random string']
+    context "creation & yaml generation" do
+      context "GeneralNames object" do
+        before :all do
+          gns = R509::ASN1::GeneralNames.new
+          gns.create_item(:type => "rfc822Name", :value => "random string")
+          args = { :value => gns, :critical => false }
+          @cdp = R509::Cert::Extensions::CRLDistributionPoints.new(args)
+        end
+
+        it "creates extension" do
+          @cdp.rfc_822_names.should == ['random string']
+        end
+
+        it "builds yaml" do
+          YAML.load(@cdp.to_yaml).should == {:critical=>false, :value=>[{:type=>"email", :value=>"random string"}]}
+        end
       end
 
-      it "creates with one CDP" do
-        cdp = R509::Cert::Extensions::CRLDistributionPoints.new(:cdp_location => ['http://crl.r509.org/ca.crl'])
-        cdp.crl.uris.should == ['http://crl.r509.org/ca.crl']
+      context "one CDP" do
+        before :all do
+          @args = { :value => [{ :type => 'URI', :value => 'http://crl.r509.org/ca.crl'}], :critical => false }
+          @cdp = R509::Cert::Extensions::CRLDistributionPoints.new(@args)
+        end
+
+        it "creates extension" do
+          @cdp.uris.should == ['http://crl.r509.org/ca.crl']
+        end
+
+        it "builds yaml" do
+          YAML.load(@cdp.to_yaml).should == @args
+        end
       end
 
-      it "creates with multiple CDP" do
-        cdp = R509::Cert::Extensions::CRLDistributionPoints.new(:cdp_location => ['http://crl.r509.org/ca.crl','http://2.com/test.crl'])
-        cdp.crl.uris.should == ['http://crl.r509.org/ca.crl','http://2.com/test.crl']
+      context "multiple CDP" do
+        before :all do
+          @args = { :value => [{ :type => 'URI', :value => 'http://crl.r509.org/ca.crl' },{ :type => 'dirName', :value => {:CN => 'myCN'}}], :critical => false }
+          @cdp = R509::Cert::Extensions::CRLDistributionPoints.new(@args)
+        end
+
+        it "creates extension" do
+          @cdp.uris.should == ['http://crl.r509.org/ca.crl']
+          @cdp.directory_names[0].to_s.should == '/CN=myCN'
+        end
+
+        it "builds yaml" do
+          YAML.load(@cdp.to_yaml).should == @args
+        end
       end
 
-      it "creates with default criticality" do
-        cdp = R509::Cert::Extensions::CRLDistributionPoints.new(:cdp_location => ['http://crl.r509.org/ca.crl'])
-        cdp.critical?.should be_false
+      context "default criticality" do
+        before :all do
+          @args = { :value => [{:type => "URI", :value => 'http://crl.r509.org/ca.crl'}] }
+          @cdp = R509::Cert::Extensions::CRLDistributionPoints.new(@args)
+        end
+
+        it "creates extension" do
+          @cdp.critical?.should be_false
+        end
+
+        it "builds yaml" do
+          YAML.load(@cdp.to_yaml).should == @args.merge(:critical => false)
+        end
       end
 
-      it "creates with non-default criticality" do
-        cdp = R509::Cert::Extensions::CRLDistributionPoints.new(:cdp_location => ['http://crl.r509.org/ca.crl'], :critical => true)
-        cdp.critical?.should be_true
+      context "non-default criticality" do
+        before :all do
+          @args = { :value => [{:type => "URI", :value => 'http://crl.r509.org/ca.crl'}], :critical => true }
+          @cdp = R509::Cert::Extensions::CRLDistributionPoints.new(@args)
+        end
+
+        it "creates extension" do
+          @cdp.critical?.should be_true
+        end
+
+        it "builds yaml" do
+          YAML.load(@cdp.to_yaml).should == @args
+        end
       end
 
     end
@@ -1222,20 +1470,47 @@ describe R509::Cert::Extensions do
   end
 
   context "OCSPNoCheck" do
-    context "creation" do
-      it "creates an extension when passed a hash" do
-        no_check = R509::Cert::Extensions::OCSPNoCheck.new({})
-        no_check.should_not be_nil
+    context "creation & yaml generation" do
+      context "when passed a hash" do
+        before :all do
+          @no_check = R509::Cert::Extensions::OCSPNoCheck.new({})
+        end
+
+        it "creates extension" do
+          @no_check.should_not be_nil
+        end
+
+        it "builds yaml" do
+          YAML.load(@no_check.to_yaml).should == {:critical=>false}
+        end
       end
 
-      it "creates with default criticality" do
-        no_check = R509::Cert::Extensions::OCSPNoCheck.new({})
-        no_check.critical?.should be_false
+      context "default criticality" do
+        before :all do
+          @no_check = R509::Cert::Extensions::OCSPNoCheck.new({})
+        end
+
+        it "creates extension" do
+          @no_check.critical?.should be_false
+        end
+
+        it "builds yaml" do
+          YAML.load(@no_check.to_yaml).should == {:critical => false}
+        end
       end
 
-      it "creates with non-default criticality" do
-        no_check = R509::Cert::Extensions::OCSPNoCheck.new(:critical => true)
-        no_check.critical?.should be_true
+      context "non-default criticality" do
+        before :all do
+          @no_check = R509::Cert::Extensions::OCSPNoCheck.new(:critical => true)
+        end
+
+        it "creates extension" do
+          @no_check.critical?.should be_true
+        end
+
+        it "builds yaml" do
+          YAML.load(@no_check.to_yaml).should == {:critical => true}
+        end
       end
 
     end
@@ -1249,79 +1524,115 @@ describe R509::Cert::Extensions do
       @policy_data = "0\x81\x90\x06\x03U\x1D \x04\x81\x880\x81\x850\x81\x82\x06\v`\x86H\x01\xE09\x01\x02\x03\x04\x010s0\"\x06\b+\x06\x01\x05\x05\a\x02\x01\x16\x16http://example.com/cps0 \x06\b+\x06\x01\x05\x05\a\x02\x01\x16\x14http://other.com/cps0+\x06\b+\x06\x01\x05\x05\a\x02\x020\x1F0\x16\x16\x06my org0\f\x02\x01\x01\x02\x01\x02\x02\x01\x03\x02\x01\x04\x1A\x05thing"
     end
 
-    context "creation" do
-      it "creates with one policy" do
-        cp = R509::Cert::Extensions::CertificatePolicies.new(
-          :policies => [{ :policy_identifier => "2.16.840.1.12345.1.2.3.4.1",
-            :cps_uris => ["http://example.com/cps","http://other.com/cps"],
-            :user_notices => [ {:explicit_text => "thing", :organization => "my org", :notice_numbers => "1,2,3,4"} ]
-          }]
-        )
-        cp.should_not be_nil
-        cp.policies.count.should == 1
-        cp.policies[0].policy_identifier.should == "2.16.840.1.12345.1.2.3.4.1"
-        cp.policies[0].policy_qualifiers.cps_uris.should == ["http://example.com/cps", "http://other.com/cps"]
-        cp.policies[0].policy_qualifiers.user_notices.count.should == 1
-        un = cp.policies[0].policy_qualifiers.user_notices[0]
-        un.notice_reference.notice_numbers.should == [1,2,3,4]
-        un.notice_reference.organization.should == 'my org'
-        un.explicit_text.should == "thing"
+    context "creation & yaml generation" do
+      context "one policy" do
+        before :all do
+          @args = {
+            :critical => false,
+            :value => [{ :policy_identifier => "2.16.840.1.12345.1.2.3.4.1",
+              :cps_uris => ["http://example.com/cps","http://other.com/cps"],
+              :user_notices => [ {:explicit_text => "thing", :organization => "my org", :notice_numbers => [1,2,3,4] }  ] }]
+          }
+          @cp = R509::Cert::Extensions::CertificatePolicies.new(@args)
+        end
+
+        it "creates extension" do
+          @cp.should_not be_nil
+          @cp.policies.count.should == 1
+          @cp.policies[0].policy_identifier.should == "2.16.840.1.12345.1.2.3.4.1"
+          @cp.policies[0].policy_qualifiers.cps_uris.should == ["http://example.com/cps", "http://other.com/cps"]
+          @cp.policies[0].policy_qualifiers.user_notices.count.should == 1
+          un = @cp.policies[0].policy_qualifiers.user_notices[0]
+          un.notice_reference.notice_numbers.should == [1,2,3,4]
+          un.notice_reference.organization.should == 'my org'
+          un.explicit_text.should == "thing"
+        end
+
+        it "builds yaml" do
+          YAML.load(@cp.to_yaml).should == @args
+        end
       end
 
-      it "creates with multiple policies" do
-        cp = R509::Cert::Extensions::CertificatePolicies.new(
-          :policies => [{ :policy_identifier => "2.16.840.1.99999.21.234",
-            :cps_uris => ["http://example.com/cps","http://other.com/cps"],
-            :user_notices => [ {:explicit_text => "this is a great thing", :organization => "my org", :notice_numbers => "1,2,3,4"} ]
-          },
-          {
-            :policy_identifier => "2.16.840.1.99999.21.235",
-            :cps_uris => ["http://example.com/cps2"],
-            :user_notices => [{:explicit_text => "this is a bad thing", :organization => "another org", :notice_numbers => "3,2,1"}, {:explicit_text => "another user notice"}]
-          },
-          {
-            :policy_identifier => "2.16.840.1.99999.0"
-          }]
-        )
-        cp.should_not be_nil
-        cp.policies.count.should == 3
-        p0 = cp.policies[0]
-        p0.policy_identifier.should == "2.16.840.1.99999.21.234"
-        p0.policy_qualifiers.cps_uris.should == ["http://example.com/cps", "http://other.com/cps"]
-        p0.policy_qualifiers.user_notices.count.should == 1
-        un0 = p0.policy_qualifiers.user_notices[0]
-        un0.notice_reference.notice_numbers.should == [1,2,3,4]
-        un0.notice_reference.organization.should == "my org"
-        un0.explicit_text.should == "this is a great thing"
-        p1 = cp.policies[1]
-        p1.policy_identifier.should == "2.16.840.1.99999.21.235"
-        p1.policy_qualifiers.cps_uris.should == ["http://example.com/cps2"]
-        p1.policy_qualifiers.user_notices.count.should == 2
-        un1 = p1.policy_qualifiers.user_notices[0]
-        un1.notice_reference.notice_numbers.should == [3,2,1]
-        un1.notice_reference.organization.should == "another org"
-        un1.explicit_text.should == 'this is a bad thing'
-        un2 = p1.policy_qualifiers.user_notices[1]
-        un2.notice_reference.should be_nil
-        un2.explicit_text.should == "another user notice"
-        p2 = cp.policies[2]
-        p2.policy_identifier.should == "2.16.840.1.99999.0"
-        p2.policy_qualifiers.should be_nil
+      context "multiple policies" do
+        before :all do
+          @args = {
+            :critical => false,
+            :value => [ {
+              :policy_identifier => "2.16.840.1.99999.21.234",
+              :cps_uris => ["http://example.com/cps","http://other.com/cps"],
+              :user_notices => [ {:explicit_text => "this is a great thing", :organization => "my org", :notice_numbers => [1,2,3,4]} ]
+            }, {
+              :policy_identifier => "2.16.840.1.99999.21.235",
+              :cps_uris => ["http://example.com/cps2"],
+              :user_notices => [{:explicit_text => "this is a bad thing", :organization => "another org", :notice_numbers => [3,2,1] }, {:explicit_text => "another user notice"}]
+            },
+            {
+              :policy_identifier => "2.16.840.1.99999.0"
+            }]
+          }
+          @cp = R509::Cert::Extensions::CertificatePolicies.new(@args)
+        end
+
+        it "creates extension" do
+          @cp.should_not be_nil
+          @cp.policies.count.should == 3
+          p0 = @cp.policies[0]
+          p0.policy_identifier.should == "2.16.840.1.99999.21.234"
+          p0.policy_qualifiers.cps_uris.should == ["http://example.com/cps", "http://other.com/cps"]
+          p0.policy_qualifiers.user_notices.count.should == 1
+          un0 = p0.policy_qualifiers.user_notices[0]
+          un0.notice_reference.notice_numbers.should == [1,2,3,4]
+          un0.notice_reference.organization.should == "my org"
+          un0.explicit_text.should == "this is a great thing"
+          p1 = @cp.policies[1]
+          p1.policy_identifier.should == "2.16.840.1.99999.21.235"
+          p1.policy_qualifiers.cps_uris.should == ["http://example.com/cps2"]
+          p1.policy_qualifiers.user_notices.count.should == 2
+          un1 = p1.policy_qualifiers.user_notices[0]
+          un1.notice_reference.notice_numbers.should == [3,2,1]
+          un1.notice_reference.organization.should == "another org"
+          un1.explicit_text.should == 'this is a bad thing'
+          un2 = p1.policy_qualifiers.user_notices[1]
+          un2.notice_reference.should be_nil
+          un2.explicit_text.should == "another user notice"
+          p2 = @cp.policies[2]
+          p2.policy_identifier.should == "2.16.840.1.99999.0"
+          p2.policy_qualifiers.should be_nil
+        end
+
+        it "builds yaml" do
+          YAML.load(@cp.to_yaml).should == @args
+        end
       end
 
-      it "creates with default criticality" do
-        cp = R509::Cert::Extensions::CertificatePolicies.new(
-          :policies => [{ :policy_identifier => "2.16.840.1.12345.1.2.3.4.1" }]
-        )
-        cp.critical?.should be_false
+      context "default criticality" do
+        before :all do
+          @args = { :value => [{ :policy_identifier => "2.16.840.1.12345.1.2.3.4.1" }] }
+          @cp = R509::Cert::Extensions::CertificatePolicies.new(@args)
+        end
+
+        it "creates extension" do
+          @cp.critical?.should be_false
+        end
+
+        it "builds yaml" do
+          YAML.load(@cp.to_yaml).should == @args.merge(:critical => false)
+        end
       end
 
-      it "creates with non-default criticality" do
-        cp = R509::Cert::Extensions::CertificatePolicies.new(
-          :policies => [{ :policy_identifier => "2.16.840.1.12345.1.2.3.4.1" }],
-          :critical => true
-        )
-        cp.critical?.should be_true
+      context "non-default criticality" do
+        before :all do
+          @args = { :value => [{ :policy_identifier => "2.16.840.1.12345.1.2.3.4.1" }], :critical => true }
+          @cp = R509::Cert::Extensions::CertificatePolicies.new(@args)
+        end
+
+        it "creates extension" do
+          @cp.critical?.should be_true
+        end
+
+        it "builds yaml" do
+          YAML.load(@cp.to_yaml).should == @args
+        end
       end
 
     end
@@ -1331,23 +1642,53 @@ describe R509::Cert::Extensions do
 
   context "InhibitAnyPolicy" do
     before :all do
-      @skip_certs = 3
+      @value = 3
     end
 
-    context "creation" do
-      it "creates with a positive skip #" do
-        iap = R509::Cert::Extensions::InhibitAnyPolicy.new(:skip_certs => 1)
-        iap.skip_certs.should == 1
+    context "creation & yaml generation" do
+      context "creates with a positive skip #" do
+        before :all do
+          @args = { :value => 1, :critical => true }
+          @iap = R509::Cert::Extensions::InhibitAnyPolicy.new(@args)
+        end
+
+        it "creates extension" do
+          @iap.value.should == 1
+        end
+
+        it "builds yaml" do
+          YAML.load(@iap.to_yaml).should == @args
+        end
       end
 
-      it "creates with default criticality" do
-        iap = R509::Cert::Extensions::InhibitAnyPolicy.new(:skip_certs => 1)
-        iap.critical?.should == true
+      context "creates with default criticality" do
+        before :all do
+          @args = { :value => 1 }
+          @iap = R509::Cert::Extensions::InhibitAnyPolicy.new(@args)
+        end
+
+        it "creates extension" do
+          @iap.critical?.should == true
+        end
+
+        it "builds yaml" do
+          YAML.load(@iap.to_yaml).should == @args.merge(:critical => true)
+        end
       end
 
-      it "creates with non-default criticality" do
-        iap = R509::Cert::Extensions::InhibitAnyPolicy.new(:skip_certs => 1, :critical => false)
-        iap.critical?.should == false
+      context "creates with non-default criticality" do
+        before :all do
+          @args = { :value => 1, :critical => false }
+          @iap = R509::Cert::Extensions::InhibitAnyPolicy.new(@args)
+        end
+
+        it "creates extension" do
+          @iap.critical?.should == false
+        end
+
+        it "builds yaml" do
+          YAML.load(@iap.to_yaml).should == @args
+        end
       end
 
     end
@@ -1357,43 +1698,85 @@ describe R509::Cert::Extensions do
   end
 
   context "PolicyConstraints" do
-    context "creation" do
-      it "creates with require explicit policy" do
-        pc = R509::Cert::Extensions::PolicyConstraints.new(
-          :require_explicit_policy => 1
-        )
-        pc.require_explicit_policy.should == 1
+    context "creation & yaml generation" do
+      context "creates with require explicit policy" do
+        before :all do
+          @args = { :require_explicit_policy => 1, :critical => true }
+          @pc = R509::Cert::Extensions::PolicyConstraints.new(@args)
+        end
+
+        it "creates extension" do
+          @pc.require_explicit_policy.should == 1
+        end
+
+        it "builds yaml" do
+          YAML.load(@pc.to_yaml).should == @args
+        end
       end
 
-      it "creates with inhibit policy mapping" do
-        pc = R509::Cert::Extensions::PolicyConstraints.new(
-          :inhibit_policy_mapping => 1
-        )
-        pc.inhibit_policy_mapping.should == 1
+      context "creates with inhibit policy mapping" do
+        before :all do
+          @args = { :inhibit_policy_mapping => 1, :critical => true }
+          @pc = R509::Cert::Extensions::PolicyConstraints.new(@args)
+        end
+
+        it "creates extension" do
+          @pc.inhibit_policy_mapping.should == 1
+        end
+
+        it "builds yaml" do
+          YAML.load(@pc.to_yaml).should == @args
+        end
       end
 
-      it "creates with both" do
-        pc = R509::Cert::Extensions::PolicyConstraints.new(
-          :inhibit_policy_mapping => 1,
-          :require_explicit_policy => 3
-        )
-        pc.inhibit_policy_mapping.should == 1
-        pc.require_explicit_policy.should == 3
+      context "creates with both" do
+        before :all do
+          @args = {
+            :inhibit_policy_mapping => 1,
+            :require_explicit_policy => 3,
+            :critical => true
+          }
+          @pc = R509::Cert::Extensions::PolicyConstraints.new(@args)
+        end
+
+        it "creates extension" do
+          @pc.inhibit_policy_mapping.should == 1
+          @pc.require_explicit_policy.should == 3
+        end
+
+        it "builds yaml" do
+          YAML.load(@pc.to_yaml).should == @args
+        end
       end
 
-      it "creates with default criticality" do
-        pc = R509::Cert::Extensions::PolicyConstraints.new(
-          :inhibit_policy_mapping => 1
-        )
-        pc.critical?.should == true
+      context "default criticality" do
+        before :all do
+          @args = { :inhibit_policy_mapping => 1 }
+          @pc = R509::Cert::Extensions::PolicyConstraints.new(@args)
+        end
+
+        it "creates extension" do
+          @pc.critical?.should == true
+        end
+
+        it "builds yaml" do
+          YAML.load(@pc.to_yaml).should == @args.merge(:critical => true)
+        end
       end
 
-      it "creates with non-default criticality" do
-        pc = R509::Cert::Extensions::PolicyConstraints.new(
-          :inhibit_policy_mapping => 1,
-          :critical => false
-        )
-        pc.critical?.should == false
+      context "non-default criticality" do
+        before :all do
+          @args = { :inhibit_policy_mapping => 1, :critical => false }
+          @pc = R509::Cert::Extensions::PolicyConstraints.new(@args)
+        end
+
+        it "creates extension" do
+          @pc.critical?.should == false
+        end
+
+        it "builds yaml" do
+          YAML.load(@pc.to_yaml).should == @args
+        end
       end
 
     end
@@ -1428,79 +1811,165 @@ describe R509::Cert::Extensions do
   end
 
   context "NameConstraints" do
-    context "creation" do
-      it "creates with one permitted" do
-        nc = R509::Cert::Extensions::NameConstraints.new(
-          :permitted => [ { :type => 'dNSName', :value => 'domain.com' }]
-        )
-        nc.permitted.size.should == 1
-        nc.permitted[0].value.should == 'domain.com'
+    context "creation & yaml generation" do
+      context "one permitted" do
+        before :all do
+          @args = { :permitted => [ { :type => 'DNS', :value => 'domain.com' }], :critical => true }
+          @nc = R509::Cert::Extensions::NameConstraints.new(@args)
+        end
+
+        it "creates extension" do
+          @nc.permitted.names.size.should == 1
+          @nc.permitted.names[0].value.should == 'domain.com'
+          @nc.permitted.names[0].short_type.should == 'DNS'
+        end
+
+        it "builds yaml" do
+          YAML.load(@nc.to_yaml).should == @args
+        end
       end
 
-      it "creates with multiple permitted" do
-        nc = R509::Cert::Extensions::NameConstraints.new(
-          :permitted => [
-            { :type => 'dNSName', :value => 'domain.com' },
-            { :type => 'iPAddress', :value => '127.0.0.1/255.255.255.255' }
-          ]
-        )
-        nc.permitted.size.should == 2
-        nc.permitted[0].value.should == 'domain.com'
-        nc.permitted[1].value.should == '127.0.0.1/255.255.255.255'
+      context "creates with multiple permitted" do
+        before :all do
+          @args = {
+            :critical => true,
+            :permitted => [
+              { :type => 'DNS', :value => 'domain.com' },
+              { :type => 'IP', :value => '127.0.0.1/255.255.255.255' },
+              { :type => 'dirName', :value => {:CN => 'myCN', :O => 'myO', :C => "US" } }
+            ]
+          }
+          @nc = R509::Cert::Extensions::NameConstraints.new(@args)
+        end
+
+        it "creates extension" do
+          @nc.permitted.names.size.should == 3
+          @nc.permitted.names[0].value.should == 'domain.com'
+          @nc.permitted.names[0].short_type.should == 'DNS'
+          @nc.permitted.names[1].value.should == '127.0.0.1/255.255.255.255'
+          @nc.permitted.names[1].short_type.should == 'IP'
+          @nc.permitted.names[2].value.to_s.should == '/CN=myCN/O=myO/C=US'
+          @nc.permitted.names[2].short_type.should == 'dirName'
+        end
+
+        it "builds yaml" do
+          YAML.load(@nc.to_yaml).should == @args
+        end
       end
 
-      it "creates with one excluded" do
-        nc = R509::Cert::Extensions::NameConstraints.new(
-          :excluded => [ { :type => 'dNSName', :value => 'domain.com' }]
-        )
-        nc.excluded.size.should == 1
-        nc.excluded[0].value.should == 'domain.com'
+      context "creates with one excluded" do
+        before :all do
+          @args = { :excluded => [ { :type => 'DNS', :value => 'domain.com' }], :critical => true }
+          @nc = R509::Cert::Extensions::NameConstraints.new(@args)
+        end
+
+        it "creates extension" do
+          @nc.excluded.names.size.should == 1
+          @nc.excluded.names[0].value.should == 'domain.com'
+          @nc.excluded.names[0].short_type.should == 'DNS'
+        end
+
+        it "builds yaml" do
+          YAML.load(@nc.to_yaml).should == @args
+        end
       end
 
-      it "creates with multiple excluded" do
-        nc = R509::Cert::Extensions::NameConstraints.new(
-          :excluded => [
-            { :type => 'dNSName', :value => 'domain.com' },
-            { :type => 'iPAddress', :value => '127.0.0.1/255.255.255.255' }
-          ]
-        )
-        nc.excluded.size.should == 2
-        nc.excluded[0].value.should == 'domain.com'
-        nc.excluded[1].value.should == '127.0.0.1/255.255.255.255'
+      context "multiple excluded" do
+        before :all do
+          @args = {
+            :critical => true,
+            :excluded => [
+              { :type => 'DNS', :value => 'domain.com' },
+              { :type => 'IP', :value => '127.0.0.1/255.255.255.255' },
+              { :type => 'dirName', :value => {:CN => 'myCN', :O => 'myO', :C => "US" } }
+            ]
+          }
+          @nc = R509::Cert::Extensions::NameConstraints.new(@args)
+        end
+
+        it "creates extension" do
+          @nc.excluded.names.size.should == 3
+          @nc.excluded.names[0].value.should == 'domain.com'
+          @nc.excluded.names[0].short_type.should == 'DNS'
+          @nc.excluded.names[1].value.should == '127.0.0.1/255.255.255.255'
+          @nc.excluded.names[1].short_type.should == 'IP'
+          @nc.excluded.names[2].value.to_s.should == '/CN=myCN/O=myO/C=US'
+          @nc.excluded.names[2].short_type.should == 'dirName'
+        end
+
+        it "builds yaml" do
+          YAML.load(@nc.to_yaml).should == @args
+        end
       end
 
-      it "creates with both" do
-        nc = R509::Cert::Extensions::NameConstraints.new(
-          :permitted => [
-            { :type => 'dNSName', :value => 'domain.com' },
-            { :type => 'iPAddress', :value => '127.0.0.1/255.255.255.255' }
-          ],
-          :excluded => [
-            { :type => 'dNSName', :value => 'domain.com' },
-            { :type => 'iPAddress', :value => '127.0.0.1/255.255.255.255' }
-          ]
-        )
-        nc.excluded.size.should == 2
-        nc.excluded[0].value.should == 'domain.com'
-        nc.excluded[1].value.should == '127.0.0.1/255.255.255.255'
-        nc.permitted.size.should == 2
-        nc.permitted[0].value.should == 'domain.com'
-        nc.permitted[1].value.should == '127.0.0.1/255.255.255.255'
+      context "both permitted and excluded" do
+        before :all do
+          @args = {
+            :critical => true,
+            :excluded => [
+              { :type => 'DNS', :value => 'domain.com' },
+              { :type => 'IP', :value => '127.0.0.1/255.255.255.255' },
+              { :type => 'dirName', :value => {:CN => 'myCN', :O => 'myO', :C => "US" } }
+            ],
+            :permitted => [
+              { :type => 'DNS', :value => 'domain.com' },
+              { :type => 'IP', :value => '127.0.0.1/255.255.255.255' },
+              { :type => 'dirName', :value => {:CN => 'myCN', :O => 'myO', :C => "US" } }
+            ]
+          }
+          @nc = R509::Cert::Extensions::NameConstraints.new(@args)
+        end
+
+        it "creates extension" do
+          @nc.permitted.names.size.should == 3
+          @nc.permitted.names[0].value.should == 'domain.com'
+          @nc.permitted.names[0].short_type.should == 'DNS'
+          @nc.permitted.names[1].value.should == '127.0.0.1/255.255.255.255'
+          @nc.permitted.names[1].short_type.should == 'IP'
+          @nc.permitted.names[2].value.to_s.should == '/CN=myCN/O=myO/C=US'
+          @nc.permitted.names[2].short_type.should == 'dirName'
+          @nc.excluded.names.size.should == 3
+          @nc.excluded.names[0].value.should == 'domain.com'
+          @nc.excluded.names[0].short_type.should == 'DNS'
+          @nc.excluded.names[1].value.should == '127.0.0.1/255.255.255.255'
+          @nc.excluded.names[1].short_type.should == 'IP'
+          @nc.excluded.names[2].value.to_s.should == '/CN=myCN/O=myO/C=US'
+          @nc.excluded.names[2].short_type.should == 'dirName'
+        end
+
+        it "builds yaml" do
+          YAML.load(@nc.to_yaml).should == @args
+        end
       end
 
-      it "creates with default criticality" do
-        nc = R509::Cert::Extensions::NameConstraints.new(
-          :excluded => [ { :type => 'dNSName', :value => 'domain.com' }]
-        )
-        nc.critical?.should == true
+      context "creates with default criticality" do
+        before :all do
+          @args = { :permitted => [ { :type => 'DNS', :value => 'domain.com' }] }
+          @nc = R509::Cert::Extensions::NameConstraints.new(@args)
+        end
+
+        it "creates extension" do
+          @nc.critical?.should == true
+        end
+
+        it "builds yaml" do
+          YAML.load(@nc.to_yaml).should == @args.merge(:critical => true)
+        end
       end
 
-      it "creates with non-default criticality" do
-        nc = R509::Cert::Extensions::NameConstraints.new(
-          :excluded => [ { :type => 'dNSName', :value => 'domain.com' }],
-          :critical => false
-        )
-        nc.critical?.should == false
+      context "creates with non-default criticality" do
+        before :all do
+          @args = { :permitted => [ { :type => 'DNS', :value => 'domain.com' }], :critical => false }
+          @nc = R509::Cert::Extensions::NameConstraints.new(@args)
+        end
+
+        it "creates extension" do
+          @nc.critical?.should == false
+        end
+
+        it "builds yaml" do
+          YAML.load(@nc.to_yaml).should == @args
+        end
       end
 
     end

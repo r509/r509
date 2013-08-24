@@ -67,7 +67,8 @@ module R509
       # The type, represented as a symbolized version of the GeneralName (e.g. :dNSName)
       attr_reader :type
       # The prefix OpenSSL needs for this type when encoding it into an extension.
-      attr_reader :serial_prefix
+      # Also used by the YAML serialization in the extensions
+      attr_reader :short_type
       # Value of the GeneralName
       attr_reader :value
       # Integer tag type. See GeneralName description at the top of this class
@@ -75,16 +76,16 @@ module R509
 
       # @param [OpenSSL::ASN1::ASN1Data,Hash] asn ASN.1 input data. Can also pass a hash with :tag and :value keys
       def initialize(asn)
-        if asn.kind_of?(Hash) and asn.has_key?(:tag) and asn.has_key?(:value)
+        if asn.kind_of?(Hash)
           # this is added via create_item
-          @tag = asn[:tag]
+          @tag = asn[:tag] || R509::ASN1::GeneralName.map_type_to_tag(asn[:type])
           @type = R509::ASN1::GeneralName.map_tag_to_type(@tag)
-          @serial_prefix = R509::ASN1::GeneralName.map_tag_to_serial_prefix(@tag)
+          @short_type = R509::ASN1::GeneralName.map_tag_to_short_type(@tag)
           @value = asn[:value]
         else
           @tag = asn.tag
           @type = R509::ASN1::GeneralName.map_tag_to_type(@tag)
-          @serial_prefix = R509::ASN1::GeneralName.map_tag_to_serial_prefix(@tag)
+          @short_type = R509::ASN1::GeneralName.map_tag_to_short_type(@tag)
           value = asn.value
           case @tag
           when 1 then @value = value
@@ -141,7 +142,7 @@ module R509
 
       # @param [Integer] tag
       # @return [String] serial prefix
-      def self.map_tag_to_serial_prefix(tag)
+      def self.map_tag_to_short_type(tag)
         case tag
         when 1 then "email"
         when 2 then "DNS"
@@ -191,7 +192,7 @@ module R509
         if self.type == :directoryName
           return serialize_directory_name
         else
-          extension_string = self.serial_prefix + ":" + self.value
+          extension_string = self.short_type + ":" + self.value
           return { :conf => nil, :extension_string => extension_string }
         end
       end
@@ -206,7 +207,7 @@ module R509
           conf << "#{el[0]}=#{el[1]}"
         end
         conf = conf.join("\n")
-        extension_string = self.serial_prefix + ":" + conf_name
+        extension_string = self.short_type + ":" + conf_name
         { :conf => conf, :extension_string => extension_string }
       end
     end
@@ -248,10 +249,7 @@ module R509
         if not hash.respond_to?(:has_key?) or (not hash.has_key?(:tag) and not hash.has_key?(:type)) or not hash.has_key?(:value)
           raise ArgumentError, "Must be a hash with (:tag or :type) and :value nodes"
         end
-        if hash[:type]
-          hash[:tag] = R509::ASN1::GeneralName.map_type_to_tag(hash[:type])
-        end
-        gn = R509::ASN1::GeneralName.new(:tag => hash[:tag], :value => hash[:value])
+        gn = R509::ASN1::GeneralName.new(:tag => hash[:tag], :type => hash[:type], :value => hash[:value])
         add_item(gn)
       end
 
@@ -317,6 +315,17 @@ module R509
           end
         end
       end
+
+      def to_h
+        hash = {}
+        hash[:policy_identifier] = @policy_identifier
+        hash.merge!(@policy_qualifiers.to_h) unless @policy_qualifiers.nil?
+        hash
+      end
+
+      def to_yaml
+        self.to_h.to_yaml
+      end
     end
 
     #   PolicyQualifierInfo ::= SEQUENCE {
@@ -334,10 +343,22 @@ module R509
         oid = data.entries[0].value
         case
         when oid == 'id-qt-cps'
+          # by RFC definition must be URIs
           @cps_uris << data.entries[1].value
         when oid == 'id-qt-unotice'
           @user_notices <<  UserNotice.new(data.entries[1])
         end
+      end
+
+      def to_h
+        hash = {}
+        hash[:cps_uris] = @cps_uris
+        hash[:user_notices] = @user_notices.map { |notice| notice.to_h } unless @user_notices.empty?
+        hash
+      end
+
+      def to_yaml
+        self.to_h.to_yaml
       end
     end
 
@@ -356,6 +377,17 @@ module R509
           end
 
         end if data.respond_to?(:each)
+      end
+
+      def to_h
+        hash = {}
+        hash[:explicit_text] = @explicit_text unless @explicit_text.nil?
+        hash.merge!(@notice_reference.to_h) unless @notice_reference.nil?
+        hash
+      end
+
+      def to_yaml
+        self.to_h.to_yaml
       end
     end
 
@@ -377,6 +409,17 @@ module R509
             @organization = notice_reference.value
           end
         end
+      end
+
+      def to_h
+        hash = {}
+        hash[:organization] = @organization unless @organization.nil?
+        hash[:notice_numbers] = @notice_numbers unless @notice_numbers.empty?
+        hash
+      end
+
+      def to_yaml
+        self.to_h.to_yaml
       end
     end
 

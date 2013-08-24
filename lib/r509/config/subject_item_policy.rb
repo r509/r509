@@ -87,6 +87,18 @@ module R509
         end)
       end
 
+      def to_h
+        hash = {}
+        @required.each { |r| hash[r] = {:policy => "required" } }
+        @optional.each { |o| hash[o] = {:policy => "optional" } }
+        @match.each { |m| hash[m] = {:policy => "match", :value => @match_values[m]} }
+        hash
+      end
+
+      def to_yaml
+        self.to_h.to_yaml
+      end
+
       private
 
       def match_check(subject)

@@ -107,7 +107,7 @@ module R509
 
 
         @profiles = {}
-          if opts[:profiles]
+        if opts[:profiles]
           opts[:profiles].each_pair do |name, prof|
             set_profile(name, prof)
           end
@@ -212,9 +212,8 @@ module R509
                              :inhibit_any_policy => data["inhibit_any_policy"],
                              :policy_constraints => data["policy_constraints"],
                              :name_constraints => data["name_constraints"],
-                             :cdp_location => data["cdp_location"],
-                             :ocsp_location => data["ocsp_location"],
-                             :ca_issuers_location => data["ca_issuers_location"],
+                             :crl_distribution_points => data["crl_distribution_points"],
+                             :authority_info_access => data["authority_info_access"],
                              :default_md => data["default_md"],
                              :allowed_mds => data["allowed_mds"],
                              :subject_item_policy => subject_item_policy)
