@@ -20,7 +20,7 @@ module R509
         # friendly name for CP OID
         OID = "certificatePolicies"
         Extensions.register_class(self)
-        # @return [Array] Array of R509::ASN1::PolicyInformation objects
+        # @return [Array] Array of R509::Cert::Extensions::PolicyObjects::PolicyInformation objects
         attr_reader :policies
 
         # This method takes a hash or an existing Extension object to parse
@@ -39,7 +39,7 @@ module R509
           # each element of this sequence should be part of a policy + qualifiers
           #   certificatePolicies ::= SEQUENCE SIZE (1..MAX) OF PolicyInformation
           data.each do |cp|
-            @policies << R509::ASN1::PolicyInformation.new(cp)
+            @policies << PolicyInformation.new(cp)
           end if data.respond_to?(:each)
         end
 
@@ -93,6 +93,135 @@ module R509
 
           conf.concat(user_notice_confs)
           conf.join "\n"
+        end
+      end
+
+      # This class is used to help build the certificate policies extension
+      #   PolicyInformation ::= SEQUENCE {
+      #        policyIdentifier   CertPolicyId,
+      #        policyQualifiers   SEQUENCE SIZE (1..MAX) OF
+      #                                PolicyQualifierInfo OPTIONAL }
+      class PolicyInformation
+        attr_reader :policy_identifier, :policy_qualifiers
+        def initialize(data)
+          # store the policy identifier OID
+          @policy_identifier = data.entries[0].value
+          # iterate the policy qualifiers if any exist
+          if not data.entries[1].nil?
+            @policy_qualifiers = PolicyQualifiers.new
+            data.entries[1].each do |pq|
+              @policy_qualifiers.parse(pq)
+            end
+          end
+        end
+
+        def to_h
+          hash = {}
+          hash[:policy_identifier] = @policy_identifier
+          hash.merge!(@policy_qualifiers.to_h) unless @policy_qualifiers.nil?
+          hash
+        end
+
+        def to_yaml
+          self.to_h.to_yaml
+        end
+      end
+
+      # This class is used to help build the certificate policies extension
+      #   PolicyQualifierInfo ::= SEQUENCE {
+      #        policyQualifierId  PolicyQualifierId,
+      #        qualifier          ANY DEFINED BY policyQualifierId }
+      class PolicyQualifiers
+        attr_reader :cps_uris, :user_notices
+        def initialize
+          @cps_uris = []
+          @user_notices = []
+        end
+
+        # parse each PolicyQualifier and store the results into the object array
+        def parse(data)
+          oid = data.entries[0].value
+          case
+          when oid == 'id-qt-cps'
+            # by RFC definition must be URIs
+            @cps_uris << data.entries[1].value
+          when oid == 'id-qt-unotice'
+            @user_notices <<  UserNotice.new(data.entries[1])
+          end
+        end
+
+        def to_h
+          hash = {}
+          hash[:cps_uris] = @cps_uris
+          hash[:user_notices] = @user_notices.map { |notice| notice.to_h } unless @user_notices.empty?
+          hash
+        end
+
+        def to_yaml
+          self.to_h.to_yaml
+        end
+      end
+
+      # This class is used to help build the certificate policies extension
+      #   UserNotice ::= SEQUENCE {
+      #        noticeRef        NoticeReference OPTIONAL,
+      #        explicitText     DisplayText OPTIONAL }
+      class UserNotice
+        attr_reader :notice_reference, :explicit_text
+        def initialize(data)
+          data.each do |qualifier|
+            #if we find another sequence, that's a noticeReference, otherwise it's explicitText
+            if qualifier.kind_of?(OpenSSL::ASN1::Sequence)
+              @notice_reference = NoticeReference.new(qualifier)
+            else
+              @explicit_text = qualifier.value
+            end
+
+          end if data.respond_to?(:each)
+        end
+
+        def to_h
+          hash = {}
+          hash[:explicit_text] = @explicit_text unless @explicit_text.nil?
+          hash.merge!(@notice_reference.to_h) unless @notice_reference.nil?
+          hash
+        end
+
+        def to_yaml
+          self.to_h.to_yaml
+        end
+      end
+
+      # This class is used to help build the certificate policies extension
+      #   NoticeReference ::= SEQUENCE {
+      #        organization     DisplayText,
+      #        noticeNumbers    SEQUENCE OF INTEGER }
+      class NoticeReference
+        attr_reader :organization, :notice_numbers
+        def initialize(data)
+          data.each do |notice_reference|
+            # if it's displaytext then it's the organization
+            # if it's YET ANOTHER ASN1::Sequence, then it's noticeNumbers
+            if notice_reference.kind_of?(OpenSSL::ASN1::Sequence)
+              @notice_numbers = []
+              notice_reference.each do |ints|
+                @notice_numbers << ints.value.to_i
+              end
+            else
+              @organization = notice_reference.value
+            end
+          end
+        end
+
+        def to_h
+          hash = {}
+          hash[:organization] = @organization unless @organization.nil?
+          hash[:notice_numbers] = @notice_numbers unless @notice_numbers.empty?
+          hash
+        end
+
+        def to_yaml
+          self.to_h.to_yaml
         end
       end
     end

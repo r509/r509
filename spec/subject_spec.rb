@@ -20,6 +20,10 @@ describe R509::Subject do
     subject = R509::Subject.new([["CN", "domain.com"], ["O", "my org"]])
     subject.name.to_s.should == "/CN=domain.com/O=my org"
   end
+  it "initializes with a subject hash, and gets the name" do
+    subject = R509::Subject.new(:CN => "domain.com", :O => "my org", :"1.2.3.4.4.5.6.7" => "what")
+    subject.name.to_s.should == "/CN=domain.com/O=my org/1.2.3.4.4.5.6.7=what"
+  end
   it "initializes with a name, gets the name" do
     name = OpenSSL::X509::Name.new([["CN", "domain.com"], ["O", "my org"], ["OU", "my unit"]])
     subject = R509::Subject.new(name)
@@ -108,6 +112,18 @@ describe R509::Subject do
     subject["1.2.3.4.5.6.7.8.9.8.7.6.5.4.3.2.1.0.0"].should == "random oid!"
     subject["1.3.3.543.567.32.43.335.1.1.1"].should == "another random oid!"
     subject["CN"].should == 'normaldomain.com'
+  end
+
+  it "builds a hash" do
+    args = { :CN => "domain.com", :O => "my org", :"1.2.3.4.4.5.6.7" => "what" }
+    subject = R509::Subject.new(args)
+    subject.to_h.should == args
+  end
+
+  it "builds yaml" do
+    args = { :CN => "domain.com", :O => "my org", :"1.2.3.4.4.5.6.7" => "what" }
+    subject = R509::Subject.new(args)
+    YAML.load(subject.to_yaml).should == args
   end
 
   context "dynamic getter/setter behaviors" do

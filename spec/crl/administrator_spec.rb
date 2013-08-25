@@ -73,6 +73,9 @@ describe R509::CRL::Administrator do
   it "raises exception when no R509::Config::CAConfig object is passed to the constructor" do
     expect { R509::CRL::Administrator.new(['random']) }.to raise_error(R509::R509Error)
   end
+  it "raises exception when reader/writer is passed that is not a subclass of ReaderWriter)" do
+    expect { R509::CRL::Administrator.new(@test_ca_config,{}) }.to raise_error(ArgumentError,'argument reader_writer must be a subclass of R509::CRL::ReaderWriter')
+  end
   it "adds a cert to the revocation list" do
     crl_admin = R509::CRL::Administrator.new(@test_ca_config)
     crl_admin.revoked?(383834832).should == false
