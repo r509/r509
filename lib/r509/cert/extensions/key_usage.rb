@@ -1,4 +1,5 @@
 require 'r509/cert/extensions/base'
+require 'r509/cert/extensions/validation_mixin'
 
 module R509
   class Cert
@@ -18,7 +19,7 @@ module R509
       # You can use this extension to parse an existing extension for easy access
       # to the contents or create a new one.
       class KeyUsage < OpenSSL::X509::Extension
-        include R509::ValidationMixin
+        include R509::Cert::Extensions::ValidationMixin
 
         # friendly name for KeyUsage OID
         OID = "keyUsage"
@@ -56,8 +57,8 @@ module R509
         #     :value => ['digitalSignature,'keyEncipherment']
         #   )
         def initialize(arg)
-          if arg.kind_of?(Hash)
-            validate_usage(arg[:value],'key_usage')
+          if not R509::Cert::Extensions.is_extension?(arg)
+            validate_usage(arg)
             ef = OpenSSL::X509::ExtensionFactory.new
             critical = R509::Cert::Extensions.calculate_critical(arg[:critical], false)
             arg = ef.create_extension("keyUsage", arg[:value].join(","),critical)

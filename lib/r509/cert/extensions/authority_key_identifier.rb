@@ -16,7 +16,6 @@ module R509
       # You can use this extension to parse an existing extension for easy access
       # to the contents or create a new one.
       class AuthorityKeyIdentifier < OpenSSL::X509::Extension
-        include R509::ValidationMixin
 
         # friendly name for Authority Key Identifier OID
         OID = "authorityKeyIdentifier"
@@ -40,7 +39,7 @@ module R509
         # @option arg :value [String] (keyid) For the rules of :value see: http://www.openssl.org/docs/apps/x509v3_config.html#Authority_Key_Identifier_. If you want to embed issuer you MUST supply :issuer_certificate and not :public_key
         # @option arg :critical [Boolean] (false)
         def initialize(arg)
-          if arg.kind_of?(Hash)
+          if not R509::Cert::Extensions.is_extension?(arg)
             arg = build_extension(arg)
           end
 
@@ -85,6 +84,16 @@ module R509
           return ef.create_extension("authorityKeyIdentifier", arg[:value], critical) # this could also be keyid:always,issuer:always
         end
 
+        # @private
+        def validate_authority_key_identifier(aki)
+          if aki[:value].downcase.include?("keyid") and aki[:public_key].nil?
+            raise ArgumentError, "You must supply an OpenSSL::PKey object to :public_key if aki value contains keyid (present by default)"
+          end
+          if aki[:value].downcase.include?("issuer") and not aki[:issuer_subject].kind_of?(R509::Subject)
+            raise ArgumentError, "You must supply an R509::Subject object to :issuer_subject if aki value contains issuer"
+          end
+          aki
+        end
       end
     end
   end

@@ -24,8 +24,37 @@ shared_examples_for "a correct R509 AuthorityInfoAccess object" do |critical|
   end
 end
 
-describe R509::Cert::Extensions do
+describe R509::Cert::Extensions::AuthorityInfoAccess do
   include R509::Cert::Extensions
+
+  context "validation" do
+    it "raises an error when not a hash" do
+      expect { AuthorityInfoAccess.new( "some-url" ) }.to raise_error(ArgumentError, 'You must pass a hash with at least one of the following two keys (:ocsp_location, :ca_issuers_location)')
+    end
+
+    it "raises an error with empty hash" do
+      expect { AuthorityInfoAccess.new( {} ) }.to raise_error(ArgumentError, 'You must pass a hash with at least one of the following two keys (:ocsp_location, :ca_issuers_location)')
+    end
+
+    it "raises an error if you pass an ocsp_location that is not an array" do
+      expect { AuthorityInfoAccess.new( :ocsp_location => "some-url" ) }.to raise_error(ArgumentError, 'ocsp_location must be an array or R509::ASN1::GeneralNames object if provided')
+    end
+
+    it "raises an error if you pass a ca_issuers_location that is not an array" do
+      expect { AuthorityInfoAccess.new( :ca_issuers_location => "some-url" ) }.to raise_error(ArgumentError, 'ca_issuers_location must be an array or R509::ASN1::GeneralNames object if provided')
+    end
+
+    it "raises an error if you pass an array that does not contain hashes" do
+      expect { AuthorityInfoAccess.new( :ca_issuers_location => [{},"string"] ) }.to raise_error(ArgumentError, 'All elements of the array must be hashes with a :type and :value')
+    end
+
+    it "raises an error if you pass an array that does not contain both :type and :value" do
+      expect { AuthorityInfoAccess.new( :ca_issuers_location => [{:type => 'URI'}] ) }.to raise_error(ArgumentError, 'All elements of the array must be hashes with a :type and :value')
+      expect { AuthorityInfoAccess.new( :ca_issuers_location => [{:value => 'value'}] ) }.to raise_error(ArgumentError, 'All elements of the array must be hashes with a :type and :value')
+      expect { AuthorityInfoAccess.new( :ocsp_location => [{:type => 'URI'}] ) }.to raise_error(ArgumentError, 'All elements of the array must be hashes with a :type and :value')
+      expect { AuthorityInfoAccess.new( :ocsp_location => [{:value => 'value'}] ) }.to raise_error(ArgumentError, 'All elements of the array must be hashes with a :type and :value')
+    end
+  end
 
   context "AuthorityInfoAccess" do
     context "creation & yaml generation" do

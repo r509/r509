@@ -7,14 +7,12 @@ require 'r509/private_key'
 require 'r509/engine'
 require 'fileutils'
 require 'pathname'
-require 'r509/validation_mixin'
 
 module R509
   # Module to contain all configuration related classes (e.g. CAConfig, CertProfile, SubjectItemPolicy)
   module Config
     # Provides access to configuration profiles
     class CertProfile
-      include R509::ValidationMixin
 
       attr_reader :basic_constraints, :key_usage, :extended_key_usage,
         :certificate_policies, :subject_item_policy, :ocsp_no_check,
@@ -47,7 +45,7 @@ module R509
         @ocsp_no_check = R509::Cert::Extensions::OCSPNoCheck.new(opts[:ocsp_no_check]) unless opts[:ocsp_no_check].nil?
         @authority_info_access = R509::Cert::Extensions::AuthorityInfoAccess.new(opts[:authority_info_access]) unless opts[:authority_info_access].nil?
         @crl_distribution_points = R509::Cert::Extensions::CRLDistributionPoints.new(opts[:crl_distribution_points]) unless opts[:crl_distribution_points].nil?
-        @subject_item_policy = validate_subject_item_policy opts[:subject_item_policy]
+        @subject_item_policy = validate_subject_item_policy(opts[:subject_item_policy])
         @default_md = validate_md(opts[:default_md] || R509::MessageDigest::DEFAULT_MD)
         @allowed_mds = validate_allowed_mds(opts[:allowed_mds])
       end
@@ -73,7 +71,37 @@ module R509
         self.to_h.to_yaml
       end
 
-    end
+      private
+      # @private
+      def validate_allowed_mds(allowed_mds)
+        if allowed_mds.respond_to?(:each)
+          allowed_mds = allowed_mds.map { |md| validate_md(md) }
+          # case insensitively check if the default_md is in the allowed_mds
+          # and add it if it's not there.
+          if not allowed_mds.any?{ |s| s.casecmp(@default_md)==0 }
+            allowed_mds.push @default_md
+          end
+        end
+        allowed_mds
+      end
 
+      # @private
+      def validate_md(md)
+        md = md.upcase
+        if not R509::MessageDigest::KNOWN_MDS.include?(md)
+          raise ArgumentError, "An unknown message digest was supplied. Permitted: #{R509::MessageDigest::KNOWN_MDS.join(", ")}"
+        end
+        md
+      end
+
+      # @private
+      # validates subject item policy
+      def validate_subject_item_policy(sip)
+        if not sip.nil? and not sip.kind_of?(R509::Config::SubjectItemPolicy)
+          raise ArgumentError, "subject_item_policy must be of type R509::Config::SubjectItemPolicy"
+        end
+        sip
+      end
+    end
   end
 end

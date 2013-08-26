@@ -20,7 +20,7 @@ shared_examples_for "a correct R509 OCSPNoCheck object" do |critical|
   end
 end
 
-describe R509::Cert::Extensions do
+describe R509::Cert::Extensions::OCSPNoCheck do
   include R509::Cert::Extensions
 
   context "OCSPNoCheck" do

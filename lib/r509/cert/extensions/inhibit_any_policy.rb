@@ -1,4 +1,5 @@
 require 'r509/cert/extensions/base'
+require 'r509/cert/extensions/validation_mixin'
 
 module R509
   class Cert
@@ -16,7 +17,7 @@ module R509
       # You can use this extension to parse an existing extension for easy access
       # to the contents or create a new one.
       class InhibitAnyPolicy < OpenSSL::X509::Extension
-        include R509::ValidationMixin
+        include R509::Cert::Extensions::ValidationMixin
 
         # friendly name for CP OID
         OID = "inhibitAnyPolicy"
@@ -30,7 +31,7 @@ module R509
         # @option arg :value [Integer]
         # @option arg :critical [Boolean] (true)
         def initialize(arg)
-          if arg.kind_of?(Hash)
+          if not R509::Cert::Extensions.is_extension?(arg)
             validate_inhibit_any_policy(arg[:value])
             ef = OpenSSL::X509::ExtensionFactory.new
             critical = R509::Cert::Extensions.calculate_critical(arg[:critical], true)
@@ -53,6 +54,16 @@ module R509
         # @return [YAML]
         def to_yaml
           self.to_h.to_yaml
+        end
+
+        private
+        # @private
+        # validates inhibit any policy
+        def validate_inhibit_any_policy(iap)
+          if not iap.nil?
+            validate_non_negative_integer("Inhibit any policy",iap)
+          end
+          iap
         end
       end
     end

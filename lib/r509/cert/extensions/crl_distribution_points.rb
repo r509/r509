@@ -1,4 +1,5 @@
 require 'r509/cert/extensions/base'
+require 'r509/cert/extensions/validation_mixin'
 
 module R509
   class Cert
@@ -13,7 +14,8 @@ module R509
       # You can use this extension to parse an existing extension for easy access
       # to the contents or create a new one.
       class CRLDistributionPoints < OpenSSL::X509::Extension
-        include R509::ValidationMixin
+        include R509::Cert::Extensions::ValidationMixin
+        include R509::Cert::Extensions::GeneralNamesMixin
 
         # friendly name for CDP OID
         OID = "crlDistributionPoints"
@@ -34,7 +36,7 @@ module R509
         #     :value => [name]
         #   )
         def initialize(arg)
-          if arg.kind_of?(Hash)
+          if not R509::Cert::Extensions.is_extension?(arg)
             arg = build_extension(arg)
           end
           super(arg)
@@ -55,8 +57,6 @@ module R509
             @general_names.add_item(distribution_point.entries[0].value[0].value[0])
           end
         end
-
-        include R509::Cert::Extensions::GeneralNamesMixin
 
         # @return [Hash]
         def to_h

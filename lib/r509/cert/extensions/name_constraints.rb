@@ -31,7 +31,6 @@ module R509
       # You can use this extension to parse an existing extension for easy access
       # to the contents or create a new one.
       class NameConstraints < OpenSSL::X509::Extension
-        include R509::ValidationMixin
 
         # friendly name for CP OID
         OID = "nameConstraints"
@@ -58,7 +57,7 @@ module R509
         #
         #      BaseDistance ::= INTEGER (0..MAX)
         def initialize(arg)
-          if arg.kind_of?(Hash)
+          if not R509::Cert::Extensions.is_extension?(arg)
             arg = build_extension(arg)
           end
           super(arg)
@@ -120,6 +119,39 @@ module R509
           critical = R509::Cert::Extensions.calculate_critical(arg[:critical], true)
           # must be set critical per RFC 5280
           return ef.create_extension("nameConstraints",nc_data.join(","),critical)
+        end
+
+        # @private
+        def validate_name_constraints(nc)
+          if not nc.nil?
+            if not nc.kind_of?(Hash)
+              raise ArgumentError, "name_constraints must be provided as a hash"
+            end
+            [:permitted,:excluded].each do |key|
+              if not nc[key].nil?
+                validate_name_constraints_elements(key,nc[key])
+              end
+            end
+            if (nc[:permitted].nil? or nc[:permitted].empty?) and (nc[:excluded].nil? or nc[:excluded].empty?)
+              raise ArgumentError, "If name_constraints are supplied you must have at least one valid :permitted or :excluded element"
+            end
+          end
+          nc
+        end
+
+        # @private
+        def validate_name_constraints_elements(type,arr)
+          if not arr.kind_of?(Array)
+            raise ArgumentError, "#{type} must be an array"
+          end
+          arr.each do |el|
+            if not el.kind_of?(Hash) or not el.has_key?(:type) or not el.has_key?(:value)
+              raise ArgumentError, "Elements within the #{type} array must be hashes with both type and value"
+            end
+            if R509::ASN1::GeneralName.map_type_to_tag(el[:type]) == nil
+              raise ArgumentError, "#{el[:type]} is not an allowed type. Check R509::ASN1::GeneralName.map_type_to_tag to see a list of types"
+            end
+          end
         end
       end
     end

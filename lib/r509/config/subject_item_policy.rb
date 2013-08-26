@@ -7,7 +7,6 @@ require 'r509/private_key'
 require 'r509/engine'
 require 'fileutils'
 require 'pathname'
-require 'r509/validation_mixin'
 
 module R509
   # Module to contain all configuration related classes (e.g. CAConfig, CertProfile, SubjectItemPolicy)
@@ -97,11 +96,6 @@ module R509
 
       def to_yaml
         self.to_h.to_yaml
-      end
-
-      private
-
-      def match_check(subject)
       end
 
     end

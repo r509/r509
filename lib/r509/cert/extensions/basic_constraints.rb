@@ -12,7 +12,6 @@ module R509
       # You can use this extension to parse an existing extension for easy access
       # to the contents or create a new one.
       class BasicConstraints < OpenSSL::X509::Extension
-        include R509::ValidationMixin
 
         # friendly name for BasicConstraints OID
         OID = "basicConstraints"
@@ -27,7 +26,7 @@ module R509
         # @option arg :path_length optional [Integer]
         # @option arg :critical [Boolean] (true)
         def initialize(arg)
-          if arg.kind_of?(Hash)
+          if not R509::Cert::Extensions.is_extension?(arg)
             arg = build_extension(arg)
           end
 
@@ -94,6 +93,24 @@ module R509
           end
           critical = R509::Cert::Extensions.calculate_critical(arg[:critical], true)
           return ef.create_extension("basicConstraints", bc_value, critical)
+        end
+
+        # @private
+        # validates the structure of the certificate policies array
+        def validate_basic_constraints(constraints)
+          if constraints.nil? or not constraints.respond_to?(:has_key?) or not constraints.has_key?(:ca)
+            raise ArgumentError, "You must supply a hash with a key named :ca with a boolean value"
+          end
+          if constraints[:ca].nil? or (not constraints[:ca].kind_of?(TrueClass) and not constraints[:ca].kind_of?(FalseClass))
+            raise ArgumentError, "You must supply true/false for the :ca key when specifying basic constraints"
+          end
+          if constraints[:ca] == false and not constraints[:path_length].nil?
+            raise ArgumentError, ":path_length is not allowed when :ca is false"
+          end
+          if constraints[:ca] == true and not constraints[:path_length].nil? and (constraints[:path_length] < 0 or not constraints[:path_length].kind_of?(Integer))
+            raise ArgumentError, "Path length must be a positive integer (>= 0)"
+          end
+          constraints
         end
       end
     end

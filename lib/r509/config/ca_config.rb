@@ -7,7 +7,6 @@ require 'r509/private_key'
 require 'r509/engine'
 require 'fileutils'
 require 'pathname'
-require 'r509/validation_mixin'
 require 'r509/config/subject_item_policy'
 require 'r509/config/cert_profile'
 

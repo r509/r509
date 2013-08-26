@@ -27,6 +27,19 @@ module R509
         end
       end
 
+      # Method attempts to determine if data being passed to an extension is already
+      # an extension/asn.1 data or not.
+      def self.is_extension?(data)
+        return true if data.kind_of?(OpenSSL::X509::Extension)
+        return false if not data.kind_of?(String)
+        begin
+          OpenSSL::X509::Extension.new(data)
+          return true
+        rescue
+          return false
+        end
+      end
+
       public
       #
       # Helper class methods

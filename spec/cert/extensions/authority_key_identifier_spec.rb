@@ -25,54 +25,59 @@ shared_examples_for "a correct R509 AuthorityKeyIdentifier object" do
   end
 end
 
-describe R509::Cert::Extensions do
+describe R509::Cert::Extensions::AuthorityKeyIdentifier do
   include R509::Cert::Extensions
 
+  context "creation" do
+    before :all do
+      @cert = TestFixtures.test_ca_cert
+    end
+
+    it "errors when not supplying a public_key" do
+      expect {
+        R509::Cert::Extensions::AuthorityKeyIdentifier.new({})
+      }.to raise_error(ArgumentError,'You must supply an OpenSSL::PKey object to :public_key if aki value contains keyid (present by default)')
+    end
+
+    it "errors when not supplying an issuer subject when embedding issuer info" do
+      expect {
+        R509::Cert::Extensions::AuthorityKeyIdentifier.new(:value => "issuer:always")
+      }.to raise_error(ArgumentError,'You must supply an R509::Subject object to :issuer_subject if aki value contains issuer')
+    end
+
+    it "creates successfully with default value" do
+      aki = R509::Cert::Extensions::AuthorityKeyIdentifier.new(:public_key => @cert.public_key)
+      aki.key_identifier.should_not be_nil
+      aki.authority_cert_issuer.should be_nil
+    end
+
+    it "creates successfully with issuer value" do
+      aki = R509::Cert::Extensions::AuthorityKeyIdentifier.new(:issuer_subject => @cert.subject, :value => "issuer:always")
+      aki.authority_cert_issuer.should_not be_nil
+      aki.authority_cert_serial_number.should_not be_nil
+    end
+
+    it "creates successfully with issuer+keyid value" do
+      aki = R509::Cert::Extensions::AuthorityKeyIdentifier.new(:issuer_subject => @cert.subject, :public_key => @cert.public_key, :value => "issuer:always,keyid:always")
+      aki.authority_cert_issuer.should_not be_nil
+      aki.authority_cert_serial_number.should_not be_nil
+      aki.key_identifier.should_not be_nil
+    end
+
+    it "creates with default criticality" do
+      aki = R509::Cert::Extensions::AuthorityKeyIdentifier.new(:public_key => @cert.public_key)
+      aki.critical?.should be_false
+    end
+
+    it "creates with non-default criticality" do
+      aki = R509::Cert::Extensions::AuthorityKeyIdentifier.new(:public_key => @cert.public_key, :critical => true)
+      aki.critical?.should be_true
+    end
+
+    end
   context "AuthorityKeyIdentifier" do
     before :all do
       @extension_value = "keyid:always,issuer:always"
-    end
-
-    context "creation" do
-      before :all do
-        @cert = TestFixtures.test_ca_cert
-      end
-
-      it "errors when not supplying an issuer certificate" do
-        expect {
-          R509::Cert::Extensions::AuthorityKeyIdentifier.new({})
-        }.to raise_error(ArgumentError,'You must supply an OpenSSL::PKey object to :public_key if aki value contains keyid (present by default)')
-      end
-
-      it "creates successfully with default value" do
-        aki = R509::Cert::Extensions::AuthorityKeyIdentifier.new(:public_key => @cert.public_key)
-        aki.key_identifier.should_not be_nil
-        aki.authority_cert_issuer.should be_nil
-      end
-
-      it "creates successfully with issuer value" do
-        aki = R509::Cert::Extensions::AuthorityKeyIdentifier.new(:issuer_subject => @cert.subject, :value => "issuer:always")
-        aki.authority_cert_issuer.should_not be_nil
-        aki.authority_cert_serial_number.should_not be_nil
-      end
-
-      it "creates successfully with issuer+keyid value" do
-        aki = R509::Cert::Extensions::AuthorityKeyIdentifier.new(:issuer_subject => @cert.subject, :public_key => @cert.public_key, :value => "issuer:always,keyid:always")
-        aki.authority_cert_issuer.should_not be_nil
-        aki.authority_cert_serial_number.should_not be_nil
-        aki.key_identifier.should_not be_nil
-      end
-
-      it "creates with default criticality" do
-        aki = R509::Cert::Extensions::AuthorityKeyIdentifier.new(:public_key => @cert.public_key)
-        aki.critical?.should be_false
-      end
-
-      it "creates with non-default criticality" do
-        aki = R509::Cert::Extensions::AuthorityKeyIdentifier.new(:public_key => @cert.public_key, :critical => true)
-        aki.critical?.should be_true
-      end
-
     end
 
     it_should_behave_like "a correct R509 AuthorityKeyIdentifier object"

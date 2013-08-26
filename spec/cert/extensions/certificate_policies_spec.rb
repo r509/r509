@@ -4,9 +4,7 @@ include R509::Cert::Extensions
 
 shared_examples_for "a correct R509 CertificatePolicies object" do
   before :all do
-    klass = CertificatePolicies
-    openssl_ext = OpenSSL::X509::Extension.new @policy_data
-    @r509_ext = klass.new( openssl_ext )
+    @r509_ext = R509::Cert::Extensions::CertificatePolicies.new(@policy_data)
   end
 
   it "should correctly parse the data" do
@@ -16,8 +14,34 @@ shared_examples_for "a correct R509 CertificatePolicies object" do
   end
 end
 
-describe R509::Cert::Extensions do
+describe R509::Cert::Extensions::CertificatePolicies do
   include R509::Cert::Extensions
+
+  context "validate certificate policy structure" do
+    it "must be an array" do
+      expect { CertificatePolicies.new(:value => "whatever") }.to raise_error(ArgumentError,'Not a valid certificate policy structure. Must be an array of hashes')
+    end
+
+    it "require a policy identifier" do
+      expect { CertificatePolicies.new(:value => [{"stuff" => "thing"}]) }.to raise_error(ArgumentError,'Each policy requires a policy identifier')
+    end
+
+    it "the cps uri must be array of strings" do
+      expect { CertificatePolicies.new(:value => [{:policy_identifier => "1.2.3.4.5", :cps_uris => "not an array"}]) }.to raise_error(ArgumentError,'CPS URIs must be an array of strings')
+    end
+
+    it "user notices must be an array of hashes" do
+      expect { CertificatePolicies.new(:value => [{:policy_identifier => "1.2.3.4.5", :user_notices => "not an array"}]) }.to raise_error(ArgumentError,'User notices must be an array of hashes')
+    end
+
+    it "org in user notice requires notice numbers" do
+      expect { CertificatePolicies.new(:value => [{:policy_identifier => "1.2.3.4.5", :user_notices => [{:explicit_text => "explicit", :organization => "something"}]}]) }.to raise_error(ArgumentError,'If you provide an organization you must provide notice numbers')
+    end
+
+    it "notice numbers in user notice requires org" do
+      expect { CertificatePolicies.new(:value => [{:policy_identifier => "1.2.3.4.5", :user_notices => [{:explicit_text => "explicit", :notice_numbers => "1,2,3"}]}]) }.to raise_error(ArgumentError,'If you provide notice numbers you must provide an organization')
+    end
+  end
 
   context "CertificatePolicies" do
     before :all do

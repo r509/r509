@@ -1,11 +1,9 @@
 require 'spec_helper'
 
-include R509::Cert::Extensions
-
 shared_examples_for "a correct R509 BasicConstraints object" do |critical|
   before :all do
     extension_name = "basicConstraints"
-    klass = BasicConstraints
+    klass = R509::Cert::Extensions::BasicConstraints
     ef = OpenSSL::X509::ExtensionFactory.new
     openssl_ext = ef.create_extension( extension_name, @extension_value , critical)
     @r509_ext = klass.new( openssl_ext )
@@ -28,8 +26,24 @@ shared_examples_for "a correct R509 BasicConstraints object" do |critical|
   end
 end
 
-describe R509::Cert::Extensions do
-  include R509::Cert::Extensions
+describe R509::Cert::Extensions::BasicConstraints do
+
+  context "validate basic constraints structure" do
+    it "must be a hash with key :ca" do
+      expect { R509::Cert::Extensions::BasicConstraints.new('string') }.to raise_error(ArgumentError, "You must supply a hash with a key named :ca with a boolean value")
+      expect { R509::Cert::Extensions::BasicConstraints.new({}) }.to raise_error(ArgumentError, "You must supply a hash with a key named :ca with a boolean value")
+    end
+    it "must have true or false for the ca key value" do
+      expect { R509::Cert::Extensions::BasicConstraints.new(:ca => 'truestring') }.to raise_error(ArgumentError, "You must supply true/false for the :ca key when specifying basic constraints")
+    end
+    it "must not pass a path_length if ca is false" do
+      expect { R509::Cert::Extensions::BasicConstraints.new(:ca => false, :path_length => 5) }.to raise_error(ArgumentError, ":path_length is not allowed when :ca is false")
+    end
+    it "must pass a non-negative integer to path_length" do
+      expect { R509::Cert::Extensions::BasicConstraints.new(:ca => true, :path_length => -1.5) }.to raise_error(ArgumentError, "Path length must be a positive integer (>= 0)")
+      expect { R509::Cert::Extensions::BasicConstraints.new(:ca => true, :path_length => 1.5) }.to raise_error(ArgumentError, "Path length must be a positive integer (>= 0)")
+    end
+  end
 
   context "BasicConstraints" do
     context "creation & yaml generation" do

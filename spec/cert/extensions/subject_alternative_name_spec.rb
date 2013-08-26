@@ -41,7 +41,7 @@ shared_examples_for "a correct R509 SubjectAlternativeName object" do |critical|
   end
 end
 
-describe R509::Cert::Extensions do
+describe R509::Cert::Extensions::SubjectAlternativeName do
   include R509::Cert::Extensions
 
   context "SubjectAlternativeName" do

@@ -1,11 +1,9 @@
 require 'spec_helper'
 
-include R509::Cert::Extensions
-
 shared_examples_for "a correct R509 KeyUsage object" do |critical|
   before :each do
     extension_name = "keyUsage"
-    klass = KeyUsage
+    klass = R509::Cert::Extensions::KeyUsage
     ef = OpenSSL::X509::ExtensionFactory.new
     openssl_ext = ef.create_extension( extension_name, @extension_value, critical )
     @r509_ext = klass.new( openssl_ext )
@@ -20,15 +18,15 @@ shared_examples_for "a correct R509 KeyUsage object" do |critical|
   end
 
   it "the individual allowed-use functions should be correct critical:#{critical}" do
-    @r509_ext.digital_signature?.should == @allowed_uses.include?( KeyUsage::AU_DIGITAL_SIGNATURE )
-    @r509_ext.non_repudiation?.should == @allowed_uses.include?( KeyUsage::AU_NON_REPUDIATION )
-    @r509_ext.key_encipherment?.should == @allowed_uses.include?( KeyUsage::AU_KEY_ENCIPHERMENT )
-    @r509_ext.data_encipherment?.should == @allowed_uses.include?( KeyUsage::AU_DATA_ENCIPHERMENT )
-    @r509_ext.key_agreement?.should == @allowed_uses.include?( KeyUsage::AU_KEY_AGREEMENT )
-    @r509_ext.key_cert_sign?.should == @allowed_uses.include?( KeyUsage::AU_KEY_CERT_SIGN )
-    @r509_ext.crl_sign?.should == @allowed_uses.include?( KeyUsage::AU_CRL_SIGN )
-    @r509_ext.encipher_only?.should == @allowed_uses.include?( KeyUsage::AU_ENCIPHER_ONLY )
-    @r509_ext.decipher_only?.should == @allowed_uses.include?( KeyUsage::AU_DECIPHER_ONLY )
+    @r509_ext.digital_signature?.should == @allowed_uses.include?( R509::Cert::Extensions::KeyUsage::AU_DIGITAL_SIGNATURE )
+    @r509_ext.non_repudiation?.should == @allowed_uses.include?( R509::Cert::Extensions::KeyUsage::AU_NON_REPUDIATION )
+    @r509_ext.key_encipherment?.should == @allowed_uses.include?( R509::Cert::Extensions::KeyUsage::AU_KEY_ENCIPHERMENT )
+    @r509_ext.data_encipherment?.should == @allowed_uses.include?( R509::Cert::Extensions::KeyUsage::AU_DATA_ENCIPHERMENT )
+    @r509_ext.key_agreement?.should == @allowed_uses.include?( R509::Cert::Extensions::KeyUsage::AU_KEY_AGREEMENT )
+    @r509_ext.key_cert_sign?.should == @allowed_uses.include?( R509::Cert::Extensions::KeyUsage::AU_KEY_CERT_SIGN )
+    @r509_ext.crl_sign?.should == @allowed_uses.include?( R509::Cert::Extensions::KeyUsage::AU_CRL_SIGN )
+    @r509_ext.encipher_only?.should == @allowed_uses.include?( R509::Cert::Extensions::KeyUsage::AU_ENCIPHER_ONLY )
+    @r509_ext.decipher_only?.should == @allowed_uses.include?( R509::Cert::Extensions::KeyUsage::AU_DECIPHER_ONLY )
   end
 
   it "the #allows? method should work critical:#{critical}" do
@@ -42,8 +40,24 @@ shared_examples_for "a correct R509 KeyUsage object" do |critical|
   end
 end
 
-describe R509::Cert::Extensions do
-  include R509::Cert::Extensions
+describe R509::Cert::Extensions::KeyUsage do
+  context "validate key usage" do
+    it "errors with non-array" do
+      expect { R509::Cert::Extensions::KeyUsage.new( 'not an array' ) }.to raise_error(ArgumentError, 'You must pass a hash with a key :value that contains an array of strings (see README)')
+    end
+
+    it "errors with nil" do
+      expect { R509::Cert::Extensions::KeyUsage.new(nil) }.to raise_error(ArgumentError, 'You must pass a hash with a key :value that contains an array of strings (see README)')
+    end
+
+    it "errors with hash with no :value" do
+      expect { R509::Cert::Extensions::KeyUsage.new({}) }.to raise_error(ArgumentError, 'You must pass a hash with a key :value that contains an array of strings (see README)')
+    end
+
+    it "errors with hash with non-array :value" do
+      expect { R509::Cert::Extensions::KeyUsage.new({:value => "string"}) }.to raise_error(ArgumentError, 'You must pass a hash with a key :value that contains an array of strings (see README)')
+    end
+  end
 
   context "KeyUsage" do
     context "creation & yaml generation" do
@@ -112,7 +126,7 @@ describe R509::Cert::Extensions do
 
     context "with one allowed use" do
       before :all do
-        @allowed_uses = [ KeyUsage::AU_DIGITAL_SIGNATURE ]
+        @allowed_uses = [ R509::Cert::Extensions::KeyUsage::AU_DIGITAL_SIGNATURE ]
         @extension_value = @allowed_uses.join( ", " )
       end
 
@@ -123,7 +137,7 @@ describe R509::Cert::Extensions do
     context "with some allowed uses" do
       before :all do
         # this spec and the one below alternate the uses
-        @allowed_uses = [ KeyUsage::AU_DIGITAL_SIGNATURE, KeyUsage::AU_KEY_ENCIPHERMENT, KeyUsage::AU_KEY_AGREEMENT, KeyUsage::AU_CRL_SIGN, KeyUsage::AU_DECIPHER_ONLY ]
+        @allowed_uses = [ R509::Cert::Extensions::KeyUsage::AU_DIGITAL_SIGNATURE, R509::Cert::Extensions::KeyUsage::AU_KEY_ENCIPHERMENT, R509::Cert::Extensions::KeyUsage::AU_KEY_AGREEMENT, R509::Cert::Extensions::KeyUsage::AU_CRL_SIGN, R509::Cert::Extensions::KeyUsage::AU_DECIPHER_ONLY ]
         @extension_value = @allowed_uses.join( ", " )
       end
 
@@ -133,7 +147,7 @@ describe R509::Cert::Extensions do
 
     context "with some different allowed uses" do
       before :all do
-        @allowed_uses = [ KeyUsage::AU_NON_REPUDIATION, KeyUsage::AU_DATA_ENCIPHERMENT, KeyUsage::AU_KEY_CERT_SIGN, KeyUsage::AU_ENCIPHER_ONLY ]
+        @allowed_uses = [ R509::Cert::Extensions::KeyUsage::AU_NON_REPUDIATION, R509::Cert::Extensions::KeyUsage::AU_DATA_ENCIPHERMENT, R509::Cert::Extensions::KeyUsage::AU_KEY_CERT_SIGN, R509::Cert::Extensions::KeyUsage::AU_ENCIPHER_ONLY ]
         @extension_value = @allowed_uses.join( ", " )
       end
 
@@ -143,11 +157,11 @@ describe R509::Cert::Extensions do
 
     context "with all allowed uses" do
       before :all do
-        @allowed_uses = [ KeyUsage::AU_DIGITAL_SIGNATURE, KeyUsage::AU_NON_REPUDIATION,
-                 KeyUsage::AU_KEY_ENCIPHERMENT, KeyUsage::AU_DATA_ENCIPHERMENT,
-                 KeyUsage::AU_KEY_AGREEMENT, KeyUsage::AU_KEY_CERT_SIGN,
-                 KeyUsage::AU_CRL_SIGN, KeyUsage::AU_ENCIPHER_ONLY,
-                 KeyUsage::AU_DECIPHER_ONLY ]
+        @allowed_uses = [ R509::Cert::Extensions::KeyUsage::AU_DIGITAL_SIGNATURE, R509::Cert::Extensions::KeyUsage::AU_NON_REPUDIATION,
+                 R509::Cert::Extensions::KeyUsage::AU_KEY_ENCIPHERMENT, R509::Cert::Extensions::KeyUsage::AU_DATA_ENCIPHERMENT,
+                 R509::Cert::Extensions::KeyUsage::AU_KEY_AGREEMENT, R509::Cert::Extensions::KeyUsage::AU_KEY_CERT_SIGN,
+                 R509::Cert::Extensions::KeyUsage::AU_CRL_SIGN, R509::Cert::Extensions::KeyUsage::AU_ENCIPHER_ONLY,
+                 R509::Cert::Extensions::KeyUsage::AU_DECIPHER_ONLY ]
         @extension_value = @allowed_uses.join( ", " )
       end
 

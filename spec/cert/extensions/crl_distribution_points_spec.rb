@@ -20,8 +20,22 @@ shared_examples_for "a correct R509 CRLDistributionPoints object" do |critical|
   end
 end
 
-describe R509::Cert::Extensions do
+describe R509::Cert::Extensions::CRLDistributionPoints do
   include R509::Cert::Extensions
+
+  it "raises an error if you pass a cdp_location that is not an array" do
+    expect { CRLDistributionPoints.new( :value => "some-url" ) }.to raise_error(ArgumentError, 'cdp_location must be an array or R509::ASN1::GeneralNames object if provided')
+  end
+
+    it "raises an error if you pass an array that does not contain hashes" do
+      expect { CRLDistributionPoints.new( :value => [{},"string"] ) }.to raise_error(ArgumentError, 'All elements of the array must be hashes with a :type and :value')
+    end
+
+    it "raises an error if you pass an array that does not contain both :type and :value" do
+      expect { CRLDistributionPoints.new( :value => [{:type => 'URI'}] ) }.to raise_error(ArgumentError, 'All elements of the array must be hashes with a :type and :value')
+      expect { CRLDistributionPoints.new( :value => [{:value => 'value'}] ) }.to raise_error(ArgumentError, 'All elements of the array must be hashes with a :type and :value')
+    end
+
 
   context "CRLDistributionPoints" do
     context "creation & yaml generation" do

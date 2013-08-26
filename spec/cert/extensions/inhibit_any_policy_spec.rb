@@ -20,8 +20,17 @@ shared_examples_for "a correct R509 InhibitAnyPolicy object" do |critical|
   end
 end
 
-describe R509::Cert::Extensions do
+describe R509::Cert::Extensions::InhibitAnyPolicy do
   include R509::Cert::Extensions
+
+  context "validate inhibit any policy" do
+    it "raises an error when not a number" do
+      expect { R509::Cert::Extensions::InhibitAnyPolicy.new( :value => "string" ) }.to raise_error(ArgumentError,'Inhibit any policy must be a non-negative integer')
+    end
+    it "raises an error when not >= 0" do
+      expect { R509::Cert::Extensions::InhibitAnyPolicy.new( :value => -5 ) }.to raise_error(ArgumentError,'Inhibit any policy must be a non-negative integer')
+    end
+  end
 
   context "InhibitAnyPolicy" do
     before :all do

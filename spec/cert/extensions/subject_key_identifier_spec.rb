@@ -15,7 +15,7 @@ shared_examples_for "a correct R509 SubjectKeyIdentifier object" do
   end
 end
 
-describe R509::Cert::Extensions do
+describe R509::Cert::Extensions::SubjectKeyIdentifier do
   include R509::Cert::Extensions
 
   context "SubjectKeyIdentifier" do

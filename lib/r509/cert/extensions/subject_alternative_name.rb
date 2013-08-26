@@ -23,7 +23,6 @@ module R509
       # You can use this extension to parse an existing extension for easy access
       # to the contents or create a new one.
       class SubjectAlternativeName < OpenSSL::X509::Extension
-        include R509::ValidationMixin
 
         # friendly name for SAN OID
         OID = "subjectAltName"
@@ -40,7 +39,7 @@ module R509
         #   can pass a pre-existing GeneralNames object.
         # @option arg :critical [Boolean] (false)
         def initialize(arg)
-          if arg.kind_of?(Hash)
+          if not R509::Cert::Extensions.is_extension?(arg)
             arg = build_extension(arg)
           end
           super(arg)
@@ -64,6 +63,13 @@ module R509
           ef.config = OpenSSL::Config.parse(serialize[:conf])
           critical = R509::Cert::Extensions.calculate_critical(arg[:critical], false)
           return ef.create_extension("subjectAltName", serialize[:extension_string],critical)
+        end
+
+        # @private
+        def validate_subject_alternative_name(san)
+          if san.nil? or not (san.kind_of?(R509::ASN1::GeneralNames) or san.kind_of?(Array))
+            raise ArgumentError, "You must supply an array or R509::ASN1::GeneralNames object to :value"
+          end
         end
       end
     end

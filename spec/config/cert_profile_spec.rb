@@ -41,6 +41,10 @@ describe R509::Config::CertProfile do
     it "errors when supplying invalid default_md" do
       expect { R509::Config::CertProfile.new( :default_md => "notahash" ) }.to raise_error(ArgumentError, "An unknown message digest was supplied. Permitted: #{R509::MessageDigest::KNOWN_MDS.join(", ")}")
     end
+
+    it "errors when supplying invalid subject item policy" do
+      expect { R509::Config::CertProfile.new( :subject_item_policy => "notapolicy") }.to raise_error(ArgumentError, 'subject_item_policy must be of type R509::Config::SubjectItemPolicy')
+    end
   end
   it "initializes with expected defaults" do
     profile = R509::Config::CertProfile.new
@@ -66,5 +70,10 @@ describe R509::Config::CertProfile do
     ocsp_profile.ocsp_no_check.should_not == nil
     client_profile = config.profile("client") # ocsp_no_check => false
     client_profile.ocsp_no_check.should == nil
+  end
+
+  it "builds YAML" do
+    config = R509::Config::CAConfig.from_yaml("test_ca", File.read("#{File.dirname(__FILE__)}/../fixtures/config_test.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/../fixtures"})
+    YAML.load(config.profile("server").to_yaml).should == {"basic_constraints"=>{:ca=>false, :critical=>true}, "key_usage"=>{:value=>["digitalSignature", "keyEncipherment"], :critical=>false}, "extended_key_usage"=>{:value=>["serverAuth"], :critical=>false}, "default_md"=>R509::MessageDigest::DEFAULT_MD}
   end
 end

@@ -1,4 +1,5 @@
 require 'r509/cert/extensions/base'
+require 'r509/cert/extensions/validation_mixin'
 
 module R509
   class Cert
@@ -31,7 +32,7 @@ module R509
       # You can use this extension to parse an existing extension for easy access
       # to the contents or create a new one.
       class PolicyConstraints < OpenSSL::X509::Extension
-        include R509::ValidationMixin
+        include R509::Cert::Extensions::ValidationMixin
 
         # friendly name for CP OID
         OID = "policyConstraints"
@@ -48,7 +49,7 @@ module R509
         # @option arg :inhibit_policy_mapping [Integer]
         # @option arg :critical [Boolean] (true)
         def initialize(arg)
-          if arg.kind_of?(Hash)
+          if not R509::Cert::Extensions.is_extension?(arg)
             arg = build_extension(arg)
           end
           super(arg)
@@ -96,6 +97,25 @@ module R509
           critical = R509::Cert::Extensions.calculate_critical(arg[:critical], true)
           # must be set critical per RFC 5280
           return ef.create_extension("policyConstraints",constraints.join(","),critical)
+        end
+
+        # @private
+        def validate_policy_constraints(pc)
+          if not pc.nil?
+            if not pc.kind_of?(Hash)
+              raise ArgumentError, 'Policy constraints must be provided as a hash with at least one of the two allowed keys: :inhibit_policy_mapping and :require_explicit_policy'
+            end
+            if not pc[:inhibit_policy_mapping].nil?
+              ipm = validate_non_negative_integer("inhibit_policy_mapping",pc[:inhibit_policy_mapping])
+            end
+            if not pc[:require_explicit_policy].nil?
+              rep = validate_non_negative_integer("require_explicit_policy",pc[:require_explicit_policy])
+            end
+            if not ipm and not rep
+              raise ArgumentError, 'Policy constraints must have at least one of two keys: :inhibit_policy_mapping and :require_explicit_policy and the value must be non-negative'
+            end
+          end
+          pc
         end
       end
     end

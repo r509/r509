@@ -41,8 +41,26 @@ shared_examples_for "a correct R509 ExtendedKeyUsage object" do |critical|
 end
 
 
-describe R509::Cert::Extensions do
+describe R509::Cert::Extensions::ExtendedKeyUsage do
   include R509::Cert::Extensions
+
+  context "validate extended key usage" do
+    it "errors with non-array" do
+      expect { R509::Cert::Extensions::ExtendedKeyUsage.new( 'not an array' ) }.to raise_error(ArgumentError, 'You must pass a hash with a key :value that contains an array of strings (see README)')
+    end
+
+    it "errors with nil" do
+      expect { R509::Cert::Extensions::ExtendedKeyUsage.new(nil) }.to raise_error(ArgumentError, 'You must pass a hash with a key :value that contains an array of strings (see README)')
+    end
+
+    it "errors with hash with no :value" do
+      expect { R509::Cert::Extensions::ExtendedKeyUsage.new({}) }.to raise_error(ArgumentError, 'You must pass a hash with a key :value that contains an array of strings (see README)')
+    end
+
+    it "errors with hash with non-array :value" do
+      expect { R509::Cert::Extensions::KeyUsage.new({:value => "string"}) }.to raise_error(ArgumentError, 'You must pass a hash with a key :value that contains an array of strings (see README)')
+    end
+  end
 
   context "ExtendedKeyUsage" do
     context "creation & yaml generation" do

@@ -1,4 +1,5 @@
 require 'r509/cert/extensions/base'
+require 'r509/cert/extensions/validation_mixin'
 
 module R509
   class Cert
@@ -16,7 +17,7 @@ module R509
       # You can use this extension to parse an existing extension for easy access
       # to the contents or create a new one.
       class AuthorityInfoAccess < OpenSSL::X509::Extension
-        include R509::ValidationMixin
+        include R509::Cert::Extensions::ValidationMixin
 
         # friendly name for AIA OID
         OID = "authorityInfoAccess"
@@ -49,7 +50,7 @@ module R509
         #     :ca_issuers_location => [name]
         #   )
         def initialize(arg)
-          if arg.kind_of?(Hash)
+          if not R509::Cert::Extensions.is_extension?(arg)
             arg = build_extension(arg)
           end
           super(arg)
@@ -87,6 +88,7 @@ module R509
 
         # @private
         def build_extension(arg)
+          validate_authority_info_access(arg)
           aia = []
           aia_conf = []
 
@@ -117,6 +119,13 @@ module R509
             ef.config = OpenSSL::Config.parse(aia_conf.join("\n"))
             critical = R509::Cert::Extensions.calculate_critical(arg[:critical], false)
             return ef.create_extension("authorityInfoAccess",aia.join(","),critical)
+          end
+        end
+
+        # @private
+        def validate_authority_info_access(aia)
+          if not aia.kind_of?(Hash) or (aia[:ocsp_location].nil? and aia[:ca_issuers_location].nil?)
+            raise ArgumentError, "You must pass a hash with at least one of the following two keys (:ocsp_location, :ca_issuers_location)"
           end
         end
       end

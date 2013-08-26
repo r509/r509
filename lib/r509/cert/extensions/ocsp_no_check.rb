@@ -18,7 +18,6 @@ module R509
       # You can use this extension to parse an existing extension for easy access
       # to the contents or create a new one.
       class OCSPNoCheck < OpenSSL::X509::Extension
-        include R509::ValidationMixin
 
         # friendly name for OCSP No Check
         OID = "noCheck"
@@ -29,7 +28,7 @@ module R509
         # @option arg :ocsp_no_check [Any] Pass any value. It's irrelevant.
         # @option arg :critical [Boolean] (false)
         def initialize(arg)
-          if arg.kind_of?(Hash)
+          if not R509::Cert::Extensions.is_extension?(arg)
             ef = OpenSSL::X509::ExtensionFactory.new
             critical = R509::Cert::Extensions.calculate_critical(arg[:critical], false)
             arg = ef.create_extension("noCheck","yes",critical)
