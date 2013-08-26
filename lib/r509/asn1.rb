@@ -172,6 +172,13 @@ module R509
         end
       end
 
+        # @return [Hash]
+      def to_h
+        val = (@value.kind_of?(R509::Subject))? @value.to_h : @value
+
+        { :type => @short_type, :value => val }
+      end
+
       # @private
       # required for #uniq comparisons
       # @return [Boolean] equality between objects
@@ -251,6 +258,11 @@ module R509
         end
         gn = R509::ASN1::GeneralName.new(:tag => hash[:tag], :type => hash[:type], :value => hash[:value])
         add_item(gn)
+      end
+
+      # @return [Hash]
+      def to_h
+        self.names.map { |n| n.to_h }
       end
 
       # @return [Array] array of GeneralName objects

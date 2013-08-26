@@ -42,8 +42,8 @@ module R509
         private
         # @private
         def validate_subject_key_identifier(ski)
-          if ski[:public_key].nil?
-            raise ArgumentError, "You must supply a :public_key"
+          if not ski.kind_of?(Hash) or ski[:public_key].nil?
+            raise ArgumentError, "You must supply a hash with a :public_key"
           end
           ski
         end

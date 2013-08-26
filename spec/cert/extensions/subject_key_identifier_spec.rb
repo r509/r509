@@ -32,7 +32,13 @@ describe R509::Cert::Extensions::SubjectKeyIdentifier do
       it "errors when not supplying a public key" do
         expect {
           R509::Cert::Extensions::SubjectKeyIdentifier.new({})
-        }.to raise_error(ArgumentError,"You must supply a :public_key")
+        }.to raise_error(ArgumentError,"You must supply a hash with a :public_key")
+      end
+
+      it "errors when supplying a non-hash" do
+        expect {
+          R509::Cert::Extensions::SubjectKeyIdentifier.new("junk!!!")
+        }.to raise_error(ArgumentError,"You must supply a hash with a :public_key")
       end
 
       it "creates successfully" do

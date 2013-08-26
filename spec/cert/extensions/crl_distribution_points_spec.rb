@@ -23,9 +23,14 @@ end
 describe R509::Cert::Extensions::CRLDistributionPoints do
   include R509::Cert::Extensions
 
-  it "raises an error if you pass a cdp_location that is not an array" do
-    expect { CRLDistributionPoints.new( :value => "some-url" ) }.to raise_error(ArgumentError, 'cdp_location must be an array or R509::ASN1::GeneralNames object if provided')
-  end
+  context "validation" do
+    it "raises an error if you pass a non-hash" do
+      expect { CRLDistributionPoints.new( "test" ) }.to raise_error(ArgumentError, 'You must pass a hash with a :value key')
+    end
+
+    it "raises an error if you pass a value that is not an array" do
+      expect { CRLDistributionPoints.new( :value => "some-url" ) }.to raise_error(ArgumentError, 'crl_distribution_points must contain an array or R509::ASN1::GeneralNames object if provided')
+    end
 
     it "raises an error if you pass an array that does not contain hashes" do
       expect { CRLDistributionPoints.new( :value => [{},"string"] ) }.to raise_error(ArgumentError, 'All elements of the array must be hashes with a :type and :value')
@@ -35,6 +40,7 @@ describe R509::Cert::Extensions::CRLDistributionPoints do
       expect { CRLDistributionPoints.new( :value => [{:type => 'URI'}] ) }.to raise_error(ArgumentError, 'All elements of the array must be hashes with a :type and :value')
       expect { CRLDistributionPoints.new( :value => [{:value => 'value'}] ) }.to raise_error(ArgumentError, 'All elements of the array must be hashes with a :type and :value')
     end
+  end
 
 
   context "CRLDistributionPoints" do

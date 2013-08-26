@@ -1,4 +1,5 @@
 require 'r509/cert/extensions/base'
+require 'r509/cert/extensions/validation_mixin'
 
 module R509
   class Cert
@@ -23,6 +24,8 @@ module R509
       # You can use this extension to parse an existing extension for easy access
       # to the contents or create a new one.
       class SubjectAlternativeName < OpenSSL::X509::Extension
+        include R509::Cert::Extensions::ValidationMixin
+        include R509::Cert::Extensions::GeneralNamesMixin
 
         # friendly name for SAN OID
         OID = "subjectAltName"
@@ -51,14 +54,30 @@ module R509
           end
         end
 
-        include R509::Cert::Extensions::GeneralNamesMixin
+        # @return [Hash]
+        def to_h
+          {:critical => self.critical?, :value => @general_names.to_h }
+        end
+
+        # @return [YAML]
+        def to_yaml
+          self.to_h.to_yaml
+        end
 
         private
 
         # @private
         def build_extension(arg)
-          validate_subject_alternative_name(arg[:value])
-          serialize = R509::ASN1.general_name_parser(arg[:value]).serialize_names
+          validate_subject_alternative_name(arg)
+          if arg[:value].kind_of?(R509::ASN1::GeneralNames)
+            gns = arg[:value]
+          else
+            gns = R509::ASN1::GeneralNames.new
+            arg[:value].each do |val|
+              gns.create_item(val)
+            end
+          end
+          serialize = gns.serialize_names
           ef = OpenSSL::X509::ExtensionFactory.new
           ef.config = OpenSSL::Config.parse(serialize[:conf])
           critical = R509::Cert::Extensions.calculate_critical(arg[:critical], false)
@@ -67,9 +86,10 @@ module R509
 
         # @private
         def validate_subject_alternative_name(san)
-          if san.nil? or not (san.kind_of?(R509::ASN1::GeneralNames) or san.kind_of?(Array))
-            raise ArgumentError, "You must supply an array or R509::ASN1::GeneralNames object to :value"
+          if not san.kind_of?(Hash) or not (san[:value].kind_of?(R509::ASN1::GeneralNames) or san[:value].kind_of?(Array))
+            raise ArgumentError, "You must supply a hash with a :value"
           end
+          validate_general_name_hash_array(san[:value])
         end
       end
     end

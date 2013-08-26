@@ -37,11 +37,11 @@ describe R509::Cert::Extensions::AuthorityInfoAccess do
     end
 
     it "raises an error if you pass an ocsp_location that is not an array" do
-      expect { AuthorityInfoAccess.new( :ocsp_location => "some-url" ) }.to raise_error(ArgumentError, 'ocsp_location must be an array or R509::ASN1::GeneralNames object if provided')
+      expect { AuthorityInfoAccess.new( :ocsp_location => "some-url" ) }.to raise_error(ArgumentError, 'ocsp_location must contain an array or R509::ASN1::GeneralNames object if provided')
     end
 
     it "raises an error if you pass a ca_issuers_location that is not an array" do
-      expect { AuthorityInfoAccess.new( :ca_issuers_location => "some-url" ) }.to raise_error(ArgumentError, 'ca_issuers_location must be an array or R509::ASN1::GeneralNames object if provided')
+      expect { AuthorityInfoAccess.new( :ca_issuers_location => "some-url" ) }.to raise_error(ArgumentError, 'ca_issuers_location must contain an array or R509::ASN1::GeneralNames object if provided')
     end
 
     it "raises an error if you pass an array that does not contain hashes" do

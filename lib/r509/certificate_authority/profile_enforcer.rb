@@ -106,7 +106,8 @@ module R509::CertificateAuthority
       extensions << profile.ocsp_no_check unless profile.ocsp_no_check.nil?
 
       if present?(options[:san_names])
-        extensions << R509::Cert::Extensions::SubjectAlternativeName.new(:value => options[:san_names])
+        gns = R509::ASN1.general_name_parser(options[:san_names])
+        extensions << R509::Cert::Extensions::SubjectAlternativeName.new(:value => gns)
       end
 
       extensions

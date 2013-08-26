@@ -75,7 +75,8 @@ module R509
 
         # @private
         def build_extension(arg)
-          validate_location('cdp_location',arg[:value])
+          validate_crl_distribution_points(arg)
+          validate_location('crl_distribution_points',arg[:value])
           if not arg[:value].kind_of?(R509::ASN1::GeneralNames)
             gns = R509::ASN1::GeneralNames.new
             arg[:value].each do |val|
@@ -89,6 +90,12 @@ module R509
           ef.config = OpenSSL::Config.parse(serialize[:conf])
           critical = R509::Cert::Extensions.calculate_critical(arg[:critical], false)
           return ef.create_extension("crlDistributionPoints", serialize[:extension_string],critical)
+        end
+
+        def validate_crl_distribution_points(arg)
+          if not arg.kind_of?(Hash)
+            raise ArgumentError, "You must pass a hash with a :value key"
+          end
         end
       end
     end

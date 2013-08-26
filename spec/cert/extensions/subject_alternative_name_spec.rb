@@ -44,41 +44,97 @@ end
 describe R509::Cert::Extensions::SubjectAlternativeName do
   include R509::Cert::Extensions
 
+
+  context "validation" do
+    it "errors when not supplying a hash" do
+      expect {
+        R509::Cert::Extensions::SubjectAlternativeName.new("create")
+      }.to raise_error(ArgumentError,"You must supply a hash with a :value")
+    end
+
+    it "errors when not supplying :value" do
+      expect {
+        R509::Cert::Extensions::SubjectAlternativeName.new({})
+      }.to raise_error(ArgumentError,"You must supply a hash with a :value")
+    end
+  end
   context "SubjectAlternativeName" do
-    context "creation" do
+    context "creation & yaml generation" do
 
-      it "errors when not supplying :value" do
-        expect {
-          R509::Cert::Extensions::SubjectAlternativeName.new({})
-        }.to raise_error(ArgumentError,"You must supply an array or R509::ASN1::GeneralNames object to :value")
+      context "GeneralNames object" do
+        before :all do
+          gns = R509::ASN1::GeneralNames.new
+          gns.create_item(:type => "rfc822Name", :value => "random string")
+          @san = R509::Cert::Extensions::SubjectAlternativeName.new(:value => gns)
+        end
+
+        it "creates extension" do
+          @san.rfc_822_names.should == ['random string']
+        end
+
+        it "builds yaml" do
+          YAML.load(@san.to_yaml).should == {:critical=>false, :value=>[{:type=>"email", :value=>"random string"}]}
+        end
       end
 
-      it "creates with GeneralNames object" do
-        gns = R509::ASN1::GeneralNames.new
-        gns.create_item(:type => "rfc822Name", :value => "random string")
-        san = R509::Cert::Extensions::SubjectAlternativeName.new(:value => gns)
-        san.rfc_822_names.should == ['random string']
+      context "single name" do
+        before :all do
+          @args = { :value => [{:type => "DNS", :value => 'domain.com' }], :critical => false }
+          @san = R509::Cert::Extensions::SubjectAlternativeName.new(@args)
+        end
+
+        it "creates extension" do
+          @san.dns_names.should == ['domain.com']
+        end
+
+        it "builds yaml" do
+          @san.to_h.should == @args
+        end
       end
 
-      it "creates with a single name" do
-        san = R509::Cert::Extensions::SubjectAlternativeName.new(:value => ['domain.com'])
-        san.dns_names.should == ['domain.com']
+      context "multiple names" do
+        before :all do
+          @args = { :value => [{:type => 'DNS', :value => 'domain.com' },{ :type => 'IP', :value => '127.0.0.1' }], :critical => false }
+          @san = R509::Cert::Extensions::SubjectAlternativeName.new(@args)
+        end
+        it "creates extension" do
+          @san.dns_names.should == ['domain.com']
+          @san.ip_addresses.should == ['127.0.0.1']
+        end
+
+        it "builds yaml" do
+          @san.to_h.should == @args
+        end
       end
 
-      it "creates with multiple names" do
-        san = R509::Cert::Extensions::SubjectAlternativeName.new(:value => ['domain.com','127.0.0.1'])
-        san.dns_names.should == ['domain.com']
-        san.ip_addresses.should == ['127.0.0.1']
+      context "default criticality" do
+        before :all do
+          @args = { :value => [{:type => "DNS", :value => 'domain.com' }] }
+          @san = R509::Cert::Extensions::SubjectAlternativeName.new(@args)
+        end
+
+        it "creates extension" do
+          @san.critical?.should be_false
+        end
+
+        it "builds yaml" do
+          @san.to_h.should == @args.merge(:critical => false)
+        end
       end
 
-      it "creates with default criticality" do
-        san = R509::Cert::Extensions::SubjectAlternativeName.new(:value => ['domain.com'])
-        san.critical?.should be_false
-      end
+      context "creates with non-default criticality" do
+        before :all do
+          @args = { :value => [{:type => "DNS", :value => 'domain.com' }], :critical => true }
+          @san = R509::Cert::Extensions::SubjectAlternativeName.new(@args)
+        end
 
-      it "creates with non-default criticality" do
-        san = R509::Cert::Extensions::SubjectAlternativeName.new(:value => ['domain.com'], :critical => true)
-        san.critical?.should be_true
+        it "creates extension" do
+          @san.critical?.should be_true
+        end
+
+        it "builds yaml" do
+          @san.to_h.should == @args
+        end
       end
 
     end
