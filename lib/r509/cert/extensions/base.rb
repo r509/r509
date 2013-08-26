@@ -6,41 +6,6 @@ module R509
   class Cert
     # module to contain extension classes for R509::Cert
     module Extensions
-
-      private
-      R509_EXTENSION_CLASSES = Set.new
-
-      # Registers a class as being an R509 certificate extension class. Registered
-      # classes are used by #wrap_openssl_extensions to wrap OpenSSL extensions
-      # in R509 extensions, based on the OID.
-      def self.register_class( r509_ext_class )
-        raise ArgumentError.new("R509 certificate extensions must have an OID") if r509_ext_class::OID.nil?
-        R509_EXTENSION_CLASSES << r509_ext_class
-      end
-
-      # @private
-      def self.calculate_critical(critical,default)
-        if critical.kind_of?(TrueClass) or critical.kind_of?(FalseClass)
-          critical
-        else
-          default
-        end
-      end
-
-      # Method attempts to determine if data being passed to an extension is already
-      # an extension/asn.1 data or not.
-      def self.is_extension?(data)
-        return true if data.kind_of?(OpenSSL::X509::Extension)
-        return false if not data.kind_of?(String)
-        begin
-          OpenSSL::X509::Extension.new(data)
-          return true
-        rescue
-          return false
-        end
-      end
-
-      public
       #
       # Helper class methods
       #
@@ -87,7 +52,6 @@ module R509
       end
 
 
-      # @private
       # Takes an array of R509::ASN1::GeneralName objects and returns a hash that can be
       # encoded to YAML (used by #to_yaml methods)
       def self.names_to_h(array)
@@ -140,6 +104,39 @@ module R509
           @general_names.names
         end
       end
+
+      private
+      R509_EXTENSION_CLASSES = Set.new
+
+      # Registers a class as being an R509 certificate extension class. Registered
+      # classes are used by #wrap_openssl_extensions to wrap OpenSSL extensions
+      # in R509 extensions, based on the OID.
+      def self.register_class( r509_ext_class )
+        raise ArgumentError.new("R509 certificate extensions must have an OID") if r509_ext_class::OID.nil?
+        R509_EXTENSION_CLASSES << r509_ext_class
+      end
+
+      def self.calculate_critical(critical,default)
+        if critical.kind_of?(TrueClass) or critical.kind_of?(FalseClass)
+          critical
+        else
+          default
+        end
+      end
+
+      # Method attempts to determine if data being passed to an extension is already
+      # an extension/asn.1 data or not.
+      def self.is_extension?(data)
+        return true if data.kind_of?(OpenSSL::X509::Extension)
+        return false if not data.kind_of?(String)
+        begin
+          OpenSSL::X509::Extension.new(data)
+          return true
+        rescue
+          return false
+        end
+      end
+
     end
   end
 end

@@ -1,11 +1,9 @@
-# @private
 # shared methods for validation among the extensions objects
 module R509
   class Cert
     module Extensions
       module ValidationMixin
         private
-        # @private
         # used by iap and pc validation methods
         def validate_non_negative_integer(source,value)
             if not value.kind_of?(Integer) or value < 0
@@ -14,7 +12,6 @@ module R509
             value
         end
 
-        # @private
         # validates key usage array
         def validate_usage(ku)
           if ku.nil? or not ku.kind_of?(Hash) or not ku[:value].kind_of?(Array)
@@ -23,7 +20,6 @@ module R509
           ku
         end
 
-        # @private
         def validate_location(type,location)
           if not location.nil? and not (location.kind_of?(Array) or location.kind_of?(R509::ASN1::GeneralNames))
             raise ArgumentError, "#{type} must contain an array or R509::ASN1::GeneralNames object if provided"
@@ -32,7 +28,6 @@ module R509
           location
         end
 
-        # @private
         def validate_general_name_hash_array(arr)
           arr.each do |l|
             if not l.kind_of?(Hash) or l[:type].nil? or l[:value].nil?

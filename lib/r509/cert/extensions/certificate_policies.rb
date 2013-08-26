@@ -57,7 +57,6 @@ module R509
 
         private
 
-        # @private
         def build_extension(arg)
           validate_certificate_policies(arg[:value])
           conf = []
@@ -72,7 +71,6 @@ module R509
           return ef.create_extension("certificatePolicies", policy_names.join(","),critical)
         end
 
-        # @private
         def build_conf(section,hash,index)
           conf = ["[#{section}]"]
           conf.push "policyIdentifier=#{hash[:policy_identifier]}" unless hash[:policy_identifier].nil?

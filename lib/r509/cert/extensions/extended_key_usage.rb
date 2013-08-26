@@ -40,6 +40,22 @@ module R509
         attr_reader :allowed_uses
 
         # This method takes a hash or an existing Extension object to parse
+        #
+        # The following types are known to r509
+        #  serverAuth
+        #  clientAuth
+        #  codeSigning
+        #  emailProtection
+        #  OCSPSigning
+        #  timeStamping
+        #  anyExtendedKeyUsage
+        #  msCodeInd (not part of RFC 5280)
+        #  msCodeCom (not part of RFC 5280)
+        #  msCTLSign (not part of RFC 5280)
+        #  msSGC (not part of RFC 5280)
+        #  msEFS (not part of RFC 5280)
+        #  nsSGC (not part of RFC 5280)
+        #
         # @option arg :value [Array]
         # @option arg :critical [Boolean] (false)
         # @example

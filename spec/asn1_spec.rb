@@ -164,7 +164,7 @@ describe R509::ASN1::GeneralName do
     end
 
   end
-  context "::map_tag_to_short_type" do
+  context ":map_tag_to_short_type" do
     it "handles otherName" do
       expect { R509::ASN1::GeneralName.map_tag_to_short_type(0) }.to raise_error(R509::R509Error)
     end
@@ -193,6 +193,144 @@ describe R509::ASN1::GeneralName do
       expect { R509::ASN1::GeneralName.map_tag_to_short_type(8) }.to raise_error(R509::R509Error)
     end
   end
+
+  context "creation & building hash" do
+    it "errors on unimplemented types" do
+      expect { R509::ASN1::GeneralName.new(:type => 0) }.to raise_error(R509::R509Error)
+      expect { R509::ASN1::GeneralName.new(:type => 3) }.to raise_error(R509::R509Error)
+      expect { R509::ASN1::GeneralName.new(:type => 5) }.to raise_error(R509::R509Error)
+      expect { R509::ASN1::GeneralName.new(:type => 8) }.to raise_error(R509::R509Error)
+    end
+    context "email" do
+      before :all do
+        @args = { :type => 'email', :value => 'email@email.com' }
+        @gn = R509::ASN1::GeneralName.new(@args)
+      end
+
+      it "creates object" do
+        @gn.type.should == :rfc822Name
+        @gn.value.should == 'email@email.com'
+        @gn.tag.should == 1
+      end
+
+      it "builds hash" do
+        @gn.to_h.should == @args
+      end
+    end
+    context " DNS" do
+      before :all do
+        @args = { :type => 'DNS', :value => 'r509.org' }
+        @gn = R509::ASN1::GeneralName.new(@args)
+      end
+
+      it "creates object" do
+        @gn.type.should == :dNSName
+        @gn.value.should == 'r509.org'
+        @gn.tag.should == 2
+      end
+
+      it "builds hash" do
+        @gn.to_h.should == @args
+      end
+    end
+    context "dirName" do
+      before :all do
+        @args = { :type => 'dirName', :value => { :CN => 'test' } }
+        @gn = R509::ASN1::GeneralName.new(@args)
+      end
+
+      it "creates object" do
+        @gn.type.should == :directoryName
+        @gn.tag.should == 4
+        @gn.value.to_s.should == '/CN=test'
+      end
+
+      it "builds hash" do
+        @gn.to_h.should == @args
+      end
+    end
+    context "URI" do
+      before :all do
+        @args = { :type => 'URI', :value => 'http://test.local' }
+        @gn = R509::ASN1::GeneralName.new(@args)
+      end
+
+      it "creates object" do
+        @gn.type.should == :uniformResourceIdentifier
+        @gn.value.should == 'http://test.local'
+        @gn.tag.should == 6
+      end
+
+      it "builds hash" do
+        @gn.to_h.should == @args
+      end
+    end
+    context "IPv4" do
+      before :all do
+        @args = { :type => 'IP', :value => '127.0.0.1' }
+        @gn = R509::ASN1::GeneralName.new(@args)
+      end
+
+      it "creates object" do
+        @gn.type.should == :iPAddress
+        @gn.value.should == '127.0.0.1'
+        @gn.tag.should == 7
+      end
+
+      it "builds hash" do
+        @gn.to_h.should == @args
+      end
+    end
+    context "IPv4 with netmask" do
+      before :all do
+        @args = { :type => 'IP', :value => '127.0.0.1/255.255.252.0' }
+        @gn = R509::ASN1::GeneralName.new(@args)
+      end
+
+      it "creates object" do
+        @gn.type.should == :iPAddress
+        @gn.value.should == '127.0.0.1/255.255.252.0'
+        @gn.tag.should == 7
+      end
+
+      it "builds hash" do
+        @gn.to_h.should == @args
+      end
+    end
+    context "IPv6" do
+      before :all do
+        @args = { :type => 'IP', :value => 'ff::ee' }
+        @gn = R509::ASN1::GeneralName.new(@args)
+      end
+
+      it "creates object" do
+        @gn.type.should == :iPAddress
+        @gn.value.should == 'ff::ee'
+        @gn.tag.should == 7
+      end
+
+      it "builds hash" do
+        @gn.to_h.should == @args
+      end
+    end
+    context "IPv6 with netmask" do
+      before :all do
+        @args = { :type => 'IP', :value => 'ff::ee/ff::' }
+        @gn = R509::ASN1::GeneralName.new(@args)
+      end
+
+      it "creates object" do
+        @gn.type.should == :iPAddress
+        @gn.value.should == 'ff::ee/ff::'
+        @gn.tag.should == 7
+      end
+
+      it "builds hash" do
+        @gn.to_h.should == @args
+      end
+    end
+  end
+
   it "handles rfc822Name" do
     der = "\x81\u0011myemail@email.com"
     asn = OpenSSL::ASN1.decode der

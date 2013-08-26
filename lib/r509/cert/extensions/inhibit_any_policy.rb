@@ -57,7 +57,6 @@ module R509
         end
 
         private
-        # @private
         # validates inhibit any policy
         def validate_inhibit_any_policy(iap)
           if not iap.nil?

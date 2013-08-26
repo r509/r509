@@ -74,14 +74,14 @@ module R509
       # Integer tag type. See GeneralName description at the top of this class
       attr_reader :tag
 
-      # @param [OpenSSL::ASN1::ASN1Data,Hash] asn ASN.1 input data. Can also pass a hash with :tag and :value keys
+      # @param [OpenSSL::ASN1::ASN1Data,Hash] asn ASN.1 input data. Can also pass a hash with (:tag or :type) and :value keys
       def initialize(asn)
         if asn.kind_of?(Hash)
           # this is added via create_item
           @tag = asn[:tag] || R509::ASN1::GeneralName.map_type_to_tag(asn[:type])
           @type = R509::ASN1::GeneralName.map_tag_to_type(@tag)
           @short_type = R509::ASN1::GeneralName.map_tag_to_short_type(@tag)
-          @value = asn[:value]
+          @value = (@tag == 4)? R509::Subject.new(asn[:value]) : asn[:value]
         else
           @tag = asn.tag
           @type = R509::ASN1::GeneralName.map_tag_to_type(@tag)
@@ -251,7 +251,7 @@ module R509
       end
 
       # @param [Hash] hash A hash with (:tag or :type) and :value keys. Allows you to build GeneralName objects and add
-      #   them to the GeneralNames object. Unless you know what you're doing you should really stay away from this.
+      #   them to the GeneralNames object
       def create_item(hash)
         if not hash.respond_to?(:has_key?) or (not hash.has_key?(:tag) and not hash.has_key?(:type)) or not hash.has_key?(:value)
           raise ArgumentError, "Must be a hash with (:tag or :type) and :value nodes"

@@ -71,7 +71,6 @@ module R509
 
         private
 
-        # @private
         def build_extension(arg)
           arg[:value] = AKI_EXTENSION_DEFAULT unless not arg[:value].nil?
           validate_authority_key_identifier(arg)
@@ -84,7 +83,6 @@ module R509
           return ef.create_extension("authorityKeyIdentifier", arg[:value], critical) # this could also be keyid:always,issuer:always
         end
 
-        # @private
         def validate_authority_key_identifier(aki)
           if aki[:value].downcase.include?("keyid") and aki[:public_key].nil?
             raise ArgumentError, "You must supply an OpenSSL::PKey object to :public_key if aki value contains keyid (present by default)"

@@ -66,7 +66,6 @@ module R509
 
         private
 
-        # @private
         def build_extension(arg)
           validate_subject_alternative_name(arg)
           if arg[:value].kind_of?(R509::ASN1::GeneralNames)
@@ -84,7 +83,6 @@ module R509
           return ef.create_extension("subjectAltName", serialize[:extension_string],critical)
         end
 
-        # @private
         def validate_subject_alternative_name(san)
           if not san.kind_of?(Hash) or not (san[:value].kind_of?(R509::ASN1::GeneralNames) or san[:value].kind_of?(Array))
             raise ArgumentError, "You must supply a hash with a :value"

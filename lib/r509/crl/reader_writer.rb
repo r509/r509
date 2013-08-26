@@ -58,10 +58,10 @@ module R509
       # @param serial [Integer] serial number of the certificate to revoke
       # @param reason [Integer,nil] reason for revocation
       # @param revoke_time [Integer]
-      def write_list_entry(serial,time,reason)
+      def write_list_entry(serial,revoke_time,reason)
         return nil if @crl_list_file.nil?
 
-        entry = [serial,time,reason].join(",")
+        entry = [serial,revoke_time,reason].join(",")
         write_data(@crl_list_file, entry+"\n" ,'wa:ascii-8bit')
       end
 

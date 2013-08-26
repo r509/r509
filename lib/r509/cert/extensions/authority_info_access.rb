@@ -30,19 +30,17 @@ module R509
         # @return [R509::ASN1::GeneralNames,nil]
         attr_reader :ca_issuers
 
-        # This method takes a hash or an existing Extension object to parse
+        # This method takes a hash or an existing Extension object to parse. If passing
+        # a hash you must supply :ocsp_location and/or :ca_issuers_location. These values
+        # must be in the form seen in the examples below.
         #
-        # @option arg :ocsp_location optional [Array,R509::ASN1::GeneralNames] Array of hashes (see examples) or GeneralNames object
-        # @option arg :ca_issuers_location optional [Array] Array of hashes (see examples) or GeneralNames object
+        # @option arg :ocsp_location [Array,R509::ASN1::GeneralNames] Array of hashes (see examples) or GeneralNames object
+        # @option arg :ca_issuers_location [Array] Array of hashes (see examples) or GeneralNames object
         # @option arg :critical [Boolean] (false)
         # @example
         #   R509::Cert::Extensions::AuthorityInfoAccess.new(
-        #     :ocsp_location => [
-        #       { :type => "URI", :value => "http://ocsp.domain.com" }
-        #     ],
-        #     :ca_issuers_location => [
-        #       { :type => "dirName", :value => { :CN => 'myCN', :O => 'some Org' }
-        #     ]
+        #     :ocsp_location => [ { :type => "URI", :value => "http://ocsp.domain.com" } ],
+        #     :ca_issuers_location => [ { :type => "dirName", :value => { :CN => 'myCN', :O => 'some Org' } ]
         #   )
         # @example
         #   name = R509::ASN1::GeneralName.new(:type => "IP", :value => "127.0.0.1")
@@ -86,7 +84,6 @@ module R509
 
         private
 
-        # @private
         def build_extension(arg)
           validate_authority_info_access(arg)
           aia = []
@@ -122,7 +119,6 @@ module R509
           end
         end
 
-        # @private
         def validate_authority_info_access(aia)
           if not aia.kind_of?(Hash) or (aia[:ocsp_location].nil? and aia[:ca_issuers_location].nil?)
             raise ArgumentError, "You must pass a hash with at least one of the following two keys (:ocsp_location, :ca_issuers_location)"

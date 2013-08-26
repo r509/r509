@@ -39,23 +39,29 @@ module R509
         # @return [R509::ASN1::GeneralNames,nil]
         attr_reader :permitted, :excluded
 
-        #      id-ce-nameConstraints OBJECT IDENTIFIER ::=  { id-ce 30 }
-        #      NameConstraints ::= SEQUENCE {
-        #           permittedSubtrees       [0]     GeneralSubtrees OPTIONAL,
-        #           excludedSubtrees        [1]     GeneralSubtrees OPTIONAL }
+        # @option arg :permitted [Array,R509::ASN1::GeneralNames] Array of hashes (see examples) or GeneralNames object
+        # @option arg :excluded [Array,R509::ASN1::GeneralNames] Array of hashes (see examples) or GeneralNames object
+        # @option arg :critical [Boolean] (false)
+        # @example
+        #   R509::Cert::Extensions::NameConstraints.new(
+        #     :critical => false,
+        #     :permitted => [
+        #       { :type => 'dirName', :value => { :CN => 'myCN', :O => 'org' } }
+        #     ]
+        #   )
+        # @example
+        #   R509::Cert::Extensions::NameConstraints.new(
+        #     :critical => false,
+        #     :permitted => [
+        #       { :type => 'dirName', :value => { :CN => 'myCN', :O => 'org' } }
+        #     ],
+        #     :excluded => [
+        #       { :type => 'DNS', :value => 'domain.com' }
+        #     ]
+        #   )
+        # @note When supplying IP you _must_ supply a full netmask in addition to an IP. (both IPv4 and IPv6 supported)
+        # @note When supplying dirName the value is an R509::Subject or the hash used to build an R509::Subject
         #
-        #      GeneralSubtrees ::= SEQUENCE SIZE (1..MAX) OF GeneralSubtree
-        #
-        # per RFC 5280
-        # Within this profile, the minimum and maximum fields are not used with
-        # any name forms, thus, the minimum MUST be zero, and maximum MUST be
-        # absent
-        #      GeneralSubtree ::= SEQUENCE {
-        #           base                    GeneralName,
-        #           minimum         [0]     BaseDistance DEFAULT 0,
-        #           maximum         [1]     BaseDistance OPTIONAL }
-        #
-        #      BaseDistance ::= INTEGER (0..MAX)
         def initialize(arg)
           if not R509::Cert::Extensions.is_extension?(arg)
             arg = build_extension(arg)
@@ -95,7 +101,23 @@ module R509
 
         private
 
-        # @private
+        #      id-ce-nameConstraints OBJECT IDENTIFIER ::=  { id-ce 30 }
+        #      NameConstraints ::= SEQUENCE {
+        #           permittedSubtrees       [0]     GeneralSubtrees OPTIONAL,
+        #           excludedSubtrees        [1]     GeneralSubtrees OPTIONAL }
+        #
+        #      GeneralSubtrees ::= SEQUENCE SIZE (1..MAX) OF GeneralSubtree
+        #
+        # per RFC 5280
+        # Within this profile, the minimum and maximum fields are not used with
+        # any name forms, thus, the minimum MUST be zero, and maximum MUST be
+        # absent
+        #      GeneralSubtree ::= SEQUENCE {
+        #           base                    GeneralName,
+        #           minimum         [0]     BaseDistance DEFAULT 0,
+        #           maximum         [1]     BaseDistance OPTIONAL }
+        #
+        #      BaseDistance ::= INTEGER (0..MAX)
         def build_extension(arg)
           validate_name_constraints(arg)
           nc_data = []
@@ -121,7 +143,6 @@ module R509
           return ef.create_extension("nameConstraints",nc_data.join(","),critical)
         end
 
-        # @private
         def validate_name_constraints(nc)
           if not nc.nil?
             if not nc.kind_of?(Hash)
@@ -139,7 +160,6 @@ module R509
           nc
         end
 
-        # @private
         def validate_name_constraints_elements(type,arr)
           if not arr.kind_of?(Array)
             raise ArgumentError, "#{type} must be an array"

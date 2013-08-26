@@ -11,9 +11,12 @@ require 'pathname'
 module R509
   # Module to contain all configuration related classes (e.g. CAConfig, CertProfile, SubjectItemPolicy)
   module Config
-    # The Subject Item Policy allows you to define what subject fields are allowed in a certificate.
-    # Required means that field *must* be supplied, optional means it will be encoded if provided, and
-    # match means the field must be present and must match the value specified.
+    # The Subject Item Policy allows you to define what subject fields are allowed in a
+    # certificate. Required means that field *must* be supplied, optional means it will
+    # be encoded if provided, and match means the field must be present and must match
+    # the value specified.
+    #
+    # Using R509::OIDMapper you can create new shortnames that will be usable inside this class.
     class SubjectItemPolicy
       # @return [Array]
       attr_reader :required, :optional, :match, :match_values

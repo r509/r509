@@ -87,7 +87,6 @@ module R509
 
         private
 
-        # @private
         def build_extension(arg)
           validate_policy_constraints(arg)
           constraints = []
@@ -99,7 +98,6 @@ module R509
           return ef.create_extension("policyConstraints",constraints.join(","),critical)
         end
 
-        # @private
         def validate_policy_constraints(pc)
           if not pc.nil?
             if not pc.kind_of?(Hash)

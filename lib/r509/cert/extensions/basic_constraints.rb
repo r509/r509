@@ -22,8 +22,8 @@ module R509
         attr_reader :path_length
 
         # This method takes a hash or an existing Extension object to parse
-        # @option arg :ca [Boolean]
-        # @option arg :path_length optional [Integer]
+        # @option arg :ca [Boolean] The ca key is required and must be set to true (for an issuing CA) or false (everything else).
+        # @option arg :path_length optional [Integer] This option is only allowed if ca is set to TRUE. path_length allows you to define the maximum number of non-self-issued intermediate certificates that may follow this certificate in a valid certification path. For example, if you set this value to 0 then the certificate issued can only issue end entity certificates, not additional subroots. This must be a non-negative integer (>=0).
         # @option arg :critical [Boolean] (true)
         def initialize(arg)
           if not R509::Cert::Extensions.is_extension?(arg)
@@ -79,7 +79,6 @@ module R509
 
         private
 
-        # @private
         def build_extension(arg)
           validate_basic_constraints(arg)
           ef = OpenSSL::X509::ExtensionFactory.new
@@ -95,7 +94,6 @@ module R509
           return ef.create_extension("basicConstraints", bc_value, critical)
         end
 
-        # @private
         # validates the structure of the certificate policies array
         def validate_basic_constraints(constraints)
           if constraints.nil? or not constraints.respond_to?(:has_key?) or not constraints.has_key?(:ca)

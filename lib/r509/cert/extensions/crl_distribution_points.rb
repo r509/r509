@@ -21,7 +21,7 @@ module R509
         OID = "crlDistributionPoints"
         Extensions.register_class(self)
 
-        # This method takes a hash or an existing Extension object to parse
+        # This method takes a hash or an existing Extension object to parse.
         #
         # @option arg :value [Array,R509::ASN1::GeneralNames] Array of hashes (see examples) or GeneralNames object
         # @option arg :critical [Boolean] (false)
@@ -73,7 +73,6 @@ module R509
 
         private
 
-        # @private
         def build_extension(arg)
           validate_crl_distribution_points(arg)
           validate_location('crl_distribution_points',arg[:value])

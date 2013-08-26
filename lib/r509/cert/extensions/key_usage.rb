@@ -49,6 +49,18 @@ module R509
         AU_DECIPHER_ONLY = "decipherOnly"
 
         # This method takes a hash or an existing Extension object to parse
+        #
+        # The following types are known to r509 by default
+        #  digitalSignature
+        #  nonRepudiation
+        #  keyEncipherment
+        #  dataEncipherment
+        #  keyAgreement
+        #  keyCertSign
+        #  cRLSign
+        #  encipherOnly
+        #  decipherOnly
+        #
         # @option arg :value [Array]
         # @option arg :critical [Boolean] (false)
         # @example
