@@ -76,15 +76,7 @@ module R509
         def build_extension(arg)
           validate_crl_distribution_points(arg)
           validate_location('crl_distribution_points',arg[:value])
-          if not arg[:value].kind_of?(R509::ASN1::GeneralNames)
-            gns = R509::ASN1::GeneralNames.new
-            arg[:value].each do |val|
-              gns.create_item(val)
-            end
-            serialize = gns.serialize_names
-          else
-            serialize = arg[:value].serialize_names
-          end
+          serialize = R509::ASN1::GeneralNames.new(arg[:value]).serialize_names
           ef = OpenSSL::X509::ExtensionFactory.new
           ef.config = OpenSSL::Config.parse(serialize[:conf])
           critical = R509::Cert::Extensions.calculate_critical(arg[:critical], false)

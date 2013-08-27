@@ -1,4 +1,5 @@
 require 'ipaddr'
+require 'r509/cert/extensions/validation_mixin'
 
 module R509
   # Module for holding various classes related to parsed ASN.1 objects
@@ -222,7 +223,10 @@ module R509
     # object to hold parsed sequences of generalnames
     # these structures are used in SubjectAlternativeName, AuthorityInfoAccess, CRLDistributionPoints, etc
     class GeneralNames
-      def initialize
+      include R509::Cert::Extensions::ValidationMixin
+
+      # @param data [Array,R509::ASN1::GeneralNames] Pass an array of hashes to create R509::ASN1::GeneralName objects or an existing R509::ASN1::GeneralNames object
+      def initialize(data=nil)
         @types = {
           :otherName => [], # unimplemented
           :rfc822Name => [],
@@ -235,6 +239,16 @@ module R509
           :registeredID => [] # unimplemented
         }
         @ordered_names = []
+        if not data.nil?
+          if data.kind_of?(self.class)
+            data.names.each { |n| add_item(n) }
+          else
+            validate_general_name_hash_array(data)
+            data.each do |n|
+              create_item(n)
+            end
+          end
+        end
       end
 
       # @param [OpenSSL::ASN1::ASN1Data] asn Takes ASN.1 data in for parsing GeneralName structures

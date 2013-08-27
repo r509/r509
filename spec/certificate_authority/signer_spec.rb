@@ -87,7 +87,7 @@ shared_examples_for "signing" do |selfsign|
 
   it "with random serial when serial is not specified and uses microtime as part of the serial to prevent collision (selfsign:#{selfsign})" do
     now = Time.now
-    Time.stub!(:now).and_return(now)
+    Time.stub(:now).and_return(now)
     time = now.to_i.to_s
     if selfsign
       cert = R509::CertificateAuthority::Signer.selfsign(@options)

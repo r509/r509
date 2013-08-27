@@ -22,10 +22,18 @@ module R509
         # @return [Array] Array of R509::Cert::Extensions::PolicyObjects::PolicyInformation objects
         attr_reader :policies
 
-        # This method takes a hash or an existing Extension object to parse
+        # This method takes a hash or an existing Extension object to parse. The hash must contain
+        # a :value that is an array of policy information. See the example.
         #
-        # @option arg :value [Array] Array of hashes in the same format as passed to R509::Config::CertProfile for certificate policies
+        # @option arg :value [Array] Array of hashes in the format shown in the examples. This is a complex hash.
         # @option arg :critical [Boolean] (false)
+        # @example
+        #  R509::Cert::Extensions::CertificatePolicies.new(:value => [
+        #    { :policy_identifier => "2.16.840.1.12345.1.2.3.4.1",
+        #      :cps_uris => ["http://example.com/cps","http://other.com/cps"],
+        #      :user_notices => [ {:explicit_text => "thing", :organization => "my org", :notice_numbers => [1,2,3,4]} ]
+        #   }
+        #  ])
         def initialize(arg)
           if not R509::Cert::Extensions.is_extension?(arg)
             arg = build_extension(arg)

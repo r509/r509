@@ -98,12 +98,8 @@ module R509
             validate_location(pair[:key].to_s,arg[pair[:key]])
             data = arg[pair[:key]]
             if not data.nil?
-              if data.kind_of?(R509::ASN1::GeneralNames)
-                elements = data.names
-              else
-                elements = data.map { |node| R509::ASN1::GeneralName.new(node) }
-              end
-              elements.each do |name|
+              elements = R509::ASN1::GeneralNames.new(data)
+              elements.names.each do |name|
                 serialize = name.serialize_name
                 aia.push "#{pair[:short_name]};#{serialize[:extension_string]}"
                 aia_conf.push serialize[:conf]
