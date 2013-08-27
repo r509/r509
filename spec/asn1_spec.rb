@@ -396,6 +396,20 @@ describe R509::ASN1::GeneralName do
 end
 
 describe R509::ASN1::GeneralNames do
+  context "constructor" do
+    it "creates an empty object when passed nil" do
+      gns = R509::ASN1::GeneralNames.new
+      gns.should_not == nil
+    end
+    it "builds a GeneralNames object when passed an array of GeneralName hashes" do
+      gns = R509::ASN1::GeneralNames.new
+      gns.create_item(:type => 'DNS', :value => 'domain.com')
+      gns_new = R509::ASN1::GeneralNames.new(gns)
+      gns_new.names.size.should == 1
+      gns_new.dns_names.size.should == 1
+      gns_new.names.should == gns.names
+    end
+  end
   it "adds items of allowed type to the object" do
     asn = OpenSSL::ASN1.decode "\x82\u000Ewww.test.local"
     asn2 = OpenSSL::ASN1.decode "\x81\u0011myemail@email.com"
