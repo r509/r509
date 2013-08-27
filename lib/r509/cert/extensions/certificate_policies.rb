@@ -156,6 +156,7 @@ module R509
           end
         end
 
+        # @return [Hash]
         def to_h
           hash = {}
           hash[:policy_identifier] = @policy_identifier
@@ -163,6 +164,7 @@ module R509
           hash
         end
 
+        # @return [YAML]
         def to_yaml
           self.to_h.to_yaml
         end
@@ -191,6 +193,7 @@ module R509
           end
         end
 
+        # @return [Hash]
         def to_h
           hash = {}
           hash[:cps_uris] = @cps_uris
@@ -198,6 +201,7 @@ module R509
           hash
         end
 
+        # @return [YAML]
         def to_yaml
           self.to_h.to_yaml
         end
@@ -221,6 +225,7 @@ module R509
           end if data.respond_to?(:each)
         end
 
+        # @return [Hash]
         def to_h
           hash = {}
           hash[:explicit_text] = @explicit_text unless @explicit_text.nil?
@@ -228,6 +233,7 @@ module R509
           hash
         end
 
+        # @return [YAML]
         def to_yaml
           self.to_h.to_yaml
         end
@@ -254,6 +260,7 @@ module R509
           end
         end
 
+        # @return [Hash]
         def to_h
           hash = {}
           hash[:organization] = @organization unless @organization.nil?
@@ -261,6 +268,7 @@ module R509
           hash
         end
 
+        # @return [YAML]
         def to_yaml
           self.to_h.to_yaml
         end

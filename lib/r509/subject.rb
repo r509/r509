@@ -101,6 +101,7 @@ module R509
       @array
     end
 
+    # @return [Hash]
     def to_h
       hash = {}
       @array.each do |el|
@@ -109,6 +110,7 @@ module R509
       hash
     end
 
+    # @return [YAML]
     def to_yaml
       self.to_h.to_yaml
     end

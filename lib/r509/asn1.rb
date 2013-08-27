@@ -105,16 +105,6 @@ module R509
         end
       end
 
-      def parse_ip(value,mask=nil)
-        ip = IPAddr.new_ntoh(value)
-        if mask.nil?
-          return ip.to_s
-        else
-          netmask = IPAddr.new_ntoh(mask)
-          return ip.to_s + "/" + netmask.to_s
-        end
-      end
-
       # Maps a GeneralName type to the integer tag representation
       # @param [String,Symbol] type of GeneralName
       # @return [Integer] tag for the type
@@ -206,7 +196,17 @@ module R509
       end
 
       private
-      # @private
+
+      def parse_ip(value,mask=nil)
+        ip = IPAddr.new_ntoh(value)
+        if mask.nil?
+          return ip.to_s
+        else
+          netmask = IPAddr.new_ntoh(mask)
+          return ip.to_s + "/" + netmask.to_s
+        end
+      end
+
       # Serializes directory names.
       def serialize_directory_name
         conf_name = OpenSSL::Random.random_bytes(16).unpack("H*")[0]

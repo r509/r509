@@ -89,6 +89,7 @@ module R509
         end)
       end
 
+    # @return [Hash]
       def to_h
         hash = {}
         @required.each { |r| hash[r] = {:policy => "required" } }
@@ -97,6 +98,7 @@ module R509
         hash
       end
 
+    # @return [YAML]
       def to_yaml
         self.to_h.to_yaml
       end

@@ -2,6 +2,7 @@
 module R509
   class Cert
     module Extensions
+      # Validation methods shared by multiple extensions
       module ValidationMixin
         private
         # used by iap and pc validation methods

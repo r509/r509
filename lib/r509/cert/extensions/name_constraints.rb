@@ -126,7 +126,7 @@ module R509
             if not arg[permit_exclude].nil?
               gns = R509::ASN1::GeneralNames.new
               arg[permit_exclude].each do |p|
-                gns.create_item(:type => p[:type], :value => p[:value])
+                gns.create_item(p)
               end
               gns.names.each do |name|
                 serialize = name.serialize_name

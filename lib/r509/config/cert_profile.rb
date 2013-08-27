@@ -50,6 +50,7 @@ module R509
         @allowed_mds = validate_allowed_mds(opts[:allowed_mds])
       end
 
+      # @return [Hash]
       def to_h
         hash = {}
         hash["basic_constraints"] = @basic_constraints.to_h unless @basic_constraints.nil?
@@ -67,6 +68,7 @@ module R509
         hash
       end
 
+      # @return [YAML]
       def to_yaml
         self.to_h.to_yaml
       end
