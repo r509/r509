@@ -3,8 +3,8 @@ test_ca_ec:
   ca_cert:
     cert: test_ca_ec.cer
     key: test_ca_ec.key
-  crl_list: crl_list_file.txt
-  crl_number: crl_number_file.txt
+  crl_list_file: crl_list_file.txt
+  crl_number_file: crl_number_file.txt
   crl_validity_hours: 72
   ocsp_validity_hours: 96
   ocsp_start_skew_seconds: 1800

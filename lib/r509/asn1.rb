@@ -289,6 +289,7 @@ module R509
       def rfc_822_names
         @types[:rfc822Name]
       end
+      alias :email_names :rfc_822_names
 
       # @return [Array] Array of dnsName strings
       def dns_names
@@ -305,11 +306,13 @@ module R509
       def ip_addresses
         @types[:iPAddress]
       end
+      alias :ips :ip_addresses
 
       # @return [Array] Array of directoryNames (R509::Subject objects)
       def directory_names
         @types[:directoryName]
       end
+      alias :dir_names :directory_names
 
       # @return [Array] string of serialized names for OpenSSL extension creation
       def serialize_names

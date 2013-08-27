@@ -20,8 +20,8 @@ certificate_authorities:
     ocsp_chain: spec/fixtures/test_ca_ocsp_chain.txt
     ocsp_start_skew_seconds: 3600
     ocsp_validity_hours: 168
-    crl_list: spec/fixtures/test_ca_crl_list.txt
-    crl_number: spec/fixtures/test_ca_crl_number.txt
+    crl_list_file: spec/fixtures/test_ca_crl_list.txt
+    crl_number_file: spec/fixtures/test_ca_crl_number.txt
     crl_validity_hours: 168
     crl_md: SHA1
     profiles:
