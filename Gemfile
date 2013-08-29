@@ -1,5 +1,6 @@
 source "http://rubygems.org"
 
+gem 'coveralls', require: false
 gemspec
 group :documentation do
   gem "yard", "~>0.8"
