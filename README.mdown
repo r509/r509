@@ -315,9 +315,9 @@ certificate_authorities:
 ```
 
 ####Building YAML
-You can serialize a CAConfig via ```#to_yaml```. The output of the YAML will vary depending upon what data you have supplied to the object, but the output does require the following manual configuration:
+You can serialize a CAConfig (or CAConfigPool) via ```#to_yaml```. The output of the YAML will vary depending upon what data you have supplied to the object, but the output does require the following manual configuration:
 
-* Add paths to the requested files where you see add_path. You can also use other options (see: ca_cert YAML config options below)
+* Add paths to the requested files where you see add_path (or change the options entirely. See the YAML config section below)
 * Define a name for your config and put the YAML inside it. In the example below the config has been named example_ca
 
 ```yaml
@@ -342,18 +342,6 @@ example_ca:
           :policy: optional
       default_md: SHA512
 ```
-
-You will need to manually add the paths to the certificates you want to load. See the YAML section below for additional details.
-
-##TODO
-Load CAConfig + Profile from YAML
-
-```ruby
-config = R509::Config::CAConfig.from_yaml("test_ca", "config_test.yaml")
-```
-
-Example YAML (more options are supported than this example)
-
 
 ###CertificateAuthority::Signer (sans CertProfile)
 
