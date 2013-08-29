@@ -450,6 +450,23 @@ cert = signer.sign(scrubbed_data)
 
 ```
 
+###CRL Administration
+The CRL administrator object takes an ```R509::Config::CAConfig``` and an optional ```R509::CRL::ReaderWriter``` subclass. By default it will use an ```R509::CRL::FileReaderWriter``` class that assumes the presence of ```crl_number_file``` and ```crl_list_file``` in the CAConfig.
+
+```ruby
+admin = R509::CRL::Administrator.new(config)
+```
+
+####Revoking a certificate
+To revoke a certificate and generate a new CRL
+
+```ruby
+admin.revoke_cert(serial)
+crl = admin.generate_crl
+```
+
+This revokes on the root configured by the CAConfig that was passed into the Administrator constructor.
+
 ###OID Mapping
 
 Register one

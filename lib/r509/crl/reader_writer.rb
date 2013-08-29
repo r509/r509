@@ -6,7 +6,8 @@ require 'r509/io_helpers'
 module R509
   # contains CRL related classes (generator and a pre-existing list loader)
   module CRL
-    # Abstract base class for a CRL writer
+    # Abstract base class for a CRL writer. Use this to construct a subclass that can then be passed to
+    # R509::CRL::Administrator to read/write CRL data with whatever backend you want.
     class ReaderWriter
       def write_list_entry
         raise NotImplementedError, "You must call #write_list_entry on a subclass of ReaderWriter"
@@ -25,7 +26,7 @@ module R509
       end
     end
 
-    # File-based implementation of the CRL reader/writer
+    # File-based implementation of the CRL reader/writer. Uses the crl_number_file and crl_list_file attributes in CAConfig
     class FileReaderWriter < R509::CRL::ReaderWriter
       include R509::IOHelpers
 

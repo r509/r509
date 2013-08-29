@@ -67,10 +67,13 @@ module R509
         :crl_number_file, :crl_list_file, :crl_md,
         :ocsp_chain, :ocsp_start_skew_seconds, :ocsp_validity_hours
 
-      # default # of seconds
+      # Default number of seconds to subtract from now when calculating the signing time of an OCSP response
       DEFAULT_OCSP_START_SKEW_SECONDS = 3600
+      # Default number of hours an OCSP response should be valid for
       DEFAULT_OCSP_VALIDITY_HOURS = 168
+      # Default number of hours a CRL should be valid for
       DEFAULT_CRL_VALIDITY_HOURS = 168
+      # Default number of seconds to subtract from now when calculating the signing time of a CRL
       DEFAULT_CRL_START_SKEW_SECONDS = 3600
 
       # @option opts [R509::Cert] :ca_cert Cert+Key pair
