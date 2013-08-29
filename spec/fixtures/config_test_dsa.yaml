@@ -3,8 +3,6 @@ test_ca_dsa:
   ca_cert:
     cert: dsa_root.cer
     key: dsa_root.key
-  crl_list_file: crl_list_file.txt
-  crl_number_file: crl_number_file.txt
   crl_validity_hours: 72
   ocsp_validity_hours: 96
   ocsp_start_skew_seconds: 1800
