@@ -6,4 +6,6 @@ if [ -n "$R509_EC_SUPPORT_DISABLED" ]; then
     sudo add-apt-repository ppa:paul-l-kehrer/testing -y
     sudo apt-get update
     sudo apt-get install libssl1.0.0 libssl-dev -y
+    rvm install 1.9.3-p0
+    rvm use 1.9.3-p0
 fi
