@@ -4,6 +4,8 @@ test_ca:
     cert: test_ca.cer
     key: test_ca.key
   crl_validity_hours: 72
+  crl_list_file: list_file
+  crl_number_file: number_file
   ocsp_validity_hours: 96
   ocsp_start_skew_seconds: 1800
   profiles:
