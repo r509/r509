@@ -15,4 +15,6 @@ matrix:
     - rvm: ruby-head
     - rvm: 1.9.3
       env: R509_EC_SUPPORT_DISABLED=true
-before_install: ./.travis-scripts/ec-patch
+before_install:
+  - ./.travis-scripts/ec-patch
+  - if [ -n "$R509_EC_SUPPORT_DISABLED" ]; then rvm use ruby-1.9.3-p0; fi
