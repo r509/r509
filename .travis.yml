@@ -17,5 +17,4 @@ matrix:
       env: R509_EC_SUPPORT_DISABLED=true
 before_install:
   - ./.travis-scripts/ec-patch
-  - if [ -n "$R509_EC_SUPPORT_DISABLED" ]; then rvm use ruby-1.9.3-p0; fi
-  - if [ -n "$R509_EC_SUPPORT_DISABLED" ]; then gem install bundler --no-ri --no-rdoc; fi
+  - if [ -n "$R509_EC_SUPPORT_DISABLED" ]; then rvm use ruby-1.9.3-p0 && gem install bundler --no-ri --no-rdoc; fi
