@@ -1,4 +1,5 @@
 require 'ipaddr'
+require 'r509/cert/extensions/validation_mixin'
 
 module R509
   # Module for holding various classes related to parsed ASN.1 objects
@@ -67,24 +68,25 @@ module R509
       # The type, represented as a symbolized version of the GeneralName (e.g. :dNSName)
       attr_reader :type
       # The prefix OpenSSL needs for this type when encoding it into an extension.
-      attr_reader :serial_prefix
+      # Also used by the YAML serialization in the extensions
+      attr_reader :short_type
       # Value of the GeneralName
       attr_reader :value
       # Integer tag type. See GeneralName description at the top of this class
       attr_reader :tag
 
-      # @param [OpenSSL::ASN1::ASN1Data,Hash] asn ASN.1 input data. Can also pass a hash with :tag and :value keys
+      # @param [OpenSSL::ASN1::ASN1Data,Hash] asn ASN.1 input data. Can also pass a hash with (:tag or :type) and :value keys
       def initialize(asn)
-        if asn.kind_of?(Hash) and asn.has_key?(:tag) and asn.has_key?(:value)
+        if asn.kind_of?(Hash)
           # this is added via create_item
-          @tag = asn[:tag]
+          @tag = asn[:tag] || R509::ASN1::GeneralName.map_type_to_tag(asn[:type])
           @type = R509::ASN1::GeneralName.map_tag_to_type(@tag)
-          @serial_prefix = R509::ASN1::GeneralName.map_tag_to_serial_prefix(@tag)
-          @value = asn[:value]
+          @short_type = R509::ASN1::GeneralName.map_tag_to_short_type(@tag)
+          @value = (@tag == 4)? R509::Subject.new(asn[:value]) : asn[:value]
         else
           @tag = asn.tag
           @type = R509::ASN1::GeneralName.map_tag_to_type(@tag)
-          @serial_prefix = R509::ASN1::GeneralName.map_tag_to_serial_prefix(@tag)
+          @short_type = R509::ASN1::GeneralName.map_tag_to_short_type(@tag)
           value = asn.value
           case @tag
           when 1 then @value = value
@@ -100,16 +102,6 @@ module R509
               @value = parse_ip(value[0,16],value[16,16])
             end
           end
-        end
-      end
-
-      def parse_ip(value,mask=nil)
-        ip = IPAddr.new_ntoh(value)
-        if mask.nil?
-          return ip.to_s
-        else
-          netmask = IPAddr.new_ntoh(mask)
-          return ip.to_s + "/" + netmask.to_s
         end
       end
 
@@ -141,7 +133,7 @@ module R509
 
       # @param [Integer] tag
       # @return [String] serial prefix
-      def self.map_tag_to_serial_prefix(tag)
+      def self.map_tag_to_short_type(tag)
         case tag
         when 1 then "email"
         when 2 then "DNS"
@@ -171,6 +163,13 @@ module R509
         end
       end
 
+        # @return [Hash]
+      def to_h
+        val = (@value.kind_of?(R509::Subject))? @value.to_h : @value
+
+        { :type => @short_type, :value => val }
+      end
+
       # @private
       # required for #uniq comparisons
       # @return [Boolean] equality between objects
@@ -191,13 +190,23 @@ module R509
         if self.type == :directoryName
           return serialize_directory_name
         else
-          extension_string = self.serial_prefix + ":" + self.value
+          extension_string = self.short_type + ":" + self.value
           return { :conf => nil, :extension_string => extension_string }
         end
       end
 
       private
-      # @private
+
+      def parse_ip(value,mask=nil)
+        ip = IPAddr.new_ntoh(value)
+        if mask.nil?
+          return ip.to_s
+        else
+          netmask = IPAddr.new_ntoh(mask)
+          return ip.to_s + "/" + netmask.to_s
+        end
+      end
+
       # Serializes directory names.
       def serialize_directory_name
         conf_name = OpenSSL::Random.random_bytes(16).unpack("H*")[0]
@@ -206,7 +215,7 @@ module R509
           conf << "#{el[0]}=#{el[1]}"
         end
         conf = conf.join("\n")
-        extension_string = self.serial_prefix + ":" + conf_name
+        extension_string = self.short_type + ":" + conf_name
         { :conf => conf, :extension_string => extension_string }
       end
     end
@@ -214,7 +223,10 @@ module R509
     # object to hold parsed sequences of generalnames
     # these structures are used in SubjectAlternativeName, AuthorityInfoAccess, CRLDistributionPoints, etc
     class GeneralNames
-      def initialize
+      include R509::Cert::Extensions::ValidationMixin
+
+      # @param data [Array,R509::ASN1::GeneralNames] Pass an array of hashes to create R509::ASN1::GeneralName objects or an existing R509::ASN1::GeneralNames object
+      def initialize(data=nil)
         @types = {
           :otherName => [], # unimplemented
           :rfc822Name => [],
@@ -227,6 +239,16 @@ module R509
           :registeredID => [] # unimplemented
         }
         @ordered_names = []
+        if not data.nil?
+          if data.kind_of?(self.class)
+            data.names.each { |n| add_item(n) }
+          else
+            validate_general_name_hash_array(data)
+            data.each do |n|
+              create_item(n)
+            end
+          end
+        end
       end
 
       # @param [OpenSSL::ASN1::ASN1Data] asn Takes ASN.1 data in for parsing GeneralName structures
@@ -243,16 +265,18 @@ module R509
       end
 
       # @param [Hash] hash A hash with (:tag or :type) and :value keys. Allows you to build GeneralName objects and add
-      #   them to the GeneralNames object. Unless you know what you're doing you should really stay away from this.
+      #   them to the GeneralNames object
       def create_item(hash)
         if not hash.respond_to?(:has_key?) or (not hash.has_key?(:tag) and not hash.has_key?(:type)) or not hash.has_key?(:value)
           raise ArgumentError, "Must be a hash with (:tag or :type) and :value nodes"
         end
-        if hash[:type]
-          hash[:tag] = R509::ASN1::GeneralName.map_type_to_tag(hash[:type])
-        end
-        gn = R509::ASN1::GeneralName.new(:tag => hash[:tag], :value => hash[:value])
+        gn = R509::ASN1::GeneralName.new(:tag => hash[:tag], :type => hash[:type], :value => hash[:value])
         add_item(gn)
+      end
+
+      # @return [Hash]
+      def to_h
+        self.names.map { |n| n.to_h }
       end
 
       # @return [Array] array of GeneralName objects
@@ -265,6 +289,7 @@ module R509
       def rfc_822_names
         @types[:rfc822Name]
       end
+      alias :email_names :rfc_822_names
 
       # @return [Array] Array of dnsName strings
       def dns_names
@@ -281,11 +306,13 @@ module R509
       def ip_addresses
         @types[:iPAddress]
       end
+      alias :ips :ip_addresses
 
       # @return [Array] Array of directoryNames (R509::Subject objects)
       def directory_names
         @types[:directoryName]
       end
+      alias :dir_names :directory_names
 
       # @return [Array] string of serialized names for OpenSSL extension creation
       def serialize_names
@@ -297,86 +324,6 @@ module R509
           extension_strings << data[:extension_string]
         }
         { :conf => confs.join("\n"), :extension_string => extension_strings.join(",") }
-      end
-    end
-
-    #   PolicyInformation ::= SEQUENCE {
-    #        policyIdentifier   CertPolicyId,
-    #        policyQualifiers   SEQUENCE SIZE (1..MAX) OF
-    #                                PolicyQualifierInfo OPTIONAL }
-    class PolicyInformation
-      attr_reader :policy_identifier, :policy_qualifiers
-      def initialize(data)
-        # store the policy identifier OID
-        @policy_identifier = data.entries[0].value
-        # iterate the policy qualifiers if any exist
-        if not data.entries[1].nil?
-          @policy_qualifiers = PolicyQualifiers.new
-          data.entries[1].each do |pq|
-            @policy_qualifiers.parse(pq)
-          end
-        end
-      end
-    end
-
-    #   PolicyQualifierInfo ::= SEQUENCE {
-    #        policyQualifierId  PolicyQualifierId,
-    #        qualifier          ANY DEFINED BY policyQualifierId }
-    class PolicyQualifiers
-      attr_reader :cps_uris, :user_notices
-      def initialize
-        @cps_uris = []
-        @user_notices = []
-      end
-
-      # parse each PolicyQualifier and store the results into the object array
-      def parse(data)
-        oid = data.entries[0].value
-        case
-        when oid == 'id-qt-cps'
-          @cps_uris << data.entries[1].value
-        when oid == 'id-qt-unotice'
-          @user_notices <<  UserNotice.new(data.entries[1])
-        end
-      end
-    end
-
-    #   UserNotice ::= SEQUENCE {
-    #        noticeRef        NoticeReference OPTIONAL,
-    #        explicitText     DisplayText OPTIONAL }
-    class UserNotice
-      attr_reader :notice_reference, :explicit_text
-      def initialize(data)
-        data.each do |qualifier|
-          #if we find another sequence, that's a noticeReference, otherwise it's explicitText
-          if qualifier.kind_of?(OpenSSL::ASN1::Sequence)
-            @notice_reference = NoticeReference.new(qualifier)
-          else
-            @explicit_text = qualifier.value
-          end
-
-        end if data.respond_to?(:each)
-      end
-    end
-
-    #   NoticeReference ::= SEQUENCE {
-    #        organization     DisplayText,
-    #        noticeNumbers    SEQUENCE OF INTEGER }
-    class NoticeReference
-      attr_reader :organization, :notice_numbers
-      def initialize(data)
-        data.each do |notice_reference|
-          # if it's displaytext then it's the organization
-          # if it's YET ANOTHER ASN1::Sequence, then it's noticeNumbers
-          if notice_reference.kind_of?(OpenSSL::ASN1::Sequence)
-            @notice_numbers = []
-            notice_reference.each do |ints|
-              @notice_numbers << ints.value.to_i
-            end
-          else
-            @organization = notice_reference.value
-          end
-        end
       end
     end
 

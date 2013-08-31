@@ -20,19 +20,24 @@ certificate_authorities:
     ocsp_chain: spec/fixtures/test_ca_ocsp_chain.txt
     ocsp_start_skew_seconds: 3600
     ocsp_validity_hours: 168
-    crl_list: spec/fixtures/test_ca_crl_list.txt
-    crl_number: spec/fixtures/test_ca_crl_number.txt
+    crl_list_file: spec/fixtures/test_ca_crl_list.txt
+    crl_number_file: spec/fixtures/test_ca_crl_number.txt
     crl_validity_hours: 168
     crl_md: SHA1
     profiles:
       server:
         basic_constraints:
           :ca: false
+          :critical: true
         key_usage:
-        - digitalSignature
-        - keyEncipherment
+          :critical: false
+          :value:
+          - digitalSignature
+          - keyEncipherment
         extended_key_usage:
-        - serverAuth
+          :critical: false
+          :value:
+          - serverAuth
         subject_item_policy:
           CN:
             :policy: required
@@ -47,12 +52,18 @@ certificate_authorities:
           L:
             :policy: match
             :value: My Locality Requirement
-        ocsp_location:
-        - http://ocsp.domain.com
-        ca_issuers_location:
-        - http://domain.com/ca.html
-        cdp_location:
-        - http://crl.domain.com/test_ca.crl
+        authority_info_access:
+          :critical: true
+          :ocsp_location:
+          - :type: URI
+            :value: http://ocsp.domain.com
+          :ca_issuers_location:
+          - :type: URI
+            :value: http://domain.com/ca.html
+        crl_distribution_points:
+          :value:
+          - :type: URI
+            :value: http://crl.domain.com/test_ca.crl
         default_md: SHA1
         allowed_mds:
         - SHA256
@@ -62,16 +73,24 @@ certificate_authorities:
         basic_constraints:
           :ca: false
         key_usage:
-        - digitalSignature
-        - keyEncipherment
+          :value:
+          - digitalSignature
+          - keyEncipherment
         extended_key_usage:
-        - clientAuth
-        ocsp_location:
-        - http://ocsp.domain.com
-        ca_issuers_location:
-        - http://domain.com/ca.html
-        cdp_location:
-        - http://crl.domain.com/test_ca.crl
+          :value:
+          - clientAuth
+        authority_info_access:
+          :critical: true
+          :ocsp_location:
+          - :type: URI
+            :value: http://ocsp.domain.com
+          :ca_issuers_location:
+          - :type: URI
+            :value: http://domain.com/ca.html
+        crl_distribution_points:
+          :value:
+          - :type: URI
+            :value: http://crl.domain.com/test_ca.crl
         default_md: SHA1
         allowed_mds:
         - SHA256
@@ -81,16 +100,24 @@ certificate_authorities:
         basic_constraints:
           :ca: false
         key_usage:
-        - digitalSignature
-        - keyEncipherment
+          :value:
+          - digitalSignature
+          - keyEncipherment
         extended_key_usage:
-        - emailProtection
-        ocsp_location:
-        - http://ocsp.domain.com
-        ca_issuers_location:
-        - http://domain.com/ca.html
-        cdp_location:
-        - http://crl.domain.com/test_ca.crl
+          :value:
+          - emailProtection
+        authority_info_access:
+          :critical: true
+          :ocsp_location:
+          - :type: URI
+            :value: http://ocsp.domain.com
+          :ca_issuers_location:
+          - :type: URI
+            :value: http://domain.com/ca.html
+        crl_distribution_points:
+          :value:
+          - :type: URI
+            :value: http://crl.domain.com/test_ca.crl
         default_md: SHA1
         allowed_mds:
         - SHA256
@@ -100,17 +127,25 @@ certificate_authorities:
         basic_constraints:
           :ca: false
         key_usage:
-        - digitalSignature
-        - keyEncipherment
+          :value:
+          - digitalSignature
+          - keyEncipherment
         extended_key_usage:
-        - serverAuth
-        - clientAuth
-        ocsp_location:
-        - http://ocsp.domain.com
-        ca_issuers_location:
-        - http://domain.com/ca.html
-        cdp_location:
-        - http://crl.domain.com/test_ca.crl
+          :value:
+          - serverAuth
+          - clientAuth
+        authority_info_access:
+          :critical: true
+          :ocsp_location:
+          - :type: URI
+            :value: http://ocsp.domain.com
+          :ca_issuers_location:
+          - :type: URI
+            :value: http://domain.com/ca.html
+        crl_distribution_points:
+          :value:
+          - :type: URI
+            :value: http://crl.domain.com/test_ca.crl
         default_md: SHA1
         allowed_mds:
         - SHA256
@@ -120,15 +155,23 @@ certificate_authorities:
         basic_constraints:
           :ca: false
         key_usage:
-        - digitalSignature
+          :value:
+          - digitalSignature
         extended_key_usage:
-        - codeSigning
-        ocsp_location:
-        - http://ocsp.domain.com
-        ca_issuers_location:
-        - http://domain.com/ca.html
-        cdp_location:
-        - http://crl.domain.com/test_ca.crl
+          :value:
+          - codeSigning
+        authority_info_access:
+          :critical: true
+          :ocsp_location:
+          - :type: URI
+            :value: http://ocsp.domain.com
+          :ca_issuers_location:
+          - :type: URI
+            :value: http://domain.com/ca.html
+        crl_distribution_points:
+          :value:
+          - :type: URI
+            :value: http://crl.domain.com/test_ca.crl
         default_md: SHA1
         allowed_mds:
         - SHA256
@@ -138,15 +181,23 @@ certificate_authorities:
         basic_constraints:
           :ca: false
         key_usage:
-        - digitalSignature
+          :value:
+          - digitalSignature
         extended_key_usage:
-        - timeStamping
-        ocsp_location:
-        - http://ocsp.domain.com
-        ca_issuers_location:
-        - http://domain.com/ca.html
-        cdp_location:
-        - http://crl.domain.com/test_ca.crl
+          :value:
+          - timeStamping
+        authority_info_access:
+          :critical: true
+          :ocsp_location:
+          - :type: URI
+            :value: http://ocsp.domain.com
+          :ca_issuers_location:
+          - :type: URI
+            :value: http://domain.com/ca.html
+        crl_distribution_points:
+          :value:
+          - :type: URI
+            :value: http://crl.domain.com/test_ca.crl
         default_md: SHA1
         allowed_mds:
         - SHA256
@@ -157,9 +208,9 @@ certificate_authorities:
           :ca: true
           :path_length: 0
         key_usage:
-        - keyCertSign
-        - cRLSign
-        extended_key_usage: []
+          :value:
+          - keyCertSign
+          - cRLSign
         certificate_policies:
         - :policy_identifier: 2.16.840.1.99999.21.234
           :cps_uris:
@@ -177,20 +228,20 @@ certificate_authorities:
             :organization: another org
             :notice_numbers: '3,2,1'
           - :explicit_text: another user notice
-        inhibit_any_policy: 0
+        inhibit_any_policy:
+          :value: 0
         policy_constraints:
           :require_explicit_policy: 0
           :inhibit_policy_mapping: 0
         name_constraints:
+          :critical: true
           :permitted:
           - :type: IP
             :value: 192.168.0.0/255.255.0.0
           - :type: dirName
             :value:
-            - - CN
-              - myCN
-            - - O
-              - Org
+              :CN: myCN
+              :O: Org
           :excluded:
           - :type: email
             :value: domain.com
@@ -198,12 +249,18 @@ certificate_authorities:
             :value: .net
           - :type: DNS
             :value: test.us
-        ocsp_location:
-        - http://ocsp.domain.com
-        ca_issuers_location:
-        - http://domain.com/ca.html
-        cdp_location:
-        - http://crl.domain.com/test_ca.crl
+        authority_info_access:
+          :critical: true
+          :ocsp_location:
+          - :type: URI
+            :value: http://ocsp.domain.com
+          :ca_issuers_location:
+          - :type: URI
+            :value: http://domain.com/ca.html
+        crl_distribution_points:
+          :value:
+          - :type: URI
+            :value: http://crl.domain.com/test_ca.crl
         default_md: SHA1
         allowed_mds:
         - SHA256
@@ -213,16 +270,18 @@ certificate_authorities:
         basic_constraints:
           :ca: false
         key_usage:
-        - digitalSignature
+          :value:
+          - digitalSignature
         extended_key_usage:
-        - OCSPSigning
-        ocsp_no_check: true
-        ocsp_location:
-        - http://ocsp.domain.com
-        ca_issuers_location:
-        - http://domain.com/ca.html
-        cdp_location:
-        - http://crl.domain.com/test_ca.crl
+          :value:
+          - OCSPSigning
+        crl_distribution_points:
+          :value:
+          - :type: URI
+            :value: http://crl.domain.com/test_ca.crl
+        ocsp_no_check:
+          :critical: false
+          :value: true
         default_md: SHA1
         allowed_mds:
         - SHA256

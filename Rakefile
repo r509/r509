@@ -5,6 +5,11 @@ require "#{File.dirname(__FILE__)}/lib/r509/version"
 task :default => :spec
 RSpec::Core::RakeTask.new(:spec)
 
+# define a new spec with suppressed stack trace
+RSpec::Core::RakeTask.new(:ntspec) do |t|
+  t.fail_on_error = false
+end
+
 namespace :gem do
   desc 'Build the gem'
   task :build do

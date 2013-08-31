@@ -24,8 +24,8 @@ module R509
           raise ArgumentError, "argument reader_writer must be a subclass of R509::CRL::ReaderWriter"
         end
         @rw = reader_writer
-        @rw.crl_list_file = @config.crl_list_file unless not @rw.respond_to?(:crl_list_file)
-        @rw.crl_number_file = @config.crl_number_file unless not @rw.respond_to?(:crl_number_file)
+        @rw.crl_list_file = @config.crl_list_file unless not @rw.respond_to?(:crl_list_file=)
+        @rw.crl_number_file = @config.crl_number_file unless not @rw.respond_to?(:crl_number_file=)
         @crl_number = @rw.read_number
         @revoked_certs = {}
         @rw.read_list(self)

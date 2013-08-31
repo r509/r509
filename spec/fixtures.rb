@@ -184,15 +184,15 @@ module TestFixtures
 
   def self.test_ca_server_profile
     R509::Config::CertProfile.new(
-        :basic_constraints => {:ca => false },
-        :key_usage => ["digitalSignature","keyEncipherment"],
-        :extended_key_usage => ["serverAuth"],
-        :certificate_policies => [
+      :basic_constraints => R509::Cert::Extensions::BasicConstraints.new({:ca => false }),
+      :key_usage => R509::Cert::Extensions::KeyUsage.new(:value => ["digitalSignature","keyEncipherment"]),
+      :extended_key_usage => R509::Cert::Extensions::ExtendedKeyUsage.new(:value => ["serverAuth"]),
+      :certificate_policies => R509::Cert::Extensions::CertificatePolicies.new(:value => [
           { :policy_identifier => "2.16.840.1.12345.1.2.3.4.1",
   :cps_uris => ["http://example.com/cps","http://other.com/cps"],
-  :user_notices => [ {:explicit_text => "thing", :organization => "my org", :notice_numbers => "1,2,3,4"} ]
-          }
-        ]
+  :user_notices => [ {:explicit_text => "thing", :organization => "my org", :notice_numbers => [1,2,3,4]} ]
+        }
+      ])
     )
 
   end
@@ -206,15 +206,15 @@ module TestFixtures
       "OU" => { :policy => "optional"}
     )
     R509::Config::CertProfile.new(
-      :basic_constraints => {:ca => false },
-      :key_usage => ["digitalSignature","keyEncipherment"],
-      :extended_key_usage => ["serverAuth"],
-      :certificate_policies => [
+      :basic_constraints => R509::Cert::Extensions::BasicConstraints.new({:ca => false }),
+      :key_usage => R509::Cert::Extensions::KeyUsage.new(:value => ["digitalSignature","keyEncipherment"]),
+      :extended_key_usage => R509::Cert::Extensions::ExtendedKeyUsage.new(:value => ["serverAuth"]),
+      :certificate_policies => R509::Cert::Extensions::CertificatePolicies.new(:value => [
           { :policy_identifier => "2.16.840.1.12345.1.2.3.4.1",
   :cps_uris => ["http://example.com/cps","http://other.com/cps"],
-  :user_notices => [ {:explicit_text => "thing", :organization => "my org", :notice_numbers => "1,2,3,4"} ]
+  :user_notices => [ {:explicit_text => "thing", :organization => "my org", :notice_numbers => [1,2,3,4]} ]
         }
-      ],
+      ]),
       :subject_item_policy => subject_item_policy
     )
   end
@@ -222,16 +222,15 @@ module TestFixtures
   def self.test_ca_subroot_profile
     R509::Config::CertProfile.new(
           :basic_constraints => {:ca => true, :path_length => 0 },
-          :key_usage => ["keyCertSign","cRLSign"],
-          :extended_key_usage => [],
+          :key_usage => {:value => ["keyCertSign","cRLSign"]},
           :certificate_policies => nil)
   end
 
   def self.test_ca_ocspsigner_profile
     R509::Config::CertProfile.new(
           :basic_constraints => { :ca => false },
-          :key_usage => ["digitalSignature"],
-          :extended_key_usage => ["OCSPSigning"],
+          :key_usage => {:value => ["digitalSignature"]},
+          :extended_key_usage => {:value => ["OCSPSigning"]},
           :certificate_policies => nil)
   end
 
@@ -244,8 +243,6 @@ module TestFixtures
 
     opts = {
       :ca_cert => test_ca_cert(),
-      :cdp_location => ['http://crl.domain.com/test_ca.crl'],
-      :ocsp_location => ['http://ocsp.domain.com'],
       :ocsp_start_skew_seconds => 3600,
       :ocsp_validity_hours => 48,
       :crl_list_file => crl_list_sio,
@@ -270,8 +267,6 @@ module TestFixtures
 
     opts = {
       :ca_cert => test_ca_cert(),
-      :cdp_location => ['http://crl.domain.com/test_ca.crl'],
-      :ocsp_location => ['http://ocsp.domain.com'],
       :ocsp_start_skew_seconds => 3600,
       :ocsp_validity_hours => 48,
       :crl_list_file => crl_list_sio,
@@ -288,8 +283,6 @@ module TestFixtures
 
     opts = {
       :ca_cert => test_ca_ec_cert(),
-      :cdp_location => ['http://crl.domain.com/test_ca.crl'],
-      :ocsp_location => ['http://ocsp.domain.com'],
       :ocsp_start_skew_seconds => 3600,
       :ocsp_validity_hours => 48,
       :crl_list_file => crl_list_sio,
@@ -306,8 +299,6 @@ module TestFixtures
 
     opts = {
       :ca_cert => test_ca_dsa_cert(),
-      :cdp_location => ['http://crl.domain.com/test_ca.crl'],
-      :ocsp_location => ['http://ocsp.domain.com'],
       :ocsp_start_skew_seconds => 3600,
       :ocsp_validity_hours => 48,
       :crl_list_file => crl_list_sio,

@@ -25,42 +25,65 @@ describe R509::Config::CAConfigPool do
   end
 
   context "all configs" do
-    it "no configs" do
-      pool = R509::Config::CAConfigPool.new({})
-      pool.all.should == []
+    context "no configs" do
+      before :all do
+        @pool = R509::Config::CAConfigPool.new({})
+      end
+
+      it "creates" do
+        @pool.all.should == []
+      end
+
+      it "builds yaml" do
+        YAML.load(@pool.to_yaml).should == {}
+      end
     end
 
-    it "one config" do
-      config = R509::Config::CAConfig.new(
-        :ca_cert => TestFixtures.test_ca_cert,
-        :profiles => { "first_profile" => R509::Config::CertProfile.new }
-      )
+    context "one config" do
+      before :all do
+        @config = R509::Config::CAConfig.new(
+          :ca_cert => TestFixtures.test_ca_cert,
+          :profiles => { "first_profile" => R509::Config::CertProfile.new }
+        )
+        @pool = R509::Config::CAConfigPool.new({
+          "first" => @config
+        })
+      end
 
-      pool = R509::Config::CAConfigPool.new({
-        "first" => config
-      })
+      it "creates" do
+        @pool.all.should == [@config]
+      end
 
-      pool.all.should == [config]
+      it "builds yaml" do
+        YAML.load(@pool.to_yaml).should == {"first"=>{"ca_cert"=>{"cert"=>"<add_path>", "key"=>"<add_path>"}, "ocsp_start_skew_seconds"=>3600, "ocsp_validity_hours"=>168, "crl_start_skew_seconds"=>3600, "crl_validity_hours"=>168, "crl_md"=>"SHA1", "profiles"=>{"first_profile"=>{"default_md"=>"SHA1"}}}}
+      end
     end
 
-    it "two configs" do
-      config1 = R509::Config::CAConfig.new(
-        :ca_cert => TestFixtures.test_ca_cert,
-        :profiles => { "first_profile" => R509::Config::CertProfile.new }
-      )
-      config2 = R509::Config::CAConfig.new(
-        :ca_cert => TestFixtures.test_ca_cert,
-        :profiles => { "first_profile" => R509::Config::CertProfile.new }
-      )
+    context "two configs" do
+      before :all do
+        @config1 = R509::Config::CAConfig.new(
+          :ca_cert => TestFixtures.test_ca_cert,
+          :profiles => { "first_profile" => R509::Config::CertProfile.new }
+        )
+        @config2 = R509::Config::CAConfig.new(
+          :ca_cert => TestFixtures.test_ca_cert,
+          :profiles => { "first_profile" => R509::Config::CertProfile.new }
+        )
+        @pool = R509::Config::CAConfigPool.new({
+          "first" => @config1,
+          "second" => @config2
+        })
+      end
 
-      pool = R509::Config::CAConfigPool.new({
-        "first" => config1,
-        "second" => config2
-      })
+      it "creates" do
+        @pool.all.size.should == 2
+        @pool.all.include?(@config1).should == true
+        @pool.all.include?(@config2).should == true
+      end
 
-      pool.all.size.should == 2
-      pool.all.include?(config1).should == true
-      pool.all.include?(config2).should == true
+      it "builds yaml" do
+        YAML.load(@pool.to_yaml).should == {"first"=>{"ca_cert"=>{"cert"=>"<add_path>", "key"=>"<add_path>"}, "ocsp_start_skew_seconds"=>3600, "ocsp_validity_hours"=>168, "crl_start_skew_seconds"=>3600, "crl_validity_hours"=>168, "crl_md"=>"SHA1", "profiles"=>{"first_profile"=>{"default_md"=>"SHA1"}}}, "second"=>{"ca_cert"=>{"cert"=>"<add_path>", "key"=>"<add_path>"}, "ocsp_start_skew_seconds"=>3600, "ocsp_validity_hours"=>168, "crl_start_skew_seconds"=>3600, "crl_validity_hours"=>168, "crl_md"=>"SHA1", "profiles"=>{"first_profile"=>{"default_md"=>"SHA1"}}}}
+      end
     end
   end
 
@@ -76,6 +99,7 @@ describe R509::Config::CAConfigPool do
       pool["second_ca"].num_profiles.should == 0
     end
   end
+
 end
 
 describe R509::Config::CAConfig do
@@ -98,6 +122,47 @@ describe R509::Config::CAConfig do
 
   it "should have the proper CA key" do
     @config.ca_cert.key.to_pem.should == TestFixtures.test_ca_cert.key.to_pem
+  end
+
+  context "to_yaml" do
+    it "includes engine stub if in hardware" do
+      config = R509::Config::CAConfig.new(:ca_cert => TestFixtures.test_ca_cert)
+      config.ca_cert.key.should_receive(:in_hardware?).and_return(true)
+      YAML.load(config.to_yaml).should == {"ca_cert"=>{"cert"=>"<add_path>", "engine"=>{:so_path=>"<add_path>", :id=>"<add_name>"}}, "ocsp_start_skew_seconds"=>3600, "ocsp_validity_hours"=>168, "crl_start_skew_seconds"=>3600, "crl_validity_hours"=>168, "crl_md"=>"SHA1"}
+    end
+    it "includes ocsp_cert stub if not nil" do
+      config = R509::Config::CAConfig.new(:ca_cert => TestFixtures.test_ca_cert, :ocsp_cert => TestFixtures.test_ca_cert)
+      YAML.load(config.to_yaml).should ==  {"ca_cert"=>{"cert"=>"<add_path>", "key"=>"<add_path>"}, "ocsp_cert"=>{"cert"=>"<add_path>", "key"=>"<add_path>"}, "ocsp_start_skew_seconds"=>3600, "ocsp_validity_hours"=>168, "crl_start_skew_seconds"=>3600, "crl_validity_hours"=>168, "crl_md"=>"SHA1"}
+    end
+    it "includes crl_cert stub if not nil" do
+      config = R509::Config::CAConfig.new(:ca_cert => TestFixtures.test_ca_cert, :crl_cert => TestFixtures.test_ca_cert)
+      YAML.load(config.to_yaml).should ==  {"ca_cert"=>{"cert"=>"<add_path>", "key"=>"<add_path>"}, "crl_cert"=>{"cert"=>"<add_path>", "key"=>"<add_path>"}, "ocsp_start_skew_seconds"=>3600, "ocsp_validity_hours"=>168, "crl_start_skew_seconds"=>3600, "crl_validity_hours"=>168, "crl_md"=>"SHA1"}
+    end
+    it "includes ocsp_chain if not nil" do
+      config = R509::Config::CAConfig.new(:ca_cert => TestFixtures.test_ca_cert, :ocsp_chain => [OpenSSL::X509::Certificate.new])
+      YAML.load(config.to_yaml).should == {"ca_cert"=>{"cert"=>"<add_path>", "key"=>"<add_path>"}, "ocsp_chain"=>"<add_path>", "ocsp_start_skew_seconds"=>3600, "ocsp_validity_hours"=>168, "crl_start_skew_seconds"=>3600, "crl_validity_hours"=>168, "crl_md"=>"SHA1"}
+    end
+    it "includes crl_list_file if not nil" do
+      config = R509::Config::CAConfig.new(:ca_cert => TestFixtures.test_ca_cert, :crl_list_file => '/some/path')
+      YAML.load(config.to_yaml).should == {"ca_cert"=>{"cert"=>"<add_path>", "key"=>"<add_path>"}, "ocsp_start_skew_seconds"=>3600, "ocsp_validity_hours"=>168, "crl_start_skew_seconds"=>3600, "crl_validity_hours"=>168, "crl_list_file"=>"/some/path", "crl_md"=>"SHA1"}
+    end
+    it "includes crl_number_file if not nil" do
+      config = R509::Config::CAConfig.new(:ca_cert => TestFixtures.test_ca_cert, :crl_number_file => '/some/path')
+      YAML.load(config.to_yaml).should == {"ca_cert"=>{"cert"=>"<add_path>", "key"=>"<add_path>"}, "ocsp_start_skew_seconds"=>3600, "ocsp_validity_hours"=>168, "crl_start_skew_seconds"=>3600, "crl_validity_hours"=>168, "crl_number_file"=>"/some/path", "crl_md"=>"SHA1"}
+    end
+    it "includes profiles" do
+      config = R509::Config::CAConfig.new(:ca_cert => TestFixtures.test_ca_cert)
+      profile = R509::Config::CertProfile.new(
+        :basic_constraints => {:ca => true}
+      )
+      config.set_profile("subroot",profile)
+      config.set_profile("subroot_also",profile)
+      YAML.load(config.to_yaml).should == {"ca_cert"=>{"cert"=>"<add_path>", "key"=>"<add_path>"}, "ocsp_start_skew_seconds"=>3600, "ocsp_validity_hours"=>168, "crl_start_skew_seconds"=>3600, "crl_validity_hours"=>168, "crl_md"=>"SHA1", "profiles"=>{"subroot"=>{"basic_constraints"=>{:ca=>true, :critical=>true}, "default_md"=>"SHA1"}, "subroot_also"=>{"basic_constraints"=>{:ca=>true, :critical=>true}, "default_md"=>"SHA1"}}}
+    end
+    it "includes defaults" do
+      config = R509::Config::CAConfig.new(:ca_cert => TestFixtures.test_ca_cert)
+      YAML.load(config.to_yaml).should == {"ca_cert"=>{"cert"=>"<add_path>", "key"=>"<add_path>"}, "ocsp_start_skew_seconds"=>3600, "ocsp_validity_hours"=>168, "crl_start_skew_seconds"=>3600, "crl_validity_hours"=>168, "crl_md"=>"SHA1"}
+    end
   end
 
   context "validates data" do
@@ -199,13 +264,15 @@ describe R509::Config::CAConfig do
     config.num_profiles.should == 9
     config.profile("mds").default_md.should == "SHA512"
     config.profile("mds").allowed_mds.should == ['SHA512','SHA1']
-    config.profile("aia_cdp").ocsp_location.should == ['http://ocsp.domain.com']
-    config.profile("aia_cdp").cdp_location.should == ['http://crl.domain.com/something.crl']
-    config.profile("aia_cdp").ca_issuers_location.should == ['http://www.domain.com/cert.cer']
-    config.profile("ocsp_delegate_with_no_check").ocsp_no_check.should == true
-    config.profile("inhibit_policy").inhibit_any_policy.should == 2
-    config.profile("policy_constraints").policy_constraints[:require_explicit_policy].should == 1
-    config.profile("policy_constraints").policy_constraints[:inhibit_policy_mapping].should == 0
+    aia = config.profile("aia_cdp").authority_info_access
+    aia.ocsp.uris.should == ['http://ocsp.domain.com']
+    aia.ca_issuers.uris.should == ['http://www.domain.com/cert.cer']
+    cdp = config.profile("aia_cdp").crl_distribution_points
+    cdp.uris.should == ['http://crl.domain.com/something.crl']
+    config.profile("ocsp_delegate_with_no_check").ocsp_no_check.should_not be_nil
+    config.profile("inhibit_policy").inhibit_any_policy.value.should == 2
+    config.profile("policy_constraints").policy_constraints.require_explicit_policy.should == 1
+    config.profile("policy_constraints").policy_constraints.inhibit_policy_mapping.should == 0
     config.profile("name_constraints").name_constraints.should_not be_nil
   end
   it "loads CRL cert/key from yaml" do
@@ -287,7 +354,7 @@ describe R509::Config::CAConfig do
 
     R509::Engine.instance.should_receive(:load).with(engine).and_return(fake_engine)
 
-    config = R509::Config::CAConfig.load_from_hash({"ca_cert"=>{"cert"=>"#{File.dirname(__FILE__)}/../fixtures/test_ca.cer", "engine"=>engine, "key_name" => "key"}, "default_md"=>"SHA512", "profiles"=>{}})
+    R509::Config::CAConfig.load_from_hash({"ca_cert"=>{"cert"=>"#{File.dirname(__FILE__)}/../fixtures/test_ca.cer", "engine"=>engine, "key_name" => "key"}, "default_md"=>"SHA512", "profiles"=>{}})
   end
 
   it "should fail if YAML for ca_cert contains engine and key" do

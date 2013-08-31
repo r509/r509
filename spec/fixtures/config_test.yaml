@@ -3,8 +3,6 @@ test_ca:
   ca_cert:
     cert: test_ca.cer
     key: test_ca.key
-  crl_list: crl_list_file.txt
-  crl_number: crl_number_file.txt
   crl_validity_hours: 72
   ocsp_validity_hours: 96
   ocsp_start_skew_seconds: 1800
@@ -13,26 +11,35 @@ test_ca:
       basic_constraints:
         :ca: false
       key_usage:
-      - digitalSignature
-      - keyEncipherment
+        :value:
+        - digitalSignature
+        - keyEncipherment
       extended_key_usage:
-      - serverAuth
+        :value:
+        - serverAuth
     mds:
       default_md: SHA512
       allowed_mds:
       - SHA512
       - SHA1
     aia_cdp:
-      ocsp_location:
-      - http://ocsp.domain.com
-      ca_issuers_location:
-      - http://www.domain.com/cert.cer
-      cdp_location:
-      - http://crl.domain.com/something.crl
+      authority_info_access:
+        :ocsp_location:
+        - :type: URI
+          :value: http://ocsp.domain.com
+        :ca_issuers_location:
+        - :type: URI
+          :value: http://www.domain.com/cert.cer
+      crl_distribution_points:
+        :value:
+        - :type: URI
+          :value: http://crl.domain.com/something.crl
     ocsp_delegate_with_no_check:
-      ocsp_no_check: true
+      ocsp_no_check:
+        :value: true
     inhibit_policy:
-      inhibit_any_policy: 2
+      inhibit_any_policy:
+        :value: 2
     policy_constraints:
       policy_constraints:
         :require_explicit_policy: 1
@@ -44,10 +51,8 @@ test_ca:
           :value: 192.168.0.0/255.255.0.0
         - :type: dirName
           :value:
-          - - CN
-            - myCN
-          - - O
-            - Org
+            :CN: myCN
+            :O: Org
         :excluded:
         - :type: email
           :value: domain.com
@@ -59,19 +64,22 @@ test_ca:
       basic_constraints:
         :ca: false
       key_usage:
-      - digitalSignature
-      - keyEncipherment
+        :value:
+        - digitalSignature
+        - keyEncipherment
       extended_key_usage:
-      - clientAuth
-      ocsp_no_check: false
+        :value:
+        - clientAuth
     server_with_subject_item_policy:
       basic_constraints:
         :ca: false
       key_usage:
-      - digitalSignature
-      - keyEncipherment
+        :value:
+        - digitalSignature
+        - keyEncipherment
       extended_key_usage:
-      - serverAuth
+        :value:
+        - serverAuth
       subject_item_policy:
         CN:
           :policy: required

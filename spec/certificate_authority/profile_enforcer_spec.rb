@@ -50,7 +50,7 @@ describe R509::CertificateAuthority::ProfileEnforcer do
       @csr = R509::CSR.new(:csr => TestFixtures::CSR)
     end
 
-    it "creates basic constraints" do
+    it "adds basic constraints" do
       profile = R509::Config::CertProfile.new(
         :basic_constraints => {:ca => false}
       )
@@ -76,9 +76,9 @@ describe R509::CertificateAuthority::ProfileEnforcer do
       data[:extensions].select{ |el| el.kind_of?(R509::Cert::Extensions::AuthorityKeyIdentifier) }.size.should == 1
     end
 
-    it "creates key usage" do
+    it "adds key usage" do
       profile = R509::Config::CertProfile.new(
-        :key_usage => ['keyEncipherment']
+        :key_usage => { :value => ['keyEncipherment'] }
       )
       @config.set_profile("profile",profile)
       enforcer = R509::CertificateAuthority::ProfileEnforcer.new(@config)
@@ -86,9 +86,9 @@ describe R509::CertificateAuthority::ProfileEnforcer do
       data[:extensions].select{ |el| el.kind_of?(R509::Cert::Extensions::KeyUsage) }.size.should == 1
     end
 
-    it "creates extended key usage" do
+    it "adds extended key usage" do
       profile = R509::Config::CertProfile.new(
-        :extended_key_usage => ['serverAuth']
+        :extended_key_usage => {:value => ['serverAuth'] }
       )
       @config.set_profile("profile",profile)
       enforcer = R509::CertificateAuthority::ProfileEnforcer.new(@config)
@@ -96,9 +96,9 @@ describe R509::CertificateAuthority::ProfileEnforcer do
       data[:extensions].select{ |el| el.kind_of?(R509::Cert::Extensions::ExtendedKeyUsage) }.size.should == 1
     end
 
-    it "creates certificate policies" do
+    it "adds certificate policies" do
       profile = R509::Config::CertProfile.new(
-        :certificate_policies => [{:policy_identifier => "2.16.840.1.99999.21.234"}]
+        :certificate_policies => {:value => [{:policy_identifier => "2.16.840.1.99999.21.234"}] }
       )
       @config.set_profile("profile",profile)
       enforcer = R509::CertificateAuthority::ProfileEnforcer.new(@config)
@@ -106,9 +106,10 @@ describe R509::CertificateAuthority::ProfileEnforcer do
       data[:extensions].select{ |el| el.kind_of?(R509::Cert::Extensions::CertificatePolicies) }.size.should == 1
     end
 
-    it "creates CRL distribution points" do
+    it "adds CRL distribution points" do
+      cdp = R509::Cert::Extensions::CRLDistributionPoints.new(:value => [{ :type => 'URI', :value => 'http://crl.domain.com/crl.crl'}])
       profile = R509::Config::CertProfile.new(
-        :cdp_location => ['http://crl.domain.com/crl.crl']
+        :crl_distribution_points => cdp
       )
       @config.set_profile("profile",profile)
       enforcer = R509::CertificateAuthority::ProfileEnforcer.new(@config)
@@ -116,10 +117,11 @@ describe R509::CertificateAuthority::ProfileEnforcer do
       data[:extensions].select{ |el| el.kind_of?(R509::Cert::Extensions::CRLDistributionPoints) }.size.should == 1
     end
 
-    it "creates authority info access" do
+    it "adds authority info access" do
+      args = { :ca_issuers_location => [{ :type => 'URI', :value => 'http://www.domain.com' }], :ocsp_location => [{ :type => 'URI', :value => 'http://ocsp.domain.com' }], :critical => false }
+      aia = R509::Cert::Extensions::AuthorityInfoAccess.new(args)
       profile = R509::Config::CertProfile.new(
-        :ocsp_location => ['http://ocsp.domain.com/'],
-        :ca_issuers_location => ['http://www.domain.com/something.cer']
+        :authority_info_access => aia
       )
       @config.set_profile("profile",profile)
       enforcer = R509::CertificateAuthority::ProfileEnforcer.new(@config)
@@ -127,9 +129,9 @@ describe R509::CertificateAuthority::ProfileEnforcer do
       data[:extensions].select{ |el| el.kind_of?(R509::Cert::Extensions::AuthorityInfoAccess) }.size.should == 1
     end
 
-    it "creates inhibit any policy" do
+    it "adds inhibit any policy" do
       profile = R509::Config::CertProfile.new(
-        :inhibit_any_policy => 1
+        :inhibit_any_policy => { :value => 1 }
       )
       @config.set_profile("profile",profile)
       enforcer = R509::CertificateAuthority::ProfileEnforcer.new(@config)
@@ -137,7 +139,7 @@ describe R509::CertificateAuthority::ProfileEnforcer do
       data[:extensions].select{ |el| el.kind_of?(R509::Cert::Extensions::InhibitAnyPolicy) }.size.should == 1
     end
 
-    it "creates policy constraints" do
+    it "adds policy constraints" do
       profile = R509::Config::CertProfile.new(
         :policy_constraints => {:inhibit_policy_mapping => 1}
       )
@@ -147,7 +149,7 @@ describe R509::CertificateAuthority::ProfileEnforcer do
       data[:extensions].select{ |el| el.kind_of?(R509::Cert::Extensions::PolicyConstraints) }.size.should == 1
     end
 
-    it "creates name constraints" do
+    it "adds name constraints" do
       profile = R509::Config::CertProfile.new(
         :name_constraints => { :permitted => [{:type => "URI", :value => "domain.com"}] }
       )
@@ -157,9 +159,9 @@ describe R509::CertificateAuthority::ProfileEnforcer do
       data[:extensions].select{ |el| el.kind_of?(R509::Cert::Extensions::NameConstraints) }.size.should == 1
     end
 
-    it "creates OCSP no check" do
+    it "adds OCSP no check" do
       profile = R509::Config::CertProfile.new(
-        :ocsp_no_check => true
+        :ocsp_no_check => {:value => true }
       )
       @config.set_profile("profile",profile)
       enforcer = R509::CertificateAuthority::ProfileEnforcer.new(@config)
@@ -203,7 +205,7 @@ describe R509::CertificateAuthority::ProfileEnforcer do
       config = R509::Config::CAConfig.new( :ca_cert => R509::Cert.new( :cert => TestFixtures::TEST_CA_CERT) )
       profile = R509::Config::CertProfile.new(
         :basic_constraints => {:ca => false},
-        :key_usage => ["digitalSignature"],
+        :key_usage => {:value => ["digitalSignature"] },
         :allowed_mds => ['sha256','sha1','sha384'],
         :default_md => 'sha1'
       )
