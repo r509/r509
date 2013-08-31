@@ -382,7 +382,7 @@ csr = R509::CSR.new(
   }
 )
 subject = csr.subject.dup
-san_names = ["sannames.com","domain2.com","128.128.128.128"]
+san_names = [{:type=> 'DNS', :value => "domain2.com"},{:type => 'IP', :value => "128.128.128.128"}]
 subject.common_name = "newdomain.com"
 subject.organization = "Org 2.0"
 ext = []
@@ -408,7 +408,7 @@ subject.CN = "mydomain.com"
 subject.L = "Locality"
 subject.ST = "State"
 subject.C = "US"
-san_names = ["domain2.com","128.128.128.128"]
+san_names = [{:type=> 'DNS', :value => "domain2.com"},{:type => 'IP', :value => "128.128.128.128"}]
 ext = []
 ext << R509::Cert::Extensions::BasicConstraints.new(:ca => false)
 ext << R509::Cert::Extensions::SubjectAlternativeName.new(:value => san_names)
@@ -422,8 +422,8 @@ cert = ca.sign(
 
 ```
 
-###CertificateAuthority::ProfileEnforcer
-The ProfileEnforcer takes in a CAConfig with CertProfiles. You then call #enforce to have it enforce a profile's constraints. Constraints include subject DN, message_digest, subject alternative names, and extensions.
+###CertificateAuthority::CertBuilder
+The CertBuilder takes in a CAConfig with CertProfiles. You then call ```#build_and_enforce``` to have it create a hash that can be passed to ``R509::CertificateAuthority::Signer#sign```. The CertBuilder is responsible for enforcing restrictions on subject DN (via SubjectItemPolicy), determing allowed message digest, and adding a profile's extensions.
 
 ```ruby
 # assume config from yaml load above
@@ -436,8 +436,8 @@ csr = R509::CSR.new(
     :C => 'US'
   }
 )
-enforcer = R509::CertificateAuthority::ProfileEnforcer.new(config)
-scrubbed_data = enforcer.enforce(
+builder = R509::CertificateAuthority::CertBuilder.new(config)
+scrubbed_data = builder.build_and_enforce(
   :csr => csr,
   :profile_name => "server",
   :subject => {:CN => 'rewritten.com'},
@@ -448,6 +448,21 @@ scrubbed_data = enforcer.enforce(
 signer = R509::CertificateAuthority::Signer.new(config)
 cert = signer.sign(scrubbed_data)
 
+```
+
+You can optionally supply an array of R509::Cert::Extensions::* objects to the builder via the ```:extensions``` key. These will be merged with the extensions from the profile. If an extension in this array is also present in the profile, *the supplied extension will override the profile*.
+
+```ruby
+# assume pre-existing config and csr from above
+builder = R509::CertificateAuthority::CertBuilder.new(config)
+scrubbed_data = builder.build_and_enforce(
+  :csr => csr,
+  :profile_name => "server",
+  :subject => {:CN => 'rewritten.com'},
+  :san_names => ['r509.org'],
+  :message_digest => 'SHA256',
+  :extensions => [R509::Cert::Extensions::BasicConstraints.new(:ca => true)]
+)
 ```
 
 ###CRL Administration

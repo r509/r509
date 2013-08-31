@@ -1,6 +1,6 @@
 module R509::CertificateAuthority
-  # Provides enforcement of defined CertProfiles.
-  class ProfileEnforcer
+  # A class to build hashes to send to the R509::CertificateAuthority::Signer. These are built from R509::Config::CertProfile objects and additional data supplied to the #build_and_enforce method.
+  class CertBuilder
     def initialize(config)
       if not config.kind_of?(R509::Config::CAConfig)
         raise ArgumentError, "You must supply a R509::Config::CAConfig object to this class at instantiation"
@@ -13,9 +13,10 @@ module R509::CertificateAuthority
     # @option options :spki [R509::SPKI]
     # @option options :subject [R509::Subject,OpenSSL::X509::Subject,Array] (optional for R509::CSR, required for R509::SPKI)
     # @option options :message_digest [String] the message digest to use for this certificate instead of the default (see R509::MessageDigest::DEFAULT_MD).
+    # @option options :extensions [Array] An optional array of R509::Cert::Extensions::* objects. These will be merged with the extensions from the profile. If an extension in this array is also present in the profile, *the supplied extension will override the profile*.
     # @option options :san_names [Array,R509::ASN1::GeneralNames] List of domains, IPs, email addresses, or URIs to encode as subjectAltNames. The type is determined from the structure of the strings via the R509::ASN1.general_name_parser method. You can also pass an explicit R509::ASN1::GeneralNames object
-    # @return [Hash] Hash of enforced :message_digest, :subject, :extensions, and :csr/:spki
-    def enforce(options)
+    # @return [Hash] Hash of :message_digest, :subject, :extensions, and :csr/:spki ready to be passed to the Signer
+    def build_and_enforce(options)
       profile = @config.profile(options[:profile_name])
 
       R509::CertificateAuthority::Signer.check_options(options)
@@ -28,11 +29,16 @@ module R509::CertificateAuthority
       raw_subject, public_key = R509::CertificateAuthority::Signer.extract_public_key_subject(options)
 
       message_digest = enforce_md(options[:message_digest],profile)
-
-      extensions = build_extensions(options,profile,public_key)
-
       subject = enforce_subject_item_policy(raw_subject,profile)
 
+      extensions = build_and_merge_extensions(options, profile, public_key)
+
+      build_hash(subject, extensions, message_digest, options)
+    end
+
+    private
+
+    def build_hash(subject, extensions, message_digest, options)
       return_hash = {
         :subject => subject,
         :extensions => extensions,
@@ -42,8 +48,6 @@ module R509::CertificateAuthority
       return_hash[:spki] = options[:spki] unless options[:spki].nil?
       return_hash
     end
-
-    private
 
     def enforce_md(requested_md,profile)
       # prior to OpenSSL 1.0 DSA could only use DSS1 (aka SHA1) signatures. post-1.0 anything
@@ -71,6 +75,31 @@ module R509::CertificateAuthority
       else
         profile.subject_item_policy.validate_subject(subject)
       end
+    end
+
+    def build_and_merge_extensions(options, profile, public_key)
+      extensions = build_extensions(options,profile,public_key)
+
+      if not options[:extensions].nil?
+        extensions = merge_extensions(options,extensions)
+      end
+      extensions
+    end
+
+
+    def merge_extensions(options,extensions)
+      ext_hash = {}
+      extensions.each do |e|
+        ext_hash[e.class] = e
+      end
+      options[:extensions].each do |e|
+        ext_hash[e.class] = e
+      end
+      merged_ext = []
+      ext_hash.each do |k,v|
+        merged_ext.push(v)
+      end
+      return merged_ext
     end
 
     def build_extensions(options,profile,public_key)
