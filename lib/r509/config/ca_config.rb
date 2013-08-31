@@ -7,7 +7,6 @@ require 'r509/private_key'
 require 'r509/engine'
 require 'fileutils'
 require 'pathname'
-require 'r509/validation_mixin'
 require 'r509/config/subject_item_policy'
 require 'r509/config/cert_profile'
 
@@ -36,6 +35,16 @@ module R509
         @configs.values
       end
 
+      # @return [Hash]
+      def to_h
+        @configs.merge(@configs) { |k,v| v.to_h }
+      end
+
+      # @return [YAML]
+      def to_yaml
+        self.to_h.to_yaml
+      end
+
       # Loads the named configuration config from a yaml string.
       # @param [String] name The name of the config within the file. Note
       #  that a single yaml file can contain more than one configuration.
@@ -58,21 +67,34 @@ module R509
         :crl_number_file, :crl_list_file, :crl_md,
         :ocsp_chain, :ocsp_start_skew_seconds, :ocsp_validity_hours
 
+      # Default number of seconds to subtract from now when calculating the signing time of an OCSP response
+      DEFAULT_OCSP_START_SKEW_SECONDS = 3600
+      # Default number of hours an OCSP response should be valid for
+      DEFAULT_OCSP_VALIDITY_HOURS = 168
+      # Default number of hours a CRL should be valid for
+      DEFAULT_CRL_VALIDITY_HOURS = 168
+      # Default number of seconds to subtract from now when calculating the signing time of a CRL
+      DEFAULT_CRL_START_SKEW_SECONDS = 3600
+
       # @option opts [R509::Cert] :ca_cert Cert+Key pair
       # @option opts [Integer] :crl_validity_hours (168) The number of hours that
       #  a CRL will be valid. Defaults to 7 days.
       # @option opts [Hash<String, R509::Config::CertProfile>] :profiles
-      # @option opts [String] :crl_number_file The file that we will save
-      #  the CRL numbers to.
+      # @option opts [String] :crl_number_file A file to save the CRL number
+      #  into. This is only used if you use the default FileReaderWriter in CRL::Administrator
     # @option opts [String] :crl_md Optional digest for signing CRLs. sha1, sha224, sha256, sha384, sha512, md5. Defaults to R509::MessageDigest::DEFAULT_MD
-      # @option opts [String] :crl_list_file The file that we will save
-      #  the CRL list data to.
+      # @option opts [String] :crl_list_file A file to serialize revoked certificates into. This
+      #  is only used if you use the default FileReaderWriter in CRL::Administrator
       # @option opts [R509::Cert] :ocsp_cert An optional cert+key pair
       #  OCSP signing delegate
       # @option opts [R509::Cert] :crl_cert An optional cert+key pair
       #  CRL signing delegate
       # @option opts [Array<OpenSSL::X509::Certificate>] :ocsp_chain An optional array
       #  that constitutes the chain to attach to an OCSP response
+      # @option opts [Integer] :ocsp_validity_hours Number of hours OCSP responses should be valid for
+      # @option opts [Integer] :ocsp_start_skew_seconds The number of seconds to subtract from Time.now when calculating the signing time of an OCSP response. This is important to handle bad user clocks.
+      # @option opts [Integer] :crl_validity_hours Number of hours CRLs should be valid for
+      # @option opts [Integer] :crl_start_skew_seconds The number of seconds to subtract from Time.now when calculating the signing time of a CRL. This is important to handle bad user clocks.
       #
       def initialize(opts = {} )
         if not opts.has_key?(:ca_cert) then
@@ -91,15 +113,15 @@ module R509
         end
         @ocsp_cert = opts[:ocsp_cert] unless opts[:ocsp_cert].nil?
         @ocsp_chain = opts[:ocsp_chain] if opts[:ocsp_chain].kind_of?(Array)
-        @ocsp_validity_hours = opts[:ocsp_validity_hours] || 168
-        @ocsp_start_skew_seconds = opts[:ocsp_start_skew_seconds] || 3600
+        @ocsp_validity_hours = opts[:ocsp_validity_hours] || DEFAULT_OCSP_VALIDITY_HOURS
+        @ocsp_start_skew_seconds = opts[:ocsp_start_skew_seconds] || DEFAULT_OCSP_START_SKEW_SECONDS
 
         if opts.has_key?(:crl_cert)
           check_ocsp_crl_delegate(opts[:crl_cert],'crl_cert')
         end
         @crl_cert = opts[:crl_cert] unless opts[:crl_cert].nil?
-        @crl_validity_hours = opts[:crl_validity_hours] || 168
-        @crl_start_skew_seconds = opts[:crl_start_skew_seconds] || 3600
+        @crl_validity_hours = opts[:crl_validity_hours] || DEFAULT_CRL_VALIDITY_HOURS
+        @crl_start_skew_seconds = opts[:crl_start_skew_seconds] || DEFAULT_CRL_START_SKEW_SECONDS
         @crl_number_file = opts[:crl_number_file] || nil
         @crl_list_file = opts[:crl_list_file] || nil
         @crl_md = opts[:crl_md] || R509::MessageDigest::DEFAULT_MD
@@ -107,7 +129,7 @@ module R509
 
 
         @profiles = {}
-          if opts[:profiles]
+        if opts[:profiles]
           opts[:profiles].each_pair do |name, prof|
             set_profile(name, prof)
           end
@@ -148,6 +170,28 @@ module R509
         @profiles.count
       end
 
+      # @return [Hash]
+      def to_h
+        hash = {}
+        hash["ca_cert"] = build_cert_hash(@ca_cert)
+        hash["ocsp_cert"] = build_cert_hash(@ocsp_cert) unless @ocsp_cert.nil?
+        hash["crl_cert"] = build_cert_hash(@crl_cert) unless @crl_cert.nil?
+        hash["ocsp_chain"] = "<add_path>" unless @ocsp_chain.nil?
+        hash["ocsp_start_skew_seconds"] = @ocsp_start_skew_seconds
+        hash["ocsp_validity_hours"] = @ocsp_validity_hours
+        hash["crl_start_skew_seconds"] = @crl_start_skew_seconds
+        hash["crl_validity_hours"] = @crl_validity_hours
+        hash["crl_list_file"] = @crl_list_file unless @crl_list_file.nil?
+        hash["crl_number_file"] = @crl_number_file unless @crl_number_file.nil?
+        hash["crl_md"] = @crl_md
+        hash["profiles"] = @profiles.merge(@profiles) { |k,v| v.to_h } unless @profiles.empty?
+        hash
+      end
+
+      # @return [YAML]
+      def to_yaml
+        self.to_h.to_yaml
+      end
 
       ######### Class Methods ##########
 
@@ -189,12 +233,12 @@ module R509
           :crl_md => conf['crl_md'],
         }
 
-        if conf.has_key?("crl_list")
-          opts[:crl_list_file] = (ca_root_path + conf['crl_list']).to_s
+        if conf.has_key?("crl_list_file")
+          opts[:crl_list_file] = (ca_root_path + conf['crl_list_file']).to_s
         end
 
-        if conf.has_key?("crl_number")
-          opts[:crl_number_file] = (ca_root_path + conf['crl_number']).to_s
+        if conf.has_key?("crl_number_file")
+          opts[:crl_number_file] = (ca_root_path + conf['crl_number_file']).to_s
         end
 
 
@@ -212,9 +256,8 @@ module R509
                              :inhibit_any_policy => data["inhibit_any_policy"],
                              :policy_constraints => data["policy_constraints"],
                              :name_constraints => data["name_constraints"],
-                             :cdp_location => data["cdp_location"],
-                             :ocsp_location => data["ocsp_location"],
-                             :ca_issuers_location => data["ca_issuers_location"],
+                             :crl_distribution_points => data["crl_distribution_points"],
+                             :authority_info_access => data["authority_info_access"],
                              :default_md => data["default_md"],
                              :allowed_mds => data["allowed_mds"],
                              :subject_item_policy => subject_item_policy)
@@ -244,6 +287,17 @@ module R509
       end
 
       private
+
+      def build_cert_hash(obj)
+        hash = { "cert" => "<add_path>" }
+        if not obj.key.nil? and obj.key.in_hardware?
+          hash["engine"] = { :so_path => "<add_path>", :id => "<add_name>" }
+          return hash
+        elsif not obj.key.nil?
+          hash["key"] = "<add_path>"
+        end
+        hash
+      end
 
       def self.load_ca_cert(ca_cert_hash,ca_root_path)
         return nil if ca_cert_hash.nil?

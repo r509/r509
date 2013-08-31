@@ -7,14 +7,16 @@ require 'r509/private_key'
 require 'r509/engine'
 require 'fileutils'
 require 'pathname'
-require 'r509/validation_mixin'
 
 module R509
   # Module to contain all configuration related classes (e.g. CAConfig, CertProfile, SubjectItemPolicy)
   module Config
-    # The Subject Item Policy allows you to define what subject fields are allowed in a certificate.
-    # Required means that field *must* be supplied, optional means it will be encoded if provided, and
-    # match means the field must be present and must match the value specified.
+    # The Subject Item Policy allows you to define what subject fields are allowed in a
+    # certificate. Required means that field *must* be supplied, optional means it will
+    # be encoded if provided, and match means the field must be present and must match
+    # the value specified.
+    #
+    # Using R509::OIDMapper you can create new shortnames that will be usable inside this class.
     class SubjectItemPolicy
       # @return [Array]
       attr_reader :required, :optional, :match, :match_values
@@ -87,9 +89,18 @@ module R509
         end)
       end
 
-      private
+    # @return [Hash]
+      def to_h
+        hash = {}
+        @required.each { |r| hash[r] = {:policy => "required" } }
+        @optional.each { |o| hash[o] = {:policy => "optional" } }
+        @match.each { |m| hash[m] = {:policy => "match", :value => @match_values[m]} }
+        hash
+      end
 
-      def match_check(subject)
+    # @return [YAML]
+      def to_yaml
+        self.to_h.to_yaml
       end
 
     end

@@ -76,9 +76,7 @@ module R509::CertificateAuthority
     def build_extensions(options,profile,public_key)
       extensions = []
 
-      if present?(profile.basic_constraints)
-        extensions << R509::Cert::Extensions::BasicConstraints.new(profile.basic_constraints)
-      end
+      extensions << profile.basic_constraints unless profile.basic_constraints.nil?
 
       extensions << R509::Cert::Extensions::SubjectKeyIdentifier.new(
         :public_key => public_key
@@ -89,46 +87,27 @@ module R509::CertificateAuthority
         :issuer_subject => @config.ca_cert.subject
       )
 
-      if present?(profile.key_usage)
-        extensions << R509::Cert::Extensions::KeyUsage.new(:key_usage => profile.key_usage)
-      end
+      extensions << profile.key_usage unless profile.key_usage.nil?
 
-      if present?(profile.extended_key_usage)
-        extensions << R509::Cert::Extensions::ExtendedKeyUsage.new(:extended_key_usage => profile.extended_key_usage)
-      end
+      extensions << profile.extended_key_usage unless profile.extended_key_usage.nil?
 
-      if present?(profile.certificate_policies)
-        extensions << R509::Cert::Extensions::CertificatePolicies.new(:policies => profile.certificate_policies)
-      end
+      extensions << profile.certificate_policies unless profile.certificate_policies.nil?
 
-      if present?(profile.cdp_location)
-        extensions << R509::Cert::Extensions::CRLDistributionPoints.new(:cdp_location => profile.cdp_location)
-      end
+      extensions << profile.crl_distribution_points unless profile.crl_distribution_points.nil?
 
-      if present?(profile.ocsp_location) or present?(profile.ca_issuers_location)
-        extensions << R509::Cert::Extensions::AuthorityInfoAccess.new(
-          :ocsp_location => profile.ocsp_location,
-          :ca_issuers_location => profile.ca_issuers_location
-        )
-      end
+      extensions << profile.authority_info_access unless profile.authority_info_access.nil?
 
-      if profile.inhibit_any_policy
-        extensions << R509::Cert::Extensions::InhibitAnyPolicy.new(:skip_certs => profile.inhibit_any_policy)
-      end
+      extensions << profile.inhibit_any_policy unless profile.inhibit_any_policy.nil?
 
-      if present?(profile.policy_constraints)
-        extensions << R509::Cert::Extensions::PolicyConstraints.new(profile.policy_constraints)
-      end
+      extensions << profile.policy_constraints unless profile.policy_constraints.nil?
 
-      if present?(profile.name_constraints)
-        extensions << R509::Cert::Extensions::NameConstraints.new(profile.name_constraints)
-      end
+      extensions << profile.name_constraints unless profile.name_constraints.nil?
 
-      if profile.ocsp_no_check
-        extensions << R509::Cert::Extensions::OCSPNoCheck.new({:ocsp_no_check => true})
-      end
+      extensions << profile.ocsp_no_check unless profile.ocsp_no_check.nil?
+
       if present?(options[:san_names])
-        extensions << R509::Cert::Extensions::SubjectAlternativeName.new(:names => options[:san_names])
+        gns = R509::ASN1.general_name_parser(options[:san_names])
+        extensions << R509::Cert::Extensions::SubjectAlternativeName.new(:value => gns)
       end
 
       extensions

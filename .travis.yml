@@ -2,9 +2,16 @@ bundler_args: --without documentation
 language: ruby
 rvm:
  - 1.9.3
+# p0 tests the X509Name UNDEF fix in R509::Subject. My patch to remove the need for this code landed in 1.9.3-p125
+ - 1.9.3-p0
  - 2.0.0
  - ruby-head
  - rbx-19mode
 matrix:
+  include:
+  - rvm: 1.9.3-p0
+    env: R509_EC_SUPPORT_DISABLED=true
   allow_failures:
     - rvm: ruby-head
+    - rvm: 1.9.3-p0
+before_script: ./.travis-scripts/ec-patch

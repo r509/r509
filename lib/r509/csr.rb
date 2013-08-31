@@ -32,6 +32,10 @@ module R509
     #     ['ST','State'],
     #     ['C','US']
     #   ]
+    # @example Generate a 2048-bit RSA key + CSR
+    #   :type => "RSA",
+    #   :bit_length => 4096,
+    #   :subject => { :CN => "myCN", :O => "org" }
     # @example Generate an ECDSA key using the secp384r1 curve parameters + CSR and sign with SHA512
     #   :type => "EC",
     #   :curve_name => 'secp384r1',

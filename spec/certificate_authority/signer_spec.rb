@@ -73,7 +73,7 @@ shared_examples_for "signing" do |selfsign|
   it "with multiple extensions (selfsign:#{selfsign})" do
     exts = []
     exts << R509::Cert::Extensions::BasicConstraints.new(:ca => false)
-    exts << R509::Cert::Extensions::InhibitAnyPolicy.new(:skip_certs => 4)
+    exts << R509::Cert::Extensions::InhibitAnyPolicy.new(:value => 4)
     @options[:extensions] = exts
     if selfsign
       cert = R509::CertificateAuthority::Signer.selfsign(@options)
@@ -82,12 +82,12 @@ shared_examples_for "signing" do |selfsign|
     end
     cert.extensions.size.should == 2
     cert.basic_constraints.is_ca?.should == false
-    cert.inhibit_any_policy.skip_certs.should == 4
+    cert.inhibit_any_policy.value.should == 4
   end
 
   it "with random serial when serial is not specified and uses microtime as part of the serial to prevent collision (selfsign:#{selfsign})" do
     now = Time.now
-    Time.stub!(:now).and_return(now)
+    Time.stub(:now).and_return(now)
     time = now.to_i.to_s
     if selfsign
       cert = R509::CertificateAuthority::Signer.selfsign(@options)

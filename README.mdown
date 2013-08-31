@@ -1,4 +1,4 @@
-#r509 [![Build Status](https://secure.travis-ci.org/reaperhulk/r509.png)](http://travis-ci.org/reaperhulk/r509)
+#r509 [![Build Status](https://secure.travis-ci.org/reaperhulk/r509.png)](http://travis-ci.org/reaperhulk/r509) [![Coverage Status](https://coveralls.io/repos/reaperhulk/r509/badge.png?branch=master)](https://coveralls.io/r/reaperhulk/r509?branch=master)
 r509 is a Ruby gem built using OpenSSL that is designed to ease management of a public key infrastructure. The r509 API facilitates easy creation of CSRs, signing of certificates, revocation (CRL/OCSP), and much more. Together with projects like [r509-ocsp-responder](https://github.com/reaperhulk/r509-ocsp-responder) and [r509-ca-http](https://github.com/sirsean/r509-ca-http) it is intended to be a complete [RFC 5280](http://www.ietf.org/rfc/rfc5280.txt)-compliant certificate authority for use in production environments.
 
 ##Requirements
@@ -19,7 +19,7 @@ rake gem:install
 If you want to run the tests for r509 you'll need rspec. Additionally, you may want to install rcov/simplecov (ruby 1.8/1.9 respectively) and yard for running the code coverage and documentation tasks in the Rakefile. ```rake -T``` for a complete list of rake tasks available.
 
 ##Continuous Integration
-We run continuous integration tests (using Travis-CI) against 1.9.3, 2.0.0, ruby-head, and rubinius(rbx) 2.0 in 1.9 mode. 1.8.7 is no longer a supported configuration due to issues with its elliptic curve methods. 0.8.1 was the last official r509 release with 1.8.7 support.
+We run continuous integration tests (using Travis-CI) against 1.9.3, 2.0.0, ruby-head, and rubinius(rbx) 2.0 in 1.9 mode. 1.8.7 is no longer a supported configuration due to issues with its elliptic curve methods. 0.8.1 was the last official r509 release with 1.8.7 support. It is highly recommended that you use Ruby 1.9.3 or later.
 
 ##Executable
 
@@ -42,6 +42,17 @@ csr = R509::CSR.new(
     ['C','US']
   ]
 )
+# alternately
+csr = R509::CSR.new(
+  :subject => {
+    :CN => 'somedomain.com',
+    :O => 'My Org',
+    :L => 'City',
+    :ST => 'State',
+    :C => 'US'
+  }
+)
+
 ```
 
 Another way to build the subject:
@@ -131,7 +142,7 @@ Generate a 1536-bit RSA key
 key = R509::PrivateKey.new(:type => "RSA", :bit_length => 1536)
 ```
 
-Encrypt the private key
+Encrypt a private key
 
 ```ruby
 key = R509::PrivateKey.new(:type => "RSA", :bit_length => 2048)
@@ -171,7 +182,7 @@ not_after = Time.now.to_i+3600*24*7300
 csr = R509::CSR.new(
   :subject => [['C','US'],['O','r509 LLC'],['CN','r509 Self-Signed CA Test']]
 )
-# if you do not pass :extensions it will add basic constraints CA:TRUE and nothing else
+# if you do not pass :extensions it will add basic constraints CA:TRUE, a SubjectKeyIdentifier, and an AuthorityKeyIdentifier
 cert = R509::CertificateAuthority::Signer.selfsign(
   :csr => csr,
   :not_before => not_before,
@@ -181,6 +192,7 @@ cert = R509::CertificateAuthority::Signer.selfsign(
 
 ###Config
 
+####CAConfig
 Create a basic CAConfig object
 
 ```ruby
@@ -195,118 +207,96 @@ config = R509::Config::CAConfig.new(
 )
 ```
 
-Add a certificate profile named "server" (CertProfile) to a config object. Certificate profiles are optional. For examples of how to use them (or not) check the ProfileEnforcer section.
-
-```ruby
-profile = R509::Config::CertProfile.new(
-  :basic_constraints => {:ca => false},
-  :key_usage => ["digitalSignature","keyEncipherment"],
-  :extended_key_usage => ["serverAuth"],
-  :certificate_policies => [
-    { :policy_identifier => "2.16.840.1.99999.21.234",
-      :cps_uris => ["http://example.com/cps","http://haha.com"],
-      :user_notices => [ { :explicit_text => "this is a great thing", :organization => "my org", :notice_numbers => "1,2,3" } ]
-    }
-  ],
-  :subject_item_policy => nil,
-  :ocsp_no_check => false, # this should only be true if you are setting OCSPSigning EKU
-  :cdp_location => ["http://crl.myca.net/ca.crl"],
-  :ocsp_location => ["http://ocsp.myca.net/"],
-  :ca_issuers_location => ["http://www.myca.net/some_ca.cer"]
-)
-# config object from above assumed
-config.set_profile("server",profile)
-```
-
+####SubjectItemPolicy
 Subject Item Policy allows you to define what subject fields are allowed in a certificate. Required means that field *must* be supplied, optional means it will be encoded if provided, and match means the field must be present and must match the value specified. The keys must match OpenSSL's short names.
 
 
 ```ruby
+sip = 509::Config::SubjectItemPolicy.new(
+  "CN" => {:policy => "required"},
+  "O" => {:policy => "optional"},
+  "OU" => {:policy => "match", :value => "Engineering" }
+)
+```
+
+####CertProfile
+Certificate profiles hold extensions you want to put in a certificate, allowed/default message digests, and subject item policies. You can build them programmatically or load them via YAML. When building programmatically you can also serialize to YAML for future use. This is the preferred way to build the YAML.
+
+The CertProfile object can either take objects or the hash that would build those objects.
+
+Objects:
+
+```ruby
 profile = R509::Config::CertProfile.new(
-  :basic_constraints => {:ca => false},
-  :key_usage => ["digitalSignature","keyEncipherment"],
-  :extended_key_usage => ["serverAuth"],
-  :subject_item_policy => {
+  :basic_constraints => R509::Cert::Extensions::BasicConstraints.new(
+    :ca => false
+  ),
+  :key_usage => R509::Cert::Extensions::KeyUsage.new(
+    :value => ['digitalSignature','keyEncipherment']
+  ),
+  :extended_key_usage => R509::Cert::Extensions::ExtendedKeyUsage.new(
+    :value => ['serverAuth','clientAuth']
+  ),
+  :authority_info_access => R509::Cert::Extensions::AuthorityInfoAccess.new(
+    :ocsp_location => [{:type => 'URI', :value => 'http://ocsp.myca.net'}]
+  ),
+  :certificate_policies => R509::Cert::Extensions::CertificatePolicies.new(
+    :value => [{:policy_identifier => '1.23.3.4.4.5.56'}]
+  ),
+  :crl_distribution_points => R509::Cert::Extensions::CRLDistributionPoints.new(
+    :value => [{:type => 'URI', :value => 'http://crl.myca.net/ca.crl'}]
+  ),
+  :inhibit_any_policy => R509::Cert::Extensions::InhibitAnyPolicy.new(
+    :value => 0
+  ),
+  :name_constraints => R509::Cert::Extensions::NameConstraints.new(
+    :permitted => [{:type => 'dirName', :value => { :CN => 'test' } }]
+  ),
+  :ocsp_no_check => R509::Cert::Extensions::OCSPNoCheck.new(:value => true),
+  :policy_constraints => R509::Cert::Extensions::PolicyConstraints.new(
+    :require_explicit_policy=> 1
+  ),
+  :subject_item_policy => R509::Config::SubjectItemPolicy.new(
     "CN" => {:policy => "required"},
     "O" => {:policy => "optional"},
     "OU" => {:policy => "match", :value => "Engineering" }
+  ),
+  :default_md => "SHA256",
+  :allowed_mds => ["SHA256","SHA512"]
+)
+```
+
+Hashes:
+
+```ruby
+profile = R509::Config::CertProfile.new(
+  :basic_constraints => {:ca => false},
+  :key_usage => { :value => ["digitalSignature","keyEncipherment"] },
+  :extended_key_usage => { :value => ["serverAuth"] },
+  :certificate_policies => [
+    { :policy_identifier => "2.16.840.1.99999.21.234",
+      :cps_uris => ["http://example.com/cps","http://haha.com"],
+      :user_notices => [ { :explicit_text => "this is a great thing", :organization => "my org", :notice_numbers => [1,2,3] } ]
+    }
+  ],
+  :subject_item_policy => nil,
+  :crl_distribution_points => {:value => [{ :type => "URI", :value => "http://crl.myca.net/ca.crl" }] },
+  :authority_info_access => {
+    :ocsp_location => [{ :type => "URI", :value => "http://ocsp.myca.net" }],
+    :ca_issuers_location => [{ :type => "URI", :value => "http://www.myca.net/some_ca.cer" }]
   }
 )
-# config object from above assumed
+# CAConfig object from above assumed
 config.set_profile("server",profile)
 ```
 
-Load CAConfig + Profile from YAML
+####CAConfigPool
+Multiple CAConfigs can be loaded via CAConfigPool
 
 ```ruby
-config = R509::Config::CAConfig.from_yaml("test_ca", "config_test.yaml")
-```
-
-Example YAML (more options are supported than this example)
-
-```yaml
-test_ca:
-  ca_cert:
-    cert: /path/to/test_ca.cer
-    key: /path/to/test_ca.key
-  crl_list: crl_list_file.txt
-  crl_number: crl_number_file.txt
-  crl_validity_hours: 168
-  profiles:
-    server:
-      basic_constraints:
-        :ca: false
-      key_usage:
-      - digitalSignature
-      - keyEncipherment
-      extended_key_usage:
-      - serverAuth
-      certificate_policies:
-      - :policy_identifier: 2.16.840.1.99999.21.234
-        :cps_uris:
-        - http://example.com/cps
-        - http://haha.com
-        :user_notices:
-        - :explicit_text: this is a great thing
-          :organization: my org
-          :notice_numbers: '1,2,3'
-      - :policy_identifier: 2.16.840.1.99999.21.235
-        :cps_uris:
-        - http://example.com/cps2
-        :user_notices:
-        - :explicit_text: this is a bad thing
-          :organization: another org
-          :notice_numbers: '3,2,1'
-        - :explicit_text: another user notice
-      subject_item_policy:
-          CN:
-            :policy: required
-          O:
-            :policy: required
-          OU:
-            :policy: match
-            :value: Engineering
-          ST:
-            :policy: required
-          C:
-            :policy: required
-          L:
-            :policy: optional
-      cdp_location:
-      - http://crl.domain.com/test_ca.crl
-      ocsp_location:
-      - http://ocsp.domain.com
-      ca_issuers_location:
-      - http://www.domain.com/my_roots.html
-      default_md: SHA1
-      allowed_mds:
-      - SHA256
-      - SHA1
-```
-
-Load multiple CAConfigs using a CAConfigPool
-
-```ruby
+# from objects
+pool = R509::Config::CAConfigPool.new("my_ca" => config, "another_ca" => another_config)
+# from yaml
 pool = R509::Config::CAConfigPool.from_yaml("certificate_authorities", "config_pool.yaml")
 ```
 
@@ -324,19 +314,48 @@ certificate_authorities:
       key: second_ca.key
 ```
 
+####Building YAML
+You can serialize a CAConfig (or CAConfigPool) via ```#to_yaml```. The output of the YAML will vary depending upon what data you have supplied to the object, but the output does require the following manual configuration:
+
+* Add paths to the requested files where you see add_path (or change the options entirely. See the YAML config section below)
+* Define a name for your config and put the YAML inside it. In the example below the config has been named example_ca
+
+```yaml
+example_ca:
+  # the following is the output of #to_yaml
+  ca_cert:
+    cert: <add_path>
+    key: <add_path>
+  ocsp_start_skew_seconds: 3600
+  ocsp_validity_hours: 168
+  crl_md: SHA1
+  profiles:
+    profile:
+      subject_item_policy:
+        CN:
+          :policy: required
+        O:
+          :policy: required
+        L:
+          :policy: required
+        OU:
+          :policy: optional
+      default_md: SHA512
+```
+
 ###CertificateAuthority::Signer (sans CertProfile)
 
 Sign a CSR
 
 ```ruby
 csr = R509::CSR.new(
-  :subject => [
-    ['CN','somedomain.com'],
-    ['O','My Org'],
-    ['L','City'],
-    ['ST','State'],
-    ['C','US']
-  ]
+  :subject => {
+    :CN => 'somedomain.com',
+    :O => 'My Org',
+    :L => 'City',
+    :ST => 'State',
+    :C => 'US'
+  }
 )
 # assume config from yaml load above
 ca = R509::CertificateAuthority::Signer.new(config)
@@ -354,13 +373,13 @@ Override a CSR's subject or SAN names when signing
 
 ```ruby
 csr = R509::CSR.new(
-  :subject => [
-    ['CN','somedomain.com'],
-    ['O','My Org'],
-    ['L','City'],
-    ['ST','State'],
-    ['C','US']
-  ]
+  :subject => {
+    :CN => 'somedomain.com',
+    :O => 'My Org',
+    :L => 'City',
+    :ST => 'State',
+    :C => 'US'
+  }
 )
 subject = csr.subject.dup
 san_names = ["sannames.com","domain2.com","128.128.128.128"]
@@ -392,7 +411,7 @@ subject.C = "US"
 san_names = ["domain2.com","128.128.128.128"]
 ext = []
 ext << R509::Cert::Extensions::BasicConstraints.new(:ca => false)
-ext << R509::Cert::Extensions::SubjectAlternativeName.new(:names => san_names)
+ext << R509::Cert::Extensions::SubjectAlternativeName.new(:value => san_names)
 # assume config from yaml load above
 ca = R509::CertificateAuthority::Signer.new(config)
 cert = ca.sign(
@@ -404,24 +423,24 @@ cert = ca.sign(
 ```
 
 ###CertificateAuthority::ProfileEnforcer
-The ProfileEnforcer takes in a CAConfig with CertProfiles. You then call #enforce to have it enforce a profile's constraints and build the specified set of extensions.
+The ProfileEnforcer takes in a CAConfig with CertProfiles. You then call #enforce to have it enforce a profile's constraints. Constraints include subject DN, message_digest, subject alternative names, and extensions.
 
 ```ruby
 # assume config from yaml load above
 csr = R509::CSR.new(
-  :subject => [
-    ['CN','somedomain.com'],
-    ['O','My Org'],
-    ['L','City'],
-    ['ST','State'],
-    ['C','US']
-  ]
+  :subject => {
+    :CN => 'somedomain.com',
+    :O => 'My Org',
+    :L => 'City',
+    :ST => 'State',
+    :C => 'US'
+  }
 )
 enforcer = R509::CertificateAuthority::ProfileEnforcer.new(config)
 scrubbed_data = enforcer.enforce(
   :csr => csr,
   :profile_name => "server",
-  :subject => [['CN','rewritten.com']],
+  :subject => {:CN => 'rewritten.com'},
   :san_names => ['r509.org'],
   :message_digest => 'SHA256'
 )
@@ -430,6 +449,23 @@ signer = R509::CertificateAuthority::Signer.new(config)
 cert = signer.sign(scrubbed_data)
 
 ```
+
+###CRL Administration
+The CRL administrator object takes an ```R509::Config::CAConfig``` and an optional ```R509::CRL::ReaderWriter``` subclass. By default it will use an ```R509::CRL::FileReaderWriter``` class that assumes the presence of ```crl_number_file``` and ```crl_list_file``` in the CAConfig.
+
+```ruby
+admin = R509::CRL::Administrator.new(config)
+```
+
+####Revoking a certificate
+To revoke a certificate and generate a new CRL
+
+```ruby
+admin.revoke_cert(serial)
+crl = admin.generate_crl
+```
+
+This revokes on the root configured by the CAConfig that was passed into the Administrator constructor.
 
 ###OID Mapping
 
@@ -487,7 +523,7 @@ There is documentation available for every method and class in r509 available vi
 See the LICENSE file. Licensed under the Apache 2.0 License.
 
 #YAML Config Options
-r509 configs are nested hashes of key:values that define the behavior of each CA. See r509.yaml for a full example config. These options can also be defined programmatically via R509::Config::CAConfig and R509::Config::CertProfile.
+r509 configs are nested hashes that define the behavior of each CA. See r509.yaml for a full example config. These options can also be defined programmatically via R509::Config::CAConfig and R509::Config::CertProfile.
 
 ##ca\_name
 ###ca\_cert
@@ -553,165 +589,86 @@ String value of the message digest to use for signing (both CRL and certificates
 * MD5 (Don't use this unless you have a really, really good reason. Even then, you shouldn't)
 
 ###profiles
-Each CA can have an arbitrary number of issuance profiles (with arbitrary names). For example, a CA named __test\_ca__ might have 3 issuance profiles: server, email, clientserver. Each of these profiles then has a set of options that define the encoded data in the certificate for that profile. If no profiles are defined the root cannot issue certs, but can still issue CRLs.
+Each CA can have an arbitrary number of issuance profiles (with arbitrary names). For example, a CA named __test\_ca__ might have 3 issuance profiles: server, email, clientserver. Each of these profiles then has a set of options that define the encoded extensions in the certificate for that profile. If no profiles are defined the root cannot issue certs, but can still issue CRLs.
 
-####basic\_constraints
-All basic constraints are encoded with the critical bit set to true. The basic constraints config expects a hash with between one and two keys.
+Profiles are defined by an object (R509::Config::CertProfile) and can be serialized to YAML after being built via ```#to_yaml```. This is the suggested way to generate the profile YAML.
 
-#####:ca
-The ca key is required and must be set to true (for an issuing CA) or false (everything else).
+###Example YAML
 
-#####:path\_length
-This option is only allowed if ca is set to TRUE. path_length allows you to define the maximum number of non-self-issued intermediate certificates that may follow this certificate in a valid certification path. For example, if you set this value to 0 then the certificate issued can only issue end entity certificates, not additional subroots. This must be a non-negative integer (>=0).
+This example YAML would be loaded via ```R509::Config::CAConfigPool.from_yaml```. It has a CA named test_ca and a profile named server.
 
 ```yaml
-basic_constraints:
-  :ca : true
-
-basic_constraints:
-  :ca : false
-
-basic_constraints:
-  :ca : true
-  :path_length: 3
+certificate_authorities:
+  test_ca:
+    ca_cert:
+      cert: /path/to/test_ca.cer
+      key: /path/to/test_ca.key
+    crl_list_file: crl_list_file.txt
+    crl_number_file: crl_number_file.txt
+    crl_validity_hours: 168
+    profiles:
+      server:
+        basic_constraints:
+          :ca: false
+        key_usage:
+          :critical: false
+          :value:
+          - digitalSignature
+          - keyEncipherment
+        extended_key_usage:
+          :value:
+          - serverAuth
+        certificate_policies:
+          :value:
+          - :policy_identifier: 2.16.840.1.99999.21.234
+            :cps_uris:
+            - http://example.com/cps
+            - http://haha.com
+            :user_notices:
+            - :explicit_text: this is a great thing
+              :organization: my org
+              :notice_numbers:
+              - 1
+              - 2
+              - 3
+          - :policy_identifier: 2.16.840.1.99999.21.235
+            :cps_uris:
+            - http://example.com/cps2
+            :user_notices:
+            - :explicit_text: this is a bad thing
+              :organization: another org
+              :notice_numbers:
+              - 3
+              - 2
+              - 1
+            - :explicit_text: another user notice
+        subject_item_policy:
+            CN:
+              :policy: required
+            O:
+              :policy: required
+            OU:
+              :policy: match
+              :value: Engineering
+            ST:
+              :policy: required
+            C:
+              :policy: required
+            L:
+              :policy: optional
+        crl_distribution_points:
+          :value:
+          - :type: URI
+            :value: http://crl.domain.com/test_ca.crl
+        authority_info_access:
+          :ocsp_location:
+          - :type: URI
+            :value: http://ocsp.domain.com
+          :ca_issuers_location:
+          - :type: URI
+            :value: http://www.domain.com/my_roots.html
+        default_md: SHA1
+        allowed_mds:
+        - SHA256
+        - SHA1
 ```
-
-####cdp\_location
-An array of CRL distribution points for certificates issued from this CA.
-
-```yaml
-['http://crl.r509.org/myca.crl']
-```
-
-####ocsp\_location
-An array of URIs for client OCSP checks. These strings will be scanned and automatically processed to determine their proper type in the certificate.
-
-```yaml
-['http://ocsp.r509.org']
-```
-
-####ca\_issuers\_location
-An array of ca issuer locations. These strings will be scanned and automatically processed to determine their proper type in the certificate.
-
-```yaml
-['http://www.r509.org/some_roots.html']
-```
-
-####key\_usage
-An array of strings that conform to the OpenSSL naming scheme for available key usage OIDs.
-
-* digitalSignature
-* nonRepudiation
-* keyEncipherment
-* dataEncipherment
-* keyAgreement
-* keyCertSign
-* cRLSign
-* encipherOnly
-* decipherOnly
-
-####extended\_key\_usage
-An array of strings that conform to the OpenSSL naming scheme for available EKU OIDs. The following list of allowed shortnames is taken from the OpenSSL docs. Depending on your OpenSSL version there may be more than this list.
-
-* serverAuth
-* clientAuth
-* codeSigning
-* emailProtection
-* OCSPSigning
-* timeStamping
-* anyExtendedKeyUsage
-* msCodeInd (not part of RFC 5280)
-* msCodeCom (not part of RFC 5280)
-* msCTLSign (not part of RFC 5280)
-* msSGC (not part of RFC 5280)
-* msEFS (not part of RFC 5280)
-* nsSGC (not part of RFC 5280)
-
-####certificate\_policies
-An array of hashes containing policy identifiers, CPS URI(s), and user notice(s)
-
-```yaml
-      - :policy_identifier: 2.16.840.1.99999.21.234
-        :cps_uris:
-        - http://example.com/cps
-```
-
-or
-
-```yaml
-      - :policy_identifier: 2.16.840.1.99999.21.234
-        :cps_uris:
-        - http://example.com/cps
-        - http://haha.com
-        :user_notices:
-        - :explicit_text: this is a great thing
-          :organization: my org
-          :notice_numbers: '1,2,3'
-      - :policy_identifier: 2.16.840.1.99999.21.235
-        :cps_uris:
-        - http://example.com/cps2
-        :user_notices:
-        - :explicit_text: this is a bad thing
-          :organization: another org
-          :notice_numbers: '3,2,1'
-        - :explicit_text: another user notice
-      - :policy_identifier: 2.16.840.1.99999.0
-```
-
-####ocsp\_no\_check
-This is a boolean option that determines whether the OCSPNoCheck extension should be encoded in certificates issued by the profile. This flag is _only_ meaningful on certificates that contain the OCSPSigning EKU.
-
-####inhibit\_any\_policy
-A non-negative integer value. From RFC 5280: "The inhibit anyPolicy extension can be used in certificates issued to CAs.  The inhibit anyPolicy extension indicates that the special anyPolicy OID, with the value { 2 5 29 32 0 }, is not considered an explicit match for other certificate policies except when it appears in an intermediate self-issued CA certificate."
-
-####policy\_constraints
-A hash with two optional keys (one or both may be present). From RFC 5280: "The policy constraints extension can be used in certificates issued to CAs.  The policy constraints extension constrains path validation in two ways.  It can be used to prohibit policy mapping or require that each certificate in a path contain an acceptable policy identifier"
-
-```yaml
-  :require_explicit_policy: 0
-  :inhibit_policy_mapping: 0
-```
-
-###name\_constraints
-From RFC 5280: "The name constraints extension, which MUST be used only in a CA certificate, indicates a name space within which all subject names in subsequent certificates in a certification path MUST be located.  Restrictions apply to the subject distinguished name and apply to subject alternative names.  Restrictions apply only when the specified name form is present.  If no name of the type is in the certificate, the certificate is acceptable.".
-
-This section is made up of a hash that contains permitted and excluded keys. Each (optional) key in turn has an array of hashes that declare a type and value. Types allowed are defined by R509::ASN1::GeneralName.map_type_to_tag. (examples: DNS, URI, IP, email, dirName)
-
-Notes:
- * When supplying IP you _must_ supply a full netmask in addition to an IP. (both IPv4 and IPv6 supported)
- * When supplying dirName the value is an array of arrays structured the same way as input to :subject in R509::CSR.new
-
-```yaml
-  :permitted:
-  - :type: IP
-    :value: 192.168.0.0/255.255.0.0
-  - :type: dirName
-    :value:
-    - - CN
-      - myCN
-    - - O
-      - Org
-  :excluded:
-  - :type: email
-    :value: domain.com
-  - :type: URI
-    :value: .net
-  - :type: DNS
-    :value: test.us
-```
-
-####subject\_item\_policy
-Hash of required/optional subject items. These must be in OpenSSL shortname format. If subject\_item\_policy is excluded from the profile then all subject items will be used. If it is included, __only items listed in the policy will be copied to the certificate__.
-Example:
-
-```yaml
-CN : "required",
-O: "required",
-OU: "optional",
-ST: "required",
-C: "required",
-L: "required",
-emailAddress: "optional"
-```
-
-If you use the R509::OIDMapper you can create new shortnames that are allowed within this directive.

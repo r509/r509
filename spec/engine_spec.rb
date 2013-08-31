@@ -24,9 +24,13 @@ describe R509::Engine do
 
   it "load returns a new engine" do
     OpenSSL::Engine.should_receive(:load)
-    OpenSSL::Engine.should_receive(:by_id).and_return("mocked_engine")
+    engine_double = double('engine')
+    OpenSSL::Engine.should_receive(:by_id).and_yield(engine_double).and_return(engine_double)
+    engine_double.should_receive(:ctrl_cmd).with("SO_PATH", "/some/path")
+    engine_double.should_receive(:ctrl_cmd).with("ID", "mocked")
+    engine_double.should_receive(:ctrl_cmd).with("LOAD")
     engine = R509::Engine.instance.load(:so_path => "/some/path", :id => "mocked")
-    engine.should == 'mocked_engine'
+    engine.should == engine_double
   end
 
   it "load returns pre-existing engine" do

@@ -39,6 +39,20 @@ describe R509::Config::SubjectItemPolicy do
     validated_subject = sip.validate_subject(subject)
     validated_subject.to_s.should == subject.to_s
   end
+  it "builds hash" do
+    args = { "CN" => { :policy => "match", :value => "langui.sh" }, "O" => { :policy => "match", :value => "ooooor"} }
+    sip = R509::Config::SubjectItemPolicy.new(args)
+    # this equality check works because ruby does not compare hash order (which exists in 1.9+)
+    # when doing comparison
+    sip.to_h.should == args
+  end
+  it "builds yaml" do
+    args = { "CN" => { :policy => "match", :value => "langui.sh" }, "O" => { :policy => "match", :value => "ooooor"} }
+    sip = R509::Config::SubjectItemPolicy.new(args)
+    # this equality check works because ruby does not compare hash order (which exists in 1.9+)
+    # when doing comparison
+    YAML.load(sip.to_yaml).should == args
+  end
   it "preserves subject order when applying policies" do
     subject_item_policy = R509::Config::SubjectItemPolicy.new("CN" => { :policy => "required" }, "O" => { :policy => "required" }, "OU" => { :policy => "optional" }, "L" => { :policy => "required" }, "C" => { :policy => "required" })
     subject = R509::Subject.new [["C","US"],["L","Chicago"],["ST","Illinois"],["CN","langui.sh"],["OU","Org Unit"],["O","Org"]]
