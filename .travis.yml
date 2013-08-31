@@ -16,5 +16,23 @@ matrix:
     - rvm: 1.9.3
       env: R509_EC_SUPPORT_DISABLED=true
 before_install:
-  - ./.travis-scripts/ec-patch
+  # instructions for building OpenSSL and Ruby on Ubuntu 12.04 64-bit LTS (current Travis-CI build slaves)
+  # apt-get update
+  # apt-get install build-essential
+  # apt-get source openssl
+  # cd openssl-1.0.1
+  # ./Configure shared no-ec no-idea no-mdc2 no-rc5 zlib enable-tlsext no-ssl2 debian-amd64
+  # make depend && make install
+  # (now make the deb via fpm)
+  # gem install fpm --no-ri --no-rdoc
+  # fpm -s dir -t deb -n ssl-no-ec /usr/local/ssl
+  #
+  # and then install a prepped ruby through rvm made with these commands:
+  # (assumed rvm is installed already)
+  # rvm install ruby-1.9.3-p0 --with-openssl-dir=/usr/local/ssl
+  # rvm prepare ruby-1.9.3-p0 --install -r example.com:/path/to/r509-travis-testing
+  #
+  # Then upload all that stuff to the right places. Fun!
+  #
+  - ./.travis-scripts/setup
   - if [ -n "$R509_EC_SUPPORT_DISABLED" ]; then rvm use ruby-1.9.3-p0 && gem install bundler --no-ri --no-rdoc; fi
