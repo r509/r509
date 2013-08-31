@@ -1,0 +1,9 @@
+#!/usr/bin/env sh
+
+if [ -n "$R509_EC_SUPPORT_DISABLED" ]; then
+    sudo apt-get update
+    sudo apt-get install python-software-properties -y
+    sudo add-apt-repository ppa:paul-l-kehrer/testing -y
+    sudo apt-get update
+    sudo apt-get install libssl1.0.0 libssl-dev -y
+fi
