@@ -14,7 +14,8 @@ module R509::CertificateAuthority
     # @option options :subject [R509::Subject,OpenSSL::X509::Subject,Array] (optional for R509::CSR, required for R509::SPKI)
     # @option options :message_digest [String] the message digest to use for this certificate instead of the default (see R509::MessageDigest::DEFAULT_MD).
     # @option options :extensions [Array] An optional array of R509::Cert::Extensions::* objects. These will be merged with the extensions from the profile. If an extension in this array is also present in the profile, *the supplied extension will override the profile*.
-    # @option options :san_names [Array,R509::ASN1::GeneralNames] List of domains, IPs, email addresses, or URIs to encode as subjectAltNames. The type is determined from the structure of the strings via the R509::ASN1.general_name_parser method. You can also pass an explicit R509::ASN1::GeneralNames object
+    # @option options :not_before [Time] the notBefore for the certificate
+    # @option options :not_after [Time] the notAfter for the certificate
     # @return [Hash] Hash of :message_digest, :subject, :extensions, and :csr/:spki ready to be passed to the Signer
     def build_and_enforce(options)
       profile = @config.profile(options[:profile_name])
@@ -30,6 +31,7 @@ module R509::CertificateAuthority
 
       message_digest = enforce_md(options[:message_digest],profile)
       subject = enforce_subject_item_policy(raw_subject,profile)
+      enforce_not_after(options[:not_after])
 
       extensions = build_and_merge_extensions(options, profile, public_key)
 
@@ -46,7 +48,15 @@ module R509::CertificateAuthority
       }
       return_hash[:csr] = options[:csr] unless options[:csr].nil?
       return_hash[:spki] = options[:spki] unless options[:spki].nil?
+      return_hash[:not_before] = options[:not_before] unless options[:not_before].nil?
+      return_hash[:not_after] = options[:not_after] unless options[:not_after].nil?
       return_hash
+    end
+
+    def enforce_not_after(not_after)
+      if not not_after.nil? and @config.ca_cert.not_after < not_after
+        raise R509::R509Error, 'The requested certificate lifetime would exceed the issuing CA.'
+      end
     end
 
     def enforce_md(requested_md,profile)
@@ -116,35 +126,16 @@ module R509::CertificateAuthority
         :issuer_subject => @config.ca_cert.subject
       )
 
-      extensions << profile.key_usage unless profile.key_usage.nil?
-
-      extensions << profile.extended_key_usage unless profile.extended_key_usage.nil?
-
-      extensions << profile.certificate_policies unless profile.certificate_policies.nil?
-
-      extensions << profile.crl_distribution_points unless profile.crl_distribution_points.nil?
-
-      extensions << profile.authority_info_access unless profile.authority_info_access.nil?
-
-      extensions << profile.inhibit_any_policy unless profile.inhibit_any_policy.nil?
-
-      extensions << profile.policy_constraints unless profile.policy_constraints.nil?
-
-      extensions << profile.name_constraints unless profile.name_constraints.nil?
-
-      extensions << profile.ocsp_no_check unless profile.ocsp_no_check.nil?
-
-      if present?(options[:san_names])
-        gns = R509::ASN1.general_name_parser(options[:san_names])
-        extensions << R509::Cert::Extensions::SubjectAlternativeName.new(:value => gns)
-      end
-
-      extensions
-    end
-
-    # check if an object exists and is not empty
-    def present?(obj)
-      (not obj.nil? and not obj.empty?)
+      extensions << profile.key_usage
+      extensions << profile.extended_key_usage
+      extensions << profile.certificate_policies
+      extensions << profile.crl_distribution_points
+      extensions << profile.authority_info_access
+      extensions << profile.inhibit_any_policy
+      extensions << profile.policy_constraints
+      extensions << profile.name_constraints
+      extensions << profile.ocsp_no_check
+      extensions.compact
     end
 
   end
