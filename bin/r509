@@ -18,7 +18,7 @@ end
 
 if opts[:interactive] == true or opts[:subject].nil? then
   if opts[:type].upcase == "RSA" or opts[:type].upcase == "DSA"
-    print "CSR Bit Strength (2048):"
+    print "CSR Bit Length (2048):"
     bit_length = gets.chomp
     bit_length = (bit_length.to_i > 0)? bit_length.to_i : 2048
   elsif opts[:type].upcase == "EC"
@@ -100,7 +100,7 @@ elsif not opts[:subject].nil?
   csr = R509::CSR.new(
     :subject => subject,
     :bit_length => opts[:bits],
-    :type => opts[:type].downcase.to_sym,
+    :type => opts[:type].upcase,
     :curve_name => opts[:curve_name],
     :message_digest => opts[:message_digest]
   )
@@ -116,12 +116,12 @@ if selfsign > 0
   if opts[:keyout].nil?
     puts csr.key.to_pem
   else
-    File.open(opts[:keyout], 'w') {|f| f.write(csr.key.to_pem) }
+    csr.key.write_pem(opts[:keyout])
   end
   if opts[:out].nil?
     puts cert.to_pem
   else
-    File.open(opts[:out], 'w') {|f| f.write(cert.to_pem) }
+    cert.write_pem(opts[:out])
   end
 
   puts cert.subject
@@ -132,13 +132,13 @@ else
   if opts[:keyout].nil?
     puts csr.key.to_pem
   else
-    File.open(opts[:keyout], 'w') {|f| f.write(csr.key.to_pem) }
+    csr.key.write_pem(opts[:keyout])
   end
 
   if opts[:out].nil?
     puts csr.to_pem
   else
-    File.open(opts[:out], 'w') {|f| f.write(csr.to_pem) }
+    csr.write_pem(opts[:out])
   end
 
   puts csr.subject
