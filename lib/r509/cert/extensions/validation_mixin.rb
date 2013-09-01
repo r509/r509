@@ -25,7 +25,7 @@ module R509
           if not location.nil? and not (location.kind_of?(Array) or location.kind_of?(R509::ASN1::GeneralNames))
             raise ArgumentError, "#{type} must contain an array or R509::ASN1::GeneralNames object if provided"
           end
-          validate_general_name_hash_array(location)
+          validate_general_name_hash_array(location) unless location.nil?
           location
         end
 
@@ -34,7 +34,7 @@ module R509
             if not l.kind_of?(Hash) or l[:type].nil? or l[:value].nil?
               raise ArgumentError, "All elements of the array must be hashes with a :type and :value"
             end
-          end unless not arr.respond_to?(:each)
+          end unless arr.kind_of?(R509::ASN1::GeneralNames)
         end
       end
     end

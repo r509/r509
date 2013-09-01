@@ -37,9 +37,8 @@ module R509
         # This method takes a hash or an existing Extension object to parse
         #
         # @option arg :value [Array,R509::ASN1::GeneralNames] If you supply an Array
-        #   it will be parsed by R509::ASN1.general_name_parser to
-        #   determine the type of each element. If you prefer to specify it yourself you
-        #   can pass a pre-existing GeneralNames object.
+        #   it must contain hashes in the standard GeneralName format (:type and :value).
+        #   You can also pass a pre-existing GeneralNames object
         # @option arg :critical [Boolean] (false)
         def initialize(arg)
           if not R509::Cert::Extensions.is_extension?(arg)
