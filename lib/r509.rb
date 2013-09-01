@@ -1,7 +1,7 @@
 # A module for building an easy to use CA. Includes CSR, Certificate, and CRL support.
 module R509
   require('r509/certificate_authority/signer.rb')
-  require('r509/certificate_authority/cert_builder.rb')
+  require('r509/certificate_authority/options_builder.rb')
   require('r509/csr.rb')
   require('r509/spki.rb')
   require('r509/cert.rb')

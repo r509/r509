@@ -1,6 +1,6 @@
 module R509::CertificateAuthority
   # A class to build hashes to send to the R509::CertificateAuthority::Signer. These are built from R509::Config::CertProfile objects and additional data supplied to the #build_and_enforce method.
-  class CertBuilder
+  class OptionsBuilder
     def initialize(config)
       if not config.kind_of?(R509::Config::CAConfig)
         raise ArgumentError, "You must supply a R509::Config::CAConfig object to this class at instantiation"

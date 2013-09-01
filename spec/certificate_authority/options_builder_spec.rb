@@ -1,10 +1,10 @@
 require 'spec_helper'
 require 'r509/config'
 
-describe R509::CertificateAuthority::CertBuilder do
+describe R509::CertificateAuthority::OptionsBuilder do
 
   it "errors when the object passed is not a CAConfig" do
-    expect { R509::CertificateAuthority::CertBuilder.new("string") }.to raise_error(ArgumentError,"You must supply a R509::Config::CAConfig object to this class at instantiation")
+    expect { R509::CertificateAuthority::OptionsBuilder.new("string") }.to raise_error(ArgumentError,"You must supply a R509::Config::CAConfig object to this class at instantiation")
   end
 
   context "enforces subject item policies" do
@@ -16,7 +16,7 @@ describe R509::CertificateAuthority::CertBuilder do
         :subject_item_policy => subject_item_policy
       )
       config.set_profile("profile",profile)
-      @builder = R509::CertificateAuthority::CertBuilder.new(config)
+      @builder = R509::CertificateAuthority::OptionsBuilder.new(config)
     end
     it "removes disallowed and keeps required/optional items" do
       csr = R509::CSR.new(:subject => [['C','US'],['ST','Illinois'],['L','Chicago'],['O','Paul Kehrer'],['OU','Enginerding'],['CN','langui.sh']], :bit_strength => 1024)
@@ -37,7 +37,7 @@ describe R509::CertificateAuthority::CertBuilder do
       :default_md => "SHA512"
     )
     config.set_profile("profile",profile)
-    builder = R509::CertificateAuthority::CertBuilder.new(config)
+    builder = R509::CertificateAuthority::OptionsBuilder.new(config)
     csr = R509::CSR.new(:csr => TestFixtures::CSR_INVALID_SIGNATURE)
     expect { builder.build_and_enforce(:csr => csr, :profile_name => 'profile') }.to raise_error(R509::R509Error, 'Request signature is invalid.')
     spki = R509::SPKI.new(:spki => TestFixtures::SPKI_INVALID_SIGNATURE)
@@ -55,7 +55,7 @@ describe R509::CertificateAuthority::CertBuilder do
         :basic_constraints => {:ca => false}
       )
       @config.set_profile("profile",profile)
-      builder = R509::CertificateAuthority::CertBuilder.new(@config)
+      builder = R509::CertificateAuthority::OptionsBuilder.new(@config)
       data = builder.build_and_enforce(:csr => @csr, :profile_name => 'profile')
       ext = data[:extensions].select{ |el| el.kind_of?(R509::Cert::Extensions::BasicConstraints) }
       ext.size.should == 1
@@ -65,7 +65,7 @@ describe R509::CertificateAuthority::CertBuilder do
     it "creates subject key identifier" do
       profile = R509::Config::CertProfile.new
       @config.set_profile("profile",profile)
-      builder = R509::CertificateAuthority::CertBuilder.new(@config)
+      builder = R509::CertificateAuthority::OptionsBuilder.new(@config)
       data = builder.build_and_enforce(:csr => @csr, :profile_name => 'profile')
       data[:extensions].select{ |el| el.kind_of?(R509::Cert::Extensions::SubjectKeyIdentifier) }.size.should == 1
     end
@@ -73,7 +73,7 @@ describe R509::CertificateAuthority::CertBuilder do
     it "creates authority key identifier" do
       profile = R509::Config::CertProfile.new
       @config.set_profile("profile",profile)
-      builder = R509::CertificateAuthority::CertBuilder.new(@config)
+      builder = R509::CertificateAuthority::OptionsBuilder.new(@config)
       data = builder.build_and_enforce(:csr => @csr, :profile_name => 'profile')
       data[:extensions].select{ |el| el.kind_of?(R509::Cert::Extensions::AuthorityKeyIdentifier) }.size.should == 1
     end
@@ -83,7 +83,7 @@ describe R509::CertificateAuthority::CertBuilder do
         :key_usage => { :value => ['keyEncipherment'] }
       )
       @config.set_profile("profile",profile)
-      builder = R509::CertificateAuthority::CertBuilder.new(@config)
+      builder = R509::CertificateAuthority::OptionsBuilder.new(@config)
       data = builder.build_and_enforce(:csr => @csr, :profile_name => 'profile')
       ext = data[:extensions].select{ |el| el.kind_of?(R509::Cert::Extensions::KeyUsage) }
       ext.size.should == 1
@@ -95,7 +95,7 @@ describe R509::CertificateAuthority::CertBuilder do
         :extended_key_usage => {:value => ['serverAuth'] }
       )
       @config.set_profile("profile",profile)
-      builder = R509::CertificateAuthority::CertBuilder.new(@config)
+      builder = R509::CertificateAuthority::OptionsBuilder.new(@config)
       data = builder.build_and_enforce(:csr => @csr, :profile_name => 'profile')
       ext = data[:extensions].select{ |el| el.kind_of?(R509::Cert::Extensions::ExtendedKeyUsage) }
       ext.size.should == 1
@@ -107,7 +107,7 @@ describe R509::CertificateAuthority::CertBuilder do
         :certificate_policies => {:value => [{:policy_identifier => "2.16.840.1.99999.21.234"}] }
       )
       @config.set_profile("profile",profile)
-      builder = R509::CertificateAuthority::CertBuilder.new(@config)
+      builder = R509::CertificateAuthority::OptionsBuilder.new(@config)
       data = builder.build_and_enforce(:csr => @csr, :profile_name => 'profile')
       data[:extensions].select{ |el| el.kind_of?(R509::Cert::Extensions::CertificatePolicies) }.size.should == 1
     end
@@ -118,7 +118,7 @@ describe R509::CertificateAuthority::CertBuilder do
         :crl_distribution_points => cdp
       )
       @config.set_profile("profile",profile)
-      builder = R509::CertificateAuthority::CertBuilder.new(@config)
+      builder = R509::CertificateAuthority::OptionsBuilder.new(@config)
       data = builder.build_and_enforce(:csr => @csr, :profile_name => 'profile')
       data[:extensions].select{ |el| el.kind_of?(R509::Cert::Extensions::CRLDistributionPoints) }.size.should == 1
     end
@@ -130,7 +130,7 @@ describe R509::CertificateAuthority::CertBuilder do
         :authority_info_access => aia
       )
       @config.set_profile("profile",profile)
-      builder = R509::CertificateAuthority::CertBuilder.new(@config)
+      builder = R509::CertificateAuthority::OptionsBuilder.new(@config)
       data = builder.build_and_enforce(:csr => @csr, :profile_name => 'profile')
       data[:extensions].select{ |el| el.kind_of?(R509::Cert::Extensions::AuthorityInfoAccess) }.size.should == 1
     end
@@ -140,7 +140,7 @@ describe R509::CertificateAuthority::CertBuilder do
         :inhibit_any_policy => { :value => 1 }
       )
       @config.set_profile("profile",profile)
-      builder = R509::CertificateAuthority::CertBuilder.new(@config)
+      builder = R509::CertificateAuthority::OptionsBuilder.new(@config)
       data = builder.build_and_enforce(:csr => @csr, :profile_name => 'profile')
       data[:extensions].select{ |el| el.kind_of?(R509::Cert::Extensions::InhibitAnyPolicy) }.size.should == 1
     end
@@ -150,7 +150,7 @@ describe R509::CertificateAuthority::CertBuilder do
         :policy_constraints => {:inhibit_policy_mapping => 1}
       )
       @config.set_profile("profile",profile)
-      builder = R509::CertificateAuthority::CertBuilder.new(@config)
+      builder = R509::CertificateAuthority::OptionsBuilder.new(@config)
       data = builder.build_and_enforce(:csr => @csr, :profile_name => 'profile')
       data[:extensions].select{ |el| el.kind_of?(R509::Cert::Extensions::PolicyConstraints) }.size.should == 1
     end
@@ -160,7 +160,7 @@ describe R509::CertificateAuthority::CertBuilder do
         :name_constraints => { :permitted => [{:type => "URI", :value => "domain.com"}] }
       )
       @config.set_profile("profile",profile)
-      builder = R509::CertificateAuthority::CertBuilder.new(@config)
+      builder = R509::CertificateAuthority::OptionsBuilder.new(@config)
       data = builder.build_and_enforce(:csr => @csr, :profile_name => 'profile')
       data[:extensions].select{ |el| el.kind_of?(R509::Cert::Extensions::NameConstraints) }.size.should == 1
     end
@@ -170,7 +170,7 @@ describe R509::CertificateAuthority::CertBuilder do
         :ocsp_no_check => {:value => true }
       )
       @config.set_profile("profile",profile)
-      builder = R509::CertificateAuthority::CertBuilder.new(@config)
+      builder = R509::CertificateAuthority::OptionsBuilder.new(@config)
       data = builder.build_and_enforce(:csr => @csr, :profile_name => 'profile')
       data[:extensions].select{ |el| el.kind_of?(R509::Cert::Extensions::OCSPNoCheck) }.size.should == 1
     end
@@ -185,7 +185,7 @@ describe R509::CertificateAuthority::CertBuilder do
         :key_usage => { :value => ['digitalSignature'] }
       )
       @config.set_profile("profile",profile)
-      @builder = R509::CertificateAuthority::CertBuilder.new(@config)
+      @builder = R509::CertificateAuthority::OptionsBuilder.new(@config)
     end
 
     it "adds extensions that don't exist in the profile" do
@@ -214,7 +214,7 @@ describe R509::CertificateAuthority::CertBuilder do
         :default_md => "SHA512"
       )
       config.set_profile("profile",profile)
-      @builder = R509::CertificateAuthority::CertBuilder.new(config)
+      @builder = R509::CertificateAuthority::OptionsBuilder.new(config)
       @csr = R509::CSR.new(:csr => TestFixtures::CSR)
     end
     it "issues with all digest types" do
@@ -239,7 +239,7 @@ describe R509::CertificateAuthority::CertBuilder do
         :default_md => 'sha1'
       )
       config.set_profile("profile",profile)
-      @builder = R509::CertificateAuthority::CertBuilder.new(config)
+      @builder = R509::CertificateAuthority::OptionsBuilder.new(config)
       @csr = R509::CSR.new(:csr => TestFixtures::CSR)
     end
     it "passes a disallowed hash" do
@@ -265,7 +265,7 @@ describe R509::CertificateAuthority::CertBuilder do
         :default_md => 'sha1'
       )
       config.set_profile("profile",profile)
-      @builder = R509::CertificateAuthority::CertBuilder.new(config)
+      @builder = R509::CertificateAuthority::OptionsBuilder.new(config)
       @csr = R509::CSR.new(:csr => TestFixtures::CSR)
     end
 

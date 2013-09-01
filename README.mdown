@@ -422,8 +422,8 @@ cert = ca.sign(
 
 ```
 
-###CertificateAuthority::CertBuilder
-The CertBuilder takes in a CAConfig with CertProfiles. You then call ```#build_and_enforce``` to have it create a hash that can be passed to ``R509::CertificateAuthority::Signer#sign```. The CertBuilder is responsible for enforcing restrictions on subject DN (via SubjectItemPolicy), determing allowed message digest, and adding a profile's extensions.
+###CertificateAuthority::OptionsBuilder
+The OptionsBuilder takes in a CAConfig with CertProfiles. You then call ```#build_and_enforce``` to have it create a hash that can be passed to ``R509::CertificateAuthority::Signer#sign```. The OptionsBuilder is responsible for enforcing restrictions on subject DN (via SubjectItemPolicy), determing allowed message digest, and adding a profile's extensions.
 
 ```ruby
 # assume config from yaml load above
@@ -436,7 +436,7 @@ csr = R509::CSR.new(
     :C => 'US'
   }
 )
-builder = R509::CertificateAuthority::CertBuilder.new(config)
+builder = R509::CertificateAuthority::OptionsBuilder.new(config)
 scrubbed_data = builder.build_and_enforce(
   :csr => csr,
   :profile_name => "server",
@@ -454,7 +454,7 @@ You can optionally supply an array of R509::Cert::Extensions::* objects to the b
 
 ```ruby
 # assume pre-existing config and csr from above
-builder = R509::CertificateAuthority::CertBuilder.new(config)
+builder = R509::CertificateAuthority::OptionsBuilder.new(config)
 scrubbed_data = builder.build_and_enforce(
   :csr => csr,
   :profile_name => "server",
