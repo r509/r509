@@ -11,11 +11,8 @@ module R509
       if filename_or_io.respond_to?(:write)
         filename_or_io.write(data)
       else
-        begin
-          file = File.open(filename_or_io, 'wb:ascii-8bit')
-          return file.write(data)
-        ensure
-          file.close()
+        return File.open(filename_or_io, mode) do |f|
+          f.write(data)
         end
       end
     end
@@ -27,11 +24,8 @@ module R509
       if filename_or_io.respond_to?(:read)
         filename_or_io.read()
       else
-        begin
-          file = File.open(filename_or_io, 'rb:ascii-8bit')
-          return file.read()
-        ensure
-          file.close() unless file.nil?
+        return File.open(filename_or_io, 'rb:ascii-8bit') do |f|
+          f.read
         end
       end
     end
