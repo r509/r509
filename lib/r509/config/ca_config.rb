@@ -110,16 +110,16 @@ module R509
         #ocsp data
         if opts.has_key?(:ocsp_cert)
           check_ocsp_crl_delegate(opts[:ocsp_cert],'ocsp_cert')
+          @ocsp_cert = opts[:ocsp_cert]
         end
-        @ocsp_cert = opts[:ocsp_cert] unless opts[:ocsp_cert].nil?
         @ocsp_chain = opts[:ocsp_chain] if opts[:ocsp_chain].kind_of?(Array)
         @ocsp_validity_hours = opts[:ocsp_validity_hours] || DEFAULT_OCSP_VALIDITY_HOURS
         @ocsp_start_skew_seconds = opts[:ocsp_start_skew_seconds] || DEFAULT_OCSP_START_SKEW_SECONDS
 
         if opts.has_key?(:crl_cert)
           check_ocsp_crl_delegate(opts[:crl_cert],'crl_cert')
+          @crl_cert = opts[:crl_cert]
         end
-        @crl_cert = opts[:crl_cert] unless opts[:crl_cert].nil?
         @crl_validity_hours = opts[:crl_validity_hours] || DEFAULT_CRL_VALIDITY_HOURS
         @crl_start_skew_seconds = opts[:crl_start_skew_seconds] || DEFAULT_CRL_START_SKEW_SECONDS
         @crl_number_file = opts[:crl_number_file] || nil
@@ -241,10 +241,19 @@ module R509
           opts[:crl_number_file] = (ca_root_path + conf['crl_number_file']).to_s
         end
 
+        opts[:profiles] = self.load_profiles(conf['profiles'])
 
+        # Create the instance.
+        self.new(opts)
+      end
+
+      # Used by load_from_hash
+      #
+      # @param profiles [Hash] Hash of profiles
+      # @return [Hash] hash of parsed profiles
+      def self.load_profiles(profiles)
         profs = {}
-        conf['profiles'].keys.each do |profile|
-          data = conf['profiles'][profile]
+        profiles.each do |profile,data|
           if not data["subject_item_policy"].nil?
             subject_item_policy = R509::Config::SubjectItemPolicy.new(data["subject_item_policy"])
           end
@@ -261,11 +270,8 @@ module R509
                              :default_md => data["default_md"],
                              :allowed_mds => data["allowed_mds"],
                              :subject_item_policy => subject_item_policy)
-        end unless conf['profiles'].nil?
-        opts[:profiles] = profs
-
-        # Create the instance.
-        self.new(opts)
+        end unless profiles.nil?
+        profs
       end
 
       # Loads the named configuration config from a yaml file.

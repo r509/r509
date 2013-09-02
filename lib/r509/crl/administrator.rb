@@ -102,36 +102,21 @@ module R509
       def generate_crl(last_update=Time.at(Time.now.to_i)-@config.crl_start_skew_seconds,next_update=Time.at(Time.now)+@config.crl_validity_hours*3600)
         # Time.at(Time.now.to_i) removes sub-second precision. Subsecond precision is irrelevant
         # for CRL update times and makes testing harder.
-        crl = OpenSSL::X509::CRL.new
-        crl.version = 1
-        crl.last_update = last_update
-        crl.next_update = next_update
-        crl.issuer = @config.crl_cert.subject.name
+        crl = create_crl_object(last_update,next_update)
 
         self.revoked_certs.each do |serial, reason, revoke_time|
           revoked = OpenSSL::X509::Revoked.new
           revoked.serial = OpenSSL::BN.new serial.to_s
           revoked.time = Time.at(revoke_time)
           if not reason.nil?
-            enum = OpenSSL::ASN1::Enumerated(reason) #see reason codes below
+            enum = OpenSSL::ASN1::Enumerated(reason)
             ext = OpenSSL::X509::Extension.new("CRLReason", enum)
             revoked.add_extension(ext)
           end
-          #now add it to the crl
+          # now add it to the crl
           crl.add_revoked(revoked)
         end
 
-        ef = OpenSSL::X509::ExtensionFactory.new
-        ef.issuer_certificate = @config.crl_cert.cert
-        ef.crl = crl
-        crl_number = increment_crl_number
-        crlnum = OpenSSL::ASN1::Integer(crl_number)
-        crl.add_extension(OpenSSL::X509::Extension.new("crlNumber", crlnum))
-        extensions = []
-        extensions << ["authorityKeyIdentifier", "keyid", false]
-        extensions.each{|oid, value, critical|
-          crl.add_extension(ef.create_extension(oid, value, critical))
-        }
         crl.sign(@config.crl_cert.key.key, @crl_md.digest)
         R509::CRL::SignedList.new(crl)
       end
@@ -147,6 +132,26 @@ module R509
       end
 
       private
+
+      def create_crl_object(last_update,next_update)
+        crl = OpenSSL::X509::CRL.new
+        crl.version = 1
+        crl.last_update = last_update
+        crl.next_update = next_update
+        crl.issuer = @config.crl_cert.subject.name
+        ef = OpenSSL::X509::ExtensionFactory.new
+        ef.issuer_certificate = @config.crl_cert.cert
+        ef.crl = crl
+        crl_number = increment_crl_number
+        crlnum = OpenSSL::ASN1::Integer(crl_number)
+        crl.add_extension(OpenSSL::X509::Extension.new("crlNumber", crlnum))
+        extensions = []
+        extensions << ["authorityKeyIdentifier", "keyid", false]
+        extensions.each{|oid, value, critical|
+          crl.add_extension(ef.create_extension(oid, value, critical))
+        }
+        crl
+      end
 
       # Increments the crl_number.
       # @return [Integer] the new CRL number
