@@ -94,7 +94,7 @@ shared_examples_for "signing" do |selfsign|
     else
       cert = @ca.sign(@options)
     end
-    cert.serial.to_s.size.should >= 45
+    cert.serial.to_s.size.should be >= 45
     cert.serial.to_s.index(time).should_not be_nil
   end
 
@@ -195,6 +195,22 @@ describe R509::CertificateAuthority::Signer do
 
     it_validates "signing", false
     it_validates "signing", true # selfsign
+
+    context "key in signed cert" do
+      it "returns key when CSR contains key" do
+        cert = R509::CertificateAuthority::Signer.selfsign(:csr => @csr)
+        cert.key.should_not be_nil
+        cert.key.should == @csr.key
+        cert = @ca.sign(:csr => @csr)
+        cert.key.should_not be_nil
+        cert.key.should == @csr.key
+      end
+      it "does not return key when CSR has no key" do
+        csr = R509::CSR.new(:csr => TestFixtures::CSR)
+        cert = @ca.sign(:csr => csr)
+        cert.key.should be_nil
+      end
+    end
   end
 
   context "RSA SPKI + CA" do
@@ -206,6 +222,13 @@ describe R509::CertificateAuthority::Signer do
     end
 
     it_validates "signing", false
+
+    context "key in signed cert" do
+      it "does not return key with SPKI" do
+        cert = @ca.sign(:spki => @spki, :subject => R509::Subject.new(:CN => 'test'))
+        cert.key.should be_nil
+      end
+    end
   end
 
   context "Elliptic Curve CSR + CA", :ec => true do
