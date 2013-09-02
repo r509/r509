@@ -34,3 +34,9 @@ before_install:
   #
   - ./.travis-scripts/setup
   - if [ -n "$R509_EC_SUPPORT_DISABLED" ]; then rvm use ruby-1.9.3-p0 && gem install bundler --no-ri --no-rdoc; fi
+notifications:
+  irc:
+    channels:
+      - "irc.freenode.org#r509"
+    use_notice: true
+    skip_join: true
