@@ -40,3 +40,5 @@ notifications:
       - "irc.freenode.org#r509"
     use_notice: true
     skip_join: true
+    on_success: always
+    on_failure: always
