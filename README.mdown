@@ -1,6 +1,9 @@
 #r509 [![Build Status](https://secure.travis-ci.org/reaperhulk/r509.png)](http://travis-ci.org/reaperhulk/r509) [![Coverage Status](https://coveralls.io/repos/reaperhulk/r509/badge.png?branch=master)](https://coveralls.io/r/reaperhulk/r509?branch=master)
 r509 is a Ruby gem built using OpenSSL that is designed to ease management of a public key infrastructure. The r509 API facilitates easy creation of CSRs, signing of certificates, revocation (CRL/OCSP), and much more. Together with projects like [r509-ocsp-responder](https://github.com/reaperhulk/r509-ocsp-responder) and [r509-ca-http](https://github.com/sirsean/r509-ca-http) it is intended to be a complete [RFC 5280](http://www.ietf.org/rfc/rfc5280.txt)-compliant certificate authority for use in production environments.
 
+##Why?
+Certificates are hard, and the Ruby OpenSSL APIs aren't easy to use (because they hew closely to OpenSSL itself). Additionally, as SSL/TLS has aged a variety of best practices and workarounds around certificate issuance have grown up around it that are not easy to discover. r509 is an attempt to build a straightforward API that allows you to do things as simple as parsing a certificate all the way up to operating an entire certificate authority.
+
 ##Requirements
 
 r509 requires the Ruby OpenSSL bindings as well as yaml support (present by default in modern Ruby builds). It is recommended that you compile Ruby against OpenSSL 1.0.0+ (with elliptic curve support enabled). Red Hat-derived distributions ship with EC disabled in OpenSSL, so if you need EC support you will need to recompile.
@@ -15,17 +18,7 @@ rake gem:build
 rake gem:install
 ```
 
-##Running Tests/Building Gem
-If you want to run the tests for r509 you'll need rspec. Additionally, you may want to install rcov/simplecov (ruby 1.8/1.9 respectively) and yard for running the code coverage and documentation tasks in the Rakefile. ```rake -T``` for a complete list of rake tasks available.
-
-##Continuous Integration
-We run continuous integration tests (using Travis-CI) against 1.9.3, 2.0.0, ruby-head, and rubinius(rbx) 2.0 in 1.9 mode. 1.8.7 is no longer a supported configuration due to issues with its elliptic curve methods. 0.8.1 was the last official r509 release with 1.8.7 support. It is highly recommended that you use Ruby 1.9.3 or later.
-
-##Executable
-
-Inside the gem there is a binary named ```r509```. Type ```r509 -h``` to see a list of options.
-
-##Basic Certificate Authority Howto
+##Basic Certificate Authority Tutorial
 [This guide](http://langui.sh/2012/11/02/building-a-ca-r509-howto/) provides instructions on building a basic CA using r509, [r509-ca-http](https://github.com/sirsean/r509-ca-http), and [r509-ocsp-responder](https://github.com/reaperhulk/r509-ocsp-responder). In it you will learn how to create a root, set up the configuration profiles, issue certificates, revoke certificates, and see responses from an OCSP responder.
 
 ##Usage
@@ -687,3 +680,13 @@ certificate_authorities:
         - SHA256
         - SHA1
 ```
+
+##Running Tests/Building Gem
+If you want to run the tests for r509 you'll need rspec. Additionally, you should install simplecov and yard for running the code coverage and documentation tasks in the Rakefile. ```rake -T``` for a complete list of rake tasks available.
+
+##Continuous Integration
+We run continuous integration tests (using Travis-CI) against 1.9.3, 2.0.0, ruby-head, and rubinius(rbx) 2.0 in 1.9 mode. 1.8.7 is no longer a supported configuration due to issues with its elliptic curve methods. 0.8.1 was the last official r509 release with 1.8.7 support. It is highly recommended that you use Ruby 1.9.3 or later.
+
+##Executable
+
+Inside the gem there is a binary named ```r509```. Type ```r509 -h``` to see a list of options.
