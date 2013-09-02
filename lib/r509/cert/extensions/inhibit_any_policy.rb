@@ -58,19 +58,11 @@ module R509
         end
 
         def build_extension(arg)
-          validate_inhibit_any_policy(arg[:value])
+          validate_non_negative_integer("Inhibit any policy",arg[:value])
           ef = OpenSSL::X509::ExtensionFactory.new
           critical = R509::Cert::Extensions.calculate_critical(arg[:critical], true)
           # must be set critical per RFC 5280
           return ef.create_extension("inhibitAnyPolicy",arg[:value].to_s,critical)
-        end
-
-        # validates inhibit any policy
-        def validate_inhibit_any_policy(iap)
-          if not iap.nil?
-            validate_non_negative_integer("Inhibit any policy",iap)
-          end
-          iap
         end
       end
     end

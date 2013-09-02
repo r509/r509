@@ -147,20 +147,17 @@ module R509
         end
 
         def validate_name_constraints(nc)
-          if not nc.nil?
-            if not nc.kind_of?(Hash)
-              raise ArgumentError, "name_constraints must be provided as a hash"
-            end
-            [:permitted,:excluded].each do |key|
-              if not nc[key].nil?
-                validate_name_constraints_elements(key,nc[key])
-              end
-            end
-            if (nc[:permitted].nil? or nc[:permitted].empty?) and (nc[:excluded].nil? or nc[:excluded].empty?)
-              raise ArgumentError, "If name_constraints are supplied you must have at least one valid :permitted or :excluded element"
+          if not nc.kind_of?(Hash)
+            raise ArgumentError, "name_constraints must be provided as a hash"
+          end
+          [:permitted,:excluded].each do |key|
+            if not nc[key].nil?
+              validate_name_constraints_elements(key,nc[key])
             end
           end
-          nc
+          if (nc[:permitted].nil? or nc[:permitted].empty?) and (nc[:excluded].nil? or nc[:excluded].empty?)
+            raise ArgumentError, "If name_constraints are supplied you must have at least one valid :permitted or :excluded element"
+          end
         end
 
         def validate_name_constraints_elements(type,arr)

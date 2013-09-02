@@ -103,21 +103,18 @@ module R509
         end
 
         def validate_policy_constraints(pc)
-          if not pc.nil?
-            if not pc.kind_of?(Hash)
-              raise ArgumentError, 'Policy constraints must be provided as a hash with at least one of the two allowed keys: :inhibit_policy_mapping and :require_explicit_policy'
-            end
-            if not pc[:inhibit_policy_mapping].nil?
-              ipm = validate_non_negative_integer("inhibit_policy_mapping",pc[:inhibit_policy_mapping])
-            end
-            if not pc[:require_explicit_policy].nil?
-              rep = validate_non_negative_integer("require_explicit_policy",pc[:require_explicit_policy])
-            end
-            if not ipm and not rep
-              raise ArgumentError, 'Policy constraints must have at least one of two keys: :inhibit_policy_mapping and :require_explicit_policy and the value must be non-negative'
-            end
+          if not pc.kind_of?(Hash)
+            raise ArgumentError, 'Policy constraints must be provided as a hash with at least one of the two allowed keys: :inhibit_policy_mapping and :require_explicit_policy'
           end
-          pc
+          if not pc[:inhibit_policy_mapping].nil?
+            ipm = validate_non_negative_integer("inhibit_policy_mapping",pc[:inhibit_policy_mapping])
+          end
+          if not pc[:require_explicit_policy].nil?
+            rep = validate_non_negative_integer("require_explicit_policy",pc[:require_explicit_policy])
+          end
+          if not ipm and not rep
+            raise ArgumentError, 'Policy constraints must have at least one of two keys: :inhibit_policy_mapping and :require_explicit_policy and the value must be non-negative'
+          end
         end
       end
     end
