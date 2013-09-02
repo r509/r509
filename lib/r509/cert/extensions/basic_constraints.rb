@@ -31,22 +31,7 @@ module R509
           end
 
           super(arg)
-
-          data = R509::ASN1.get_extension_payload(self)
-          @is_ca = false
-          #   BasicConstraints ::= SEQUENCE {
-          #        cA                      BOOLEAN DEFAULT FALSE,
-          #        pathLenConstraint       INTEGER (0..MAX) OPTIONAL }
-          data.entries.each do |entry|
-            if entry.kind_of?(OpenSSL::ASN1::Boolean)
-              @is_ca = entry.value
-            else
-              # There are only two kinds of entries permitted so anything
-              # else is an integer pathlength. it is in OpenSSL::BN form by default
-              # but that's annoying so let's cast it.
-              @path_length = entry.value.to_i
-            end
-          end
+          parse_extension
         end
 
         # Check whether the extension value would make the parent certificate a CA
@@ -78,6 +63,24 @@ module R509
         end
 
         private
+
+        def parse_extension
+          data = R509::ASN1.get_extension_payload(self)
+          @is_ca = false
+          #   BasicConstraints ::= SEQUENCE {
+          #        cA                      BOOLEAN DEFAULT FALSE,
+          #        pathLenConstraint       INTEGER (0..MAX) OPTIONAL }
+          data.entries.each do |entry|
+            if entry.kind_of?(OpenSSL::ASN1::Boolean)
+              @is_ca = entry.value
+            else
+              # There are only two kinds of entries permitted so anything
+              # else is an integer pathlength. it is in OpenSSL::BN form by default
+              # but that's annoying so let's cast it.
+              @path_length = entry.value.to_i
+            end
+          end
+        end
 
         def build_extension(arg)
           validate_basic_constraints(arg)

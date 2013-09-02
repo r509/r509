@@ -52,22 +52,9 @@ module R509
           if not R509::Cert::Extensions.is_extension?(arg)
             arg = build_extension(arg)
           end
-          super(arg)
 
-          #   id-ce-policyConstraints OBJECT IDENTIFIER ::=  { id-ce 36 }
-          #   PolicyConstraints ::= SEQUENCE {
-          #        requireExplicitPolicy           [0] SkipCerts OPTIONAL,
-          #        inhibitPolicyMapping            [1] SkipCerts OPTIONAL }
-          #
-          #   SkipCerts ::= INTEGER (0..MAX)
-          data = R509::ASN1.get_extension_payload(self)
-          data.each do |pc|
-            if pc.tag == 0
-              @require_explicit_policy = pc.value.bytes.to_a[0]
-            elsif pc.tag == 1
-              @inhibit_policy_mapping = pc.value.bytes.to_a[0]
-            end
-          end
+          super(arg)
+          parse_extension
         end
 
         # @return [Hash]
@@ -86,6 +73,23 @@ module R509
         end
 
         private
+
+        def parse_extension
+          #   id-ce-policyConstraints OBJECT IDENTIFIER ::=  { id-ce 36 }
+          #   PolicyConstraints ::= SEQUENCE {
+          #        requireExplicitPolicy           [0] SkipCerts OPTIONAL,
+          #        inhibitPolicyMapping            [1] SkipCerts OPTIONAL }
+          #
+          #   SkipCerts ::= INTEGER (0..MAX)
+          data = R509::ASN1.get_extension_payload(self)
+          data.each do |pc|
+            if pc.tag == 0
+              @require_explicit_policy = pc.value.bytes.to_a[0]
+            elsif pc.tag == 1
+              @inhibit_policy_mapping = pc.value.bytes.to_a[0]
+            end
+          end
+        end
 
         def build_extension(arg)
           validate_policy_constraints(arg)

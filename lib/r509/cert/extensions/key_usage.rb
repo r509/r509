@@ -70,72 +70,11 @@ module R509
         #   )
         def initialize(arg)
           if not R509::Cert::Extensions.is_extension?(arg)
-            validate_usage(arg)
-            ef = OpenSSL::X509::ExtensionFactory.new
-            critical = R509::Cert::Extensions.calculate_critical(arg[:critical], false)
-            arg = ef.create_extension("keyUsage", arg[:value].join(","),critical)
+            arg = build_extension(arg)
           end
 
           super(arg)
-
-          data = R509::ASN1.get_extension_payload(self)
-
-          # There are 9 possible bits, which means we need 2 bytes
-          # to represent them all. When the last bit is not set
-          # the second byte is not encoded. let's add it back so we can
-          # have the full bitmask for comparison
-          if data.size == 1
-            data = data + "\0"
-          end
-          bit_mask = data.unpack('n')[0] # treat it as a 16-bit unsigned big endian
-          #      KeyUsage ::= BIT STRING {
-          #           digitalSignature        (0),
-          #           nonRepudiation          (1), -- recent editions of X.509 have
-          #                                -- renamed this bit to contentCommitment
-          #           keyEncipherment         (2),
-          #           dataEncipherment        (3),
-          #           keyAgreement            (4),
-          #           keyCertSign             (5),
-          #           cRLSign                 (6),
-          #           encipherOnly            (7),
-          #           decipherOnly            (8) }
-          @allowed_uses = []
-          if bit_mask & 0b1000000000000000 > 0
-            @digital_signature = true
-            @allowed_uses << AU_DIGITAL_SIGNATURE
-          end
-          if bit_mask & 0b0100000000000000 > 0
-            @non_repudiation = true
-            @allowed_uses << AU_NON_REPUDIATION
-          end
-          if bit_mask & 0b0010000000000000 > 0
-            @key_encipherment = true
-            @allowed_uses << AU_KEY_ENCIPHERMENT
-          end
-          if bit_mask & 0b0001000000000000 > 0
-            @data_encipherment = true
-            @allowed_uses << AU_DATA_ENCIPHERMENT
-          end
-          if bit_mask & 0b0000100000000000 > 0
-            @key_agreement = true
-            @allowed_uses << AU_KEY_AGREEMENT
-          end
-          if bit_mask & 0b0000010000000000 > 0
-            @key_cert_sign = true
-            @allowed_uses << AU_KEY_CERT_SIGN
-          end
-          if bit_mask & 0b0000001000000000 > 0
-            @crl_sign = true
-            @allowed_uses << AU_CRL_SIGN
-          end
-          if bit_mask & 0b0000000100000000 > 0
-            @encipher_only = true
-            @allowed_uses << AU_ENCIPHER_ONLY
-          end
-          if bit_mask & 0b0000000010000000 > 0
-            @decipher_only = true
-            @allowed_uses << AU_DECIPHER_ONLY
-          end
+          parse_extension
         end
 
         # Returns true if the given use is allowed by this extension.
@@ -193,6 +132,76 @@ module R509
         # @return [YAML]
         def to_yaml
           self.to_h.to_yaml
+        end
+
+        private
+
+        def build_extension(arg)
+          validate_usage(arg)
+          ef = OpenSSL::X509::ExtensionFactory.new
+          critical = R509::Cert::Extensions.calculate_critical(arg[:critical], false)
+          return ef.create_extension("keyUsage", arg[:value].join(","),critical)
+        end
+
+        def parse_extension
+          @allowed_uses = []
+          data = R509::ASN1.get_extension_payload(self)
+
+          # There are 9 possible bits, which means we need 2 bytes
+          # to represent them all. When the last bit is not set
+          # the second byte is not encoded. let's add it back so we can
+          # have the full bitmask for comparison
+          if data.size == 1
+            data = data + "\0"
+          end
+          bit_mask = data.unpack('n')[0] # treat it as a 16-bit unsigned big endian
+          #      KeyUsage ::= BIT STRING {
+          #           digitalSignature        (0),
+          #           nonRepudiation          (1), -- recent editions of X.509 have
+          #                                -- renamed this bit to contentCommitment
+          #           keyEncipherment         (2),
+          #           dataEncipherment        (3),
+          #           keyAgreement            (4),
+          #           keyCertSign             (5),
+          #           cRLSign                 (6),
+          #           encipherOnly            (7),
+          #           decipherOnly            (8) }
+          if bit_mask & 0b1000000000000000 > 0
+            @digital_signature = true
+            @allowed_uses << AU_DIGITAL_SIGNATURE
+          end
+          if bit_mask & 0b0100000000000000 > 0
+            @non_repudiation = true
+            @allowed_uses << AU_NON_REPUDIATION
+          end
+          if bit_mask & 0b0010000000000000 > 0
+            @key_encipherment = true
+            @allowed_uses << AU_KEY_ENCIPHERMENT
+          end
+          if bit_mask & 0b0001000000000000 > 0
+            @data_encipherment = true
+            @allowed_uses << AU_DATA_ENCIPHERMENT
+          end
+          if bit_mask & 0b0000100000000000 > 0
+            @key_agreement = true
+            @allowed_uses << AU_KEY_AGREEMENT
+          end
+          if bit_mask & 0b0000010000000000 > 0
+            @key_cert_sign = true
+            @allowed_uses << AU_KEY_CERT_SIGN
+          end
+          if bit_mask & 0b0000001000000000 > 0
+            @crl_sign = true
+            @allowed_uses << AU_CRL_SIGN
+          end
+          if bit_mask & 0b0000000100000000 > 0
+            @encipher_only = true
+            @allowed_uses << AU_ENCIPHER_ONLY
+          end
+          if bit_mask & 0b0000000010000000 > 0
+            @decipher_only = true
+            @allowed_uses << AU_DECIPHER_ONLY
+          end
         end
       end
     end

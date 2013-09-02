@@ -51,22 +51,9 @@ module R509
           if not R509::Cert::Extensions.is_extension?(arg)
             arg = build_extension(arg)
           end
-          super(arg)
 
-          data = R509::ASN1.get_extension_payload(self)
-          @ocsp= R509::ASN1::GeneralNames.new
-          @ca_issuers= R509::ASN1::GeneralNames.new
-          data.entries.each do |access_description|
-            #   AccessDescription  ::=  SEQUENCE {
-            #           accessMethod          OBJECT IDENTIFIER,
-            #           accessLocation        GeneralName  }
-            case access_description.entries[0].value
-            when "OCSP"
-              @ocsp.add_item(access_description.entries[1])
-            when "caIssuers"
-              @ca_issuers.add_item(access_description.entries[1])
-            end
-          end
+          super(arg)
+          parse_extension
         end
 
         # @return [Hash]
@@ -83,6 +70,23 @@ module R509
         end
 
         private
+
+        def parse_extension
+          data = R509::ASN1.get_extension_payload(self)
+          @ocsp= R509::ASN1::GeneralNames.new
+          @ca_issuers= R509::ASN1::GeneralNames.new
+          data.entries.each do |access_description|
+            #   AccessDescription  ::=  SEQUENCE {
+            #           accessMethod          OBJECT IDENTIFIER,
+            #           accessLocation        GeneralName  }
+            case access_description.entries[0].value
+            when "OCSP"
+              @ocsp.add_item(access_description.entries[1])
+            when "caIssuers"
+              @ca_issuers.add_item(access_description.entries[1])
+            end
+          end
+        end
 
         def build_extension(arg)
           validate_authority_info_access(arg)

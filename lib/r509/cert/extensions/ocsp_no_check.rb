@@ -29,9 +29,7 @@ module R509
         # @option arg :critical [Boolean] (false)
         def initialize(arg)
           if not R509::Cert::Extensions.is_extension?(arg)
-            ef = OpenSSL::X509::ExtensionFactory.new
-            critical = R509::Cert::Extensions.calculate_critical(arg[:critical], false)
-            arg = ef.create_extension("noCheck","yes",critical)
+            arg = build_extension(arg)
           end
           super(arg)
         end
@@ -44,6 +42,13 @@ module R509
         # @return [YAML]
         def to_yaml
           self.to_h.to_yaml
+        end
+
+        private
+        def build_extension(arg)
+          ef = OpenSSL::X509::ExtensionFactory.new
+          critical = R509::Cert::Extensions.calculate_critical(arg[:critical], false)
+          return ef.create_extension("noCheck","yes",critical)
         end
       end
     end

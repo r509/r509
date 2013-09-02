@@ -38,16 +38,9 @@ module R509
           if not R509::Cert::Extensions.is_extension?(arg)
             arg = build_extension(arg)
           end
-          @policies = []
+
           super(arg)
-
-          data = R509::ASN1.get_extension_payload(self)
-
-          # each element of this sequence should be part of a policy + qualifiers
-          #   certificatePolicies ::= SEQUENCE SIZE (1..MAX) OF PolicyInformation
-          data.each do |cp|
-            @policies << PolicyInformation.new(cp)
-          end if data.respond_to?(:each)
+          parse_extension
         end
 
         # @return [Hash]
@@ -64,6 +57,16 @@ module R509
         end
 
         private
+        def parse_extension
+          @policies = []
+          data = R509::ASN1.get_extension_payload(self)
+
+          # each element of this sequence should be part of a policy + qualifiers
+          #   certificatePolicies ::= SEQUENCE SIZE (1..MAX) OF PolicyInformation
+          data.each do |cp|
+            @policies << PolicyInformation.new(cp)
+          end if data.respond_to?(:each)
+        end
 
         def build_extension(arg)
           validate_certificate_policies(arg[:value])

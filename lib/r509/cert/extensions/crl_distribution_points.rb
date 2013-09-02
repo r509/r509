@@ -39,23 +39,9 @@ module R509
           if not R509::Cert::Extensions.is_extension?(arg)
             arg = build_extension(arg)
           end
-          super(arg)
 
-          @general_names= R509::ASN1::GeneralNames.new
-          data = R509::ASN1.get_extension_payload(self)
-          data.entries.each do |distribution_point|
-            #   DistributionPoint ::= SEQUENCE {
-            #        distributionPoint       [0]     DistributionPointName OPTIONAL,
-            #        reasons                 [1]     ReasonFlags OPTIONAL,
-            #        cRLIssuer               [2]     GeneralNames OPTIONAL }
-            #   DistributionPointName ::= CHOICE {
-            #        fullName                [0]     GeneralNames,
-            #        nameRelativeToCRLIssuer [1]     RelativeDistinguishedName }
-            # We're only going to handle DistributionPointName [0] for now
-            # so grab entries[0] and then get the fullName with value[0]
-            # and the value of that ASN1Data with value[0] again
-            @general_names.add_item(distribution_point.entries[0].value[0].value[0])
-          end
+          super(arg)
+          parse_extension
         end
 
         # @return [Hash]
@@ -72,6 +58,24 @@ module R509
         end
 
         private
+
+        def parse_extension
+          @general_names= R509::ASN1::GeneralNames.new
+          data = R509::ASN1.get_extension_payload(self)
+          data.entries.each do |distribution_point|
+            #   DistributionPoint ::= SEQUENCE {
+            #        distributionPoint       [0]     DistributionPointName OPTIONAL,
+            #        reasons                 [1]     ReasonFlags OPTIONAL,
+            #        cRLIssuer               [2]     GeneralNames OPTIONAL }
+            #   DistributionPointName ::= CHOICE {
+            #        fullName                [0]     GeneralNames,
+            #        nameRelativeToCRLIssuer [1]     RelativeDistinguishedName }
+            # We're only going to handle DistributionPointName [0] for now
+            # so grab entries[0] and then get the fullName with value[0]
+            # and the value of that ASN1Data with value[0] again
+            @general_names.add_item(distribution_point.entries[0].value[0].value[0])
+          end
+        end
 
         def build_extension(arg)
           validate_crl_distribution_points(arg)

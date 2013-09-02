@@ -45,12 +45,7 @@ module R509
             arg = build_extension(arg)
           end
           super(arg)
-
-          data = R509::ASN1.get_extension_payload(self)
-          @general_names = R509::ASN1::GeneralNames.new
-          data.entries.each do |gn|
-            @general_names.add_item(gn)
-          end
+          parse_extension
         end
 
         # @return [Hash]
@@ -64,6 +59,13 @@ module R509
         end
 
         private
+        def parse_extension
+          data = R509::ASN1.get_extension_payload(self)
+          @general_names = R509::ASN1::GeneralNames.new
+          data.entries.each do |gn|
+            @general_names.add_item(gn)
+          end
+        end
 
         def build_extension(arg)
           validate_subject_alternative_name(arg)

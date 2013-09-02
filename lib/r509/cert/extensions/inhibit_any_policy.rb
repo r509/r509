@@ -32,18 +32,11 @@ module R509
         # @option arg :critical [Boolean] (true)
         def initialize(arg)
           if not R509::Cert::Extensions.is_extension?(arg)
-            validate_inhibit_any_policy(arg[:value])
-            ef = OpenSSL::X509::ExtensionFactory.new
-            critical = R509::Cert::Extensions.calculate_critical(arg[:critical], true)
-            # must be set critical per RFC 5280
-            arg = ef.create_extension("inhibitAnyPolicy",arg[:value].to_s,critical)
+            arg = build_extension(arg)
           end
-          super(arg)
 
-          #   id-ce-inhibitAnyPolicy OBJECT IDENTIFIER ::=  { id-ce 54 }
-          #   InhibitAnyPolicy ::= SkipCerts
-          #   SkipCerts ::= INTEGER (0..MAX)
-          @value = R509::ASN1.get_extension_payload(self).to_i # returns a non-negative integer
+          super(arg)
+          parse_extension
         end
 
         # @return [Hash]
@@ -57,6 +50,21 @@ module R509
         end
 
         private
+        def parse_extension
+          #   id-ce-inhibitAnyPolicy OBJECT IDENTIFIER ::=  { id-ce 54 }
+          #   InhibitAnyPolicy ::= SkipCerts
+          #   SkipCerts ::= INTEGER (0..MAX)
+          @value = R509::ASN1.get_extension_payload(self).to_i # returns a non-negative integer
+        end
+
+        def build_extension(arg)
+          validate_inhibit_any_policy(arg[:value])
+          ef = OpenSSL::X509::ExtensionFactory.new
+          critical = R509::Cert::Extensions.calculate_critical(arg[:critical], true)
+          # must be set critical per RFC 5280
+          return ef.create_extension("inhibitAnyPolicy",arg[:value].to_s,critical)
+        end
+
         # validates inhibit any policy
         def validate_inhibit_any_policy(iap)
           if not iap.nil?

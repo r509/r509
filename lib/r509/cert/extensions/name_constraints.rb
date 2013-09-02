@@ -68,6 +68,24 @@ module R509
           end
           super(arg)
 
+          parse_extension
+        end
+
+        # @return [Hash]
+        def to_h
+          hash = { :critical => self.critical?  }
+          hash[:permitted] = R509::Cert::Extensions.names_to_h(@permitted.names) unless @permitted.names.empty?
+          hash[:excluded] = R509::Cert::Extensions.names_to_h(@excluded.names) unless @excluded.names.empty?
+          hash
+        end
+
+        # @return [YAML]
+        def to_yaml
+          self.to_h.to_yaml
+        end
+
+        private
+        def parse_extension
           @permitted = R509::ASN1::GeneralNames.new
           @excluded = R509::ASN1::GeneralNames.new
 
@@ -85,21 +103,6 @@ module R509
             end
           end
         end
-
-        # @return [Hash]
-        def to_h
-          hash = { :critical => self.critical?  }
-          hash[:permitted] = R509::Cert::Extensions.names_to_h(@permitted.names) unless @permitted.names.empty?
-          hash[:excluded] = R509::Cert::Extensions.names_to_h(@excluded.names) unless @excluded.names.empty?
-          hash
-        end
-
-        # @return [YAML]
-        def to_yaml
-          self.to_h.to_yaml
-        end
-
-        private
 
         #      id-ce-nameConstraints OBJECT IDENTIFIER ::=  { id-ce 30 }
         #      NameConstraints ::= SEQUENCE {

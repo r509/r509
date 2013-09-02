@@ -44,7 +44,12 @@ module R509
           end
 
           super(arg)
+          parse_extension
+        end
 
+        private
+
+        def parse_extension
           data = R509::ASN1.get_extension_payload(self)
           #   AuthorityKeyIdentifier ::= SEQUENCE {
           #      keyIdentifier             [0] KeyIdentifier           OPTIONAL,
@@ -66,10 +71,7 @@ module R509
               @authority_cert_serial_number = arr.join(":")
             end
           end
-
         end
-
-        private
 
         def build_extension(arg)
           arg[:value] = AKI_EXTENSION_DEFAULT unless not arg[:value].nil?

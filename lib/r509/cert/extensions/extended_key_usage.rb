@@ -65,14 +65,60 @@ module R509
         #   )
         def initialize(arg)
           if not R509::Cert::Extensions.is_extension?(arg)
-            validate_usage(arg)
-            ef = OpenSSL::X509::ExtensionFactory.new
-            critical = R509::Cert::Extensions.calculate_critical(arg[:critical], false)
-            arg = ef.create_extension("extendedKeyUsage", arg[:value].join(","),critical)
+            arg = build_extension(arg)
           end
 
           super(arg)
+          parse_extension
+        end
 
+        # Returns true if the given use is allowed by this extension.
+        # @param [string] friendly_use_name One of the AU_* constants in this class.
+        def allows?( friendly_use_name )
+          @allowed_uses.include?( friendly_use_name )
+        end
+
+        def web_server_authentication?
+          (@web_server_authentication == true)
+        end
+
+        def web_client_authentication?
+          (@web_client_authentication == true)
+        end
+
+        def code_signing?
+          (@code_signing == true)
+        end
+
+        def email_protection?
+          (@email_protection == true)
+        end
+
+        def ocsp_signing?
+          (@ocsp_signing == true)
+        end
+
+        def time_stamping?
+          (@time_stamping == true)
+        end
+
+        def any_extended_key_usage?
+          (@any_extended_key_usage == true)
+        end
+
+        # @return [Hash]
+        def to_h
+          { :value => @allowed_uses, :critical => self.critical?  }
+        end
+
+        # @return [YAML]
+        def to_yaml
+          self.to_h.to_yaml
+        end
+
+        private
+
+        def parse_extension
           @allowed_uses = []
           data = R509::ASN1.get_extension_payload(self)
 
@@ -131,48 +177,11 @@ module R509
           end
         end
 
-        # Returns true if the given use is allowed by this extension.
-        # @param [string] friendly_use_name One of the AU_* constants in this class.
-        def allows?( friendly_use_name )
-          @allowed_uses.include?( friendly_use_name )
-        end
-
-        def web_server_authentication?
-          (@web_server_authentication == true)
-        end
-
-        def web_client_authentication?
-          (@web_client_authentication == true)
-        end
-
-        def code_signing?
-          (@code_signing == true)
-        end
-
-        def email_protection?
-          (@email_protection == true)
-        end
-
-        def ocsp_signing?
-          (@ocsp_signing == true)
-        end
-
-        def time_stamping?
-          (@time_stamping == true)
-        end
-
-        def any_extended_key_usage?
-          (@any_extended_key_usage == true)
-        end
-
-        # @return [Hash]
-        def to_h
-          { :value => @allowed_uses, :critical => self.critical?  }
-        end
-
-        # @return [YAML]
-        def to_yaml
-          self.to_h.to_yaml
+        def build_extension(arg)
+          validate_usage(arg)
+          ef = OpenSSL::X509::ExtensionFactory.new
+          critical = R509::Cert::Extensions.calculate_critical(arg[:critical], false)
+          return ef.create_extension("extendedKeyUsage", arg[:value].join(","),critical)
         end
       end
     end

@@ -23,13 +23,7 @@ module R509
         # @option arg :critical [Boolean] (false)
         def initialize(arg)
           if not R509::Cert::Extensions.is_extension?(arg)
-            validate_subject_key_identifier(arg)
-            ef = OpenSSL::X509::ExtensionFactory.new
-            cert = OpenSSL::X509::Certificate.new
-            cert.public_key = arg[:public_key]
-            ef.subject_certificate = cert
-            critical = R509::Cert::Extensions.calculate_critical(arg[:critical], false)
-            arg = ef.create_extension("subjectKeyIdentifier", SKI_EXTENSION_DEFAULT, critical)
+            arg = build_extension(arg)
           end
           super(arg)
         end
@@ -40,6 +34,16 @@ module R509
         end
 
         private
+        def build_extension(arg)
+          validate_subject_key_identifier(arg)
+          ef = OpenSSL::X509::ExtensionFactory.new
+          cert = OpenSSL::X509::Certificate.new
+          cert.public_key = arg[:public_key]
+          ef.subject_certificate = cert
+          critical = R509::Cert::Extensions.calculate_critical(arg[:critical], false)
+          arg = ef.create_extension("subjectKeyIdentifier", SKI_EXTENSION_DEFAULT, critical)
+        end
+
         def validate_subject_key_identifier(ski)
           if not ski.kind_of?(Hash) or ski[:public_key].nil?
             raise ArgumentError, "You must supply a hash with a :public_key"
