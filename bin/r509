@@ -1,9 +1,9 @@
 #!/usr/bin/env ruby
 require 'rubygems'
 require 'r509'
-require 'trollop'
+require 'r509/trollop'
 
-opts = Trollop::options do
+opts = R509::Trollop::options do
   opt :interactive, "Interactive CSR/self-signed certificate generation. Overrides all flags other than keyout and out."
   opt :subject, "X509 subject / delimited. Example: /CN=test.com/O=Org/C=US/ST=Illinois/L=Chicago", :type => :string
   opt :message_digest, "Message digest to use. sha1, sha224, sha256, sha384, sha512, md5", :type => :string, :default => 'sha1'

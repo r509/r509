@@ -6,7 +6,7 @@ Certificates are hard, and the Ruby OpenSSL APIs aren't easy to use (because the
 
 ##Requirements
 
-r509 requires the Ruby OpenSSL bindings as well as yaml support (present by default in modern Ruby builds). It is recommended that you compile Ruby against OpenSSL 1.0.0+ (with elliptic curve support enabled). Red Hat-derived distributions ship with EC disabled in OpenSSL, so if you need EC support you will need to recompile.
+r509 requires Ruby 1.9.3+ compiled with OpenSSL and YAML support (this is a typical default). It is recommended that you compile Ruby against OpenSSL 1.0.0+ (with elliptic curve support enabled). Red Hat-derived distributions ship with EC disabled in OpenSSL, so if you need EC support you will need to recompile.
 
 ##Installation
 You can install via rubygems with ```gem install r509```
@@ -17,6 +17,16 @@ To install the gem from your own clone (you will need to satisfy the dependencie
 rake gem:build
 rake gem:install
 ```
+
+##Running Tests/Building Gem
+If you want to run the tests for r509 you'll need rspec. Additionally, you should install simplecov and yard for running the code coverage and documentation tasks in the Rakefile. ```rake -T``` for a complete list of rake tasks available.
+
+##Continuous Integration
+We run continuous integration tests (using Travis-CI) against 1.9.3, 2.0.0, ruby-head, and rubinius(rbx) 2.0 in 1.9 mode. 1.8.7 is no longer a supported configuration due to issues with its elliptic curve methods. 0.8.1 was the last official r509 release with 1.8.7 support.
+
+##Executables
+
+r509 ships with a binary named ```r509``` that can generate CSRs, keys, and create self-signed certificates. Type ```r509 -h``` to see a list of options.
 
 ##Basic Certificate Authority Tutorial
 [This guide](http://langui.sh/2012/11/02/building-a-ca-r509-howto/) provides instructions on building a basic CA using r509, [r509-ca-http](https://github.com/sirsean/r509-ca-http), and [r509-ocsp-responder](https://github.com/reaperhulk/r509-ocsp-responder). In it you will learn how to create a root, set up the configuration profiles, issue certificates, revoke certificates, and see responses from an OCSP responder.
@@ -680,13 +690,3 @@ certificate_authorities:
         - SHA256
         - SHA1
 ```
-
-##Running Tests/Building Gem
-If you want to run the tests for r509 you'll need rspec. Additionally, you should install simplecov and yard for running the code coverage and documentation tasks in the Rakefile. ```rake -T``` for a complete list of rake tasks available.
-
-##Continuous Integration
-We run continuous integration tests (using Travis-CI) against 1.9.3, 2.0.0, ruby-head, and rubinius(rbx) 2.0 in 1.9 mode. 1.8.7 is no longer a supported configuration due to issues with its elliptic curve methods. 0.8.1 was the last official r509 release with 1.8.7 support. It is highly recommended that you use Ruby 1.9.3 or later.
-
-##Executable
-
-Inside the gem there is a binary named ```r509```. Type ```r509 -h``` to see a list of options.
