@@ -149,8 +149,9 @@ module R509::CertificateAuthority
         rand = OpenSSL::BN.rand(96,0) # 96 bits is 12 bytes (octets).
         serial = OpenSSL::BN.new((Time.now.to_f*1000000).to_i.to_s + rand.to_s)
         # since second param is 0 the most significant bit must always be 1
-        # this theoretically gives us 95 bits of entropy + microtime, which
-        # adds a non-zero quantity of entropy. depending upon how predictable
+        # this theoretically gives us 95 bits of entropy
+        # (see: http://www.openssl.org/docs/crypto/BN_rand.html) + microtime,
+        # which adds a non-zero quantity of entropy. depending upon how predictable
         # your issuance is, this could range from a reasonably large quantity
         # of entropy to very little
       end
