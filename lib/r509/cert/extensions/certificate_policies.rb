@@ -105,32 +105,18 @@ module R509
 
         # validates the structure of the certificate policies array
         def validate_certificate_policies(policies)
-          if not policies.kind_of?(Array)
-            raise ArgumentError, "Not a valid certificate policy structure. Must be an array of hashes"
-          end
+          raise ArgumentError, "Not a valid certificate policy structure. Must be an array of hashes" unless policies.kind_of?(Array)
+
           policies.each do |policy|
-            if policy[:policy_identifier].nil?
-              raise ArgumentError, "Each policy requires a policy identifier"
-            end
-            if not policy[:cps_uris].nil?
-              if not policy[:cps_uris].respond_to?(:each)
-                raise ArgumentError, "CPS URIs must be an array of strings"
-              end
-            end
+            raise ArgumentError, "Each policy requires a policy identifier" if policy[:policy_identifier].nil?
+            raise ArgumentError, "CPS URIs must be an array of strings" if not policy[:cps_uris].nil? and not policy[:cps_uris].respond_to?(:each)
             if not policy[:user_notices].nil?
-              if not policy[:user_notices].respond_to?(:each)
-                raise ArgumentError, "User notices must be an array of hashes"
-              end
+              raise ArgumentError, "User notices must be an array of hashes" if not policy[:user_notices].respond_to?(:each)
               policy[:user_notices].each do |un|
-                if not un[:organization].nil? and un[:notice_numbers].nil?
-                  raise ArgumentError, "If you provide an organization you must provide notice numbers"
-                end
-                if not un[:notice_numbers].nil? and un[:organization].nil?
-                  raise ArgumentError, "If you provide notice numbers you must provide an organization"
-                end
+                raise ArgumentError, "If you provide an organization you must provide notice numbers" if not un[:organization].nil? and un[:notice_numbers].nil?
+                raise ArgumentError, "If you provide notice numbers you must provide an organization" if not un[:notice_numbers].nil? and un[:organization].nil?
               end
             end
-            policies
           end
         end
       end

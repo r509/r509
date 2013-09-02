@@ -107,26 +107,8 @@ module R509
           raise ArgumentError, ':ca_cert must be of type R509::Cert'
         end
 
-        #ocsp data
-        if opts.has_key?(:ocsp_cert)
-          check_ocsp_crl_delegate(opts[:ocsp_cert],'ocsp_cert')
-          @ocsp_cert = opts[:ocsp_cert]
-        end
-        @ocsp_chain = opts[:ocsp_chain] if opts[:ocsp_chain].kind_of?(Array)
-        @ocsp_validity_hours = opts[:ocsp_validity_hours] || DEFAULT_OCSP_VALIDITY_HOURS
-        @ocsp_start_skew_seconds = opts[:ocsp_start_skew_seconds] || DEFAULT_OCSP_START_SKEW_SECONDS
-
-        if opts.has_key?(:crl_cert)
-          check_ocsp_crl_delegate(opts[:crl_cert],'crl_cert')
-          @crl_cert = opts[:crl_cert]
-        end
-        @crl_validity_hours = opts[:crl_validity_hours] || DEFAULT_CRL_VALIDITY_HOURS
-        @crl_start_skew_seconds = opts[:crl_start_skew_seconds] || DEFAULT_CRL_START_SKEW_SECONDS
-        @crl_number_file = opts[:crl_number_file] || nil
-        @crl_list_file = opts[:crl_list_file] || nil
-        @crl_md = opts[:crl_md] || R509::MessageDigest::DEFAULT_MD
-
-
+        parse_ocsp_data(opts)
+        parse_crl_data(opts)
 
         @profiles = {}
         if opts[:profiles]
@@ -134,7 +116,6 @@ module R509
             set_profile(name, prof)
           end
         end
-
       end
 
       # @return [R509::Cert] either a custom OCSP cert or the ca_cert
@@ -293,6 +274,29 @@ module R509
       end
 
       private
+
+      def parse_ocsp_data(opts)
+        #ocsp data
+        if opts.has_key?(:ocsp_cert)
+          check_ocsp_crl_delegate(opts[:ocsp_cert],'ocsp_cert')
+          @ocsp_cert = opts[:ocsp_cert]
+        end
+        @ocsp_chain = opts[:ocsp_chain] if opts[:ocsp_chain].kind_of?(Array)
+        @ocsp_validity_hours = opts[:ocsp_validity_hours] || DEFAULT_OCSP_VALIDITY_HOURS
+        @ocsp_start_skew_seconds = opts[:ocsp_start_skew_seconds] || DEFAULT_OCSP_START_SKEW_SECONDS
+      end
+
+      def parse_crl_data(opts)
+        if opts.has_key?(:crl_cert)
+          check_ocsp_crl_delegate(opts[:crl_cert],'crl_cert')
+          @crl_cert = opts[:crl_cert]
+        end
+        @crl_validity_hours = opts[:crl_validity_hours] || DEFAULT_CRL_VALIDITY_HOURS
+        @crl_start_skew_seconds = opts[:crl_start_skew_seconds] || DEFAULT_CRL_START_SKEW_SECONDS
+        @crl_number_file = opts[:crl_number_file] || nil
+        @crl_list_file = opts[:crl_list_file] || nil
+        @crl_md = opts[:crl_md] || R509::MessageDigest::DEFAULT_MD
+      end
 
       def build_cert_hash(obj)
         hash = { "cert" => "<add_path>" }
