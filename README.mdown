@@ -530,12 +530,17 @@ These curves are set via ```:curve_name```. The system defaults to using ```secp
 ##Documentation
 There is documentation available for every method and class in r509 available via yardoc. You can view the latest release docs at [r509.org](http://r509.org). If you installed via gem it should be pre-generated in the doc directory. If you cloned this repo, just type ```rake yard``` with the yard gem installed. You will also need the redcarpet and github-markup gems to properly parse the README.md.
 
-##Created by...
-[Paul Kehrer](https://github.com/reaperhulk)
+##Support
+You can [file bugs](https://github.com/reaperhulk/r509/issues), contact me via the methods below, or join the #r509 channel on irc.freenode.net to ask questions.
 
-##Thanks to...
+
+##Created by...
+__Paul Kehrer__ ([Twitter](https://twitter.com/reaperhulk) | [GitHub](https://github.com/reaperhulk))
+
+##Contributors
 * [Sean Schulte](https://github.com/sirsean)
 * [Mike Ryan](https://github.com/justfalter)
+* [Chris Woodbury](https://github.com/woodbusy)
 
 ##License
 See the LICENSE file. Licensed under the Apache 2.0 License.
