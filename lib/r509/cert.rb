@@ -25,7 +25,7 @@ module R509
       elsif opts.has_key?(:pkcs12)
         pkcs12 = OpenSSL::PKCS12.new( opts[:pkcs12], opts[:password] )
         parse_certificate(pkcs12.certificate)
-        key = R509::PrivateKey.new( :key => pkcs12.key )
+        parse_private_key(pkcs12.key)
       elsif not opts.has_key?(:cert)
         raise ArgumentError, 'Must provide :cert or :pkcs12'
       else
@@ -34,13 +34,8 @@ module R509
       end
 
       if opts.has_key?(:key)
-        if opts[:key].kind_of?(R509::PrivateKey)
-          key = opts[:key]
-        else
-          key = R509::PrivateKey.new( :key => opts[:key], :password => opts[:password] )
-        end
+        parse_private_key(opts[:key], opts[:password])
       end
-      associate_private_key(key)
     end
 
     # Helper method to quickly load a cert from the filesystem
@@ -315,7 +310,7 @@ module R509
     # parse a CSR as a certificate. All for Sean
     def csr_check(cert)
       begin
-        csr = OpenSSL::X509::Request.new cert
+        OpenSSL::X509::Request.new cert
         raise ArgumentError, 'Cert provided is actually a certificate signing request.'
       rescue OpenSSL::X509::RequestError
         # do nothing, it shouldn't be a CSR anyway!
@@ -328,13 +323,14 @@ module R509
       @issuer = R509::Subject.new(@cert.issuer)
     end
 
-    def associate_private_key(key)
-      if not key.nil?
-        if not @cert.public_key.to_der == key.public_key.to_der then
-          raise R509Error, 'Key does not match cert.'
-        end
-        @key = key
+    def parse_private_key(key, password=nil)
+      if not key.kind_of?(R509::PrivateKey)
+        key = R509::PrivateKey.new( :key => key, :password => password )
       end
+      if not @cert.public_key.to_der == key.public_key.to_der
+        raise R509Error, 'Key does not match cert.'
+      end
+      @key = key
     end
 
     # Returns the proper instance variable

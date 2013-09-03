@@ -28,53 +28,12 @@ module R509
       if not opts.kind_of?(Hash)
         raise ArgumentError, 'Must provide a hash of options'
       end
-
-      if opts.has_key?(:engine) and opts.has_key?(:key)
-        raise ArgumentError, 'You can\'t pass both :key and :engine'
-      elsif opts.has_key?(:key_name) and not opts.has_key?(:engine)
-        raise ArgumentError, 'When providing a :key_name you MUST provide an :engine'
-      elsif opts.has_key?(:engine) and not opts.has_key?(:key_name)
-        raise ArgumentError, 'When providing an :engine you MUST provide a :key_name'
-      elsif opts.has_key?(:engine) and opts.has_key?(:key_name)
-        if not opts[:engine].kind_of?(OpenSSL::Engine)
-          raise ArgumentError, 'When providing an engine, it must be of type OpenSSL::Engine'
-        end
-        @engine = opts[:engine]
-        @key_name = opts[:key_name]
-      end
+      validate_engine(opts)
 
       if opts.has_key?(:key)
-        password = opts[:password] || nil
-        #OpenSSL::PKey.read solves this begin/rescue garbage but is only
-        #available to Ruby 1.9.3+ and may not solve the EC portion
-        begin
-          @key = OpenSSL::PKey::RSA.new(opts[:key],password)
-        rescue OpenSSL::PKey::RSAError
-          begin
-            @key = OpenSSL::PKey::DSA.new(opts[:key],password)
-          rescue
-            begin
-              @key = OpenSSL::PKey::EC.new(opts[:key],password)
-            rescue
-              raise R509::R509Error, "Failed to load private key. Invalid key or incorrect password."
-            end
-          end
-        end
+        validate_key(opts)
       else
-        bit_length = opts[:bit_length] || opts[:bit_strength] || DEFAULT_STRENGTH
-        type = opts[:type] || DEFAULT_TYPE
-        case type.upcase
-        when "RSA"
-          @key = OpenSSL::PKey::RSA.new(bit_length)
-        when "DSA"
-          @key = OpenSSL::PKey::DSA.new(bit_length)
-        when "EC"
-          curve_name = opts[:curve_name] || DEFAULT_CURVE
-          @key = OpenSSL::PKey::EC.new(curve_name)
-          @key.generate_key
-        else
-          raise ArgumentError, "Must provide #{KNOWN_TYPES.join(", ")} as type when key or engine is nil"
-        end
+        generate_key(opts)
       end
     end
 
@@ -234,6 +193,60 @@ module R509
     # @return [Boolean] true if the key is EC, false otherwise
     def ec?
       self.key.kind_of?(OpenSSL::PKey::EC)
+    end
+
+    private
+
+    def validate_engine(opts)
+      if opts.has_key?(:engine) and opts.has_key?(:key)
+        raise ArgumentError, 'You can\'t pass both :key and :engine'
+      elsif opts.has_key?(:key_name) and not opts.has_key?(:engine)
+        raise ArgumentError, 'When providing a :key_name you MUST provide an :engine'
+      elsif opts.has_key?(:engine) and not opts.has_key?(:key_name)
+        raise ArgumentError, 'When providing an :engine you MUST provide a :key_name'
+      elsif opts.has_key?(:engine) and opts.has_key?(:key_name)
+        if not opts[:engine].kind_of?(OpenSSL::Engine)
+          raise ArgumentError, 'When providing an engine, it must be of type OpenSSL::Engine'
+        end
+        @engine = opts[:engine]
+        @key_name = opts[:key_name]
+      end
+    end
+
+    def validate_key(opts)
+      password = opts[:password] || nil
+      #OpenSSL::PKey.read solves this begin/rescue garbage but is only
+      #available to Ruby 1.9.3+ and may not solve the EC portion
+      begin
+        @key = OpenSSL::PKey::RSA.new(opts[:key],password)
+      rescue OpenSSL::PKey::RSAError
+        begin
+          @key = OpenSSL::PKey::DSA.new(opts[:key],password)
+        rescue
+          begin
+            @key = OpenSSL::PKey::EC.new(opts[:key],password)
+          rescue
+            raise R509::R509Error, "Failed to load private key. Invalid key or incorrect password."
+          end
+        end
+      end
+    end
+
+    def generate_key(opts)
+      bit_length = opts[:bit_length] || opts[:bit_strength] || DEFAULT_STRENGTH
+      type = opts[:type] || DEFAULT_TYPE
+      case type.upcase
+      when "RSA"
+        @key = OpenSSL::PKey::RSA.new(bit_length)
+      when "DSA"
+        @key = OpenSSL::PKey::DSA.new(bit_length)
+      when "EC"
+        curve_name = opts[:curve_name] || DEFAULT_CURVE
+        @key = OpenSSL::PKey::EC.new(curve_name)
+        @key.generate_key
+      else
+        raise ArgumentError, "Must provide #{KNOWN_TYPES.join(", ")} as type when key or engine is nil"
+      end
     end
   end
 end

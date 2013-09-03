@@ -79,29 +79,9 @@ module R509
       def initialize(asn)
         if asn.kind_of?(Hash)
           # this is added via create_item
-          @tag = asn[:tag] || R509::ASN1::GeneralName.map_type_to_tag(asn[:type])
-          @type = R509::ASN1::GeneralName.map_tag_to_type(@tag)
-          @short_type = R509::ASN1::GeneralName.map_tag_to_short_type(@tag)
-          @value = (@tag == 4)? R509::Subject.new(asn[:value]) : asn[:value]
+          parse_hash(asn)
         else
-          @tag = asn.tag
-          @type = R509::ASN1::GeneralName.map_tag_to_type(@tag)
-          @short_type = R509::ASN1::GeneralName.map_tag_to_short_type(@tag)
-          value = asn.value
-          case @tag
-          when 1 then @value = value
-          when 2 then @value = value
-          when 4 then @value = R509::Subject.new(value.first.to_der)
-          when 6 then @value = value
-          when 7
-            if value.size == 4 or value.size == 16
-              @value = parse_ip(value)
-            elsif value.size == 8 #IPv4 with netmask
-              @value = parse_ip(value[0,4],value[4,4])
-            elsif value.size == 32 #IPv6 with netmask
-              @value = parse_ip(value[0,16],value[16,16])
-            end
-          end
+          parse_asn(asn)
         end
       end
 
@@ -196,6 +176,34 @@ module R509
       end
 
       private
+
+      def parse_hash(asn)
+        @tag = asn[:tag] || R509::ASN1::GeneralName.map_type_to_tag(asn[:type])
+        @type = R509::ASN1::GeneralName.map_tag_to_type(@tag)
+        @short_type = R509::ASN1::GeneralName.map_tag_to_short_type(@tag)
+        @value = (@tag == 4)? R509::Subject.new(asn[:value]) : asn[:value]
+      end
+
+      def parse_asn(asn)
+        @tag = asn.tag
+        @type = R509::ASN1::GeneralName.map_tag_to_type(@tag)
+        @short_type = R509::ASN1::GeneralName.map_tag_to_short_type(@tag)
+        value = asn.value
+        case @tag
+        when 1 then @value = value
+        when 2 then @value = value
+        when 4 then @value = R509::Subject.new(value.first.to_der)
+        when 6 then @value = value
+        when 7
+          if value.size == 4 or value.size == 16
+            @value = parse_ip(value)
+          elsif value.size == 8 #IPv4 with netmask
+            @value = parse_ip(value[0,4],value[4,4])
+          elsif value.size == 32 #IPv6 with netmask
+            @value = parse_ip(value[0,16],value[16,16])
+          end
+        end
+      end
 
       def parse_ip(value,mask=nil)
         ip = IPAddr.new_ntoh(value)

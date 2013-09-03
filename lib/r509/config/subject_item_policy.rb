@@ -60,27 +60,8 @@ module R509
       # @return [R509::Subject] validated version of the subject or error
       def validate_subject(subject)
         # check if match components are present and match
-        if not @match.empty?
-          subject.to_a.each do |item|
-            if @match.include?(item[0])
-              if @match_values[item[0]] != item[1]
-                raise R509::R509Error, "This profile requires that #{item[0]} have value: #{@match_values[item[0]]}"
-              end
-            end
-          end
-        end
-        # convert the subject components into an array of component names that match
-        # those that are on the required list
-        supplied = subject.to_a.each do |item|
-          @required.include?(item[0]) or @match.include?(item[0])
-        end.map do |item|
-          item[0]
-        end
-        # so we can make sure they gave us everything that's required
-        diff = @required + @match - supplied
-        if not diff.empty?
-          raise R509::R509Error, "This profile requires you supply "+(@required+@match).join(", ")
-        end
+        validate_match(subject)
+        validate_required_match(subject)
 
         # the validated subject contains only those subject components that are either
         # required, optional, or match
@@ -103,6 +84,35 @@ module R509
         self.to_h.to_yaml
       end
 
+      private
+      # validates that the provided subject has the expected values for the
+      # match policy
+      def validate_match(subject)
+        subject.to_a.each do |item|
+          if @match.include?(item[0])
+            if @match_values[item[0]] != item[1]
+              raise R509::R509Error, "This profile requires that #{item[0]} have value: #{@match_values[item[0]]}"
+            end
+          end
+        end unless @match.empty?
+      end
+
+      # validates that all the subject elements that are required or match in the
+      # subject item policy are present in the supplied subject
+      def validate_required_match(subject)
+        # convert the subject components into an array of component names that match
+        # those that are on the required list
+        supplied = subject.to_a.each do |item|
+          @required.include?(item[0]) or @match.include?(item[0])
+        end.map do |item|
+          item[0]
+        end
+        # so we can make sure they gave us everything that's required
+        diff = @required + @match - supplied
+        if not diff.empty?
+          raise R509::R509Error, "This profile requires you supply "+(@required+@match).join(", ")
+        end
+      end
     end
   end
 end
