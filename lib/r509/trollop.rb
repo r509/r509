@@ -9,6 +9,7 @@
 require 'date'
 
 module R509
+  # @private
   module Trollop
 
   VERSION = "2.0"

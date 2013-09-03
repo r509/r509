@@ -1,7 +1,7 @@
 require "openssl"
 
 module R509
-  # subject class. Used for building OpenSSL::X509::Name objects in a sane fashion
+  # The primary subject class. Used for building subject DNs in a sane fashion.
   # @example
   #   subject = R509::Subject.new
   #   subject.CN= "test.test"
@@ -132,6 +132,10 @@ module R509
     # dynamically. this will also cache methods that get built via instance_eval.
     # This code will also allow you to set subject items for custom oids
     # defined via R509::OIDMapper
+    #
+    # @example
+    #  subject = R509::Subject.new
+    #  subject.CN = 'test' # method built via method missing.
     #
     def method_missing(method_sym, *args, &block)
       if method_sym.to_s =~ /(.*)=$/

@@ -426,7 +426,7 @@ cert = ca.sign(
 ```
 
 ###CertificateAuthority::OptionsBuilder
-The OptionsBuilder takes in a CAConfig with CertProfiles. You then call ```#build_and_enforce``` to have it create a hash that can be passed to ``R509::CertificateAuthority::Signer#sign```. The OptionsBuilder is responsible for enforcing restrictions on subject DN (via SubjectItemPolicy), determing allowed message digest, and adding a profile's extensions.
+The OptionsBuilder takes in a CAConfig with CertProfiles. You then call ```#build_and_enforce``` to have it create a hash that can be passed to ```R509::CertificateAuthority::Signer#sign```. The OptionsBuilder is responsible for enforcing restrictions on subject DN (via SubjectItemPolicy), determing allowed message digest, and adding a profile's extensions.
 
 ```ruby
 # assume config from yaml load above
@@ -574,12 +574,12 @@ This hash defines the certificate + key that will be used to sign CRLs. This has
 * pkcs12 (optional, cannot be used with key or cert)
 * password (optional, used for pkcs12 or passworded private key)
 
-###crl\_list
+###crl\_list\_file
 The path on the filesystem of the list of revoked certificates for this CA.
 
 Example: '/path/to/my\_ca\_crl\_list.txt'
 
-###crl\_number
+###crl\_number\_file
 The path on the filesystem of the current CRL number for this CA.
 
 Example: '/path/to/my\_ca\_crl\_number.txt'

@@ -1,2 +1,6 @@
 --no-private
 --protected - r509.yaml
+--embed-mixins
+-
+CONTRIBUTING.mdown
+LICENSE
