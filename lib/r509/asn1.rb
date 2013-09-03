@@ -190,10 +190,8 @@ module R509
         @short_type = R509::ASN1::GeneralName.map_tag_to_short_type(@tag)
         value = asn.value
         case @tag
-        when 1 then @value = value
-        when 2 then @value = value
+        when 1,2,6 then @value = value
         when 4 then @value = R509::Subject.new(value.first.to_der)
-        when 6 then @value = value
         when 7
           if value.size == 4 or value.size == 16
             @value = parse_ip(value)
