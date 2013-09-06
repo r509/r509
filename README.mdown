@@ -18,6 +18,12 @@ rake gem:build
 rake gem:install
 ```
 
+##Documentation
+There is documentation available for every method and class in r509 available via yardoc. You can view the latest release docs at [r509.org](http://r509.org). If you installed via gem it should be pre-generated in the doc directory. If you cloned this repo, just type ```rake yard``` with the yard gem installed. You will also need the redcarpet and github-markup gems to properly parse the README.md.
+
+##Support
+You can [file bugs](https://github.com/reaperhulk/r509/issues), contact me directly, or join the #r509 channel on irc.freenode.net to ask questions.
+
 ##Running Tests/Building Gem
 If you want to run the tests for r509 you'll need rspec. Additionally, you should install simplecov and yard for running the code coverage and documentation tasks in the Rakefile. ```rake -T``` for a complete list of rake tasks available.
 
@@ -31,7 +37,7 @@ r509 ships with a binary named ```r509``` that can generate CSRs, keys, and crea
 ##Basic Certificate Authority Tutorial
 [This guide](http://langui.sh/2012/11/02/building-a-ca-r509-howto/) provides instructions on building a basic CA using r509, [r509-ca-http](https://github.com/sirsean/r509-ca-http), and [r509-ocsp-responder](https://github.com/reaperhulk/r509-ocsp-responder). In it you will learn how to create a root, set up the configuration profiles, issue certificates, revoke certificates, and see responses from an OCSP responder.
 
-##Sample Usage
+##Quick Start
 ###CSR
 To generate a 2048-bit RSA CSR
 
@@ -526,12 +532,6 @@ These curves are set via ```:curve_name```. The system defaults to using ```secp
  * sect409r1 -- NIST/SECG curve over a 409 bit binary field
  * sect571k1 -- NIST/SECG curve over a 571 bit binary field
  * sect571r1 -- NIST/SECG curve over a 571 bit binary field
-
-##Documentation
-There is documentation available for every method and class in r509 available via yardoc. You can view the latest release docs at [r509.org](http://r509.org). If you installed via gem it should be pre-generated in the doc directory. If you cloned this repo, just type ```rake yard``` with the yard gem installed. You will also need the redcarpet and github-markup gems to properly parse the README.md.
-
-##Support
-You can [file bugs](https://github.com/reaperhulk/r509/issues), contact me via the methods below, or join the #r509 channel on irc.freenode.net to ask questions.
 
 
 ##Created by...
