@@ -1,5 +1,5 @@
-#r509 [![Build Status](https://secure.travis-ci.org/reaperhulk/r509.png)](http://travis-ci.org/reaperhulk/r509) [![Coverage Status](https://coveralls.io/repos/reaperhulk/r509/badge.png?branch=master)](https://coveralls.io/r/reaperhulk/r509?branch=master)
-r509 is a Ruby gem built using OpenSSL that is designed to ease management of a public key infrastructure. The r509 API facilitates easy creation of CSRs, signing of certificates, revocation (CRL/OCSP), and much more. Together with projects like [r509-ocsp-responder](https://github.com/reaperhulk/r509-ocsp-responder) and [r509-ca-http](https://github.com/sirsean/r509-ca-http) it is intended to be a complete [RFC 5280](http://www.ietf.org/rfc/rfc5280.txt)-compliant certificate authority for use in production environments.
+#r509 [![Build Status](https://secure.travis-ci.org/r509/r509.png)](http://travis-ci.org/r509/r509) [![Coverage Status](https://coveralls.io/repos/r509/r509/badge.png?branch=master)](https://coveralls.io/r/r509/r509?branch=master)
+r509 is a Ruby gem built using OpenSSL that is designed to ease management of a public key infrastructure. The r509 API facilitates easy creation of CSRs, signing of certificates, revocation (CRL/OCSP), and much more. Together with projects like [r509-ocsp-responder](https://github.com/r509/r509-ocsp-responder) and [r509-ca-http](https://github.com/r509/r509-ca-http) it is intended to be a complete [RFC 5280](http://www.ietf.org/rfc/rfc5280.txt)-compliant certificate authority for use in production environments.
 
 ##Why?
 Certificates are hard, and the Ruby OpenSSL APIs aren't easy to use (because they hew closely to OpenSSL itself). Additionally, as SSL/TLS has aged a variety of best practices and workarounds around certificate issuance have grown up around it that are not easy to discover. r509 is an attempt to build a straightforward API that allows you to do things as simple as parsing a certificate all the way up to operating an entire certificate authority.
@@ -22,7 +22,7 @@ rake gem:install
 There is documentation available for every method and class in r509 available via yardoc. You can view the latest release docs at [r509.org](http://r509.org). If you installed via gem it should be pre-generated in the doc directory. If you cloned this repo, just type ```rake yard``` with the yard gem installed. You will also need the redcarpet and github-markup gems to properly parse the README.md.
 
 ##Support
-You can [file bugs](https://github.com/reaperhulk/r509/issues), contact me directly, or join the #r509 channel on irc.freenode.net to ask questions.
+You can [file bugs](https://github.com/r509/r509/issues), contact me directly, or join the #r509 channel on irc.freenode.net to ask questions.
 
 ##Running Tests/Building Gem
 If you want to run the tests for r509 you'll need rspec. Additionally, you should install simplecov and yard for running the code coverage and documentation tasks in the Rakefile. ```rake -T``` for a complete list of rake tasks available.
@@ -35,7 +35,7 @@ We run continuous integration tests (using Travis-CI) against 1.9.3, 2.0.0, ruby
 r509 ships with a binary named ```r509``` that can generate CSRs, keys, and create self-signed certificates. Type ```r509 -h``` to see a list of options.
 
 ##Basic Certificate Authority Tutorial
-[This guide](http://langui.sh/2012/11/02/building-a-ca-r509-howto/) provides instructions on building a basic CA using r509, [r509-ca-http](https://github.com/sirsean/r509-ca-http), and [r509-ocsp-responder](https://github.com/reaperhulk/r509-ocsp-responder). In it you will learn how to create a root, set up the configuration profiles, issue certificates, revoke certificates, and see responses from an OCSP responder.
+[This guide](http://langui.sh/2012/11/02/building-a-ca-r509-howto/) provides instructions on building a basic CA using r509, [r509-ca-http](https://github.com/r509/r509-ca-http), and [r509-ocsp-responder](https://github.com/r509/r509-ocsp-responder). In it you will learn how to create a root, set up the configuration profiles, issue certificates, revoke certificates, and see responses from an OCSP responder.
 
 ##Quick Start
 ###CSR
