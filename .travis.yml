@@ -4,7 +4,7 @@ rvm:
  - 1.9.3
  - 2.0.0
  - ruby-head
- - rbx-19mode
+ - rbx-head
 matrix:
   include:
   # This tests the X509Name UNDEF fix in R509::Subject. My patch to remove the need for this code landed in 1.9.3-p125
@@ -14,6 +14,7 @@ matrix:
   allow_failures:
     - rvm: 1.9.3
       env: R509_EC_SUPPORT_DISABLED=true
+    - rvm: rbx-head
 before_install:
   # instructions for building OpenSSL and Ruby on Ubuntu 12.04 64-bit LTS (current Travis-CI build slaves)
   # apt-get update
