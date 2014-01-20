@@ -62,6 +62,7 @@ module R509
         hash["name_constraints"] = @name_constraints.to_h unless @name_constraints.nil?
         hash["ocsp_no_check"] = @ocsp_no_check.to_h unless @ocsp_no_check.nil?
         hash["authority_info_access"] = @authority_info_access.to_h unless @authority_info_access.nil?
+        hash["crl_distribution_points"] = @crl_distribution_points.to_h unless @crl_distribution_points.nil?
         hash["subject_item_policy"] = @subject_item_policy.to_h unless @subject_item_policy.nil?
         hash["default_md"] = @default_md unless @default_md.nil?
         hash["allowed_mds"] = @allowed_mds unless @allowed_mds.nil?
