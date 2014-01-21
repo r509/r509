@@ -1,6 +1,7 @@
 source "https://rubygems.org"
 
 gem 'coveralls', require: false
+gem "rubysl-singleton" # for rbx
 gemspec
 group :documentation do
   gem "yard", "~>0.8"
