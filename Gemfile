@@ -1,7 +1,10 @@
 source "https://rubygems.org"
 
 gem 'coveralls', require: false
-gem "rubysl-singleton" # for rbx
+platforms :rbx do
+    gem "rubysl-ipaddr"
+    gem "rubysl-singleton"
+end
 gemspec
 group :documentation do
   gem "yard", "~>0.8"
