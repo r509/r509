@@ -6,7 +6,7 @@ Gem::Specification.new do |s|
   s.license = 'Apache 2.0'
   s.version = R509::VERSION
   s.platform = Gem::Platform::RUBY
-  s.summary = "A (relatively) simple X.509 certification authority"
+  s.summary = "A (relatively) simple X.509 certification authority API"
   s.description = 'A module that allows you to create CSRs, issue certs off a CA, view the certs, create CRLs, run an OCSP responder, and much more'
   s.add_development_dependency 'rspec'
   s.add_development_dependency 'rake'

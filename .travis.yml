@@ -3,6 +3,7 @@ language: ruby
 rvm:
  - 1.9.3
  - 2.0.0
+ - 2.1.0
  - ruby-head
  - rbx
 matrix:
@@ -14,7 +15,6 @@ matrix:
   allow_failures:
     - rvm: 1.9.3
       env: R509_EC_SUPPORT_DISABLED=true
-    - rvm: rbx
 before_install:
   # instructions for building OpenSSL and Ruby on Ubuntu 12.04 64-bit LTS (current Travis-CI build slaves)
   # apt-get update
