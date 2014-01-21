@@ -4,6 +4,7 @@ gem 'coveralls', require: false
 platforms :rbx do
     gem "rubysl-ipaddr"
     gem "rubysl-singleton"
+    gem "rubinius-coverage"
 end
 gemspec
 group :documentation do
