@@ -1,6 +1,6 @@
+require 'simplecov'
+SimpleCov.start
 begin
-  require 'simplecov'
-  SimpleCov.start
   require 'coveralls'
   Coveralls.wear!
 rescue LoadError

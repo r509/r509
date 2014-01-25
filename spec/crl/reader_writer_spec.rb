@@ -10,6 +10,10 @@ describe R509::CRL::ReaderWriter do
     expect { @rw.write_list_entry }.to raise_error(NotImplementedError)
   end
 
+  it "abstract base class raises error for remove_list_entry" do
+    expect { @rw.remove_list_entry }.to raise_error(NotImplementedError)
+  end
+
   it "abstract base class raises error for write_number" do
     expect { @rw.write_number }.to raise_error(NotImplementedError)
   end
@@ -63,6 +67,17 @@ describe R509::CRL::FileReaderWriter do
     sio.string.should == "1,1,\n"
     @rw.write_list_entry(2,2,1)
     sio.string.should == "1,1,\n2,2,1\n"
+  end
+
+  it "removes a crl list entry" do
+    sio = StringIO.new
+    @rw.crl_list_file = sio
+    @rw.write_list_entry(1,1,nil)
+    sio.string.should == "1,1,\n"
+    @rw.write_list_entry(2,2,1)
+    sio.string.should == "1,1,\n2,2,1\n"
+    @rw.remove_list_entry(2)
+    sio.string.should == "1,1,\n"
   end
 
   it "reads a number" do

@@ -91,6 +91,7 @@ module R509
       # @param serial [Integer] serial number of the certificate to remove from revocation
       def unrevoke_cert(serial)
         @revoked_certs.delete(serial)
+        @rw.remove_list_entry(serial)
         nil
       end
 
