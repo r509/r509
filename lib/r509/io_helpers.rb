@@ -9,6 +9,12 @@ module R509
     # @param [String] mode The write mode
     def self.write_data(filename_or_io, data, mode='wb:ascii-8bit')
       if filename_or_io.respond_to?(:write)
+        if filename_or_io.kind_of?(StringIO) and mode != "a:ascii-8bit"
+          # Writing to a StringIO in a non-append mode. This requires
+          # us to rewind and truncate it first.
+          filename_or_io.rewind()
+          filename_or_io.truncate(0)
+        end
         filename_or_io.write(data)
       else
         return File.open(filename_or_io, mode) do |f|
@@ -22,6 +28,9 @@ module R509
     #  the file that you'd like to read, or an IO-like object.
     def self.read_data(filename_or_io)
       if filename_or_io.respond_to?(:read)
+        if filename_or_io.kind_of?(StringIO)
+          filename_or_io.rewind()
+        end
         filename_or_io.read()
       else
         return File.open(filename_or_io, 'rb:ascii-8bit') do |f|
