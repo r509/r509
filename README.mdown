@@ -6,7 +6,7 @@ Certificates are hard, and the Ruby OpenSSL APIs aren't easy to use (because the
 
 ##Requirements
 
-r509 requires Ruby 1.9.3+ compiled with OpenSSL and YAML support (this is a typical default). It is recommended that you compile Ruby against OpenSSL 1.0.0+ (with elliptic curve support enabled). Red Hat-derived distributions ship with EC disabled in OpenSSL, so if you need EC support you will need to recompile.
+r509 requires Ruby 1.9.3+ compiled with OpenSSL and YAML support (this is a typical default). It is recommended that you compile Ruby against OpenSSL 1.0.0+ (with elliptic curve support enabled). Red Hat-derived distributions prior to RHEL/CentOS 6.5 ship with EC disabled in OpenSSL, so if you need EC support you will need to recompile.
 
 ##Installation
 You can install via rubygems with ```gem install r509```
@@ -28,7 +28,7 @@ You can [file bugs](https://github.com/r509/r509/issues), contact me directly, o
 If you want to run the tests for r509 you'll need rspec. Additionally, you should install simplecov and yard for running the code coverage and documentation tasks in the Rakefile. ```rake -T``` for a complete list of rake tasks available.
 
 ##Continuous Integration
-We run continuous integration tests (using Travis-CI) against 1.9.3, 2.0.0, ruby-head, and rubinius(rbx) 2.0 in 1.9 mode. 1.8.7 is no longer a supported configuration due to issues with its elliptic curve methods. 0.8.1 was the last official r509 release with 1.8.7 support.
+We run continuous integration tests (using Travis-CI) against 1.9.3, 2.0.0, 2.1.0, ruby-head, and rubinius. 1.8.7 is no longer a supported configuration due to issues with its elliptic curve methods. 0.8.1 was the last official r509 release with 1.8.7 support.
 
 ##Executables
 
