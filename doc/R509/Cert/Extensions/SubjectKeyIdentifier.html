@@ -6,13 +6,13 @@
 <title>
   Class: R509::Cert::Extensions::SubjectKeyIdentifier
   
-    &mdash; Documentation by YARD 0.8.4.1
+    &mdash; Documentation by YARD 0.8.6.1
   
 </title>
 
-  <link rel="stylesheet" href="../../../css/style.css" type="text/css" media="screen" charset="utf-8" />
+  <link rel="stylesheet" href="../../../css/style.css" type="text/css" charset="utf-8" />
 
-  <link rel="stylesheet" href="../../../css/common.css" type="text/css" media="screen" charset="utf-8" />
+  <link rel="stylesheet" href="../../../css/common.css" type="text/css" charset="utf-8" />
 
 <script type="text/javascript" charset="utf-8">
   hasFrames = window.top.frames.main ? true : false;
@@ -96,7 +96,7 @@
   
   
     <dt class="r2 last">Defined in:</dt>
-    <dd class="r2 last">lib/r509/cert/extensions.rb</dd>
+    <dd class="r2 last">lib/r509/cert/extensions/subject_key_identifier.rb</dd>
   
 </dl>
 <div class="clear"></div>
@@ -139,6 +139,22 @@ to the contents or create a new one.</p>
 </div>
         </dt>
         <dd><pre class="code"><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>subjectKeyIdentifier</span><span class='tstring_end'>&quot;</span></span></pre></dd>
+      
+        <dt id="SKI_EXTENSION_DEFAULT-constant" class="">SKI_EXTENSION_DEFAULT =
+          <div class="docstring">
+  <div class="discussion">
+    
+<p>default extension behavior when generating</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
+        </dt>
+        <dd><pre class="code"><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>hash</span><span class='tstring_end'>&quot;</span></span></pre></dd>
       
     </dl>
   
@@ -211,12 +227,6 @@ to the contents or create a new one.</p>
   
 
 
-  
-  
-  
-  
-  
-  
   <div id="constructor_details" class="method_details_list">
   <h2>Constructor Details</h2>
   
@@ -299,31 +309,19 @@ to the contents or create a new one.</p>
       <pre class="lines">
 
 
-426
-427
-428
-429
-430
-431
-432
-433
-434
-435
-436
-437</pre>
+24
+25
+26
+27
+28
+29</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 426</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions/subject_key_identifier.rb', line 24</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='id identifier rubyid_arg'>arg</span><span class='rparen'>)</span>
-  <span class='kw'>if</span> <span class='id identifier rubyid_arg'>arg</span><span class='period'>.</span><span class='id identifier rubyid_kind_of?'>kind_of?</span><span class='lparen'>(</span><span class='const'>Hash</span><span class='rparen'>)</span>
-    <span class='id identifier rubyid_validate_subject_key_identifier'>validate_subject_key_identifier</span><span class='lparen'>(</span><span class='id identifier rubyid_arg'>arg</span><span class='rparen'>)</span>
-    <span class='id identifier rubyid_ef'>ef</span> <span class='op'>=</span> <span class='const'>OpenSSL</span><span class='op'>::</span><span class='const'>X509</span><span class='op'>::</span><span class='const'>ExtensionFactory</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span>
-    <span class='id identifier rubyid_cert'>cert</span> <span class='op'>=</span> <span class='const'>OpenSSL</span><span class='op'>::</span><span class='const'>X509</span><span class='op'>::</span><span class='const'>Certificate</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span>
-    <span class='id identifier rubyid_cert'>cert</span><span class='period'>.</span><span class='id identifier rubyid_public_key'>public_key</span> <span class='op'>=</span> <span class='id identifier rubyid_arg'>arg</span><span class='lbracket'>[</span><span class='symbol'>:public_key</span><span class='rbracket'>]</span>
-    <span class='id identifier rubyid_ef'>ef</span><span class='period'>.</span><span class='id identifier rubyid_subject_certificate'>subject_certificate</span> <span class='op'>=</span> <span class='id identifier rubyid_cert'>cert</span>
-    <span class='id identifier rubyid_critical'>critical</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>Cert</span><span class='op'>::</span><span class='const'>Extensions</span><span class='period'>.</span><span class='id identifier rubyid_calculate_critical'>calculate_critical</span><span class='lparen'>(</span><span class='id identifier rubyid_arg'>arg</span><span class='lbracket'>[</span><span class='symbol'>:critical</span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='kw'>false</span><span class='rparen'>)</span>
-    <span class='id identifier rubyid_arg'>arg</span> <span class='op'>=</span> <span class='id identifier rubyid_ef'>ef</span><span class='period'>.</span><span class='id identifier rubyid_create_extension'>create_extension</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>subjectKeyIdentifier</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>hash</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='id identifier rubyid_critical'>critical</span><span class='rparen'>)</span>
+  <span class='kw'>if</span> <span class='kw'>not</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>Cert</span><span class='op'>::</span><span class='const'>Extensions</span><span class='period'>.</span><span class='id identifier rubyid_is_extension?'>is_extension?</span><span class='lparen'>(</span><span class='id identifier rubyid_arg'>arg</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_arg'>arg</span> <span class='op'>=</span> <span class='id identifier rubyid_build_extension'>build_extension</span><span class='lparen'>(</span><span class='id identifier rubyid_arg'>arg</span><span class='rparen'>)</span>
   <span class='kw'>end</span>
   <span class='kw'>super</span><span class='lparen'>(</span><span class='id identifier rubyid_arg'>arg</span><span class='rparen'>)</span>
 <span class='kw'>end</span></pre>
@@ -383,12 +381,12 @@ to the contents or create a new one.</p>
       <pre class="lines">
 
 
-440
-441
-442</pre>
+32
+33
+34</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 440</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions/subject_key_identifier.rb', line 32</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_key'>key</span>
   <span class='kw'>return</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_value'>value</span>
@@ -403,9 +401,9 @@ to the contents or create a new one.</p>
 </div>
 
     <div id="footer">
-  Generated on Sun Jun  9 10:03:37 2013 by
+  Generated on Sat Jan 25 19:00:20 2014 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.8.4.1 (ruby-2.0.0).
+  0.8.6.1 (ruby-2.0.0).
 </div>
 
   </body>

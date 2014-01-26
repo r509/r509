@@ -6,13 +6,13 @@
 <title>
   Class: R509::CertificateAuthority::Signer
   
-    &mdash; Documentation by YARD 0.8.4.1
+    &mdash; Documentation by YARD 0.8.6.1
   
 </title>
 
-  <link rel="stylesheet" href="../../css/style.css" type="text/css" media="screen" charset="utf-8" />
+  <link rel="stylesheet" href="../../css/style.css" type="text/css" charset="utf-8" />
 
-  <link rel="stylesheet" href="../../css/common.css" type="text/css" media="screen" charset="utf-8" />
+  <link rel="stylesheet" href="../../css/common.css" type="text/css" charset="utf-8" />
 
 <script type="text/javascript" charset="utf-8">
   hasFrames = window.top.frames.main ? true : false;
@@ -449,11 +449,6 @@ you want to embed in the final certificate</p>
       <pre class="lines">
 
 
-65
-66
-67
-68
-69
 70
 71
 72
@@ -480,10 +475,19 @@ you want to embed in the final certificate</p>
 93
 94
 95
-96</pre>
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/certificate_authority/signer.rb', line 65</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/certificate_authority/signer.rb', line 70</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_selfsign'>selfsign</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='kw'>not</span> <span class='id identifier rubyid_options'>options</span><span class='period'>.</span><span class='id identifier rubyid_kind_of?'>kind_of?</span><span class='lparen'>(</span><span class='const'>Hash</span><span class='rparen'>)</span>
@@ -505,7 +509,11 @@ you want to embed in the final certificate</p>
     <span class='symbol'>:serial</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:serial</span><span class='rbracket'>]</span>
   <span class='rparen'>)</span>
 
-  <span class='id identifier rubyid_cert'>cert</span><span class='period'>.</span><span class='id identifier rubyid_extensions'>extensions</span> <span class='op'>=</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:extensions</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='lbracket'>[</span><span class='const'>R509</span><span class='op'>::</span><span class='const'>Cert</span><span class='op'>::</span><span class='const'>Extensions</span><span class='op'>::</span><span class='const'>BasicConstraints</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='symbol'>:ca</span> <span class='op'>=&gt;</span> <span class='kw'>true</span><span class='rparen'>)</span><span class='comma'>,</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>Cert</span><span class='op'>::</span><span class='const'>Extensions</span><span class='op'>::</span><span class='const'>SubjectKeyIdentifier</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='symbol'>:public_key</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_public_key'>public_key</span><span class='rparen'>)</span><span class='rbracket'>]</span>
+  <span class='id identifier rubyid_cert'>cert</span><span class='period'>.</span><span class='id identifier rubyid_extensions'>extensions</span> <span class='op'>=</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:extensions</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='lbracket'>[</span>
+    <span class='const'>R509</span><span class='op'>::</span><span class='const'>Cert</span><span class='op'>::</span><span class='const'>Extensions</span><span class='op'>::</span><span class='const'>BasicConstraints</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='symbol'>:ca</span> <span class='op'>=&gt;</span> <span class='kw'>true</span><span class='rparen'>)</span><span class='comma'>,</span>
+    <span class='const'>R509</span><span class='op'>::</span><span class='const'>Cert</span><span class='op'>::</span><span class='const'>Extensions</span><span class='op'>::</span><span class='const'>SubjectKeyIdentifier</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='symbol'>:public_key</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_public_key'>public_key</span><span class='rparen'>)</span><span class='comma'>,</span>
+    <span class='const'>R509</span><span class='op'>::</span><span class='const'>Cert</span><span class='op'>::</span><span class='const'>Extensions</span><span class='op'>::</span><span class='const'>AuthorityKeyIdentifier</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='symbol'>:public_key</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_public_key'>public_key</span><span class='rparen'>)</span>
+  <span class='rbracket'>]</span>
 
   <span class='kw'>if</span> <span class='id identifier rubyid_options'>options</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span><span class='lparen'>(</span><span class='symbol'>:message_digest</span><span class='rparen'>)</span>
     <span class='id identifier rubyid_message_digest'>message_digest</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>MessageDigest</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:message_digest</span><span class='rbracket'>]</span><span class='rparen'>)</span>
@@ -515,7 +523,7 @@ you want to embed in the final certificate</p>
 
   <span class='id identifier rubyid_cert'>cert</span><span class='period'>.</span><span class='id identifier rubyid_sign'>sign</span><span class='lparen'>(</span> <span class='id identifier rubyid_csr'>csr</span><span class='period'>.</span><span class='id identifier rubyid_key'>key</span><span class='period'>.</span><span class='id identifier rubyid_key'>key</span><span class='comma'>,</span> <span class='id identifier rubyid_message_digest'>message_digest</span><span class='period'>.</span><span class='id identifier rubyid_digest'>digest</span> <span class='rparen'>)</span>
 
-  <span class='const'>R509</span><span class='op'>::</span><span class='const'>Cert</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='symbol'>:cert</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_cert'>cert</span><span class='rparen'>)</span>
+  <span class='const'>R509</span><span class='op'>::</span><span class='const'>Cert</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='symbol'>:cert</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_cert'>cert</span><span class='comma'>,</span> <span class='symbol'>:key</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_csr'>csr</span><span class='period'>.</span><span class='id identifier rubyid_key'>key</span><span class='rparen'>)</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -730,7 +738,12 @@ you want to embed in the final certificate</p>
 52
 53
 54
-55</pre>
+55
+56
+57
+58
+59
+60</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'lib/r509/certificate_authority/signer.rb', line 33</span>
@@ -751,12 +764,17 @@ you want to embed in the final certificate</p>
     <span class='symbol'>:serial</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:serial</span><span class='rbracket'>]</span>
   <span class='rparen'>)</span>
 
-  <span class='id identifier rubyid_cert'>cert</span><span class='period'>.</span><span class='id identifier rubyid_extensions'>extensions</span> <span class='op'>=</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:extensions</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
+  <span class='id identifier rubyid_cert'>cert</span><span class='period'>.</span><span class='id identifier rubyid_extensions'>extensions</span> <span class='op'>=</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:extensions</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='lbracket'>[</span>
+    <span class='const'>R509</span><span class='op'>::</span><span class='const'>Cert</span><span class='op'>::</span><span class='const'>Extensions</span><span class='op'>::</span><span class='const'>SubjectKeyIdentifier</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='symbol'>:public_key</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_public_key'>public_key</span><span class='rparen'>)</span><span class='comma'>,</span>
+    <span class='const'>R509</span><span class='op'>::</span><span class='const'>Cert</span><span class='op'>::</span><span class='const'>Extensions</span><span class='op'>::</span><span class='const'>AuthorityKeyIdentifier</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='symbol'>:public_key</span> <span class='op'>=&gt;</span> <span class='ivar'>@config</span><span class='period'>.</span><span class='id identifier rubyid_ca_cert'>ca_cert</span><span class='period'>.</span><span class='id identifier rubyid_public_key'>public_key</span><span class='rparen'>)</span>
+  <span class='rbracket'>]</span>
 
   <span class='comment'>#@config.ca_cert.key.key ... ugly. ca_cert returns R509::Cert
 </span>  <span class='comment'># #key returns R509::PrivateKey and #key on that returns OpenSSL object we need
 </span>  <span class='id identifier rubyid_cert'>cert</span><span class='period'>.</span><span class='id identifier rubyid_sign'>sign</span><span class='lparen'>(</span> <span class='ivar'>@config</span><span class='period'>.</span><span class='id identifier rubyid_ca_cert'>ca_cert</span><span class='period'>.</span><span class='id identifier rubyid_key'>key</span><span class='period'>.</span><span class='id identifier rubyid_key'>key</span><span class='comma'>,</span> <span class='id identifier rubyid_message_digest'>message_digest</span><span class='period'>.</span><span class='id identifier rubyid_digest'>digest</span> <span class='rparen'>)</span>
-  <span class='const'>R509</span><span class='op'>::</span><span class='const'>Cert</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='symbol'>:cert</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_cert'>cert</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_cert_opts'>cert_opts</span> <span class='op'>=</span> <span class='lbrace'>{</span> <span class='symbol'>:cert</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_cert'>cert</span> <span class='rbrace'>}</span>
+  <span class='id identifier rubyid_cert_opts'>cert_opts</span><span class='lbracket'>[</span><span class='symbol'>:key</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:csr</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_key'>key</span> <span class='kw'>if</span> <span class='kw'>not</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:csr</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span> <span class='kw'>and</span> <span class='kw'>not</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:csr</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_key'>key</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
+  <span class='const'>R509</span><span class='op'>::</span><span class='const'>Cert</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_cert_opts'>cert_opts</span><span class='rparen'>)</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -768,9 +786,9 @@ you want to embed in the final certificate</p>
 </div>
 
     <div id="footer">
-  Generated on Sun Jun  9 10:03:39 2013 by
+  Generated on Sat Jan 25 19:00:18 2014 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.8.4.1 (ruby-2.0.0).
+  0.8.6.1 (ruby-2.0.0).
 </div>
 
   </body>

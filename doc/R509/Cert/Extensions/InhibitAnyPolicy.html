@@ -6,13 +6,13 @@
 <title>
   Class: R509::Cert::Extensions::InhibitAnyPolicy
   
-    &mdash; Documentation by YARD 0.8.4.1
+    &mdash; Documentation by YARD 0.8.6.1
   
 </title>
 
-  <link rel="stylesheet" href="../../../css/style.css" type="text/css" media="screen" charset="utf-8" />
+  <link rel="stylesheet" href="../../../css/style.css" type="text/css" charset="utf-8" />
 
-  <link rel="stylesheet" href="../../../css/common.css" type="text/css" media="screen" charset="utf-8" />
+  <link rel="stylesheet" href="../../../css/common.css" type="text/css" charset="utf-8" />
 
 <script type="text/javascript" charset="utf-8">
   hasFrames = window.top.frames.main ? true : false;
@@ -92,11 +92,15 @@
     
   
     
+      <dt class="r2">Includes:</dt>
+      <dd class="r2"><span class='object_link'><a href="ValidationMixin.html" title="R509::Cert::Extensions::ValidationMixin (module)">ValidationMixin</a></span></dd>
+      
+    
   
   
   
-    <dt class="r2 last">Defined in:</dt>
-    <dd class="r2 last">lib/r509/cert/extensions.rb</dd>
+    <dt class="r1 last">Defined in:</dt>
+    <dd class="r1 last">lib/r509/cert/extensions/inhibit_any_policy.rb</dd>
   
 </dl>
 <div class="clear"></div>
@@ -155,7 +159,7 @@ to the contents or create a new one.</p>
       <li class="public ">
   <span class="summary_signature">
     
-      <a href="#skip_certs-instance_method" title="#skip_certs (instance method)">- (Integer) <strong>skip_certs</strong> </a>
+      <a href="#value-instance_method" title="#value (instance method)">- (Integer) <strong>value</strong> </a>
     
 
     
@@ -218,14 +222,54 @@ to the contents or create a new one.</p>
 </li>
 
       
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#to_h-instance_method" title="#to_h (instance method)">- (Hash) <strong>to_h</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#to_yaml-instance_method" title="#to_yaml (instance method)">- (YAML) <strong>to_yaml</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
     </ul>
   
 
 
-  
-  
-  
-  
   
   
   <div id="constructor_details" class="method_details_list">
@@ -277,7 +321,7 @@ to the contents or create a new one.</p>
     <ul class="option">
       
         <li>
-          <span class="name">:skip_certs</span>
+          <span class="name">:value</span>
           <span class="type">(<tt>Integer</tt>)</span>
           <span class="default">
             
@@ -307,40 +351,26 @@ to the contents or create a new one.</p>
       <pre class="lines">
 
 
-869
-870
-871
-872
-873
-874
-875
-876
-877
-878
-879
-880
-881
-882
-883</pre>
+33
+34
+35
+36
+37
+38
+39
+40</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 869</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions/inhibit_any_policy.rb', line 33</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='id identifier rubyid_arg'>arg</span><span class='rparen'>)</span>
-  <span class='kw'>if</span> <span class='id identifier rubyid_arg'>arg</span><span class='period'>.</span><span class='id identifier rubyid_kind_of?'>kind_of?</span><span class='lparen'>(</span><span class='const'>Hash</span><span class='rparen'>)</span>
-    <span class='id identifier rubyid_validate_inhibit_any_policy'>validate_inhibit_any_policy</span><span class='lparen'>(</span><span class='id identifier rubyid_arg'>arg</span><span class='lbracket'>[</span><span class='symbol'>:skip_certs</span><span class='rbracket'>]</span><span class='rparen'>)</span>
-    <span class='id identifier rubyid_ef'>ef</span> <span class='op'>=</span> <span class='const'>OpenSSL</span><span class='op'>::</span><span class='const'>X509</span><span class='op'>::</span><span class='const'>ExtensionFactory</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span>
-    <span class='id identifier rubyid_critical'>critical</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>Cert</span><span class='op'>::</span><span class='const'>Extensions</span><span class='period'>.</span><span class='id identifier rubyid_calculate_critical'>calculate_critical</span><span class='lparen'>(</span><span class='id identifier rubyid_arg'>arg</span><span class='lbracket'>[</span><span class='symbol'>:critical</span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='kw'>true</span><span class='rparen'>)</span>
-    <span class='comment'># must be set critical per RFC 5280
-</span>    <span class='id identifier rubyid_arg'>arg</span> <span class='op'>=</span> <span class='id identifier rubyid_ef'>ef</span><span class='period'>.</span><span class='id identifier rubyid_create_extension'>create_extension</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>inhibitAnyPolicy</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='id identifier rubyid_arg'>arg</span><span class='lbracket'>[</span><span class='symbol'>:skip_certs</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='comma'>,</span><span class='id identifier rubyid_critical'>critical</span><span class='rparen'>)</span>
+  <span class='kw'>if</span> <span class='kw'>not</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>Cert</span><span class='op'>::</span><span class='const'>Extensions</span><span class='period'>.</span><span class='id identifier rubyid_is_extension?'>is_extension?</span><span class='lparen'>(</span><span class='id identifier rubyid_arg'>arg</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_arg'>arg</span> <span class='op'>=</span> <span class='id identifier rubyid_build_extension'>build_extension</span><span class='lparen'>(</span><span class='id identifier rubyid_arg'>arg</span><span class='rparen'>)</span>
   <span class='kw'>end</span>
-  <span class='kw'>super</span><span class='lparen'>(</span><span class='id identifier rubyid_arg'>arg</span><span class='rparen'>)</span>
 
-  <span class='comment'>#   id-ce-inhibitAnyPolicy OBJECT IDENTIFIER ::=  { id-ce 54 }
-</span>  <span class='comment'>#   InhibitAnyPolicy ::= SkipCerts
-</span>  <span class='comment'>#   SkipCerts ::= INTEGER (0..MAX)
-</span>  <span class='ivar'>@skip_certs</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>ASN1</span><span class='period'>.</span><span class='id identifier rubyid_get_extension_payload'>get_extension_payload</span><span class='lparen'>(</span><span class='kw'>self</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_to_i'>to_i</span> <span class='comment'># returns a non-negative integer
-</span><span class='kw'>end</span></pre>
+  <span class='kw'>super</span><span class='lparen'>(</span><span class='id identifier rubyid_arg'>arg</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_parse_extension'>parse_extension</span>
+<span class='kw'>end</span></pre>
     </td>
   </tr>
 </table>
@@ -354,9 +384,9 @@ to the contents or create a new one.</p>
       
       <span id=""></span>
       <div class="method_details first">
-  <h3 class="signature first" id="skip_certs-instance_method">
+  <h3 class="signature first" id="value-instance_method">
   
-    - (<tt>Integer</tt>) <strong>skip_certs</strong>  <span class="extras">(readonly)</span>
+    - (<tt>Integer</tt>) <strong>value</strong>  <span class="extras">(readonly)</span>
   
 
   
@@ -390,15 +420,15 @@ to the contents or create a new one.</p>
       <pre class="lines">
 
 
-863
-864
-865</pre>
+27
+28
+29</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 863</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions/inhibit_any_policy.rb', line 27</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_skip_certs'>skip_certs</span>
-  <span class='ivar'>@skip_certs</span>
+<span class='kw'>def</span> <span class='id identifier rubyid_value'>value</span>
+  <span class='ivar'>@value</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -408,12 +438,122 @@ to the contents or create a new one.</p>
   </div>
 
 
+  <div id="instance_method_details" class="method_details_list">
+    <h2>Instance Method Details</h2>
+
+    
+      <div class="method_details first">
+  <h3 class="signature first" id="to_h-instance_method">
+  
+    - (<tt>Hash</tt>) <strong>to_h</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Hash</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+43
+44
+45</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions/inhibit_any_policy.rb', line 43</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_to_h'>to_h</span>
+  <span class='lbrace'>{</span> <span class='symbol'>:critical</span> <span class='op'>=&gt;</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_critical?'>critical?</span><span class='comma'>,</span> <span class='symbol'>:value</span> <span class='op'>=&gt;</span> <span class='ivar'>@value</span> <span class='rbrace'>}</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="to_yaml-instance_method">
+  
+    - (<tt>YAML</tt>) <strong>to_yaml</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>YAML</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+48
+49
+50</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions/inhibit_any_policy.rb', line 48</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_to_yaml'>to_yaml</span>
+  <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_to_h'>to_h</span><span class='period'>.</span><span class='id identifier rubyid_to_yaml'>to_yaml</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
 </div>
 
     <div id="footer">
-  Generated on Sun Jun  9 10:03:38 2013 by
+  Generated on Sat Jan 25 19:00:19 2014 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.8.4.1 (ruby-2.0.0).
+  0.8.6.1 (ruby-2.0.0).
 </div>
 
   </body>

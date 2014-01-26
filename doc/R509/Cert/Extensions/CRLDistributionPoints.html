@@ -6,13 +6,13 @@
 <title>
   Class: R509::Cert::Extensions::CRLDistributionPoints
   
-    &mdash; Documentation by YARD 0.8.4.1
+    &mdash; Documentation by YARD 0.8.6.1
   
 </title>
 
-  <link rel="stylesheet" href="../../../css/style.css" type="text/css" media="screen" charset="utf-8" />
+  <link rel="stylesheet" href="../../../css/style.css" type="text/css" charset="utf-8" />
 
-  <link rel="stylesheet" href="../../../css/common.css" type="text/css" media="screen" charset="utf-8" />
+  <link rel="stylesheet" href="../../../css/common.css" type="text/css" charset="utf-8" />
 
 <script type="text/javascript" charset="utf-8">
   hasFrames = window.top.frames.main ? true : false;
@@ -92,11 +92,15 @@
     
   
     
+      <dt class="r2">Includes:</dt>
+      <dd class="r2"><span class='object_link'><a href="GeneralNamesMixin.html" title="R509::Cert::Extensions::GeneralNamesMixin (module)">GeneralNamesMixin</a></span>, <span class='object_link'><a href="ValidationMixin.html" title="R509::Cert::Extensions::ValidationMixin (module)">ValidationMixin</a></span></dd>
+      
+    
   
   
   
-    <dt class="r2 last">Defined in:</dt>
-    <dd class="r2 last">lib/r509/cert/extensions.rb</dd>
+    <dt class="r1 last">Defined in:</dt>
+    <dd class="r1 last">lib/r509/cert/extensions/crl_distribution_points.rb</dd>
   
 </dl>
 <div class="clear"></div>
@@ -148,38 +152,6 @@ to the contents or create a new one.</p>
 
 
 
-  <h2>Instance Attribute Summary <small>(<a href="#" class="summary_toggle">collapse</a>)</small></h2>
-  <ul class="summary">
-    
-      <li class="public ">
-  <span class="summary_signature">
-    
-      <a href="#crl-instance_method" title="#crl (instance method)">- (R509::ASN1::GeneralNames<sup>?</sup>) <strong>crl</strong> </a>
-    
-
-    
-  </span>
-  
-  
-  
-    
-      <span class="note title readonly">readonly</span>
-    
-    
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'></div></span>
-  
-</li>
-
-    
-  </ul>
-
 
 
 
@@ -190,6 +162,66 @@ to the contents or create a new one.</p>
     </h2>
 
     <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#directory_names-instance_method" title="#directory_names (instance method)">- (Array&lt;R509::Subject&gt;) <strong>directory_names</strong> </a>
+    
+
+    
+      (also: #dir_names)
+    
+  </span>
+  
+    <span class="note title not_defined_here">
+      included
+      from <span class='object_link'><a href="GeneralNamesMixin.html#directory_names-instance_method" title="R509::Cert::Extensions::GeneralNamesMixin#directory_names (method)">GeneralNamesMixin</a></span>
+    </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Directory names.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#dns_names-instance_method" title="#dns_names (instance method)">- (Array&lt;String&gt;) <strong>dns_names</strong> </a>
+    
+
+    
+  </span>
+  
+    <span class="note title not_defined_here">
+      included
+      from <span class='object_link'><a href="GeneralNamesMixin.html#dns_names-instance_method" title="R509::Cert::Extensions::GeneralNamesMixin#dns_names (method)">GeneralNamesMixin</a></span>
+    </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>DNS names.</p>
+</div></span>
+  
+</li>
+
       
         <li class="public ">
   <span class="summary_signature">
@@ -217,12 +249,174 @@ to the contents or create a new one.</p>
 </li>
 
       
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#ip_addresses-instance_method" title="#ip_addresses (instance method)">- (Array&lt;String&gt;) <strong>ip_addresses</strong> </a>
+    
+
+    
+      (also: #ips)
+    
+  </span>
+  
+    <span class="note title not_defined_here">
+      included
+      from <span class='object_link'><a href="GeneralNamesMixin.html#ip_addresses-instance_method" title="R509::Cert::Extensions::GeneralNamesMixin#ip_addresses (method)">GeneralNamesMixin</a></span>
+    </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>IP addresses.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#names-instance_method" title="#names (instance method)">- (Array) <strong>names</strong> </a>
+    
+
+    
+  </span>
+  
+    <span class="note title not_defined_here">
+      included
+      from <span class='object_link'><a href="GeneralNamesMixin.html#names-instance_method" title="R509::Cert::Extensions::GeneralNamesMixin#names (method)">GeneralNamesMixin</a></span>
+    </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Array of GeneralName objects preserving order found in the extension.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#rfc_822_names-instance_method" title="#rfc_822_names (instance method)">- (Array&lt;String&gt;) <strong>rfc_822_names</strong> </a>
+    
+
+    
+      (also: #email_names)
+    
+  </span>
+  
+    <span class="note title not_defined_here">
+      included
+      from <span class='object_link'><a href="GeneralNamesMixin.html#rfc_822_names-instance_method" title="R509::Cert::Extensions::GeneralNamesMixin#rfc_822_names (method)">GeneralNamesMixin</a></span>
+    </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Email addresses.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#to_h-instance_method" title="#to_h (instance method)">- (Hash) <strong>to_h</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#to_yaml-instance_method" title="#to_yaml (instance method)">- (YAML) <strong>to_yaml</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#uris-instance_method" title="#uris (instance method)">- (Array&lt;String&gt;) <strong>uris</strong> </a>
+    
+
+    
+  </span>
+  
+    <span class="note title not_defined_here">
+      included
+      from <span class='object_link'><a href="GeneralNamesMixin.html#uris-instance_method" title="R509::Cert::Extensions::GeneralNamesMixin#uris (method)">GeneralNamesMixin</a></span>
+    </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>URIs (not typically found in SAN extensions).</p>
+</div></span>
+  
+</li>
+
+      
     </ul>
   
 
 
-  
-  
   
   
   
@@ -242,13 +436,30 @@ to the contents or create a new one.</p>
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>This method takes a hash or an existing Extension object to parse</p>
+<p>This method takes a hash or an existing Extension object to parse.</p>
 
 
   </div>
 </div>
 <div class="tags">
-  <p class="tag_title">Parameters:</p>
+  
+  <div class="examples">
+    <p class="tag_title">Examples:</p>
+    
+      
+      <pre class="example code"><code>R509::Cert::Extensions::CRLDistributionPoints.new(
+  :value =&gt; [
+    { :type =&gt; &quot;URI&quot;, :value =&gt; &quot;http://crl.domain.com/test.crl&quot; }
+)</code></pre>
+    
+      
+      <pre class="example code"><code><span class='id identifier rubyid_name'>name</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>ASN1</span><span class='op'>::</span><span class='const'>GeneralName</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='symbol'>:type</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>URI</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span> <span class='symbol'>:value</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>http://crl.domain.com/test.crl</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+<span class='const'>R509</span><span class='op'>::</span><span class='const'>Cert</span><span class='op'>::</span><span class='const'>Extensions</span><span class='op'>::</span><span class='const'>CRLDistributionPoints</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span>
+  <span class='symbol'>:value</span> <span class='op'>=&gt;</span> <span class='lbracket'>[</span><span class='id identifier rubyid_name'>name</span><span class='rbracket'>]</span>
+<span class='rparen'>)</span></code></pre>
+    
+  </div>
+<p class="tag_title">Parameters:</p>
 <ul class="param">
   
     <li>
@@ -276,16 +487,14 @@ to the contents or create a new one.</p>
     <ul class="option">
       
         <li>
-          <span class="name">:cdp_location</span>
+          <span class="name">:value</span>
           <span class="type">(<tt>Array</tt>, <tt><span class='object_link'><a href="../../ASN1/GeneralNames.html" title="R509::ASN1::GeneralNames (class)">R509::ASN1::GeneralNames</a></span></tt>)</span>
           <span class="default">
             
           </span>
           
             &mdash; <div class='inline'>
-<p>Array of strings (eg ["<a
-href="http://crl.what.com/crl.crl">crl.what.com/crl.crl</a>"]) or
-GeneralNames object</p>
+<p>Array of hashes (see examples) or GeneralNames object</p>
 </div>
           
         </li>
@@ -312,63 +521,25 @@ GeneralNames object</p>
       <pre class="lines">
 
 
-705
-706
-707
-708
-709
-710
-711
-712
-713
-714
-715
-716
-717
-718
-719
-720
-721
-722
-723
-724
-725
-726
-727
-728
-729
-730
-731</pre>
+38
+39
+40
+41
+42
+43
+44
+45</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 705</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions/crl_distribution_points.rb', line 38</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='id identifier rubyid_arg'>arg</span><span class='rparen'>)</span>
-  <span class='kw'>if</span> <span class='id identifier rubyid_arg'>arg</span><span class='period'>.</span><span class='id identifier rubyid_kind_of?'>kind_of?</span><span class='lparen'>(</span><span class='const'>Hash</span><span class='rparen'>)</span>
-    <span class='id identifier rubyid_validate_cdp_location'>validate_cdp_location</span><span class='lparen'>(</span><span class='id identifier rubyid_arg'>arg</span><span class='lbracket'>[</span><span class='symbol'>:cdp_location</span><span class='rbracket'>]</span><span class='rparen'>)</span>
-    <span class='id identifier rubyid_serialize'>serialize</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>ASN1</span><span class='period'>.</span><span class='id identifier rubyid_general_name_parser'>general_name_parser</span><span class='lparen'>(</span><span class='id identifier rubyid_arg'>arg</span><span class='lbracket'>[</span><span class='symbol'>:cdp_location</span><span class='rbracket'>]</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_serialize_names'>serialize_names</span>
-    <span class='id identifier rubyid_ef'>ef</span> <span class='op'>=</span> <span class='const'>OpenSSL</span><span class='op'>::</span><span class='const'>X509</span><span class='op'>::</span><span class='const'>ExtensionFactory</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span>
-    <span class='id identifier rubyid_ef'>ef</span><span class='period'>.</span><span class='id identifier rubyid_config'>config</span> <span class='op'>=</span> <span class='const'>OpenSSL</span><span class='op'>::</span><span class='const'>Config</span><span class='period'>.</span><span class='id identifier rubyid_parse'>parse</span><span class='lparen'>(</span><span class='id identifier rubyid_serialize'>serialize</span><span class='lbracket'>[</span><span class='symbol'>:conf</span><span class='rbracket'>]</span><span class='rparen'>)</span>
-    <span class='id identifier rubyid_critical'>critical</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>Cert</span><span class='op'>::</span><span class='const'>Extensions</span><span class='period'>.</span><span class='id identifier rubyid_calculate_critical'>calculate_critical</span><span class='lparen'>(</span><span class='id identifier rubyid_arg'>arg</span><span class='lbracket'>[</span><span class='symbol'>:critical</span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='kw'>false</span><span class='rparen'>)</span>
-    <span class='id identifier rubyid_arg'>arg</span> <span class='op'>=</span> <span class='id identifier rubyid_ef'>ef</span><span class='period'>.</span><span class='id identifier rubyid_create_extension'>create_extension</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>crlDistributionPoints</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_serialize'>serialize</span><span class='lbracket'>[</span><span class='symbol'>:extension_string</span><span class='rbracket'>]</span><span class='comma'>,</span><span class='id identifier rubyid_critical'>critical</span><span class='rparen'>)</span>
+  <span class='kw'>if</span> <span class='kw'>not</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>Cert</span><span class='op'>::</span><span class='const'>Extensions</span><span class='period'>.</span><span class='id identifier rubyid_is_extension?'>is_extension?</span><span class='lparen'>(</span><span class='id identifier rubyid_arg'>arg</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_arg'>arg</span> <span class='op'>=</span> <span class='id identifier rubyid_build_extension'>build_extension</span><span class='lparen'>(</span><span class='id identifier rubyid_arg'>arg</span><span class='rparen'>)</span>
   <span class='kw'>end</span>
-  <span class='kw'>super</span><span class='lparen'>(</span><span class='id identifier rubyid_arg'>arg</span><span class='rparen'>)</span>
 
-  <span class='ivar'>@crl</span><span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>ASN1</span><span class='op'>::</span><span class='const'>GeneralNames</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span>
-  <span class='id identifier rubyid_data'>data</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>ASN1</span><span class='period'>.</span><span class='id identifier rubyid_get_extension_payload'>get_extension_payload</span><span class='lparen'>(</span><span class='kw'>self</span><span class='rparen'>)</span>
-  <span class='id identifier rubyid_data'>data</span><span class='period'>.</span><span class='id identifier rubyid_entries'>entries</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_distribution_point'>distribution_point</span><span class='op'>|</span>
-    <span class='comment'>#   DistributionPoint ::= SEQUENCE {
-</span>    <span class='comment'>#        distributionPoint       [0]     DistributionPointName OPTIONAL,
-</span>    <span class='comment'>#        reasons                 [1]     ReasonFlags OPTIONAL,
-</span>    <span class='comment'>#        cRLIssuer               [2]     GeneralNames OPTIONAL }
-</span>    <span class='comment'>#   DistributionPointName ::= CHOICE {
-</span>    <span class='comment'>#        fullName                [0]     GeneralNames,
-</span>    <span class='comment'>#        nameRelativeToCRLIssuer [1]     RelativeDistinguishedName }
-</span>    <span class='comment'># We&#39;re only going to handle DistributionPointName [0] for now
-</span>    <span class='comment'># so grab entries[0] and then get the fullName with value[0]
-</span>    <span class='comment'># and the value of that ASN1Data with value[0] again
-</span>    <span class='ivar'>@crl</span><span class='period'>.</span><span class='id identifier rubyid_add_item'>add_item</span><span class='lparen'>(</span><span class='id identifier rubyid_distribution_point'>distribution_point</span><span class='period'>.</span><span class='id identifier rubyid_entries'>entries</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_value'>value</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_value'>value</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='rparen'>)</span>
-  <span class='kw'>end</span>
+  <span class='kw'>super</span><span class='lparen'>(</span><span class='id identifier rubyid_arg'>arg</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_parse_extension'>parse_extension</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -377,15 +548,259 @@ GeneralNames object</p>
   
 </div>
 
-  <div id="instance_attr_details" class="attr_details">
-    <h2>Instance Attribute Details</h2>
+
+  <div id="instance_method_details" class="method_details_list">
+    <h2>Instance Method Details</h2>
+
     
-      
-      <span id=""></span>
       <div class="method_details first">
-  <h3 class="signature first" id="crl-instance_method">
+  <h3 class="signature first" id="directory_names-instance_method">
   
-    - (<tt><span class='object_link'><a href="../../ASN1/GeneralNames.html" title="R509::ASN1::GeneralNames (class)">R509::ASN1::GeneralNames</a></span></tt><sup>?</sup>) <strong>crl</strong>  <span class="extras">(readonly)</span>
+    - (<tt>Array&lt;<span class='object_link'><a href="../../Subject.html" title="R509::Subject (class)">R509::Subject</a></span>&gt;</tt>) <strong>directory_names</strong> 
+  
+
+  
+    <span class="aliases">Also known as:
+    <span class="names"><span id='dir_names-instance_method'>dir_names</span></span>
+    </span>
+  
+
+  
+    <span class="not_defined_here">
+      Originally defined in module
+        <span class='object_link'><a href="GeneralNamesMixin.html#directory_names-instance_method" title="R509::Cert::Extensions::GeneralNamesMixin#directory_names (method)">GeneralNamesMixin</a></span>
+    </span>
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Directory names</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Array&lt;<span class='object_link'><a href="../../Subject.html" title="R509::Subject (class)">R509::Subject</a></span>&gt;</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>directory names</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="dns_names-instance_method">
+  
+    - (<tt>Array&lt;String&gt;</tt>) <strong>dns_names</strong> 
+  
+
+  
+
+  
+    <span class="not_defined_here">
+      Originally defined in module
+        <span class='object_link'><a href="GeneralNamesMixin.html#dns_names-instance_method" title="R509::Cert::Extensions::GeneralNamesMixin#dns_names (method)">GeneralNamesMixin</a></span>
+    </span>
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>DNS names</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Array&lt;String&gt;</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>DNS names</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="ip_addresses-instance_method">
+  
+    - (<tt>Array&lt;String&gt;</tt>) <strong>ip_addresses</strong> 
+  
+
+  
+    <span class="aliases">Also known as:
+    <span class="names"><span id='ips-instance_method'>ips</span></span>
+    </span>
+  
+
+  
+    <span class="not_defined_here">
+      Originally defined in module
+        <span class='object_link'><a href="GeneralNamesMixin.html#ip_addresses-instance_method" title="R509::Cert::Extensions::GeneralNamesMixin#ip_addresses (method)">GeneralNamesMixin</a></span>
+    </span>
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>IP addresses. They will be formatted as strings (dotted quad with optional
+netmask for IPv4 and colon-hexadecimal with optional netmask for IPv6</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Array&lt;String&gt;</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>IP addresses. They will be formatted as strings (dotted quad with optional
+netmask for IPv4 and colon-hexadecimal with optional netmask for IPv6</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="names-instance_method">
+  
+    - (<tt>Array</tt>) <strong>names</strong> 
+  
+
+  
+
+  
+    <span class="not_defined_here">
+      Originally defined in module
+        <span class='object_link'><a href="GeneralNamesMixin.html#names-instance_method" title="R509::Cert::Extensions::GeneralNamesMixin#names (method)">GeneralNamesMixin</a></span>
+    </span>
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Array of GeneralName objects preserving order found in the extension</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Array</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>array of GeneralName objects preserving order found in the extension</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="rfc_822_names-instance_method">
+  
+    - (<tt>Array&lt;String&gt;</tt>) <strong>rfc_822_names</strong> 
+  
+
+  
+    <span class="aliases">Also known as:
+    <span class="names"><span id='email_names-instance_method'>email_names</span></span>
+    </span>
+  
+
+  
+    <span class="not_defined_here">
+      Originally defined in module
+        <span class='object_link'><a href="GeneralNamesMixin.html#rfc_822_names-instance_method" title="R509::Cert::Extensions::GeneralNamesMixin#rfc_822_names (method)">GeneralNamesMixin</a></span>
+    </span>
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Email addresses</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Array&lt;String&gt;</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>email addresses</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="to_h-instance_method">
+  
+    - (<tt>Hash</tt>) <strong>to_h</strong> 
   
 
   
@@ -405,7 +820,7 @@ GeneralNames object</p>
     <li>
       
       
-        <span class='type'>(<tt><span class='object_link'><a href="../../ASN1/GeneralNames.html" title="R509::ASN1::GeneralNames (class)">R509::ASN1::GeneralNames</a></span></tt>, <tt>nil</tt>)</span>
+        <span class='type'>(<tt>Hash</tt>)</span>
       
       
       
@@ -419,30 +834,133 @@ GeneralNames object</p>
       <pre class="lines">
 
 
-699
-700
-701</pre>
+48
+49
+50
+51
+52
+53</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 699</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions/crl_distribution_points.rb', line 48</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_crl'>crl</span>
-  <span class='ivar'>@crl</span>
+<span class='kw'>def</span> <span class='id identifier rubyid_to_h'>to_h</span>
+  <span class='lbrace'>{</span>
+    <span class='symbol'>:critical</span> <span class='op'>=&gt;</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_critical?'>critical?</span><span class='comma'>,</span>
+    <span class='symbol'>:value</span> <span class='op'>=&gt;</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>Cert</span><span class='op'>::</span><span class='const'>Extensions</span><span class='period'>.</span><span class='id identifier rubyid_names_to_h'>names_to_h</span><span class='lparen'>(</span><span class='ivar'>@general_names</span><span class='period'>.</span><span class='id identifier rubyid_names'>names</span><span class='rparen'>)</span>
+  <span class='rbrace'>}</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
 </table>
 </div>
     
-  </div>
+      <div class="method_details ">
+  <h3 class="signature " id="to_yaml-instance_method">
+  
+    - (<tt>YAML</tt>) <strong>to_yaml</strong> 
+  
 
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>YAML</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+56
+57
+58</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions/crl_distribution_points.rb', line 56</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_to_yaml'>to_yaml</span>
+  <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_to_h'>to_h</span><span class='period'>.</span><span class='id identifier rubyid_to_yaml'>to_yaml</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="uris-instance_method">
+  
+    - (<tt>Array&lt;String&gt;</tt>) <strong>uris</strong> 
+  
+
+  
+
+  
+    <span class="not_defined_here">
+      Originally defined in module
+        <span class='object_link'><a href="GeneralNamesMixin.html#uris-instance_method" title="R509::Cert::Extensions::GeneralNamesMixin#uris (method)">GeneralNamesMixin</a></span>
+    </span>
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>URIs (not typically found in SAN extensions)</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Array&lt;String&gt;</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>URIs (not typically found in SAN extensions)</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div>
+</div>
+    
+  </div>
 
 </div>
 
     <div id="footer">
-  Generated on Sun Jun  9 10:03:38 2013 by
+  Generated on Sat Jan 25 19:00:20 2014 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.8.4.1 (ruby-2.0.0).
+  0.8.6.1 (ruby-2.0.0).
 </div>
 
   </body>

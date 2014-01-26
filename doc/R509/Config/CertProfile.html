@@ -6,13 +6,13 @@
 <title>
   Class: R509::Config::CertProfile
   
-    &mdash; Documentation by YARD 0.8.4.1
+    &mdash; Documentation by YARD 0.8.6.1
   
 </title>
 
-  <link rel="stylesheet" href="../../css/style.css" type="text/css" media="screen" charset="utf-8" />
+  <link rel="stylesheet" href="../../css/style.css" type="text/css" charset="utf-8" />
 
-  <link rel="stylesheet" href="../../css/common.css" type="text/css" media="screen" charset="utf-8" />
+  <link rel="stylesheet" href="../../css/common.css" type="text/css" charset="utf-8" />
 
 <script type="text/javascript" charset="utf-8">
   hasFrames = window.top.frames.main ? true : false;
@@ -94,7 +94,7 @@
   
   
     <dt class="r2 last">Defined in:</dt>
-    <dd class="r2 last">lib/r509/config.rb</dd>
+    <dd class="r2 last">lib/r509/config/cert_profile.rb</dd>
   
 </dl>
 <div class="clear"></div>
@@ -149,6 +149,35 @@
       <li class="public ">
   <span class="summary_signature">
     
+      <a href="#authority_info_access-instance_method" title="#authority_info_access (instance method)">- (Object) <strong>authority_info_access</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+    
+      <span class="note title readonly">readonly</span>
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Returns the value of attribute authority_info_access.</p>
+</div></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
       <a href="#basic_constraints-instance_method" title="#basic_constraints (instance method)">- (Object) <strong>basic_constraints</strong> </a>
     
 
@@ -178,64 +207,6 @@
       <li class="public ">
   <span class="summary_signature">
     
-      <a href="#ca_issuers_location-instance_method" title="#ca_issuers_location (instance method)">- (Object) <strong>ca_issuers_location</strong> </a>
-    
-
-    
-  </span>
-  
-  
-  
-    
-      <span class="note title readonly">readonly</span>
-    
-    
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'>
-<p>Returns the value of attribute ca_issuers_location.</p>
-</div></span>
-  
-</li>
-
-    
-      <li class="public ">
-  <span class="summary_signature">
-    
-      <a href="#cdp_location-instance_method" title="#cdp_location (instance method)">- (Object) <strong>cdp_location</strong> </a>
-    
-
-    
-  </span>
-  
-  
-  
-    
-      <span class="note title readonly">readonly</span>
-    
-    
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'>
-<p>Returns the value of attribute cdp_location.</p>
-</div></span>
-  
-</li>
-
-    
-      <li class="public ">
-  <span class="summary_signature">
-    
       <a href="#certificate_policies-instance_method" title="#certificate_policies (instance method)">- (Object) <strong>certificate_policies</strong> </a>
     
 
@@ -257,6 +228,35 @@
   
     <span class="summary_desc"><div class='inline'>
 <p>Returns the value of attribute certificate_policies.</p>
+</div></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#crl_distribution_points-instance_method" title="#crl_distribution_points (instance method)">- (Object) <strong>crl_distribution_points</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+    
+      <span class="note title readonly">readonly</span>
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Returns the value of attribute crl_distribution_points.</p>
 </div></span>
   
 </li>
@@ -410,35 +410,6 @@
       <li class="public ">
   <span class="summary_signature">
     
-      <a href="#ocsp_location-instance_method" title="#ocsp_location (instance method)">- (Object) <strong>ocsp_location</strong> </a>
-    
-
-    
-  </span>
-  
-  
-  
-    
-      <span class="note title readonly">readonly</span>
-    
-    
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'>
-<p>Returns the value of attribute ocsp_location.</p>
-</div></span>
-  
-</li>
-
-    
-      <li class="public ">
-  <span class="summary_signature">
-    
       <a href="#ocsp_no_check-instance_method" title="#ocsp_no_check (instance method)">- (Object) <strong>ocsp_no_check</strong> </a>
     
 
@@ -562,16 +533,54 @@
 </li>
 
       
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#to_h-instance_method" title="#to_h (instance method)">- (Hash) <strong>to_h</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#to_yaml-instance_method" title="#to_yaml (instance method)">- (YAML) <strong>to_yaml</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
     </ul>
   
 
-
-  
-  
-  
-  
-  
-  <div id="constructor_details" class="method_details_list">
+<div id="constructor_details" class="method_details_list">
   <h2>Constructor Details</h2>
   
     <div class="method_details first">
@@ -632,7 +641,7 @@
       
         <li>
           <span class="name">:key_usage</span>
-          <span class="type">(<tt>Array</tt>)</span>
+          <span class="type">(<tt>Hash</tt>)</span>
           <span class="default">
             
           </span>
@@ -641,7 +650,7 @@
       
         <li>
           <span class="name">:extended_key_usage</span>
-          <span class="type">(<tt>Array</tt>)</span>
+          <span class="type">(<tt>Hash</tt>)</span>
           <span class="default">
             
           </span>
@@ -650,7 +659,7 @@
       
         <li>
           <span class="name">:certificate_policies</span>
-          <span class="type">(<tt>Array</tt>)</span>
+          <span class="type">(<tt>Hash</tt>)</span>
           <span class="default">
             
           </span>
@@ -672,7 +681,7 @@
       
         <li>
           <span class="name">:inhibit_any_policy</span>
-          <span class="type">(<tt>Integer</tt>)</span>
+          <span class="type">(<tt>Hash</tt>)</span>
           <span class="default">
             
           </span>
@@ -691,8 +700,26 @@
           </span>
           
             &mdash; <div class='inline'>
-<p>Sets the value of the policyConstriants extension</p>
+<p>Sets the value of the policyConstraints extension</p>
 </div>
+          
+        </li>
+      
+        <li>
+          <span class="name">:authority_info_access</span>
+          <span class="type">(<tt>Hash</tt>)</span>
+          <span class="default">
+            
+          </span>
+          
+        </li>
+      
+        <li>
+          <span class="name">:crl_distribution_points</span>
+          <span class="type">(<tt>Hash</tt>)</span>
+          <span class="default">
+            
+          </span>
           
         </li>
       
@@ -751,33 +778,6 @@ list if it isn&#39;t already listed.</p>
           
         </li>
       
-        <li>
-          <span class="name">:cdp_location</span>
-          <span class="type">(<tt>Array</tt>, <tt><span class='object_link'><a href="../ASN1/GeneralNames.html" title="R509::ASN1::GeneralNames (class)">R509::ASN1::GeneralNames</a></span></tt>)</span>
-          <span class="default">
-            
-          </span>
-          
-        </li>
-      
-        <li>
-          <span class="name">:ocsp_location</span>
-          <span class="type">(<tt>Array</tt>, <tt><span class='object_link'><a href="../ASN1/GeneralNames.html" title="R509::ASN1::GeneralNames (class)">R509::ASN1::GeneralNames</a></span></tt>)</span>
-          <span class="default">
-            
-          </span>
-          
-        </li>
-      
-        <li>
-          <span class="name">:ca_issuers_location</span>
-          <span class="type">(<tt>Array</tt>, <tt><span class='object_link'><a href="../ASN1/GeneralNames.html" title="R509::ASN1::GeneralNames (class)">R509::ASN1::GeneralNames</a></span></tt>)</span>
-          <span class="default">
-            
-          </span>
-          
-        </li>
-      
     </ul>
   
 
@@ -788,6 +788,10 @@ list if it isn&#39;t already listed.</p>
       <pre class="lines">
 
 
+37
+38
+39
+40
 41
 42
 43
@@ -798,29 +802,23 @@ list if it isn&#39;t already listed.</p>
 48
 49
 50
-51
-52
-53
-54
-55
-56</pre>
+51</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/config.rb', line 41</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/config/cert_profile.rb', line 37</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='id identifier rubyid_opts'>opts</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
-  <span class='ivar'>@basic_constraints</span> <span class='op'>=</span> <span class='id identifier rubyid_validate_basic_constraints'>validate_basic_constraints</span> <span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:basic_constraints</span><span class='rbracket'>]</span>
-  <span class='ivar'>@key_usage</span> <span class='op'>=</span> <span class='id identifier rubyid_validate_key_usage'>validate_key_usage</span> <span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:key_usage</span><span class='rbracket'>]</span>
-  <span class='ivar'>@extended_key_usage</span> <span class='op'>=</span> <span class='id identifier rubyid_validate_extended_key_usage'>validate_extended_key_usage</span> <span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:extended_key_usage</span><span class='rbracket'>]</span>
-  <span class='ivar'>@certificate_policies</span> <span class='op'>=</span> <span class='id identifier rubyid_validate_certificate_policies'>validate_certificate_policies</span> <span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:certificate_policies</span><span class='rbracket'>]</span>
-  <span class='ivar'>@inhibit_any_policy</span> <span class='op'>=</span> <span class='id identifier rubyid_validate_inhibit_any_policy'>validate_inhibit_any_policy</span> <span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:inhibit_any_policy</span><span class='rbracket'>]</span>
-  <span class='ivar'>@policy_constraints</span> <span class='op'>=</span> <span class='id identifier rubyid_validate_policy_constraints'>validate_policy_constraints</span> <span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:policy_constraints</span><span class='rbracket'>]</span>
-  <span class='ivar'>@name_constraints</span> <span class='op'>=</span> <span class='id identifier rubyid_validate_name_constraints'>validate_name_constraints</span> <span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:name_constraints</span><span class='rbracket'>]</span>
-  <span class='ivar'>@ocsp_no_check</span> <span class='op'>=</span> <span class='lparen'>(</span><span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:ocsp_no_check</span><span class='rbracket'>]</span> <span class='op'>==</span> <span class='kw'>true</span> <span class='kw'>or</span> <span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:ocsp_no_check</span><span class='rbracket'>]</span> <span class='op'>==</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>true</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='op'>?</span><span class='kw'>true</span><span class='op'>:</span><span class='kw'>false</span>
-  <span class='ivar'>@subject_item_policy</span> <span class='op'>=</span> <span class='id identifier rubyid_validate_subject_item_policy'>validate_subject_item_policy</span> <span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:subject_item_policy</span><span class='rbracket'>]</span>
-  <span class='ivar'>@ocsp_location</span> <span class='op'>=</span> <span class='id identifier rubyid_validate_ocsp_location'>validate_ocsp_location</span><span class='lparen'>(</span><span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:ocsp_location</span><span class='rbracket'>]</span><span class='rparen'>)</span>
-  <span class='ivar'>@ca_issuers_location</span> <span class='op'>=</span> <span class='id identifier rubyid_validate_ca_issuers_location'>validate_ca_issuers_location</span><span class='lparen'>(</span><span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:ca_issuers_location</span><span class='rbracket'>]</span><span class='rparen'>)</span>
-  <span class='ivar'>@cdp_location</span> <span class='op'>=</span> <span class='id identifier rubyid_validate_cdp_location'>validate_cdp_location</span><span class='lparen'>(</span><span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:cdp_location</span><span class='rbracket'>]</span><span class='rparen'>)</span>
+  <span class='ivar'>@basic_constraints</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>Cert</span><span class='op'>::</span><span class='const'>Extensions</span><span class='op'>::</span><span class='const'>BasicConstraints</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:basic_constraints</span><span class='rbracket'>]</span><span class='rparen'>)</span> <span class='kw'>unless</span> <span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:basic_constraints</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
+  <span class='ivar'>@key_usage</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>Cert</span><span class='op'>::</span><span class='const'>Extensions</span><span class='op'>::</span><span class='const'>KeyUsage</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:key_usage</span><span class='rbracket'>]</span><span class='rparen'>)</span> <span class='kw'>unless</span> <span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:key_usage</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
+  <span class='ivar'>@extended_key_usage</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>Cert</span><span class='op'>::</span><span class='const'>Extensions</span><span class='op'>::</span><span class='const'>ExtendedKeyUsage</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:extended_key_usage</span><span class='rbracket'>]</span><span class='rparen'>)</span> <span class='kw'>unless</span> <span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:extended_key_usage</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
+  <span class='ivar'>@certificate_policies</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>Cert</span><span class='op'>::</span><span class='const'>Extensions</span><span class='op'>::</span><span class='const'>CertificatePolicies</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:certificate_policies</span><span class='rbracket'>]</span><span class='rparen'>)</span> <span class='kw'>unless</span> <span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:certificate_policies</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
+  <span class='ivar'>@inhibit_any_policy</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>Cert</span><span class='op'>::</span><span class='const'>Extensions</span><span class='op'>::</span><span class='const'>InhibitAnyPolicy</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:inhibit_any_policy</span><span class='rbracket'>]</span><span class='rparen'>)</span> <span class='kw'>unless</span> <span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:inhibit_any_policy</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
+  <span class='ivar'>@policy_constraints</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>Cert</span><span class='op'>::</span><span class='const'>Extensions</span><span class='op'>::</span><span class='const'>PolicyConstraints</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:policy_constraints</span><span class='rbracket'>]</span><span class='rparen'>)</span> <span class='kw'>unless</span> <span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:policy_constraints</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
+  <span class='ivar'>@name_constraints</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>Cert</span><span class='op'>::</span><span class='const'>Extensions</span><span class='op'>::</span><span class='const'>NameConstraints</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:name_constraints</span><span class='rbracket'>]</span><span class='rparen'>)</span> <span class='kw'>unless</span> <span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:name_constraints</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
+  <span class='ivar'>@ocsp_no_check</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>Cert</span><span class='op'>::</span><span class='const'>Extensions</span><span class='op'>::</span><span class='const'>OCSPNoCheck</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:ocsp_no_check</span><span class='rbracket'>]</span><span class='rparen'>)</span> <span class='kw'>unless</span> <span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:ocsp_no_check</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
+  <span class='ivar'>@authority_info_access</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>Cert</span><span class='op'>::</span><span class='const'>Extensions</span><span class='op'>::</span><span class='const'>AuthorityInfoAccess</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:authority_info_access</span><span class='rbracket'>]</span><span class='rparen'>)</span> <span class='kw'>unless</span> <span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:authority_info_access</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
+  <span class='ivar'>@crl_distribution_points</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>Cert</span><span class='op'>::</span><span class='const'>Extensions</span><span class='op'>::</span><span class='const'>CRLDistributionPoints</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:crl_distribution_points</span><span class='rbracket'>]</span><span class='rparen'>)</span> <span class='kw'>unless</span> <span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:crl_distribution_points</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
+  <span class='ivar'>@subject_item_policy</span> <span class='op'>=</span> <span class='id identifier rubyid_validate_subject_item_policy'>validate_subject_item_policy</span><span class='lparen'>(</span><span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:subject_item_policy</span><span class='rbracket'>]</span><span class='rparen'>)</span>
   <span class='ivar'>@default_md</span> <span class='op'>=</span> <span class='id identifier rubyid_validate_md'>validate_md</span><span class='lparen'>(</span><span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:default_md</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>MessageDigest</span><span class='op'>::</span><span class='const'>DEFAULT_MD</span><span class='rparen'>)</span>
   <span class='ivar'>@allowed_mds</span> <span class='op'>=</span> <span class='id identifier rubyid_validate_allowed_mds'>validate_allowed_mds</span><span class='lparen'>(</span><span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:allowed_mds</span><span class='rbracket'>]</span><span class='rparen'>)</span>
 <span class='kw'>end</span></pre>
@@ -862,15 +860,58 @@ list if it isn&#39;t already listed.</p>
       <pre class="lines">
 
 
-19
-20
-21</pre>
+17
+18
+19</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/config.rb', line 19</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/config/cert_profile.rb', line 17</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_allowed_mds'>allowed_mds</span>
   <span class='ivar'>@allowed_mds</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      
+      <span id=""></span>
+      <div class="method_details ">
+  <h3 class="signature " id="authority_info_access-instance_method">
+  
+    - (<tt>Object</tt>) <strong>authority_info_access</strong>  <span class="extras">(readonly)</span>
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns the value of attribute authority_info_access</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+17
+18
+19</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/r509/config/cert_profile.rb', line 17</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_authority_info_access'>authority_info_access</span>
+  <span class='ivar'>@authority_info_access</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -905,101 +946,15 @@ list if it isn&#39;t already listed.</p>
       <pre class="lines">
 
 
-19
-20
-21</pre>
+17
+18
+19</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/config.rb', line 19</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/config/cert_profile.rb', line 17</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_basic_constraints'>basic_constraints</span>
   <span class='ivar'>@basic_constraints</span>
-<span class='kw'>end</span></pre>
-    </td>
-  </tr>
-</table>
-</div>
-    
-      
-      <span id=""></span>
-      <div class="method_details ">
-  <h3 class="signature " id="ca_issuers_location-instance_method">
-  
-    - (<tt>Object</tt>) <strong>ca_issuers_location</strong>  <span class="extras">(readonly)</span>
-  
-
-  
-
-  
-</h3><div class="docstring">
-  <div class="discussion">
-    
-<p>Returns the value of attribute ca_issuers_location</p>
-
-
-  </div>
-</div>
-<div class="tags">
-  
-
-</div><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-19
-20
-21</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/config.rb', line 19</span>
-
-<span class='kw'>def</span> <span class='id identifier rubyid_ca_issuers_location'>ca_issuers_location</span>
-  <span class='ivar'>@ca_issuers_location</span>
-<span class='kw'>end</span></pre>
-    </td>
-  </tr>
-</table>
-</div>
-    
-      
-      <span id=""></span>
-      <div class="method_details ">
-  <h3 class="signature " id="cdp_location-instance_method">
-  
-    - (<tt>Object</tt>) <strong>cdp_location</strong>  <span class="extras">(readonly)</span>
-  
-
-  
-
-  
-</h3><div class="docstring">
-  <div class="discussion">
-    
-<p>Returns the value of attribute cdp_location</p>
-
-
-  </div>
-</div>
-<div class="tags">
-  
-
-</div><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-19
-20
-21</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/config.rb', line 19</span>
-
-<span class='kw'>def</span> <span class='id identifier rubyid_cdp_location'>cdp_location</span>
-  <span class='ivar'>@cdp_location</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -1034,15 +989,58 @@ list if it isn&#39;t already listed.</p>
       <pre class="lines">
 
 
-19
-20
-21</pre>
+17
+18
+19</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/config.rb', line 19</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/config/cert_profile.rb', line 17</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_certificate_policies'>certificate_policies</span>
   <span class='ivar'>@certificate_policies</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      
+      <span id=""></span>
+      <div class="method_details ">
+  <h3 class="signature " id="crl_distribution_points-instance_method">
+  
+    - (<tt>Object</tt>) <strong>crl_distribution_points</strong>  <span class="extras">(readonly)</span>
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns the value of attribute crl_distribution_points</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+17
+18
+19</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/r509/config/cert_profile.rb', line 17</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_crl_distribution_points'>crl_distribution_points</span>
+  <span class='ivar'>@crl_distribution_points</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -1077,12 +1075,12 @@ list if it isn&#39;t already listed.</p>
       <pre class="lines">
 
 
-19
-20
-21</pre>
+17
+18
+19</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/config.rb', line 19</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/config/cert_profile.rb', line 17</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_default_md'>default_md</span>
   <span class='ivar'>@default_md</span>
@@ -1120,12 +1118,12 @@ list if it isn&#39;t already listed.</p>
       <pre class="lines">
 
 
-19
-20
-21</pre>
+17
+18
+19</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/config.rb', line 19</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/config/cert_profile.rb', line 17</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_extended_key_usage'>extended_key_usage</span>
   <span class='ivar'>@extended_key_usage</span>
@@ -1163,12 +1161,12 @@ list if it isn&#39;t already listed.</p>
       <pre class="lines">
 
 
-19
-20
-21</pre>
+17
+18
+19</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/config.rb', line 19</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/config/cert_profile.rb', line 17</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_inhibit_any_policy'>inhibit_any_policy</span>
   <span class='ivar'>@inhibit_any_policy</span>
@@ -1206,12 +1204,12 @@ list if it isn&#39;t already listed.</p>
       <pre class="lines">
 
 
-19
-20
-21</pre>
+17
+18
+19</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/config.rb', line 19</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/config/cert_profile.rb', line 17</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_key_usage'>key_usage</span>
   <span class='ivar'>@key_usage</span>
@@ -1249,58 +1247,15 @@ list if it isn&#39;t already listed.</p>
       <pre class="lines">
 
 
-19
-20
-21</pre>
+17
+18
+19</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/config.rb', line 19</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/config/cert_profile.rb', line 17</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_name_constraints'>name_constraints</span>
   <span class='ivar'>@name_constraints</span>
-<span class='kw'>end</span></pre>
-    </td>
-  </tr>
-</table>
-</div>
-    
-      
-      <span id=""></span>
-      <div class="method_details ">
-  <h3 class="signature " id="ocsp_location-instance_method">
-  
-    - (<tt>Object</tt>) <strong>ocsp_location</strong>  <span class="extras">(readonly)</span>
-  
-
-  
-
-  
-</h3><div class="docstring">
-  <div class="discussion">
-    
-<p>Returns the value of attribute ocsp_location</p>
-
-
-  </div>
-</div>
-<div class="tags">
-  
-
-</div><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-19
-20
-21</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/config.rb', line 19</span>
-
-<span class='kw'>def</span> <span class='id identifier rubyid_ocsp_location'>ocsp_location</span>
-  <span class='ivar'>@ocsp_location</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -1335,12 +1290,12 @@ list if it isn&#39;t already listed.</p>
       <pre class="lines">
 
 
-19
-20
-21</pre>
+17
+18
+19</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/config.rb', line 19</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/config/cert_profile.rb', line 17</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_ocsp_no_check'>ocsp_no_check</span>
   <span class='ivar'>@ocsp_no_check</span>
@@ -1378,12 +1333,12 @@ list if it isn&#39;t already listed.</p>
       <pre class="lines">
 
 
-19
-20
-21</pre>
+17
+18
+19</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/config.rb', line 19</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/config/cert_profile.rb', line 17</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_policy_constraints'>policy_constraints</span>
   <span class='ivar'>@policy_constraints</span>
@@ -1421,12 +1376,12 @@ list if it isn&#39;t already listed.</p>
       <pre class="lines">
 
 
-19
-20
-21</pre>
+17
+18
+19</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/config.rb', line 19</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/config/cert_profile.rb', line 17</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_subject_item_policy'>subject_item_policy</span>
   <span class='ivar'>@subject_item_policy</span>
@@ -1439,12 +1394,150 @@ list if it isn&#39;t already listed.</p>
   </div>
 
 
+  <div id="instance_method_details" class="method_details_list">
+    <h2>Instance Method Details</h2>
+
+    
+      <div class="method_details first">
+  <h3 class="signature first" id="to_h-instance_method">
+  
+    - (<tt>Hash</tt>) <strong>to_h</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Hash</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/r509/config/cert_profile.rb', line 54</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_to_h'>to_h</span>
+  <span class='id identifier rubyid_hash'>hash</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
+  <span class='id identifier rubyid_hash'>hash</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>basic_constraints</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='ivar'>@basic_constraints</span><span class='period'>.</span><span class='id identifier rubyid_to_h'>to_h</span> <span class='kw'>unless</span> <span class='ivar'>@basic_constraints</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
+  <span class='id identifier rubyid_hash'>hash</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>key_usage</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='ivar'>@key_usage</span><span class='period'>.</span><span class='id identifier rubyid_to_h'>to_h</span> <span class='kw'>unless</span> <span class='ivar'>@key_usage</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
+  <span class='id identifier rubyid_hash'>hash</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>extended_key_usage</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='ivar'>@extended_key_usage</span><span class='period'>.</span><span class='id identifier rubyid_to_h'>to_h</span> <span class='kw'>unless</span> <span class='ivar'>@extended_key_usage</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
+  <span class='id identifier rubyid_hash'>hash</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>certificate_policies</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='ivar'>@certificate_policies</span><span class='period'>.</span><span class='id identifier rubyid_to_h'>to_h</span> <span class='kw'>unless</span> <span class='ivar'>@certificate_policies</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
+  <span class='id identifier rubyid_hash'>hash</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>inhibit_any_policy</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='ivar'>@inhibit_any_policy</span><span class='period'>.</span><span class='id identifier rubyid_to_h'>to_h</span> <span class='kw'>unless</span> <span class='ivar'>@inhibit_any_policy</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
+  <span class='id identifier rubyid_hash'>hash</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>policy_constraints</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='ivar'>@policy_constraints</span><span class='period'>.</span><span class='id identifier rubyid_to_h'>to_h</span> <span class='kw'>unless</span> <span class='ivar'>@policy_constraints</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
+  <span class='id identifier rubyid_hash'>hash</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>name_constraints</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='ivar'>@name_constraints</span><span class='period'>.</span><span class='id identifier rubyid_to_h'>to_h</span> <span class='kw'>unless</span> <span class='ivar'>@name_constraints</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
+  <span class='id identifier rubyid_hash'>hash</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>ocsp_no_check</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='ivar'>@ocsp_no_check</span><span class='period'>.</span><span class='id identifier rubyid_to_h'>to_h</span> <span class='kw'>unless</span> <span class='ivar'>@ocsp_no_check</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
+  <span class='id identifier rubyid_hash'>hash</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>authority_info_access</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='ivar'>@authority_info_access</span><span class='period'>.</span><span class='id identifier rubyid_to_h'>to_h</span> <span class='kw'>unless</span> <span class='ivar'>@authority_info_access</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
+  <span class='id identifier rubyid_hash'>hash</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>crl_distribution_points</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='ivar'>@crl_distribution_points</span><span class='period'>.</span><span class='id identifier rubyid_to_h'>to_h</span> <span class='kw'>unless</span> <span class='ivar'>@crl_distribution_points</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
+  <span class='id identifier rubyid_hash'>hash</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>subject_item_policy</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='ivar'>@subject_item_policy</span><span class='period'>.</span><span class='id identifier rubyid_to_h'>to_h</span> <span class='kw'>unless</span> <span class='ivar'>@subject_item_policy</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
+  <span class='id identifier rubyid_hash'>hash</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>default_md</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='ivar'>@default_md</span> <span class='kw'>unless</span> <span class='ivar'>@default_md</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
+  <span class='id identifier rubyid_hash'>hash</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>allowed_mds</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='ivar'>@allowed_mds</span> <span class='kw'>unless</span> <span class='ivar'>@allowed_mds</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
+  <span class='id identifier rubyid_hash'>hash</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="to_yaml-instance_method">
+  
+    - (<tt>YAML</tt>) <strong>to_yaml</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>YAML</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+73
+74
+75</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/r509/config/cert_profile.rb', line 73</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_to_yaml'>to_yaml</span>
+  <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_to_h'>to_h</span><span class='period'>.</span><span class='id identifier rubyid_to_yaml'>to_yaml</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
 </div>
 
     <div id="footer">
-  Generated on Sun Jun  9 10:03:36 2013 by
+  Generated on Sat Jan 25 19:00:18 2014 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.8.4.1 (ruby-2.0.0).
+  0.8.6.1 (ruby-2.0.0).
 </div>
 
   </body>

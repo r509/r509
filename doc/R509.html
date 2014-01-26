@@ -6,13 +6,13 @@
 <title>
   Module: R509
   
-    &mdash; Documentation by YARD 0.8.4.1
+    &mdash; Documentation by YARD 0.8.6.1
   
 </title>
 
-  <link rel="stylesheet" href="css/style.css" type="text/css" media="screen" charset="utf-8" />
+  <link rel="stylesheet" href="css/style.css" type="text/css" charset="utf-8" />
 
-  <link rel="stylesheet" href="css/common.css" type="text/css" media="screen" charset="utf-8" />
+  <link rel="stylesheet" href="css/common.css" type="text/css" charset="utf-8" />
 
 <script type="text/javascript" charset="utf-8">
   hasFrames = window.top.frames.main ? true : false;
@@ -80,7 +80,7 @@
   
     <dt class="r1 last">Defined in:</dt>
     <dd class="r1 last">lib/r509.rb<span class="defines">,<br />
-  lib/r509/crl.rb,<br /> lib/r509/csr.rb,<br /> lib/r509/cert.rb,<br /> lib/r509/spki.rb,<br /> lib/r509/asn1.rb,<br /> lib/r509/config.rb,<br /> lib/r509/engine.rb,<br /> lib/r509/version.rb,<br /> lib/r509/subject.rb,<br /> lib/r509/oid_mapper.rb,<br /> lib/r509/io_helpers.rb,<br /> lib/r509/exceptions.rb,<br /> lib/r509/private_key.rb,<br /> lib/r509/message_digest.rb,<br /> lib/r509/cert/extensions.rb</span>
+  lib/r509/csr.rb,<br /> lib/r509/spki.rb,<br /> lib/r509/cert.rb,<br /> lib/r509/asn1.rb,<br /> lib/r509/config.rb,<br /> lib/r509/engine.rb,<br /> lib/r509/version.rb,<br /> lib/r509/subject.rb,<br /> lib/r509/trollop.rb,<br /> lib/r509/helpers.rb,<br /> lib/r509/io_helpers.rb,<br /> lib/r509/exceptions.rb,<br /> lib/r509/oid_mapper.rb,<br /> lib/r509/private_key.rb,<br /> lib/r509/message_digest.rb,<br /> lib/r509/crl/signed_list.rb,<br /> lib/r509/config/ca_config.rb,<br /> lib/r509/crl/reader_writer.rb,<br /> lib/r509/crl/administrator.rb,<br /> lib/r509/config/cert_profile.rb,<br /> lib/r509/cert/extensions/base.rb,<br /> lib/r509/cert/extensions/key_usage.rb,<br /> lib/r509/config/subject_item_policy.rb,<br /> lib/r509/cert/extensions/ocsp_no_check.rb,<br /> lib/r509/cert/extensions/name_constraints.rb,<br /> lib/r509/cert/extensions/validation_mixin.rb,<br /> lib/r509/cert/extensions/basic_constraints.rb,<br /> lib/r509/cert/extensions/extended_key_usage.rb,<br /> lib/r509/cert/extensions/policy_constraints.rb,<br /> lib/r509/cert/extensions/inhibit_any_policy.rb,<br /> lib/r509/cert/extensions/certificate_policies.rb,<br /> lib/r509/cert/extensions/authority_info_access.rb,<br /> lib/r509/cert/extensions/subject_key_identifier.rb,<br /> lib/r509/cert/extensions/crl_distribution_points.rb,<br /> lib/r509/cert/extensions/subject_alternative_name.rb,<br /> lib/r509/cert/extensions/authority_key_identifier.rb</span>
 </dd>
   
 </dl>
@@ -89,8 +89,7 @@
 <h2>Overview</h2><div class="docstring">
   <div class="discussion">
     
-<p>A module for building an easy to use CA. Includes CSR, Certificate, and CRL
-support.</p>
+<p>shared methods for validation among the extensions objects</p>
 
 
   </div>
@@ -102,7 +101,7 @@ support.</p>
 <p class="children">
   
     
-      <strong class="modules">Modules:</strong> <span class='object_link'><a href="R509/ASN1.html" title="R509::ASN1 (module)">ASN1</a></span>, <span class='object_link'><a href="R509/CRL.html" title="R509::CRL (module)">CRL</a></span>, <span class='object_link'><a href="R509/CertificateAuthority.html" title="R509::CertificateAuthority (module)">CertificateAuthority</a></span>, <span class='object_link'><a href="R509/Config.html" title="R509::Config (module)">Config</a></span>, <span class='object_link'><a href="R509/IOHelpers.html" title="R509::IOHelpers (module)">IOHelpers</a></span>, <span class='object_link'><a href="R509/OCSP.html" title="R509::OCSP (module)">OCSP</a></span>, <span class='object_link'><a href="R509/OIDMapper.html" title="R509::OIDMapper (module)">OIDMapper</a></span>, <span class='object_link'><a href="R509/Validity.html" title="R509::Validity (module)">Validity</a></span>
+      <strong class="modules">Modules:</strong> <span class='object_link'><a href="R509/ASN1.html" title="R509::ASN1 (module)">ASN1</a></span>, <span class='object_link'><a href="R509/CRL.html" title="R509::CRL (module)">CRL</a></span>, <span class='object_link'><a href="R509/CertificateAuthority.html" title="R509::CertificateAuthority (module)">CertificateAuthority</a></span>, <span class='object_link'><a href="R509/Config.html" title="R509::Config (module)">Config</a></span>, <span class='object_link'><a href="R509/Helpers.html" title="R509::Helpers (module)">Helpers</a></span>, <span class='object_link'><a href="R509/OCSP.html" title="R509::OCSP (module)">OCSP</a></span>, <span class='object_link'><a href="R509/OIDMapper.html" title="R509::OIDMapper (module)">OIDMapper</a></span>, <span class='object_link'><a href="R509/Validity.html" title="R509::Validity (module)">Validity</a></span>
     
   
     
@@ -129,7 +128,7 @@ support.</p>
 
 </div>
         </dt>
-        <dd><pre class="code"><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>0.9.2</span><span class='tstring_end'>&quot;</span></span></pre></dd>
+        <dd><pre class="code"><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>0.10.0.pre</span><span class='tstring_end'>&quot;</span></span></pre></dd>
       
     </dl>
   
@@ -244,12 +243,12 @@ support.</p>
       <pre class="lines">
 
 
-31
-32
-33</pre>
+33
+34
+35</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509.rb', line 31</span>
+      <pre class="code"><span class="info file"># File 'lib/r509.rb', line 33</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_ec_supported?'>ec_supported?</span>
   <span class='lparen'>(</span><span class='kw'>not</span> <span class='kw'>defined?</span><span class='lparen'>(</span><span class='const'>OpenSSL</span><span class='op'>::</span><span class='const'>PKey</span><span class='op'>::</span><span class='const'>EC</span><span class='op'>::</span><span class='const'>UNSUPPORTED</span><span class='rparen'>)</span><span class='rparen'>)</span>
@@ -298,15 +297,15 @@ support.</p>
       <pre class="lines">
 
 
-23
-24
 25
 26
 27
-28</pre>
+28
+29
+30</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509.rb', line 23</span>
+      <pre class="code"><span class="info file"># File 'lib/r509.rb', line 25</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_print_debug'>print_debug</span>
   <span class='id identifier rubyid_puts'>puts</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>r509 v</span><span class='embexpr_beg'>#{</span><span class='const'>R509</span><span class='op'>::</span><span class='const'>VERSION</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
@@ -324,9 +323,9 @@ support.</p>
 </div>
 
     <div id="footer">
-  Generated on Sun Jun  9 10:03:34 2013 by
+  Generated on Sat Jan 25 19:00:16 2014 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.8.4.1 (ruby-2.0.0).
+  0.8.6.1 (ruby-2.0.0).
 </div>
 
   </body>
