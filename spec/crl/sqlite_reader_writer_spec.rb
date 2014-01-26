@@ -7,8 +7,7 @@ module R509
       let(:empty_db) { SQLite3::Database.new ':memory:' }
       let(:db) {
         db = SQLite3::Database.new ':memory:'
-        db.execute_batch SqliteReaderWriter::DB_SCHEMA
-        db.execute "INSERT INTO revoked_serials (serial, reason, revoked_at) VALUES ('12345',0,1323983885), ('12346',null,1323983885)"
+        db.execute_batch TestFixtures::CRL_LIST_SQLITE
         db
       }
       let(:rw) { SqliteReaderWriter.new db } 

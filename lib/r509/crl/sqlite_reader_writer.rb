@@ -3,18 +3,6 @@ module R509
   module CRL
     class SqliteReaderWriter < R509::CRL::ReaderWriter
 
-      DB_SCHEMA=<<-EOSCHEMA
-        CREATE TABLE revoked_serials(
-           serial TEXT NOT NULL PRIMARY KEY,
-           reason INTEGER,
-           revoked_at INTEGER NOT NULL
-        );
-        CREATE TABLE crl_number(
-          number INTEGER NOT NULL DEFAULT 0
-        );
-        INSERT INTO crl_number DEFAULT VALUES;
-      EOSCHEMA
-
       #Create an SQLite based persitence
       #@param filename_or_db filepath to an SQLite database or an SQLite3::Database object
       def initialize(filename_or_db)
@@ -66,7 +54,17 @@ module R509
       private
       def ensure_schema
         if @db.execute('SELECT * FROM sqlite_master WHERE type=? AND name=?', 'table', 'revoked_serials').empty?
-          @db.execute_batch DB_SCHEMA 
+          @db.execute_batch <<-EOSCHEMA
+            CREATE TABLE revoked_serials(
+               serial TEXT NOT NULL PRIMARY KEY,
+               reason INTEGER,
+               revoked_at INTEGER NOT NULL
+            );
+            CREATE TABLE crl_number(
+              number INTEGER NOT NULL DEFAULT 0
+            );
+            INSERT INTO crl_number DEFAULT VALUES;
+          EOSCHEMA
         end
       end
     end
