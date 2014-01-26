@@ -6,13 +6,13 @@
 <title>
   Class: R509::Cert::Extensions::ExtendedKeyUsage
   
-    &mdash; Documentation by YARD 0.8.4.1
+    &mdash; Documentation by YARD 0.8.6.1
   
 </title>
 
-  <link rel="stylesheet" href="../../../css/style.css" type="text/css" media="screen" charset="utf-8" />
+  <link rel="stylesheet" href="../../../css/style.css" type="text/css" charset="utf-8" />
 
-  <link rel="stylesheet" href="../../../css/common.css" type="text/css" media="screen" charset="utf-8" />
+  <link rel="stylesheet" href="../../../css/common.css" type="text/css" charset="utf-8" />
 
 <script type="text/javascript" charset="utf-8">
   hasFrames = window.top.frames.main ? true : false;
@@ -92,11 +92,15 @@
     
   
     
+      <dt class="r2">Includes:</dt>
+      <dd class="r2"><span class='object_link'><a href="ValidationMixin.html" title="R509::Cert::Extensions::ValidationMixin (module)">ValidationMixin</a></span></dd>
+      
+    
   
   
   
-    <dt class="r2 last">Defined in:</dt>
-    <dd class="r2 last">lib/r509/cert/extensions.rb</dd>
+    <dt class="r1 last">Defined in:</dt>
+    <dd class="r1 last">lib/r509/cert/extensions/extended_key_usage.rb</dd>
   
 </dl>
 <div class="clear"></div>
@@ -468,6 +472,50 @@ to the contents or create a new one.</p>
         <li class="public ">
   <span class="summary_signature">
     
+      <a href="#to_h-instance_method" title="#to_h (instance method)">- (Hash) <strong>to_h</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#to_yaml-instance_method" title="#to_yaml (instance method)">- (YAML) <strong>to_yaml</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
       <a href="#web_client_authentication%3F-instance_method" title="#web_client_authentication? (instance method)">- (Boolean) <strong>web_client_authentication?</strong> </a>
     
 
@@ -515,10 +563,6 @@ to the contents or create a new one.</p>
 
   
   
-  
-  
-  
-  
   <div id="constructor_details" class="method_details_list">
   <h2>Constructor Details</h2>
   
@@ -536,11 +580,38 @@ to the contents or create a new one.</p>
     
 <p>This method takes a hash or an existing Extension object to parse</p>
 
+<p>The following types are known to r509</p>
+
+<pre class="code ruby"><code class="ruby"><span class='id identifier rubyid_serverAuth'>serverAuth</span>
+<span class='id identifier rubyid_clientAuth'>clientAuth</span>
+<span class='id identifier rubyid_codeSigning'>codeSigning</span>
+<span class='id identifier rubyid_emailProtection'>emailProtection</span>
+<span class='const'>OCSPSigning</span>
+<span class='id identifier rubyid_timeStamping'>timeStamping</span>
+<span class='id identifier rubyid_anyExtendedKeyUsage'>anyExtendedKeyUsage</span>
+<span class='id identifier rubyid_msCodeInd'>msCodeInd</span> <span class='lparen'>(</span><span class='kw'>not</span> <span class='id identifier rubyid_part'>part</span> <span class='id identifier rubyid_of'>of</span> <span class='const'>RFC</span> <span class='int'>5280</span><span class='rparen'>)</span>
+<span class='id identifier rubyid_msCodeCom'>msCodeCom</span> <span class='lparen'>(</span><span class='kw'>not</span> <span class='id identifier rubyid_part'>part</span> <span class='id identifier rubyid_of'>of</span> <span class='const'>RFC</span> <span class='int'>5280</span><span class='rparen'>)</span>
+<span class='id identifier rubyid_msCTLSign'>msCTLSign</span> <span class='lparen'>(</span><span class='kw'>not</span> <span class='id identifier rubyid_part'>part</span> <span class='id identifier rubyid_of'>of</span> <span class='const'>RFC</span> <span class='int'>5280</span><span class='rparen'>)</span>
+<span class='id identifier rubyid_msSGC'>msSGC</span> <span class='lparen'>(</span><span class='kw'>not</span> <span class='id identifier rubyid_part'>part</span> <span class='id identifier rubyid_of'>of</span> <span class='const'>RFC</span> <span class='int'>5280</span><span class='rparen'>)</span>
+<span class='id identifier rubyid_msEFS'>msEFS</span> <span class='lparen'>(</span><span class='kw'>not</span> <span class='id identifier rubyid_part'>part</span> <span class='id identifier rubyid_of'>of</span> <span class='const'>RFC</span> <span class='int'>5280</span><span class='rparen'>)</span>
+<span class='id identifier rubyid_nsSGC'>nsSGC</span> <span class='lparen'>(</span><span class='kw'>not</span> <span class='id identifier rubyid_part'>part</span> <span class='id identifier rubyid_of'>of</span> <span class='const'>RFC</span> <span class='int'>5280</span><span class='rparen'>)</span></code></pre>
+
 
   </div>
 </div>
 <div class="tags">
-  <p class="tag_title">Parameters:</p>
+  
+  <div class="examples">
+    <p class="tag_title">Examples:</p>
+    
+      
+      <pre class="example code"><code>R509::Cert::Extensions::ExtendedKeyUsage.new(
+  :critical =&gt; false,
+  :value =&gt; [&#39;clientAuth,&#39;serverAuth&#39;]
+)</code></pre>
+    
+  </div>
+<p class="tag_title">Parameters:</p>
 <ul class="param">
   
     <li>
@@ -568,7 +639,7 @@ to the contents or create a new one.</p>
     <ul class="option">
       
         <li>
-          <span class="name">:extended_key_usage</span>
+          <span class="name">:value</span>
           <span class="type">(<tt>Array</tt>)</span>
           <span class="default">
             
@@ -598,143 +669,25 @@ to the contents or create a new one.</p>
       <pre class="lines">
 
 
-306
-307
-308
-309
-310
-311
-312
-313
-314
-315
-316
-317
-318
-319
-320
-321
-322
-323
-324
-325
-326
-327
-328
-329
-330
-331
-332
-333
-334
-335
-336
-337
-338
-339
-340
-341
-342
-343
-344
-345
-346
-347
-348
-349
-350
-351
-352
-353
-354
-355
-356
-357
-358
-359
-360
-361
-362
-363
-364
-365
-366
-367
-368
-369
-370
-371
-372</pre>
+66
+67
+68
+69
+70
+71
+72
+73</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 306</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions/extended_key_usage.rb', line 66</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='id identifier rubyid_arg'>arg</span><span class='rparen'>)</span>
-  <span class='kw'>if</span> <span class='id identifier rubyid_arg'>arg</span><span class='period'>.</span><span class='id identifier rubyid_kind_of?'>kind_of?</span><span class='lparen'>(</span><span class='const'>Hash</span><span class='rparen'>)</span>
-    <span class='id identifier rubyid_validate_extended_key_usage'>validate_extended_key_usage</span><span class='lparen'>(</span><span class='id identifier rubyid_arg'>arg</span><span class='lbracket'>[</span><span class='symbol'>:extended_key_usage</span><span class='rbracket'>]</span><span class='rparen'>)</span>
-    <span class='id identifier rubyid_ef'>ef</span> <span class='op'>=</span> <span class='const'>OpenSSL</span><span class='op'>::</span><span class='const'>X509</span><span class='op'>::</span><span class='const'>ExtensionFactory</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span>
-    <span class='id identifier rubyid_critical'>critical</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>Cert</span><span class='op'>::</span><span class='const'>Extensions</span><span class='period'>.</span><span class='id identifier rubyid_calculate_critical'>calculate_critical</span><span class='lparen'>(</span><span class='id identifier rubyid_arg'>arg</span><span class='lbracket'>[</span><span class='symbol'>:critical</span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='kw'>false</span><span class='rparen'>)</span>
-    <span class='id identifier rubyid_arg'>arg</span> <span class='op'>=</span> <span class='id identifier rubyid_ef'>ef</span><span class='period'>.</span><span class='id identifier rubyid_create_extension'>create_extension</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>extendedKeyUsage</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_arg'>arg</span><span class='lbracket'>[</span><span class='symbol'>:extended_key_usage</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_join'>join</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>,</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='comma'>,</span><span class='id identifier rubyid_critical'>critical</span><span class='rparen'>)</span>
+  <span class='kw'>if</span> <span class='kw'>not</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>Cert</span><span class='op'>::</span><span class='const'>Extensions</span><span class='period'>.</span><span class='id identifier rubyid_is_extension?'>is_extension?</span><span class='lparen'>(</span><span class='id identifier rubyid_arg'>arg</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_arg'>arg</span> <span class='op'>=</span> <span class='id identifier rubyid_build_extension'>build_extension</span><span class='lparen'>(</span><span class='id identifier rubyid_arg'>arg</span><span class='rparen'>)</span>
   <span class='kw'>end</span>
 
   <span class='kw'>super</span><span class='lparen'>(</span><span class='id identifier rubyid_arg'>arg</span><span class='rparen'>)</span>
-
-  <span class='ivar'>@allowed_uses</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
-  <span class='id identifier rubyid_data'>data</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>ASN1</span><span class='period'>.</span><span class='id identifier rubyid_get_extension_payload'>get_extension_payload</span><span class='lparen'>(</span><span class='kw'>self</span><span class='rparen'>)</span>
-
-  <span class='id identifier rubyid_data'>data</span><span class='period'>.</span><span class='id identifier rubyid_entries'>entries</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_eku'>eku</span><span class='op'>|</span>
-    <span class='comment'>#   The following key usage purposes are defined:
-</span>    <span class='comment'>#
-</span>    <span class='comment'>#   anyExtendedKeyUsage OBJECT IDENTIFIER ::= { id-ce-extKeyUsage 0 }
-</span>    <span class='comment'>#
-</span>    <span class='comment'>#   id-kp OBJECT IDENTIFIER ::= { id-pkix 3 }
-</span>    <span class='comment'>#   id-kp-serverAuth             OBJECT IDENTIFIER ::= { id-kp 1 }
-</span>    <span class='comment'>#   -- TLS WWW server authentication
-</span>    <span class='comment'>#   -- Key usage bits that may be consistent: digitalSignature,
-</span>    <span class='comment'>#   -- keyEncipherment or keyAgreement
-</span>    <span class='comment'>#
-</span>    <span class='comment'>#   id-kp-clientAuth             OBJECT IDENTIFIER ::= { id-kp 2 }
-</span>    <span class='comment'>#   -- TLS WWW client authentication
-</span>    <span class='comment'>#   -- Key usage bits that may be consistent: digitalSignature
-</span>    <span class='comment'>#   -- and/or keyAgreement
-</span>    <span class='comment'>#
-</span>    <span class='comment'>#   id-kp-codeSigning             OBJECT IDENTIFIER ::= { id-kp 3 }
-</span>    <span class='comment'>#   -- Signing of downloadable executable code
-</span>    <span class='comment'>#   -- Key usage bits that may be consistent: digitalSignature
-</span>    <span class='comment'>#
-</span>    <span class='comment'>#   id-kp-emailProtection         OBJECT IDENTIFIER ::= { id-kp 4 }
-</span>    <span class='comment'>#   -- Email protection
-</span>    <span class='comment'>#   -- Key usage bits that may be consistent: digitalSignature,
-</span>    <span class='comment'>#   -- nonRepudiation, and/or (keyEncipherment or keyAgreement)
-</span>    <span class='comment'>#
-</span>    <span class='comment'>#   id-kp-timeStamping            OBJECT IDENTIFIER ::= { id-kp 8 }
-</span>    <span class='comment'>#   -- Binding the hash of an object to a time
-</span>    <span class='comment'>#   -- Key usage bits that may be consistent: digitalSignature
-</span>    <span class='comment'>#   -- and/or nonRepudiation
-</span>    <span class='comment'>#
-</span>    <span class='comment'>#   id-kp-OCSPSigning            OBJECT IDENTIFIER ::= { id-kp 9 }
-</span>    <span class='comment'>#   -- Signing OCSP responses
-</span>    <span class='comment'>#   -- Key usage bits that may be consistent: digitalSignature
-</span>    <span class='comment'>#   -- and/or nonRepudiation
-</span>
-    <span class='kw'>case</span> <span class='id identifier rubyid_eku'>eku</span><span class='period'>.</span><span class='id identifier rubyid_value'>value</span>
-    <span class='kw'>when</span> <span class='const'>AU_WEB_SERVER_AUTH</span>
-      <span class='ivar'>@web_server_authentication</span> <span class='op'>=</span> <span class='kw'>true</span>
-    <span class='kw'>when</span> <span class='const'>AU_WEB_CLIENT_AUTH</span>
-      <span class='ivar'>@web_client_authentication</span> <span class='op'>=</span> <span class='kw'>true</span>
-    <span class='kw'>when</span> <span class='const'>AU_CODE_SIGNING</span>
-      <span class='ivar'>@code_signing</span> <span class='op'>=</span> <span class='kw'>true</span>
-    <span class='kw'>when</span> <span class='const'>AU_EMAIL_PROTECTION</span>
-      <span class='ivar'>@email_protection</span> <span class='op'>=</span> <span class='kw'>true</span>
-    <span class='kw'>when</span> <span class='const'>AU_OCSP_SIGNING</span>
-      <span class='ivar'>@ocsp_signing</span> <span class='op'>=</span> <span class='kw'>true</span>
-    <span class='kw'>when</span> <span class='const'>AU_TIME_STAMPING</span>
-      <span class='ivar'>@time_stamping</span> <span class='op'>=</span> <span class='kw'>true</span>
-    <span class='kw'>when</span> <span class='const'>AU_ANY_EXTENDED_KEY_USAGE</span>
-      <span class='ivar'>@any_extended_key_usage</span> <span class='op'>=</span> <span class='kw'>true</span>
-    <span class='kw'>end</span>
-    <span class='ivar'>@allowed_uses</span> <span class='op'>&lt;&lt;</span> <span class='id identifier rubyid_eku'>eku</span><span class='period'>.</span><span class='id identifier rubyid_value'>value</span>
-  <span class='kw'>end</span>
+  <span class='id identifier rubyid_parse_extension'>parse_extension</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -787,12 +740,12 @@ to the contents or create a new one.</p>
       <pre class="lines">
 
 
-301
-302
-303</pre>
+40
+41
+42</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 301</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions/extended_key_usage.rb', line 40</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_allowed_uses'>allowed_uses</span>
   <span class='ivar'>@allowed_uses</span>
@@ -868,12 +821,12 @@ to the contents or create a new one.</p>
       <pre class="lines">
 
 
-376
-377
-378</pre>
+77
+78
+79</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 376</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions/extended_key_usage.rb', line 77</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_allows?'>allows?</span><span class='lparen'>(</span> <span class='id identifier rubyid_friendly_use_name'>friendly_use_name</span> <span class='rparen'>)</span>
   <span class='ivar'>@allowed_uses</span><span class='period'>.</span><span class='id identifier rubyid_include?'>include?</span><span class='lparen'>(</span> <span class='id identifier rubyid_friendly_use_name'>friendly_use_name</span> <span class='rparen'>)</span>
@@ -920,12 +873,12 @@ to the contents or create a new one.</p>
       <pre class="lines">
 
 
-404
-405
-406</pre>
+105
+106
+107</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 404</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions/extended_key_usage.rb', line 105</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_any_extended_key_usage?'>any_extended_key_usage?</span>
   <span class='lparen'>(</span><span class='ivar'>@any_extended_key_usage</span> <span class='op'>==</span> <span class='kw'>true</span><span class='rparen'>)</span>
@@ -972,12 +925,12 @@ to the contents or create a new one.</p>
       <pre class="lines">
 
 
-388
-389
-390</pre>
+89
+90
+91</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 388</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions/extended_key_usage.rb', line 89</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_code_signing?'>code_signing?</span>
   <span class='lparen'>(</span><span class='ivar'>@code_signing</span> <span class='op'>==</span> <span class='kw'>true</span><span class='rparen'>)</span>
@@ -1024,12 +977,12 @@ to the contents or create a new one.</p>
       <pre class="lines">
 
 
-392
-393
-394</pre>
+93
+94
+95</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 392</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions/extended_key_usage.rb', line 93</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_email_protection?'>email_protection?</span>
   <span class='lparen'>(</span><span class='ivar'>@email_protection</span> <span class='op'>==</span> <span class='kw'>true</span><span class='rparen'>)</span>
@@ -1076,12 +1029,12 @@ to the contents or create a new one.</p>
       <pre class="lines">
 
 
-396
-397
-398</pre>
+97
+98
+99</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 396</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions/extended_key_usage.rb', line 97</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_ocsp_signing?'>ocsp_signing?</span>
   <span class='lparen'>(</span><span class='ivar'>@ocsp_signing</span> <span class='op'>==</span> <span class='kw'>true</span><span class='rparen'>)</span>
@@ -1128,15 +1081,119 @@ to the contents or create a new one.</p>
       <pre class="lines">
 
 
-400
-401
-402</pre>
+101
+102
+103</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 400</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions/extended_key_usage.rb', line 101</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_time_stamping?'>time_stamping?</span>
   <span class='lparen'>(</span><span class='ivar'>@time_stamping</span> <span class='op'>==</span> <span class='kw'>true</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="to_h-instance_method">
+  
+    - (<tt>Hash</tt>) <strong>to_h</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Hash</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+110
+111
+112</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions/extended_key_usage.rb', line 110</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_to_h'>to_h</span>
+  <span class='lbrace'>{</span> <span class='symbol'>:value</span> <span class='op'>=&gt;</span> <span class='ivar'>@allowed_uses</span><span class='comma'>,</span> <span class='symbol'>:critical</span> <span class='op'>=&gt;</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_critical?'>critical?</span>  <span class='rbrace'>}</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="to_yaml-instance_method">
+  
+    - (<tt>YAML</tt>) <strong>to_yaml</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>YAML</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+115
+116
+117</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions/extended_key_usage.rb', line 115</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_to_yaml'>to_yaml</span>
+  <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_to_h'>to_h</span><span class='period'>.</span><span class='id identifier rubyid_to_yaml'>to_yaml</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -1180,12 +1237,12 @@ to the contents or create a new one.</p>
       <pre class="lines">
 
 
-384
-385
-386</pre>
+85
+86
+87</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 384</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions/extended_key_usage.rb', line 85</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_web_client_authentication?'>web_client_authentication?</span>
   <span class='lparen'>(</span><span class='ivar'>@web_client_authentication</span> <span class='op'>==</span> <span class='kw'>true</span><span class='rparen'>)</span>
@@ -1232,12 +1289,12 @@ to the contents or create a new one.</p>
       <pre class="lines">
 
 
-380
-381
-382</pre>
+81
+82
+83</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 380</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions/extended_key_usage.rb', line 81</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_web_server_authentication?'>web_server_authentication?</span>
   <span class='lparen'>(</span><span class='ivar'>@web_server_authentication</span> <span class='op'>==</span> <span class='kw'>true</span><span class='rparen'>)</span>
@@ -1252,9 +1309,9 @@ to the contents or create a new one.</p>
 </div>
 
     <div id="footer">
-  Generated on Sun Jun  9 10:03:37 2013 by
+  Generated on Sat Jan 25 19:00:19 2014 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.8.4.1 (ruby-2.0.0).
+  0.8.6.1 (ruby-2.0.0).
 </div>
 
   </body>

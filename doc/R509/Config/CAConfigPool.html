@@ -6,13 +6,13 @@
 <title>
   Class: R509::Config::CAConfigPool
   
-    &mdash; Documentation by YARD 0.8.4.1
+    &mdash; Documentation by YARD 0.8.6.1
   
 </title>
 
-  <link rel="stylesheet" href="../../css/style.css" type="text/css" media="screen" charset="utf-8" />
+  <link rel="stylesheet" href="../../css/style.css" type="text/css" charset="utf-8" />
 
-  <link rel="stylesheet" href="../../css/common.css" type="text/css" media="screen" charset="utf-8" />
+  <link rel="stylesheet" href="../../css/common.css" type="text/css" charset="utf-8" />
 
 <script type="text/javascript" charset="utf-8">
   hasFrames = window.top.frames.main ? true : false;
@@ -94,7 +94,7 @@
   
   
     <dt class="r2 last">Defined in:</dt>
-    <dd class="r2 last">lib/r509/config.rb</dd>
+    <dd class="r2 last">lib/r509/config/ca_config.rb</dd>
   
 </dl>
 <div class="clear"></div>
@@ -256,6 +256,50 @@
 </li>
 
       
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#to_h-instance_method" title="#to_h (instance method)">- (Hash) <strong>to_h</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#to_yaml-instance_method" title="#to_yaml (instance method)">- (YAML) <strong>to_yaml</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
     </ul>
   
 
@@ -330,12 +374,12 @@
       <pre class="lines">
 
 
-120
-121
-122</pre>
+19
+20
+21</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/config.rb', line 120</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/config/ca_config.rb', line 19</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='id identifier rubyid_configs'>configs</span><span class='rparen'>)</span>
   <span class='ivar'>@configs</span> <span class='op'>=</span> <span class='id identifier rubyid_configs'>configs</span>
@@ -415,17 +459,17 @@ contain more than one configuration.</p>
       <pre class="lines">
 
 
-143
-144
-145
-146
-147
-148
-149
-150</pre>
+52
+53
+54
+55
+56
+57
+58
+59</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/config.rb', line 143</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/config/ca_config.rb', line 52</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_from_yaml'>from_yaml</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='id identifier rubyid_yaml_data'>yaml_data</span><span class='comma'>,</span> <span class='id identifier rubyid_opts'>opts</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_conf'>conf</span> <span class='op'>=</span> <span class='const'>YAML</span><span class='period'>.</span><span class='id identifier rubyid_load'>load</span><span class='lparen'>(</span><span class='id identifier rubyid_yaml_data'>yaml_data</span><span class='rparen'>)</span>
@@ -472,12 +516,12 @@ contain more than one configuration.</p>
       <pre class="lines">
 
 
-130
-131
-132</pre>
+29
+30
+31</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/config.rb', line 130</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/config/ca_config.rb', line 29</span>
 
 <span class='kw'>def</span> <span class='op'>[]</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span><span class='rparen'>)</span>
   <span class='ivar'>@configs</span><span class='lbracket'>[</span><span class='id identifier rubyid_name'>name</span><span class='rbracket'>]</span>
@@ -531,12 +575,12 @@ contain more than one configuration.</p>
       <pre class="lines">
 
 
-135
-136
-137</pre>
+34
+35
+36</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/config.rb', line 135</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/config/ca_config.rb', line 34</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_all'>all</span>
   <span class='ivar'>@configs</span><span class='period'>.</span><span class='id identifier rubyid_values'>values</span>
@@ -572,15 +616,119 @@ contain more than one configuration.</p>
       <pre class="lines">
 
 
-125
-126
-127</pre>
+24
+25
+26</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/config.rb', line 125</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/config/ca_config.rb', line 24</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_names'>names</span>
   <span class='ivar'>@configs</span><span class='period'>.</span><span class='id identifier rubyid_keys'>keys</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="to_h-instance_method">
+  
+    - (<tt>Hash</tt>) <strong>to_h</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Hash</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+39
+40
+41</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/r509/config/ca_config.rb', line 39</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_to_h'>to_h</span>
+  <span class='ivar'>@configs</span><span class='period'>.</span><span class='id identifier rubyid_merge'>merge</span><span class='lparen'>(</span><span class='ivar'>@configs</span><span class='rparen'>)</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_k'>k</span><span class='comma'>,</span><span class='id identifier rubyid_v'>v</span><span class='op'>|</span> <span class='id identifier rubyid_v'>v</span><span class='period'>.</span><span class='id identifier rubyid_to_h'>to_h</span> <span class='rbrace'>}</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="to_yaml-instance_method">
+  
+    - (<tt>YAML</tt>) <strong>to_yaml</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>YAML</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+44
+45
+46</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/r509/config/ca_config.rb', line 44</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_to_yaml'>to_yaml</span>
+  <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_to_h'>to_h</span><span class='period'>.</span><span class='id identifier rubyid_to_yaml'>to_yaml</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -592,9 +740,9 @@ contain more than one configuration.</p>
 </div>
 
     <div id="footer">
-  Generated on Sun Jun  9 10:03:36 2013 by
+  Generated on Sat Jan 25 19:00:17 2014 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.8.4.1 (ruby-2.0.0).
+  0.8.6.1 (ruby-2.0.0).
 </div>
 
   </body>

@@ -1,0 +1,656 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>
+  Module: R509::Cert::Extensions::GeneralNamesMixin
+  
+    &mdash; Documentation by YARD 0.8.6.1
+  
+</title>
+
+  <link rel="stylesheet" href="../../../css/style.css" type="text/css" charset="utf-8" />
+
+  <link rel="stylesheet" href="../../../css/common.css" type="text/css" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  hasFrames = window.top.frames.main ? true : false;
+  relpath = '../../../';
+  framesUrl = "../../../frames.html#!" + escape(window.location.href);
+</script>
+
+
+  <script type="text/javascript" charset="utf-8" src="../../../js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../../../js/app.js"></script>
+
+
+  </head>
+  <body>
+    <div id="header">
+      <div id="menu">
+  
+    <a href="../../../_index.html">Index (G)</a> &raquo;
+    <span class='title'><span class='object_link'><a href="../../../R509.html" title="R509 (module)">R509</a></span></span> &raquo; <span class='title'><span class='object_link'><a href="../../Cert.html" title="R509::Cert (class)">Cert</a></span></span> &raquo; <span class='title'><span class='object_link'><a href="../Extensions.html" title="R509::Cert::Extensions (module)">Extensions</a></span></span>
+     &raquo; 
+    <span class="title">GeneralNamesMixin</span>
+  
+
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  
+    <a class="full_list_link" id="class_list_link"
+        href="../../../class_list.html">
+      Class List
+    </a>
+  
+    <a class="full_list_link" id="method_list_link"
+        href="../../../method_list.html">
+      Method List
+    </a>
+  
+    <a class="full_list_link" id="file_list_link"
+        href="../../../file_list.html">
+      File List
+    </a>
+  
+</div>
+      <div class="clear"></div>
+    </div>
+
+    <iframe id="search_frame"></iframe>
+
+    <div id="content"><h1>Module: R509::Cert::Extensions::GeneralNamesMixin
+  
+  
+  
+</h1>
+
+<dl class="box">
+  
+  
+    
+  
+    
+  
+  
+    <dt class="r1">Included in:</dt>
+    <dd class="r1"><span class='object_link'><a href="CRLDistributionPoints.html" title="R509::Cert::Extensions::CRLDistributionPoints (class)">CRLDistributionPoints</a></span>, <span class='object_link'><a href="SubjectAlternativeName.html" title="R509::Cert::Extensions::SubjectAlternativeName (class)">SubjectAlternativeName</a></span></dd>
+    
+  
+  
+    <dt class="r2 last">Defined in:</dt>
+    <dd class="r2 last">lib/r509/cert/extensions/base.rb</dd>
+  
+</dl>
+<div class="clear"></div>
+
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    
+<p>Mixed into extensions that have a single generalnames object to simplify
+getting data out of them</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
+
+
+
+
+
+
+  
+    <h2>
+      Instance Method Summary
+      <small>(<a href="#" class="summary_toggle">collapse</a>)</small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#directory_names-instance_method" title="#directory_names (instance method)">- (Array&lt;R509::Subject&gt;) <strong>directory_names</strong> </a>
+    
+
+    
+      (also: #dir_names)
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Directory names.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#dns_names-instance_method" title="#dns_names (instance method)">- (Array&lt;String&gt;) <strong>dns_names</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>DNS names.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#ip_addresses-instance_method" title="#ip_addresses (instance method)">- (Array&lt;String&gt;) <strong>ip_addresses</strong> </a>
+    
+
+    
+      (also: #ips)
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>IP addresses.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#names-instance_method" title="#names (instance method)">- (Array) <strong>names</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Array of GeneralName objects preserving order found in the extension.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#rfc_822_names-instance_method" title="#rfc_822_names (instance method)">- (Array&lt;String&gt;) <strong>rfc_822_names</strong> </a>
+    
+
+    
+      (also: #email_names)
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Email addresses.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#uris-instance_method" title="#uris (instance method)">- (Array&lt;String&gt;) <strong>uris</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>URIs (not typically found in SAN extensions).</p>
+</div></span>
+  
+</li>
+
+      
+    </ul>
+  
+
+
+
+  <div id="instance_method_details" class="method_details_list">
+    <h2>Instance Method Details</h2>
+
+    
+      <div class="method_details first">
+  <h3 class="signature first" id="directory_names-instance_method">
+  
+    - (<tt>Array&lt;<span class='object_link'><a href="../../Subject.html" title="R509::Subject (class)">R509::Subject</a></span>&gt;</tt>) <strong>directory_names</strong> 
+  
+
+  
+    <span class="aliases">Also known as:
+    <span class="names"><span id='dir_names-instance_method'>dir_names</span></span>
+    </span>
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Directory names</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Array&lt;<span class='object_link'><a href="../../Subject.html" title="R509::Subject (class)">R509::Subject</a></span>&gt;</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>directory names</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+97
+98
+99</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions/base.rb', line 97</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_directory_names'>directory_names</span>
+  <span class='ivar'>@general_names</span><span class='period'>.</span><span class='id identifier rubyid_directory_names'>directory_names</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="dns_names-instance_method">
+  
+    - (<tt>Array&lt;String&gt;</tt>) <strong>dns_names</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>DNS names</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Array&lt;String&gt;</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>DNS names</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+75
+76
+77</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions/base.rb', line 75</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_dns_names'>dns_names</span>
+  <span class='ivar'>@general_names</span><span class='period'>.</span><span class='id identifier rubyid_dns_names'>dns_names</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="ip_addresses-instance_method">
+  
+    - (<tt>Array&lt;String&gt;</tt>) <strong>ip_addresses</strong> 
+  
+
+  
+    <span class="aliases">Also known as:
+    <span class="names"><span id='ips-instance_method'>ips</span></span>
+    </span>
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>IP addresses. They will be formatted as strings (dotted quad with optional
+netmask for IPv4 and colon-hexadecimal with optional netmask for IPv6</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Array&lt;String&gt;</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>IP addresses. They will be formatted as strings (dotted quad with optional
+netmask for IPv4 and colon-hexadecimal with optional netmask for IPv6</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+80
+81
+82</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions/base.rb', line 80</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_ip_addresses'>ip_addresses</span>
+  <span class='ivar'>@general_names</span><span class='period'>.</span><span class='id identifier rubyid_ip_addresses'>ip_addresses</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="names-instance_method">
+  
+    - (<tt>Array</tt>) <strong>names</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Array of GeneralName objects preserving order found in the extension</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Array</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>array of GeneralName objects preserving order found in the extension</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+103
+104
+105</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions/base.rb', line 103</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_names'>names</span>
+  <span class='ivar'>@general_names</span><span class='period'>.</span><span class='id identifier rubyid_names'>names</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="rfc_822_names-instance_method">
+  
+    - (<tt>Array&lt;String&gt;</tt>) <strong>rfc_822_names</strong> 
+  
+
+  
+    <span class="aliases">Also known as:
+    <span class="names"><span id='email_names-instance_method'>email_names</span></span>
+    </span>
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Email addresses</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Array&lt;String&gt;</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>email addresses</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+86
+87
+88</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions/base.rb', line 86</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_rfc_822_names'>rfc_822_names</span>
+  <span class='ivar'>@general_names</span><span class='period'>.</span><span class='id identifier rubyid_rfc_822_names'>rfc_822_names</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="uris-instance_method">
+  
+    - (<tt>Array&lt;String&gt;</tt>) <strong>uris</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>URIs (not typically found in SAN extensions)</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Array&lt;String&gt;</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>URIs (not typically found in SAN extensions)</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+92
+93
+94</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions/base.rb', line 92</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_uris'>uris</span>
+  <span class='ivar'>@general_names</span><span class='period'>.</span><span class='id identifier rubyid_uris'>uris</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+</div>
+
+    <div id="footer">
+  Generated on Sat Jan 25 19:00:16 2014 by
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.8.6.1 (ruby-2.0.0).
+</div>
+
+  </body>
+</html>

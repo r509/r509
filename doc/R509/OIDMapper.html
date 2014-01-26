@@ -6,13 +6,13 @@
 <title>
   Module: R509::OIDMapper
   
-    &mdash; Documentation by YARD 0.8.4.1
+    &mdash; Documentation by YARD 0.8.6.1
   
 </title>
 
-  <link rel="stylesheet" href="../css/style.css" type="text/css" media="screen" charset="utf-8" />
+  <link rel="stylesheet" href="../css/style.css" type="text/css" charset="utf-8" />
 
-  <link rel="stylesheet" href="../css/common.css" type="text/css" media="screen" charset="utf-8" />
+  <link rel="stylesheet" href="../css/common.css" type="text/css" charset="utf-8" />
 
 <script type="text/javascript" charset="utf-8">
   hasFrames = window.top.frames.main ? true : false;
@@ -158,6 +158,30 @@
 </li>
 
       
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#register_from_yaml-class_method" title="register_from_yaml (class method)">+ (Object) <strong>register_from_yaml</strong>(name, yaml_data) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Load YAML and register OIDs.</p>
+</div></span>
+  
+</li>
+
+      
     </ul>
   
 
@@ -276,7 +300,7 @@
       
         &mdash;
         <div class='inline'>
-<p>A string representation of the OID you want to map (e.g. "1.6.2.3.55")</p>
+<p>A string representation of the OID you want to map (e.g. “1.6.2.3.55”)</p>
 </div>
       
     </li>
@@ -363,14 +387,105 @@
 </table>
 </div>
     
+      <div class="method_details ">
+  <h3 class="signature " id="register_from_yaml-class_method">
+  
+    + (<tt>Object</tt>) <strong>register_from_yaml</strong>(name, yaml_data) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Load YAML and register OIDs</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+  <div class="examples">
+    <p class="tag_title">Examples:</p>
+    
+      
+      <pre class="example code"><code>custom_oids:
+  - :oid: 1.4.3.2.1.2.3.4.4.4.5
+    :short_name: testOIDName
+  - :oid: 1.4.3.2.1.2.5.4.4.4.5
+    :short_name: anotherOIDName</code></pre>
+    
+  </div>
+<p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>name</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Name of the config within the file</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>yaml_data</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>YAML data to load</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+41
+42
+43
+44</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/r509/oid_mapper.rb', line 41</span>
+
+<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_register_from_yaml'>register_from_yaml</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='id identifier rubyid_yaml_data'>yaml_data</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_conf'>conf</span> <span class='op'>=</span> <span class='const'>YAML</span><span class='period'>.</span><span class='id identifier rubyid_load'>load</span><span class='lparen'>(</span><span class='id identifier rubyid_yaml_data'>yaml_data</span><span class='rparen'>)</span>
+  <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_batch_register'>batch_register</span><span class='lparen'>(</span><span class='id identifier rubyid_conf'>conf</span><span class='lbracket'>[</span><span class='id identifier rubyid_name'>name</span><span class='rbracket'>]</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
   </div>
 
 </div>
 
     <div id="footer">
-  Generated on Sun Jun  9 10:03:35 2013 by
+  Generated on Sat Jan 25 19:00:16 2014 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.8.4.1 (ruby-2.0.0).
+  0.8.6.1 (ruby-2.0.0).
 </div>
 
   </body>

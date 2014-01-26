@@ -6,13 +6,13 @@
 <title>
   Class: R509::Cert::Extensions::AuthorityInfoAccess
   
-    &mdash; Documentation by YARD 0.8.4.1
+    &mdash; Documentation by YARD 0.8.6.1
   
 </title>
 
-  <link rel="stylesheet" href="../../../css/style.css" type="text/css" media="screen" charset="utf-8" />
+  <link rel="stylesheet" href="../../../css/style.css" type="text/css" charset="utf-8" />
 
-  <link rel="stylesheet" href="../../../css/common.css" type="text/css" media="screen" charset="utf-8" />
+  <link rel="stylesheet" href="../../../css/common.css" type="text/css" charset="utf-8" />
 
 <script type="text/javascript" charset="utf-8">
   hasFrames = window.top.frames.main ? true : false;
@@ -92,11 +92,15 @@
     
   
     
+      <dt class="r2">Includes:</dt>
+      <dd class="r2"><span class='object_link'><a href="ValidationMixin.html" title="R509::Cert::Extensions::ValidationMixin (module)">ValidationMixin</a></span></dd>
+      
+    
   
   
   
-    <dt class="r2 last">Defined in:</dt>
-    <dd class="r2 last">lib/r509/cert/extensions.rb</dd>
+    <dt class="r1 last">Defined in:</dt>
+    <dd class="r1 last">lib/r509/cert/extensions/authority_info_access.rb</dd>
   
 </dl>
 <div class="clear"></div>
@@ -251,14 +255,54 @@ present).</p>
 </li>
 
       
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#to_h-instance_method" title="#to_h (instance method)">- (Hash) <strong>to_h</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#to_yaml-instance_method" title="#to_yaml (instance method)">- (YAML) <strong>to_yaml</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
     </ul>
   
 
 
-  
-  
-  
-  
   
   
   <div id="constructor_details" class="method_details_list">
@@ -276,13 +320,32 @@ present).</p>
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>This method takes a hash or an existing Extension object to parse</p>
+<p>This method takes a hash or an existing Extension object to parse. If
+passing a hash you must supply :ocsp_location and/or :ca_issuers_location.
+These values must be in the form seen in the examples below.</p>
 
 
   </div>
 </div>
 <div class="tags">
-  <p class="tag_title">Parameters:</p>
+  
+  <div class="examples">
+    <p class="tag_title">Examples:</p>
+    
+      
+      <pre class="example code"><code>R509::Cert::Extensions::AuthorityInfoAccess.new(
+  :ocsp_location =&gt; [ { :type =&gt; &quot;URI&quot;, :value =&gt; &quot;http://ocsp.domain.com&quot; } ],
+  :ca_issuers_location =&gt; [ { :type =&gt; &quot;dirName&quot;, :value =&gt; { :CN =&gt; &#39;myCN&#39;, :O =&gt; &#39;some Org&#39; } ]
+)</code></pre>
+    
+      
+      <pre class="example code"><code><span class='id identifier rubyid_name'>name</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>ASN1</span><span class='op'>::</span><span class='const'>GeneralName</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='symbol'>:type</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>IP</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span> <span class='symbol'>:value</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>127.0.0.1</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+<span class='const'>R509</span><span class='op'>::</span><span class='const'>Cert</span><span class='op'>::</span><span class='const'>Extensions</span><span class='op'>::</span><span class='const'>AuthorityInfoAccess</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span>
+  <span class='symbol'>:ca_issuers_location</span> <span class='op'>=&gt;</span> <span class='lbracket'>[</span><span class='id identifier rubyid_name'>name</span><span class='rbracket'>]</span>
+<span class='rparen'>)</span></code></pre>
+    
+  </div>
+<p class="tag_title">Parameters:</p>
 <ul class="param">
   
     <li>
@@ -317,9 +380,7 @@ present).</p>
           </span>
           
             &mdash; <div class='inline'>
-<p>Array of strings (eg ["<a
-href="http://somedomain.com/something">somedomain.com/something</a>"]) or
-GeneralNames object</p>
+<p>Array of hashes (see examples) or GeneralNames object</p>
 </div>
           
         </li>
@@ -332,7 +393,7 @@ GeneralNames object</p>
           </span>
           
             &mdash; <div class='inline'>
-<p>Array of strings or GeneralNames object</p>
+<p>Array of hashes (see examples) or GeneralNames object</p>
 </div>
           
         </li>
@@ -359,107 +420,25 @@ GeneralNames object</p>
       <pre class="lines">
 
 
-631
-632
-633
-634
-635
-636
-637
-638
-639
-640
-641
-642
-643
-644
-645
-646
-647
-648
-649
-650
-651
-652
-653
-654
-655
-656
-657
-658
-659
-660
-661
-662
-663
-664
-665
-666
-667
-668
-669
-670
-671
-672
-673
-674
-675
-676
-677
-678
-679</pre>
+50
+51
+52
+53
+54
+55
+56
+57</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 631</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions/authority_info_access.rb', line 50</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='id identifier rubyid_arg'>arg</span><span class='rparen'>)</span>
-  <span class='kw'>if</span> <span class='id identifier rubyid_arg'>arg</span><span class='period'>.</span><span class='id identifier rubyid_kind_of?'>kind_of?</span><span class='lparen'>(</span><span class='const'>Hash</span><span class='rparen'>)</span>
-    <span class='id identifier rubyid_aia'>aia</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
-    <span class='id identifier rubyid_aia_conf'>aia_conf</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
-
-    <span class='id identifier rubyid_validate_ocsp_location'>validate_ocsp_location</span><span class='lparen'>(</span><span class='id identifier rubyid_arg'>arg</span><span class='lbracket'>[</span><span class='symbol'>:ocsp_location</span><span class='rbracket'>]</span><span class='rparen'>)</span>
-    <span class='kw'>if</span> <span class='kw'>not</span> <span class='id identifier rubyid_arg'>arg</span><span class='lbracket'>[</span><span class='symbol'>:ocsp_location</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
-      <span class='id identifier rubyid_gns'>gns</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>ASN1</span><span class='period'>.</span><span class='id identifier rubyid_general_name_parser'>general_name_parser</span><span class='lparen'>(</span><span class='id identifier rubyid_arg'>arg</span><span class='lbracket'>[</span><span class='symbol'>:ocsp_location</span><span class='rbracket'>]</span><span class='rparen'>)</span>
-      <span class='id identifier rubyid_gns'>gns</span><span class='period'>.</span><span class='id identifier rubyid_names'>names</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_ocsp'>ocsp</span><span class='op'>|</span>
-        <span class='id identifier rubyid_serialize'>serialize</span> <span class='op'>=</span> <span class='id identifier rubyid_ocsp'>ocsp</span><span class='period'>.</span><span class='id identifier rubyid_serialize_name'>serialize_name</span>
-        <span class='id identifier rubyid_aia'>aia</span><span class='period'>.</span><span class='id identifier rubyid_push'>push</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>OCSP;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_serialize'>serialize</span><span class='lbracket'>[</span><span class='symbol'>:extension_string</span><span class='rbracket'>]</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
-        <span class='id identifier rubyid_aia_conf'>aia_conf</span><span class='period'>.</span><span class='id identifier rubyid_push'>push</span> <span class='id identifier rubyid_serialize'>serialize</span><span class='lbracket'>[</span><span class='symbol'>:conf</span><span class='rbracket'>]</span>
-      <span class='kw'>end</span>
-    <span class='kw'>end</span>
-
-    <span class='id identifier rubyid_validate_ca_issuers_location'>validate_ca_issuers_location</span><span class='lparen'>(</span><span class='id identifier rubyid_arg'>arg</span><span class='lbracket'>[</span><span class='symbol'>:ca_issuers_location</span><span class='rbracket'>]</span><span class='rparen'>)</span>
-    <span class='kw'>if</span> <span class='kw'>not</span> <span class='id identifier rubyid_arg'>arg</span><span class='lbracket'>[</span><span class='symbol'>:ca_issuers_location</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
-      <span class='id identifier rubyid_gns'>gns</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>ASN1</span><span class='period'>.</span><span class='id identifier rubyid_general_name_parser'>general_name_parser</span><span class='lparen'>(</span><span class='id identifier rubyid_arg'>arg</span><span class='lbracket'>[</span><span class='symbol'>:ca_issuers_location</span><span class='rbracket'>]</span><span class='rparen'>)</span>
-      <span class='id identifier rubyid_gns'>gns</span><span class='period'>.</span><span class='id identifier rubyid_names'>names</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_ca_issuers'>ca_issuers</span><span class='op'>|</span>
-        <span class='id identifier rubyid_serialize'>serialize</span> <span class='op'>=</span> <span class='id identifier rubyid_ca_issuers'>ca_issuers</span><span class='period'>.</span><span class='id identifier rubyid_serialize_name'>serialize_name</span>
-        <span class='id identifier rubyid_aia'>aia</span><span class='period'>.</span><span class='id identifier rubyid_push'>push</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>caIssuers;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_serialize'>serialize</span><span class='lbracket'>[</span><span class='symbol'>:extension_string</span><span class='rbracket'>]</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
-        <span class='id identifier rubyid_aia_conf'>aia_conf</span><span class='period'>.</span><span class='id identifier rubyid_push'>push</span> <span class='id identifier rubyid_serialize'>serialize</span><span class='lbracket'>[</span><span class='symbol'>:conf</span><span class='rbracket'>]</span>
-      <span class='kw'>end</span>
-    <span class='kw'>end</span>
-
-    <span class='kw'>if</span> <span class='kw'>not</span> <span class='id identifier rubyid_aia'>aia</span><span class='period'>.</span><span class='id identifier rubyid_empty?'>empty?</span>
-      <span class='id identifier rubyid_ef'>ef</span> <span class='op'>=</span> <span class='const'>OpenSSL</span><span class='op'>::</span><span class='const'>X509</span><span class='op'>::</span><span class='const'>ExtensionFactory</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span>
-      <span class='id identifier rubyid_ef'>ef</span><span class='period'>.</span><span class='id identifier rubyid_config'>config</span> <span class='op'>=</span> <span class='const'>OpenSSL</span><span class='op'>::</span><span class='const'>Config</span><span class='period'>.</span><span class='id identifier rubyid_parse'>parse</span><span class='lparen'>(</span><span class='id identifier rubyid_aia_conf'>aia_conf</span><span class='period'>.</span><span class='id identifier rubyid_join'>join</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>\n</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='rparen'>)</span>
-      <span class='id identifier rubyid_critical'>critical</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>Cert</span><span class='op'>::</span><span class='const'>Extensions</span><span class='period'>.</span><span class='id identifier rubyid_calculate_critical'>calculate_critical</span><span class='lparen'>(</span><span class='id identifier rubyid_arg'>arg</span><span class='lbracket'>[</span><span class='symbol'>:critical</span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='kw'>false</span><span class='rparen'>)</span>
-      <span class='id identifier rubyid_arg'>arg</span> <span class='op'>=</span> <span class='id identifier rubyid_ef'>ef</span><span class='period'>.</span><span class='id identifier rubyid_create_extension'>create_extension</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>authorityInfoAccess</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='id identifier rubyid_aia'>aia</span><span class='period'>.</span><span class='id identifier rubyid_join'>join</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>,</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='comma'>,</span><span class='id identifier rubyid_critical'>critical</span><span class='rparen'>)</span>
-    <span class='kw'>end</span>
+  <span class='kw'>if</span> <span class='kw'>not</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>Cert</span><span class='op'>::</span><span class='const'>Extensions</span><span class='period'>.</span><span class='id identifier rubyid_is_extension?'>is_extension?</span><span class='lparen'>(</span><span class='id identifier rubyid_arg'>arg</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_arg'>arg</span> <span class='op'>=</span> <span class='id identifier rubyid_build_extension'>build_extension</span><span class='lparen'>(</span><span class='id identifier rubyid_arg'>arg</span><span class='rparen'>)</span>
   <span class='kw'>end</span>
+
   <span class='kw'>super</span><span class='lparen'>(</span><span class='id identifier rubyid_arg'>arg</span><span class='rparen'>)</span>
-
-  <span class='id identifier rubyid_data'>data</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>ASN1</span><span class='period'>.</span><span class='id identifier rubyid_get_extension_payload'>get_extension_payload</span><span class='lparen'>(</span><span class='kw'>self</span><span class='rparen'>)</span>
-  <span class='ivar'>@ocsp</span><span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>ASN1</span><span class='op'>::</span><span class='const'>GeneralNames</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span>
-  <span class='ivar'>@ca_issuers</span><span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>ASN1</span><span class='op'>::</span><span class='const'>GeneralNames</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span>
-  <span class='id identifier rubyid_data'>data</span><span class='period'>.</span><span class='id identifier rubyid_entries'>entries</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_access_description'>access_description</span><span class='op'>|</span>
-    <span class='comment'>#   AccessDescription  ::=  SEQUENCE {
-</span>    <span class='comment'>#           accessMethod          OBJECT IDENTIFIER,
-</span>    <span class='comment'>#           accessLocation        GeneralName  }
-</span>    <span class='kw'>case</span> <span class='id identifier rubyid_access_description'>access_description</span><span class='period'>.</span><span class='id identifier rubyid_entries'>entries</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_value'>value</span>
-    <span class='kw'>when</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>OCSP</span><span class='tstring_end'>&quot;</span></span>
-      <span class='ivar'>@ocsp</span><span class='period'>.</span><span class='id identifier rubyid_add_item'>add_item</span><span class='lparen'>(</span><span class='id identifier rubyid_access_description'>access_description</span><span class='period'>.</span><span class='id identifier rubyid_entries'>entries</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span><span class='rparen'>)</span>
-    <span class='kw'>when</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>caIssuers</span><span class='tstring_end'>&quot;</span></span>
-      <span class='ivar'>@ca_issuers</span><span class='period'>.</span><span class='id identifier rubyid_add_item'>add_item</span><span class='lparen'>(</span><span class='id identifier rubyid_access_description'>access_description</span><span class='period'>.</span><span class='id identifier rubyid_entries'>entries</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span><span class='rparen'>)</span>
-    <span class='kw'>end</span>
-  <span class='kw'>end</span>
+  <span class='id identifier rubyid_parse_extension'>parse_extension</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -512,12 +491,12 @@ GeneralNames object</p>
       <pre class="lines">
 
 
-624
-625
-626</pre>
+31
+32
+33</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 624</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions/authority_info_access.rb', line 31</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_ca_issuers'>ca_issuers</span>
   <span class='ivar'>@ca_issuers</span>
@@ -569,12 +548,12 @@ present)</p>
       <pre class="lines">
 
 
-621
-622
-623</pre>
+28
+29
+30</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 621</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions/authority_info_access.rb', line 28</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_ocsp'>ocsp</span>
   <span class='ivar'>@ocsp</span>
@@ -587,12 +566,128 @@ present)</p>
   </div>
 
 
+  <div id="instance_method_details" class="method_details_list">
+    <h2>Instance Method Details</h2>
+
+    
+      <div class="method_details first">
+  <h3 class="signature first" id="to_h-instance_method">
+  
+    - (<tt>Hash</tt>) <strong>to_h</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Hash</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+60
+61
+62
+63
+64
+65</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions/authority_info_access.rb', line 60</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_to_h'>to_h</span>
+  <span class='id identifier rubyid_hash'>hash</span> <span class='op'>=</span> <span class='lbrace'>{</span> <span class='symbol'>:critical</span> <span class='op'>=&gt;</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_critical?'>critical?</span> <span class='rbrace'>}</span>
+  <span class='id identifier rubyid_hash'>hash</span><span class='lbracket'>[</span><span class='symbol'>:ocsp_location</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>Cert</span><span class='op'>::</span><span class='const'>Extensions</span><span class='period'>.</span><span class='id identifier rubyid_names_to_h'>names_to_h</span><span class='lparen'>(</span><span class='ivar'>@ocsp</span><span class='period'>.</span><span class='id identifier rubyid_names'>names</span><span class='rparen'>)</span> <span class='kw'>unless</span> <span class='ivar'>@ocsp</span><span class='period'>.</span><span class='id identifier rubyid_names'>names</span><span class='period'>.</span><span class='id identifier rubyid_empty?'>empty?</span>
+  <span class='id identifier rubyid_hash'>hash</span><span class='lbracket'>[</span><span class='symbol'>:ca_issuers_location</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>Cert</span><span class='op'>::</span><span class='const'>Extensions</span><span class='period'>.</span><span class='id identifier rubyid_names_to_h'>names_to_h</span><span class='lparen'>(</span><span class='ivar'>@ca_issuers</span><span class='period'>.</span><span class='id identifier rubyid_names'>names</span><span class='rparen'>)</span> <span class='kw'>unless</span> <span class='ivar'>@ca_issuers</span><span class='period'>.</span><span class='id identifier rubyid_names'>names</span><span class='period'>.</span><span class='id identifier rubyid_empty?'>empty?</span>
+  <span class='id identifier rubyid_hash'>hash</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="to_yaml-instance_method">
+  
+    - (<tt>YAML</tt>) <strong>to_yaml</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>YAML</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+68
+69
+70</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions/authority_info_access.rb', line 68</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_to_yaml'>to_yaml</span>
+  <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_to_h'>to_h</span><span class='period'>.</span><span class='id identifier rubyid_to_yaml'>to_yaml</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
 </div>
 
     <div id="footer">
-  Generated on Sun Jun  9 10:03:38 2013 by
+  Generated on Sat Jan 25 19:00:20 2014 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.8.4.1 (ruby-2.0.0).
+  0.8.6.1 (ruby-2.0.0).
 </div>
 
   </body>

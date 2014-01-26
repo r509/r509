@@ -6,13 +6,13 @@
 <title>
   Module: R509::Cert::Extensions
   
-    &mdash; Documentation by YARD 0.8.4.1
+    &mdash; Documentation by YARD 0.8.6.1
   
 </title>
 
-  <link rel="stylesheet" href="../../css/style.css" type="text/css" media="screen" charset="utf-8" />
+  <link rel="stylesheet" href="../../css/style.css" type="text/css" charset="utf-8" />
 
-  <link rel="stylesheet" href="../../css/common.css" type="text/css" media="screen" charset="utf-8" />
+  <link rel="stylesheet" href="../../css/common.css" type="text/css" charset="utf-8" />
 
 <script type="text/javascript" charset="utf-8">
   hasFrames = window.top.frames.main ? true : false;
@@ -79,7 +79,9 @@
   
   
     <dt class="r1 last">Defined in:</dt>
-    <dd class="r1 last">lib/r509/cert/extensions.rb</dd>
+    <dd class="r1 last">lib/r509/cert/extensions/base.rb<span class="defines">,<br />
+  lib/r509/cert/extensions/key_usage.rb,<br /> lib/r509/cert/extensions/ocsp_no_check.rb,<br /> lib/r509/cert/extensions/name_constraints.rb,<br /> lib/r509/cert/extensions/validation_mixin.rb,<br /> lib/r509/cert/extensions/basic_constraints.rb,<br /> lib/r509/cert/extensions/extended_key_usage.rb,<br /> lib/r509/cert/extensions/policy_constraints.rb,<br /> lib/r509/cert/extensions/inhibit_any_policy.rb,<br /> lib/r509/cert/extensions/certificate_policies.rb,<br /> lib/r509/cert/extensions/authority_info_access.rb,<br /> lib/r509/cert/extensions/subject_key_identifier.rb,<br /> lib/r509/cert/extensions/crl_distribution_points.rb,<br /> lib/r509/cert/extensions/subject_alternative_name.rb,<br /> lib/r509/cert/extensions/authority_key_identifier.rb</span>
+</dd>
   
 </dl>
 <div class="clear"></div>
@@ -99,9 +101,11 @@
 <p class="children">
   
     
+      <strong class="modules">Modules:</strong> <span class='object_link'><a href="Extensions/GeneralNamesMixin.html" title="R509::Cert::Extensions::GeneralNamesMixin (module)">GeneralNamesMixin</a></span>, <span class='object_link'><a href="Extensions/ValidationMixin.html" title="R509::Cert::Extensions::ValidationMixin (module)">ValidationMixin</a></span>
+    
   
     
-      <strong class="classes">Classes:</strong> <span class='object_link'><a href="Extensions/AuthorityInfoAccess.html" title="R509::Cert::Extensions::AuthorityInfoAccess (class)">AuthorityInfoAccess</a></span>, <span class='object_link'><a href="Extensions/AuthorityKeyIdentifier.html" title="R509::Cert::Extensions::AuthorityKeyIdentifier (class)">AuthorityKeyIdentifier</a></span>, <span class='object_link'><a href="Extensions/BasicConstraints.html" title="R509::Cert::Extensions::BasicConstraints (class)">BasicConstraints</a></span>, <span class='object_link'><a href="Extensions/CRLDistributionPoints.html" title="R509::Cert::Extensions::CRLDistributionPoints (class)">CRLDistributionPoints</a></span>, <span class='object_link'><a href="Extensions/CertificatePolicies.html" title="R509::Cert::Extensions::CertificatePolicies (class)">CertificatePolicies</a></span>, <span class='object_link'><a href="Extensions/ExtendedKeyUsage.html" title="R509::Cert::Extensions::ExtendedKeyUsage (class)">ExtendedKeyUsage</a></span>, <span class='object_link'><a href="Extensions/InhibitAnyPolicy.html" title="R509::Cert::Extensions::InhibitAnyPolicy (class)">InhibitAnyPolicy</a></span>, <span class='object_link'><a href="Extensions/KeyUsage.html" title="R509::Cert::Extensions::KeyUsage (class)">KeyUsage</a></span>, <span class='object_link'><a href="Extensions/NameConstraints.html" title="R509::Cert::Extensions::NameConstraints (class)">NameConstraints</a></span>, <span class='object_link'><a href="Extensions/OCSPNoCheck.html" title="R509::Cert::Extensions::OCSPNoCheck (class)">OCSPNoCheck</a></span>, <span class='object_link'><a href="Extensions/PolicyConstraints.html" title="R509::Cert::Extensions::PolicyConstraints (class)">PolicyConstraints</a></span>, <span class='object_link'><a href="Extensions/SubjectAlternativeName.html" title="R509::Cert::Extensions::SubjectAlternativeName (class)">SubjectAlternativeName</a></span>, <span class='object_link'><a href="Extensions/SubjectKeyIdentifier.html" title="R509::Cert::Extensions::SubjectKeyIdentifier (class)">SubjectKeyIdentifier</a></span>
+      <strong class="classes">Classes:</strong> <span class='object_link'><a href="Extensions/AuthorityInfoAccess.html" title="R509::Cert::Extensions::AuthorityInfoAccess (class)">AuthorityInfoAccess</a></span>, <span class='object_link'><a href="Extensions/AuthorityKeyIdentifier.html" title="R509::Cert::Extensions::AuthorityKeyIdentifier (class)">AuthorityKeyIdentifier</a></span>, <span class='object_link'><a href="Extensions/BasicConstraints.html" title="R509::Cert::Extensions::BasicConstraints (class)">BasicConstraints</a></span>, <span class='object_link'><a href="Extensions/CRLDistributionPoints.html" title="R509::Cert::Extensions::CRLDistributionPoints (class)">CRLDistributionPoints</a></span>, <span class='object_link'><a href="Extensions/CertificatePolicies.html" title="R509::Cert::Extensions::CertificatePolicies (class)">CertificatePolicies</a></span>, <span class='object_link'><a href="Extensions/ExtendedKeyUsage.html" title="R509::Cert::Extensions::ExtendedKeyUsage (class)">ExtendedKeyUsage</a></span>, <span class='object_link'><a href="Extensions/InhibitAnyPolicy.html" title="R509::Cert::Extensions::InhibitAnyPolicy (class)">InhibitAnyPolicy</a></span>, <span class='object_link'><a href="Extensions/KeyUsage.html" title="R509::Cert::Extensions::KeyUsage (class)">KeyUsage</a></span>, <span class='object_link'><a href="Extensions/NameConstraints.html" title="R509::Cert::Extensions::NameConstraints (class)">NameConstraints</a></span>, <span class='object_link'><a href="Extensions/NoticeReference.html" title="R509::Cert::Extensions::NoticeReference (class)">NoticeReference</a></span>, <span class='object_link'><a href="Extensions/OCSPNoCheck.html" title="R509::Cert::Extensions::OCSPNoCheck (class)">OCSPNoCheck</a></span>, <span class='object_link'><a href="Extensions/PolicyConstraints.html" title="R509::Cert::Extensions::PolicyConstraints (class)">PolicyConstraints</a></span>, <span class='object_link'><a href="Extensions/PolicyInformation.html" title="R509::Cert::Extensions::PolicyInformation (class)">PolicyInformation</a></span>, <span class='object_link'><a href="Extensions/PolicyQualifiers.html" title="R509::Cert::Extensions::PolicyQualifiers (class)">PolicyQualifiers</a></span>, <span class='object_link'><a href="Extensions/SubjectAlternativeName.html" title="R509::Cert::Extensions::SubjectAlternativeName (class)">SubjectAlternativeName</a></span>, <span class='object_link'><a href="Extensions/SubjectKeyIdentifier.html" title="R509::Cert::Extensions::SubjectKeyIdentifier (class)">SubjectKeyIdentifier</a></span>, <span class='object_link'><a href="Extensions/UserNotice.html" title="R509::Cert::Extensions::UserNotice (class)">UserNotice</a></span>
     
   
 </p>
@@ -143,6 +147,31 @@
     <span class="summary_desc"><div class='inline'>
 <p>Given a list of OpenSSL::X509::Extension objects, returns those without an
 R509 implementation.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#names_to_h-class_method" title="names_to_h (class method)">+ (Object) <strong>names_to_h</strong>(array) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Takes an array of R509::ASN1::GeneralName objects and returns a hash that
+can be encoded to YAML (used by #to_yaml methods).</p>
 </div></span>
   
 </li>
@@ -209,25 +238,25 @@ R509 implementation.</p>
       <pre class="lines">
 
 
-1099
-1100
-1101
-1102
-1103
-1104
-1105
-1106
-1107
-1108
-1109
-1110
-1111
-1112
-1113
-1114</pre>
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 1099</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions/base.rb', line 37</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_unknown_extensions'>get_unknown_extensions</span><span class='lparen'>(</span> <span class='id identifier rubyid_extensions'>extensions</span> <span class='rparen'>)</span>
   <span class='id identifier rubyid_unknown_extensions'>unknown_extensions</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
@@ -244,6 +273,68 @@ R509 implementation.</p>
   <span class='kw'>end</span>
 
   <span class='kw'>return</span> <span class='id identifier rubyid_unknown_extensions'>unknown_extensions</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="names_to_h-class_method">
+  
+    + (<tt>Object</tt>) <strong>names_to_h</strong>(array) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Takes an array of R509::ASN1::GeneralName objects and returns a hash that
+can be encoded to YAML (used by #to_yaml methods)</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions/base.rb', line 57</span>
+
+<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_names_to_h'>names_to_h</span><span class='lparen'>(</span><span class='id identifier rubyid_array'>array</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_data'>data</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
+  <span class='id identifier rubyid_array'>array</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_name'>name</span><span class='op'>|</span>
+    <span class='id identifier rubyid_value'>value</span> <span class='op'>=</span> <span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span><span class='period'>.</span><span class='id identifier rubyid_value'>value</span><span class='period'>.</span><span class='id identifier rubyid_kind_of?'>kind_of?</span><span class='lparen'>(</span><span class='const'>R509</span><span class='op'>::</span><span class='const'>Subject</span><span class='rparen'>)</span><span class='rparen'>)</span><span class='op'>?</span> <span class='id identifier rubyid_name'>name</span><span class='period'>.</span><span class='id identifier rubyid_value'>value</span><span class='period'>.</span><span class='id identifier rubyid_to_h'>to_h</span> <span class='op'>:</span> <span class='id identifier rubyid_name'>name</span><span class='period'>.</span><span class='id identifier rubyid_value'>value</span>
+    <span class='id identifier rubyid_data'>data</span><span class='period'>.</span><span class='id identifier rubyid_push'>push</span><span class='lparen'>(</span>
+      <span class='lbrace'>{</span>
+        <span class='symbol'>:type</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_name'>name</span><span class='period'>.</span><span class='id identifier rubyid_short_type'>short_type</span><span class='comma'>,</span>
+        <span class='symbol'>:value</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_value'>value</span>
+      <span class='rbrace'>}</span>
+    <span class='rparen'>)</span>
+  <span class='kw'>end</span>
+  <span class='id identifier rubyid_data'>data</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -279,26 +370,26 @@ implementation are ignored (see #get_unknown_extensions).</p>
       <pre class="lines">
 
 
-1079
-1080
-1081
-1082
-1083
-1084
-1085
-1086
-1087
-1088
-1089
-1090
-1091
-1092
-1093
-1094
-1095</pre>
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions.rb', line 1079</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions/base.rb', line 17</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_wrap_openssl_extensions'>wrap_openssl_extensions</span><span class='lparen'>(</span> <span class='id identifier rubyid_extensions'>extensions</span> <span class='rparen'>)</span>
   <span class='id identifier rubyid_r509_extensions'>r509_extensions</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
@@ -327,9 +418,9 @@ implementation are ignored (see #get_unknown_extensions).</p>
 </div>
 
     <div id="footer">
-  Generated on Sun Jun  9 10:03:35 2013 by
+  Generated on Sat Jan 25 19:00:16 2014 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.8.4.1 (ruby-2.0.0).
+  0.8.6.1 (ruby-2.0.0).
 </div>
 
   </body>

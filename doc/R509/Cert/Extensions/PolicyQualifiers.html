@@ -4,26 +4,26 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>
-  Class: R509::ASN1::PolicyQualifiers
+  Class: R509::Cert::Extensions::PolicyQualifiers
   
-    &mdash; Documentation by YARD 0.8.4.1
+    &mdash; Documentation by YARD 0.8.6.1
   
 </title>
 
-  <link rel="stylesheet" href="../../css/style.css" type="text/css" media="screen" charset="utf-8" />
+  <link rel="stylesheet" href="../../../css/style.css" type="text/css" charset="utf-8" />
 
-  <link rel="stylesheet" href="../../css/common.css" type="text/css" media="screen" charset="utf-8" />
+  <link rel="stylesheet" href="../../../css/common.css" type="text/css" charset="utf-8" />
 
 <script type="text/javascript" charset="utf-8">
   hasFrames = window.top.frames.main ? true : false;
-  relpath = '../../';
-  framesUrl = "../../frames.html#!" + escape(window.location.href);
+  relpath = '../../../';
+  framesUrl = "../../../frames.html#!" + escape(window.location.href);
 </script>
 
 
-  <script type="text/javascript" charset="utf-8" src="../../js/jquery.js"></script>
+  <script type="text/javascript" charset="utf-8" src="../../../js/jquery.js"></script>
 
-  <script type="text/javascript" charset="utf-8" src="../../js/app.js"></script>
+  <script type="text/javascript" charset="utf-8" src="../../../js/app.js"></script>
 
 
   </head>
@@ -31,8 +31,8 @@
     <div id="header">
       <div id="menu">
   
-    <a href="../../_index.html">Index (P)</a> &raquo;
-    <span class='title'><span class='object_link'><a href="../../R509.html" title="R509 (module)">R509</a></span></span> &raquo; <span class='title'><span class='object_link'><a href="../ASN1.html" title="R509::ASN1 (module)">ASN1</a></span></span>
+    <a href="../../../_index.html">Index (P)</a> &raquo;
+    <span class='title'><span class='object_link'><a href="../../../R509.html" title="R509 (module)">R509</a></span></span> &raquo; <span class='title'><span class='object_link'><a href="../../Cert.html" title="R509::Cert (class)">Cert</a></span></span> &raquo; <span class='title'><span class='object_link'><a href="../Extensions.html" title="R509::Cert::Extensions (module)">Extensions</a></span></span>
      &raquo; 
     <span class="title">PolicyQualifiers</span>
   
@@ -43,17 +43,17 @@
       <div id="search">
   
     <a class="full_list_link" id="class_list_link"
-        href="../../class_list.html">
+        href="../../../class_list.html">
       Class List
     </a>
   
     <a class="full_list_link" id="method_list_link"
-        href="../../method_list.html">
+        href="../../../method_list.html">
       Method List
     </a>
   
     <a class="full_list_link" id="file_list_link"
-        href="../../file_list.html">
+        href="../../../file_list.html">
       File List
     </a>
   
@@ -63,7 +63,7 @@
 
     <iframe id="search_frame"></iframe>
 
-    <div id="content"><h1>Class: R509::ASN1::PolicyQualifiers
+    <div id="content"><h1>Class: R509::Cert::Extensions::PolicyQualifiers
   
   
   
@@ -78,7 +78,7 @@
         <ul class="fullTree">
           <li>Object</li>
           
-            <li class="next">R509::ASN1::PolicyQualifiers</li>
+            <li class="next">R509::Cert::Extensions::PolicyQualifiers</li>
           
         </ul>
         <a href="#" class="inheritanceTree">show all</a>
@@ -94,7 +94,7 @@
   
   
     <dt class="r2 last">Defined in:</dt>
-    <dd class="r2 last">lib/r509/asn1.rb</dd>
+    <dd class="r2 last">lib/r509/cert/extensions/certificate_policies.rb</dd>
   
 </dl>
 <div class="clear"></div>
@@ -102,10 +102,11 @@
 <h2>Overview</h2><div class="docstring">
   <div class="discussion">
     
-<p>PolicyQualifierInfo ::= SEQUENCE {</p>
+<p>This class is used to help build the certificate policies extension</p>
 
-<pre class="code ruby"><code class="ruby">policyQualifierId  PolicyQualifierId,
-qualifier          ANY DEFINED BY policyQualifierId }</code></pre>
+<pre class="code ruby"><code class="ruby">PolicyQualifierInfo ::= SEQUENCE {
+     policyQualifierId  PolicyQualifierId,
+     qualifier          ANY DEFINED BY policyQualifierId }</code></pre>
 
 
   </div>
@@ -241,6 +242,50 @@ qualifier          ANY DEFINED BY policyQualifierId }</code></pre>
 </li>
 
       
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#to_h-instance_method" title="#to_h (instance method)">- (Hash) <strong>to_h</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#to_yaml-instance_method" title="#to_yaml (instance method)">- (YAML) <strong>to_yaml</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
     </ul>
   
 
@@ -250,7 +295,7 @@ qualifier          ANY DEFINED BY policyQualifierId }</code></pre>
     <div class="method_details first">
   <h3 class="signature first" id="initialize-instance_method">
   
-    - (<tt><span class='object_link'><a href="" title="R509::ASN1::PolicyQualifiers (class)">PolicyQualifiers</a></span></tt>) <strong>initialize</strong> 
+    - (<tt><span class='object_link'><a href="" title="R509::Cert::Extensions::PolicyQualifiers (class)">PolicyQualifiers</a></span></tt>) <strong>initialize</strong> 
   
 
   
@@ -273,13 +318,13 @@ qualifier          ANY DEFINED BY policyQualifierId }</code></pre>
       <pre class="lines">
 
 
-318
-319
-320
-321</pre>
+163
+164
+165
+166</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/asn1.rb', line 318</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions/certificate_policies.rb', line 163</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span>
   <span class='ivar'>@cps_uris</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
@@ -323,12 +368,12 @@ qualifier          ANY DEFINED BY policyQualifierId }</code></pre>
       <pre class="lines">
 
 
-317
-318
-319</pre>
+162
+163
+164</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/asn1.rb', line 317</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions/certificate_policies.rb', line 162</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_cps_uris'>cps_uris</span>
   <span class='ivar'>@cps_uris</span>
@@ -366,12 +411,12 @@ qualifier          ANY DEFINED BY policyQualifierId }</code></pre>
       <pre class="lines">
 
 
-317
-318
-319</pre>
+162
+163
+164</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/asn1.rb', line 317</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions/certificate_policies.rb', line 162</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_user_notices'>user_notices</span>
   <span class='ivar'>@user_notices</span>
@@ -414,27 +459,139 @@ qualifier          ANY DEFINED BY policyQualifierId }</code></pre>
       <pre class="lines">
 
 
-324
-325
-326
-327
-328
-329
-330
-331
-332</pre>
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/asn1.rb', line 324</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions/certificate_policies.rb', line 169</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_parse'>parse</span><span class='lparen'>(</span><span class='id identifier rubyid_data'>data</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_oid'>oid</span> <span class='op'>=</span> <span class='id identifier rubyid_data'>data</span><span class='period'>.</span><span class='id identifier rubyid_entries'>entries</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_value'>value</span>
   <span class='kw'>case</span>
   <span class='kw'>when</span> <span class='id identifier rubyid_oid'>oid</span> <span class='op'>==</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>id-qt-cps</span><span class='tstring_end'>&#39;</span></span>
-    <span class='ivar'>@cps_uris</span> <span class='op'>&lt;&lt;</span> <span class='id identifier rubyid_data'>data</span><span class='period'>.</span><span class='id identifier rubyid_entries'>entries</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_value'>value</span>
+    <span class='comment'># by RFC definition must be URIs
+</span>    <span class='ivar'>@cps_uris</span> <span class='op'>&lt;&lt;</span> <span class='id identifier rubyid_data'>data</span><span class='period'>.</span><span class='id identifier rubyid_entries'>entries</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_value'>value</span>
   <span class='kw'>when</span> <span class='id identifier rubyid_oid'>oid</span> <span class='op'>==</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>id-qt-unotice</span><span class='tstring_end'>&#39;</span></span>
     <span class='ivar'>@user_notices</span> <span class='op'>&lt;&lt;</span>  <span class='const'>UserNotice</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_data'>data</span><span class='period'>.</span><span class='id identifier rubyid_entries'>entries</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span><span class='rparen'>)</span>
   <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="to_h-instance_method">
+  
+    - (<tt>Hash</tt>) <strong>to_h</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Hash</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+181
+182
+183
+184
+185
+186</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions/certificate_policies.rb', line 181</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_to_h'>to_h</span>
+  <span class='id identifier rubyid_hash'>hash</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
+  <span class='id identifier rubyid_hash'>hash</span><span class='lbracket'>[</span><span class='symbol'>:cps_uris</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='ivar'>@cps_uris</span>
+  <span class='id identifier rubyid_hash'>hash</span><span class='lbracket'>[</span><span class='symbol'>:user_notices</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='ivar'>@user_notices</span><span class='period'>.</span><span class='id identifier rubyid_map'>map</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_notice'>notice</span><span class='op'>|</span> <span class='id identifier rubyid_notice'>notice</span><span class='period'>.</span><span class='id identifier rubyid_to_h'>to_h</span> <span class='rbrace'>}</span> <span class='kw'>unless</span> <span class='ivar'>@user_notices</span><span class='period'>.</span><span class='id identifier rubyid_empty?'>empty?</span>
+  <span class='id identifier rubyid_hash'>hash</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="to_yaml-instance_method">
+  
+    - (<tt>YAML</tt>) <strong>to_yaml</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>YAML</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+189
+190
+191</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/r509/cert/extensions/certificate_policies.rb', line 189</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_to_yaml'>to_yaml</span>
+  <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_to_h'>to_h</span><span class='period'>.</span><span class='id identifier rubyid_to_yaml'>to_yaml</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -446,9 +603,9 @@ qualifier          ANY DEFINED BY policyQualifierId }</code></pre>
 </div>
 
     <div id="footer">
-  Generated on Sun Jun  9 10:03:36 2013 by
+  Generated on Sat Jan 25 19:00:19 2014 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.8.4.1 (ruby-2.0.0).
+  0.8.6.1 (ruby-2.0.0).
 </div>
 
   </body>

@@ -6,13 +6,13 @@
 <title>
   Module: R509::ASN1
   
-    &mdash; Documentation by YARD 0.8.4.1
+    &mdash; Documentation by YARD 0.8.6.1
   
 </title>
 
-  <link rel="stylesheet" href="../css/style.css" type="text/css" media="screen" charset="utf-8" />
+  <link rel="stylesheet" href="../css/style.css" type="text/css" charset="utf-8" />
 
-  <link rel="stylesheet" href="../css/common.css" type="text/css" media="screen" charset="utf-8" />
+  <link rel="stylesheet" href="../css/common.css" type="text/css" charset="utf-8" />
 
 <script type="text/javascript" charset="utf-8">
   hasFrames = window.top.frames.main ? true : false;
@@ -101,7 +101,7 @@
     
   
     
-      <strong class="classes">Classes:</strong> <span class='object_link'><a href="ASN1/GeneralName.html" title="R509::ASN1::GeneralName (class)">GeneralName</a></span>, <span class='object_link'><a href="ASN1/GeneralNames.html" title="R509::ASN1::GeneralNames (class)">GeneralNames</a></span>, <span class='object_link'><a href="ASN1/NoticeReference.html" title="R509::ASN1::NoticeReference (class)">NoticeReference</a></span>, <span class='object_link'><a href="ASN1/PolicyInformation.html" title="R509::ASN1::PolicyInformation (class)">PolicyInformation</a></span>, <span class='object_link'><a href="ASN1/PolicyQualifiers.html" title="R509::ASN1::PolicyQualifiers (class)">PolicyQualifiers</a></span>, <span class='object_link'><a href="ASN1/UserNotice.html" title="R509::ASN1::UserNotice (class)">UserNotice</a></span>
+      <strong class="classes">Classes:</strong> <span class='object_link'><a href="ASN1/GeneralName.html" title="R509::ASN1::GeneralName (class)">GeneralName</a></span>, <span class='object_link'><a href="ASN1/GeneralNames.html" title="R509::ASN1::GeneralNames (class)">GeneralNames</a></span>
     
   
 </p>
@@ -200,7 +200,7 @@ processing by the subclasses.</p>
         <span class='name'>names</span>
       
       
-        <span class='type'>(<tt>Array</tt>)</span>
+        <span class='type'>(<tt>Array</tt>, <tt><span class='object_link'><a href="ASN1/GeneralNames.html" title="R509::ASN1::GeneralNames (class)">R509::ASN1::GeneralNames</a></span></tt>)</span>
       
       
       
@@ -235,7 +235,6 @@ arrays</p>
       <pre class="lines">
 
 
-25
 26
 27
 28
@@ -261,18 +260,21 @@ arrays</p>
 48
 49
 50
-51</pre>
+51
+52
+53</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/asn1.rb', line 25</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/asn1.rb', line 26</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_general_name_parser'>general_name_parser</span><span class='lparen'>(</span><span class='id identifier rubyid_names'>names</span><span class='rparen'>)</span>
-  <span class='kw'>if</span> <span class='id identifier rubyid_names'>names</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
-    <span class='kw'>return</span> <span class='kw'>nil</span>
-  <span class='kw'>elsif</span> <span class='id identifier rubyid_names'>names</span><span class='period'>.</span><span class='id identifier rubyid_kind_of?'>kind_of?</span><span class='lparen'>(</span><span class='const'>R509</span><span class='op'>::</span><span class='const'>ASN1</span><span class='op'>::</span><span class='const'>GeneralNames</span><span class='rparen'>)</span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_names'>names</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span> <span class='kw'>or</span> <span class='id identifier rubyid_names'>names</span><span class='period'>.</span><span class='id identifier rubyid_kind_of?'>kind_of?</span><span class='lparen'>(</span><span class='const'>R509</span><span class='op'>::</span><span class='const'>ASN1</span><span class='op'>::</span><span class='const'>GeneralNames</span><span class='rparen'>)</span>
     <span class='kw'>return</span> <span class='id identifier rubyid_names'>names</span>
+  <span class='kw'>elsif</span> <span class='kw'>not</span> <span class='id identifier rubyid_names'>names</span><span class='period'>.</span><span class='id identifier rubyid_kind_of?'>kind_of?</span><span class='lparen'>(</span><span class='const'>Array</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_raise'>raise</span> <span class='const'>ArgumentError</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>You must supply an array or existing R509::ASN1 GeneralNames object to general_name_parser</span><span class='tstring_end'>&quot;</span></span>
   <span class='kw'>end</span>
   <span class='id identifier rubyid_general_names'>general_names</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>ASN1</span><span class='op'>::</span><span class='const'>GeneralNames</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span>
+  <span class='id identifier rubyid_names'>names</span><span class='period'>.</span><span class='id identifier rubyid_uniq!'>uniq!</span>
   <span class='id identifier rubyid_names'>names</span><span class='period'>.</span><span class='id identifier rubyid_map'>map</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_domain'>domain</span><span class='op'>|</span>
     <span class='kw'>if</span> <span class='op'>!</span><span class='lparen'>(</span><span class='const'>IPAddr</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_domain'>domain</span><span class='period'>.</span><span class='id identifier rubyid_strip'>strip</span><span class='rparen'>)</span> <span class='kw'>rescue</span> <span class='kw'>nil</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
       <span class='id identifier rubyid_ip'>ip</span> <span class='op'>=</span> <span class='const'>IPAddr</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_domain'>domain</span><span class='period'>.</span><span class='id identifier rubyid_strip'>strip</span><span class='rparen'>)</span>
@@ -325,7 +327,6 @@ processing by the subclasses</p>
       <pre class="lines">
 
 
-8
 9
 10
 11
@@ -337,10 +338,11 @@ processing by the subclasses</p>
 17
 18
 19
-20</pre>
+20
+21</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/asn1.rb', line 8</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/asn1.rb', line 9</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_get_extension_payload'>get_extension_payload</span><span class='lparen'>(</span><span class='id identifier rubyid_ext'>ext</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_asn'>asn</span> <span class='op'>=</span> <span class='const'>OpenSSL</span><span class='op'>::</span><span class='const'>ASN1</span><span class='period'>.</span><span class='id identifier rubyid_decode'>decode</span> <span class='id identifier rubyid_ext'>ext</span>
@@ -365,9 +367,9 @@ processing by the subclasses</p>
 </div>
 
     <div id="footer">
-  Generated on Sun Jun  9 10:03:35 2013 by
+  Generated on Sat Jan 25 19:00:16 2014 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.8.4.1 (ruby-2.0.0).
+  0.8.6.1 (ruby-2.0.0).
 </div>
 
   </body>

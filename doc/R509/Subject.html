@@ -6,13 +6,13 @@
 <title>
   Class: R509::Subject
   
-    &mdash; Documentation by YARD 0.8.4.1
+    &mdash; Documentation by YARD 0.8.6.1
   
 </title>
 
-  <link rel="stylesheet" href="../css/style.css" type="text/css" media="screen" charset="utf-8" />
+  <link rel="stylesheet" href="../css/style.css" type="text/css" charset="utf-8" />
 
-  <link rel="stylesheet" href="../css/common.css" type="text/css" media="screen" charset="utf-8" />
+  <link rel="stylesheet" href="../css/common.css" type="text/css" charset="utf-8" />
 
 <script type="text/javascript" charset="utf-8">
   hasFrames = window.top.frames.main ? true : false;
@@ -102,8 +102,7 @@
 <h2>Overview</h2><div class="docstring">
   <div class="discussion">
     
-<p>subject class. Used for building OpenSSL::X509::Name objects in a sane
-fashion</p>
+<p>The primary subject class. Used for building subject DNs in a sane fashion.</p>
 
 
   </div>
@@ -120,6 +119,9 @@ fashion</p>
     
       
       <pre class="example code"><code><span class='id identifier rubyid_subject'>subject</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>Subject</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='lbracket'>[</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>CN</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>test.test</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='comma'>,</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>O</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>r509 LLC</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='rbracket'>]</span><span class='rparen'>)</span></code></pre>
+    
+      
+      <pre class="example code"><code><span class='id identifier rubyid_subject'>subject</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>Subject</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='symbol'>:CN</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>test.test</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='symbol'>:O</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>r509 LLC</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span></code></pre>
     
       
       <pre class="example code"><code><span class='comment'># you can also use the friendly getter/setters with custom OIDs
@@ -316,6 +318,28 @@ fashion</p>
         <li class="public ">
   <span class="summary_signature">
     
+      <a href="#to_h-instance_method" title="#to_h (instance method)">- (Hash) <strong>to_h</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
       <a href="#to_s-instance_method" title="#to_s (instance method)">- (String) <strong>to_s</strong> </a>
     
 
@@ -333,6 +357,28 @@ fashion</p>
     <span class="summary_desc"><div class='inline'>
 <p>String of form /CN=something.com/O=whatever/L=Locality.</p>
 </div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#to_yaml-instance_method" title="#to_yaml (instance method)">- (YAML) <strong>to_yaml</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
   
 </li>
 
@@ -369,7 +415,7 @@ fashion</p>
         <span class='name'>arg</span>
       
       
-        <span class='type'>(<tt>Array</tt>, <tt>OpenSSL::X509::Name</tt>, <tt><span class='object_link'><a href="" title="R509::Subject (class)">R509::Subject</a></span></tt>, <tt>DER</tt>, <tt>nil</tt>)</span>
+        <span class='type'>(<tt>Array</tt>, <tt>OpenSSL::X509::Name</tt>, <tt><span class='object_link'><a href="" title="R509::Subject (class)">R509::Subject</a></span></tt>, <tt>DER</tt>, <tt>Hash</tt>, <tt>nil</tt>)</span>
       
       
         <em class="default">(defaults to: <tt>nil</tt>)</em>
@@ -386,8 +432,6 @@ fashion</p>
       <pre class="lines">
 
 
-22
-23
 24
 25
 26
@@ -403,14 +447,20 @@ fashion</p>
 36
 37
 38
-39</pre>
+39
+40
+41
+42
+43</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/subject.rb', line 22</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/subject.rb', line 24</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='id identifier rubyid_arg'>arg</span><span class='op'>=</span><span class='kw'>nil</span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='id identifier rubyid_arg'>arg</span><span class='period'>.</span><span class='id identifier rubyid_kind_of?'>kind_of?</span><span class='lparen'>(</span><span class='const'>Array</span><span class='rparen'>)</span>
     <span class='ivar'>@array</span> <span class='op'>=</span> <span class='id identifier rubyid_arg'>arg</span>
+  <span class='kw'>elsif</span> <span class='id identifier rubyid_arg'>arg</span><span class='period'>.</span><span class='id identifier rubyid_kind_of?'>kind_of?</span><span class='lparen'>(</span><span class='const'>Hash</span><span class='rparen'>)</span>
+    <span class='ivar'>@array</span> <span class='op'>=</span> <span class='id identifier rubyid_arg'>arg</span><span class='period'>.</span><span class='id identifier rubyid_map'>map</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_k'>k</span><span class='comma'>,</span><span class='id identifier rubyid_v'>v</span><span class='op'>|</span> <span class='lbracket'>[</span><span class='id identifier rubyid_k'>k</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='period'>.</span><span class='id identifier rubyid_upcase'>upcase</span><span class='comma'>,</span><span class='id identifier rubyid_v'>v</span><span class='rbracket'>]</span> <span class='rbrace'>}</span>
   <span class='kw'>elsif</span> <span class='id identifier rubyid_arg'>arg</span><span class='period'>.</span><span class='id identifier rubyid_kind_of?'>kind_of?</span><span class='lparen'>(</span><span class='const'>OpenSSL</span><span class='op'>::</span><span class='const'>X509</span><span class='op'>::</span><span class='const'>Name</span><span class='rparen'>)</span>
     <span class='id identifier rubyid_sanitizer'>sanitizer</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>NameSanitizer</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span>
     <span class='ivar'>@array</span> <span class='op'>=</span> <span class='id identifier rubyid_sanitizer'>sanitizer</span><span class='period'>.</span><span class='id identifier rubyid_sanitize'>sanitize</span><span class='lparen'>(</span><span class='id identifier rubyid_arg'>arg</span><span class='rparen'>)</span>
@@ -442,7 +492,7 @@ fashion</p>
     <div class="method_details first">
   <h3 class="signature first" id="method_missing-instance_method">
   
-    - (<tt>Object</tt>) <strong>method_missing</strong>(method_sym, *args)  <span class="extras">(private)</span>
+    - (<tt>Object</tt>) <strong>method_missing</strong>(method_sym, *args, &amp;block)  <span class="extras">(private)</span>
   
 
   
@@ -461,6 +511,15 @@ via R509::OIDMapper</p>
 </div>
 <div class="tags">
   
+  <div class="examples">
+    <p class="tag_title">Examples:</p>
+    
+      
+      <pre class="example code"><code><span class='id identifier rubyid_subject'>subject</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>Subject</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span>
+<span class='id identifier rubyid_subject'>subject</span><span class='period'>.</span><span class='const'>CN</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>test</span><span class='tstring_end'>&#39;</span></span> <span class='comment'># method built via method missing.</span></code></pre>
+    
+  </div>
+
 
 </div><table class="source_code">
   <tr>
@@ -468,28 +527,28 @@ via R509::OIDMapper</p>
       <pre class="lines">
 
 
-118
-119
-120
-121
-122
-123
-124
-125
-126
-127
-128
-129
-130
-131
-132
-133
-134
-135
-136</pre>
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/subject.rb', line 118</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/subject.rb', line 140</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_method_missing'>method_missing</span><span class='lparen'>(</span><span class='id identifier rubyid_method_sym'>method_sym</span><span class='comma'>,</span> <span class='op'>*</span><span class='id identifier rubyid_args'>args</span><span class='comma'>,</span> <span class='op'>&amp;</span><span class='id identifier rubyid_block'>block</span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='id identifier rubyid_method_sym'>method_sym</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span> <span class='op'>=~</span> <span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>(.*)=$</span><span class='regexp_end'>/</span></span>
@@ -548,17 +607,17 @@ via R509::OIDMapper</p>
       <pre class="lines">
 
 
-52
-53
-54
-55
 56
 57
 58
-59</pre>
+59
+60
+61
+62
+63</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/subject.rb', line 52</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/subject.rb', line 56</span>
 
 <span class='kw'>def</span> <span class='op'>[]</span><span class='lparen'>(</span><span class='id identifier rubyid_key'>key</span><span class='rparen'>)</span>
   <span class='ivar'>@array</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_item'>item</span><span class='op'>|</span>
@@ -599,10 +658,6 @@ via R509::OIDMapper</p>
       <pre class="lines">
 
 
-62
-63
-64
-65
 66
 67
 68
@@ -618,10 +673,14 @@ via R509::OIDMapper</p>
 78
 79
 80
-81</pre>
+81
+82
+83
+84
+85</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/subject.rb', line 62</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/subject.rb', line 66</span>
 
 <span class='kw'>def</span> <span class='op'>[]=</span><span class='lparen'>(</span><span class='id identifier rubyid_key'>key</span><span class='comma'>,</span> <span class='id identifier rubyid_value'>value</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_added'>added</span> <span class='op'>=</span> <span class='kw'>false</span>
@@ -692,14 +751,14 @@ via R509::OIDMapper</p>
       <pre class="lines">
 
 
-84
-85
-86
-87
-88</pre>
+88
+89
+90
+91
+92</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/subject.rb', line 84</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/subject.rb', line 88</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_delete'>delete</span><span class='lparen'>(</span><span class='id identifier rubyid_key'>key</span><span class='rparen'>)</span>
   <span class='ivar'>@array</span> <span class='op'>=</span> <span class='ivar'>@array</span><span class='period'>.</span><span class='id identifier rubyid_select'>select</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_item'>item</span><span class='op'>|</span>
@@ -748,12 +807,12 @@ via R509::OIDMapper</p>
       <pre class="lines">
 
 
-47
-48
-49</pre>
+51
+52
+53</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/subject.rb', line 47</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/subject.rb', line 51</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_empty?'>empty?</span>
   <span class='ivar'>@array</span><span class='period'>.</span><span class='id identifier rubyid_empty?'>empty?</span>
@@ -800,12 +859,12 @@ via R509::OIDMapper</p>
       <pre class="lines">
 
 
-42
-43
-44</pre>
+46
+47
+48</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/subject.rb', line 42</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/subject.rb', line 46</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_name'>name</span>
   <span class='const'>OpenSSL</span><span class='op'>::</span><span class='const'>X509</span><span class='op'>::</span><span class='const'>Name</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='ivar'>@array</span><span class='rparen'>)</span>
@@ -859,15 +918,75 @@ via R509::OIDMapper</p>
       <pre class="lines">
 
 
-96
-97
-98</pre>
+100
+101
+102</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/subject.rb', line 96</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/subject.rb', line 100</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_to_a'>to_a</span>
   <span class='ivar'>@array</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="to_h-instance_method">
+  
+    - (<tt>Hash</tt>) <strong>to_h</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Hash</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+105
+106
+107
+108
+109
+110
+111</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/r509/subject.rb', line 105</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_to_h'>to_h</span>
+  <span class='id identifier rubyid_hash'>hash</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
+  <span class='ivar'>@array</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_el'>el</span><span class='op'>|</span>
+    <span class='id identifier rubyid_hash'>hash</span><span class='lbracket'>[</span><span class='id identifier rubyid_el'>el</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_to_sym'>to_sym</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_el'>el</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span>
+  <span class='kw'>end</span>
+  <span class='id identifier rubyid_hash'>hash</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -918,15 +1037,67 @@ via R509::OIDMapper</p>
       <pre class="lines">
 
 
-91
-92
-93</pre>
+95
+96
+97</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/subject.rb', line 91</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/subject.rb', line 95</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_to_s'>to_s</span>
   <span class='id identifier rubyid_name'>name</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="to_yaml-instance_method">
+  
+    - (<tt>YAML</tt>) <strong>to_yaml</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>YAML</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+114
+115
+116</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/r509/subject.rb', line 114</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_to_yaml'>to_yaml</span>
+  <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_to_h'>to_h</span><span class='period'>.</span><span class='id identifier rubyid_to_yaml'>to_yaml</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -938,9 +1109,9 @@ via R509::OIDMapper</p>
 </div>
 
     <div id="footer">
-  Generated on Sun Jun  9 10:03:36 2013 by
+  Generated on Sat Jan 25 19:00:17 2014 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.8.4.1 (ruby-2.0.0).
+  0.8.6.1 (ruby-2.0.0).
 </div>
 
   </body>

@@ -6,13 +6,13 @@
 <title>
   Class: R509::SPKI
   
-    &mdash; Documentation by YARD 0.8.4.1
+    &mdash; Documentation by YARD 0.8.6.1
   
 </title>
 
-  <link rel="stylesheet" href="../css/style.css" type="text/css" media="screen" charset="utf-8" />
+  <link rel="stylesheet" href="../css/style.css" type="text/css" charset="utf-8" />
 
-  <link rel="stylesheet" href="../css/common.css" type="text/css" media="screen" charset="utf-8" />
+  <link rel="stylesheet" href="../css/common.css" type="text/css" charset="utf-8" />
 
 <script type="text/javascript" charset="utf-8">
   hasFrames = window.top.frames.main ? true : false;
@@ -91,7 +91,7 @@
   
     
       <dt class="r2">Includes:</dt>
-      <dd class="r2"><span class='object_link'><a href="IOHelpers.html" title="R509::IOHelpers (module)">IOHelpers</a></span></dd>
+      <dd class="r2"><span class='object_link'><a href="Helpers.html" title="R509::Helpers (module)">Helpers</a></span></dd>
       
     
   
@@ -196,11 +196,18 @@ the &lt;keygen&gt; tag</p>
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#bit_strength-instance_method" title="#bit_strength (instance method)">- (Integer) <strong>bit_strength</strong> </a>
+      <a href="#bit_length-instance_method" title="#bit_length (instance method)">- (Integer) <strong>bit_length</strong> </a>
     
 
     
+      (also: #bit_strength)
+    
   </span>
+  
+    <span class="note title not_defined_here">
+      included
+      from <span class='object_link'><a href="Helpers.html#bit_length-instance_method" title="R509::Helpers#bit_length (method)">Helpers</a></span>
+    </span>
   
   
   
@@ -211,7 +218,7 @@ the &lt;keygen&gt; tag</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Returns the bit strength of the key used to create the SPKI.</p>
+<p>Returns the bit length of the key.</p>
 </div></span>
   
 </li>
@@ -225,6 +232,11 @@ the &lt;keygen&gt; tag</p>
 
     
   </span>
+  
+    <span class="note title not_defined_here">
+      included
+      from <span class='object_link'><a href="Helpers.html#curve_name-instance_method" title="R509::Helpers#curve_name (method)">Helpers</a></span>
+    </span>
   
   
   
@@ -251,6 +263,11 @@ key if the key is EC.</p>
     
   </span>
   
+    <span class="note title not_defined_here">
+      included
+      from <span class='object_link'><a href="Helpers.html#dsa%3F-instance_method" title="R509::Helpers#dsa? (method)">Helpers</a></span>
+    </span>
+  
   
   
   
@@ -274,6 +291,11 @@ key if the key is EC.</p>
 
     
   </span>
+  
+    <span class="note title not_defined_here">
+      included
+      from <span class='object_link'><a href="Helpers.html#ec%3F-instance_method" title="R509::Helpers#ec? (method)">Helpers</a></span>
+    </span>
   
   
   
@@ -325,6 +347,11 @@ key if the key is EC.</p>
     
   </span>
   
+    <span class="note title not_defined_here">
+      included
+      from <span class='object_link'><a href="Helpers.html#key_algorithm-instance_method" title="R509::Helpers#key_algorithm (method)">Helpers</a></span>
+    </span>
+  
   
   
   
@@ -334,7 +361,7 @@ key if the key is EC.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Returns key algorithm (RSA/DSA).</p>
+<p>Returns key algorithm (RSA/DSA/EC).</p>
 </div></span>
   
 </li>
@@ -373,6 +400,11 @@ key if the key is EC.</p>
     
   </span>
   
+    <span class="note title not_defined_here">
+      included
+      from <span class='object_link'><a href="Helpers.html#rsa%3F-instance_method" title="R509::Helpers#rsa? (method)">Helpers</a></span>
+    </span>
+  
   
   
   
@@ -391,7 +423,7 @@ key if the key is EC.</p>
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#to_der-instance_method" title="#to_der (instance method)">- (String) <strong>to_der</strong> </a>
+      <a href="#signature_algorithm-instance_method" title="#signature_algorithm (instance method)">- (String) <strong>signature_algorithm</strong> </a>
     
 
     
@@ -406,7 +438,36 @@ key if the key is EC.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Converts the SPKI into the DER format.</p>
+<p>Returns the signature algorithm (e.g., RSA-SHA1, ecdsa-with-SHA256).</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#to_der-instance_method" title="#to_der (instance method)">- (String) <strong>to_der</strong> </a>
+    
+
+    
+  </span>
+  
+    <span class="note title not_defined_here">
+      included
+      from <span class='object_link'><a href="Helpers.html#to_der-instance_method" title="R509::Helpers#to_der (method)">Helpers</a></span>
+    </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Converts the object into DER format.</p>
 </div></span>
   
 </li>
@@ -419,9 +480,12 @@ key if the key is EC.</p>
     
 
     
-      (also: #to_s)
-    
   </span>
+  
+    <span class="note title not_defined_here">
+      included
+      from <span class='object_link'><a href="Helpers.html#to_pem-instance_method" title="R509::Helpers#to_pem (method)">Helpers</a></span>
+    </span>
   
   
   
@@ -432,7 +496,7 @@ key if the key is EC.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Converts the SPKI into the PEM format.</p>
+<p>Converts the object into PEM format.</p>
 </div></span>
   
 </li>
@@ -471,6 +535,11 @@ key if the key is EC.</p>
     
   </span>
   
+    <span class="note title not_defined_here">
+      included
+      from <span class='object_link'><a href="Helpers.html#write_der-instance_method" title="R509::Helpers#write_der (method)">Helpers</a></span>
+    </span>
+  
   
   
   
@@ -480,7 +549,7 @@ key if the key is EC.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Writes the SPKI into the DER format.</p>
+<p>Writes the object into DER format.</p>
 </div></span>
   
 </li>
@@ -495,6 +564,11 @@ key if the key is EC.</p>
     
   </span>
   
+    <span class="note title not_defined_here">
+      included
+      from <span class='object_link'><a href="Helpers.html#write_pem-instance_method" title="R509::Helpers#write_pem (method)">Helpers</a></span>
+    </span>
+  
   
   
   
@@ -504,7 +578,7 @@ key if the key is EC.</p>
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Writes the SPKI into the PEM format.</p>
+<p>Writes the object into PEM format.</p>
 </div></span>
   
 </li>
@@ -517,14 +591,7 @@ key if the key is EC.</p>
   
   
   
-  
-  
-  
-  
-  
-  <h3 class="inherited">Methods included from <span class='object_link'><a href="IOHelpers.html" title="R509::IOHelpers (module)">IOHelpers</a></span></h3>
-  <p class="inherited"><span class='object_link'><a href="IOHelpers.html#read_data-instance_method" title="R509::IOHelpers#read_data (method)">#read_data</a></span>, <span class='object_link'><a href="IOHelpers.html#read_data-class_method" title="R509::IOHelpers.read_data (method)">read_data</a></span>, <span class='object_link'><a href="IOHelpers.html#write_data-instance_method" title="R509::IOHelpers#write_data (method)">#write_data</a></span>, <span class='object_link'><a href="IOHelpers.html#write_data-class_method" title="R509::IOHelpers.write_data (method)">write_data</a></span></p>
-<div id="constructor_details" class="method_details_list">
+  <div id="constructor_details" class="method_details_list">
   <h2>Constructor Details</h2>
   
     <div class="method_details first">
@@ -626,8 +693,6 @@ sha1. Only used if you supply a :key and no :spki</p>
       <pre class="lines">
 
 
-14
-15
 16
 17
 18
@@ -643,40 +708,10 @@ sha1. Only used if you supply a :key and no :spki</p>
 28
 29
 30
-31
-32
-33
-34
-35
-36
-37
-38
-39
-40
-41
-42
-43
-44
-45
-46
-47
-48
-49
-50
-51
-52
-53
-54
-55
-56
-57
-58
-59
-60
-61</pre>
+31</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/spki.rb', line 14</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/spki.rb', line 16</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='id identifier rubyid_opts'>opts</span><span class='op'>=</span><span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='kw'>not</span> <span class='id identifier rubyid_opts'>opts</span><span class='period'>.</span><span class='id identifier rubyid_kind_of?'>kind_of?</span><span class='lparen'>(</span><span class='const'>Hash</span><span class='rparen'>)</span>
@@ -685,45 +720,13 @@ sha1. Only used if you supply a :key and no :spki</p>
     <span class='id identifier rubyid_raise'>raise</span> <span class='const'>ArgumentError</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Must provide either :spki or :key</span><span class='tstring_end'>&#39;</span></span>
   <span class='kw'>end</span>
 
-  <span class='kw'>if</span> <span class='id identifier rubyid_opts'>opts</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span><span class='lparen'>(</span><span class='symbol'>:key</span><span class='rparen'>)</span>
-    <span class='kw'>if</span> <span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:key</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_kind_of?'>kind_of?</span><span class='lparen'>(</span><span class='const'>R509</span><span class='op'>::</span><span class='const'>PrivateKey</span><span class='rparen'>)</span>
-      <span class='ivar'>@key</span> <span class='op'>=</span> <span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:key</span><span class='rbracket'>]</span>
-    <span class='kw'>else</span>
-      <span class='ivar'>@key</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>PrivateKey</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='symbol'>:key</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:key</span><span class='rbracket'>]</span><span class='rparen'>)</span>
-    <span class='kw'>end</span>
-  <span class='kw'>end</span>
+  <span class='ivar'>@key</span> <span class='op'>=</span> <span class='id identifier rubyid_load_private_key'>load_private_key</span><span class='lparen'>(</span><span class='id identifier rubyid_opts'>opts</span><span class='rparen'>)</span>
+
   <span class='kw'>if</span> <span class='id identifier rubyid_opts'>opts</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span><span class='lparen'>(</span><span class='symbol'>:spki</span><span class='rparen'>)</span>
-    <span class='id identifier rubyid_spki'>spki</span> <span class='op'>=</span> <span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:spki</span><span class='rbracket'>]</span>
-    <span class='comment'># first let&#39;s try cleaning up the input a bit so OpenSSL is happy with it
-</span>    <span class='comment'># OpenSSL hates SPKAC=
-</span>    <span class='id identifier rubyid_spki'>spki</span><span class='period'>.</span><span class='id identifier rubyid_sub!'>sub!</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>SPKAC=</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
-    <span class='comment'># it really hates newlines (Firefox loves &#39;em)
-</span>    <span class='comment'># so let&#39;s normalize line endings
-</span>    <span class='id identifier rubyid_spki'>spki</span><span class='period'>.</span><span class='id identifier rubyid_gsub!'>gsub!</span><span class='lparen'>(</span><span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>\r\n?</span><span class='regexp_end'>/</span></span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>\n</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
-    <span class='comment'># and nuke &#39;em
-</span>    <span class='id identifier rubyid_spki'>spki</span><span class='period'>.</span><span class='id identifier rubyid_gsub!'>gsub!</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>\n</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
-    <span class='comment'># ...and leading/trailing whitespace
-</span>    <span class='id identifier rubyid_spki'>spki</span><span class='period'>.</span><span class='id identifier rubyid_strip!'>strip!</span>
-    <span class='ivar'>@spki</span> <span class='op'>=</span> <span class='const'>OpenSSL</span><span class='op'>::</span><span class='const'>Netscape</span><span class='op'>::</span><span class='const'>SPKI</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_spki'>spki</span><span class='rparen'>)</span>
-    <span class='kw'>if</span> <span class='kw'>not</span> <span class='ivar'>@key</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span> <span class='kw'>and</span> <span class='kw'>not</span> <span class='ivar'>@spki</span><span class='period'>.</span><span class='id identifier rubyid_verify'>verify</span><span class='lparen'>(</span><span class='ivar'>@key</span><span class='period'>.</span><span class='id identifier rubyid_public_key'>public_key</span><span class='rparen'>)</span> <span class='kw'>then</span>
-      <span class='id identifier rubyid_raise'>raise</span> <span class='const'>R509Error</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Key does not match SPKI.</span><span class='tstring_end'>&#39;</span></span>
-    <span class='kw'>end</span>
-  <span class='kw'>end</span>
+    <span class='ivar'>@spki</span> <span class='op'>=</span> <span class='id identifier rubyid_parse_spki'>parse_spki</span><span class='lparen'>(</span><span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:spki</span><span class='rbracket'>]</span><span class='rparen'>)</span>
+  <span class='kw'>else</span>
   <span class='comment'># create the SPKI from the private key if it wasn&#39;t passed in
-</span>  <span class='kw'>if</span> <span class='ivar'>@spki</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
-    <span class='ivar'>@spki</span> <span class='op'>=</span> <span class='const'>OpenSSL</span><span class='op'>::</span><span class='const'>Netscape</span><span class='op'>::</span><span class='const'>SPKI</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span>
-    <span class='ivar'>@spki</span><span class='period'>.</span><span class='id identifier rubyid_public_key'>public_key</span> <span class='op'>=</span> <span class='ivar'>@key</span><span class='period'>.</span><span class='id identifier rubyid_public_key'>public_key</span>
-    <span class='kw'>if</span> <span class='ivar'>@key</span><span class='period'>.</span><span class='id identifier rubyid_dsa?'>dsa?</span>
-      <span class='comment'>#only DSS1 is acceptable for DSA signing in OpenSSL &lt; 1.0
-</span>      <span class='comment'>#post-1.0 you can sign with anything, but let&#39;s be conservative
-</span>      <span class='comment'>#see: http://www.ruby-doc.org/stdlib-1.9.3/libdoc/openssl/rdoc/OpenSSL/PKey/DSA.html
-</span>      <span class='id identifier rubyid_message_digest'>message_digest</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>MessageDigest</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>dss1</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
-    <span class='kw'>elsif</span> <span class='id identifier rubyid_opts'>opts</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span><span class='lparen'>(</span><span class='symbol'>:message_digest</span><span class='rparen'>)</span>
-      <span class='id identifier rubyid_message_digest'>message_digest</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>MessageDigest</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:message_digest</span><span class='rbracket'>]</span><span class='rparen'>)</span>
-    <span class='kw'>else</span>
-      <span class='id identifier rubyid_message_digest'>message_digest</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>MessageDigest</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span>
-    <span class='kw'>end</span>
-    <span class='ivar'>@spki</span><span class='period'>.</span><span class='id identifier rubyid_sign'>sign</span><span class='lparen'>(</span><span class='ivar'>@key</span><span class='period'>.</span><span class='id identifier rubyid_key'>key</span><span class='comma'>,</span><span class='id identifier rubyid_message_digest'>message_digest</span><span class='period'>.</span><span class='id identifier rubyid_digest'>digest</span><span class='rparen'>)</span>
+</span>    <span class='ivar'>@spki</span> <span class='op'>=</span> <span class='id identifier rubyid_build_spki'>build_spki</span><span class='lparen'>(</span><span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:message_digest</span><span class='rbracket'>]</span><span class='rparen'>)</span>
   <span class='kw'>end</span>
 <span class='kw'>end</span></pre>
     </td>
@@ -764,12 +767,12 @@ sha1. Only used if you supply a :key and no :spki</p>
       <pre class="lines">
 
 
-10
-11
-12</pre>
+12
+13
+14</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/spki.rb', line 10</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/spki.rb', line 12</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_key'>key</span>
   <span class='ivar'>@key</span>
@@ -807,12 +810,12 @@ sha1. Only used if you supply a :key and no :spki</p>
       <pre class="lines">
 
 
-10
-11
-12</pre>
+12
+13
+14</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/spki.rb', line 10</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/spki.rb', line 12</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_spki'>spki</span>
   <span class='ivar'>@spki</span>
@@ -830,18 +833,27 @@ sha1. Only used if you supply a :key and no :spki</p>
 
     
       <div class="method_details first">
-  <h3 class="signature first" id="bit_strength-instance_method">
+  <h3 class="signature first" id="bit_length-instance_method">
   
-    - (<tt>Integer</tt>) <strong>bit_strength</strong> 
+    - (<tt>Integer</tt>) <strong>bit_length</strong> 
+  
+
+  
+    <span class="aliases">Also known as:
+    <span class="names"><span id='bit_strength-instance_method'>bit_strength</span></span>
+    </span>
   
 
   
-
+    <span class="not_defined_here">
+      Originally defined in module
+        <span class='object_link'><a href="Helpers.html#bit_length-instance_method" title="R509::Helpers#bit_length (method)">Helpers</a></span>
+    </span>
   
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Returns the bit strength of the key used to create the SPKI</p>
+<p>Returns the bit length of the key</p>
 
 
   </div>
@@ -860,44 +872,14 @@ sha1. Only used if you supply a :key and no :spki</p>
       
         &mdash;
         <div class='inline'>
-<p>the integer bit strength.</p>
+<p>the integer bit length.</p>
 </div>
       
     </li>
   
 </ul>
 
-</div><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-129
-130
-131
-132
-133
-134
-135
-136
-137</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/spki.rb', line 129</span>
-
-<span class='kw'>def</span> <span class='id identifier rubyid_bit_strength'>bit_strength</span>
-  <span class='kw'>if</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_rsa?'>rsa?</span>
-    <span class='kw'>return</span> <span class='ivar'>@spki</span><span class='period'>.</span><span class='id identifier rubyid_public_key'>public_key</span><span class='period'>.</span><span class='id identifier rubyid_n'>n</span><span class='period'>.</span><span class='id identifier rubyid_num_bits'>num_bits</span>
-  <span class='kw'>elsif</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_dsa?'>dsa?</span>
-    <span class='kw'>return</span> <span class='ivar'>@spki</span><span class='period'>.</span><span class='id identifier rubyid_public_key'>public_key</span><span class='period'>.</span><span class='id identifier rubyid_p'>p</span><span class='period'>.</span><span class='id identifier rubyid_num_bits'>num_bits</span>
-  <span class='kw'>elsif</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_ec?'>ec?</span>
-    <span class='id identifier rubyid_raise'>raise</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>R509Error</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Bit strength is not available for EC at this time.</span><span class='tstring_end'>&#39;</span></span>
-  <span class='kw'>end</span>
-<span class='kw'>end</span></pre>
-    </td>
-  </tr>
-</table>
+</div>
 </div>
     
       <div class="method_details ">
@@ -908,6 +890,11 @@ sha1. Only used if you supply a :key and no :spki</p>
 
   
 
+  
+    <span class="not_defined_here">
+      Originally defined in module
+        <span class='object_link'><a href="Helpers.html#curve_name-instance_method" title="R509::Helpers#curve_name (method)">Helpers</a></span>
+    </span>
   
 </h3><div class="docstring">
   <div class="discussion">
@@ -939,33 +926,7 @@ key if the key is EC. If not, raises an error.</p>
   
 </ul>
 
-</div><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-143
-144
-145
-146
-147
-148
-149</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/spki.rb', line 143</span>
-
-<span class='kw'>def</span> <span class='id identifier rubyid_curve_name'>curve_name</span>
-  <span class='kw'>if</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_ec?'>ec?</span>
-    <span class='ivar'>@spki</span><span class='period'>.</span><span class='id identifier rubyid_public_key'>public_key</span><span class='period'>.</span><span class='id identifier rubyid_group'>group</span><span class='period'>.</span><span class='id identifier rubyid_curve_name'>curve_name</span>
-  <span class='kw'>else</span>
-    <span class='id identifier rubyid_raise'>raise</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>R509Error</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Curve name is only available with EC SPKIs</span><span class='tstring_end'>&#39;</span></span>
-  <span class='kw'>end</span>
-<span class='kw'>end</span></pre>
-    </td>
-  </tr>
-</table>
+</div>
 </div>
     
       <div class="method_details ">
@@ -976,6 +937,11 @@ key if the key is EC. If not, raises an error.</p>
 
   
 
+  
+    <span class="not_defined_here">
+      Originally defined in module
+        <span class='object_link'><a href="Helpers.html#dsa%3F-instance_method" title="R509::Helpers#dsa? (method)">Helpers</a></span>
+    </span>
   
 </h3><div class="docstring">
   <div class="discussion">
@@ -1006,25 +972,7 @@ key if the key is EC. If not, raises an error.</p>
   
 </ul>
 
-</div><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-116
-117
-118</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/spki.rb', line 116</span>
-
-<span class='kw'>def</span> <span class='id identifier rubyid_dsa?'>dsa?</span>
-  <span class='ivar'>@spki</span><span class='period'>.</span><span class='id identifier rubyid_public_key'>public_key</span><span class='period'>.</span><span class='id identifier rubyid_kind_of?'>kind_of?</span><span class='lparen'>(</span><span class='const'>OpenSSL</span><span class='op'>::</span><span class='const'>PKey</span><span class='op'>::</span><span class='const'>DSA</span><span class='rparen'>)</span>
-<span class='kw'>end</span></pre>
-    </td>
-  </tr>
-</table>
+</div>
 </div>
     
       <div class="method_details ">
@@ -1035,6 +983,11 @@ key if the key is EC. If not, raises an error.</p>
 
   
 
+  
+    <span class="not_defined_here">
+      Originally defined in module
+        <span class='object_link'><a href="Helpers.html#ec%3F-instance_method" title="R509::Helpers#ec? (method)">Helpers</a></span>
+    </span>
   
 </h3><div class="docstring">
   <div class="discussion">
@@ -1065,25 +1018,7 @@ key if the key is EC. If not, raises an error.</p>
   
 </ul>
 
-</div><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-123
-124
-125</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/spki.rb', line 123</span>
-
-<span class='kw'>def</span> <span class='id identifier rubyid_ec?'>ec?</span>
-  <span class='ivar'>@spki</span><span class='period'>.</span><span class='id identifier rubyid_public_key'>public_key</span><span class='period'>.</span><span class='id identifier rubyid_kind_of?'>kind_of?</span><span class='lparen'>(</span><span class='const'>OpenSSL</span><span class='op'>::</span><span class='const'>PKey</span><span class='op'>::</span><span class='const'>EC</span><span class='rparen'>)</span>
-<span class='kw'>end</span></pre>
-    </td>
-  </tr>
-</table>
+</div>
 </div>
     
       <div class="method_details ">
@@ -1095,10 +1030,15 @@ key if the key is EC. If not, raises an error.</p>
   
 
   
+    <span class="not_defined_here">
+      Originally defined in module
+        <span class='object_link'><a href="Helpers.html#key_algorithm-instance_method" title="R509::Helpers#key_algorithm (method)">Helpers</a></span>
+    </span>
+  
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Returns key algorithm (RSA/DSA)</p>
+<p>Returns key algorithm (RSA/DSA/EC)</p>
 
 
   </div>
@@ -1117,44 +1057,14 @@ key if the key is EC. If not, raises an error.</p>
       
         &mdash;
         <div class='inline'>
-<p>value of the key algorithm. RSA or DSA</p>
+<p>value of the key algorithm.</p>
 </div>
       
     </li>
   
 </ul>
 
-</div><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-154
-155
-156
-157
-158
-159
-160
-161
-162</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/spki.rb', line 154</span>
-
-<span class='kw'>def</span> <span class='id identifier rubyid_key_algorithm'>key_algorithm</span>
-  <span class='kw'>if</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_rsa?'>rsa?</span>
-    <span class='symbol'>:rsa</span>
-  <span class='kw'>elsif</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_dsa?'>dsa?</span>
-    <span class='symbol'>:dsa</span>
-  <span class='kw'>elsif</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_ec?'>ec?</span>
-    <span class='symbol'>:ec</span>
-  <span class='kw'>end</span>
-<span class='kw'>end</span></pre>
-    </td>
-  </tr>
-</table>
+</div>
 </div>
     
       <div class="method_details ">
@@ -1201,12 +1111,12 @@ key if the key is EC. If not, raises an error.</p>
       <pre class="lines">
 
 
-64
-65
-66</pre>
+34
+35
+36</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/spki.rb', line 64</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/spki.rb', line 34</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_public_key'>public_key</span>
   <span class='ivar'>@spki</span><span class='period'>.</span><span class='id identifier rubyid_public_key'>public_key</span>
@@ -1224,6 +1134,11 @@ key if the key is EC. If not, raises an error.</p>
 
   
 
+  
+    <span class="not_defined_here">
+      Originally defined in module
+        <span class='object_link'><a href="Helpers.html#rsa%3F-instance_method" title="R509::Helpers#rsa? (method)">Helpers</a></span>
+    </span>
   
 </h3><div class="docstring">
   <div class="discussion">
@@ -1254,21 +1169,64 @@ key if the key is EC. If not, raises an error.</p>
   
 </ul>
 
+</div>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="signature_algorithm-instance_method">
+  
+    - (<tt>String</tt>) <strong>signature_algorithm</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns the signature algorithm (e.g., RSA-SHA1, ecdsa-with-SHA256)</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>signature algorithm string</p>
+</div>
+      
+    </li>
+  
+</ul>
+
 </div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-109
-110
-111</pre>
+49
+50
+51
+52</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/spki.rb', line 109</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/spki.rb', line 49</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_rsa?'>rsa?</span>
-  <span class='ivar'>@spki</span><span class='period'>.</span><span class='id identifier rubyid_public_key'>public_key</span><span class='period'>.</span><span class='id identifier rubyid_kind_of?'>kind_of?</span><span class='lparen'>(</span><span class='const'>OpenSSL</span><span class='op'>::</span><span class='const'>PKey</span><span class='op'>::</span><span class='const'>RSA</span><span class='rparen'>)</span>
+<span class='kw'>def</span> <span class='id identifier rubyid_signature_algorithm'>signature_algorithm</span>
+  <span class='id identifier rubyid_data'>data</span> <span class='op'>=</span> <span class='const'>OpenSSL</span><span class='op'>::</span><span class='const'>ASN1</span><span class='period'>.</span><span class='id identifier rubyid_decode'>decode</span><span class='lparen'>(</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_to_der'>to_der</span><span class='rparen'>)</span>
+  <span class='kw'>return</span> <span class='id identifier rubyid_data'>data</span><span class='period'>.</span><span class='id identifier rubyid_entries'>entries</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_value'>value</span><span class='period'>.</span><span class='id identifier rubyid_entries'>entries</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_value'>value</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -1284,10 +1242,15 @@ key if the key is EC. If not, raises an error.</p>
   
 
   
+    <span class="not_defined_here">
+      Originally defined in module
+        <span class='object_link'><a href="Helpers.html#to_der-instance_method" title="R509::Helpers#to_der (method)">Helpers</a></span>
+    </span>
+  
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Converts the SPKI into the DER format</p>
+<p>Converts the object into DER format</p>
 
 
   </div>
@@ -1306,32 +1269,14 @@ key if the key is EC. If not, raises an error.</p>
       
         &mdash;
         <div class='inline'>
-<p>the SPKI converted into DER format.</p>
+<p>the object converted into DER format.</p>
 </div>
       
     </li>
   
 </ul>
 
-</div><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-86
-87
-88</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/spki.rb', line 86</span>
-
-<span class='kw'>def</span> <span class='id identifier rubyid_to_der'>to_der</span>
-  <span class='ivar'>@spki</span><span class='period'>.</span><span class='id identifier rubyid_to_der'>to_der</span>
-<span class='kw'>end</span></pre>
-    </td>
-  </tr>
-</table>
+</div>
 </div>
     
       <div class="method_details ">
@@ -1341,16 +1286,17 @@ key if the key is EC. If not, raises an error.</p>
   
 
   
-    <span class="aliases">Also known as:
-    <span class="names"><span id='to_s-instance_method'>to_s</span></span>
-    </span>
-  
 
+  
+    <span class="not_defined_here">
+      Originally defined in module
+        <span class='object_link'><a href="Helpers.html#to_pem-instance_method" title="R509::Helpers#to_pem (method)">Helpers</a></span>
+    </span>
   
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Converts the SPKI into the PEM format</p>
+<p>Converts the object into PEM format</p>
 
 
   </div>
@@ -1369,32 +1315,14 @@ key if the key is EC. If not, raises an error.</p>
       
         &mdash;
         <div class='inline'>
-<p>the SPKI converted into PEM format.</p>
+<p>the object converted into PEM format.</p>
 </div>
       
     </li>
   
 </ul>
 
-</div><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-77
-78
-79</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/spki.rb', line 77</span>
-
-<span class='kw'>def</span> <span class='id identifier rubyid_to_pem'>to_pem</span>
-  <span class='ivar'>@spki</span><span class='period'>.</span><span class='id identifier rubyid_to_pem'>to_pem</span>
-<span class='kw'>end</span></pre>
-    </td>
-  </tr>
-</table>
+</div>
 </div>
     
       <div class="method_details ">
@@ -1436,12 +1364,12 @@ key if the key is EC. If not, raises an error.</p>
       <pre class="lines">
 
 
-70
-71
-72</pre>
+40
+41
+42</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/spki.rb', line 70</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/spki.rb', line 40</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_verify_signature'>verify_signature</span>
   <span class='ivar'>@spki</span><span class='period'>.</span><span class='id identifier rubyid_verify'>verify</span><span class='lparen'>(</span><span class='id identifier rubyid_public_key'>public_key</span><span class='rparen'>)</span>
@@ -1460,10 +1388,15 @@ key if the key is EC. If not, raises an error.</p>
   
 
   
+    <span class="not_defined_here">
+      Originally defined in module
+        <span class='object_link'><a href="Helpers.html#write_der-instance_method" title="R509::Helpers#write_der (method)">Helpers</a></span>
+    </span>
+  
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Writes the SPKI into the DER format</p>
+<p>Writes the object into DER format</p>
 
 
   </div>
@@ -1492,25 +1425,7 @@ an IO-like object.</p>
 </ul>
 
 
-</div><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-102
-103
-104</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/spki.rb', line 102</span>
-
-<span class='kw'>def</span> <span class='id identifier rubyid_write_der'>write_der</span><span class='lparen'>(</span><span class='id identifier rubyid_filename_or_io'>filename_or_io</span><span class='rparen'>)</span>
-  <span class='id identifier rubyid_write_data'>write_data</span><span class='lparen'>(</span><span class='id identifier rubyid_filename_or_io'>filename_or_io</span><span class='comma'>,</span> <span class='ivar'>@spki</span><span class='period'>.</span><span class='id identifier rubyid_to_der'>to_der</span><span class='rparen'>)</span>
-<span class='kw'>end</span></pre>
-    </td>
-  </tr>
-</table>
+</div>
 </div>
     
       <div class="method_details ">
@@ -1522,10 +1437,15 @@ an IO-like object.</p>
   
 
   
+    <span class="not_defined_here">
+      Originally defined in module
+        <span class='object_link'><a href="Helpers.html#write_pem-instance_method" title="R509::Helpers#write_pem (method)">Helpers</a></span>
+    </span>
+  
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Writes the SPKI into the PEM format</p>
+<p>Writes the object into PEM format</p>
 
 
   </div>
@@ -1554,25 +1474,7 @@ an IO-like object.</p>
 </ul>
 
 
-</div><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-94
-95
-96</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/spki.rb', line 94</span>
-
-<span class='kw'>def</span> <span class='id identifier rubyid_write_pem'>write_pem</span><span class='lparen'>(</span><span class='id identifier rubyid_filename_or_io'>filename_or_io</span><span class='rparen'>)</span>
-  <span class='id identifier rubyid_write_data'>write_data</span><span class='lparen'>(</span><span class='id identifier rubyid_filename_or_io'>filename_or_io</span><span class='comma'>,</span> <span class='ivar'>@spki</span><span class='period'>.</span><span class='id identifier rubyid_to_pem'>to_pem</span><span class='rparen'>)</span>
-<span class='kw'>end</span></pre>
-    </td>
-  </tr>
-</table>
+</div>
 </div>
     
   </div>
@@ -1580,9 +1482,9 @@ an IO-like object.</p>
 </div>
 
     <div id="footer">
-  Generated on Sun Jun  9 10:03:36 2013 by
+  Generated on Sat Jan 25 19:00:16 2014 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.8.4.1 (ruby-2.0.0).
+  0.8.6.1 (ruby-2.0.0).
 </div>
 
   </body>

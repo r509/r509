@@ -6,13 +6,13 @@
 <title>
   Class: R509::Config::CAConfig
   
-    &mdash; Documentation by YARD 0.8.4.1
+    &mdash; Documentation by YARD 0.8.6.1
   
 </title>
 
-  <link rel="stylesheet" href="../../css/style.css" type="text/css" media="screen" charset="utf-8" />
+  <link rel="stylesheet" href="../../css/style.css" type="text/css" charset="utf-8" />
 
-  <link rel="stylesheet" href="../../css/common.css" type="text/css" media="screen" charset="utf-8" />
+  <link rel="stylesheet" href="../../css/common.css" type="text/css" charset="utf-8" />
 
 <script type="text/javascript" charset="utf-8">
   hasFrames = window.top.frames.main ? true : false;
@@ -88,21 +88,13 @@
   
   
     
-      <dt class="r2">Extended by:</dt>
-      <dd class="r2"><span class='object_link'><a href="../IOHelpers.html" title="R509::IOHelpers (module)">IOHelpers</a></span></dd>
-      
-    
   
-    
-      <dt class="r1">Includes:</dt>
-      <dd class="r1"><span class='object_link'><a href="../IOHelpers.html" title="R509::IOHelpers (module)">IOHelpers</a></span></dd>
-      
     
   
   
   
     <dt class="r2 last">Defined in:</dt>
-    <dd class="r2 last">lib/r509/config.rb</dd>
+    <dd class="r2 last">lib/r509/config/ca_config.rb</dd>
   
 </dl>
 <div class="clear"></div>
@@ -119,6 +111,79 @@
   
 
 </div>
+  <h2>Constant Summary</h2>
+  
+    <dl class="constants">
+      
+        <dt id="DEFAULT_OCSP_START_SKEW_SECONDS-constant" class="">DEFAULT_OCSP_START_SKEW_SECONDS =
+          <div class="docstring">
+  <div class="discussion">
+    
+<p>Default number of seconds to subtract from now when calculating the signing
+time of an OCSP response</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
+        </dt>
+        <dd><pre class="code"><span class='int'>3600</span></pre></dd>
+      
+        <dt id="DEFAULT_OCSP_VALIDITY_HOURS-constant" class="">DEFAULT_OCSP_VALIDITY_HOURS =
+          <div class="docstring">
+  <div class="discussion">
+    
+<p>Default number of hours an OCSP response should be valid for</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
+        </dt>
+        <dd><pre class="code"><span class='int'>168</span></pre></dd>
+      
+        <dt id="DEFAULT_CRL_VALIDITY_HOURS-constant" class="">DEFAULT_CRL_VALIDITY_HOURS =
+          <div class="docstring">
+  <div class="discussion">
+    
+<p>Default number of hours a CRL should be valid for</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
+        </dt>
+        <dd><pre class="code"><span class='int'>168</span></pre></dd>
+      
+        <dt id="DEFAULT_CRL_START_SKEW_SECONDS-constant" class="">DEFAULT_CRL_START_SKEW_SECONDS =
+          <div class="docstring">
+  <div class="discussion">
+    
+<p>Default number of seconds to subtract from now when calculating the signing
+time of a CRL</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
+        </dt>
+        <dd><pre class="code"><span class='int'>3600</span></pre></dd>
+      
+    </dl>
+  
+
 
 
 
@@ -178,6 +243,35 @@
   
     <span class="summary_desc"><div class='inline'>
 <p>Returns the value of attribute crl_list_file.</p>
+</div></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#crl_md-instance_method" title="#crl_md (instance method)">- (Object) <strong>crl_md</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+    
+      <span class="note title readonly">readonly</span>
+    
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Returns the value of attribute crl_md.</p>
 </div></span>
   
 </li>
@@ -421,6 +515,30 @@
         <li class="public ">
   <span class="summary_signature">
     
+      <a href="#load_profiles-class_method" title="load_profiles (class method)">+ (Hash) <strong>load_profiles</strong>(profiles) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Used by load_from_hash.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
       <a href="#load_yaml-class_method" title="load_yaml (class method)">+ (Object) <strong>load_yaml</strong>(conf_name, yaml_file, opts = {}) </a>
     
 
@@ -454,6 +572,30 @@
         <li class="public ">
   <span class="summary_signature">
     
+      <a href="#crl_cert-instance_method" title="#crl_cert (instance method)">- (R509::Cert) <strong>crl_cert</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Either a custom CRL cert or the ca_cert.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
       <a href="#initialize-instance_method" title="#initialize (instance method)">- (CAConfig) <strong>initialize</strong>(opts = {}) </a>
     
 
@@ -471,7 +613,7 @@
 
   
     <span class="summary_desc"><div class='inline'>
-<p>OCSP signing delegate.</p>
+<p>A new instance of CAConfig.</p>
 </div></span>
   
 </li>
@@ -571,21 +713,56 @@
 </li>
 
       
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#to_h-instance_method" title="#to_h (instance method)">- (Hash) <strong>to_h</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#to_yaml-instance_method" title="#to_yaml (instance method)">- (YAML) <strong>to_yaml</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
     </ul>
   
 
 
   
-  
-  
-  
-  
-  
-  
-  
-  <h3 class="inherited">Methods included from <span class='object_link'><a href="../IOHelpers.html" title="R509::IOHelpers (module)">IOHelpers</a></span></h3>
-  <p class="inherited"><span class='object_link'><a href="../IOHelpers.html#read_data-instance_method" title="R509::IOHelpers#read_data (method)">read_data</a></span>, <span class='object_link'><a href="../IOHelpers.html#read_data-class_method" title="R509::IOHelpers.read_data (method)">read_data</a></span>, <span class='object_link'><a href="../IOHelpers.html#write_data-instance_method" title="R509::IOHelpers#write_data (method)">write_data</a></span>, <span class='object_link'><a href="../IOHelpers.html#write_data-class_method" title="R509::IOHelpers.write_data (method)">write_data</a></span></p>
-<div id="constructor_details" class="method_details_list">
+  <div id="constructor_details" class="method_details_list">
   <h2>Constructor Details</h2>
   
     <div class="method_details first">
@@ -600,7 +777,7 @@
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>OCSP signing delegate</p>
+<p>A new instance of CAConfig</p>
 
 
   </div>
@@ -636,57 +813,6 @@
     <ul class="option">
       
         <li>
-          <span class="name">:ca_cert</span>
-          <span class="type">(<tt><span class='object_link'><a href="../Cert.html" title="R509::Cert (class)">R509::Cert</a></span></tt>)</span>
-          <span class="default">
-            
-          </span>
-          
-            &mdash; <div class='inline'>
-<p>Cert+Key pair</p>
-</div>
-          
-        </li>
-      
-        <li>
-          <span class="name">:crl_validity_hours</span>
-          <span class="type">(<tt>Integer</tt>)</span>
-          <span class="default">
-            
-              &mdash; default:
-              <tt>168</tt>
-            
-          </span>
-          
-            &mdash; <div class='inline'>
-<p>The number of hours that a CRL will be valid. Defaults to 7 days.</p>
-</div>
-          
-        </li>
-      
-        <li>
-          <span class="name">:profiles</span>
-          <span class="type">(<tt>Hash&lt;String, <span class='object_link'><a href="CertProfile.html" title="R509::Config::CertProfile (class)">R509::Config::CertProfile</a></span>&gt;</tt>)</span>
-          <span class="default">
-            
-          </span>
-          
-        </li>
-      
-        <li>
-          <span class="name">:crl_number_file</span>
-          <span class="type">(<tt>String</tt>)</span>
-          <span class="default">
-            
-          </span>
-          
-            &mdash; <div class='inline'>
-<p>The file that we will save the CRL numbers to.</p>
-</div>
-          
-        </li>
-      
-        <li>
           <span class="name">:crl_list_file</span>
           <span class="type">(<tt>String</tt>)</span>
           <span class="default">
@@ -694,7 +820,8 @@
           </span>
           
             &mdash; <div class='inline'>
-<p>The file that we will save the CRL list data to.</p>
+<p>A file to serialize revoked certificates into. This is only used if you use
+the default FileReaderWriter in CRL::Administrator</p>
 </div>
           
         </li>
@@ -707,7 +834,20 @@
           </span>
           
             &mdash; <div class='inline'>
-<p>An optional cert+key pair</p>
+<p>An optional cert+key pair OCSP signing delegate</p>
+</div>
+          
+        </li>
+      
+        <li>
+          <span class="name">:crl_cert</span>
+          <span class="type">(<tt><span class='object_link'><a href="../Cert.html" title="R509::Cert (class)">R509::Cert</a></span></tt>)</span>
+          <span class="default">
+            
+          </span>
+          
+            &mdash; <div class='inline'>
+<p>An optional cert+key pair CRL signing delegate</p>
 </div>
           
         </li>
@@ -725,6 +865,61 @@
           
         </li>
       
+        <li>
+          <span class="name">:ocsp_validity_hours</span>
+          <span class="type">(<tt>Integer</tt>)</span>
+          <span class="default">
+            
+          </span>
+          
+            &mdash; <div class='inline'>
+<p>Number of hours OCSP responses should be valid for</p>
+</div>
+          
+        </li>
+      
+        <li>
+          <span class="name">:ocsp_start_skew_seconds</span>
+          <span class="type">(<tt>Integer</tt>)</span>
+          <span class="default">
+            
+          </span>
+          
+            &mdash; <div class='inline'>
+<p>The number of seconds to subtract from Time.now when calculating the
+signing time of an OCSP response. This is important to handle bad user
+clocks.</p>
+</div>
+          
+        </li>
+      
+        <li>
+          <span class="name">:crl_validity_hours</span>
+          <span class="type">(<tt>Integer</tt>)</span>
+          <span class="default">
+            
+          </span>
+          
+            &mdash; <div class='inline'>
+<p>Number of hours CRLs should be valid for</p>
+</div>
+          
+        </li>
+      
+        <li>
+          <span class="name">:crl_start_skew_seconds</span>
+          <span class="type">(<tt>Integer</tt>)</span>
+          <span class="default">
+            
+          </span>
+          
+            &mdash; <div class='inline'>
+<p>The number of seconds to subtract from Time.now when calculating the
+signing time of a CRL. This is important to handle bad user clocks.</p>
+</div>
+          
+        </li>
+      
     </ul>
   
 
@@ -735,47 +930,30 @@
       <pre class="lines">
 
 
-174
-175
-176
-177
-178
-179
-180
-181
-182
-183
-184
-185
-186
-187
-188
-189
-190
-191
-192
-193
-194
-195
-196
-197
-198
-199
-200
-201
-202
-203
-204
-205
-206
-207
-208
-209
-210
-211</pre>
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/config.rb', line 174</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/config/ca_config.rb', line 99</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='id identifier rubyid_opts'>opts</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span> <span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='kw'>not</span> <span class='id identifier rubyid_opts'>opts</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span><span class='lparen'>(</span><span class='symbol'>:ca_cert</span><span class='rparen'>)</span> <span class='kw'>then</span>
@@ -788,32 +966,15 @@
     <span class='id identifier rubyid_raise'>raise</span> <span class='const'>ArgumentError</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>:ca_cert must be of type R509::Cert</span><span class='tstring_end'>&#39;</span></span>
   <span class='kw'>end</span>
 
-  <span class='comment'>#ocsp data
-</span>  <span class='kw'>if</span> <span class='id identifier rubyid_opts'>opts</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span><span class='lparen'>(</span><span class='symbol'>:ocsp_cert</span><span class='rparen'>)</span> <span class='kw'>and</span> <span class='kw'>not</span> <span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:ocsp_cert</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_kind_of?'>kind_of?</span><span class='lparen'>(</span><span class='const'>R509</span><span class='op'>::</span><span class='const'>Cert</span><span class='rparen'>)</span> <span class='kw'>and</span> <span class='kw'>not</span> <span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:ocsp_cert</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
-    <span class='id identifier rubyid_raise'>raise</span> <span class='const'>ArgumentError</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>:ocsp_cert, if provided, must be of type R509::Cert</span><span class='tstring_end'>&#39;</span></span>
-  <span class='kw'>end</span>
-  <span class='kw'>if</span> <span class='id identifier rubyid_opts'>opts</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span><span class='lparen'>(</span><span class='symbol'>:ocsp_cert</span><span class='rparen'>)</span> <span class='kw'>and</span> <span class='kw'>not</span> <span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:ocsp_cert</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span> <span class='kw'>and</span> <span class='kw'>not</span> <span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:ocsp_cert</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_has_private_key?'>has_private_key?</span>
-    <span class='id identifier rubyid_raise'>raise</span> <span class='const'>ArgumentError</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>:ocsp_cert must contain a private key, not just a certificate</span><span class='tstring_end'>&#39;</span></span>
-  <span class='kw'>end</span>
-  <span class='ivar'>@ocsp_cert</span> <span class='op'>=</span> <span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:ocsp_cert</span><span class='rbracket'>]</span> <span class='kw'>unless</span> <span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:ocsp_cert</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
-  <span class='ivar'>@ocsp_chain</span> <span class='op'>=</span> <span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:ocsp_chain</span><span class='rbracket'>]</span> <span class='kw'>if</span> <span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:ocsp_chain</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_kind_of?'>kind_of?</span><span class='lparen'>(</span><span class='const'>Array</span><span class='rparen'>)</span>
-  <span class='ivar'>@ocsp_validity_hours</span> <span class='op'>=</span> <span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:ocsp_validity_hours</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='int'>168</span>
-  <span class='ivar'>@ocsp_start_skew_seconds</span> <span class='op'>=</span> <span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:ocsp_start_skew_seconds</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='int'>3600</span>
-
-  <span class='ivar'>@crl_validity_hours</span> <span class='op'>=</span> <span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:crl_validity_hours</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='int'>168</span>
-  <span class='ivar'>@crl_start_skew_seconds</span> <span class='op'>=</span> <span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:crl_start_skew_seconds</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='int'>3600</span>
-  <span class='ivar'>@crl_number_file</span> <span class='op'>=</span> <span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:crl_number_file</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='kw'>nil</span>
-  <span class='ivar'>@crl_list_file</span> <span class='op'>=</span> <span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:crl_list_file</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='kw'>nil</span>
-
-
+  <span class='id identifier rubyid_parse_ocsp_data'>parse_ocsp_data</span><span class='lparen'>(</span><span class='id identifier rubyid_opts'>opts</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_parse_crl_data'>parse_crl_data</span><span class='lparen'>(</span><span class='id identifier rubyid_opts'>opts</span><span class='rparen'>)</span>
 
   <span class='ivar'>@profiles</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
-    <span class='kw'>if</span> <span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:profiles</span><span class='rbracket'>]</span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:profiles</span><span class='rbracket'>]</span>
     <span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:profiles</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_each_pair'>each_pair</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='id identifier rubyid_prof'>prof</span><span class='op'>|</span>
       <span class='id identifier rubyid_set_profile'>set_profile</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='id identifier rubyid_prof'>prof</span><span class='rparen'>)</span>
     <span class='kw'>end</span>
   <span class='kw'>end</span>
-
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -853,12 +1014,12 @@
       <pre class="lines">
 
 
-157
-158
-159</pre>
+66
+67
+68</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/config.rb', line 157</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/config/ca_config.rb', line 66</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_ca_cert'>ca_cert</span>
   <span class='ivar'>@ca_cert</span>
@@ -896,15 +1057,58 @@
       <pre class="lines">
 
 
-157
-158
-159</pre>
+66
+67
+68</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/config.rb', line 157</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/config/ca_config.rb', line 66</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_crl_list_file'>crl_list_file</span>
   <span class='ivar'>@crl_list_file</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      
+      <span id=""></span>
+      <div class="method_details ">
+  <h3 class="signature " id="crl_md-instance_method">
+  
+    - (<tt>Object</tt>) <strong>crl_md</strong>  <span class="extras">(readonly)</span>
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns the value of attribute crl_md</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+66
+67
+68</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/r509/config/ca_config.rb', line 66</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_crl_md'>crl_md</span>
+  <span class='ivar'>@crl_md</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -939,12 +1143,12 @@
       <pre class="lines">
 
 
-157
-158
-159</pre>
+66
+67
+68</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/config.rb', line 157</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/config/ca_config.rb', line 66</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_crl_number_file'>crl_number_file</span>
   <span class='ivar'>@crl_number_file</span>
@@ -982,12 +1186,12 @@
       <pre class="lines">
 
 
-157
-158
-159</pre>
+66
+67
+68</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/config.rb', line 157</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/config/ca_config.rb', line 66</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_crl_start_skew_seconds'>crl_start_skew_seconds</span>
   <span class='ivar'>@crl_start_skew_seconds</span>
@@ -1025,12 +1229,12 @@
       <pre class="lines">
 
 
-157
-158
-159</pre>
+66
+67
+68</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/config.rb', line 157</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/config/ca_config.rb', line 66</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_crl_validity_hours'>crl_validity_hours</span>
   <span class='ivar'>@crl_validity_hours</span>
@@ -1068,12 +1272,12 @@
       <pre class="lines">
 
 
-157
-158
-159</pre>
+66
+67
+68</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/config.rb', line 157</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/config/ca_config.rb', line 66</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_ocsp_chain'>ocsp_chain</span>
   <span class='ivar'>@ocsp_chain</span>
@@ -1111,12 +1315,12 @@
       <pre class="lines">
 
 
-157
-158
-159</pre>
+66
+67
+68</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/config.rb', line 157</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/config/ca_config.rb', line 66</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_ocsp_start_skew_seconds'>ocsp_start_skew_seconds</span>
   <span class='ivar'>@ocsp_start_skew_seconds</span>
@@ -1154,12 +1358,12 @@
       <pre class="lines">
 
 
-157
-158
-159</pre>
+66
+67
+68</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/config.rb', line 157</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/config/ca_config.rb', line 66</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_ocsp_validity_hours'>ocsp_validity_hours</span>
   <span class='ivar'>@ocsp_validity_hours</span>
@@ -1239,13 +1443,13 @@ contain more than one configuration.</p>
       <pre class="lines">
 
 
-358
-359
-360
-361</pre>
+271
+272
+273
+274</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/config.rb', line 358</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/config/ca_config.rb', line 271</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_from_yaml'>from_yaml</span><span class='lparen'>(</span><span class='id identifier rubyid_conf_name'>conf_name</span><span class='comma'>,</span> <span class='id identifier rubyid_yaml_data'>yaml_data</span><span class='comma'>,</span> <span class='id identifier rubyid_opts'>opts</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_conf'>conf</span> <span class='op'>=</span> <span class='const'>YAML</span><span class='period'>.</span><span class='id identifier rubyid_load'>load</span><span class='lparen'>(</span><span class='id identifier rubyid_yaml_data'>yaml_data</span><span class='rparen'>)</span>
@@ -1345,104 +1549,55 @@ when loading from a YAML file.</p>
       <pre class="lines">
 
 
-249
-250
-251
-252
-253
-254
-255
-256
-257
-258
-259
-260
-261
-262
-263
-264
-265
-266
-267
-268
-269
-270
-271
-272
-273
-274
-275
-276
-277
-278
-279
-280
-281
-282
-283
-284
-285
-286
-287
-288
-289
-290
-291
-292
-293
-294
-295
-296
-297
-298
-299
-300
-301
-302
-303
-304
-305
-306
-307
-308
-309
-310
-311
-312
-313
-314
-315
-316
-317
-318
-319
-320
-321
-322
-323
-324
-325
-326
-327
-328
-329
-330
-331
-332
-333
-334
-335
-336
-337
-338
-339
-340
-341
-342
-343</pre>
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/config.rb', line 249</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/config/ca_config.rb', line 184</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_load_from_hash'>load_from_hash</span><span class='lparen'>(</span><span class='id identifier rubyid_conf'>conf</span><span class='comma'>,</span> <span class='id identifier rubyid_opts'>opts</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='id identifier rubyid_conf'>conf</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
@@ -1458,64 +1613,136 @@ when loading from a YAML file.</p>
     <span class='id identifier rubyid_raise'>raise</span> <span class='const'>R509Error</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>ca_root_path is not a directory: </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_ca_root_path'>ca_root_path</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
   <span class='kw'>end</span>
 
-  <span class='id identifier rubyid_ca_cert_hash'>ca_cert_hash</span> <span class='op'>=</span> <span class='id identifier rubyid_conf'>conf</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>ca_cert</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span>
+  <span class='id identifier rubyid_ca_cert'>ca_cert</span> <span class='op'>=</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_load_ca_cert'>load_ca_cert</span><span class='lparen'>(</span><span class='id identifier rubyid_conf'>conf</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>ca_cert</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='comma'>,</span><span class='id identifier rubyid_ca_root_path'>ca_root_path</span><span class='rparen'>)</span>
 
-  <span class='kw'>if</span> <span class='id identifier rubyid_ca_cert_hash'>ca_cert_hash</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>engine</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
-    <span class='id identifier rubyid_ca_cert'>ca_cert</span> <span class='op'>=</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_load_with_engine'>load_with_engine</span><span class='lparen'>(</span><span class='id identifier rubyid_ca_cert_hash'>ca_cert_hash</span><span class='comma'>,</span><span class='id identifier rubyid_ca_root_path'>ca_root_path</span><span class='rparen'>)</span>
-  <span class='kw'>end</span>
+  <span class='id identifier rubyid_ocsp_cert'>ocsp_cert</span> <span class='op'>=</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_load_ca_cert'>load_ca_cert</span><span class='lparen'>(</span><span class='id identifier rubyid_conf'>conf</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>ocsp_cert</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='comma'>,</span><span class='id identifier rubyid_ca_root_path'>ca_root_path</span><span class='rparen'>)</span>
 
-  <span class='kw'>if</span> <span class='id identifier rubyid_ca_cert'>ca_cert</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span> <span class='kw'>and</span> <span class='id identifier rubyid_ca_cert_hash'>ca_cert_hash</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>pkcs12</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
-    <span class='id identifier rubyid_ca_cert'>ca_cert</span> <span class='op'>=</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_load_with_pkcs12'>load_with_pkcs12</span><span class='lparen'>(</span><span class='id identifier rubyid_ca_cert_hash'>ca_cert_hash</span><span class='comma'>,</span><span class='id identifier rubyid_ca_root_path'>ca_root_path</span><span class='rparen'>)</span>
-  <span class='kw'>end</span>
+  <span class='id identifier rubyid_crl_cert'>crl_cert</span> <span class='op'>=</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_load_ca_cert'>load_ca_cert</span><span class='lparen'>(</span><span class='id identifier rubyid_conf'>conf</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>crl_cert</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='comma'>,</span><span class='id identifier rubyid_ca_root_path'>ca_root_path</span><span class='rparen'>)</span>
 
-  <span class='kw'>if</span> <span class='id identifier rubyid_ca_cert'>ca_cert</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span> <span class='kw'>and</span> <span class='id identifier rubyid_ca_cert_hash'>ca_cert_hash</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>cert</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
-    <span class='id identifier rubyid_ca_cert'>ca_cert</span> <span class='op'>=</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_load_with_key'>load_with_key</span><span class='lparen'>(</span><span class='id identifier rubyid_ca_cert_hash'>ca_cert_hash</span><span class='comma'>,</span><span class='id identifier rubyid_ca_root_path'>ca_root_path</span><span class='rparen'>)</span>
-  <span class='kw'>end</span>
-
-  <span class='kw'>if</span> <span class='id identifier rubyid_conf'>conf</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>ocsp_cert</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
-    <span class='kw'>if</span> <span class='id identifier rubyid_conf'>conf</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>ocsp_cert</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>engine</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
-      <span class='id identifier rubyid_ocsp_cert'>ocsp_cert</span> <span class='op'>=</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_load_with_engine'>load_with_engine</span><span class='lparen'>(</span><span class='id identifier rubyid_conf'>conf</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>ocsp_cert</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span><span class='comma'>,</span><span class='id identifier rubyid_ca_root_path'>ca_root_path</span><span class='rparen'>)</span>
-    <span class='kw'>end</span>
-
-    <span class='kw'>if</span> <span class='id identifier rubyid_ocsp_cert'>ocsp_cert</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span> <span class='kw'>and</span> <span class='id identifier rubyid_conf'>conf</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>ocsp_cert</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>pkcs12</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
-      <span class='id identifier rubyid_ocsp_cert'>ocsp_cert</span> <span class='op'>=</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_load_with_pkcs12'>load_with_pkcs12</span><span class='lparen'>(</span><span class='id identifier rubyid_conf'>conf</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>ocsp_cert</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span><span class='comma'>,</span><span class='id identifier rubyid_ca_root_path'>ca_root_path</span><span class='rparen'>)</span>
-    <span class='kw'>end</span>
-
-    <span class='kw'>if</span> <span class='id identifier rubyid_ocsp_cert'>ocsp_cert</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span> <span class='kw'>and</span> <span class='id identifier rubyid_conf'>conf</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>ocsp_cert</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>cert</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span>
-      <span class='id identifier rubyid_ocsp_cert'>ocsp_cert</span> <span class='op'>=</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_load_with_key'>load_with_key</span><span class='lparen'>(</span><span class='id identifier rubyid_conf'>conf</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>ocsp_cert</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span><span class='comma'>,</span><span class='id identifier rubyid_ca_root_path'>ca_root_path</span><span class='rparen'>)</span>
-    <span class='kw'>end</span>
-  <span class='kw'>end</span>
-
-  <span class='id identifier rubyid_ocsp_chain'>ocsp_chain</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
-  <span class='kw'>if</span> <span class='id identifier rubyid_conf'>conf</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>ocsp_chain</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
-    <span class='id identifier rubyid_ocsp_chain_data'>ocsp_chain_data</span> <span class='op'>=</span> <span class='id identifier rubyid_read_data'>read_data</span><span class='lparen'>(</span><span class='id identifier rubyid_ca_root_path'>ca_root_path</span><span class='op'>+</span><span class='id identifier rubyid_conf'>conf</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>ocsp_chain</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span><span class='rparen'>)</span>
-    <span class='id identifier rubyid_cert_regex'>cert_regex</span> <span class='op'>=</span> <span class='tstring'><span class='regexp_beg'>/</span><span class='tstring_content'>-----BEGIN CERTIFICATE-----.+?-----END CERTIFICATE-----</span><span class='regexp_end'>/m</span></span>
-    <span class='id identifier rubyid_ocsp_chain_data'>ocsp_chain_data</span><span class='period'>.</span><span class='id identifier rubyid_scan'>scan</span><span class='lparen'>(</span><span class='id identifier rubyid_cert_regex'>cert_regex</span><span class='rparen'>)</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_cert'>cert</span><span class='op'>|</span>
-      <span class='id identifier rubyid_ocsp_chain'>ocsp_chain</span><span class='period'>.</span><span class='id identifier rubyid_push'>push</span><span class='lparen'>(</span><span class='const'>OpenSSL</span><span class='op'>::</span><span class='const'>X509</span><span class='op'>::</span><span class='const'>Certificate</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_cert'>cert</span><span class='rparen'>)</span><span class='rparen'>)</span>
-    <span class='kw'>end</span>
-  <span class='kw'>end</span>
+  <span class='id identifier rubyid_ocsp_chain'>ocsp_chain</span> <span class='op'>=</span> <span class='id identifier rubyid_build_ocsp_chain'>build_ocsp_chain</span><span class='lparen'>(</span><span class='id identifier rubyid_conf'>conf</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>ocsp_chain</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='comma'>,</span><span class='id identifier rubyid_ca_root_path'>ca_root_path</span><span class='rparen'>)</span>
 
   <span class='id identifier rubyid_opts'>opts</span> <span class='op'>=</span> <span class='lbrace'>{</span>
     <span class='symbol'>:ca_cert</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_ca_cert'>ca_cert</span><span class='comma'>,</span>
     <span class='symbol'>:ocsp_cert</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_ocsp_cert'>ocsp_cert</span><span class='comma'>,</span>
+    <span class='symbol'>:crl_cert</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_crl_cert'>crl_cert</span><span class='comma'>,</span>
     <span class='symbol'>:ocsp_chain</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_ocsp_chain'>ocsp_chain</span><span class='comma'>,</span>
     <span class='symbol'>:crl_validity_hours</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_conf'>conf</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>crl_validity_hours</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='comma'>,</span>
     <span class='symbol'>:ocsp_validity_hours</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_conf'>conf</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>ocsp_validity_hours</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='comma'>,</span>
     <span class='symbol'>:ocsp_start_skew_seconds</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_conf'>conf</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>ocsp_start_skew_seconds</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='comma'>,</span>
+    <span class='symbol'>:crl_md</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_conf'>conf</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>crl_md</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='comma'>,</span>
   <span class='rbrace'>}</span>
 
-  <span class='kw'>if</span> <span class='id identifier rubyid_conf'>conf</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>crl_list</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
-    <span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:crl_list_file</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='lparen'>(</span><span class='id identifier rubyid_ca_root_path'>ca_root_path</span> <span class='op'>+</span> <span class='id identifier rubyid_conf'>conf</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>crl_list</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_conf'>conf</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>crl_list_file</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:crl_list_file</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='lparen'>(</span><span class='id identifier rubyid_ca_root_path'>ca_root_path</span> <span class='op'>+</span> <span class='id identifier rubyid_conf'>conf</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>crl_list_file</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span>
   <span class='kw'>end</span>
 
-  <span class='kw'>if</span> <span class='id identifier rubyid_conf'>conf</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>crl_number</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
-    <span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:crl_number_file</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='lparen'>(</span><span class='id identifier rubyid_ca_root_path'>ca_root_path</span> <span class='op'>+</span> <span class='id identifier rubyid_conf'>conf</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>crl_number</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_conf'>conf</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>crl_number_file</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:crl_number_file</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='lparen'>(</span><span class='id identifier rubyid_ca_root_path'>ca_root_path</span> <span class='op'>+</span> <span class='id identifier rubyid_conf'>conf</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>crl_number_file</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span>
   <span class='kw'>end</span>
 
+  <span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:profiles</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_load_profiles'>load_profiles</span><span class='lparen'>(</span><span class='id identifier rubyid_conf'>conf</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>profiles</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='rparen'>)</span>
 
+  <span class='comment'># Create the instance.
+</span>  <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_opts'>opts</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="load_profiles-class_method">
+  
+    + (<tt>Hash</tt>) <strong>load_profiles</strong>(profiles) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Used by load_from_hash</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>profiles</span>
+      
+      
+        <span class='type'>(<tt>Hash</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Hash of profiles</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Hash</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>hash of parsed profiles</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255
+256</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/r509/config/ca_config.rb', line 235</span>
+
+<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_load_profiles'>load_profiles</span><span class='lparen'>(</span><span class='id identifier rubyid_profiles'>profiles</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_profs'>profs</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
-  <span class='id identifier rubyid_conf'>conf</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>profiles</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_keys'>keys</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_profile'>profile</span><span class='op'>|</span>
-    <span class='id identifier rubyid_data'>data</span> <span class='op'>=</span> <span class='id identifier rubyid_conf'>conf</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>profiles</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='id identifier rubyid_profile'>profile</span><span class='rbracket'>]</span>
+  <span class='id identifier rubyid_profiles'>profiles</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_profile'>profile</span><span class='comma'>,</span><span class='id identifier rubyid_data'>data</span><span class='op'>|</span>
     <span class='kw'>if</span> <span class='kw'>not</span> <span class='id identifier rubyid_data'>data</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>subject_item_policy</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
       <span class='id identifier rubyid_subject_item_policy'>subject_item_policy</span> <span class='op'>=</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>Config</span><span class='op'>::</span><span class='const'>SubjectItemPolicy</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_data'>data</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>subject_item_policy</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span><span class='rparen'>)</span>
     <span class='kw'>end</span>
@@ -1527,17 +1754,13 @@ when loading from a YAML file.</p>
                        <span class='symbol'>:inhibit_any_policy</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_data'>data</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>inhibit_any_policy</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span><span class='comma'>,</span>
                        <span class='symbol'>:policy_constraints</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_data'>data</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>policy_constraints</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span><span class='comma'>,</span>
                        <span class='symbol'>:name_constraints</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_data'>data</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>name_constraints</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span><span class='comma'>,</span>
-                       <span class='symbol'>:cdp_location</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_data'>data</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>cdp_location</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span><span class='comma'>,</span>
-                       <span class='symbol'>:ocsp_location</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_data'>data</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>ocsp_location</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span><span class='comma'>,</span>
-                       <span class='symbol'>:ca_issuers_location</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_data'>data</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>ca_issuers_location</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span><span class='comma'>,</span>
+                       <span class='symbol'>:crl_distribution_points</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_data'>data</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>crl_distribution_points</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span><span class='comma'>,</span>
+                       <span class='symbol'>:authority_info_access</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_data'>data</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>authority_info_access</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span><span class='comma'>,</span>
                        <span class='symbol'>:default_md</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_data'>data</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>default_md</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span><span class='comma'>,</span>
                        <span class='symbol'>:allowed_mds</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_data'>data</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>allowed_mds</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span><span class='comma'>,</span>
                        <span class='symbol'>:subject_item_policy</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_subject_item_policy'>subject_item_policy</span><span class='rparen'>)</span>
-  <span class='kw'>end</span> <span class='kw'>unless</span> <span class='id identifier rubyid_conf'>conf</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>profiles</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
-  <span class='id identifier rubyid_opts'>opts</span><span class='lbracket'>[</span><span class='symbol'>:profiles</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_profs'>profs</span>
-
-  <span class='comment'># Create the instance.
-</span>  <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_opts'>opts</span><span class='rparen'>)</span>
+  <span class='kw'>end</span> <span class='kw'>unless</span> <span class='id identifier rubyid_profiles'>profiles</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
+  <span class='id identifier rubyid_profs'>profs</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -1607,13 +1830,13 @@ contain more than one configuration.</p>
       <pre class="lines">
 
 
-349
-350
-351
-352</pre>
+262
+263
+264
+265</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/config.rb', line 349</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/config/ca_config.rb', line 262</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_load_yaml'>load_yaml</span><span class='lparen'>(</span><span class='id identifier rubyid_conf_name'>conf_name</span><span class='comma'>,</span> <span class='id identifier rubyid_yaml_file'>yaml_file</span><span class='comma'>,</span> <span class='id identifier rubyid_opts'>opts</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_conf'>conf</span> <span class='op'>=</span> <span class='const'>YAML</span><span class='period'>.</span><span class='id identifier rubyid_load_file'>load_file</span><span class='lparen'>(</span><span class='id identifier rubyid_yaml_file'>yaml_file</span><span class='rparen'>)</span>
@@ -1631,7 +1854,66 @@ contain more than one configuration.</p>
 
     
       <div class="method_details first">
-  <h3 class="signature first" id="num_profiles-instance_method">
+  <h3 class="signature first" id="crl_cert-instance_method">
+  
+    - (<tt><span class='object_link'><a href="../Cert.html" title="R509::Cert (class)">R509::Cert</a></span></tt>) <strong>crl_cert</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Either a custom CRL cert or the ca_cert</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="../Cert.html" title="R509::Cert (class)">R509::Cert</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>either a custom CRL cert or the ca_cert</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+127
+128
+129</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/r509/config/ca_config.rb', line 127</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_crl_cert'>crl_cert</span>
+  <span class='kw'>if</span> <span class='ivar'>@crl_cert</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span> <span class='kw'>then</span> <span class='ivar'>@ca_cert</span> <span class='kw'>else</span> <span class='ivar'>@crl_cert</span> <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="num_profiles-instance_method">
   
     - (<tt>Integer</tt>) <strong>num_profiles</strong> 
   
@@ -1674,12 +1956,12 @@ contain more than one configuration.</p>
       <pre class="lines">
 
 
-237
-238
-239</pre>
+150
+151
+152</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/config.rb', line 237</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/config/ca_config.rb', line 150</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_num_profiles'>num_profiles</span>
   <span class='ivar'>@profiles</span><span class='period'>.</span><span class='id identifier rubyid_count'>count</span>
@@ -1733,12 +2015,12 @@ contain more than one configuration.</p>
       <pre class="lines">
 
 
-214
-215
-216</pre>
+122
+123
+124</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/config.rb', line 214</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/config/ca_config.rb', line 122</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_ocsp_cert'>ocsp_cert</span>
   <span class='kw'>if</span> <span class='ivar'>@ocsp_cert</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span> <span class='kw'>then</span> <span class='ivar'>@ca_cert</span> <span class='kw'>else</span> <span class='ivar'>@ocsp_cert</span> <span class='kw'>end</span>
@@ -1807,15 +2089,15 @@ contain more than one configuration.</p>
       <pre class="lines">
 
 
-229
-230
-231
-232
-233
-234</pre>
+142
+143
+144
+145
+146
+147</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/config.rb', line 229</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/config/ca_config.rb', line 142</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_profile'>profile</span><span class='lparen'>(</span><span class='id identifier rubyid_prof'>prof</span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='op'>!</span><span class='ivar'>@profiles</span><span class='period'>.</span><span class='id identifier rubyid_has_key?'>has_key?</span><span class='lparen'>(</span><span class='id identifier rubyid_prof'>prof</span><span class='rparen'>)</span>
@@ -1888,15 +2170,15 @@ contain more than one configuration.</p>
       <pre class="lines">
 
 
-220
-221
-222
-223
-224
-225</pre>
+133
+134
+135
+136
+137
+138</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/config.rb', line 220</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/config/ca_config.rb', line 133</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_set_profile'>set_profile</span><span class='lparen'>(</span><span class='id identifier rubyid_name'>name</span><span class='comma'>,</span> <span class='id identifier rubyid_prof'>prof</span><span class='rparen'>)</span>
   <span class='kw'>unless</span> <span class='id identifier rubyid_prof'>prof</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span><span class='lparen'>(</span><span class='const'>R509</span><span class='op'>::</span><span class='const'>Config</span><span class='op'>::</span><span class='const'>CertProfile</span><span class='rparen'>)</span>
@@ -1909,14 +2191,144 @@ contain more than one configuration.</p>
 </table>
 </div>
     
+      <div class="method_details ">
+  <h3 class="signature " id="to_h-instance_method">
+  
+    - (<tt>Hash</tt>) <strong>to_h</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Hash</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/r509/config/ca_config.rb', line 155</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_to_h'>to_h</span>
+  <span class='id identifier rubyid_hash'>hash</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
+  <span class='id identifier rubyid_hash'>hash</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>ca_cert</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_build_cert_hash'>build_cert_hash</span><span class='lparen'>(</span><span class='ivar'>@ca_cert</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_hash'>hash</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>ocsp_cert</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_build_cert_hash'>build_cert_hash</span><span class='lparen'>(</span><span class='ivar'>@ocsp_cert</span><span class='rparen'>)</span> <span class='kw'>unless</span> <span class='ivar'>@ocsp_cert</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
+  <span class='id identifier rubyid_hash'>hash</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>crl_cert</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='id identifier rubyid_build_cert_hash'>build_cert_hash</span><span class='lparen'>(</span><span class='ivar'>@crl_cert</span><span class='rparen'>)</span> <span class='kw'>unless</span> <span class='ivar'>@crl_cert</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
+  <span class='id identifier rubyid_hash'>hash</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>ocsp_chain</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>&lt;add_path&gt;</span><span class='tstring_end'>&quot;</span></span> <span class='kw'>unless</span> <span class='ivar'>@ocsp_chain</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
+  <span class='id identifier rubyid_hash'>hash</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>ocsp_start_skew_seconds</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='ivar'>@ocsp_start_skew_seconds</span>
+  <span class='id identifier rubyid_hash'>hash</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>ocsp_validity_hours</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='ivar'>@ocsp_validity_hours</span>
+  <span class='id identifier rubyid_hash'>hash</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>crl_start_skew_seconds</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='ivar'>@crl_start_skew_seconds</span>
+  <span class='id identifier rubyid_hash'>hash</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>crl_validity_hours</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='ivar'>@crl_validity_hours</span>
+  <span class='id identifier rubyid_hash'>hash</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>crl_list_file</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='ivar'>@crl_list_file</span> <span class='kw'>unless</span> <span class='ivar'>@crl_list_file</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
+  <span class='id identifier rubyid_hash'>hash</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>crl_number_file</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='ivar'>@crl_number_file</span> <span class='kw'>unless</span> <span class='ivar'>@crl_number_file</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
+  <span class='id identifier rubyid_hash'>hash</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>crl_md</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='ivar'>@crl_md</span>
+  <span class='id identifier rubyid_hash'>hash</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>profiles</span><span class='tstring_end'>&quot;</span></span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='ivar'>@profiles</span><span class='period'>.</span><span class='id identifier rubyid_merge'>merge</span><span class='lparen'>(</span><span class='ivar'>@profiles</span><span class='rparen'>)</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_k'>k</span><span class='comma'>,</span><span class='id identifier rubyid_v'>v</span><span class='op'>|</span> <span class='id identifier rubyid_v'>v</span><span class='period'>.</span><span class='id identifier rubyid_to_h'>to_h</span> <span class='rbrace'>}</span> <span class='kw'>unless</span> <span class='ivar'>@profiles</span><span class='period'>.</span><span class='id identifier rubyid_empty?'>empty?</span>
+  <span class='id identifier rubyid_hash'>hash</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="to_yaml-instance_method">
+  
+    - (<tt>YAML</tt>) <strong>to_yaml</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>YAML</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+173
+174
+175</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/r509/config/ca_config.rb', line 173</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_to_yaml'>to_yaml</span>
+  <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_to_h'>to_h</span><span class='period'>.</span><span class='id identifier rubyid_to_yaml'>to_yaml</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
   </div>
 
 </div>
 
     <div id="footer">
-  Generated on Sun Jun  9 10:03:36 2013 by
+  Generated on Sat Jan 25 19:00:18 2014 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.8.4.1 (ruby-2.0.0).
+  0.8.6.1 (ruby-2.0.0).
 </div>
 
   </body>

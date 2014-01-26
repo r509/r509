@@ -6,13 +6,13 @@
 <title>
   Class: R509::CRL::SignedList
   
-    &mdash; Documentation by YARD 0.8.4.1
+    &mdash; Documentation by YARD 0.8.6.1
   
 </title>
 
-  <link rel="stylesheet" href="../../css/style.css" type="text/css" media="screen" charset="utf-8" />
+  <link rel="stylesheet" href="../../css/style.css" type="text/css" charset="utf-8" />
 
-  <link rel="stylesheet" href="../../css/common.css" type="text/css" media="screen" charset="utf-8" />
+  <link rel="stylesheet" href="../../css/common.css" type="text/css" charset="utf-8" />
 
 <script type="text/javascript" charset="utf-8">
   hasFrames = window.top.frames.main ? true : false;
@@ -90,15 +90,11 @@
     
   
     
-      <dt class="r2">Includes:</dt>
-      <dd class="r2"><span class='object_link'><a href="../IOHelpers.html" title="R509::IOHelpers (module)">IOHelpers</a></span></dd>
-      
-    
   
   
   
-    <dt class="r1 last">Defined in:</dt>
-    <dd class="r1 last">lib/r509/crl.rb</dd>
+    <dt class="r2 last">Defined in:</dt>
+    <dd class="r2 last">lib/r509/crl/signed_list.rb</dd>
   
 </dl>
 <div class="clear"></div>
@@ -519,16 +515,7 @@ certificate (call cert.public_key on that object).</p>
 
 
   
-  
-  
-  
-  
-  
-  
-  
-  <h3 class="inherited">Methods included from <span class='object_link'><a href="../IOHelpers.html" title="R509::IOHelpers (module)">IOHelpers</a></span></h3>
-  <p class="inherited"><span class='object_link'><a href="../IOHelpers.html#read_data-instance_method" title="R509::IOHelpers#read_data (method)">#read_data</a></span>, <span class='object_link'><a href="../IOHelpers.html#read_data-class_method" title="R509::IOHelpers.read_data (method)">read_data</a></span>, <span class='object_link'><a href="../IOHelpers.html#write_data-instance_method" title="R509::IOHelpers#write_data (method)">#write_data</a></span>, <span class='object_link'><a href="../IOHelpers.html#write_data-class_method" title="R509::IOHelpers.write_data (method)">write_data</a></span></p>
-<div id="constructor_details" class="method_details_list">
+  <div id="constructor_details" class="method_details_list">
   <h2>Constructor Details</h2>
   
     <div class="method_details first">
@@ -578,7 +565,7 @@ certificate (call cert.public_key on that object).</p>
 19</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/crl.rb', line 16</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/crl/signed_list.rb', line 16</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='id identifier rubyid_crl'>crl</span><span class='rparen'>)</span>
   <span class='ivar'>@crl</span> <span class='op'>=</span> <span class='const'>OpenSSL</span><span class='op'>::</span><span class='const'>X509</span><span class='op'>::</span><span class='const'>CRL</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_crl'>crl</span><span class='rparen'>)</span>
@@ -627,7 +614,7 @@ certificate (call cert.public_key on that object).</p>
 15</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/crl.rb', line 13</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/crl/signed_list.rb', line 13</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_crl'>crl</span>
   <span class='ivar'>@crl</span>
@@ -670,7 +657,7 @@ certificate (call cert.public_key on that object).</p>
 15</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/crl.rb', line 13</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/crl/signed_list.rb', line 13</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_issuer'>issuer</span>
   <span class='ivar'>@issuer</span>
@@ -756,7 +743,7 @@ certificate (call cert.public_key on that object).</p>
 27</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/crl.rb', line 25</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/crl/signed_list.rb', line 25</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_load_from_file'>load_from_file</span><span class='lparen'>(</span> <span class='id identifier rubyid_filename'>filename</span> <span class='rparen'>)</span>
   <span class='kw'>return</span> <span class='const'>R509</span><span class='op'>::</span><span class='const'>CRL</span><span class='op'>::</span><span class='const'>SignedList</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span> <span class='const'>IOHelpers</span><span class='period'>.</span><span class='id identifier rubyid_read_data'>read_data</span><span class='lparen'>(</span><span class='id identifier rubyid_filename'>filename</span><span class='rparen'>)</span> <span class='rparen'>)</span>
@@ -821,7 +808,7 @@ certificate (call cert.public_key on that object).</p>
 55</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/crl.rb', line 53</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/crl/signed_list.rb', line 53</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_last_update'>last_update</span>
   <span class='ivar'>@crl</span><span class='period'>.</span><span class='id identifier rubyid_last_update'>last_update</span>
@@ -880,7 +867,7 @@ certificate (call cert.public_key on that object).</p>
 62</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/crl.rb', line 60</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/crl/signed_list.rb', line 60</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_next_update'>next_update</span>
   <span class='ivar'>@crl</span><span class='period'>.</span><span class='id identifier rubyid_next_update'>next_update</span>
@@ -945,7 +932,7 @@ certificate (call cert.public_key on that object).</p>
 107</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/crl.rb', line 99</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/crl/signed_list.rb', line 99</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_revoked'>revoked</span>
   <span class='id identifier rubyid_revoked_list'>revoked_list</span> <span class='op'>=</span> <span class='lbrace'>{</span><span class='rbrace'>}</span>
@@ -1027,10 +1014,10 @@ certificate (call cert.public_key on that object).</p>
 80</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/crl.rb', line 74</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/crl/signed_list.rb', line 74</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_revoked?'>revoked?</span><span class='lparen'>(</span><span class='id identifier rubyid_serial'>serial</span><span class='rparen'>)</span>
-  <span class='kw'>if</span> <span class='ivar'>@crl</span><span class='period'>.</span><span class='id identifier rubyid_revoked'>revoked</span><span class='period'>.</span><span class='id identifier rubyid_find'>find</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_revoked'>revoked</span><span class='op'>|</span> <span class='id identifier rubyid_revoked'>revoked</span><span class='period'>.</span><span class='id identifier rubyid_serial'>serial</span> <span class='op'>==</span> <span class='id identifier rubyid_serial'>serial</span> <span class='rbrace'>}</span>
+  <span class='kw'>if</span> <span class='ivar'>@crl</span><span class='period'>.</span><span class='id identifier rubyid_revoked'>revoked</span><span class='period'>.</span><span class='id identifier rubyid_find'>find</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_revoked'>revoked</span><span class='op'>|</span> <span class='id identifier rubyid_revoked'>revoked</span><span class='period'>.</span><span class='id identifier rubyid_serial'>serial</span> <span class='op'>==</span> <span class='id identifier rubyid_serial'>serial</span><span class='period'>.</span><span class='id identifier rubyid_to_i'>to_i</span> <span class='rbrace'>}</span>
     <span class='kw'>true</span>
   <span class='kw'>else</span>
     <span class='kw'>false</span>
@@ -1116,10 +1103,10 @@ certificate (call cert.public_key on that object).</p>
 119</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/crl.rb', line 111</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/crl/signed_list.rb', line 111</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_revoked_cert'>revoked_cert</span><span class='lparen'>(</span><span class='id identifier rubyid_serial'>serial</span><span class='rparen'>)</span>
-  <span class='id identifier rubyid_revoked'>revoked</span> <span class='op'>=</span> <span class='ivar'>@crl</span><span class='period'>.</span><span class='id identifier rubyid_revoked'>revoked</span><span class='period'>.</span><span class='id identifier rubyid_find'>find</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_revoked'>revoked</span><span class='op'>|</span> <span class='id identifier rubyid_revoked'>revoked</span><span class='period'>.</span><span class='id identifier rubyid_serial'>serial</span> <span class='op'>==</span> <span class='id identifier rubyid_serial'>serial</span> <span class='rbrace'>}</span>
+  <span class='id identifier rubyid_revoked'>revoked</span> <span class='op'>=</span> <span class='ivar'>@crl</span><span class='period'>.</span><span class='id identifier rubyid_revoked'>revoked</span><span class='period'>.</span><span class='id identifier rubyid_find'>find</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_r'>r</span><span class='op'>|</span> <span class='id identifier rubyid_r'>r</span><span class='period'>.</span><span class='id identifier rubyid_serial'>serial</span> <span class='op'>==</span> <span class='id identifier rubyid_serial'>serial</span> <span class='rbrace'>}</span>
   <span class='kw'>if</span> <span class='id identifier rubyid_revoked'>revoked</span>
     <span class='id identifier rubyid_reason'>reason</span> <span class='op'>=</span> <span class='id identifier rubyid_get_reason'>get_reason</span><span class='lparen'>(</span><span class='id identifier rubyid_revoked'>revoked</span><span class='rparen'>)</span>
     <span class='lbrace'>{</span> <span class='symbol'>:time</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_revoked'>revoked</span><span class='period'>.</span><span class='id identifier rubyid_time'>time</span><span class='comma'>,</span> <span class='symbol'>:reason</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_reason'>reason</span> <span class='rbrace'>}</span>
@@ -1174,7 +1161,7 @@ certificate (call cert.public_key on that object).</p>
 32</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/crl.rb', line 30</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/crl/signed_list.rb', line 30</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_signature_algorithm'>signature_algorithm</span>
   <span class='ivar'>@crl</span><span class='period'>.</span><span class='id identifier rubyid_signature_algorithm'>signature_algorithm</span>
@@ -1233,7 +1220,7 @@ certificate (call cert.public_key on that object).</p>
 96</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/crl.rb', line 94</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/crl/signed_list.rb', line 94</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_to_der'>to_der</span>
   <span class='ivar'>@crl</span><span class='period'>.</span><span class='id identifier rubyid_to_der'>to_der</span>
@@ -1296,7 +1283,7 @@ certificate (call cert.public_key on that object).</p>
 87</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/crl.rb', line 85</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/crl/signed_list.rb', line 85</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_to_pem'>to_pem</span>
   <span class='ivar'>@crl</span><span class='period'>.</span><span class='id identifier rubyid_to_pem'>to_pem</span>
@@ -1366,7 +1353,7 @@ certificate (call cert.public_key on that object)</p>
 70</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/crl.rb', line 68</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/crl/signed_list.rb', line 68</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_verify'>verify</span><span class='lparen'>(</span><span class='id identifier rubyid_public_key'>public_key</span><span class='rparen'>)</span>
   <span class='ivar'>@crl</span><span class='period'>.</span><span class='id identifier rubyid_verify'>verify</span><span class='lparen'>(</span><span class='id identifier rubyid_public_key'>public_key</span><span class='rparen'>)</span>
@@ -1428,7 +1415,7 @@ an IO-like object.</p>
 48</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/crl.rb', line 46</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/crl/signed_list.rb', line 46</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_write_der'>write_der</span><span class='lparen'>(</span><span class='id identifier rubyid_filename_or_io'>filename_or_io</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_write_data'>write_data</span><span class='lparen'>(</span><span class='id identifier rubyid_filename_or_io'>filename_or_io</span><span class='comma'>,</span> <span class='ivar'>@crl</span><span class='period'>.</span><span class='id identifier rubyid_to_der'>to_der</span><span class='rparen'>)</span>
@@ -1490,7 +1477,7 @@ an IO-like object.</p>
 40</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/r509/crl.rb', line 38</span>
+      <pre class="code"><span class="info file"># File 'lib/r509/crl/signed_list.rb', line 38</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_write_pem'>write_pem</span><span class='lparen'>(</span><span class='id identifier rubyid_filename_or_io'>filename_or_io</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_write_data'>write_data</span><span class='lparen'>(</span><span class='id identifier rubyid_filename_or_io'>filename_or_io</span><span class='comma'>,</span> <span class='ivar'>@crl</span><span class='period'>.</span><span class='id identifier rubyid_to_pem'>to_pem</span><span class='rparen'>)</span>
@@ -1505,9 +1492,9 @@ an IO-like object.</p>
 </div>
 
     <div id="footer">
-  Generated on Sun Jun  9 10:03:35 2013 by
+  Generated on Sat Jan 25 19:00:17 2014 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.8.4.1 (ruby-2.0.0).
+  0.8.6.1 (ruby-2.0.0).
 </div>
 
   </body>
