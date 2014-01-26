@@ -1,6 +1,9 @@
 source "https://rubygems.org"
 
 gem 'coveralls', require: false
+
+gem 'sqlite3'
+
 platforms :rbx do
     gem "rubysl-ipaddr"
     gem "rubysl-singleton"
