@@ -15,6 +15,8 @@ module R509
         INSERT INTO crl_number DEFAULT VALUES;
       EOSCHEMA
 
+      #Create an SQLite based persitence
+      #@param filename_or_db filepath to an SQLite database or an SQLite3::Database object
       def initialize(filename_or_db)
         if filename_or_db.kind_of? SQLite3::Database
           @db = filename_or_db
@@ -25,7 +27,7 @@ module R509
         ensure_schema
       end
 
-      # Reads a CRL list file from a file or StringIO
+      # Reads a CRL list file from the SQLite database
       # @param admin [R509::CRL::Administrator] the parent CRL Administrator object
       def read_list(admin)
         @db.execute('SELECT serial,reason,revoked_at from revoked_serials') do |row|
@@ -37,7 +39,7 @@ module R509
         nil
       end
 
-      # Appends a CRL list entry to a file or StringIO
+      # Appends a CRL list entry to the SQLite database
       # @param serial [Integer] serial number of the certificate to revoke
       # @param reason [Integer,nil] reason for revocation
       # @param revoke_time [Integer]
@@ -45,18 +47,18 @@ module R509
         @db.execute('INSERT OR REPLACE INTO revoked_serials (serial, revoked_at, reason) VALUES (?,?,?)', serial.to_s, revoke_time, reason)
       end
 
-      # Remove a CRL list entry
+      # Remove a CRL list entry from SQLite
       # @param serial [Integer] serial number of the certificate to remove from the list
       def remove_list_entry(serial)
         @db.execute('DELETE FROM revoked_serials WHERE serial=?', serial.to_s)
       end
 
-      # read the CRL number from a file or StringIO
+      # read the CRL number from SQLite 
       def read_number
         @db.get_first_value 'SELECT number from crl_number'
       end
 
-      # write the CRL number to a file or StringIO
+      # write the CRL number to SQLite 
       def write_number(crl_number)
         @db.execute('UPDATE crl_number SET number=?', crl_number)
       end
