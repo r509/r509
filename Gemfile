@@ -4,6 +4,9 @@ group :test do
     gem 'coveralls', require: false
     gem 'rubocop'
 end
+
+gem 'sqlite3'
+
 platforms :rbx do
     gem "rubysl-ipaddr"
     gem "rubysl-singleton"
