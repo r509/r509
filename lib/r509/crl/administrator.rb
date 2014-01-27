@@ -31,7 +31,6 @@ module R509
         @rw.read_list(self)
 
         @crl_md = R509::MessageDigest.new(@config.crl_md)
-        @crl = nil
       end
 
       # Indicates whether the serial number has been revoked, or not.
