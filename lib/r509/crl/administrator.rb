@@ -28,7 +28,9 @@ module R509
         @rw.crl_number_file = @config.crl_number_file unless not @rw.respond_to?(:crl_number_file=)
         @crl_number = @rw.read_number
         @revoked_certs = {}
-        @rw.read_list(self)
+        @rw.read_list do |serial, reason, revoke_time|
+          revoke_cert(serial, reason, revoke_time, false)
+        end
 
         @crl_md = R509::MessageDigest.new(@config.crl_md)
       end
