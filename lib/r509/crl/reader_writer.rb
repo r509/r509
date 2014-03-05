@@ -42,8 +42,11 @@ module R509
       end
 
       # Reads a CRL list file from a file or StringIO
-      # @param admin [R509::CRL::Administrator] the parent CRL Administrator object
-      def read_list(admin)
+      # @yield For each revoked certificate in the CRL
+      # @yieldparam serial [Integer] revoked certificate's serial number
+      # @yieldparam reason [Integer,nil] reason for revocation. 
+      # @yieldparam revoke_time [Integer]
+      def read_list
         return nil if @crl_list_file.nil?
 
         data = read_data(@crl_list_file)
@@ -54,7 +57,7 @@ module R509
           serial = serial.to_i
           reason = (reason == '') ? nil : reason.to_i
           revoke_time = (revoke_time == '') ? nil : revoke_time.to_i
-          admin.revoke_cert(serial, reason, revoke_time, false)
+          yield serial, reason, revoke_time
         end
         nil
       end

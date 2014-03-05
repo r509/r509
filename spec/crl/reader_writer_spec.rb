@@ -34,7 +34,7 @@ describe R509::CRL::FileReaderWriter do
 
   it "handles nil crl_list_file in read_list" do
     @rw.crl_list_file = nil
-    @rw.read_list(nil).should == nil
+    @rw.read_list.should == nil
   end
 
   it "handles nil crl_list_file in write_list_entry" do
@@ -54,10 +54,11 @@ describe R509::CRL::FileReaderWriter do
 
   it "reads a crl list" do
     @rw.crl_list_file = TestFixtures::CRL_LIST_FILE
-    admin = double("admin")
-    admin.should_receive(:revoke_cert).with(12345, 0, 1323983885, false)
-    admin.should_receive(:revoke_cert).with(12346, nil, 1323983885, false)
-    @rw.read_list(admin)
+    expect { |b| @rw.read_list(&b) }.to yield_successive_args(
+        [12345, 0, 1323983885], 
+        [ 12346, nil, 1323983885]
+    )
+   
   end
 
   it "writes a crl list entry" do
