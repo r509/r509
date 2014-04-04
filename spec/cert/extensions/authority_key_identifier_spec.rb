@@ -41,8 +41,14 @@ describe R509::Cert::Extensions::AuthorityKeyIdentifier do
 
     it "errors when not supplying an issuer subject when embedding issuer info" do
       expect {
-        R509::Cert::Extensions::AuthorityKeyIdentifier.new(:value => "issuer:always")
+        R509::Cert::Extensions::AuthorityKeyIdentifier.new(:value => "issuer:always", :issuer_serial => 3)
       }.to raise_error(ArgumentError,'You must supply an R509::Subject object to :issuer_subject if aki value contains issuer')
+    end
+
+    it "errors when not supplying an issuer serial when embedding issuer info" do
+      expect {
+        R509::Cert::Extensions::AuthorityKeyIdentifier.new(:value => "issuer:always", :issuer_subject => R509::Subject.new(:CN => 'something'))
+      }.to raise_error(ArgumentError,'You must supply an integer to :issuer_serial if aki value contains issuer')
     end
 
     it "creates successfully with default value" do
@@ -52,14 +58,14 @@ describe R509::Cert::Extensions::AuthorityKeyIdentifier do
     end
 
     it "creates successfully with issuer value" do
-      aki = R509::Cert::Extensions::AuthorityKeyIdentifier.new(:issuer_subject => @cert.subject, :value => "issuer:always")
-      aki.authority_cert_issuer.should_not be_nil
-      aki.authority_cert_serial_number.should_not be_nil
+      aki = R509::Cert::Extensions::AuthorityKeyIdentifier.new(:issuer_subject => @cert.subject, :issuer_serial => 5, :value => "issuer:always")
+      aki.authority_cert_issuer.to_h.should == { :type=>"dirName", :value=>{:C=>"US", :ST=>"Illinois", :L=>"Chicago", :O=>"Ruby CA Project", :CN=>"Test CA"} }
+      aki.authority_cert_serial_number.should == "05"
     end
 
     it "creates successfully with issuer+keyid value" do
-      aki = R509::Cert::Extensions::AuthorityKeyIdentifier.new(:issuer_subject => @cert.subject, :public_key => @cert.public_key, :value => "issuer:always,keyid:always")
-      aki.authority_cert_issuer.should_not be_nil
+      aki = R509::Cert::Extensions::AuthorityKeyIdentifier.new(:issuer_subject => @cert.subject, :issuer_serial => 5, :public_key => @cert.public_key, :value => "issuer:always,keyid:always")
+      aki.authority_cert_issuer.to_h.should == { :type=>"dirName", :value=>{:C=>"US", :ST=>"Illinois", :L=>"Chicago", :O=>"Ruby CA Project", :CN=>"Test CA"} }
       aki.authority_cert_serial_number.should_not be_nil
       aki.key_identifier.should_not be_nil
     end
