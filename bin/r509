@@ -79,6 +79,7 @@ if opts[:interactive] == true or opts[:subject].nil? then
   subject.push ['CN',gets.chomp]
   print "SAN Domains (comma separated):"
   opts[:san] = gets.chomp
+
   csr = R509::CSR.new(
     :subject => subject,
     :bit_length => opts[:bits],
@@ -96,61 +97,42 @@ else
       subject.push item.split('=')[0..1]
     end
   }
-  csr = R509::CSR.new(
-    :subject => subject,
-    :bit_length => opts[:bits],
-    :type => opts[:type].upcase,
-    :curve_name => opts[:curve_name],
-    :san_names => (opts[:san]||"").split(',').collect { |domain| domain.strip },
-    :message_digest => opts[:message_digest]
-  )
 end
 
+csr_or_cert = csr = R509::CSR.new(
+  :subject => subject,
+  :bit_length => opts[:bits],
+  :type => opts[:type].upcase,
+  :curve_name => opts[:curve_name],
+  :san_names => (opts[:san] || "").split(',').collect { |domain| domain.strip },
+  :message_digest => opts[:message_digest]
+)
+
+# for self signed, outputting the cert (not the csr)
 selfsign = opts[:duration]
 if selfsign > 0
-  cert = R509::CertificateAuthority::Signer.selfsign(
+  csr_or_cert = R509::CertificateAuthority::Signer.selfsign(
     :csr => csr,
     :not_after => Time.now.to_i+86400*selfsign,
     :message_digest => opts[:message_digest]
   )
-  if opts[:keyout].nil?
-    puts csr.key.to_pem
-  else
-    csr.key.write_pem(opts[:keyout])
-  end
-  if opts[:out].nil?
-    puts cert.to_pem
-  else
-    cert.write_pem(opts[:out])
-  end
-
-  puts cert.subject
-  if not cert.san.nil?
-    puts "SAN(s): "+cert.san.names.map { |n| n.value }.join(", ")
-  end
-else
-  if opts[:keyout].nil?
-    puts csr.key.to_pem
-  else
-    csr.key.write_pem(opts[:keyout])
-  end
-
-  if opts[:out].nil?
-    puts csr.to_pem
-  else
-    csr.write_pem(opts[:out])
-  end
-
-  puts csr.subject
-  if not csr.san.nil?
-    puts "SAN(s): "+csr.san.names.map{|n| n.value}.join(", ")
-  end
 end
 
+if opts[:keyout]
+  csr.key.write_pem(opts[:keyout])
+else
+  puts csr.key.to_pem
+end
+
+if opts[:out]
+  csr_or_cert.write_pem(opts[:out])
+else
+  puts csr_or_cert.to_pem
+end
+
+puts csr_or_cert.subject
+puts "SAN(s): #{csr_or_cert.san.names.map { |n| n.value }.join(", ")}" if csr_or_cert.san
+
 if opts[:clipboard]
-  if selfsign > 0
-    IO.popen('pbcopy','w').puts cert
-  else
-    IO.popen('pbcopy','w').puts csr
-  end
+  IO.popen('pbcopy','w').puts csr_or_cert
 end
