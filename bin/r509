@@ -13,6 +13,9 @@ opts = R509::Trollop::options do
   opt :keyout, "File name to save generated key.", :type => :string
   opt :out, "File name to save generated CSR or self-signed certificate", :type => :string
   opt :type, "Type of key to generate. RSA/DSA/EC", :type => :string, :default => "RSA"
+  if RUBY_PLATFORM.match('darwin')
+    opt :clipboard, "Copy CSR or certificate to the clipboard", :default => false, :short => :p
+  end
   version "r509 #{R509::VERSION}"
 end
 
@@ -147,7 +150,7 @@ else
   end
 end
 
-if RUBY_PLATFORM.match('darwin') != nil then
+if opts[:clipboard]
   if selfsign > 0
     IO.popen('pbcopy','w').puts cert
   else
