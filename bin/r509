@@ -6,6 +6,7 @@ require 'r509/trollop'
 opts = R509::Trollop::options do
   opt :interactive, "Interactive CSR/self-signed certificate generation. Overrides all flags other than keyout and out."
   opt :subject, "X509 subject / delimited. Example: /CN=test.com/O=Org/C=US/ST=Illinois/L=Chicago", :type => :string
+  opt :san, "Subject Alternative Name Example: DNS:test.com,DNS:*.test.com", :type => :string
   opt :message_digest, "Message digest to use. sha1, sha224, sha256, sha384, sha512, md5", :type => :string, :default => 'sha1'
   opt :duration, "Self-sign the certificate with the duration (in days) specified.", :type => :integer
   opt :bits, "Bit length of generated key. Ignored for EC.", :type => :integer, :default => 2048
@@ -13,18 +14,24 @@ opts = R509::Trollop::options do
   opt :keyout, "File name to save generated key.", :type => :string
   opt :out, "File name to save generated CSR or self-signed certificate", :type => :string
   opt :type, "Type of key to generate. RSA/DSA/EC", :type => :string, :default => "RSA"
+  if RUBY_PLATFORM.match('darwin')
+    opt :clipboard, "Copy CSR or certificate to the clipboard", :default => false, :short => :p
+  end
   version "r509 #{R509::VERSION}"
 end
+
+opts[:duration] = opts[:duration].to_i
+subject = []
 
 if opts[:interactive] == true or opts[:subject].nil? then
   if opts[:type].upcase == "RSA" or opts[:type].upcase == "DSA"
     print "CSR Bit Length (2048):"
     bit_length = gets.chomp
-    bit_length = (bit_length.to_i > 0)? bit_length.to_i : 2048
+    opts[:bits] = (bit_length.to_i > 0)? bit_length.to_i : 2048
   elsif opts[:type].upcase == "EC"
     print "Curve Name (secp384r1):"
     curve_name = gets.chomp
-    curve_name = (not curve_name.empty?)? curve_name : 'secp384r1'
+    opts[:curve_name] = (not curve_name.empty?)? curve_name : 'secp384r1'
   else
     puts "Invalid key type specified. RSA/DSA/EC"
     exit
@@ -42,7 +49,6 @@ if opts[:interactive] == true or opts[:subject].nil? then
     else R509::MessageDigest::DEFAULT_MD
   end
 
-  subject = []
   print "C (US): "
   c = gets.chomp
   c = c.empty? ? 'US':c;
@@ -72,85 +78,61 @@ if opts[:interactive] == true or opts[:subject].nil? then
   print "CN: "
   subject.push ['CN',gets.chomp]
   print "SAN Domains (comma separated):"
-  san_domains = []
-  san_domains = gets.chomp.split(',').collect { |domain| domain.strip }
-  csr = R509::CSR.new(
-    :subject => subject,
-    :bit_length => bit_length,
-    :type => opts[:type].upcase,
-    :curve_name => curve_name,
-    :san_names => san_domains,
-    :message_digest => opts[:message_digest]
-  )
+  opts[:san] = gets.chomp
 
-  selfsign = 0
-  print "Self-signed cert duration in days (null disables self-sign):"
-  selfsign_input = gets.chomp
-  if selfsign_input.to_i > 0
-    selfsign = selfsign_input.to_i
-  end
-elsif not opts[:subject].nil?
-  subject = OpenSSL::X509::Name.new
-  opts[:subject].chomp.split('/').each { |item|
-    if item != '' then
-      value = item.split('=')
-      subject.add_entry(value[0],value[1])
-    end
-  }
   csr = R509::CSR.new(
     :subject => subject,
     :bit_length => opts[:bits],
     :type => opts[:type].upcase,
     :curve_name => opts[:curve_name],
+    :san_names => (opts[:san]||"").split(',').collect { |domain| domain.strip },
     :message_digest => opts[:message_digest]
   )
-  selfsign = opts[:duration] || 0
+
+  print "Self-signed cert duration in days (null disables self-sign):"
+  opts[:duration] = gets.chomp.to_i
+else
+  opts[:subject].chomp.split('/').each { |item|
+    if item != '' then
+      subject.push item.split('=')[0..1]
+    end
+  }
 end
 
+csr_or_cert = csr = R509::CSR.new(
+  :subject => subject,
+  :bit_length => opts[:bits],
+  :type => opts[:type].upcase,
+  :curve_name => opts[:curve_name],
+  :san_names => (opts[:san] || "").split(',').collect { |domain| domain.strip },
+  :message_digest => opts[:message_digest]
+)
+
+# for self signed, outputting the cert (not the csr)
+selfsign = opts[:duration]
 if selfsign > 0
-  cert = R509::CertificateAuthority::Signer.selfsign(
+  csr_or_cert = R509::CertificateAuthority::Signer.selfsign(
     :csr => csr,
     :not_after => Time.now.to_i+86400*selfsign,
     :message_digest => opts[:message_digest]
   )
-  if opts[:keyout].nil?
-    puts csr.key.to_pem
-  else
-    csr.key.write_pem(opts[:keyout])
-  end
-  if opts[:out].nil?
-    puts cert.to_pem
-  else
-    cert.write_pem(opts[:out])
-  end
-
-  puts cert.subject
-  if not cert.san.nil?
-    puts "SAN(s): "+cert.san.names.map { |n| n.value }.join(", ")
-  end
-else
-  if opts[:keyout].nil?
-    puts csr.key.to_pem
-  else
-    csr.key.write_pem(opts[:keyout])
-  end
-
-  if opts[:out].nil?
-    puts csr.to_pem
-  else
-    csr.write_pem(opts[:out])
-  end
-
-  puts csr.subject
-  if not csr.san.nil?
-    puts "SAN(s): "+csr.san.names.map{|n| n.value}.join(", ")
-  end
 end
 
-if RUBY_PLATFORM.match('darwin') != nil then
-  if selfsign > 0
-    IO.popen('pbcopy','w').puts cert
-  else
-    IO.popen('pbcopy','w').puts csr
-  end
+if opts[:keyout]
+  csr.key.write_pem(opts[:keyout])
+else
+  puts csr.key.to_pem
+end
+
+if opts[:out]
+  csr_or_cert.write_pem(opts[:out])
+else
+  puts csr_or_cert.to_pem
+end
+
+puts csr_or_cert.subject
+puts "SAN(s): #{csr_or_cert.san.names.map { |n| n.value }.join(", ")}" if csr_or_cert.san
+
+if opts[:clipboard]
+  IO.popen('pbcopy','w').puts csr_or_cert
 end
