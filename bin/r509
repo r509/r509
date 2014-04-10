@@ -80,15 +80,6 @@ if opts[:interactive] == true or opts[:subject].nil? then
   print "SAN Domains (comma separated):"
   opts[:san] = gets.chomp
 
-  csr = R509::CSR.new(
-    :subject => subject,
-    :bit_length => opts[:bits],
-    :type => opts[:type].upcase,
-    :curve_name => opts[:curve_name],
-    :san_names => (opts[:san]||"").split(',').map { |domain| domain.strip },
-    :message_digest => opts[:message_digest]
-  )
-
   print "Self-signed cert duration in days (null disables self-sign):"
   opts[:duration] = gets.chomp.to_i
 else
