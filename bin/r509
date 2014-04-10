@@ -3,7 +3,7 @@ require 'rubygems'
 require 'r509'
 require 'r509/trollop'
 
-opts = R509::Trollop::options do
+opts = R509::Trollop.options do
   opt :interactive, "Interactive CSR/self-signed certificate generation. Overrides all flags other than keyout and out."
   opt :subject, "X509 subject / delimited. Example: /CN=test.com/O=Org/C=US/ST=Illinois/L=Chicago", :type => :string
   opt :san, "Subject Alternative Name Example: test.com,*.test.com", :type => :string
