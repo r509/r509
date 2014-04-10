@@ -92,11 +92,11 @@ if opts[:interactive] == true or opts[:subject].nil? then
   print "Self-signed cert duration in days (null disables self-sign):"
   opts[:duration] = gets.chomp.to_i
 else
-  opts[:subject].chomp.split('/').each { |item|
+  opts[:subject].chomp.split('/').each do |item|
     if item != '' then
       subject.push item.split('=')[0..1]
     end
-  }
+  end
 end
 
 csr_or_cert = csr = R509::CSR.new(

@@ -47,15 +47,15 @@ describe R509::Cert::Extensions::SubjectAlternativeName do
 
   context "validation" do
     it "errors when not supplying a hash" do
-      expect {
+      expect do
         R509::Cert::Extensions::SubjectAlternativeName.new("create")
-      }.to raise_error(ArgumentError,"You must supply a hash with a :value")
+      end.to raise_error(ArgumentError,"You must supply a hash with a :value")
     end
 
     it "errors when not supplying :value" do
-      expect {
+      expect do
         R509::Cert::Extensions::SubjectAlternativeName.new({})
-      }.to raise_error(ArgumentError,"You must supply a hash with a :value")
+      end.to raise_error(ArgumentError,"You must supply a hash with a :value")
     end
   end
   context "SubjectAlternativeName" do

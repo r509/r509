@@ -65,14 +65,14 @@ module R509
     # set key and value
     def []=(key, value)
       added = false
-      @array = @array.map{ |item|
+      @array = @array.map do |item|
         if key == item[0]
           added = true
           [key, value]
         else
           item
         end
-      }
+      end
 
       if not added
         @array << [key, value]

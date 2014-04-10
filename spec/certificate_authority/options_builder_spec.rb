@@ -294,14 +294,14 @@ describe R509::CertificateAuthority::OptionsBuilder do
     end
 
     it "raises error when not_after is after the issuing CA's expiry" do
-      expect {
+      expect do
         @builder.build_and_enforce(
           :csr => @csr,
           :message_digest => 'sha256',
           :profile_name => 'profile',
           :not_after => Time.now + 86400*7300*25
         )
-      }.to raise_error(R509::R509Error,'The requested certificate lifetime would exceed the issuing CA.')
+      end.to raise_error(R509::R509Error,'The requested certificate lifetime would exceed the issuing CA.')
     end
   end
 

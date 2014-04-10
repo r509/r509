@@ -34,15 +34,15 @@ describe R509::Cert::Extensions::AuthorityKeyIdentifier do
     end
 
     it "errors when not supplying a public_key" do
-      expect {
+      expect do
         R509::Cert::Extensions::AuthorityKeyIdentifier.new({})
-      }.to raise_error(ArgumentError,'You must supply an OpenSSL::PKey object to :public_key if aki value contains keyid (present by default)')
+      end.to raise_error(ArgumentError,'You must supply an OpenSSL::PKey object to :public_key if aki value contains keyid (present by default)')
     end
 
     it "errors when not supplying an issuer subject when embedding issuer info" do
-      expect {
+      expect do
         R509::Cert::Extensions::AuthorityKeyIdentifier.new(:value => "issuer:always", :issuer_serial => 3)
-      }.to raise_error(ArgumentError,'You must supply an R509::Subject object to :issuer_subject if aki value contains issuer')
+      end.to raise_error(ArgumentError,'You must supply an R509::Subject object to :issuer_subject if aki value contains issuer')
     end
 
     it "errors when not supplying an issuer serial when embedding issuer info" do

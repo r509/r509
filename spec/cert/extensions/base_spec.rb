@@ -146,9 +146,9 @@ describe R509::Cert::Extensions do
         end
 
         it "should raise an ArgumentError for #wrap_openssl_extensions" do
-          expect {
+          expect do
             R509::Cert::Extensions.wrap_openssl_extensions( @openssl_extensions )
-          }.to raise_error(ArgumentError)
+          end.to raise_error(ArgumentError)
         end
         it_should_behave_like "a correctly implemented get_unknown_extensions"
       end

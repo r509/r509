@@ -324,11 +324,11 @@ module R509
       def serialize_names
         confs = []
         extension_strings = []
-        @ordered_names.each { |item|
+        @ordered_names.each do |item|
           data = item.serialize_name
           confs << data[:conf]
           extension_strings << data[:extension_string]
-        }
+        end
         { :conf => confs.join("\n"), :extension_string => extension_strings.join(",") }
       end
     end

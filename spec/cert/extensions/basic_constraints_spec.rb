@@ -127,9 +127,9 @@ describe R509::Cert::Extensions::BasicConstraints do
       end
 
       it "errors when supplying path_length if CA:FALSE" do
-        expect {
+        expect do
           R509::Cert::Extensions::BasicConstraints.new(:ca => false, :path_length => 4)
-        }.to raise_error(ArgumentError, ":path_length is not allowed when :ca is false")
+        end.to raise_error(ArgumentError, ":path_length is not allowed when :ca is false")
       end
 
     end

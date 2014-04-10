@@ -225,11 +225,11 @@ describe R509::Cert::Extensions::NameConstraints do
           gns.add_item(name)
         end
         @conf = []
-        permitted = gns.names.map { |name|
+        permitted = gns.names.map do |name|
           serialized = name.serialize_name
           @conf << serialized[:conf]
           "permitted;" + serialized[:extension_string]
-        }.join(",")
+        end.join(",")
         @extension_value = permitted
         @conf = @conf.join("\n")
       end
@@ -246,11 +246,11 @@ describe R509::Cert::Extensions::NameConstraints do
           gns.add_item(name)
         end
         @conf = []
-        permitted = gns.names.map { |name|
+        permitted = gns.names.map do |name|
           serialized = name.serialize_name
           @conf << serialized[:conf]
           "permitted;" + serialized[:extension_string]
-        }.join(",")
+        end.join(",")
         @extension_value = permitted
         @conf = @conf.join("\n")
       end
@@ -267,11 +267,11 @@ describe R509::Cert::Extensions::NameConstraints do
           egns.add_item(name)
         end
         @conf = []
-        excluded = egns.names.map { |name|
+        excluded = egns.names.map do |name|
           serialized = name.serialize_name
           @conf << serialized[:conf]
           "excluded;" + serialized[:extension_string]
-        }.join(",")
+        end.join(",")
         @extension_value = excluded
         @conf = @conf.join("\n")
       end
@@ -289,11 +289,11 @@ describe R509::Cert::Extensions::NameConstraints do
           egns.add_item(name)
         end
         @conf = []
-        excluded = egns.names.map { |name|
+        excluded = egns.names.map do |name|
           serialized = name.serialize_name
           @conf << serialized[:conf]
           "excluded;" + serialized[:extension_string]
-        }.join(",")
+        end.join(",")
         @extension_value = excluded
         @conf = @conf.join("\n")
       end
@@ -310,20 +310,20 @@ describe R509::Cert::Extensions::NameConstraints do
           gns.add_item(name)
         end
         @conf = []
-        permitted = gns.names.map { |name|
+        permitted = gns.names.map do |name|
           serialized = name.serialize_name
           @conf << serialized[:conf]
           "permitted;" + serialized[:extension_string]
-        }.join(",")
+        end.join(",")
         egns = R509::ASN1::GeneralNames.new
         @excluded.each do |name|
           egns.add_item(name)
         end
-        excluded = egns.names.map { |name|
+        excluded = egns.names.map do |name|
           serialized = name.serialize_name
           @conf << serialized[:conf]
           "excluded;" + serialized[:extension_string]
-        }.join(",")
+        end.join(",")
         @extension_value = permitted + "," + excluded
         @conf = @conf.join("\n")
       end

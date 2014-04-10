@@ -229,12 +229,12 @@ describe R509::Config::CAConfig do
   end
 
   it "shouldn't let you specify a profile that's not a Config::CertProfile, on instantiation" do
-    expect{
+    expect do
       R509::Config::CAConfig.new(
         :ca_cert => TestFixtures.test_ca_cert,
         :profiles => { "first_profile" => "not a Config::CertProfile" }
       )
-    }.to raise_error TypeError
+    end.to raise_error TypeError
   end
 
   it "can specify a single profile" do
