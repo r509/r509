@@ -14,10 +14,10 @@ end
 describe R509 do
   it "prints version and feature info with ::print_debug" do
     output = capture_stdout { R509.print_debug }
-    output.should match /^r509 v/
-    output.should match /^OpenSSL/
-    output.should match /^Ruby/
-    output.should match /^Elliptic/
+    output.should match(/^r509 v/)
+    output.should match(/^OpenSSL/)
+    output.should match(/^Ruby/)
+    output.should match(/^Elliptic/)
   end
   it "checks if ec is supported", :ec => true do
     R509.ec_supported?.should == true

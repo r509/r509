@@ -261,8 +261,8 @@ describe R509::Config::CAConfig do
     config = R509::Config::CAConfig.from_yaml("test_ca", File.read("#{File.dirname(__FILE__)}/../fixtures/config_test.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/../fixtures"})
     config.crl_validity_hours.should == 72
     config.ocsp_validity_hours.should == 96
-    config.crl_list_file.should match /list_file$/
-    config.crl_number_file.should match /number_file$/
+    config.crl_list_file.should match(/list_file$/)
+    config.crl_number_file.should match(/number_file$/)
     config.num_profiles.should == 9
     config.profile("mds").default_md.should == "SHA512"
     config.profile("mds").allowed_mds.should == ['SHA512','SHA1']
