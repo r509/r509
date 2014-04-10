@@ -258,7 +258,7 @@ module TestFixtures
     crl_number_sio.set_encoding("BINARY") if crl_number_sio.respond_to?(:set_encoding)
 
     opts = {
-      :ca_cert => test_ca_cert(),
+      :ca_cert => test_ca_cert,
       :ocsp_start_skew_seconds => 3600,
       :ocsp_validity_hours => 48,
       :crl_list_file => crl_list_sio,
@@ -282,7 +282,7 @@ module TestFixtures
     crl_number_sio.set_encoding("BINARY") if crl_number_sio.respond_to?(:set_encoding)
 
     opts = {
-      :ca_cert => test_ca_cert(),
+      :ca_cert => test_ca_cert,
       :ocsp_start_skew_seconds => 3600,
       :ocsp_validity_hours => 48,
       :crl_list_file => crl_list_sio,
@@ -298,7 +298,7 @@ module TestFixtures
     crl_number_sio.set_encoding("BINARY") if crl_number_sio.respond_to?(:set_encoding)
 
     opts = {
-      :ca_cert => test_ca_ec_cert(),
+      :ca_cert => test_ca_ec_cert,
       :ocsp_start_skew_seconds => 3600,
       :ocsp_validity_hours => 48,
       :crl_list_file => crl_list_sio,
@@ -314,7 +314,7 @@ module TestFixtures
     crl_number_sio.set_encoding("BINARY") if crl_number_sio.respond_to?(:set_encoding)
 
     opts = {
-      :ca_cert => test_ca_dsa_cert(),
+      :ca_cert => test_ca_dsa_cert,
       :ocsp_start_skew_seconds => 3600,
       :ocsp_validity_hours => 48,
       :crl_list_file => crl_list_sio,
