@@ -34,7 +34,7 @@ module R509
         #   }
         #  ])
         def initialize(arg)
-          if not R509::Cert::Extensions.is_extension?(arg)
+          unless R509::Cert::Extensions.is_extension?(arg)
             arg = build_extension(arg)
           end
 
@@ -96,7 +96,7 @@ module R509
             # if org is supplied notice numbers is also required (and vice versa). enforced in CAProfile
             user_notice_confs.push "organization=\"#{un[:organization]}\"" unless un[:organization].nil?
             user_notice_confs.push "noticeNumbers=\"#{un[:notice_numbers].join(",")}\"" unless un[:notice_numbers].nil?
-          end unless not hash[:user_notices].kind_of?(Array)
+          end if hash[:user_notices].kind_of?(Array)
 
           conf.concat(user_notice_confs)
           conf.join "\n"
@@ -109,8 +109,8 @@ module R509
           policies.each do |policy|
             raise ArgumentError, "Each policy requires a policy identifier" if policy[:policy_identifier].nil?
             raise ArgumentError, "CPS URIs must be an array of strings" if not policy[:cps_uris].nil? and not policy[:cps_uris].respond_to?(:each)
-            if not policy[:user_notices].nil?
-              raise ArgumentError, "User notices must be an array of hashes" if not policy[:user_notices].respond_to?(:each)
+            unless policy[:user_notices].nil?
+              raise ArgumentError, "User notices must be an array of hashes" unless policy[:user_notices].respond_to?(:each)
               policy[:user_notices].each do |un|
                 raise ArgumentError, "If you provide an organization you must provide notice numbers" if not un[:organization].nil? and un[:notice_numbers].nil?
                 raise ArgumentError, "If you provide notice numbers you must provide an organization" if not un[:notice_numbers].nil? and un[:organization].nil?
@@ -131,7 +131,7 @@ module R509
           # store the policy identifier OID
           @policy_identifier = data.entries[0].value
           # iterate the policy qualifiers if any exist
-          if not data.entries[1].nil?
+          unless data.entries[1].nil?
             @policy_qualifiers = PolicyQualifiers.new
             data.entries[1].each do |pq|
               @policy_qualifiers.parse(pq)

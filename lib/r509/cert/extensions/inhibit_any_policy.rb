@@ -31,7 +31,7 @@ module R509
         # @option arg :value [Integer]
         # @option arg :critical [Boolean] (true)
         def initialize(arg)
-          if not R509::Cert::Extensions.is_extension?(arg)
+          unless R509::Cert::Extensions.is_extension?(arg)
             arg = build_extension(arg)
           end
 

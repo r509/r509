@@ -38,7 +38,7 @@ module R509
         # @option arg :value [String] (keyid) For the rules of :value see: http://www.openssl.org/docs/apps/x509v3_config.html#Authority_Key_Identifier_. If you want to embed issuer you MUST supply :issuer_subject and :issuer_serial and not :public_key
         # @option arg :critical [Boolean] (false)
         def initialize(arg)
-          if not R509::Cert::Extensions.is_extension?(arg)
+          unless R509::Cert::Extensions.is_extension?(arg)
             arg = build_extension(arg)
           end
 
@@ -73,7 +73,7 @@ module R509
         end
 
         def build_extension(arg)
-          arg[:value] = AKI_EXTENSION_DEFAULT unless not arg[:value].nil?
+          arg[:value] = AKI_EXTENSION_DEFAULT if arg[:value].nil?
           validate_authority_key_identifier(arg)
           ef = OpenSSL::X509::ExtensionFactory.new
           fake_cert = OpenSSL::X509::Certificate.new

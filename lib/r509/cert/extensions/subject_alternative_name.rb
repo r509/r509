@@ -41,7 +41,7 @@ module R509
         #   You can also pass a pre-existing GeneralNames object
         # @option arg :critical [Boolean] (false)
         def initialize(arg)
-          if not R509::Cert::Extensions.is_extension?(arg)
+          unless R509::Cert::Extensions.is_extension?(arg)
             arg = build_extension(arg)
           end
           super(arg)

@@ -36,7 +36,7 @@ module R509
         #     :value => [name]
         #   )
         def initialize(arg)
-          if not R509::Cert::Extensions.is_extension?(arg)
+          unless R509::Cert::Extensions.is_extension?(arg)
             arg = build_extension(arg)
           end
 
@@ -88,7 +88,7 @@ module R509
         end
 
         def validate_crl_distribution_points(arg)
-          if not arg.kind_of?(Hash)
+          unless arg.kind_of?(Hash)
             raise ArgumentError, "You must pass a hash with a :value key"
           end
         end

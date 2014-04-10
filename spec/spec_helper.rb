@@ -14,7 +14,7 @@ require 'rspec'
 require 'r509'
 
 # exclude EC specific tests if it's unsupported
-if not R509.ec_supported?
+unless R509.ec_supported?
   puts "\e[#{31}mWARNING: NOT RUNNING EC TESTS BECAUSE EC IS UNSUPPORTED ON YOUR RUBY INSTALLATION\e[0m"
   R509.print_debug
   RSpec.configure do |c|

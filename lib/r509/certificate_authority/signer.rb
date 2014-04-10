@@ -68,7 +68,7 @@ module R509::CertificateAuthority
     # @option options :not_after [Time] (Time.now + 365 days) the notAfter for the certificate
     # @return [R509::Cert] the signed cert object
     def self.selfsign(options)
-      if not options.kind_of?(Hash)
+      unless options.kind_of?(Hash)
         raise ArgumentError, "You must pass a hash of options consisting of at minimum :csr"
       end
       csr = options[:csr]
@@ -174,7 +174,7 @@ module R509::CertificateAuthority
         public_key = options[:csr].public_key
       else
         # spki
-        if not options.key?(:subject)
+        unless options.key?(:subject)
           raise ArgumentError, "You must supply :subject when passing :spki"
         end
         public_key = options[:spki].public_key

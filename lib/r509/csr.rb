@@ -44,7 +44,7 @@ module R509
     #     ['CN','somedomain.com'],
     #   ]
     def initialize(opts={})
-      if not opts.kind_of?(Hash)
+      unless opts.kind_of?(Hash)
         raise ArgumentError, 'Must provide a hash of options'
       end
       if opts.key?(:subject) and opts.key?(:csr)
@@ -81,7 +81,7 @@ module R509
         @message_digest = R509::MessageDigest.new(opts[:message_digest])
       end
 
-      if not opts.key?(:csr)
+      unless opts.key?(:csr)
         @req.sign(@key.key, @message_digest.digest)
       end
       if not @key.nil? and not @req.verify(@key.public_key) then
@@ -201,7 +201,7 @@ module R509
           set = OpenSSL::ASN1.decode attribute.value
           extensions = set.value[0].value.map{|asn1ext| OpenSSL::X509::Extension.new(asn1ext) }
           r509_extensions = R509::Cert::Extensions.wrap_openssl_extensions( extensions )
-          if not r509_extensions[R509::Cert::Extensions::SubjectAlternativeName].nil?
+          unless r509_extensions[R509::Cert::Extensions::SubjectAlternativeName].nil?
             @san = r509_extensions[R509::Cert::Extensions::SubjectAlternativeName].general_names
           end
           break

@@ -97,13 +97,13 @@ module R509
       # @option opts [Integer] :crl_start_skew_seconds The number of seconds to subtract from Time.now when calculating the signing time of a CRL. This is important to handle bad user clocks.
       #
       def initialize(opts = {} )
-        if not opts.key?(:ca_cert) then
+        unless opts.key?(:ca_cert) then
           raise ArgumentError, 'Config object requires that you pass :ca_cert'
         end
 
         @ca_cert = opts[:ca_cert]
 
-        if not @ca_cert.kind_of?(R509::Cert) then
+        unless @ca_cert.kind_of?(R509::Cert) then
           raise ArgumentError, ':ca_cert must be of type R509::Cert'
         end
 
@@ -140,7 +140,7 @@ module R509
       # @param [String] prof
       # @return [R509::Config::CertProfile] The config profile.
       def profile(prof)
-        if !@profiles.key?(prof)
+        unless @profiles.key?(prof)
           raise R509::R509Error, "unknown profile '#{prof}'"
         end
         @profiles[prof]
@@ -235,7 +235,7 @@ module R509
       def self.load_profiles(profiles)
         profs = {}
         profiles.each do |profile,data|
-          if not data["subject_item_policy"].nil?
+          unless data["subject_item_policy"].nil?
             subject_item_policy = R509::Config::SubjectItemPolicy.new(data["subject_item_policy"])
           end
           profs[profile] = R509::Config::CertProfile.new(
@@ -335,7 +335,7 @@ module R509
         if ca_cert_hash.key?('pkcs12')
           raise ArgumentError, "You can't specify both engine and pkcs12"
         end
-        if not ca_cert_hash.key?('key_name')
+        unless ca_cert_hash.key?('key_name')
           raise ArgumentError, "You must supply a key_name with an engine"
         end
 
@@ -401,7 +401,7 @@ module R509
 
       def self.build_ocsp_chain(ocsp_chain_path,ca_root_path)
         ocsp_chain = []
-        if not ocsp_chain_path.nil?
+        unless ocsp_chain_path.nil?
           ocsp_chain_data = read_data(ca_root_path+ocsp_chain_path)
           cert_regex = /-----BEGIN CERTIFICATE-----.+?-----END CERTIFICATE-----/m
           ocsp_chain_data.scan(cert_regex) do |cert|

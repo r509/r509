@@ -49,7 +49,7 @@ module R509
         # @option arg :inhibit_policy_mapping [Integer]
         # @option arg :critical [Boolean] (true)
         def initialize(arg)
-          if not R509::Cert::Extensions.is_extension?(arg)
+          unless R509::Cert::Extensions.is_extension?(arg)
             arg = build_extension(arg)
           end
 
@@ -103,13 +103,13 @@ module R509
         end
 
         def validate_policy_constraints(pc)
-          if not pc.kind_of?(Hash)
+          unless pc.kind_of?(Hash)
             raise ArgumentError, 'Policy constraints must be provided as a hash with at least one of the two allowed keys: :inhibit_policy_mapping and :require_explicit_policy'
           end
-          if not pc[:inhibit_policy_mapping].nil?
+          unless pc[:inhibit_policy_mapping].nil?
             ipm = validate_non_negative_integer("inhibit_policy_mapping",pc[:inhibit_policy_mapping])
           end
-          if not pc[:require_explicit_policy].nil?
+          unless pc[:require_explicit_policy].nil?
             rep = validate_non_negative_integer("require_explicit_policy",pc[:require_explicit_policy])
           end
           if not ipm and not rep

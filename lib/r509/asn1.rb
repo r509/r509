@@ -245,7 +245,7 @@ module R509
           :registeredID => [] # unimplemented
         }
         @ordered_names = []
-        if not data.nil?
+        unless data.nil?
           if data.kind_of?(self.class)
             data.names.each { |n| add_item(n) }
           else

@@ -33,7 +33,7 @@ module R509
         @array = arg.to_a
       else
         @array = []
-        if not (begin OpenSSL::ASN1.decode(arg) rescue nil end).nil?
+        unless (begin OpenSSL::ASN1.decode(arg) rescue nil end).nil?
           parse_asn1(arg)
         end
       end
@@ -74,7 +74,7 @@ module R509
         end
       end
 
-      if not added
+      unless added
         @array << [key, value]
       end
 

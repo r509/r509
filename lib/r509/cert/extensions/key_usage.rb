@@ -69,7 +69,7 @@ module R509
         #     :value => ['digitalSignature,'keyEncipherment']
         #   )
         def initialize(arg)
-          if not R509::Cert::Extensions.is_extension?(arg)
+          unless R509::Cert::Extensions.is_extension?(arg)
             arg = build_extension(arg)
           end
 

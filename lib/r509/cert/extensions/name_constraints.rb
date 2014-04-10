@@ -62,7 +62,7 @@ module R509
         # @note When supplying dirName the value is an R509::Subject or the hash used to build an R509::Subject
         #
         def initialize(arg)
-          if not R509::Cert::Extensions.is_extension?(arg)
+          unless R509::Cert::Extensions.is_extension?(arg)
             arg = build_extension(arg)
           end
           super(arg)
@@ -125,7 +125,7 @@ module R509
           nc_data = []
           nc_conf = []
           [:permitted,:excluded].each do |permit_exclude|
-            if not arg[permit_exclude].nil?
+            unless arg[permit_exclude].nil?
               gns = R509::ASN1::GeneralNames.new
               arg[permit_exclude].each do |p|
                 gns.create_item(p)
@@ -146,11 +146,11 @@ module R509
         end
 
         def validate_name_constraints(nc)
-          if not nc.kind_of?(Hash)
+          unless nc.kind_of?(Hash)
             raise ArgumentError, "name_constraints must be provided as a hash"
           end
           [:permitted,:excluded].each do |key|
-            if not nc[key].nil?
+            unless nc[key].nil?
               validate_name_constraints_elements(key,nc[key])
             end
           end
@@ -160,7 +160,7 @@ module R509
         end
 
         def validate_name_constraints_elements(type,arr)
-          if not arr.kind_of?(Array)
+          unless arr.kind_of?(Array)
             raise ArgumentError, "#{type} must be an array"
           end
           arr.each do |el|

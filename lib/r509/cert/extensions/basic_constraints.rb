@@ -25,7 +25,7 @@ module R509
         # @option arg :path_length optional [Integer] This option is only allowed if ca is set to TRUE. path_length allows you to define the maximum number of non-self-issued intermediate certificates that may follow this certificate in a valid certification path. For example, if you set this value to 0 then the certificate issued can only issue end entity certificates, not additional subroots. This must be a non-negative integer (>=0).
         # @option arg :critical [Boolean] (true)
         def initialize(arg)
-          if not R509::Cert::Extensions.is_extension?(arg)
+          unless R509::Cert::Extensions.is_extension?(arg)
             arg = build_extension(arg)
           end
 
@@ -86,7 +86,7 @@ module R509
           ef = OpenSSL::X509::ExtensionFactory.new
           if arg[:ca] == true
             bc_value = "CA:TRUE"
-            if not arg[:path_length].nil?
+            unless arg[:path_length].nil?
               bc_value += ",pathlen:#{arg[:path_length]}"
             end
           else

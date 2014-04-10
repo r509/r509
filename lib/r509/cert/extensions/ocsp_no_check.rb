@@ -27,7 +27,7 @@ module R509
         # @option arg :ocsp_no_check [Any] Pass any value. It's irrelevant.
         # @option arg :critical [Boolean] (false)
         def initialize(arg)
-          if not R509::Cert::Extensions.is_extension?(arg)
+          unless R509::Cert::Extensions.is_extension?(arg)
             arg = build_extension(arg)
           end
           super(arg)

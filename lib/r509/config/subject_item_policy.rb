@@ -31,16 +31,16 @@ module R509
       #  "L" => { :policy => "match", :value => "Chicago" },
       #  "emailAddress" => { :policy => "optional" }
       def initialize(hash={})
-        if not hash.kind_of?(Hash)
+        unless hash.kind_of?(Hash)
           raise ArgumentError, "Must supply a hash in form 'shortname'=>hash_with_policy_info"
         end
         @required = []
         @optional = []
         @match_values = {}
         @match = []
-        if not hash.empty?
+        unless hash.empty?
           hash.each_pair do |key,value|
-            if not value.kind_of?(Hash)
+            unless value.kind_of?(Hash)
               raise ArgumentError, "Each value must be a hash with a :policy key"
             end
             case value[:policy]
@@ -109,7 +109,7 @@ module R509
         end
         # so we can make sure they gave us everything that's required
         diff = @required + @match - supplied
-        if not diff.empty?
+        unless diff.empty?
           raise R509::R509Error, "This profile requires you supply "+(@required+@match).join(", ")
         end
       end

@@ -64,7 +64,7 @@ module R509
         #     :value => ['clientAuth,'serverAuth']
         #   )
         def initialize(arg)
-          if not R509::Cert::Extensions.is_extension?(arg)
+          unless R509::Cert::Extensions.is_extension?(arg)
             arg = build_extension(arg)
           end
 

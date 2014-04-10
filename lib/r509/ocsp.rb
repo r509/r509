@@ -8,7 +8,7 @@ module R509::OCSP
   class Response
     # @param ocsp_response [OpenSSL::OCSP::Response]
     def initialize(ocsp_response)
-      if not ocsp_response.kind_of?(OpenSSL::OCSP::Response)
+      unless ocsp_response.kind_of?(OpenSSL::OCSP::Response)
         raise R509::R509Error, 'You must pass an OpenSSL::OCSP::Response object to the constructor. See R509::OCSP::Response.parse if you are trying to parse'
       end
       @ocsp_response = ocsp_response

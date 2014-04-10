@@ -20,12 +20,12 @@ module R509
           raise R509Error, "config must be a kind of R509::Config::CAConfig"
         end
 
-        if not reader_writer.kind_of?(R509::CRL::ReaderWriter)
+        unless reader_writer.kind_of?(R509::CRL::ReaderWriter)
           raise ArgumentError, "argument reader_writer must be a subclass of R509::CRL::ReaderWriter"
         end
         @rw = reader_writer
-        @rw.crl_list_file = @config.crl_list_file unless not @rw.respond_to?(:crl_list_file=)
-        @rw.crl_number_file = @config.crl_number_file unless not @rw.respond_to?(:crl_number_file=)
+        @rw.crl_list_file = @config.crl_list_file if @rw.respond_to?(:crl_list_file=)
+        @rw.crl_number_file = @config.crl_number_file if @rw.respond_to?(:crl_number_file=)
         @crl_number = @rw.read_number
         @revoked_certs = {}
         @rw.read_list do |serial, reason, revoke_time|
@@ -69,7 +69,7 @@ module R509
       #     privilegeWithdrawn    (9),
       #     aACompromise       (10) }
       def revoke_cert(serial,reason=nil, revoke_time=Time.now.to_i, write=true)
-        if not reason.nil?
+        unless reason.nil?
           if not reason.kind_of?(Integer) or not reason.between?(0,10) or reason == 7
             raise ArgumentError, "Revocation reason must be integer 0-10 (excluding 7) or nil"
           end
@@ -110,7 +110,7 @@ module R509
           revoked = OpenSSL::X509::Revoked.new
           revoked.serial = OpenSSL::BN.new serial.to_s
           revoked.time = Time.at(revoke_time)
-          if not reason.nil?
+          unless reason.nil?
             enum = OpenSSL::ASN1::Enumerated(reason)
             ext = OpenSSL::X509::Extension.new("CRLReason", enum)
             revoked.add_extension(ext)

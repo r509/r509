@@ -71,7 +71,7 @@ if opts[:interactive] == true or opts[:subject].nil? then
 
   print "OU (null by default): "
   ou = gets.chomp
-  if(!ou.empty?) then
+  unless ou.empty? then
     subject.push ['OU',ou]
   end
 

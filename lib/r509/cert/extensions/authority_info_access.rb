@@ -48,7 +48,7 @@ module R509
         #     :ca_issuers_location => [name]
         #   )
         def initialize(arg)
-          if not R509::Cert::Extensions.is_extension?(arg)
+          unless R509::Cert::Extensions.is_extension?(arg)
             arg = build_extension(arg)
           end
 
@@ -101,7 +101,7 @@ module R509
           locations.each do |pair|
             validate_location(pair[:key].to_s,arg[pair[:key]])
             data = arg[pair[:key]]
-            if not data.nil?
+            unless data.nil?
               elements = R509::ASN1::GeneralNames.new(data)
               elements.names.each do |name|
                 serialize = name.serialize_name

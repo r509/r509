@@ -25,7 +25,7 @@ module R509
     # @option opts [OpenSSL::Engine] :engine
     # @option opts [string] :key_name (used with engine)
     def initialize(opts={})
-      if not opts.kind_of?(Hash)
+      unless opts.kind_of?(Hash)
         raise ArgumentError, 'Must provide a hash of options'
       end
       validate_engine(opts)
@@ -201,7 +201,7 @@ module R509
       elsif opts.key?(:engine) and not opts.key?(:key_name)
         raise ArgumentError, 'When providing an :engine you MUST provide a :key_name'
       elsif opts.key?(:engine) and opts.key?(:key_name)
-        if not opts[:engine].kind_of?(OpenSSL::Engine)
+        unless opts[:engine].kind_of?(OpenSSL::Engine)
           raise ArgumentError, 'When providing an engine, it must be of type OpenSSL::Engine'
         end
         @engine = opts[:engine]
