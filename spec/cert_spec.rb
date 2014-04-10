@@ -32,18 +32,22 @@ describe R509::Cert do
     expect { R509::Cert.new(:cert => TestFixtures::CSR)}.to raise_error(ArgumentError, "Cert provided is actually a certificate signing request.")
   end
   it "raises error when :cert and :pkcs12 are both provided" do
-    expect { R509::Cert.new(
-      :key => @key3,
-      :pkcs12 => @cert3_p12,
-      :password => 'whatever'
-    ) }.to raise_error(ArgumentError, 'When providing pkcs12, do not pass cert or key')
+    expect {
+      R509::Cert.new(
+        :key => @key3,
+        :pkcs12 => @cert3_p12,
+        :password => 'whatever'
+      )
+    }.to raise_error(ArgumentError, 'When providing pkcs12, do not pass cert or key')
   end
   it "raises error when :key and :pkcs12 are both provided" do
-    expect { R509::Cert.new(
-      :cert => @cert,
-      :pkcs12 => @cert3_p12,
-      :password => 'whatever'
-    ) }.to raise_error(ArgumentError, 'When providing pkcs12, do not pass cert or key')
+    expect {
+      R509::Cert.new(
+        :cert => @cert,
+        :pkcs12 => @cert3_p12,
+        :password => 'whatever'
+      )
+    }.to raise_error(ArgumentError, 'When providing pkcs12, do not pass cert or key')
   end
   it "has a public_key" do
     cert = R509::Cert.new(:cert => @cert)
@@ -198,7 +202,7 @@ describe R509::Cert do
     it "returns pem on to_s" do
       cert = R509::Cert.new(:cert => @cert)
       cert.to_s.should == @cert
-     end
+    end
   end
   it "gets the right object from #basic_constraints" do
     cert = R509::Cert.new(:cert => @cert)

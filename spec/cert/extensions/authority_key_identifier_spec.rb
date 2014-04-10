@@ -80,7 +80,7 @@ describe R509::Cert::Extensions::AuthorityKeyIdentifier do
       aki.critical?.should be_true
     end
 
-    end
+  end
   context "AuthorityKeyIdentifier" do
     before :all do
       @extension_value = "keyid:always,issuer:always"
