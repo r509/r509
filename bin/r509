@@ -85,7 +85,7 @@ if opts[:interactive] == true or opts[:subject].nil? then
     :bit_length => opts[:bits],
     :type => opts[:type].upcase,
     :curve_name => opts[:curve_name],
-    :san_names => (opts[:san]||"").split(',').collect { |domain| domain.strip },
+    :san_names => (opts[:san]||"").split(',').map { |domain| domain.strip },
     :message_digest => opts[:message_digest]
   )
 
@@ -104,7 +104,7 @@ csr_or_cert = csr = R509::CSR.new(
   :bit_length => opts[:bits],
   :type => opts[:type].upcase,
   :curve_name => opts[:curve_name],
-  :san_names => (opts[:san] || "").split(',').collect { |domain| domain.strip },
+  :san_names => (opts[:san] || "").split(',').map { |domain| domain.strip },
   :message_digest => opts[:message_digest]
 )
 

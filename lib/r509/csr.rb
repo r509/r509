@@ -201,7 +201,7 @@ module R509
       req.attributes.each do |attribute|
         if attribute.oid == 'extReq'
           set = OpenSSL::ASN1.decode attribute.value
-          extensions = set.value[0].value.collect{|asn1ext| OpenSSL::X509::Extension.new(asn1ext) }
+          extensions = set.value[0].value.map{|asn1ext| OpenSSL::X509::Extension.new(asn1ext) }
           r509_extensions = R509::Cert::Extensions.wrap_openssl_extensions( extensions )
           if not r509_extensions[R509::Cert::Extensions::SubjectAlternativeName].nil?
             @san = r509_extensions[R509::Cert::Extensions::SubjectAlternativeName].general_names

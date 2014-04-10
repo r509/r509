@@ -179,7 +179,7 @@ module R509
     end
 
     def camelize(sym)
-      sym.to_s.split('_').inject([]){ |buffer,e| buffer.push(buffer.empty? ? e : e.capitalize) }.join
+      sym.to_s.split('_').reduce([]){ |buffer,e| buffer.push(buffer.empty? ? e : e.capitalize) }.join
     end
 
     def parse_asn1(asn)
