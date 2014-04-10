@@ -75,13 +75,14 @@ module R509
       end
 
       private
+
       # @private
       def validate_allowed_mds(allowed_mds)
         if allowed_mds.respond_to?(:each)
           allowed_mds = allowed_mds.map { |md| validate_md(md) }
           # case insensitively check if the default_md is in the allowed_mds
           # and add it if it's not there.
-          unless allowed_mds.any?{ |s| s.casecmp(@default_md) == 0 }
+          unless allowed_mds.any? { |s| s.casecmp(@default_md) == 0 }
             allowed_mds.push @default_md
           end
         end

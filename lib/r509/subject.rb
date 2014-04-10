@@ -21,11 +21,11 @@ module R509
   #   subject.custom_oid="test"
   class Subject
     # @param [Array, OpenSSL::X509::Name, R509::Subject, DER, Hash, nil] arg
-    def initialize(arg=nil)
+    def initialize(arg = nil)
       if arg.kind_of?(Array)
         @array = arg
       elsif arg.kind_of?(Hash)
-        @array = arg.map { |k,v| [k.to_s.upcase,v] }
+        @array = arg.map { |k, v| [k.to_s.upcase, v] }
       elsif arg.kind_of?(OpenSSL::X509::Name)
         sanitizer = R509::NameSanitizer.new
         @array = sanitizer.sanitize(arg)
@@ -141,7 +141,7 @@ module R509
       if method_sym.to_s =~ /(.*)=$/
         sn = oid_check($1)
         if not sn.nil?
-          define_dynamic_setter(method_sym,sn)
+          define_dynamic_setter(method_sym, sn)
           send(method_sym, args.first)
         else
           return super(method_sym, *args, &block)
@@ -149,7 +149,7 @@ module R509
       else
         sn = oid_check(method_sym)
         if not sn.nil?
-          define_dynamic_getter(method_sym,sn)
+          define_dynamic_getter(method_sym, sn)
           send(method_sym)
         else
           return super(method_sym, *args, &block)
@@ -157,7 +157,7 @@ module R509
       end
     end
 
-    def define_dynamic_setter(name,sn)
+    def define_dynamic_setter(name, sn)
       instance_eval <<-RUBY
         def #{name}(value)
           self["#{sn}"]= value
@@ -165,7 +165,7 @@ module R509
       RUBY
     end
 
-    def define_dynamic_getter(name,sn)
+    def define_dynamic_getter(name, sn)
       instance_eval <<-RUBY
         def #{name}
           self["#{sn}"]
@@ -179,7 +179,7 @@ module R509
     end
 
     def camelize(sym)
-      sym.to_s.split('_').reduce([]){ |buffer,e| buffer.push(buffer.empty? ? e : e.capitalize) }.join
+      sym.to_s.split('_').reduce([]) { |a, e| a.push(a.empty? ? e : e.capitalize) }.join
     end
 
     def parse_asn1(asn)
@@ -213,7 +213,7 @@ module R509
           if oids.size == 1
             oid = oids.first
           else
-            oid = oids.select{ |match| not used_oids.include?(match) }.first
+            oid = oids.select { |match| not used_oids.include?(match) }.first
           end
           # replace the "UNDEF" OID name in the array at the index the UNDEF was found
           array[component[:index]][0] = oid

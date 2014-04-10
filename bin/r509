@@ -51,32 +51,32 @@ if opts[:interactive] == true or opts[:subject].nil? then
 
   print "C (US): "
   c = gets.chomp
-  c = c.empty? ? 'US' : c;
-  subject.push ['C',c]
+  c = c.empty? ? 'US' : c
+  subject.push ['C', c]
 
   print "ST (Illinois): "
   st = gets.chomp
-  st = st.empty? ? 'Illinois' : st;
-  subject.push ['ST',st]
+  st = st.empty? ? 'Illinois' : st
+  subject.push ['ST', st]
 
   print "L (Chicago): "
   l = gets.chomp
-  l = l.empty? ? 'Chicago' : l;
-  subject.push ['L',l]
+  l = l.empty? ? 'Chicago' : l
+  subject.push ['L', l]
 
   print "O (r509 LLC): "
   o = gets.chomp
-  o = o.empty? ? 'r509 LLC' : o;
-  subject.push ['O',o]
+  o = o.empty? ? 'r509 LLC' : o
+  subject.push ['O', o]
 
   print "OU (null by default): "
   ou = gets.chomp
   unless ou.empty? then
-    subject.push ['OU',ou]
+    subject.push ['OU', ou]
   end
 
   print "CN: "
-  subject.push ['CN',gets.chomp]
+  subject.push ['CN', gets.chomp]
   print "SAN Domains (comma separated):"
   opts[:san] = gets.chomp
 
@@ -125,5 +125,5 @@ puts csr_or_cert.subject
 puts "SAN(s): #{csr_or_cert.san.names.map { |n| n.value }.join(", ")}" if csr_or_cert.san
 
 if opts[:clipboard]
-  IO.popen('pbcopy','w').puts csr_or_cert
+  IO.popen('pbcopy', 'w').puts csr_or_cert
 end

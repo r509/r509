@@ -14,7 +14,7 @@ module R509::Validity
   class Status
     attr_reader :status, :revocation_time, :revocation_reason
 
-    def initialize(options={})
+    def initialize(options = {})
       @status = options[:status]
       @revocation_time = options[:revocation_time] || nil
       @revocation_reason = options[:revocation_reason] || 0

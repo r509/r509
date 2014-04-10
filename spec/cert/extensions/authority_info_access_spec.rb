@@ -45,7 +45,7 @@ describe R509::Cert::Extensions::AuthorityInfoAccess do
     end
 
     it "raises an error if you pass an array that does not contain hashes" do
-      expect { AuthorityInfoAccess.new(:ca_issuers_location => [{},"string"]) }.to raise_error(ArgumentError, 'All elements of the array must be hashes with a :type and :value')
+      expect { AuthorityInfoAccess.new(:ca_issuers_location => [{}, "string"]) }.to raise_error(ArgumentError, 'All elements of the array must be hashes with a :type and :value')
     end
 
     it "raises an error if you pass an array that does not contain both :type and :value" do
@@ -97,12 +97,12 @@ describe R509::Cert::Extensions::AuthorityInfoAccess do
 
       context " multiple OCSP locations" do
         before :all do
-          @args = { :ocsp_location => [ { :type => 'URI', :value => 'http://ocsp.domain.com' }, { :type => "URI", :value => 'http://ocsp2.domain.com' }], :critical => false }
+          @args = { :ocsp_location => [{ :type => 'URI', :value => 'http://ocsp.domain.com' }, { :type => "URI", :value => 'http://ocsp2.domain.com' }], :critical => false }
           @aia = R509::Cert::Extensions::AuthorityInfoAccess.new(@args)
         end
 
         it "creates extension" do
-          @aia.ocsp.uris.should == ['http://ocsp.domain.com','http://ocsp2.domain.com']
+          @aia.ocsp.uris.should == ['http://ocsp.domain.com', 'http://ocsp2.domain.com']
         end
 
         it "builds yaml" do
@@ -112,7 +112,7 @@ describe R509::Cert::Extensions::AuthorityInfoAccess do
 
       context "one caIssuers" do
         before :all do
-          @args = { :ca_issuers_location => [ { :type => 'URI', :value => 'http://www.domain.com' } ], :critical => false }
+          @args = { :ca_issuers_location => [{ :type => 'URI', :value => 'http://www.domain.com' }], :critical => false }
           @aia = R509::Cert::Extensions::AuthorityInfoAccess.new(@args)
         end
 
@@ -127,12 +127,12 @@ describe R509::Cert::Extensions::AuthorityInfoAccess do
 
       context "multiple caIssuers" do
         before :all do
-          @args = { :ca_issuers_location => [ { :type => 'URI', :value => 'http://www.domain.com' }, { :type => "URI", :value => 'http://www2.domain.com' }], :critical => false }
+          @args = { :ca_issuers_location => [{ :type => 'URI', :value => 'http://www.domain.com' }, { :type => "URI", :value => 'http://www2.domain.com' }], :critical => false }
           @aia = R509::Cert::Extensions::AuthorityInfoAccess.new(@args)
         end
 
         it "creates extension" do
-          @aia.ca_issuers.uris.should == ['http://www.domain.com','http://www2.domain.com']
+          @aia.ca_issuers.uris.should == ['http://www.domain.com', 'http://www2.domain.com']
         end
 
         it "builds yaml" do

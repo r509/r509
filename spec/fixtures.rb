@@ -185,17 +185,17 @@ module TestFixtures
   def self.test_ca_server_profile
     R509::Config::CertProfile.new(
       :basic_constraints => R509::Cert::Extensions::BasicConstraints.new(:ca => false),
-      :key_usage => R509::Cert::Extensions::KeyUsage.new(:value => ["digitalSignature","keyEncipherment"]),
+      :key_usage => R509::Cert::Extensions::KeyUsage.new(:value => ["digitalSignature", "keyEncipherment"]),
       :extended_key_usage => R509::Cert::Extensions::ExtendedKeyUsage.new(:value => ["serverAuth"]),
       :certificate_policies => R509::Cert::Extensions::CertificatePolicies.new(
         :value => [
           { :policy_identifier => "2.16.840.1.12345.1.2.3.4.1",
-            :cps_uris => ["http://example.com/cps","http://other.com/cps"],
+            :cps_uris => ["http://example.com/cps", "http://other.com/cps"],
             :user_notices => [
               {
                 :explicit_text => "thing",
                 :organization => "my org",
-                :notice_numbers => [1,2,3,4]
+                :notice_numbers => [1, 2, 3, 4]
               }
             ]
           }
@@ -214,18 +214,18 @@ module TestFixtures
     )
     R509::Config::CertProfile.new(
       :basic_constraints => R509::Cert::Extensions::BasicConstraints.new(:ca => false),
-      :key_usage => R509::Cert::Extensions::KeyUsage.new(:value => ["digitalSignature","keyEncipherment"]),
+      :key_usage => R509::Cert::Extensions::KeyUsage.new(:value => ["digitalSignature", "keyEncipherment"]),
       :extended_key_usage => R509::Cert::Extensions::ExtendedKeyUsage.new(:value => ["serverAuth"]),
       :certificate_policies => R509::Cert::Extensions::CertificatePolicies.new(
         :value => [
           {
             :policy_identifier => "2.16.840.1.12345.1.2.3.4.1",
-            :cps_uris => ["http://example.com/cps","http://other.com/cps"],
+            :cps_uris => ["http://example.com/cps", "http://other.com/cps"],
             :user_notices => [
               {
                 :explicit_text => "thing",
                 :organization => "my org",
-                :notice_numbers => [1,2,3,4]
+                :notice_numbers => [1, 2, 3, 4]
               }
             ]
           }
@@ -238,7 +238,7 @@ module TestFixtures
   def self.test_ca_subroot_profile
     R509::Config::CertProfile.new(
           :basic_constraints => { :ca => true, :path_length => 0 },
-          :key_usage => { :value => ["keyCertSign","cRLSign"] },
+          :key_usage => { :value => ["keyCertSign", "cRLSign"] },
           :certificate_policies => nil)
   end
 

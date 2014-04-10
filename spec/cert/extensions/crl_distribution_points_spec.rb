@@ -33,7 +33,7 @@ describe R509::Cert::Extensions::CRLDistributionPoints do
     end
 
     it "raises an error if you pass an array that does not contain hashes" do
-      expect { CRLDistributionPoints.new(:value => [{},"string"]) }.to raise_error(ArgumentError, 'All elements of the array must be hashes with a :type and :value')
+      expect { CRLDistributionPoints.new(:value => [{}, "string"]) }.to raise_error(ArgumentError, 'All elements of the array must be hashes with a :type and :value')
     end
 
     it "raises an error if you pass an array that does not contain both :type and :value" do
@@ -78,7 +78,7 @@ describe R509::Cert::Extensions::CRLDistributionPoints do
 
       context "multiple CDP" do
         before :all do
-          @args = { :value => [{ :type => 'URI', :value => 'http://crl.r509.org/ca.crl' },{ :type => 'dirName', :value => { :CN => 'myCN' } }], :critical => false }
+          @args = { :value => [{ :type => 'URI', :value => 'http://crl.r509.org/ca.crl' }, { :type => 'dirName', :value => { :CN => 'myCN' } }], :critical => false }
           @cdp = R509::Cert::Extensions::CRLDistributionPoints.new(@args)
         end
 

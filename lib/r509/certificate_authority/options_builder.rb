@@ -29,8 +29,8 @@ module R509::CertificateAuthority
 
       raw_subject, public_key = R509::CertificateAuthority::Signer.extract_public_key_subject(options)
 
-      message_digest = enforce_md(options[:message_digest],profile)
-      subject = enforce_subject_item_policy(raw_subject,profile)
+      message_digest = enforce_md(options[:message_digest], profile)
+      subject = enforce_subject_item_policy(raw_subject, profile)
       enforce_not_after(options[:not_after])
 
       extensions = build_and_merge_extensions(options, profile, public_key)
@@ -59,7 +59,7 @@ module R509::CertificateAuthority
       end
     end
 
-    def enforce_md(requested_md,profile)
+    def enforce_md(requested_md, profile)
       # prior to OpenSSL 1.0 DSA could only use DSS1 (aka SHA1) signatures. post-1.0 anything
       # goes but at the moment we don't enforce this restriction so an OpenSSL error could
       # bubble up if they do it wrong.
@@ -79,7 +79,7 @@ module R509::CertificateAuthority
     end
 
     # @return [R509::Subject]
-    def enforce_subject_item_policy(subject,profile)
+    def enforce_subject_item_policy(subject, profile)
       if profile.subject_item_policy.nil? then
         subject
       else
@@ -88,15 +88,15 @@ module R509::CertificateAuthority
     end
 
     def build_and_merge_extensions(options, profile, public_key)
-      extensions = build_extensions(options,profile,public_key)
+      extensions = build_extensions(options, profile, public_key)
 
       unless options[:extensions].nil?
-        extensions = merge_extensions(options,extensions)
+        extensions = merge_extensions(options, extensions)
       end
       extensions
     end
 
-    def merge_extensions(options,extensions)
+    def merge_extensions(options, extensions)
       ext_hash = {}
       extensions.each do |e|
         ext_hash[e.class] = e
@@ -105,13 +105,13 @@ module R509::CertificateAuthority
         ext_hash[e.class] = e
       end
       merged_ext = []
-      ext_hash.each do |k,v|
+      ext_hash.each do |k, v|
         merged_ext.push(v)
       end
       return merged_ext
     end
 
-    def build_extensions(options,profile,public_key)
+    def build_extensions(options, profile, public_key)
       extensions = []
 
       extensions << profile.basic_constraints unless profile.basic_constraints.nil?

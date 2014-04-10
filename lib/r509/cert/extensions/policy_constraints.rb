@@ -99,7 +99,7 @@ module R509
           ef = OpenSSL::X509::ExtensionFactory.new
           critical = R509::Cert::Extensions.calculate_critical(arg[:critical], true)
           # must be set critical per RFC 5280
-          return ef.create_extension("policyConstraints",constraints.join(","),critical)
+          return ef.create_extension("policyConstraints", constraints.join(","), critical)
         end
 
         def validate_policy_constraints(pc)
@@ -107,10 +107,10 @@ module R509
             raise ArgumentError, 'Policy constraints must be provided as a hash with at least one of the two allowed keys: :inhibit_policy_mapping and :require_explicit_policy'
           end
           unless pc[:inhibit_policy_mapping].nil?
-            ipm = validate_non_negative_integer("inhibit_policy_mapping",pc[:inhibit_policy_mapping])
+            ipm = validate_non_negative_integer("inhibit_policy_mapping", pc[:inhibit_policy_mapping])
           end
           unless pc[:require_explicit_policy].nil?
-            rep = validate_non_negative_integer("require_explicit_policy",pc[:require_explicit_policy])
+            rep = validate_non_negative_integer("require_explicit_policy", pc[:require_explicit_policy])
           end
           if not ipm and not rep
             raise ArgumentError, 'Policy constraints must have at least one of two keys: :inhibit_policy_mapping and :require_explicit_policy and the value must be non-negative'

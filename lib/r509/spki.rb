@@ -13,7 +13,7 @@ module R509
     # @option opts [String,OpenSSL::Netscape::SPKI] :spki the spki you want to parse
     # @option opts [R509::PrivateKey,String] :key optional private key to supply. either an unencrypted PEM/DER string or an R509::PrivateKey object (use the latter if you need password/hardware support). if supplied you do not need to pass an spki.
     # @option opts [String] :message_digest Optional digest. sha1, sha224, sha256, sha384, sha512, md5. Defaults to sha1. Only used if you supply a :key and no :spki
-    def initialize(opts={})
+    def initialize(opts = {})
       if not opts.kind_of?(Hash)
         raise ArgumentError, 'Must provide a hash of options'
       elsif not opts.key?(:spki) and not opts.key?(:key)
@@ -59,7 +59,7 @@ module R509
     def parse_spki(spki)
       # first let's try cleaning up the input a bit so OpenSSL is happy with it
       # OpenSSL hates SPKAC=
-      spki.sub!("SPKAC=","")
+      spki.sub!("SPKAC=", "")
       # it really hates newlines (Firefox loves 'em)
       # so let's normalize line endings
       spki.gsub!(/\r\n?/, "\n")
@@ -88,7 +88,7 @@ module R509
       else
         message_digest = R509::MessageDigest.new(md)
       end
-      spki.sign(@key.key,message_digest.digest)
+      spki.sign(@key.key, message_digest.digest)
       return spki
     end
 

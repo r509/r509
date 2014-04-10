@@ -8,7 +8,7 @@ module R509
     include R509::IOHelpers
 
     # a list of key types
-    KNOWN_TYPES = ["RSA","DSA","EC"]
+    KNOWN_TYPES = ["RSA", "DSA", "EC"]
     # the default type
     DEFAULT_TYPE = "RSA"
     # default bit length for DSA/RSA
@@ -24,7 +24,7 @@ module R509
     # @option opts [String,OpenSSL::PKey::RSA,OpenSSL::PKey::DSA,OpenSSL::PKey::EC] :key
     # @option opts [OpenSSL::Engine] :engine
     # @option opts [string] :key_name (used with engine)
-    def initialize(opts={})
+    def initialize(opts = {})
       unless opts.kind_of?(Hash)
         raise ArgumentError, 'Must provide a hash of options'
       end
@@ -124,12 +124,12 @@ module R509
     # (common ones are des3, aes256, aes128)
     # @param [String] password password
     # @return [String] the key converted into encrypted PEM format.
-    def to_encrypted_pem(cipher,password)
+    def to_encrypted_pem(cipher, password)
       if in_hardware?
         raise R509::R509Error, "This method cannot be called when using keys in hardware"
       end
       cipher = OpenSSL::Cipher::Cipher.new(cipher)
-      self.key.to_pem(cipher,password)
+      self.key.to_pem(cipher, password)
     end
 
     # Converts the key into the DER format
@@ -158,8 +158,8 @@ module R509
     # full list of available ciphers can be obtained with OpenSSL::Cipher.ciphers
     # (common ones are des3, aes256, aes128)
     # @param [String] password password
-    def write_encrypted_pem(filename_or_io,cipher,password)
-      write_data(filename_or_io, to_encrypted_pem(cipher,password))
+    def write_encrypted_pem(filename_or_io, cipher, password)
+      write_data(filename_or_io, to_encrypted_pem(cipher, password))
     end
 
     # Writes the key into the DER format
@@ -214,13 +214,13 @@ module R509
       # OpenSSL::PKey.read solves this begin/rescue garbage but is only
       # available to Ruby 1.9.3+ and may not solve the EC portion
       begin
-        @key = OpenSSL::PKey::RSA.new(opts[:key],password)
+        @key = OpenSSL::PKey::RSA.new(opts[:key], password)
       rescue OpenSSL::PKey::RSAError
         begin
-          @key = OpenSSL::PKey::DSA.new(opts[:key],password)
+          @key = OpenSSL::PKey::DSA.new(opts[:key], password)
         rescue
           begin
-            @key = OpenSSL::PKey::EC.new(opts[:key],password)
+            @key = OpenSSL::PKey::EC.new(opts[:key], password)
           rescue
             raise R509::R509Error, "Failed to load private key. Invalid key or incorrect password."
           end

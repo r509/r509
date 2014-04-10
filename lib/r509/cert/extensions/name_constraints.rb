@@ -84,6 +84,7 @@ module R509
         end
 
         private
+
         def parse_extension
           @permitted = R509::ASN1::GeneralNames.new
           @excluded = R509::ASN1::GeneralNames.new
@@ -124,7 +125,7 @@ module R509
           validate_name_constraints(arg)
           nc_data = []
           nc_conf = []
-          [:permitted,:excluded].each do |permit_exclude|
+          [:permitted, :excluded].each do |permit_exclude|
             unless arg[permit_exclude].nil?
               gns = R509::ASN1::GeneralNames.new
               arg[permit_exclude].each do |p|
@@ -142,16 +143,16 @@ module R509
           ef.config = OpenSSL::Config.parse nc_conf.join("\n")
           critical = R509::Cert::Extensions.calculate_critical(arg[:critical], true)
           # must be set critical per RFC 5280
-          return ef.create_extension("nameConstraints",nc_data.join(","),critical)
+          return ef.create_extension("nameConstraints", nc_data.join(","), critical)
         end
 
         def validate_name_constraints(nc)
           unless nc.kind_of?(Hash)
             raise ArgumentError, "name_constraints must be provided as a hash"
           end
-          [:permitted,:excluded].each do |key|
+          [:permitted, :excluded].each do |key|
             unless nc[key].nil?
-              validate_name_constraints_elements(key,nc[key])
+              validate_name_constraints_elements(key, nc[key])
             end
           end
           if (nc[:permitted].nil? or nc[:permitted].empty?) and (nc[:excluded].nil? or nc[:excluded].empty?)
@@ -159,7 +160,7 @@ module R509
           end
         end
 
-        def validate_name_constraints_elements(type,arr)
+        def validate_name_constraints_elements(type, arr)
           unless arr.kind_of?(Array)
             raise ArgumentError, "#{type} must be an array"
           end

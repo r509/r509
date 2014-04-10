@@ -33,6 +33,7 @@ module R509
         end
 
         private
+
         def build_extension(arg)
           validate_subject_key_identifier(arg)
           ef = OpenSSL::X509::ExtensionFactory.new

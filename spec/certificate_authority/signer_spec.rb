@@ -6,7 +6,7 @@ shared_examples_for "signing" do |selfsign|
     @options[:csr] = @csr unless @csr.nil?
     @options[:spki] = @spki unless @spki.nil?
     if @options.key?(:spki)
-      @options[:subject] = R509::Subject.new([['CN','test']])
+      @options[:subject] = R509::Subject.new([['CN', 'test']])
     end
   end
 
@@ -35,7 +35,7 @@ shared_examples_for "signing" do |selfsign|
 
   it "with default md (selfsign:#{selfsign})" do
     cert = @ca.sign(@options)
-    regex = Regexp.new(R509::MessageDigest::DEFAULT_MD,Regexp::IGNORECASE)
+    regex = Regexp.new(R509::MessageDigest::DEFAULT_MD, Regexp::IGNORECASE)
     cert.signature_algorithm.should match(regex)
   end
 
@@ -156,7 +156,7 @@ describe R509::CertificateAuthority::Signer do
 
     it "raises an error if you pass both csr and spki" do
       csr = R509::CSR.new(:csr => TestFixtures::CSR)
-      spki = R509::SPKI.new(:spki => TestFixtures::SPKI, :subject => [['CN','test']])
+      spki = R509::SPKI.new(:spki => TestFixtures::SPKI, :subject => [['CN', 'test']])
       expect { @ca.sign(:spki => spki, :csr => csr) }.to raise_error(ArgumentError, "You can't pass both :csr and :spki")
     end
 
@@ -190,7 +190,7 @@ describe R509::CertificateAuthority::Signer do
     before :all do
       test_ca_config = TestFixtures.test_ca_config
       @ca = R509::CertificateAuthority::Signer.new(test_ca_config)
-      @csr = R509::CSR.new(:subject => [['C','US'],['ST','Illinois'],['L','Chicago'],['O','Paul Kehrer'],['CN','langui.sh']], :bit_strength => 1024)
+      @csr = R509::CSR.new(:subject => [['C', 'US'], ['ST', 'Illinois'], ['L', 'Chicago'], ['O', 'Paul Kehrer'], ['CN', 'langui.sh']], :bit_strength => 1024)
     end
 
     it_validates "signing", false
@@ -235,7 +235,7 @@ describe R509::CertificateAuthority::Signer do
     before :all do
       test_ca_ec = R509::Config::CAConfig.from_yaml("test_ca_ec", File.read("#{File.dirname(__FILE__)}/../fixtures/config_test_ec.yaml"), :ca_root_path => "#{File.dirname(__FILE__)}/../fixtures")
       @ca = R509::CertificateAuthority::Signer.new(test_ca_ec)
-      @csr = R509::CSR.new(:subject => [['CN','elliptic curves']], :type => "ec")
+      @csr = R509::CSR.new(:subject => [['CN', 'elliptic curves']], :type => "ec")
     end
 
     it_validates "signing", false
@@ -258,7 +258,7 @@ describe R509::CertificateAuthority::Signer do
       test_ca_dsa = R509::Config::CAConfig.from_yaml("test_ca_dsa", File.read("#{File.dirname(__FILE__)}/../fixtures/config_test_dsa.yaml"), :ca_root_path => "#{File.dirname(__FILE__)}/../fixtures")
 
       @ca = R509::CertificateAuthority::Signer.new(test_ca_dsa)
-      @csr = R509::CSR.new(:subject => [['CN','elliptic curves']], :type => "dsa", :bit_strength => 512)
+      @csr = R509::CSR.new(:subject => [['CN', 'elliptic curves']], :type => "dsa", :bit_strength => 512)
     end
 
     it_validates "signing", false

@@ -56,6 +56,7 @@ module R509
         end
 
         private
+
         def parse_extension
           @policies = []
           data = R509::ASN1.get_extension_payload(self)
@@ -71,25 +72,25 @@ module R509
           validate_certificate_policies(arg[:value])
           conf = []
           policy_names = ["ia5org"]
-          arg[:value].each_with_index do |policy,i|
-            conf << build_conf("certPolicies#{i}",policy,i)
+          arg[:value].each_with_index do |policy, i|
+            conf << build_conf("certPolicies#{i}", policy, i)
             policy_names << "@certPolicies#{i}"
           end
           ef = OpenSSL::X509::ExtensionFactory.new
           ef.config = OpenSSL::Config.parse(conf.join("\n"))
           critical = R509::Cert::Extensions.calculate_critical(arg[:critical], false)
-          return ef.create_extension("certificatePolicies", policy_names.join(","),critical)
+          return ef.create_extension("certificatePolicies", policy_names.join(","), critical)
         end
 
-        def build_conf(section,hash,index)
+        def build_conf(section, hash, index)
           conf = ["[#{section}]"]
           conf.push "policyIdentifier=#{hash[:policy_identifier]}" unless hash[:policy_identifier].nil?
-          hash[:cps_uris].each_with_index do |cps,idx|
+          hash[:cps_uris].each_with_index do |cps, idx|
             conf.push "CPS.#{idx + 1}=\"#{cps}\""
           end if hash[:cps_uris].respond_to?(:each_with_index)
 
           user_notice_confs = []
-          hash[:user_notices].each_with_index do |un,k|
+          hash[:user_notices].each_with_index do |un, k|
             conf.push "userNotice.#{k + 1}=@user_notice#{k + 1}#{index}"
             user_notice_confs.push "[user_notice#{k + 1}#{index}]"
             user_notice_confs.push "explicitText=\"#{un[:explicit_text]}\"" unless un[:explicit_text].nil?

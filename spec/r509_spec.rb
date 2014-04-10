@@ -23,11 +23,11 @@ describe R509 do
     R509.ec_supported?.should == true
   end
   it "checks if EC is unsupported" do
-    ec = OpenSSL::PKey.send(:remove_const,:EC) # remove EC support for test!
+    ec = OpenSSL::PKey.send(:remove_const, :EC) # remove EC support for test!
     load('r509/ec-hack.rb')
     R509.ec_supported?.should == false
     expect { OpenSSL::PKey::EC.new }.to raise_error(R509::R509Error)
-    OpenSSL::PKey.send(:remove_const,:EC) # remove stubbed EC
+    OpenSSL::PKey.send(:remove_const, :EC) # remove stubbed EC
     OpenSSL::PKey::EC = ec # add the real one back
     # this pretty fragile. if the expectation fails then we don't fix the EC class assignment
     # so any spec called after this will fail improperly.

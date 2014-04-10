@@ -19,27 +19,27 @@ describe R509::Cert::Extensions::CertificatePolicies do
 
   context "validate certificate policy structure" do
     it "must be an array" do
-      expect { CertificatePolicies.new(:value => "whatever") }.to raise_error(ArgumentError,'Not a valid certificate policy structure. Must be an array of hashes')
+      expect { CertificatePolicies.new(:value => "whatever") }.to raise_error(ArgumentError, 'Not a valid certificate policy structure. Must be an array of hashes')
     end
 
     it "require a policy identifier" do
-      expect { CertificatePolicies.new(:value => [{ "stuff" => "thing" }]) }.to raise_error(ArgumentError,'Each policy requires a policy identifier')
+      expect { CertificatePolicies.new(:value => [{ "stuff" => "thing" }]) }.to raise_error(ArgumentError, 'Each policy requires a policy identifier')
     end
 
     it "the cps uri must be array of strings" do
-      expect { CertificatePolicies.new(:value => [{ :policy_identifier => "1.2.3.4.5", :cps_uris => "not an array" }]) }.to raise_error(ArgumentError,'CPS URIs must be an array of strings')
+      expect { CertificatePolicies.new(:value => [{ :policy_identifier => "1.2.3.4.5", :cps_uris => "not an array" }]) }.to raise_error(ArgumentError, 'CPS URIs must be an array of strings')
     end
 
     it "user notices must be an array of hashes" do
-      expect { CertificatePolicies.new(:value => [{ :policy_identifier => "1.2.3.4.5", :user_notices => "not an array" }]) }.to raise_error(ArgumentError,'User notices must be an array of hashes')
+      expect { CertificatePolicies.new(:value => [{ :policy_identifier => "1.2.3.4.5", :user_notices => "not an array" }]) }.to raise_error(ArgumentError, 'User notices must be an array of hashes')
     end
 
     it "org in user notice requires notice numbers" do
-      expect { CertificatePolicies.new(:value => [{ :policy_identifier => "1.2.3.4.5", :user_notices => [{ :explicit_text => "explicit", :organization => "something" }] }]) }.to raise_error(ArgumentError,'If you provide an organization you must provide notice numbers')
+      expect { CertificatePolicies.new(:value => [{ :policy_identifier => "1.2.3.4.5", :user_notices => [{ :explicit_text => "explicit", :organization => "something" }] }]) }.to raise_error(ArgumentError, 'If you provide an organization you must provide notice numbers')
     end
 
     it "notice numbers in user notice requires org" do
-      expect { CertificatePolicies.new(:value => [{ :policy_identifier => "1.2.3.4.5", :user_notices => [{ :explicit_text => "explicit", :notice_numbers => "1,2,3" }] }]) }.to raise_error(ArgumentError,'If you provide notice numbers you must provide an organization')
+      expect { CertificatePolicies.new(:value => [{ :policy_identifier => "1.2.3.4.5", :user_notices => [{ :explicit_text => "explicit", :notice_numbers => "1,2,3" }] }]) }.to raise_error(ArgumentError, 'If you provide notice numbers you must provide an organization')
     end
   end
 
@@ -56,12 +56,12 @@ describe R509::Cert::Extensions::CertificatePolicies do
             :value => [
               {
                 :policy_identifier => "2.16.840.1.12345.1.2.3.4.1",
-                :cps_uris => ["http://example.com/cps","http://other.com/cps"],
+                :cps_uris => ["http://example.com/cps", "http://other.com/cps"],
                 :user_notices => [
                   {
                     :explicit_text => "thing",
                     :organization => "my org",
-                    :notice_numbers => [1,2,3,4]
+                    :notice_numbers => [1, 2, 3, 4]
                   }
                 ]
               }
@@ -77,7 +77,7 @@ describe R509::Cert::Extensions::CertificatePolicies do
           @cp.policies[0].policy_qualifiers.cps_uris.should == ["http://example.com/cps", "http://other.com/cps"]
           @cp.policies[0].policy_qualifiers.user_notices.count.should == 1
           un = @cp.policies[0].policy_qualifiers.user_notices[0]
-          un.notice_reference.notice_numbers.should == [1,2,3,4]
+          un.notice_reference.notice_numbers.should == [1, 2, 3, 4]
           un.notice_reference.organization.should == 'my org'
           un.explicit_text.should == "thing"
         end
@@ -94,12 +94,12 @@ describe R509::Cert::Extensions::CertificatePolicies do
             :value => [
               {
                 :policy_identifier => "2.16.840.1.99999.21.234",
-                :cps_uris => ["http://example.com/cps","http://other.com/cps"],
-                :user_notices => [ { :explicit_text => "this is a great thing", :organization => "my org", :notice_numbers => [1,2,3,4] } ]
+                :cps_uris => ["http://example.com/cps", "http://other.com/cps"],
+                :user_notices => [{ :explicit_text => "this is a great thing", :organization => "my org", :notice_numbers => [1, 2, 3, 4] }]
               }, {
                 :policy_identifier => "2.16.840.1.99999.21.235",
                 :cps_uris => ["http://example.com/cps2"],
-                :user_notices => [{ :explicit_text => "this is a bad thing", :organization => "another org", :notice_numbers => [3,2,1] }, { :explicit_text => "another user notice" }]
+                :user_notices => [{ :explicit_text => "this is a bad thing", :organization => "another org", :notice_numbers => [3, 2, 1] }, { :explicit_text => "another user notice" }]
               },
               {
                 :policy_identifier => "2.16.840.1.99999.0"
@@ -117,7 +117,7 @@ describe R509::Cert::Extensions::CertificatePolicies do
           p0.policy_qualifiers.cps_uris.should == ["http://example.com/cps", "http://other.com/cps"]
           p0.policy_qualifiers.user_notices.count.should == 1
           un0 = p0.policy_qualifiers.user_notices[0]
-          un0.notice_reference.notice_numbers.should == [1,2,3,4]
+          un0.notice_reference.notice_numbers.should == [1, 2, 3, 4]
           un0.notice_reference.organization.should == "my org"
           un0.explicit_text.should == "this is a great thing"
           p1 = @cp.policies[1]
@@ -125,7 +125,7 @@ describe R509::Cert::Extensions::CertificatePolicies do
           p1.policy_qualifiers.cps_uris.should == ["http://example.com/cps2"]
           p1.policy_qualifiers.user_notices.count.should == 2
           un1 = p1.policy_qualifiers.user_notices[0]
-          un1.notice_reference.notice_numbers.should == [3,2,1]
+          un1.notice_reference.notice_numbers.should == [3, 2, 1]
           un1.notice_reference.organization.should == "another org"
           un1.explicit_text.should == 'this is a bad thing'
           un2 = p1.policy_qualifiers.user_notices[1]
@@ -289,7 +289,7 @@ describe R509::Cert::Extensions::CertificatePolicies::NoticeReference do
     data = OpenSSL::ASN1.decode "0\u0016\u0016\u0006my org0\f\u0002\u0001\u0001\u0002\u0001\u0002\u0002\u0001\u0003\u0002\u0001\u0004"
     nr = R509::Cert::Extensions::CertificatePolicies::NoticeReference.new(data)
     nr.organization.should == 'my org'
-    nr.notice_numbers.should == [1,2,3,4]
+    nr.notice_numbers.should == [1, 2, 3, 4]
   end
 
   it "builds yaml" do

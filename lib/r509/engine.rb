@@ -31,8 +31,8 @@ module R509
     def init_engine(hash)
       OpenSSL::Engine.load
       @engines[hash[:id]] = OpenSSL::Engine.by_id("dynamic") do |e|
-        e.ctrl_cmd("SO_PATH",hash[:so_path])
-        e.ctrl_cmd("ID",hash[:id])
+        e.ctrl_cmd("SO_PATH", hash[:so_path])
+        e.ctrl_cmd("ID", hash[:id])
         e.ctrl_cmd("LOAD")
       end
     end

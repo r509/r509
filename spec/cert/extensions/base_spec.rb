@@ -25,7 +25,7 @@ shared_examples_for "a correctly implemented wrap_openssl_extensions" do
   end
 
   it "should not have returned keys improperly mapped to values" do
-    incorrect_mappings = @r509_extensions.select { |key_class,ext| ext.class != key_class }
+    incorrect_mappings = @r509_extensions.select { |key_class, ext| ext.class != key_class }
     incorrect_mappings = {} if incorrect_mappings == [] # compatibility for old versions of Ruby
     incorrect_mappings.should == {}
   end
@@ -33,7 +33,7 @@ shared_examples_for "a correctly implemented wrap_openssl_extensions" do
   it "should not have failed to map an implemented extension" do
     missing_extensions = []
     @wrappable_extensions.each do |openssl_ext|
-      if (@r509_extensions.select {|r509_class,r509_ext| r509_ext.oid == openssl_ext.oid}) == {} then missing_extensions << openssl_ext.oid end
+      if (@r509_extensions.select { |r509_class, r509_ext| r509_ext.oid == openssl_ext.oid }) == {} then missing_extensions << openssl_ext.oid end
     end
 
     missing_extensions.should == []

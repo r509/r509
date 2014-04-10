@@ -7,26 +7,26 @@ describe R509::Config::CertProfile do
   context "validates allowed_mds and default_md" do
     it "loads allowed_mds and adds default_md when not present" do
       profile = R509::Config::CertProfile.new(
-        :allowed_mds => ['sha256','sha1'],
+        :allowed_mds => ['sha256', 'sha1'],
         :default_md => 'sha384'
       )
-      profile.allowed_mds.should =~ ['SHA1','SHA256','SHA384']
+      profile.allowed_mds.should =~ ['SHA1', 'SHA256', 'SHA384']
     end
 
     it "loads allowed_mds without an explicit default_md" do
       profile = R509::Config::CertProfile.new(
-        :allowed_mds => ['sha256','sha1']
+        :allowed_mds => ['sha256', 'sha1']
       )
-      profile.allowed_mds.should =~ ['SHA1','SHA256']
+      profile.allowed_mds.should =~ ['SHA1', 'SHA256']
       profile.default_md.should == R509::MessageDigest::DEFAULT_MD
     end
 
     it "loads allowed_mds with an explicit default_md" do
       profile = R509::Config::CertProfile.new(
-        :allowed_mds => ['sha384','sha256'],
+        :allowed_mds => ['sha384', 'sha256'],
         :default_md => "SHA256"
       )
-      profile.allowed_mds.should =~ ['SHA384','SHA256']
+      profile.allowed_mds.should =~ ['SHA384', 'SHA256']
       profile.default_md.should == 'SHA256'
     end
 

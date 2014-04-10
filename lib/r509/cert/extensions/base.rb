@@ -105,6 +105,7 @@ module R509
       end
 
       private
+
       R509_EXTENSION_CLASSES = Set.new
 
       # Registers a class as being an R509 certificate extension class. Registered
@@ -115,7 +116,7 @@ module R509
         R509_EXTENSION_CLASSES << r509_ext_class
       end
 
-      def self.calculate_critical(critical,default)
+      def self.calculate_critical(critical, default)
         if critical.kind_of?(TrueClass) or critical.kind_of?(FalseClass)
           critical
         else

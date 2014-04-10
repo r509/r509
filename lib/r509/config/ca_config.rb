@@ -37,7 +37,7 @@ module R509
 
       # @return [Hash]
       def to_h
-        @configs.merge(@configs) { |k,v| v.to_h }
+        @configs.merge(@configs) { |k, v| v.to_h }
       end
 
       # @return [YAML]
@@ -165,7 +165,7 @@ module R509
         hash["crl_list_file"] = @crl_list_file unless @crl_list_file.nil?
         hash["crl_number_file"] = @crl_number_file unless @crl_number_file.nil?
         hash["crl_md"] = @crl_md
-        hash["profiles"] = @profiles.merge(@profiles) { |k,v| v.to_h } unless @profiles.empty?
+        hash["profiles"] = @profiles.merge(@profiles) { |k, v| v.to_h } unless @profiles.empty?
         hash
       end
 
@@ -195,13 +195,13 @@ module R509
           raise R509Error, "ca_root_path is not a directory: #{ca_root_path}"
         end
 
-        ca_cert = self.load_ca_cert(conf['ca_cert'],ca_root_path)
+        ca_cert = self.load_ca_cert(conf['ca_cert'], ca_root_path)
 
-        ocsp_cert = self.load_ca_cert(conf['ocsp_cert'],ca_root_path)
+        ocsp_cert = self.load_ca_cert(conf['ocsp_cert'], ca_root_path)
 
-        crl_cert = self.load_ca_cert(conf['crl_cert'],ca_root_path)
+        crl_cert = self.load_ca_cert(conf['crl_cert'], ca_root_path)
 
-        ocsp_chain = build_ocsp_chain(conf['ocsp_chain'],ca_root_path)
+        ocsp_chain = build_ocsp_chain(conf['ocsp_chain'], ca_root_path)
 
         opts = {
           :ca_cert => ca_cert,
@@ -234,7 +234,7 @@ module R509
       # @return [Hash] hash of parsed profiles
       def self.load_profiles(profiles)
         profs = {}
-        profiles.each do |profile,data|
+        profiles.each do |profile, data|
           unless data["subject_item_policy"].nil?
             subject_item_policy = R509::Config::SubjectItemPolicy.new(data["subject_item_policy"])
           end
@@ -280,7 +280,7 @@ module R509
       def parse_ocsp_data(opts)
         # ocsp data
         if opts.key?(:ocsp_cert)
-          check_ocsp_crl_delegate(opts[:ocsp_cert],'ocsp_cert')
+          check_ocsp_crl_delegate(opts[:ocsp_cert], 'ocsp_cert')
           @ocsp_cert = opts[:ocsp_cert]
         end
         @ocsp_chain = opts[:ocsp_chain] if opts[:ocsp_chain].kind_of?(Array)
@@ -290,7 +290,7 @@ module R509
 
       def parse_crl_data(opts)
         if opts.key?(:crl_cert)
-          check_ocsp_crl_delegate(opts[:crl_cert],'crl_cert')
+          check_ocsp_crl_delegate(opts[:crl_cert], 'crl_cert')
           @crl_cert = opts[:crl_cert]
         end
         @crl_validity_hours = opts[:crl_validity_hours] || DEFAULT_CRL_VALIDITY_HOURS
@@ -311,24 +311,24 @@ module R509
         hash
       end
 
-      def self.load_ca_cert(ca_cert_hash,ca_root_path)
+      def self.load_ca_cert(ca_cert_hash, ca_root_path)
         return nil if ca_cert_hash.nil?
         if ca_cert_hash.key?('engine')
-          ca_cert = self.load_with_engine(ca_cert_hash,ca_root_path)
+          ca_cert = self.load_with_engine(ca_cert_hash, ca_root_path)
         end
 
         if ca_cert.nil? and ca_cert_hash.key?('pkcs12')
-          ca_cert = self.load_with_pkcs12(ca_cert_hash,ca_root_path)
+          ca_cert = self.load_with_pkcs12(ca_cert_hash, ca_root_path)
         end
 
         if ca_cert.nil? and ca_cert_hash.key?('cert')
-          ca_cert = self.load_with_key(ca_cert_hash,ca_root_path)
+          ca_cert = self.load_with_key(ca_cert_hash, ca_root_path)
         end
 
         return ca_cert
       end
 
-      def self.load_with_engine(ca_cert_hash,ca_root_path)
+      def self.load_with_engine(ca_cert_hash, ca_root_path)
         if ca_cert_hash.key?('key')
           raise ArgumentError, "You can't specify both key and engine"
         end
@@ -353,7 +353,7 @@ module R509
         ca_cert
       end
 
-      def self.load_with_pkcs12(ca_cert_hash,ca_root_path)
+      def self.load_with_pkcs12(ca_cert_hash, ca_root_path)
         if ca_cert_hash.key?('cert')
           raise ArgumentError, "You can't specify both pkcs12 and cert"
         end
@@ -369,7 +369,7 @@ module R509
         ca_cert
       end
 
-      def self.load_with_key(ca_cert_hash,ca_root_path)
+      def self.load_with_key(ca_cert_hash, ca_root_path)
         ca_cert_file = ca_root_path + ca_cert_hash['cert']
 
         if ca_cert_hash.key?('key')
@@ -390,7 +390,7 @@ module R509
         ca_cert
       end
 
-      def check_ocsp_crl_delegate(cert,kind)
+      def check_ocsp_crl_delegate(cert, kind)
         if not cert.kind_of?(R509::Cert) and not cert.nil?
           raise ArgumentError, ":#{kind}, if provided, must be of type R509::Cert"
         end
@@ -399,7 +399,7 @@ module R509
         end
       end
 
-      def self.build_ocsp_chain(ocsp_chain_path,ca_root_path)
+      def self.build_ocsp_chain(ocsp_chain_path, ca_root_path)
         ocsp_chain = []
         unless ocsp_chain_path.nil?
           ocsp_chain_data = read_data(ca_root_path + ocsp_chain_path)

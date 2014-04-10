@@ -38,15 +38,15 @@ describe R509::Subject do
     s2.name.to_s.should == s1.name.to_s
   end
   it "preserves order of a full subject line" do
-    subject = R509::Subject.new([['CN','langui.sh'],['ST','Illinois'],['L','Chicago'],['C','US'],['emailAddress','ca@langui.sh']])
+    subject = R509::Subject.new([['CN', 'langui.sh'], ['ST', 'Illinois'], ['L', 'Chicago'], ['C', 'US'], ['emailAddress', 'ca@langui.sh']])
     subject.name.to_s.should == '/CN=langui.sh/ST=Illinois/L=Chicago/C=US/emailAddress=ca@langui.sh'
   end
   it "preserves order of a full subject line and uses to_s directly" do
-    subject = R509::Subject.new([['CN','langui.sh'],['ST','Illinois'],['L','Chicago'],['C','US'],['emailAddress','ca@langui.sh']])
+    subject = R509::Subject.new([['CN', 'langui.sh'], ['ST', 'Illinois'], ['L', 'Chicago'], ['C', 'US'], ['emailAddress', 'ca@langui.sh']])
     subject.to_s.should == '/CN=langui.sh/ST=Illinois/L=Chicago/C=US/emailAddress=ca@langui.sh'
   end
   it "preserves order with raw OIDs, and potentially fills in known OID names" do
-    subject = R509::Subject.new([['2.5.4.3','common name'],['2.5.4.15','business category'],['2.5.4.7','locality'],['1.3.6.1.4.1.311.60.2.1.3','jurisdiction oid openssl typically does not know']])
+    subject = R509::Subject.new([['2.5.4.3', 'common name'], ['2.5.4.15', 'business category'], ['2.5.4.7', 'locality'], ['1.3.6.1.4.1.311.60.2.1.3', 'jurisdiction oid openssl typically does not know']])
     subject.to_s.should == "/CN=common name/businessCategory=business category/L=locality/jurisdictionOfIncorporationCountryName=jurisdiction oid openssl typically does not know"
   end
 
@@ -128,7 +128,7 @@ describe R509::Subject do
 
   context "dynamic getter/setter behaviors" do
     it "recognizes getters for a standard subject oid" do
-      subject = R509::Subject.new [['CN','testCN']]
+      subject = R509::Subject.new [['CN', 'testCN']]
       subject.CN.should == 'testCN'
       subject.common_name.should == 'testCN'
       subject.commonName.should == 'testCN'

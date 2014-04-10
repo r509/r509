@@ -190,20 +190,20 @@ module R509
         @short_type = R509::ASN1::GeneralName.map_tag_to_short_type(@tag)
         value = asn.value
         case @tag
-        when 1,2,6 then @value = value
+        when 1, 2, 6 then @value = value
         when 4 then @value = R509::Subject.new(value.first.to_der)
         when 7
           if value.size == 4 or value.size == 16
             @value = parse_ip(value)
           elsif value.size == 8 # IPv4 with netmask
-            @value = parse_ip(value[0,4],value[4,4])
+            @value = parse_ip(value[0, 4], value[4, 4])
           elsif value.size == 32 # IPv6 with netmask
-            @value = parse_ip(value[0,16],value[16,16])
+            @value = parse_ip(value[0, 16], value[16, 16])
           end
         end
       end
 
-      def parse_ip(value,mask=nil)
+      def parse_ip(value, mask = nil)
         ip = IPAddr.new_ntoh(value)
         if mask.nil?
           return ip.to_s
@@ -234,7 +234,7 @@ module R509
       attr_reader :ordered_names
 
       # @param data [Array,R509::ASN1::GeneralNames] Pass an array of hashes to create R509::ASN1::GeneralName objects or an existing R509::ASN1::GeneralNames object
-      def initialize(data=nil)
+      def initialize(data = nil)
         @types = {
           :otherName => [], # unimplemented
           :rfc822Name => [],

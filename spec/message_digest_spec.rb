@@ -110,6 +110,6 @@ describe R509::MessageDigest do
     md.name.should == R509::MessageDigest::DEFAULT_MD.downcase
   end
   it "exception on unknown digest -> name" do
-    expect{ R509::MessageDigest.new(12345) }.to raise_error(ArgumentError)
+    expect { R509::MessageDigest.new(12345) }.to raise_error(ArgumentError)
   end
 end

@@ -7,7 +7,7 @@ module R509
     #  the file that you'd like to write, or an IO-like object.
     # @param [String] data The data that we want to write
     # @param [String] mode The write mode
-    def self.write_data(filename_or_io, data, mode='wb:ascii-8bit')
+    def self.write_data(filename_or_io, data, mode = 'wb:ascii-8bit')
       if filename_or_io.respond_to?(:write)
         if filename_or_io.kind_of?(StringIO) and mode != "a:ascii-8bit"
           # Writing to a StringIO in a non-append mode. This requires
@@ -43,7 +43,7 @@ module R509
     # @param [String, #write] filename_or_io Either a string of the path for
     #  the file that you'd like to write, or an IO-like object.
     # @param [String] data The data that we want to write
-    def write_data(filename_or_io, data, mode='wb:ascii-8bit')
+    def write_data(filename_or_io, data, mode = 'wb:ascii-8bit')
       IOHelpers.write_data(filename_or_io, data, mode)
     end
 

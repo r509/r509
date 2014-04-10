@@ -142,12 +142,12 @@ describe R509::Config::CAConfig do
     )
   end
 
-  subject {@config}
+  subject { @config }
 
-  its(:crl_validity_hours) {should == 168}
-  its(:ocsp_validity_hours) {should == 168}
-  its(:ocsp_start_skew_seconds) {should == 3600}
-  its(:num_profiles) {should == 0}
+  its(:crl_validity_hours) { should == 168 }
+  its(:ocsp_validity_hours) { should == 168 }
+  its(:ocsp_start_skew_seconds) { should == 3600 }
+  its(:num_profiles) { should == 0 }
 
   it "should have the proper CA cert" do
     @config.ca_cert.to_pem.should == TestFixtures.test_ca_cert.to_pem
@@ -188,8 +188,8 @@ describe R509::Config::CAConfig do
       profile = R509::Config::CertProfile.new(
         :basic_constraints => { :ca => true }
       )
-      config.set_profile("subroot",profile)
-      config.set_profile("subroot_also",profile)
+      config.set_profile("subroot", profile)
+      config.set_profile("subroot_also", profile)
       YAML.load(config.to_yaml).should == { "ca_cert" => { "cert" => "<add_path>", "key" => "<add_path>" }, "ocsp_start_skew_seconds" => 3600, "ocsp_validity_hours" => 168, "crl_start_skew_seconds" => 3600, "crl_validity_hours" => 168, "crl_md" => "SHA1", "profiles" => { "subroot" => { "basic_constraints" => { :ca => true, :critical => true }, "default_md" => "SHA1" }, "subroot_also" => { "basic_constraints" => { :ca => true, :critical => true }, "default_md" => "SHA1" } } }
     end
     it "includes defaults" do
@@ -258,7 +258,7 @@ describe R509::Config::CAConfig do
       :ca_cert => TestFixtures.test_ca_cert
     )
 
-    expect{ config.set_profile("bogus", "not a Config::CertProfile")}.to raise_error TypeError
+    expect { config.set_profile("bogus", "not a Config::CertProfile") }.to raise_error TypeError
   end
 
   it "shouldn't let you specify a profile that's not a Config::CertProfile, on instantiation" do
@@ -300,7 +300,7 @@ describe R509::Config::CAConfig do
     config.crl_number_file.should match(/number_file$/)
     config.num_profiles.should == 9
     config.profile("mds").default_md.should == "SHA512"
-    config.profile("mds").allowed_mds.should == ['SHA512','SHA1']
+    config.profile("mds").allowed_mds.should == ['SHA512', 'SHA1']
     aia = config.profile("aia_cdp").authority_info_access
     aia.ocsp.uris.should == ['http://ocsp.domain.com']
     aia.ca_issuers.uris.should == ['http://www.domain.com/cert.cer']
@@ -323,7 +323,7 @@ describe R509::Config::CAConfig do
     config.crl_cert.subject.to_s.should == "/C=US/ST=Illinois/L=Chicago/O=r509 LLC/CN=r509 CRL Delegate"
   end
   it "loads CRL cert/key in engine from yaml" do
-    expect { R509::Config::CAConfig.from_yaml("crl_engine_ca", File.read("#{File.dirname(__FILE__)}/../fixtures/config_test_various.yaml"), :ca_root_path => "#{File.dirname(__FILE__)}/../fixtures") }.to raise_error(ArgumentError,"You must supply a key_name with an engine")
+    expect { R509::Config::CAConfig.from_yaml("crl_engine_ca", File.read("#{File.dirname(__FILE__)}/../fixtures/config_test_various.yaml"), :ca_root_path => "#{File.dirname(__FILE__)}/../fixtures") }.to raise_error(ArgumentError, "You must supply a key_name with an engine")
   end
   it "loads OCSP cert/key from yaml" do
     config = R509::Config::CAConfig.from_yaml("ocsp_delegate_ca", File.read("#{File.dirname(__FILE__)}/../fixtures/config_test_various.yaml"), :ca_root_path => "#{File.dirname(__FILE__)}/../fixtures")
@@ -337,7 +337,7 @@ describe R509::Config::CAConfig do
   end
   it "loads OCSP cert/key in engine from yaml" do
     # most of this code path is tested by loading ca_cert engine.
-    expect { R509::Config::CAConfig.from_yaml("ocsp_engine_ca", File.read("#{File.dirname(__FILE__)}/../fixtures/config_test_various.yaml"), :ca_root_path => "#{File.dirname(__FILE__)}/../fixtures") }.to raise_error(ArgumentError,"You must supply a key_name with an engine")
+    expect { R509::Config::CAConfig.from_yaml("ocsp_engine_ca", File.read("#{File.dirname(__FILE__)}/../fixtures/config_test_various.yaml"), :ca_root_path => "#{File.dirname(__FILE__)}/../fixtures") }.to raise_error(ArgumentError, "You must supply a key_name with an engine")
   end
   it "loads OCSP chain from yaml" do
     config = R509::Config::CAConfig.from_yaml("ocsp_chain_ca", File.read("#{File.dirname(__FILE__)}/../fixtures/config_test_various.yaml"), :ca_root_path => "#{File.dirname(__FILE__)}/../fixtures")
@@ -348,8 +348,8 @@ describe R509::Config::CAConfig do
   it "should load subject_item_policy from yaml (if present)" do
     config = R509::Config::CAConfig.from_yaml("test_ca", File.read("#{File.dirname(__FILE__)}/../fixtures/config_test.yaml"), :ca_root_path => "#{File.dirname(__FILE__)}/../fixtures")
     config.profile("server").subject_item_policy.should be_nil
-    config.profile("server_with_subject_item_policy").subject_item_policy.optional.should include("O","OU")
-    config.profile("server_with_subject_item_policy").subject_item_policy.required.should include("CN","ST","C")
+    config.profile("server_with_subject_item_policy").subject_item_policy.optional.should include("O", "OU")
+    config.profile("server_with_subject_item_policy").subject_item_policy.required.should include("CN", "ST", "C")
   end
 
   it "should load YAML which only has a CA Cert and Key defined" do
@@ -403,15 +403,15 @@ describe R509::Config::CAConfig do
   end
 
   it "should fail if YAML config is null" do
-    expect{ R509::Config::CAConfig.from_yaml("no_config_here", File.read("#{File.dirname(__FILE__)}/../fixtures/config_test.yaml"), :ca_root_path => "#{File.dirname(__FILE__)}/../fixtures") }.to raise_error(ArgumentError)
+    expect { R509::Config::CAConfig.from_yaml("no_config_here", File.read("#{File.dirname(__FILE__)}/../fixtures/config_test.yaml"), :ca_root_path => "#{File.dirname(__FILE__)}/../fixtures") }.to raise_error(ArgumentError)
   end
 
   it "should fail if YAML config isn't a hash" do
-    expect{ R509::Config::CAConfig.from_yaml("config_is_string", File.read("#{File.dirname(__FILE__)}/../fixtures/config_test.yaml"), :ca_root_path => "#{File.dirname(__FILE__)}/../fixtures") }.to raise_error(ArgumentError)
+    expect { R509::Config::CAConfig.from_yaml("config_is_string", File.read("#{File.dirname(__FILE__)}/../fixtures/config_test.yaml"), :ca_root_path => "#{File.dirname(__FILE__)}/../fixtures") }.to raise_error(ArgumentError)
   end
 
   it "should fail if YAML config doesn't give a root CA directory that's a directory" do
-    expect{ R509::Config::CAConfig.from_yaml("test_ca", File.read("#{File.dirname(__FILE__)}/../fixtures/config_test.yaml"), :ca_root_path => "#{File.dirname(__FILE__)}/../fixtures/no_directory_here") }.to raise_error(R509::R509Error)
+    expect { R509::Config::CAConfig.from_yaml("test_ca", File.read("#{File.dirname(__FILE__)}/../fixtures/config_test.yaml"), :ca_root_path => "#{File.dirname(__FILE__)}/../fixtures/no_directory_here") }.to raise_error(R509::R509Error)
   end
 
   it "should load YAML from filename" do

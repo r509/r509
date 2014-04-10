@@ -16,7 +16,7 @@ module R509
     # @option opts [R509::PrivateKey,String] :key optional private key to supply. either an unencrypted PEM/DER string or an R509::PrivateKey object (use the latter if you need password/hardware support)
     # @option opts [String] :pkcs12 a PKCS12 object containing both key and cert
     # @option opts [String] :password password for PKCS12 or private key (if supplied)
-    def initialize(opts={})
+    def initialize(opts = {})
       unless opts.kind_of?(Hash)
         raise ArgumentError, 'Must provide a hash of options'
       end
@@ -87,7 +87,7 @@ module R509
     #
     # @param [String] algorithm Which algorithm to use for the fingerprint. See R509::MessageDigest for supported algorithm names
     # @return [String] hex digest of the certificate
-    def fingerprint(algorithm='sha1')
+    def fingerprint(algorithm = 'sha1')
       message_digest = R509::MessageDigest.new(algorithm)
       md = message_digest.digest
       md.update(@cert.to_der)
@@ -151,11 +151,11 @@ module R509
     #  the file that you'd like to write, or an IO-like object.
     # @param [String] password password
     # @param [String] friendly_name An optional string to encode in the PKCS12 for friendlyName. defaults to "r509 pkcs12"
-    def write_pkcs12(filename_or_io,password,friendly_name='r509 pkcs12')
+    def write_pkcs12(filename_or_io, password, friendly_name = 'r509 pkcs12')
       if @key.nil?
         raise R509::R509Error, "Writing a PKCS12 requires both key and cert"
       end
-      pkcs12 = OpenSSL::PKCS12.create(password,friendly_name,@key.key,@cert)
+      pkcs12 = OpenSSL::PKCS12.create(password, friendly_name, @key.key, @cert)
       write_data(filename_or_io, pkcs12.to_der)
     end
 
@@ -306,6 +306,7 @@ module R509
     end
 
     private
+
     # This method exists only to provide a friendlier error msg if you attempt to
     # parse a CSR as a certificate. All for Sean
     def csr_check(cert)
@@ -323,7 +324,7 @@ module R509
       @issuer = R509::Subject.new(@cert.issuer)
     end
 
-    def parse_private_key(key, password=nil)
+    def parse_private_key(key, password = nil)
       unless key.kind_of?(R509::PrivateKey)
         key = R509::PrivateKey.new(:key => key, :password => password)
       end

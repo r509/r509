@@ -119,6 +119,7 @@ module R509
       end
 
       private
+
       def get_reason(revocation_object)
         reason = nil
         revocation_object.extensions.each do |extension|

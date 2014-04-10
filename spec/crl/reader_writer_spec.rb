@@ -39,7 +39,7 @@ describe R509::CRL::FileReaderWriter do
 
   it "handles nil crl_list_file in write_list_entry" do
     @rw.crl_list_file = nil
-    @rw.write_list_entry(1,1,nil).should == nil
+    @rw.write_list_entry(1, 1, nil).should == nil
   end
 
   it "handles nil crl_number_file in read_number" do
@@ -56,7 +56,7 @@ describe R509::CRL::FileReaderWriter do
     @rw.crl_list_file = TestFixtures::CRL_LIST_FILE
     expect { |b| @rw.read_list(&b) }.to yield_successive_args(
         [12345, 0, 1323983885],
-        [ 12346, nil, 1323983885]
+        [12346, nil, 1323983885]
     )
 
   end
@@ -64,18 +64,18 @@ describe R509::CRL::FileReaderWriter do
   it "writes a crl list entry" do
     sio = StringIO.new
     @rw.crl_list_file = sio
-    @rw.write_list_entry(1,1,nil)
+    @rw.write_list_entry(1, 1, nil)
     sio.string.should == "1,1,\n"
-    @rw.write_list_entry(2,2,1)
+    @rw.write_list_entry(2, 2, 1)
     sio.string.should == "1,1,\n2,2,1\n"
   end
 
   it "removes a crl list entry" do
     sio = StringIO.new
     @rw.crl_list_file = sio
-    @rw.write_list_entry(1,1,nil)
+    @rw.write_list_entry(1, 1, nil)
     sio.string.should == "1,1,\n"
-    @rw.write_list_entry(2,2,1)
+    @rw.write_list_entry(2, 2, 1)
     sio.string.should == "1,1,\n2,2,1\n"
     @rw.remove_list_entry(2)
     sio.string.should == "1,1,\n"

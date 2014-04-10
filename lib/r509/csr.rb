@@ -43,7 +43,7 @@ module R509
     #   :subject => [
     #     ['CN','somedomain.com'],
     #   ]
-    def initialize(opts={})
+    def initialize(opts = {})
       unless opts.kind_of?(Hash)
         raise ArgumentError, 'Must provide a hash of options'
       end
@@ -99,7 +99,7 @@ module R509
 
     # @return [OpenSSL::PKey::RSA,OpenSSL::PKey::DSA,OpenSSL::PKey::EC] public key
     def public_key
-      if(@req.kind_of?(OpenSSL::X509::Request)) then
+      if (@req.kind_of?(OpenSSL::X509::Request)) then
         @req.public_key
       end
     end
@@ -165,9 +165,9 @@ module R509
           # normalize line endings (really just for the next replace)
           csr.gsub!(/\r\n?/, "\n")
           # remove extraneous newlines
-          csr.gsub!(/^\s*\n/,'')
+          csr.gsub!(/^\s*\n/, '')
           # and leading/trailing whitespace
-          csr.gsub!(/^\s*|\s*$/,'')
+          csr.gsub!(/^\s*|\s*$/, '')
           if not csr.match(/-----BEGIN.+-----/) and csr.match(/MII/)
             # if csr is probably PEM (MII is the beginning of every base64
             # encoded DER) then add the wrapping lines if they aren't provided.
@@ -182,7 +182,7 @@ module R509
       parse_san_attribute_from_csr(@req)
     end
 
-    def create_request(subject,san_names)
+    def create_request(subject, san_names)
       @req = OpenSSL::X509::Request.new
       @req.version = 0
       @subject = R509::Subject.new(subject)
@@ -199,7 +199,7 @@ module R509
       req.attributes.each do |attribute|
         if attribute.oid == 'extReq'
           set = OpenSSL::ASN1.decode attribute.value
-          extensions = set.value[0].value.map{|asn1ext| OpenSSL::X509::Extension.new(asn1ext) }
+          extensions = set.value[0].value.map { |asn1ext| OpenSSL::X509::Extension.new(asn1ext) }
           r509_extensions = R509::Cert::Extensions.wrap_openssl_extensions(extensions)
           unless r509_extensions[R509::Cert::Extensions::SubjectAlternativeName].nil?
             @san = r509_extensions[R509::Cert::Extensions::SubjectAlternativeName].general_names

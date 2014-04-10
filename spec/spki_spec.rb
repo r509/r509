@@ -56,7 +56,7 @@ shared_examples_for "spki + private key" do
   end
 
   it "errors if they don't match" do
-    expect { R509::SPKI.new(:key => @key, :spki => @spki2) }.to raise_error(R509::R509Error,'Key does not match SPKI.')
+    expect { R509::SPKI.new(:key => @key, :spki => @spki2) }.to raise_error(R509::R509Error, 'Key does not match SPKI.')
   end
 end
 
@@ -71,10 +71,10 @@ describe R509::SPKI do
     @spki_der = TestFixtures::SPKI_DER
   end
   it "raises an error if you don't provide a hash" do
-    expect { R509::SPKI.new("junk") }.to raise_error(ArgumentError,'Must provide a hash of options')
+    expect { R509::SPKI.new("junk") }.to raise_error(ArgumentError, 'Must provide a hash of options')
   end
   it "raises an error if you provide an empty hash" do
-    expect { R509::SPKI.new({}) }.to raise_error(ArgumentError,'Must provide either :spki or :key')
+    expect { R509::SPKI.new({}) }.to raise_error(ArgumentError, 'Must provide either :spki or :key')
   end
   context "rsa" do
     context "no existing spki" do
@@ -134,7 +134,7 @@ describe R509::SPKI do
     end
     it "loads an spkac with newlines" do
       spki = R509::SPKI.new(:spki => @spki_rsa_newlines)
-      spki.to_pem.should == @spki_rsa_newlines.gsub("\n","")
+      spki.to_pem.should == @spki_rsa_newlines.gsub("\n", "")
     end
     it "properly strips SPKAC= prefix and loads" do
       spki = R509::SPKI.new(:spki => "SPKAC=" + @spki)
@@ -174,7 +174,7 @@ describe R509::SPKI do
   end
   it "returns error when asking for curve_name on non-ec" do
     spki = R509::SPKI.new(:spki => @spki)
-    expect { spki.curve_name }.to raise_error(R509::R509Error,'Curve name is only available with EC')
+    expect { spki.curve_name }.to raise_error(R509::R509Error, 'Curve name is only available with EC')
   end
   it "returns RSA key algorithm for RSA" do
     spki = R509::SPKI.new(:spki => @spki)
@@ -214,7 +214,7 @@ describe R509::SPKI do
     end
     it "raises error on bit length" do
       spki = R509::SPKI.new(:spki => @spki_ec)
-      expect { spki.bit_length }.to raise_error(R509::R509Error,'Bit length is not available for EC at this time.')
+      expect { spki.bit_length }.to raise_error(R509::R509Error, 'Bit length is not available for EC at this time.')
     end
     it "returns the key algorithm" do
       spki = R509::SPKI.new(:spki => @spki_ec)
@@ -234,11 +234,11 @@ describe R509::SPKI do
 
   context "when elliptic curve support is unavailable" do
     before :all do
-      @ec = OpenSSL::PKey.send(:remove_const,:EC) # remove EC support for test!
+      @ec = OpenSSL::PKey.send(:remove_const, :EC) # remove EC support for test!
       load('r509/ec-hack.rb')
     end
     after :all do
-      OpenSSL::PKey.send(:remove_const,:EC) # remove stubbed EC
+      OpenSSL::PKey.send(:remove_const, :EC) # remove stubbed EC
       OpenSSL::PKey::EC = @ec # add the real one back
     end
     it "checks rsa?" do

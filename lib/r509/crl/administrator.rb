@@ -14,7 +14,7 @@ module R509
 
       # @param config [R509::Config::CAConfig]
       # @param reader_writer [R509::CRL::ReaderWriter] A subclass off the R509::CRL::ReaderWriter. Defaults to an instance of R509::CRL::FileReaderWriter.
-      def initialize(config,reader_writer=R509::CRL::FileReaderWriter.new)
+      def initialize(config, reader_writer = R509::CRL::FileReaderWriter.new)
         @config = config
         unless @config.kind_of?(R509::Config::CAConfig)
           raise R509Error, "config must be a kind of R509::Config::CAConfig"
@@ -68,9 +68,9 @@ module R509
       #     removeFromCRL       (8),
       #     privilegeWithdrawn    (9),
       #     aACompromise       (10) }
-      def revoke_cert(serial,reason=nil, revoke_time=Time.now.to_i, write=true)
+      def revoke_cert(serial, reason = nil, revoke_time = Time.now.to_i, write = true)
         unless reason.nil?
-          if not reason.kind_of?(Integer) or not reason.between?(0,10) or reason == 7
+          if not reason.kind_of?(Integer) or not reason.between?(0, 10) or reason == 7
             raise ArgumentError, "Revocation reason must be integer 0-10 (excluding 7) or nil"
           end
         end
@@ -101,10 +101,10 @@ module R509
       # @param next_update [Time] the nextUpdate for the CRL
       #
       # @return [R509::CRL::SignedList] signed CRL
-      def generate_crl(last_update=Time.at(Time.now.to_i) - @config.crl_start_skew_seconds,next_update=Time.at(Time.now) + @config.crl_validity_hours * 3600)
+      def generate_crl(last_update = Time.at(Time.now.to_i) - @config.crl_start_skew_seconds, next_update = Time.at(Time.now) + @config.crl_validity_hours * 3600)
         # Time.at(Time.now.to_i) removes sub-second precision. Subsecond precision is irrelevant
         # for CRL update times and makes testing harder.
-        crl = create_crl_object(last_update,next_update)
+        crl = create_crl_object(last_update, next_update)
 
         self.revoked_certs.each do |serial, reason, revoke_time|
           revoked = OpenSSL::X509::Revoked.new
@@ -135,7 +135,7 @@ module R509
 
       private
 
-      def create_crl_object(last_update,next_update)
+      def create_crl_object(last_update, next_update)
         crl = OpenSSL::X509::CRL.new
         crl.version = 1
         crl.last_update = last_update

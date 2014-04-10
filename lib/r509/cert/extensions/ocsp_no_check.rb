@@ -44,10 +44,11 @@ module R509
         end
 
         private
+
         def build_extension(arg)
           ef = OpenSSL::X509::ExtensionFactory.new
           critical = R509::Cert::Extensions.calculate_critical(arg[:critical], false)
-          return ef.create_extension("noCheck","yes",critical)
+          return ef.create_extension("noCheck", "yes", critical)
         end
       end
     end

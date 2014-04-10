@@ -80,12 +80,12 @@ describe R509::Cert::Extensions::ExtendedKeyUsage do
 
       context "multiple EKU" do
         before :all do
-          @args = { :value => ['serverAuth','codeSigning'], :critical => false }
+          @args = { :value => ['serverAuth', 'codeSigning'], :critical => false }
           @eku = R509::Cert::Extensions::ExtendedKeyUsage.new(@args)
         end
 
         it "creates extension" do
-          @eku.allowed_uses.should == ['serverAuth','codeSigning']
+          @eku.allowed_uses.should == ['serverAuth', 'codeSigning']
         end
 
         it "builds yaml" do
@@ -127,7 +127,7 @@ describe R509::Cert::Extensions::ExtendedKeyUsage do
 
     context "with one allowed use" do
       before :all do
-        @allowed_uses = [ ExtendedKeyUsage::AU_WEB_SERVER_AUTH ]
+        @allowed_uses = [ExtendedKeyUsage::AU_WEB_SERVER_AUTH]
         @extension_value = @allowed_uses.join(", ")
       end
 
@@ -138,7 +138,7 @@ describe R509::Cert::Extensions::ExtendedKeyUsage do
     context "with some allowed uses" do
       before :all do
         # this spec and the one below alternate the uses
-        @allowed_uses = [ ExtendedKeyUsage::AU_WEB_SERVER_AUTH, ExtendedKeyUsage::AU_CODE_SIGNING ]
+        @allowed_uses = [ExtendedKeyUsage::AU_WEB_SERVER_AUTH, ExtendedKeyUsage::AU_CODE_SIGNING]
         @extension_value = @allowed_uses.join(", ")
       end
 
@@ -148,7 +148,7 @@ describe R509::Cert::Extensions::ExtendedKeyUsage do
 
     context "with some different allowed uses" do
       before :all do
-        @allowed_uses = [ ExtendedKeyUsage::AU_WEB_CLIENT_AUTH, ExtendedKeyUsage::AU_EMAIL_PROTECTION ]
+        @allowed_uses = [ExtendedKeyUsage::AU_WEB_CLIENT_AUTH, ExtendedKeyUsage::AU_EMAIL_PROTECTION]
         @extension_value = @allowed_uses.join(", ")
       end
 

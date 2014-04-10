@@ -122,7 +122,7 @@ module R509::CertificateAuthority
       cert.subject = options[:subject]
       cert.issuer = options[:issuer]
       cert.not_before = calculate_not_before(options[:not_before])
-      cert.not_after = calculate_not_after(options[:not_after],cert.not_before)
+      cert.not_after = calculate_not_after(options[:not_after], cert.not_before)
       cert.public_key = options[:public_key]
       cert.serial = create_serial(options[:serial])
       cert.version = 2 # 2 means v3
@@ -139,7 +139,7 @@ module R509::CertificateAuthority
         # per rfc5280 conforming CAs can make the serial field up to 20 octets
         # to prevent even the incredibly remote possibility of collision we'll
         # concatenate current time (to the microsecond) with a random num
-        rand = OpenSSL::BN.rand(96,0) # 96 bits is 12 bytes (octets).
+        rand = OpenSSL::BN.rand(96, 0) # 96 bits is 12 bytes (octets).
         serial = OpenSSL::BN.new((Time.now.to_f * 1000000).to_i.to_s + rand.to_s)
         # since second param is 0 the most significant bit must always be 1
         # this theoretically gives us 95 bits of entropy
@@ -161,7 +161,7 @@ module R509::CertificateAuthority
     end
     private_class_method :calculate_not_before
 
-    def self.calculate_not_after(not_after,not_before)
+    def self.calculate_not_after(not_after, not_before)
       if not_after.nil?
         not_after = not_before + 365 * 24 * 60 * 60
       end
@@ -182,7 +182,7 @@ module R509::CertificateAuthority
         subject = R509::Subject.new(options[:subject])
       end
 
-      [subject,public_key]
+      [subject, public_key]
     end
   end
 end

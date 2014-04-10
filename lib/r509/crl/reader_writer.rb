@@ -69,8 +69,8 @@ module R509
       def write_list_entry(serial, revoke_time, reason)
         return nil if @crl_list_file.nil?
 
-        entry = [serial,revoke_time,reason].join(",")
-        write_data(@crl_list_file, entry + "\n" ,'a:ascii-8bit')
+        entry = [serial, revoke_time, reason].join(",")
+        write_data(@crl_list_file, entry + "\n" , 'a:ascii-8bit')
       end
 
       # Remove a CRL list entry
@@ -104,7 +104,7 @@ module R509
       def write_number(crl_number)
         return nil if @crl_number_file.nil?
 
-        write_data(@crl_number_file,crl_number.to_s)
+        write_data(@crl_number_file, crl_number.to_s)
       end
     end
   end
