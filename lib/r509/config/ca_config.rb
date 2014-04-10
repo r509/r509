@@ -238,19 +238,21 @@ module R509
           if not data["subject_item_policy"].nil?
             subject_item_policy = R509::Config::SubjectItemPolicy.new(data["subject_item_policy"])
           end
-          profs[profile] = R509::Config::CertProfile.new(:key_usage => data["key_usage"],
-                             :extended_key_usage => data["extended_key_usage"],
-                             :basic_constraints => data["basic_constraints"],
-                             :certificate_policies => data["certificate_policies"],
-                             :ocsp_no_check => data["ocsp_no_check"],
-                             :inhibit_any_policy => data["inhibit_any_policy"],
-                             :policy_constraints => data["policy_constraints"],
-                             :name_constraints => data["name_constraints"],
-                             :crl_distribution_points => data["crl_distribution_points"],
-                             :authority_info_access => data["authority_info_access"],
-                             :default_md => data["default_md"],
-                             :allowed_mds => data["allowed_mds"],
-                             :subject_item_policy => subject_item_policy)
+          profs[profile] = R509::Config::CertProfile.new(
+            :key_usage => data["key_usage"],
+            :extended_key_usage => data["extended_key_usage"],
+            :basic_constraints => data["basic_constraints"],
+            :certificate_policies => data["certificate_policies"],
+            :ocsp_no_check => data["ocsp_no_check"],
+            :inhibit_any_policy => data["inhibit_any_policy"],
+            :policy_constraints => data["policy_constraints"],
+            :name_constraints => data["name_constraints"],
+            :crl_distribution_points => data["crl_distribution_points"],
+            :authority_info_access => data["authority_info_access"],
+            :default_md => data["default_md"],
+            :allowed_mds => data["allowed_mds"],
+            :subject_item_policy => subject_item_policy
+          )
         end unless profiles.nil?
         profs
       end

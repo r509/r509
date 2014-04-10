@@ -187,12 +187,20 @@ module TestFixtures
       :basic_constraints => R509::Cert::Extensions::BasicConstraints.new({:ca => false }),
       :key_usage => R509::Cert::Extensions::KeyUsage.new(:value => ["digitalSignature","keyEncipherment"]),
       :extended_key_usage => R509::Cert::Extensions::ExtendedKeyUsage.new(:value => ["serverAuth"]),
-      :certificate_policies => R509::Cert::Extensions::CertificatePolicies.new(:value => [
+      :certificate_policies => R509::Cert::Extensions::CertificatePolicies.new(
+        :value => [
           { :policy_identifier => "2.16.840.1.12345.1.2.3.4.1",
-  :cps_uris => ["http://example.com/cps","http://other.com/cps"],
-  :user_notices => [ {:explicit_text => "thing", :organization => "my org", :notice_numbers => [1,2,3,4]} ]
-        }
-      ])
+            :cps_uris => ["http://example.com/cps","http://other.com/cps"],
+            :user_notices => [
+              {
+                :explicit_text => "thing",
+                :organization => "my org",
+                :notice_numbers => [1,2,3,4]
+              }
+            ]
+          }
+        ]
+      )
     )
 
   end
@@ -209,12 +217,21 @@ module TestFixtures
       :basic_constraints => R509::Cert::Extensions::BasicConstraints.new({:ca => false }),
       :key_usage => R509::Cert::Extensions::KeyUsage.new(:value => ["digitalSignature","keyEncipherment"]),
       :extended_key_usage => R509::Cert::Extensions::ExtendedKeyUsage.new(:value => ["serverAuth"]),
-      :certificate_policies => R509::Cert::Extensions::CertificatePolicies.new(:value => [
-          { :policy_identifier => "2.16.840.1.12345.1.2.3.4.1",
-  :cps_uris => ["http://example.com/cps","http://other.com/cps"],
-  :user_notices => [ {:explicit_text => "thing", :organization => "my org", :notice_numbers => [1,2,3,4]} ]
-        }
-      ]),
+      :certificate_policies => R509::Cert::Extensions::CertificatePolicies.new(
+        :value => [
+          {
+            :policy_identifier => "2.16.840.1.12345.1.2.3.4.1",
+            :cps_uris => ["http://example.com/cps","http://other.com/cps"],
+            :user_notices => [
+              {
+                :explicit_text => "thing",
+                :organization => "my org",
+                :notice_numbers => [1,2,3,4]
+              }
+            ]
+          }
+        ]
+      ),
       :subject_item_policy => subject_item_policy
     )
   end
