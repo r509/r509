@@ -23,23 +23,23 @@ describe R509::Cert::Extensions::CertificatePolicies do
     end
 
     it "require a policy identifier" do
-      expect { CertificatePolicies.new(:value => [{"stuff" => "thing"}]) }.to raise_error(ArgumentError,'Each policy requires a policy identifier')
+      expect { CertificatePolicies.new(:value => [{ "stuff" => "thing" }]) }.to raise_error(ArgumentError,'Each policy requires a policy identifier')
     end
 
     it "the cps uri must be array of strings" do
-      expect { CertificatePolicies.new(:value => [{:policy_identifier => "1.2.3.4.5", :cps_uris => "not an array"}]) }.to raise_error(ArgumentError,'CPS URIs must be an array of strings')
+      expect { CertificatePolicies.new(:value => [{ :policy_identifier => "1.2.3.4.5", :cps_uris => "not an array" }]) }.to raise_error(ArgumentError,'CPS URIs must be an array of strings')
     end
 
     it "user notices must be an array of hashes" do
-      expect { CertificatePolicies.new(:value => [{:policy_identifier => "1.2.3.4.5", :user_notices => "not an array"}]) }.to raise_error(ArgumentError,'User notices must be an array of hashes')
+      expect { CertificatePolicies.new(:value => [{ :policy_identifier => "1.2.3.4.5", :user_notices => "not an array" }]) }.to raise_error(ArgumentError,'User notices must be an array of hashes')
     end
 
     it "org in user notice requires notice numbers" do
-      expect { CertificatePolicies.new(:value => [{:policy_identifier => "1.2.3.4.5", :user_notices => [{:explicit_text => "explicit", :organization => "something"}]}]) }.to raise_error(ArgumentError,'If you provide an organization you must provide notice numbers')
+      expect { CertificatePolicies.new(:value => [{ :policy_identifier => "1.2.3.4.5", :user_notices => [{ :explicit_text => "explicit", :organization => "something" }] }]) }.to raise_error(ArgumentError,'If you provide an organization you must provide notice numbers')
     end
 
     it "notice numbers in user notice requires org" do
-      expect { CertificatePolicies.new(:value => [{:policy_identifier => "1.2.3.4.5", :user_notices => [{:explicit_text => "explicit", :notice_numbers => "1,2,3"}]}]) }.to raise_error(ArgumentError,'If you provide notice numbers you must provide an organization')
+      expect { CertificatePolicies.new(:value => [{ :policy_identifier => "1.2.3.4.5", :user_notices => [{ :explicit_text => "explicit", :notice_numbers => "1,2,3" }] }]) }.to raise_error(ArgumentError,'If you provide notice numbers you must provide an organization')
     end
   end
 
@@ -95,11 +95,11 @@ describe R509::Cert::Extensions::CertificatePolicies do
               {
                 :policy_identifier => "2.16.840.1.99999.21.234",
                 :cps_uris => ["http://example.com/cps","http://other.com/cps"],
-                :user_notices => [ {:explicit_text => "this is a great thing", :organization => "my org", :notice_numbers => [1,2,3,4]} ]
+                :user_notices => [ { :explicit_text => "this is a great thing", :organization => "my org", :notice_numbers => [1,2,3,4] } ]
               }, {
                 :policy_identifier => "2.16.840.1.99999.21.235",
                 :cps_uris => ["http://example.com/cps2"],
-                :user_notices => [{:explicit_text => "this is a bad thing", :organization => "another org", :notice_numbers => [3,2,1] }, {:explicit_text => "another user notice"}]
+                :user_notices => [{ :explicit_text => "this is a bad thing", :organization => "another org", :notice_numbers => [3,2,1] }, { :explicit_text => "another user notice" }]
               },
               {
                 :policy_identifier => "2.16.840.1.99999.0"
@@ -205,7 +205,7 @@ describe R509::Cert::Extensions::CertificatePolicies::PolicyInformation do
   it "builds yaml" do
     data = OpenSSL::ASN1.decode "0\x81\x94\u0006\n`\x86H\u0001\x86\x8D\u001F\u0015\x81k0\x81\x850#\u0006\b+\u0006\u0001\u0005\u0005\a\u0002\u0001\u0016\u0017http://example.com/cps20;\u0006\b+\u0006\u0001\u0005\u0005\a\u0002\u00020/0\u0018\u0016\vanother org0\t\u0002\u0001\u0003\u0002\u0001\u0002\u0002\u0001\u0001\u001A\u0013this is a bad thing0!\u0006\b+\u0006\u0001\u0005\u0005\a\u0002\u00020\u0015\u001A\u0013another user notice"
     pi = R509::Cert::Extensions::CertificatePolicies::PolicyInformation.new(data)
-    YAML.load(pi.to_yaml).should == {:policy_identifier=>"2.16.840.1.99999.21.235", :cps_uris=>["http://example.com/cps2"], :user_notices=>[{:explicit_text=>"this is a bad thing", :organization=>"another org", :notice_numbers=>[3, 2, 1]}, {:explicit_text=>"another user notice"}]}
+    YAML.load(pi.to_yaml).should == { :policy_identifier=>"2.16.840.1.99999.21.235", :cps_uris=>["http://example.com/cps2"], :user_notices=>[{ :explicit_text=>"this is a bad thing", :organization=>"another org", :notice_numbers=>[3, 2, 1] }, { :explicit_text=>"another user notice" }] }
   end
 end
 
@@ -237,7 +237,7 @@ describe R509::Cert::Extensions::CertificatePolicies::PolicyQualifiers do
   it "builds yaml" do
     data = OpenSSL::ASN1.decode "0#\u0006\b+\u0006\u0001\u0005\u0005\a\u0002\u0001\u0016\u0017http://example.com/cps2"
     @pq.parse(data)
-    YAML.load(@pq.to_yaml).should == {:cps_uris=>["http://example.com/cps2"]}
+    YAML.load(@pq.to_yaml).should == { :cps_uris=>["http://example.com/cps2"] }
   end
 end
 
@@ -266,7 +266,7 @@ describe R509::Cert::Extensions::CertificatePolicies::UserNotice do
   it "builds yaml" do
     data = OpenSSL::ASN1.decode "0\a\u001A\u0005thing"
     un = R509::Cert::Extensions::CertificatePolicies::UserNotice.new(data)
-    YAML.load(un.to_yaml).should == {:explicit_text => "thing"}
+    YAML.load(un.to_yaml).should == { :explicit_text => "thing" }
   end
 end
 
@@ -295,6 +295,6 @@ describe R509::Cert::Extensions::CertificatePolicies::NoticeReference do
   it "builds yaml" do
     data = OpenSSL::ASN1.decode "0\u0016\u0016\u0006my org0\f\u0002\u0001\u0001\u0002\u0001\u0002\u0002\u0001\u0003\u0002\u0001\u0004"
     nr = R509::Cert::Extensions::CertificatePolicies::NoticeReference.new(data)
-    YAML.load(nr.to_yaml).should == {:organization=>"my org", :notice_numbers=>[1, 2, 3, 4]}
+    YAML.load(nr.to_yaml).should == { :organization=>"my org", :notice_numbers=>[1, 2, 3, 4] }
   end
 end

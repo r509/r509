@@ -37,8 +37,8 @@ describe R509::Cert::Extensions::CRLDistributionPoints do
     end
 
     it "raises an error if you pass an array that does not contain both :type and :value" do
-      expect { CRLDistributionPoints.new( :value => [{:type => 'URI'}] ) }.to raise_error(ArgumentError, 'All elements of the array must be hashes with a :type and :value')
-      expect { CRLDistributionPoints.new( :value => [{:value => 'value'}] ) }.to raise_error(ArgumentError, 'All elements of the array must be hashes with a :type and :value')
+      expect { CRLDistributionPoints.new( :value => [{ :type => 'URI' }] ) }.to raise_error(ArgumentError, 'All elements of the array must be hashes with a :type and :value')
+      expect { CRLDistributionPoints.new( :value => [{ :value => 'value' }] ) }.to raise_error(ArgumentError, 'All elements of the array must be hashes with a :type and :value')
     end
   end
 
@@ -57,13 +57,13 @@ describe R509::Cert::Extensions::CRLDistributionPoints do
         end
 
         it "builds yaml" do
-          YAML.load(@cdp.to_yaml).should == {:critical=>false, :value=>[{:type=>"email", :value=>"random string"}]}
+          YAML.load(@cdp.to_yaml).should == { :critical=>false, :value=>[{ :type=>"email", :value=>"random string" }] }
         end
       end
 
       context "one CDP" do
         before :all do
-          @args = { :value => [{ :type => 'URI', :value => 'http://crl.r509.org/ca.crl'}], :critical => false }
+          @args = { :value => [{ :type => 'URI', :value => 'http://crl.r509.org/ca.crl' }], :critical => false }
           @cdp = R509::Cert::Extensions::CRLDistributionPoints.new(@args)
         end
 
@@ -78,7 +78,7 @@ describe R509::Cert::Extensions::CRLDistributionPoints do
 
       context "multiple CDP" do
         before :all do
-          @args = { :value => [{ :type => 'URI', :value => 'http://crl.r509.org/ca.crl' },{ :type => 'dirName', :value => {:CN => 'myCN'}}], :critical => false }
+          @args = { :value => [{ :type => 'URI', :value => 'http://crl.r509.org/ca.crl' },{ :type => 'dirName', :value => { :CN => 'myCN' } }], :critical => false }
           @cdp = R509::Cert::Extensions::CRLDistributionPoints.new(@args)
         end
 
@@ -94,7 +94,7 @@ describe R509::Cert::Extensions::CRLDistributionPoints do
 
       context "default criticality" do
         before :all do
-          @args = { :value => [{:type => "URI", :value => 'http://crl.r509.org/ca.crl'}] }
+          @args = { :value => [{ :type => "URI", :value => 'http://crl.r509.org/ca.crl' }] }
           @cdp = R509::Cert::Extensions::CRLDistributionPoints.new(@args)
         end
 
@@ -109,7 +109,7 @@ describe R509::Cert::Extensions::CRLDistributionPoints do
 
       context "non-default criticality" do
         before :all do
-          @args = { :value => [{:type => "URI", :value => 'http://crl.r509.org/ca.crl'}], :critical => true }
+          @args = { :value => [{ :type => "URI", :value => 'http://crl.r509.org/ca.crl' }], :critical => true }
           @cdp = R509::Cert::Extensions::CRLDistributionPoints.new(@args)
         end
 

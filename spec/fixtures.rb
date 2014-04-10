@@ -206,11 +206,11 @@ module TestFixtures
 
   def self.test_ca_server_profile_with_subject_item_policy
     subject_item_policy = R509::Config::SubjectItemPolicy.new(
-      "CN" => { :policy => "required"},
-      "O" => { :policy => "optional"},
-      "ST" => { :policy => "required"},
-      "C" => { :policy => "required"},
-      "OU" => { :policy => "optional"}
+      "CN" => { :policy => "required" },
+      "O" => { :policy => "optional" },
+      "ST" => { :policy => "required" },
+      "C" => { :policy => "required" },
+      "OU" => { :policy => "optional" }
     )
     R509::Config::CertProfile.new(
       :basic_constraints => R509::Cert::Extensions::BasicConstraints.new(:ca => false ),
@@ -237,16 +237,16 @@ module TestFixtures
 
   def self.test_ca_subroot_profile
     R509::Config::CertProfile.new(
-          :basic_constraints => {:ca => true, :path_length => 0 },
-          :key_usage => {:value => ["keyCertSign","cRLSign"]},
+          :basic_constraints => { :ca => true, :path_length => 0 },
+          :key_usage => { :value => ["keyCertSign","cRLSign"] },
           :certificate_policies => nil)
   end
 
   def self.test_ca_ocspsigner_profile
     R509::Config::CertProfile.new(
           :basic_constraints => { :ca => false },
-          :key_usage => {:value => ["digitalSignature"]},
-          :extended_key_usage => {:value => ["OCSPSigning"]},
+          :key_usage => { :value => ["digitalSignature"] },
+          :extended_key_usage => { :value => ["OCSPSigning"] },
           :certificate_policies => nil)
   end
 

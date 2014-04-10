@@ -73,9 +73,9 @@ module R509
     # @return [Hash]
       def to_h
         hash = {}
-        @required.each { |r| hash[r] = {:policy => "required" } }
-        @optional.each { |o| hash[o] = {:policy => "optional" } }
-        @match.each { |m| hash[m] = {:policy => "match", :value => @match_values[m]} }
+        @required.each { |r| hash[r] = { :policy => "required" } }
+        @optional.each { |o| hash[o] = { :policy => "optional" } }
+        @match.each { |m| hash[m] = { :policy => "match", :value => @match_values[m] } }
         hash
       end
 

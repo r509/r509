@@ -34,20 +34,20 @@ describe R509::Config::SubjectItemPolicy do
     validated_subject.to_s.should == subject.to_s
   end
   it "allows matched fields" do
-    sip = R509::Config::SubjectItemPolicy.new("CN" => { :policy => "match", :value => "langui.sh" }, "O" => { :policy => "match", :value => "ooooor"})
+    sip = R509::Config::SubjectItemPolicy.new("CN" => { :policy => "match", :value => "langui.sh" }, "O" => { :policy => "match", :value => "ooooor" })
     subject = R509::Subject.new [['CN','langui.sh'],['O','ooooor']]
     validated_subject = sip.validate_subject(subject)
     validated_subject.to_s.should == subject.to_s
   end
   it "builds hash" do
-    args = { "CN" => { :policy => "match", :value => "langui.sh" }, "O" => { :policy => "match", :value => "ooooor"} }
+    args = { "CN" => { :policy => "match", :value => "langui.sh" }, "O" => { :policy => "match", :value => "ooooor" } }
     sip = R509::Config::SubjectItemPolicy.new(args)
     # this equality check works because ruby does not compare hash order (which exists in 1.9+)
     # when doing comparison
     sip.to_h.should == args
   end
   it "builds yaml" do
-    args = { "CN" => { :policy => "match", :value => "langui.sh" }, "O" => { :policy => "match", :value => "ooooor"} }
+    args = { "CN" => { :policy => "match", :value => "langui.sh" }, "O" => { :policy => "match", :value => "ooooor" } }
     sip = R509::Config::SubjectItemPolicy.new(args)
     # this equality check works because ruby does not compare hash order (which exists in 1.9+)
     # when doing comparison

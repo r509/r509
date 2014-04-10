@@ -10,7 +10,7 @@ describe R509::CertificateAuthority::OptionsBuilder do
   context "enforces subject item policies" do
     before :all do
       config = R509::Config::CAConfig.new( :ca_cert => R509::Cert.new( :cert => TestFixtures::TEST_CA_CERT) )
-      subject_item_policy = R509::Config::SubjectItemPolicy.new("CN" => {:policy => "required"} , "O" => {:policy => "required"}, "OU" => {:policy => "optional"}, "L" => {:policy => "required"})
+      subject_item_policy = R509::Config::SubjectItemPolicy.new("CN" => { :policy => "required" } , "O" => { :policy => "required" }, "OU" => { :policy => "optional" }, "L" => { :policy => "required" })
       profile = R509::Config::CertProfile.new(
         :default_md => "SHA512",
         :subject_item_policy => subject_item_policy
@@ -51,7 +51,7 @@ describe R509::CertificateAuthority::OptionsBuilder do
 
     it "adds basic constraints" do
       profile = R509::Config::CertProfile.new(
-        :basic_constraints => {:ca => false}
+        :basic_constraints => { :ca => false }
       )
       @config.set_profile("profile",profile)
       builder = R509::CertificateAuthority::OptionsBuilder.new(@config)
@@ -91,7 +91,7 @@ describe R509::CertificateAuthority::OptionsBuilder do
 
     it "adds extended key usage" do
       profile = R509::Config::CertProfile.new(
-        :extended_key_usage => {:value => ['serverAuth'] }
+        :extended_key_usage => { :value => ['serverAuth'] }
       )
       @config.set_profile("profile",profile)
       builder = R509::CertificateAuthority::OptionsBuilder.new(@config)
@@ -103,7 +103,7 @@ describe R509::CertificateAuthority::OptionsBuilder do
 
     it "adds certificate policies" do
       profile = R509::Config::CertProfile.new(
-        :certificate_policies => {:value => [{:policy_identifier => "2.16.840.1.99999.21.234"}] }
+        :certificate_policies => { :value => [{ :policy_identifier => "2.16.840.1.99999.21.234" }] }
       )
       @config.set_profile("profile",profile)
       builder = R509::CertificateAuthority::OptionsBuilder.new(@config)
@@ -112,7 +112,7 @@ describe R509::CertificateAuthority::OptionsBuilder do
     end
 
     it "adds CRL distribution points" do
-      cdp = R509::Cert::Extensions::CRLDistributionPoints.new(:value => [{ :type => 'URI', :value => 'http://crl.domain.com/crl.crl'}])
+      cdp = R509::Cert::Extensions::CRLDistributionPoints.new(:value => [{ :type => 'URI', :value => 'http://crl.domain.com/crl.crl' }])
       profile = R509::Config::CertProfile.new(
         :crl_distribution_points => cdp
       )
@@ -146,7 +146,7 @@ describe R509::CertificateAuthority::OptionsBuilder do
 
     it "adds policy constraints" do
       profile = R509::Config::CertProfile.new(
-        :policy_constraints => {:inhibit_policy_mapping => 1}
+        :policy_constraints => { :inhibit_policy_mapping => 1 }
       )
       @config.set_profile("profile",profile)
       builder = R509::CertificateAuthority::OptionsBuilder.new(@config)
@@ -156,7 +156,7 @@ describe R509::CertificateAuthority::OptionsBuilder do
 
     it "adds name constraints" do
       profile = R509::Config::CertProfile.new(
-        :name_constraints => { :permitted => [{:type => "URI", :value => "domain.com"}] }
+        :name_constraints => { :permitted => [{ :type => "URI", :value => "domain.com" }] }
       )
       @config.set_profile("profile",profile)
       builder = R509::CertificateAuthority::OptionsBuilder.new(@config)
@@ -166,7 +166,7 @@ describe R509::CertificateAuthority::OptionsBuilder do
 
     it "adds OCSP no check" do
       profile = R509::Config::CertProfile.new(
-        :ocsp_no_check => {:value => true }
+        :ocsp_no_check => { :value => true }
       )
       @config.set_profile("profile",profile)
       builder = R509::CertificateAuthority::OptionsBuilder.new(@config)
@@ -180,7 +180,7 @@ describe R509::CertificateAuthority::OptionsBuilder do
       @config = R509::Config::CAConfig.new( :ca_cert => R509::Cert.new( :cert => TestFixtures::TEST_CA_CERT) )
       @csr = R509::CSR.new(:csr => TestFixtures::CSR)
       profile = R509::Config::CertProfile.new(
-        :ocsp_no_check => {:value => true },
+        :ocsp_no_check => { :value => true },
         :key_usage => { :value => ['digitalSignature'] }
       )
       @config.set_profile("profile",profile)
@@ -232,8 +232,8 @@ describe R509::CertificateAuthority::OptionsBuilder do
     before :all do
       config = R509::Config::CAConfig.new( :ca_cert => R509::Cert.new( :cert => TestFixtures::TEST_CA_CERT) )
       profile = R509::Config::CertProfile.new(
-        :basic_constraints => {:ca => false},
-        :key_usage => {:value => ["digitalSignature"] },
+        :basic_constraints => { :ca => false },
+        :key_usage => { :value => ["digitalSignature"] },
         :allowed_mds => ['sha256','sha1','sha384'],
         :default_md => 'sha1'
       )
@@ -258,8 +258,8 @@ describe R509::CertificateAuthority::OptionsBuilder do
     before :all do
       config = R509::Config::CAConfig.new( :ca_cert => R509::Cert.new( :cert => TestFixtures::TEST_CA_CERT) )
       profile = R509::Config::CertProfile.new(
-        :basic_constraints => {:ca => false},
-        :key_usage => {:value => ["digitalSignature"] },
+        :basic_constraints => { :ca => false },
+        :key_usage => { :value => ["digitalSignature"] },
         :allowed_mds => ['sha256','sha1','sha384'],
         :default_md => 'sha1'
       )

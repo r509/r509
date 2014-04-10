@@ -74,15 +74,15 @@ describe R509::Config::CertProfile do
 
   it "builds YAML" do
     config = R509::Config::CAConfig.from_yaml("test_ca", File.read("#{File.dirname(__FILE__)}/../fixtures/config_test.yaml"), :ca_root_path => "#{File.dirname(__FILE__)}/../fixtures")
-    YAML.load(config.profile("server").to_yaml).should == {"basic_constraints"=>{:ca=>false, :critical=>true}, "key_usage"=>{:value=>["digitalSignature", "keyEncipherment"], :critical=>false}, "extended_key_usage"=>{:value=>["serverAuth"], :critical=>false}, "default_md"=>R509::MessageDigest::DEFAULT_MD}
+    YAML.load(config.profile("server").to_yaml).should == { "basic_constraints"=>{ :ca=>false, :critical=>true }, "key_usage"=>{ :value=>["digitalSignature", "keyEncipherment"], :critical=>false }, "extended_key_usage"=>{ :value=>["serverAuth"], :critical=>false }, "default_md"=>R509::MessageDigest::DEFAULT_MD }
   end
 
   it "includes crl distribution points in the yaml" do
     config = R509::Config::CertProfile.new(
       :crl_distribution_points => R509::Cert::Extensions::CRLDistributionPoints.new(
-        :value => [{:type => 'URI', :value => 'http://crl.myca.net/ca.crl'}]
+        :value => [{ :type => 'URI', :value => 'http://crl.myca.net/ca.crl' }]
       )
     )
-    YAML.load(config.to_yaml).should == {"crl_distribution_points"=>{:critical=>false, :value=>[{:type=>"URI", :value=>"http://crl.myca.net/ca.crl"}]}, "default_md"=>"SHA1"}
+    YAML.load(config.to_yaml).should == { "crl_distribution_points"=>{ :critical=>false, :value=>[{ :type=>"URI", :value=>"http://crl.myca.net/ca.crl" }] }, "default_md"=>"SHA1" }
   end
 end

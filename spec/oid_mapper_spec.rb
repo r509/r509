@@ -21,8 +21,8 @@ describe R509::OIDMapper do
     expect { R509::Subject.new [['testOIDName','random_oid']] }.to raise_error(OpenSSL::X509::NameError,'invalid field name')
     expect { R509::Subject.new [['anotherOIDName','second_random']] }.to raise_error(OpenSSL::X509::NameError,'invalid field name')
     R509::OIDMapper.batch_register([
-    {:oid => '1.4.3.2.1.2.3.4.4.4.4', :short_name => 'testOIDName'},
-    {:oid => '1.4.3.2.1.2.5.4.4.4.4', :short_name => 'anotherOIDName'}
+    { :oid => '1.4.3.2.1.2.3.4.4.4.4', :short_name => 'testOIDName' },
+    { :oid => '1.4.3.2.1.2.5.4.4.4.4', :short_name => 'anotherOIDName' }
     ])
     subject_new = R509::Subject.new [['testOIDName','random_oid'],['anotherOIDName','second_random']]
     subject_new['testOIDName'].should == 'random_oid'

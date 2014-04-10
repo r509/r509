@@ -43,12 +43,12 @@ describe R509::Cert::Extensions::NameConstraints do
     end
 
     it "raises an error when permitted or excluded elements are not hashes with the required values" do
-      expect { R509::Cert::Extensions::NameConstraints.new( :permitted => [{"type" => 'DNS'}] ) }.to raise_error(ArgumentError,'Elements within the permitted array must be hashes with both type and value')
-      expect { R509::Cert::Extensions::NameConstraints.new( :permitted => [{'value' => '127'}] ) }.to raise_error(ArgumentError,'Elements within the permitted array must be hashes with both type and value')
+      expect { R509::Cert::Extensions::NameConstraints.new( :permitted => [{ "type" => 'DNS' }] ) }.to raise_error(ArgumentError,'Elements within the permitted array must be hashes with both type and value')
+      expect { R509::Cert::Extensions::NameConstraints.new( :permitted => [{ 'value' => '127' }] ) }.to raise_error(ArgumentError,'Elements within the permitted array must be hashes with both type and value')
     end
 
     it "raises an error when an invalid type is specified" do
-      expect { R509::Cert::Extensions::NameConstraints.new( :permitted => [{:type => 'invalid', :value => '127'}] ) }.to raise_error(ArgumentError,'invalid is not an allowed type. Check R509::ASN1::GeneralName.map_type_to_tag to see a list of types')
+      expect { R509::Cert::Extensions::NameConstraints.new( :permitted => [{ :type => 'invalid', :value => '127' }] ) }.to raise_error(ArgumentError,'invalid is not an allowed type. Check R509::ASN1::GeneralName.map_type_to_tag to see a list of types')
     end
   end
 
@@ -78,7 +78,7 @@ describe R509::Cert::Extensions::NameConstraints do
             :permitted => [
               { :type => 'DNS', :value => 'domain.com' },
               { :type => 'IP', :value => '127.0.0.1/255.255.255.255' },
-              { :type => 'dirName', :value => {:CN => 'myCN', :O => 'myO', :C => "US" } }
+              { :type => 'dirName', :value => { :CN => 'myCN', :O => 'myO', :C => "US" } }
             ]
           }
           @nc = R509::Cert::Extensions::NameConstraints.new(@args)
@@ -123,7 +123,7 @@ describe R509::Cert::Extensions::NameConstraints do
             :excluded => [
               { :type => 'DNS', :value => 'domain.com' },
               { :type => 'IP', :value => '127.0.0.1/255.255.255.255' },
-              { :type => 'dirName', :value => {:CN => 'myCN', :O => 'myO', :C => "US" } }
+              { :type => 'dirName', :value => { :CN => 'myCN', :O => 'myO', :C => "US" } }
             ]
           }
           @nc = R509::Cert::Extensions::NameConstraints.new(@args)
@@ -151,12 +151,12 @@ describe R509::Cert::Extensions::NameConstraints do
             :excluded => [
               { :type => 'DNS', :value => 'domain.com' },
               { :type => 'IP', :value => '127.0.0.1/255.255.255.255' },
-              { :type => 'dirName', :value => {:CN => 'myCN', :O => 'myO', :C => "US" } }
+              { :type => 'dirName', :value => { :CN => 'myCN', :O => 'myO', :C => "US" } }
             ],
             :permitted => [
               { :type => 'DNS', :value => 'domain.com' },
               { :type => 'IP', :value => '127.0.0.1/255.255.255.255' },
-              { :type => 'dirName', :value => {:CN => 'myCN', :O => 'myO', :C => "US" } }
+              { :type => 'dirName', :value => { :CN => 'myCN', :O => 'myO', :C => "US" } }
             ]
           }
           @nc = R509::Cert::Extensions::NameConstraints.new(@args)
@@ -219,7 +219,7 @@ describe R509::Cert::Extensions::NameConstraints do
     context "with one permitted name" do
       before :all do
         @excluded = []
-        @permitted = [{:tag => 2, :value => ".whatever.com"}]
+        @permitted = [{ :tag => 2, :value => ".whatever.com" }]
         gns = R509::ASN1::GeneralNames.new
         @permitted.each do |name|
           gns.add_item(name)
@@ -240,7 +240,7 @@ describe R509::Cert::Extensions::NameConstraints do
     context "with multiple permitted names" do
       before :all do
         @excluded = []
-        @permitted = [{:tag => 2, :value => ".whatever.com"}, {:tag => 1, :value => "user@emaildomain.com" } ]
+        @permitted = [{ :tag => 2, :value => ".whatever.com" }, { :tag => 1, :value => "user@emaildomain.com" } ]
         gns = R509::ASN1::GeneralNames.new
         @permitted.each do |name|
           gns.add_item(name)
@@ -261,7 +261,7 @@ describe R509::Cert::Extensions::NameConstraints do
     context "with one excluded name" do
       before :all do
         @permitted = []
-        @excluded = [{:tag => 7, :value => "127.0.0.1/255.255.255.255"}]
+        @excluded = [{ :tag => 7, :value => "127.0.0.1/255.255.255.255" }]
         egns = R509::ASN1::GeneralNames.new
         @excluded.each do |name|
           egns.add_item(name)
@@ -282,7 +282,7 @@ describe R509::Cert::Extensions::NameConstraints do
     context "with multiple excluded names" do
       before :all do
         @permitted = []
-        @excluded = [{:tag => 7, :value => "127.0.0.1/255.255.255.255"}, {:tag => 1, :value => "emaildomain.com" } ]
+        @excluded = [{ :tag => 7, :value => "127.0.0.1/255.255.255.255" }, { :tag => 1, :value => "emaildomain.com" } ]
         @permitted = []
         egns = R509::ASN1::GeneralNames.new
         @excluded.each do |name|
@@ -303,8 +303,8 @@ describe R509::Cert::Extensions::NameConstraints do
     end
     context "with both permitted and excluded names" do
       before :all do
-        @excluded = [{:tag => 7, :value => "127.0.0.1/255.255.255.255"}, {:tag => 1, :value => "emaildomain.com" } ]
-        @permitted = [{:tag => 2, :value => ".whatever.com"}, {:tag => 1, :value => "user@emaildomain.com"} ]
+        @excluded = [{ :tag => 7, :value => "127.0.0.1/255.255.255.255" }, { :tag => 1, :value => "emaildomain.com" } ]
+        @permitted = [{ :tag => 2, :value => ".whatever.com" }, { :tag => 1, :value => "user@emaildomain.com" } ]
         gns = R509::ASN1::GeneralNames.new
         @permitted.each do |name|
           gns.add_item(name)

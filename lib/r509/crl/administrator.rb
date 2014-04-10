@@ -80,7 +80,7 @@ module R509
         if revoked?(serial)
           raise R509::R509Error, "Cannot revoke a previously revoked certificate"
         end
-        @revoked_certs[serial] = {:reason => reason, :revoke_time => revoke_time}
+        @revoked_certs[serial] = { :reason => reason, :revoke_time => revoke_time }
         if write == true
           @rw.write_list_entry(serial, revoke_time, reason)
         end

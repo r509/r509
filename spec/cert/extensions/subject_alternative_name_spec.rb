@@ -72,13 +72,13 @@ describe R509::Cert::Extensions::SubjectAlternativeName do
         end
 
         it "builds yaml" do
-          YAML.load(@san.to_yaml).should == {:critical=>false, :value=>[{:type=>"email", :value=>"random string"}]}
+          YAML.load(@san.to_yaml).should == { :critical=>false, :value=>[{ :type=>"email", :value=>"random string" }] }
         end
       end
 
       context "single name" do
         before :all do
-          @args = { :value => [{:type => "DNS", :value => 'domain.com' }], :critical => false }
+          @args = { :value => [{ :type => "DNS", :value => 'domain.com' }], :critical => false }
           @san = R509::Cert::Extensions::SubjectAlternativeName.new(@args)
         end
 
@@ -93,7 +93,7 @@ describe R509::Cert::Extensions::SubjectAlternativeName do
 
       context "multiple names" do
         before :all do
-          @args = { :value => [{:type => 'DNS', :value => 'domain.com' },{ :type => 'IP', :value => '127.0.0.1' }], :critical => false }
+          @args = { :value => [{ :type => 'DNS', :value => 'domain.com' },{ :type => 'IP', :value => '127.0.0.1' }], :critical => false }
           @san = R509::Cert::Extensions::SubjectAlternativeName.new(@args)
         end
         it "creates extension" do
@@ -108,7 +108,7 @@ describe R509::Cert::Extensions::SubjectAlternativeName do
 
       context "default criticality" do
         before :all do
-          @args = { :value => [{:type => "DNS", :value => 'domain.com' }] }
+          @args = { :value => [{ :type => "DNS", :value => 'domain.com' }] }
           @san = R509::Cert::Extensions::SubjectAlternativeName.new(@args)
         end
 
@@ -123,7 +123,7 @@ describe R509::Cert::Extensions::SubjectAlternativeName do
 
       context "creates with non-default criticality" do
         before :all do
-          @args = { :value => [{:type => "DNS", :value => 'domain.com' }], :critical => true }
+          @args = { :value => [{ :type => "DNS", :value => 'domain.com' }], :critical => true }
           @san = R509::Cert::Extensions::SubjectAlternativeName.new(@args)
         end
 

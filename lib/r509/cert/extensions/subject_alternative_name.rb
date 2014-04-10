@@ -50,7 +50,7 @@ module R509
 
         # @return [Hash]
         def to_h
-          {:critical => self.critical?, :value => @general_names.to_h }
+          { :critical => self.critical?, :value => @general_names.to_h }
         end
 
         # @return [YAML]
