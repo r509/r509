@@ -96,7 +96,7 @@ module R509
       # @option opts [Integer] :crl_validity_hours Number of hours CRLs should be valid for
       # @option opts [Integer] :crl_start_skew_seconds The number of seconds to subtract from Time.now when calculating the signing time of a CRL. This is important to handle bad user clocks.
       #
-      def initialize(opts = {} )
+      def initialize(opts = {})
         unless opts.key?(:ca_cert) then
           raise ArgumentError, 'Config object requires that you pass :ca_cert'
         end

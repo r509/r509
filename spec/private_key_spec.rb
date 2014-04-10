@@ -202,7 +202,7 @@ describe R509::PrivateKey do
   end
   it "loads a private key with load_from_file with password" do
     path = File.dirname(__FILE__) + '/fixtures/key4_encrypted_des3.pem'
-    key = R509::PrivateKey.load_from_file( path, 'r509')
+    key = R509::PrivateKey.load_from_file(path, 'r509')
     key.rsa?.should == true
   end
 

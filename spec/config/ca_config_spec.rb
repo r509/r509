@@ -209,18 +209,18 @@ describe R509::Config::CAConfig do
       expect { R509::Config::CAConfig.new(:ca_cert => TestFixtures.test_ca_cert, :ocsp_cert => "not a cert") }.to raise_error ArgumentError, ':ocsp_cert, if provided, must be of type R509::Cert'
     end
     it "raises an error if :ocsp_cert does not contain a private key" do
-      expect { R509::Config::CAConfig.new( :ca_cert => TestFixtures.test_ca_cert, :ocsp_cert => R509::Cert.new( :cert => TestFixtures::TEST_CA_CERT) ) }.to raise_error ArgumentError, ':ocsp_cert must contain a private key, not just a certificate'
+      expect { R509::Config::CAConfig.new(:ca_cert => TestFixtures.test_ca_cert, :ocsp_cert => R509::Cert.new(:cert => TestFixtures::TEST_CA_CERT)) }.to raise_error ArgumentError, ':ocsp_cert must contain a private key, not just a certificate'
     end
     it "raises an error if :crl_cert that is not R509::Cert" do
       expect { R509::Config::CAConfig.new(:ca_cert => TestFixtures.test_ca_cert, :crl_cert => "not a cert") }.to raise_error ArgumentError, ':crl_cert, if provided, must be of type R509::Cert'
     end
     it "raises an error if :crl_cert does not contain a private key" do
-      expect { R509::Config::CAConfig.new( :ca_cert => TestFixtures.test_ca_cert, :crl_cert => R509::Cert.new( :cert => TestFixtures::TEST_CA_CERT) ) }.to raise_error ArgumentError, ':crl_cert must contain a private key, not just a certificate'
+      expect { R509::Config::CAConfig.new(:ca_cert => TestFixtures.test_ca_cert, :crl_cert => R509::Cert.new(:cert => TestFixtures::TEST_CA_CERT)) }.to raise_error ArgumentError, ':crl_cert must contain a private key, not just a certificate'
     end
   end
 
   it "loads the config even if :ca_cert does not contain a private key" do
-    config = R509::Config::CAConfig.new( :ca_cert => R509::Cert.new( :cert => TestFixtures::TEST_CA_CERT) )
+    config = R509::Config::CAConfig.new(:ca_cert => R509::Cert.new(:cert => TestFixtures::TEST_CA_CERT))
     config.ca_cert.subject.to_s.should_not be_nil
   end
   it "returns the correct cert object on #ocsp_cert if none is specified" do

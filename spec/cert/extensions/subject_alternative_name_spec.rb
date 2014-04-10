@@ -8,8 +8,8 @@ shared_examples_for "a correct R509 SubjectAlternativeName object" do |critical|
     klass = SubjectAlternativeName
     ef = OpenSSL::X509::ExtensionFactory.new
     ef.config = OpenSSL::Config.parse(@conf)
-    openssl_ext = ef.create_extension( extension_name, @extension_value , critical )
-    @r509_ext = klass.new( openssl_ext )
+    openssl_ext = ef.create_extension(extension_name, @extension_value , critical)
+    @r509_ext = klass.new(openssl_ext)
   end
 
   it "dns_names should be correct critical:#{critical}" do

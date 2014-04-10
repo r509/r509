@@ -22,8 +22,8 @@ module R509
       #
       # @param [String] filename Path to file you want to load
       # @return [R509::CRL::SignedList] CRL object
-      def self.load_from_file( filename )
-        return R509::CRL::SignedList.new( IOHelpers.read_data(filename) )
+      def self.load_from_file(filename)
+        return R509::CRL::SignedList.new(IOHelpers.read_data(filename))
       end
 
       # @return [String]

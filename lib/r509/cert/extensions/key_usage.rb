@@ -81,8 +81,8 @@ module R509
         # @param [String] friendly_use_name key usage short name (e.g. digitalSignature, cRLSign, etc)
         #   or one of the AU_* constants in this class
         # @return [Boolean]
-        def allows?( friendly_use_name )
-          @allowed_uses.include?( friendly_use_name )
+        def allows?(friendly_use_name)
+          @allowed_uses.include?(friendly_use_name)
         end
 
         def digital_signature?

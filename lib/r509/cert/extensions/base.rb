@@ -14,16 +14,16 @@ module R509
       # R509::Cert::Extensions object, and returns them in a hash. The hash is
       # keyed with the R509 extension class. Extensions without an R509
       # implementation are ignored (see #get_unknown_extensions).
-      def self.wrap_openssl_extensions( extensions )
+      def self.wrap_openssl_extensions(extensions)
         r509_extensions = {}
         extensions.each do |openssl_extension|
           R509_EXTENSION_CLASSES.each do |r509_class|
-            if ( r509_class::OID.downcase == openssl_extension.oid.downcase )
+            if ( r509_class::OID.downcase == openssl_extension.oid.downcase)
               if r509_extensions.key?(r509_class)
                 raise ArgumentError.new("Only one extension object allowed per OID")
               end
 
-              r509_extensions[r509_class] = r509_class.new( openssl_extension )
+              r509_extensions[r509_class] = r509_class.new(openssl_extension)
               break
             end
           end
@@ -34,12 +34,12 @@ module R509
 
       # Given a list of OpenSSL::X509::Extension objects, returns those without
       # an R509 implementation.
-      def self.get_unknown_extensions( extensions )
+      def self.get_unknown_extensions(extensions)
         unknown_extensions = []
         extensions.each do |openssl_extension|
           match_found = false
           R509_EXTENSION_CLASSES.each do |r509_class|
-            if ( r509_class::OID.downcase == openssl_extension.oid.downcase )
+            if ( r509_class::OID.downcase == openssl_extension.oid.downcase)
               match_found = true
               break
             end
@@ -110,7 +110,7 @@ module R509
       # Registers a class as being an R509 certificate extension class. Registered
       # classes are used by #wrap_openssl_extensions to wrap OpenSSL extensions
       # in R509 extensions, based on the OID.
-      def self.register_class( r509_ext_class )
+      def self.register_class(r509_ext_class)
         raise ArgumentError.new("R509 certificate extensions must have an OID") if r509_ext_class::OID.nil?
         R509_EXTENSION_CLASSES << r509_ext_class
       end

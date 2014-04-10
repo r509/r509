@@ -53,7 +53,7 @@ module R509::CertificateAuthority
 
       # @config.ca_cert.key.key ... ugly. ca_cert returns R509::Cert
       # #key returns R509::PrivateKey and #key on that returns OpenSSL object we need
-      cert.sign( @config.ca_cert.key.key, message_digest.digest )
+      cert.sign(@config.ca_cert.key.key, message_digest.digest)
       cert_opts = { :cert => cert }
       cert_opts[:key] = options[:csr].key if not options[:csr].nil? and not options[:csr].key.nil?
       R509::Cert.new(cert_opts)
@@ -99,7 +99,7 @@ module R509::CertificateAuthority
         message_digest = R509::MessageDigest.new(R509::MessageDigest::DEFAULT_MD)
       end
 
-      cert.sign( csr.key.key, message_digest.digest )
+      cert.sign(csr.key.key, message_digest.digest)
 
       R509::Cert.new(:cert => cert, :key => csr.key)
     end

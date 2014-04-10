@@ -462,13 +462,13 @@ describe R509::ASN1::GeneralNames do
     gns = R509::ASN1::GeneralNames.new
     s = R509::Subject.new([['C','US'],['L','locality']])
     gns.directory_names.size.should == 0
-    gns.create_item( :tag => 4, :value => s )
+    gns.create_item(:tag => 4, :value => s)
     gns.directory_names.size.should == 1
   end
   it "allows addition of directoryNames with #create_item passing array" do
     gns = R509::ASN1::GeneralNames.new
     gns.directory_names.size.should == 0
-    gns.create_item( :tag => 4, :value => [['C','US'],['L','locality']] )
+    gns.create_item(:tag => 4, :value => [['C','US'],['L','locality']])
     gns.directory_names.size.should == 1
   end
 end

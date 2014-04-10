@@ -74,8 +74,8 @@ module R509
 
         # Returns true if the given use is allowed by this extension.
         # @param [string] friendly_use_name One of the AU_* constants in this class.
-        def allows?( friendly_use_name )
-          @allowed_uses.include?( friendly_use_name )
+        def allows?(friendly_use_name)
+          @allowed_uses.include?(friendly_use_name)
         end
 
         def web_server_authentication?

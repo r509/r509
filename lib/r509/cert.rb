@@ -20,10 +20,10 @@ module R509
       unless opts.kind_of?(Hash)
         raise ArgumentError, 'Must provide a hash of options'
       end
-      if opts.key?(:pkcs12) and ( opts.key?(:key) or opts.key?(:cert) )
+      if opts.key?(:pkcs12) and ( opts.key?(:key) or opts.key?(:cert))
         raise ArgumentError, "When providing pkcs12, do not pass cert or key"
       elsif opts.key?(:pkcs12)
-        pkcs12 = OpenSSL::PKCS12.new( opts[:pkcs12], opts[:password] )
+        pkcs12 = OpenSSL::PKCS12.new(opts[:pkcs12], opts[:password])
         parse_certificate(pkcs12.certificate)
         parse_private_key(pkcs12.key)
       elsif not opts.key?(:cert)
@@ -42,8 +42,8 @@ module R509
     #
     # @param [String] filename Path to file you want to load
     # @return [R509::Cert] cert object
-    def self.load_from_file( filename )
-      return R509::Cert.new(:cert => IOHelpers.read_data(filename) )
+    def self.load_from_file(filename)
+      return R509::Cert.new(:cert => IOHelpers.read_data(filename))
     end
 
     alias_method :to_s, :to_pem
@@ -134,7 +134,7 @@ module R509
     def all_names
       ret = []
       ret << @subject.CN unless @subject.CN.nil?
-      ret.concat( self.san.names.map { |n| n.value } ) unless self.san.nil?
+      ret.concat(self.san.names.map { |n| n.value }) unless self.san.nil?
 
       return ret.sort.uniq
     end
@@ -164,8 +164,8 @@ module R509
     # so do that check yourself
     #
     # @param [R509::CRL::SignedList] r509_crl A CRL from the CA that issued this certificate.
-    def is_revoked_by_crl?( r509_crl )
-      return r509_crl.revoked?( self.serial )
+    def is_revoked_by_crl?(r509_crl)
+      return r509_crl.revoked?(self.serial)
     end
 
     # Returns the certificate extensions as a hash of R509::Cert::Extensions
@@ -177,7 +177,7 @@ module R509
     # implementation are ignored (see #get_unknown_extensions).
     def extensions
       if @r509_extensions.nil?
-        @r509_extensions = Extensions.wrap_openssl_extensions( self.cert.extensions )
+        @r509_extensions = Extensions.wrap_openssl_extensions(self.cert.extensions)
       end
 
       return @r509_extensions
@@ -188,7 +188,7 @@ module R509
     #
     # @return [Array] An array of OpenSSL::X509::Extension objects.
     def unknown_extensions
-      return Extensions.get_unknown_extensions( self.cert.extensions )
+      return Extensions.get_unknown_extensions(self.cert.extensions)
     end
 
     #
@@ -325,7 +325,7 @@ module R509
 
     def parse_private_key(key, password=nil)
       unless key.kind_of?(R509::PrivateKey)
-        key = R509::PrivateKey.new( :key => key, :password => password )
+        key = R509::PrivateKey.new(:key => key, :password => password)
       end
       unless @cert.public_key.to_der == key.public_key.to_der
         raise R509Error, 'Key does not match cert.'

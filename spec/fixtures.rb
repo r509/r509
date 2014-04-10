@@ -184,7 +184,7 @@ module TestFixtures
 
   def self.test_ca_server_profile
     R509::Config::CertProfile.new(
-      :basic_constraints => R509::Cert::Extensions::BasicConstraints.new(:ca => false ),
+      :basic_constraints => R509::Cert::Extensions::BasicConstraints.new(:ca => false),
       :key_usage => R509::Cert::Extensions::KeyUsage.new(:value => ["digitalSignature","keyEncipherment"]),
       :extended_key_usage => R509::Cert::Extensions::ExtendedKeyUsage.new(:value => ["serverAuth"]),
       :certificate_policies => R509::Cert::Extensions::CertificatePolicies.new(
@@ -213,7 +213,7 @@ module TestFixtures
       "OU" => { :policy => "optional" }
     )
     R509::Config::CertProfile.new(
-      :basic_constraints => R509::Cert::Extensions::BasicConstraints.new(:ca => false ),
+      :basic_constraints => R509::Cert::Extensions::BasicConstraints.new(:ca => false),
       :key_usage => R509::Cert::Extensions::KeyUsage.new(:value => ["digitalSignature","keyEncipherment"]),
       :extended_key_usage => R509::Cert::Extensions::ExtendedKeyUsage.new(:value => ["serverAuth"]),
       :certificate_policies => R509::Cert::Extensions::CertificatePolicies.new(

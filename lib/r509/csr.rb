@@ -93,8 +93,8 @@ module R509
     #
     # @param [String] filename Path to file you want to load
     # @return [R509::CSR] CSR object
-    def self.load_from_file( filename )
-      return R509::CSR.new(:csr => IOHelpers.read_data(filename) )
+    def self.load_from_file(filename)
+      return R509::CSR.new(:csr => IOHelpers.read_data(filename))
     end
 
     # @return [OpenSSL::PKey::RSA,OpenSSL::PKey::DSA,OpenSSL::PKey::EC] public key
@@ -200,7 +200,7 @@ module R509
         if attribute.oid == 'extReq'
           set = OpenSSL::ASN1.decode attribute.value
           extensions = set.value[0].value.map{|asn1ext| OpenSSL::X509::Extension.new(asn1ext) }
-          r509_extensions = R509::Cert::Extensions.wrap_openssl_extensions( extensions )
+          r509_extensions = R509::Cert::Extensions.wrap_openssl_extensions(extensions)
           unless r509_extensions[R509::Cert::Extensions::SubjectAlternativeName].nil?
             @san = r509_extensions[R509::Cert::Extensions::SubjectAlternativeName].general_names
           end

@@ -6,8 +6,8 @@ shared_examples_for "a correct R509 SubjectKeyIdentifier object" do
   before :all do
     extension_name = "subjectKeyIdentifier"
     klass = SubjectKeyIdentifier
-    openssl_ext = OpenSSL::X509::Extension.new( extension_name, @extension_value )
-    @r509_ext = klass.new( openssl_ext )
+    openssl_ext = OpenSSL::X509::Extension.new(extension_name, @extension_value)
+    @r509_ext = klass.new(openssl_ext)
   end
 
   it "key should be correct" do

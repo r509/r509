@@ -150,34 +150,34 @@ describe R509::CertificateAuthority::Signer do
     end
 
     it "raises an error if you pass a config that has no private key for ca_cert" do
-      config = R509::Config::CAConfig.new( :ca_cert => R509::Cert.new( :cert => TestFixtures::TEST_CA_CERT) )
+      config = R509::Config::CAConfig.new(:ca_cert => R509::Cert.new(:cert => TestFixtures::TEST_CA_CERT))
       expect { R509::CertificateAuthority::Signer.new(config) }.to raise_error(R509::R509Error, "You must have a private key associated with your CA certificate to issue")
     end
 
     it "raises an error if you pass both csr and spki" do
       csr = R509::CSR.new(:csr => TestFixtures::CSR)
       spki = R509::SPKI.new(:spki => TestFixtures::SPKI, :subject=>[['CN','test']])
-      expect { @ca.sign( :spki => spki, :csr => csr ) }.to raise_error(ArgumentError, "You can't pass both :csr and :spki")
+      expect { @ca.sign(:spki => spki, :csr => csr) }.to raise_error(ArgumentError, "You can't pass both :csr and :spki")
     end
 
     it "raise an error if you don't pass an R509::SPKI in :spki" do
       spki = OpenSSL::Netscape::SPKI.new(TestFixtures::SPKI)
-      expect { @ca.sign( :spki => spki ) }.to raise_error(ArgumentError, 'You must pass an R509::SPKI object for :spki')
+      expect { @ca.sign(:spki => spki) }.to raise_error(ArgumentError, 'You must pass an R509::SPKI object for :spki')
     end
 
     it "raise an error if you pass :spki without :subject" do
       spki = R509::SPKI.new(:spki => TestFixtures::SPKI)
-      expect { @ca.sign( :spki => spki ) }.to raise_error(ArgumentError, 'You must supply :subject when passing :spki')
+      expect { @ca.sign(:spki => spki) }.to raise_error(ArgumentError, 'You must supply :subject when passing :spki')
     end
 
     it "raise an error if you don't pass an R509::CSR in :csr" do
       csr = OpenSSL::X509::Request.new(TestFixtures::CSR)
-      expect { @ca.sign( :csr => csr ) }.to raise_error(ArgumentError, 'You must pass an R509::CSR object for :csr')
+      expect { @ca.sign(:csr => csr) }.to raise_error(ArgumentError, 'You must pass an R509::CSR object for :csr')
     end
 
     it "raises an error if attempting to self-sign without a key" do
       csr = R509::CSR.new(:csr => TestFixtures::CSR)
-      expect { R509::CertificateAuthority::Signer.selfsign( :csr => csr ) }.to raise_error(ArgumentError, "CSR must also have a private key to self sign")
+      expect { R509::CertificateAuthority::Signer.selfsign(:csr => csr) }.to raise_error(ArgumentError, "CSR must also have a private key to self sign")
     end
 
     it "raises error when passing non-hash to selfsign method" do

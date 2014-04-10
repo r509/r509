@@ -8,8 +8,8 @@ shared_examples_for "a correct R509 AuthorityKeyIdentifier object" do
     klass = AuthorityKeyIdentifier
     ef = OpenSSL::X509::ExtensionFactory.new
     ef.issuer_certificate = OpenSSL::X509::Certificate.new TestFixtures::TEST_CA_CERT
-    openssl_ext = ef.create_extension( extension_name, @extension_value )
-    @r509_ext = klass.new( openssl_ext )
+    openssl_ext = ef.create_extension(extension_name, @extension_value)
+    @r509_ext = klass.new(openssl_ext)
   end
 
   it "has the expected type" do

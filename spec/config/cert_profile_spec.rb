@@ -39,11 +39,11 @@ describe R509::Config::CertProfile do
     end
 
     it "errors when supplying invalid default_md" do
-      expect { R509::Config::CertProfile.new( :default_md => "notahash" ) }.to raise_error(ArgumentError, "An unknown message digest was supplied. Permitted: #{R509::MessageDigest::KNOWN_MDS.join(", ")}")
+      expect { R509::Config::CertProfile.new(:default_md => "notahash") }.to raise_error(ArgumentError, "An unknown message digest was supplied. Permitted: #{R509::MessageDigest::KNOWN_MDS.join(", ")}")
     end
 
     it "errors when supplying invalid subject item policy" do
-      expect { R509::Config::CertProfile.new( :subject_item_policy => "notapolicy") }.to raise_error(ArgumentError, 'subject_item_policy must be of type R509::Config::SubjectItemPolicy')
+      expect { R509::Config::CertProfile.new(:subject_item_policy => "notapolicy") }.to raise_error(ArgumentError, 'subject_item_policy must be of type R509::Config::SubjectItemPolicy')
     end
   end
   it "initializes with expected defaults" do

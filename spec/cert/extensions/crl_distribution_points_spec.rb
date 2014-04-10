@@ -7,8 +7,8 @@ shared_examples_for "a correct R509 CRLDistributionPoints object" do |critical|
     extension_name = "crlDistributionPoints"
     klass = CRLDistributionPoints
     ef = OpenSSL::X509::ExtensionFactory.new
-    openssl_ext = ef.create_extension( extension_name, @extension_value , critical )
-    @r509_ext = klass.new( openssl_ext )
+    openssl_ext = ef.create_extension(extension_name, @extension_value , critical)
+    @r509_ext = klass.new(openssl_ext)
   end
 
   it "crl_uri should be correct critical:#{critical}" do
@@ -25,20 +25,20 @@ describe R509::Cert::Extensions::CRLDistributionPoints do
 
   context "validation" do
     it "raises an error if you pass a non-hash" do
-      expect { CRLDistributionPoints.new( "test" ) }.to raise_error(ArgumentError, 'You must pass a hash with a :value key')
+      expect { CRLDistributionPoints.new("test") }.to raise_error(ArgumentError, 'You must pass a hash with a :value key')
     end
 
     it "raises an error if you pass a value that is not an array" do
-      expect { CRLDistributionPoints.new( :value => "some-url" ) }.to raise_error(ArgumentError, 'crl_distribution_points must contain an array or R509::ASN1::GeneralNames object if provided')
+      expect { CRLDistributionPoints.new(:value => "some-url") }.to raise_error(ArgumentError, 'crl_distribution_points must contain an array or R509::ASN1::GeneralNames object if provided')
     end
 
     it "raises an error if you pass an array that does not contain hashes" do
-      expect { CRLDistributionPoints.new( :value => [{},"string"] ) }.to raise_error(ArgumentError, 'All elements of the array must be hashes with a :type and :value')
+      expect { CRLDistributionPoints.new(:value => [{},"string"]) }.to raise_error(ArgumentError, 'All elements of the array must be hashes with a :type and :value')
     end
 
     it "raises an error if you pass an array that does not contain both :type and :value" do
-      expect { CRLDistributionPoints.new( :value => [{ :type => 'URI' }] ) }.to raise_error(ArgumentError, 'All elements of the array must be hashes with a :type and :value')
-      expect { CRLDistributionPoints.new( :value => [{ :value => 'value' }] ) }.to raise_error(ArgumentError, 'All elements of the array must be hashes with a :type and :value')
+      expect { CRLDistributionPoints.new(:value => [{ :type => 'URI' }]) }.to raise_error(ArgumentError, 'All elements of the array must be hashes with a :type and :value')
+      expect { CRLDistributionPoints.new(:value => [{ :value => 'value' }]) }.to raise_error(ArgumentError, 'All elements of the array must be hashes with a :type and :value')
     end
   end
 

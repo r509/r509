@@ -8,8 +8,8 @@ shared_examples_for "a correct R509 NameConstraints object" do |critical|
     klass = NameConstraints
     ef = OpenSSL::X509::ExtensionFactory.new
     ef.config = OpenSSL::Config.parse(@conf)
-    openssl_ext = ef.create_extension( extension_name, @extension_value, critical)
-    @r509_ext = klass.new( openssl_ext )
+    openssl_ext = ef.create_extension(extension_name, @extension_value, critical)
+    @r509_ext = klass.new(openssl_ext)
   end
 
   it "should have the permitted names" do
@@ -31,24 +31,24 @@ describe R509::Cert::Extensions::NameConstraints do
 
   context "validate name constraints"do
     it "raises an error when not a hash" do
-      expect { R509::Cert::Extensions::NameConstraints.new( 'a string' ) }.to raise_error(ArgumentError,'name_constraints must be provided as a hash')
+      expect { R509::Cert::Extensions::NameConstraints.new('a string') }.to raise_error(ArgumentError,'name_constraints must be provided as a hash')
     end
 
     it "raises an error when permitted and excluded are empty" do
-      expect { R509::Cert::Extensions::NameConstraints.new( :permitted => [], :excluded => [] ) }.to raise_error(ArgumentError,'If name_constraints are supplied you must have at least one valid :permitted or :excluded element')
+      expect { R509::Cert::Extensions::NameConstraints.new(:permitted => [], :excluded => []) }.to raise_error(ArgumentError,'If name_constraints are supplied you must have at least one valid :permitted or :excluded element')
     end
 
     it "raises an error when permitted or excluded are not arrays" do
-      expect { R509::Cert::Extensions::NameConstraints.new( :permitted => 'string', :excluded => 'string' ) }.to raise_error(ArgumentError,'permitted must be an array')
+      expect { R509::Cert::Extensions::NameConstraints.new(:permitted => 'string', :excluded => 'string') }.to raise_error(ArgumentError,'permitted must be an array')
     end
 
     it "raises an error when permitted or excluded elements are not hashes with the required values" do
-      expect { R509::Cert::Extensions::NameConstraints.new( :permitted => [{ "type" => 'DNS' }] ) }.to raise_error(ArgumentError,'Elements within the permitted array must be hashes with both type and value')
-      expect { R509::Cert::Extensions::NameConstraints.new( :permitted => [{ 'value' => '127' }] ) }.to raise_error(ArgumentError,'Elements within the permitted array must be hashes with both type and value')
+      expect { R509::Cert::Extensions::NameConstraints.new(:permitted => [{ "type" => 'DNS' }]) }.to raise_error(ArgumentError,'Elements within the permitted array must be hashes with both type and value')
+      expect { R509::Cert::Extensions::NameConstraints.new(:permitted => [{ 'value' => '127' }]) }.to raise_error(ArgumentError,'Elements within the permitted array must be hashes with both type and value')
     end
 
     it "raises an error when an invalid type is specified" do
-      expect { R509::Cert::Extensions::NameConstraints.new( :permitted => [{ :type => 'invalid', :value => '127' }] ) }.to raise_error(ArgumentError,'invalid is not an allowed type. Check R509::ASN1::GeneralName.map_type_to_tag to see a list of types')
+      expect { R509::Cert::Extensions::NameConstraints.new(:permitted => [{ :type => 'invalid', :value => '127' }]) }.to raise_error(ArgumentError,'invalid is not an allowed type. Check R509::ASN1::GeneralName.map_type_to_tag to see a list of types')
     end
   end
 
