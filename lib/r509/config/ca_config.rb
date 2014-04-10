@@ -64,8 +64,8 @@ module R509
       include R509::IOHelpers
       extend R509::IOHelpers
       attr_reader :ca_cert, :crl_validity_hours, :crl_start_skew_seconds,
-        :crl_number_file, :crl_list_file, :crl_md,
-        :ocsp_chain, :ocsp_start_skew_seconds, :ocsp_validity_hours
+                  :crl_number_file, :crl_list_file, :crl_md, :ocsp_chain,
+                  :ocsp_start_skew_seconds, :ocsp_validity_hours
 
       # Default number of seconds to subtract from now when calculating the signing time of an OCSP response
       DEFAULT_OCSP_START_SKEW_SECONDS = 3600

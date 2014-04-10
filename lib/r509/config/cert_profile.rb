@@ -15,9 +15,10 @@ module R509
     class CertProfile
 
       attr_reader :basic_constraints, :key_usage, :extended_key_usage,
-        :certificate_policies, :subject_item_policy, :ocsp_no_check,
-        :inhibit_any_policy, :policy_constraints, :name_constraints,
-        :authority_info_access, :crl_distribution_points, :default_md, :allowed_mds
+                  :certificate_policies, :subject_item_policy, :ocsp_no_check,
+                  :inhibit_any_policy, :policy_constraints, :name_constraints,
+                  :authority_info_access, :crl_distribution_points,
+                  :default_md, :allowed_mds
 
       # All hash options for CertProfile are optional.
       # @option opts [Hash] :basic_constraints
