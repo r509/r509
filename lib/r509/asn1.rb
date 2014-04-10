@@ -231,6 +231,8 @@ module R509
     class GeneralNames
       include R509::Cert::Extensions::ValidationMixin
 
+      attr_reader :ordered_names
+
       # @param data [Array,R509::ASN1::GeneralNames] Pass an array of hashes to create R509::ASN1::GeneralName objects or an existing R509::ASN1::GeneralNames object
       def initialize(data=nil)
         @types = {
@@ -287,9 +289,7 @@ module R509
 
       # @return [Array] array of GeneralName objects
       # order found in the extension
-      def names
-        @ordered_names
-      end
+      alias_method :names, :ordered_names
 
       # @return [Array] Array of rfc822name strings
       def rfc_822_names

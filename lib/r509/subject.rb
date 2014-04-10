@@ -159,7 +159,7 @@ module R509
 
     def define_dynamic_setter(name,sn)
       instance_eval <<-RUBY
-        def #{name.to_s}(value)
+        def #{name}(value)
           self["#{sn}"]= value
         end
       RUBY
@@ -167,7 +167,7 @@ module R509
 
     def define_dynamic_getter(name,sn)
       instance_eval <<-RUBY
-        def #{name.to_s}
+        def #{name}
           self["#{sn}"]
         end
       RUBY

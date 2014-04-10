@@ -93,8 +93,6 @@ module R509
     end
 
     # Returns the proper instance variable
-    def internal_obj
-      @spki
-    end
+    alias_method :internal_obj, :spki
   end
 end

@@ -222,8 +222,7 @@ module R509
       end
     end
 
-    def internal_obj
-      @req
-    end
+    # Returns the proper instance variable
+    alias_method :internal_obj, :req
   end
 end

@@ -90,10 +90,10 @@ module R509
             raise ArgumentError, "You must supply an OpenSSL::PKey object to :public_key if aki value contains keyid (present by default)"
           end
           if aki[:value].downcase.include?("issuer")
-            if not aki[:issuer_subject].kind_of?(R509::Subject)
+            unless aki[:issuer_subject].kind_of?(R509::Subject)
               raise ArgumentError, "You must supply an R509::Subject object to :issuer_subject if aki value contains issuer"
             end
-            if not aki[:issuer_serial].kind_of?(Integer)
+            unless aki[:issuer_serial].kind_of?(Integer)
               raise ArgumentError, "You must supply an integer to :issuer_serial if aki value contains issuer"
             end
           end

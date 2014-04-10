@@ -132,7 +132,7 @@ module R509
               end
               gns.names.each do |name|
                 serialize = name.serialize_name
-                nc_data.push "#{permit_exclude.to_s};#{serialize[:extension_string]}"
+                nc_data.push "#{permit_exclude};#{serialize[:extension_string]}"
                 nc_conf.push serialize[:conf]
               end
             end

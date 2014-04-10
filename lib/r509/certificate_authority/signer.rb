@@ -104,8 +104,6 @@ module R509::CertificateAuthority
       R509::Cert.new(:cert => cert, :key => csr.key)
     end
 
-    private
-
     def self.check_options(options)
       if options.key?(:csr) and options.key?(:spki)
         raise ArgumentError, "You can't pass both :csr and :spki"
@@ -152,6 +150,7 @@ module R509::CertificateAuthority
       end
       serial
     end
+    private_class_method :create_serial
 
     def self.calculate_not_before(not_before)
       if not_before.nil?
@@ -160,6 +159,7 @@ module R509::CertificateAuthority
       end
       not_before
     end
+    private_class_method :calculate_not_before
 
     def self.calculate_not_after(not_after,not_before)
       if not_after.nil?
@@ -167,6 +167,7 @@ module R509::CertificateAuthority
       end
       not_after
     end
+    private_class_method :calculate_not_after
 
     def self.extract_public_key_subject(options)
       if options.key?(:csr)

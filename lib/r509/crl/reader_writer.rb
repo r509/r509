@@ -44,7 +44,7 @@ module R509
       # Reads a CRL list file from a file or StringIO
       # @yield For each revoked certificate in the CRL
       # @yieldparam serial [Integer] revoked certificate's serial number
-      # @yieldparam reason [Integer,nil] reason for revocation. 
+      # @yieldparam reason [Integer,nil] reason for revocation.
       # @yieldparam revoke_time [Integer]
       def read_list
         return nil if @crl_list_file.nil?
@@ -109,4 +109,3 @@ module R509
     end
   end
 end
-

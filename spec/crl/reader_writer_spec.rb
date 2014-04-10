@@ -55,10 +55,10 @@ describe R509::CRL::FileReaderWriter do
   it "reads a crl list" do
     @rw.crl_list_file = TestFixtures::CRL_LIST_FILE
     expect { |b| @rw.read_list(&b) }.to yield_successive_args(
-        [12345, 0, 1323983885], 
+        [12345, 0, 1323983885],
         [ 12346, nil, 1323983885]
     )
-   
+
   end
 
   it "writes a crl list entry" do

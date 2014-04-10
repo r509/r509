@@ -40,7 +40,7 @@ module R509
           cert.public_key = arg[:public_key]
           ef.subject_certificate = cert
           critical = R509::Cert::Extensions.calculate_critical(arg[:critical], false)
-          arg = ef.create_extension("subjectKeyIdentifier", SKI_EXTENSION_DEFAULT, critical)
+          ef.create_extension("subjectKeyIdentifier", SKI_EXTENSION_DEFAULT, critical)
         end
 
         def validate_subject_key_identifier(ski)

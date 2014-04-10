@@ -272,4 +272,3 @@ describe R509::PrivateKey do
 
   end
 end
-

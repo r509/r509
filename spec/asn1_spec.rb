@@ -472,4 +472,3 @@ describe R509::ASN1::GeneralNames do
     gns.directory_names.size.should == 1
   end
 end
-
