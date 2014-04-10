@@ -31,7 +31,7 @@ describe R509::ASN1 do
     end
 
     it "adds SAN IPv6 names" do
-      general_names = R509::ASN1.general_name_parser(['FE80:0:0:0:0:0:0:1','fe80::2',])
+      general_names = R509::ASN1.general_name_parser(['FE80:0:0:0:0:0:0:1','fe80::2'])
       general_names.ip_addresses.should == ["fe80::1", "fe80::2"]
     end
 

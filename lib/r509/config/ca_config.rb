@@ -211,7 +211,7 @@ module R509
           :crl_validity_hours => conf['crl_validity_hours'],
           :ocsp_validity_hours => conf['ocsp_validity_hours'],
           :ocsp_start_skew_seconds => conf['ocsp_start_skew_seconds'],
-          :crl_md => conf['crl_md'],
+          :crl_md => conf['crl_md']
         }
 
         if conf.key?("crl_list_file")

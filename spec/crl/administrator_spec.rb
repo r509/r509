@@ -11,7 +11,7 @@ describe R509::CRL::Administrator do
 
   it "signs CRL with no delegate certificate" do
     config = R509::Config::CAConfig.new(
-      :ca_cert => TestFixtures.test_ca_cert,
+      :ca_cert => TestFixtures.test_ca_cert
     )
     crl_admin = R509::CRL::Administrator.new(config)
     crl = crl_admin.generate_crl
@@ -21,7 +21,7 @@ describe R509::CRL::Administrator do
   it "signs CRL with delegate certificate" do
     config = R509::Config::CAConfig.new(
       :ca_cert => TestFixtures.test_ca_cert,
-      :crl_cert => TestFixtures.test_ca_crl_delegate,
+      :crl_cert => TestFixtures.test_ca_crl_delegate
     )
     crl_admin = R509::CRL::Administrator.new(config)
     crl = crl_admin.generate_crl
@@ -40,7 +40,7 @@ describe R509::CRL::Administrator do
 
   it "signs CRL with default message digest" do
     config = R509::Config::CAConfig.new(
-      :ca_cert => TestFixtures.test_ca_cert,
+      :ca_cert => TestFixtures.test_ca_cert
     )
     crl_admin = R509::CRL::Administrator.new(config)
     crl = crl_admin.generate_crl

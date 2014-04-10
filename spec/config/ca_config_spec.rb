@@ -82,7 +82,40 @@ describe R509::Config::CAConfigPool do
       end
 
       it "builds yaml" do
-        YAML.load(@pool.to_yaml).should == { "first"=>{ "ca_cert"=>{ "cert"=>"<add_path>", "key"=>"<add_path>" }, "ocsp_start_skew_seconds"=>3600, "ocsp_validity_hours"=>168, "crl_start_skew_seconds"=>3600, "crl_validity_hours"=>168, "crl_md"=>"SHA1", "profiles"=>{ "first_profile"=>{ "default_md"=>"SHA1" } } }, "second"=>{ "ca_cert"=>{ "cert"=>"<add_path>", "key"=>"<add_path>" }, "ocsp_start_skew_seconds"=>3600, "ocsp_validity_hours"=>168, "crl_start_skew_seconds"=>3600, "crl_validity_hours"=>168, "crl_md"=>"SHA1", "profiles"=>{ "first_profile"=>{ "default_md"=>"SHA1" } } } }
+        YAML.load(@pool.to_yaml).should == {
+          "first"=> {
+            "ca_cert"=> {
+              "cert"=>"<add_path>",
+              "key"=>"<add_path>"
+            },
+            "ocsp_start_skew_seconds" => 3600,
+            "ocsp_validity_hours" => 168,
+            "crl_start_skew_seconds" => 3600,
+            "crl_validity_hours" => 168,
+            "crl_md" => "SHA1",
+            "profiles"=> {
+              "first_profile" => {
+                "default_md" => "SHA1"
+              }
+            }
+          },
+          "second" => {
+            "ca_cert" => {
+              "cert" => "<add_path>",
+              "key" => "<add_path>"
+            },
+            "ocsp_start_skew_seconds" => 3600,
+            "ocsp_validity_hours" => 168,
+            "crl_start_skew_seconds" => 3600,
+            "crl_validity_hours" => 168,
+            "crl_md" => "SHA1",
+            "profiles" => {
+              "first_profile" => {
+                "default_md" => "SHA1"
+              }
+            }
+          }
+        }
       end
     end
   end

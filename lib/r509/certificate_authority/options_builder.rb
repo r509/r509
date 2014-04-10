@@ -44,7 +44,7 @@ module R509::CertificateAuthority
       return_hash = {
         :subject => subject,
         :extensions => extensions,
-        :message_digest => message_digest,
+        :message_digest => message_digest
       }
       return_hash[:csr] = options[:csr] unless options[:csr].nil?
       return_hash[:spki] = options[:spki] unless options[:spki].nil?
