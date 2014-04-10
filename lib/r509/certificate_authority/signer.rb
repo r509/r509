@@ -93,7 +93,7 @@ module R509::CertificateAuthority
         R509::Cert::Extensions::AuthorityKeyIdentifier.new(:public_key => public_key)
       ]
 
-      if options.has_key?(:message_digest)
+      if options.key?(:message_digest)
         message_digest = R509::MessageDigest.new(options[:message_digest])
       else
         message_digest = R509::MessageDigest.new(R509::MessageDigest::DEFAULT_MD)
@@ -107,13 +107,13 @@ module R509::CertificateAuthority
     private
 
     def self.check_options(options)
-      if options.has_key?(:csr) and options.has_key?(:spki)
+      if options.key?(:csr) and options.key?(:spki)
         raise ArgumentError, "You can't pass both :csr and :spki"
-      elsif not options.has_key?(:csr) and not options.has_key?(:spki)
+      elsif not options.key?(:csr) and not options.key?(:spki)
         raise ArgumentError, "You must supply either :csr or :spki"
-      elsif options.has_key?(:csr) and not options[:csr].kind_of?(R509::CSR)
+      elsif options.key?(:csr) and not options[:csr].kind_of?(R509::CSR)
         raise ArgumentError, "You must pass an R509::CSR object for :csr"
-      elsif options.has_key?(:spki) and not options[:spki].kind_of?(R509::SPKI)
+      elsif options.key?(:spki) and not options[:spki].kind_of?(R509::SPKI)
         raise ArgumentError, "You must pass an R509::SPKI object for :spki"
       end
     end
@@ -170,12 +170,12 @@ module R509::CertificateAuthority
     end
 
     def self.extract_public_key_subject(options)
-      if options.has_key?(:csr)
-        subject = (options.has_key?(:subject))? R509::Subject.new(options[:subject]) : options[:csr].subject
+      if options.key?(:csr)
+        subject = (options.key?(:subject))? R509::Subject.new(options[:subject]) : options[:csr].subject
         public_key = options[:csr].public_key
       else
         # spki
-        if not options.has_key?(:subject)
+        if not options.key?(:subject)
           raise ArgumentError, "You must supply :subject when passing :spki"
         end
         public_key = options[:spki].public_key

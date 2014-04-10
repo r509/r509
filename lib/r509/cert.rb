@@ -20,20 +20,20 @@ module R509
       if not opts.kind_of?(Hash)
         raise ArgumentError, 'Must provide a hash of options'
       end
-      if opts.has_key?(:pkcs12) and ( opts.has_key?(:key) or opts.has_key?(:cert) )
+      if opts.key?(:pkcs12) and ( opts.key?(:key) or opts.key?(:cert) )
         raise ArgumentError, "When providing pkcs12, do not pass cert or key"
-      elsif opts.has_key?(:pkcs12)
+      elsif opts.key?(:pkcs12)
         pkcs12 = OpenSSL::PKCS12.new( opts[:pkcs12], opts[:password] )
         parse_certificate(pkcs12.certificate)
         parse_private_key(pkcs12.key)
-      elsif not opts.has_key?(:cert)
+      elsif not opts.key?(:cert)
         raise ArgumentError, 'Must provide :cert or :pkcs12'
       else
         csr_check(opts[:cert])
         parse_certificate(opts[:cert])
       end
 
-      if opts.has_key?(:key)
+      if opts.key?(:key)
         parse_private_key(opts[:key], opts[:password])
       end
     end
@@ -270,7 +270,7 @@ module R509
     #
     # @return [Boolean] presence/absence of the nocheck extension
     def ocsp_no_check?
-      return (extensions.has_key?(R509::Cert::Extensions::OCSPNoCheck))
+      return (extensions.key?(R509::Cert::Extensions::OCSPNoCheck))
     end
 
     # Returns this object's CertificatePolicies extension as an R509 extension

@@ -99,7 +99,7 @@ module R509
 
         # validates the structure of the certificate policies array
         def validate_basic_constraints(constraints)
-          if constraints.nil? or not constraints.respond_to?(:has_key?) or not constraints.has_key?(:ca)
+          if constraints.nil? or not constraints.respond_to?(:has_key?) or not constraints.key?(:ca)
             raise ArgumentError, "You must supply a hash with a key named :ca with a boolean value"
           end
           if constraints[:ca].nil? or (not constraints[:ca].kind_of?(TrueClass) and not constraints[:ca].kind_of?(FalseClass))

@@ -289,8 +289,8 @@ describe R509::CertificateAuthority::OptionsBuilder do
         :message_digest => 'sha256',
         :profile_name => 'profile'
       )
-      hash.has_key?(:not_before).should be_false
-      hash.has_key?(:not_after).should be_false
+      hash.key?(:not_before).should be_false
+      hash.key?(:not_after).should be_false
     end
 
     it "raises error when not_after is after the issuing CA's expiry" do

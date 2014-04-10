@@ -97,7 +97,7 @@ module R509
       # @option opts [Integer] :crl_start_skew_seconds The number of seconds to subtract from Time.now when calculating the signing time of a CRL. This is important to handle bad user clocks.
       #
       def initialize(opts = {} )
-        if not opts.has_key?(:ca_cert) then
+        if not opts.key?(:ca_cert) then
           raise ArgumentError, 'Config object requires that you pass :ca_cert'
         end
 
@@ -140,7 +140,7 @@ module R509
       # @param [String] prof
       # @return [R509::Config::CertProfile] The config profile.
       def profile(prof)
-        if !@profiles.has_key?(prof)
+        if !@profiles.key?(prof)
           raise R509::R509Error, "unknown profile '#{prof}'"
         end
         @profiles[prof]
@@ -214,11 +214,11 @@ module R509
           :crl_md => conf['crl_md'],
         }
 
-        if conf.has_key?("crl_list_file")
+        if conf.key?("crl_list_file")
           opts[:crl_list_file] = (ca_root_path + conf['crl_list_file']).to_s
         end
 
-        if conf.has_key?("crl_number_file")
+        if conf.key?("crl_number_file")
           opts[:crl_number_file] = (ca_root_path + conf['crl_number_file']).to_s
         end
 
@@ -279,7 +279,7 @@ module R509
 
       def parse_ocsp_data(opts)
         #ocsp data
-        if opts.has_key?(:ocsp_cert)
+        if opts.key?(:ocsp_cert)
           check_ocsp_crl_delegate(opts[:ocsp_cert],'ocsp_cert')
           @ocsp_cert = opts[:ocsp_cert]
         end
@@ -289,7 +289,7 @@ module R509
       end
 
       def parse_crl_data(opts)
-        if opts.has_key?(:crl_cert)
+        if opts.key?(:crl_cert)
           check_ocsp_crl_delegate(opts[:crl_cert],'crl_cert')
           @crl_cert = opts[:crl_cert]
         end
@@ -313,15 +313,15 @@ module R509
 
       def self.load_ca_cert(ca_cert_hash,ca_root_path)
         return nil if ca_cert_hash.nil?
-        if ca_cert_hash.has_key?('engine')
+        if ca_cert_hash.key?('engine')
           ca_cert = self.load_with_engine(ca_cert_hash,ca_root_path)
         end
 
-        if ca_cert.nil? and ca_cert_hash.has_key?('pkcs12')
+        if ca_cert.nil? and ca_cert_hash.key?('pkcs12')
           ca_cert = self.load_with_pkcs12(ca_cert_hash,ca_root_path)
         end
 
-        if ca_cert.nil? and ca_cert_hash.has_key?('cert')
+        if ca_cert.nil? and ca_cert_hash.key?('cert')
           ca_cert = self.load_with_key(ca_cert_hash,ca_root_path)
         end
 
@@ -329,13 +329,13 @@ module R509
       end
 
       def self.load_with_engine(ca_cert_hash,ca_root_path)
-        if ca_cert_hash.has_key?('key')
+        if ca_cert_hash.key?('key')
           raise ArgumentError, "You can't specify both key and engine"
         end
-        if ca_cert_hash.has_key?('pkcs12')
+        if ca_cert_hash.key?('pkcs12')
           raise ArgumentError, "You can't specify both engine and pkcs12"
         end
-        if not ca_cert_hash.has_key?('key_name')
+        if not ca_cert_hash.key?('key_name')
           raise ArgumentError, "You must supply a key_name with an engine"
         end
 
@@ -354,10 +354,10 @@ module R509
       end
 
       def self.load_with_pkcs12(ca_cert_hash,ca_root_path)
-        if ca_cert_hash.has_key?('cert')
+        if ca_cert_hash.key?('cert')
           raise ArgumentError, "You can't specify both pkcs12 and cert"
         end
-        if ca_cert_hash.has_key?('key')
+        if ca_cert_hash.key?('key')
           raise ArgumentError, "You can't specify both pkcs12 and key"
         end
 
@@ -372,7 +372,7 @@ module R509
       def self.load_with_key(ca_cert_hash,ca_root_path)
         ca_cert_file = ca_root_path + ca_cert_hash['cert']
 
-        if ca_cert_hash.has_key?('key')
+        if ca_cert_hash.key?('key')
           ca_key_file = ca_root_path + ca_cert_hash['key']
           ca_key = R509::PrivateKey.new(
             :key => read_data(ca_key_file),

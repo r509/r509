@@ -5,7 +5,7 @@ shared_examples_for "signing" do |selfsign|
     @options = {}
     @options[:csr] = @csr unless @csr.nil?
     @options[:spki] = @spki unless @spki.nil?
-    if @options.has_key?(:spki)
+    if @options.key?(:spki)
       @options[:subject] = R509::Subject.new([['CN','test']])
     end
   end

@@ -16,13 +16,13 @@ module R509
     def initialize(opts={})
       if not opts.kind_of?(Hash)
         raise ArgumentError, 'Must provide a hash of options'
-      elsif not opts.has_key?(:spki) and not opts.has_key?(:key)
+      elsif not opts.key?(:spki) and not opts.key?(:key)
         raise ArgumentError, 'Must provide either :spki or :key'
       end
 
       @key = load_private_key(opts)
 
-      if opts.has_key?(:spki)
+      if opts.key?(:spki)
         @spki = parse_spki(opts[:spki])
       else
       # create the SPKI from the private key if it wasn't passed in

@@ -92,7 +92,7 @@ module R509
 
     # @private
     def load_private_key(opts)
-      if opts.has_key?(:key)
+      if opts.key?(:key)
         if opts[:key].kind_of?(R509::PrivateKey)
           return opts[:key]
         else

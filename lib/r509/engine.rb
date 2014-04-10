@@ -14,7 +14,7 @@ module R509
     # @return OpenSSL::Engine object
     def load(hash)
       validate_hash(hash)
-      if @engines.has_key?(hash[:id])
+      if @engines.key?(hash[:id])
         @engines[hash[:id]]
       else
         init_engine(hash)
@@ -38,7 +38,7 @@ module R509
     end
 
     def validate_hash(hash)
-      if not hash.respond_to?(:has_key?) or not hash.has_key?(:so_path) or not hash.has_key?(:id)
+      if not hash.respond_to?(:has_key?) or not hash.key?(:so_path) or not hash.key?(:id)
         raise ArgumentError, "You must supply a hash with both :so_path and :id"
       end
     end

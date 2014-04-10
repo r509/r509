@@ -47,7 +47,7 @@ module R509
       if not opts.kind_of?(Hash)
         raise ArgumentError, 'Must provide a hash of options'
       end
-      if opts.has_key?(:subject) and opts.has_key?(:csr)
+      if opts.key?(:subject) and opts.key?(:csr)
         raise ArgumentError, "You must provide :subject or :csr, not both"
       end
       @bit_length = opts[:bit_length] || opts[:bit_strength] || R509::PrivateKey::DEFAULT_STRENGTH
@@ -61,11 +61,11 @@ module R509
         raise ArgumentError, "Must provide #{R509::PrivateKey::KNOWN_TYPES.join(", ")} as type when key is nil"
       end
 
-      if opts.has_key?(:subject)
+      if opts.key?(:subject)
         san_names = R509::ASN1.general_name_parser(opts[:san_names])
         create_request(opts[:subject], san_names) #sets @req
-      elsif opts.has_key?(:csr)
-        if opts.has_key?(:san_names)
+      elsif opts.key?(:csr)
+        if opts.key?(:san_names)
           raise ArgumentError, "You can't add domains to an existing CSR"
         end
         parse_csr(opts[:csr])
@@ -82,7 +82,7 @@ module R509
         @message_digest = R509::MessageDigest.new(opts[:message_digest])
       end
 
-      if not opts.has_key?(:csr)
+      if not opts.key?(:csr)
         @req.sign(@key.key, @message_digest.digest)
       end
       if not @key.nil? and not @req.verify(@key.public_key) then

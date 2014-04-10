@@ -22,8 +22,8 @@ module R509::CertificateAuthority
 
       R509::CertificateAuthority::Signer.check_options(options)
 
-      if (options.has_key?(:csr) and not options[:csr].verify_signature) or
-         (options.has_key?(:spki) and not options[:spki].verify_signature)
+      if (options.key?(:csr) and not options[:csr].verify_signature) or
+         (options.key?(:spki) and not options[:spki].verify_signature)
         raise R509::R509Error, "Request signature is invalid."
       end
 
