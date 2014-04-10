@@ -134,10 +134,10 @@ describe R509::CSR do
   end
   context "when initialized" do
     it "raises exception when providing invalid csr" do
-      expect { R509::CSR.new({:csr => 'invalid csr'}) }.to raise_error(OpenSSL::X509::RequestError)
+      expect { R509::CSR.new(:csr => 'invalid csr') }.to raise_error(OpenSSL::X509::RequestError)
     end
     it "raises exception when providing invalid key" do
-      expect { R509::CSR.new({:csr => @csr, :key => 'invalid key'}) }.to raise_error(R509::R509Error,"Failed to load private key. Invalid key or incorrect password.")
+      expect { R509::CSR.new(:csr => @csr, :key => 'invalid key') }.to raise_error(R509::R509Error,"Failed to load private key. Invalid key or incorrect password.")
     end
   end
   context "when passing a subject array" do
@@ -161,54 +161,54 @@ describe R509::CSR do
   end
   context "when supplying an existing csr" do
     it "populates the bit_length" do
-      csr = R509::CSR.new({ :csr => @csr })
+      csr = R509::CSR.new( :csr => @csr )
       csr.bit_length.should == 2048
     end
     it "populates the subject" do
-      csr = R509::CSR.new({ :csr => @csr })
+      csr = R509::CSR.new( :csr => @csr )
       csr.subject.to_s.should == '/CN=test.local/O=Testing CSR'
     end
     it "parses the san names" do
-      csr = R509::CSR.new({ :csr => @csr })
+      csr = R509::CSR.new( :csr => @csr )
       csr.san.dns_names.should == ["test.local", "additionaldomains.com", "saniam.com"]
     end
     it "parses san names when there are multiple non-SAN attributes" do
-      csr = R509::CSR.new({ :csr => @csr4_multiple_attrs })
+      csr = R509::CSR.new( :csr => @csr4_multiple_attrs )
       csr.san.dns_names.should == ["adomain.com", "anotherdomain.com", "justanexample.com"]
     end
     it "fetches a subject component" do
-      csr = R509::CSR.new({ :csr => @csr })
+      csr = R509::CSR.new( :csr => @csr )
       csr.subject_component('CN').to_s.should == 'test.local'
     end
     it "returns nil when subject component not found" do
-      csr = R509::CSR.new({ :csr => @csr })
+      csr = R509::CSR.new( :csr => @csr )
       csr.subject_component('OU').should be_nil
     end
     it "returns the signature algorithm" do
-      csr = R509::CSR.new({ :csr => @csr })
+      csr = R509::CSR.new( :csr => @csr )
       csr.signature_algorithm.should == 'sha1WithRSAEncryption'
     end
     it "returns RSA key algorithm for RSA CSR" do
-      csr = R509::CSR.new({ :csr => @csr })
+      csr = R509::CSR.new( :csr => @csr )
       csr.key_algorithm.should == "RSA"
     end
     it "returns DSA key algorithm for DSA CSR" do
-      csr = R509::CSR.new({ :csr => @csr_dsa })
+      csr = R509::CSR.new( :csr => @csr_dsa )
       csr.key_algorithm.should == "DSA"
     end
     it "returns the public key" do
       #this is more complex than it should have to be. diff versions of openssl
       #return subtly diff PEM encodings so we need to look at the modulus (n)
       #but beware, because n is not present for DSA certificates
-      csr = R509::CSR.new({ :csr => @csr })
+      csr = R509::CSR.new( :csr => @csr )
       csr.public_key.n.to_i.should == @csr_public_key_modulus.to_i
     end
     it "returns true with valid signature" do
-      csr = R509::CSR.new({ :csr => @csr })
+      csr = R509::CSR.new( :csr => @csr )
       csr.verify_signature.should == true
     end
     it "returns false on invalid signature" do
-      csr = R509::CSR.new({ :csr => @csr_invalid_signature })
+      csr = R509::CSR.new( :csr => @csr_invalid_signature )
       csr.verify_signature.should == false
     end
     it "works when the CSR has unknown OIDs" do
@@ -219,10 +219,10 @@ describe R509::CSR do
   end
   context "when supplying a key with csr" do
     it "raises exception on non-matching key" do
-      expect { R509::CSR.new({:csr => @csr, :key => @key_csr2}) }.to raise_error(R509::R509Error, 'Key does not match request.')
+      expect { R509::CSR.new(:csr => @csr, :key => @key_csr2) }.to raise_error(R509::R509Error, 'Key does not match request.')
     end
     it "accepts matching key" do
-      csr = R509::CSR.new({:csr => @csr2, :key => @key_csr2})
+      csr = R509::CSR.new(:csr => @csr2, :key => @key_csr2)
       csr.to_pem.should == @csr2
     end
   end
@@ -259,13 +259,13 @@ describe R509::CSR do
     end
   end
   it "checks rsa?" do
-    csr = R509::CSR.new({:csr => @csr})
+    csr = R509::CSR.new(:csr => @csr)
     csr.rsa?.should == true
     csr.ec?.should == false
     csr.dsa?.should == false
   end
   it "gets RSA bit length" do
-    csr = R509::CSR.new({:csr => @csr})
+    csr = R509::CSR.new(:csr => @csr)
     csr.bit_length.should == 2048
   end
   it "returns an error for curve_name for dsa/rsa CSRs" do
@@ -273,13 +273,13 @@ describe R509::CSR do
     expect { csr.curve_name }.to raise_error(R509::R509Error, 'Curve name is only available with EC')
   end
   it "checks dsa?" do
-    csr = R509::CSR.new({:csr => @csr_dsa})
+    csr = R509::CSR.new(:csr => @csr_dsa)
     csr.rsa?.should == false
     csr.ec?.should == false
     csr.dsa?.should == true
   end
   it "gets DSA bit length" do
-    csr = R509::CSR.new({:csr => @csr_dsa})
+    csr = R509::CSR.new(:csr => @csr_dsa)
     csr.bit_length.should == 1024
   end
 
@@ -340,13 +340,13 @@ describe R509::CSR do
       OpenSSL::PKey::EC = @ec # add the real one back
     end
     it "checks rsa?" do
-      csr = R509::CSR.new({:csr => @csr})
+      csr = R509::CSR.new(:csr => @csr)
       csr.rsa?.should == true
       csr.ec?.should == false
       csr.dsa?.should == false
     end
     it "returns RSA key algorithm for RSA CSR" do
-      csr = R509::CSR.new({ :csr => @csr })
+      csr = R509::CSR.new( :csr => @csr )
       csr.key_algorithm.should == "RSA"
     end
   end

@@ -55,7 +55,7 @@ describe R509::Cert::Extensions::KeyUsage do
     end
 
     it "errors with hash with non-array :value" do
-      expect { R509::Cert::Extensions::KeyUsage.new({:value => "string"}) }.to raise_error(ArgumentError, 'You must pass a hash with a key :value that contains an array of strings (see README)')
+      expect { R509::Cert::Extensions::KeyUsage.new(:value => "string") }.to raise_error(ArgumentError, 'You must pass a hash with a key :value that contains an array of strings (see README)')
     end
   end
 

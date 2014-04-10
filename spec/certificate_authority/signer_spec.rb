@@ -157,22 +157,22 @@ describe R509::CertificateAuthority::Signer do
     it "raises an error if you pass both csr and spki" do
       csr = R509::CSR.new(:csr => TestFixtures::CSR)
       spki = R509::SPKI.new(:spki => TestFixtures::SPKI, :subject=>[['CN','test']])
-      expect { @ca.sign({ :spki => spki, :csr => csr }) }.to raise_error(ArgumentError, "You can't pass both :csr and :spki")
+      expect { @ca.sign( :spki => spki, :csr => csr ) }.to raise_error(ArgumentError, "You can't pass both :csr and :spki")
     end
 
     it "raise an error if you don't pass an R509::SPKI in :spki" do
       spki = OpenSSL::Netscape::SPKI.new(TestFixtures::SPKI)
-      expect { @ca.sign({ :spki => spki }) }.to raise_error(ArgumentError, 'You must pass an R509::SPKI object for :spki')
+      expect { @ca.sign( :spki => spki ) }.to raise_error(ArgumentError, 'You must pass an R509::SPKI object for :spki')
     end
 
     it "raise an error if you pass :spki without :subject" do
       spki = R509::SPKI.new(:spki => TestFixtures::SPKI)
-      expect { @ca.sign({ :spki => spki }) }.to raise_error(ArgumentError, 'You must supply :subject when passing :spki')
+      expect { @ca.sign( :spki => spki ) }.to raise_error(ArgumentError, 'You must supply :subject when passing :spki')
     end
 
     it "raise an error if you don't pass an R509::CSR in :csr" do
       csr = OpenSSL::X509::Request.new(TestFixtures::CSR)
-      expect { @ca.sign({ :csr => csr }) }.to raise_error(ArgumentError, 'You must pass an R509::CSR object for :csr')
+      expect { @ca.sign( :csr => csr ) }.to raise_error(ArgumentError, 'You must pass an R509::CSR object for :csr')
     end
 
     it "raises an error if attempting to self-sign without a key" do
@@ -233,7 +233,7 @@ describe R509::CertificateAuthority::Signer do
 
   context "Elliptic Curve CSR + CA", :ec => true do
     before :all do
-      test_ca_ec = R509::Config::CAConfig.from_yaml("test_ca_ec", File.read("#{File.dirname(__FILE__)}/../fixtures/config_test_ec.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/../fixtures"})
+      test_ca_ec = R509::Config::CAConfig.from_yaml("test_ca_ec", File.read("#{File.dirname(__FILE__)}/../fixtures/config_test_ec.yaml"), :ca_root_path => "#{File.dirname(__FILE__)}/../fixtures")
       @ca = R509::CertificateAuthority::Signer.new(test_ca_ec)
       @csr = R509::CSR.new(:subject => [['CN','elliptic curves']], :type => "ec")
     end
@@ -244,7 +244,7 @@ describe R509::CertificateAuthority::Signer do
 
   context "Elliptic Curve SPKI + CA", :ec => true do
     before :all do
-      test_ca_ec = R509::Config::CAConfig.from_yaml("test_ca_ec", File.read("#{File.dirname(__FILE__)}/../fixtures/config_test_ec.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/../fixtures"})
+      test_ca_ec = R509::Config::CAConfig.from_yaml("test_ca_ec", File.read("#{File.dirname(__FILE__)}/../fixtures/config_test_ec.yaml"), :ca_root_path => "#{File.dirname(__FILE__)}/../fixtures")
       @ca = R509::CertificateAuthority::Signer.new(test_ca_ec)
       private_key = R509::PrivateKey.new(:type => "ec")
       @spki = R509::SPKI.new(:key => private_key)
@@ -255,7 +255,7 @@ describe R509::CertificateAuthority::Signer do
 
   context "DSA CSR + CA", :ec => true do
     before :all do
-      test_ca_dsa = R509::Config::CAConfig.from_yaml("test_ca_dsa", File.read("#{File.dirname(__FILE__)}/../fixtures/config_test_dsa.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/../fixtures"})
+      test_ca_dsa = R509::Config::CAConfig.from_yaml("test_ca_dsa", File.read("#{File.dirname(__FILE__)}/../fixtures/config_test_dsa.yaml"), :ca_root_path => "#{File.dirname(__FILE__)}/../fixtures")
 
       @ca = R509::CertificateAuthority::Signer.new(test_ca_dsa)
       @csr = R509::CSR.new(:subject => [['CN','elliptic curves']], :type => "dsa", :bit_strength => 512)
@@ -267,7 +267,7 @@ describe R509::CertificateAuthority::Signer do
 
   context "DSA SPKI + CA", :ec => true do
     before :all do
-      test_ca_dsa = R509::Config::CAConfig.from_yaml("test_ca_dsa", File.read("#{File.dirname(__FILE__)}/../fixtures/config_test_dsa.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/../fixtures"})
+      test_ca_dsa = R509::Config::CAConfig.from_yaml("test_ca_dsa", File.read("#{File.dirname(__FILE__)}/../fixtures/config_test_dsa.yaml"), :ca_root_path => "#{File.dirname(__FILE__)}/../fixtures")
       @ca = R509::CertificateAuthority::Signer.new(test_ca_dsa)
       private_key = R509::PrivateKey.new(:type => "dsa", :bit_strength => 512)
       @spki = R509::SPKI.new(:key => private_key)

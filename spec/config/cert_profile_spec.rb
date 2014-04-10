@@ -63,7 +63,7 @@ describe R509::Config::CertProfile do
     profile.subject_item_policy.should == nil
   end
   it "loads profiles from YAML while setting expected defaults" do
-    config = R509::Config::CAConfig.from_yaml("test_ca", File.read("#{File.dirname(__FILE__)}/../fixtures/config_test.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/../fixtures"})
+    config = R509::Config::CAConfig.from_yaml("test_ca", File.read("#{File.dirname(__FILE__)}/../fixtures/config_test.yaml"), :ca_root_path => "#{File.dirname(__FILE__)}/../fixtures")
     server_profile = config.profile("server") # no ocsp_no_check node
     server_profile.ocsp_no_check.should == nil
     ocsp_profile = config.profile("ocsp_delegate_with_no_check") # ocsp_no_check => true
@@ -73,7 +73,7 @@ describe R509::Config::CertProfile do
   end
 
   it "builds YAML" do
-    config = R509::Config::CAConfig.from_yaml("test_ca", File.read("#{File.dirname(__FILE__)}/../fixtures/config_test.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/../fixtures"})
+    config = R509::Config::CAConfig.from_yaml("test_ca", File.read("#{File.dirname(__FILE__)}/../fixtures/config_test.yaml"), :ca_root_path => "#{File.dirname(__FILE__)}/../fixtures")
     YAML.load(config.profile("server").to_yaml).should == {"basic_constraints"=>{:ca=>false, :critical=>true}, "key_usage"=>{:value=>["digitalSignature", "keyEncipherment"], :critical=>false}, "extended_key_usage"=>{:value=>["serverAuth"], :critical=>false}, "default_md"=>R509::MessageDigest::DEFAULT_MD}
   end
 

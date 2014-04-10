@@ -16,9 +16,9 @@ describe R509::Config::CAConfigPool do
         :profiles => { "first_profile" => R509::Config::CertProfile.new }
       )
 
-      pool = R509::Config::CAConfigPool.new({
+      pool = R509::Config::CAConfigPool.new(
         "first" => config
-      })
+      )
 
       pool["first"].should == config
     end
@@ -45,9 +45,9 @@ describe R509::Config::CAConfigPool do
           :ca_cert => TestFixtures.test_ca_cert,
           :profiles => { "first_profile" => R509::Config::CertProfile.new }
         )
-        @pool = R509::Config::CAConfigPool.new({
+        @pool = R509::Config::CAConfigPool.new(
           "first" => @config
-        })
+        )
       end
 
       it "creates" do
@@ -69,10 +69,10 @@ describe R509::Config::CAConfigPool do
           :ca_cert => TestFixtures.test_ca_cert,
           :profiles => { "first_profile" => R509::Config::CertProfile.new }
         )
-        @pool = R509::Config::CAConfigPool.new({
+        @pool = R509::Config::CAConfigPool.new(
           "first" => @config1,
           "second" => @config2
-        })
+        )
       end
 
       it "creates" do
@@ -89,7 +89,7 @@ describe R509::Config::CAConfigPool do
 
   context "loaded from YAML" do
     it "should load two configs" do
-      pool = R509::Config::CAConfigPool.from_yaml("certificate_authorities", File.read("#{File.dirname(__FILE__)}/../fixtures/config_pool_test_minimal.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/../fixtures"})
+      pool = R509::Config::CAConfigPool.from_yaml("certificate_authorities", File.read("#{File.dirname(__FILE__)}/../fixtures/config_pool_test_minimal.yaml"), :ca_root_path => "#{File.dirname(__FILE__)}/../fixtures")
 
       pool.names.should include("test_ca", "second_ca")
 
@@ -260,7 +260,7 @@ describe R509::Config::CAConfig do
   end
 
   it "should load YAML" do
-    config = R509::Config::CAConfig.from_yaml("test_ca", File.read("#{File.dirname(__FILE__)}/../fixtures/config_test.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/../fixtures"})
+    config = R509::Config::CAConfig.from_yaml("test_ca", File.read("#{File.dirname(__FILE__)}/../fixtures/config_test.yaml"), :ca_root_path => "#{File.dirname(__FILE__)}/../fixtures")
     config.crl_validity_hours.should == 72
     config.ocsp_validity_hours.should == 96
     config.crl_list_file.should match(/list_file$/)
@@ -280,72 +280,72 @@ describe R509::Config::CAConfig do
     config.profile("name_constraints").name_constraints.should_not be_nil
   end
   it "loads CRL cert/key from yaml" do
-    config = R509::Config::CAConfig.from_yaml("crl_delegate_ca", File.read("#{File.dirname(__FILE__)}/../fixtures/config_test_various.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/../fixtures"})
+    config = R509::Config::CAConfig.from_yaml("crl_delegate_ca", File.read("#{File.dirname(__FILE__)}/../fixtures/config_test_various.yaml"), :ca_root_path => "#{File.dirname(__FILE__)}/../fixtures")
     config.crl_cert.has_private_key?.should == true
     config.crl_cert.subject.to_s.should == "/C=US/ST=Illinois/L=Chicago/O=r509 LLC/CN=r509 CRL Delegate"
   end
   it "loads CRL pkcs12 from yaml" do
-    config = R509::Config::CAConfig.from_yaml("crl_pkcs12_ca", File.read("#{File.dirname(__FILE__)}/../fixtures/config_test_various.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/../fixtures"})
+    config = R509::Config::CAConfig.from_yaml("crl_pkcs12_ca", File.read("#{File.dirname(__FILE__)}/../fixtures/config_test_various.yaml"), :ca_root_path => "#{File.dirname(__FILE__)}/../fixtures")
     config.crl_cert.has_private_key?.should == true
     config.crl_cert.subject.to_s.should == "/C=US/ST=Illinois/L=Chicago/O=r509 LLC/CN=r509 CRL Delegate"
   end
   it "loads CRL cert/key in engine from yaml" do
-    expect { R509::Config::CAConfig.from_yaml("crl_engine_ca", File.read("#{File.dirname(__FILE__)}/../fixtures/config_test_various.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/../fixtures"}) }.to raise_error(ArgumentError,"You must supply a key_name with an engine")
+    expect { R509::Config::CAConfig.from_yaml("crl_engine_ca", File.read("#{File.dirname(__FILE__)}/../fixtures/config_test_various.yaml"), :ca_root_path => "#{File.dirname(__FILE__)}/../fixtures") }.to raise_error(ArgumentError,"You must supply a key_name with an engine")
   end
   it "loads OCSP cert/key from yaml" do
-    config = R509::Config::CAConfig.from_yaml("ocsp_delegate_ca", File.read("#{File.dirname(__FILE__)}/../fixtures/config_test_various.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/../fixtures"})
+    config = R509::Config::CAConfig.from_yaml("ocsp_delegate_ca", File.read("#{File.dirname(__FILE__)}/../fixtures/config_test_various.yaml"), :ca_root_path => "#{File.dirname(__FILE__)}/../fixtures")
     config.ocsp_cert.has_private_key?.should == true
     config.ocsp_cert.subject.to_s.should == "/C=US/ST=Illinois/L=Chicago/O=r509 LLC/CN=r509 OCSP Signer"
   end
   it "loads OCSP pkcs12 from yaml" do
-    config = R509::Config::CAConfig.from_yaml("ocsp_pkcs12_ca", File.read("#{File.dirname(__FILE__)}/../fixtures/config_test_various.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/../fixtures"})
+    config = R509::Config::CAConfig.from_yaml("ocsp_pkcs12_ca", File.read("#{File.dirname(__FILE__)}/../fixtures/config_test_various.yaml"), :ca_root_path => "#{File.dirname(__FILE__)}/../fixtures")
     config.ocsp_cert.has_private_key?.should == true
     config.ocsp_cert.subject.to_s.should == "/C=US/ST=Illinois/L=Chicago/O=r509 LLC/CN=r509 OCSP Signer"
   end
   it "loads OCSP cert/key in engine from yaml" do
     #most of this code path is tested by loading ca_cert engine.
-    expect { R509::Config::CAConfig.from_yaml("ocsp_engine_ca", File.read("#{File.dirname(__FILE__)}/../fixtures/config_test_various.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/../fixtures"}) }.to raise_error(ArgumentError,"You must supply a key_name with an engine")
+    expect { R509::Config::CAConfig.from_yaml("ocsp_engine_ca", File.read("#{File.dirname(__FILE__)}/../fixtures/config_test_various.yaml"), :ca_root_path => "#{File.dirname(__FILE__)}/../fixtures") }.to raise_error(ArgumentError,"You must supply a key_name with an engine")
   end
   it "loads OCSP chain from yaml" do
-    config = R509::Config::CAConfig.from_yaml("ocsp_chain_ca", File.read("#{File.dirname(__FILE__)}/../fixtures/config_test_various.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/../fixtures"})
+    config = R509::Config::CAConfig.from_yaml("ocsp_chain_ca", File.read("#{File.dirname(__FILE__)}/../fixtures/config_test_various.yaml"), :ca_root_path => "#{File.dirname(__FILE__)}/../fixtures")
     config.ocsp_chain.size.should == 2
     config.ocsp_chain[0].kind_of?(OpenSSL::X509::Certificate).should == true
     config.ocsp_chain[1].kind_of?(OpenSSL::X509::Certificate).should == true
   end
   it "should load subject_item_policy from yaml (if present)" do
-    config = R509::Config::CAConfig.from_yaml("test_ca", File.read("#{File.dirname(__FILE__)}/../fixtures/config_test.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/../fixtures"})
+    config = R509::Config::CAConfig.from_yaml("test_ca", File.read("#{File.dirname(__FILE__)}/../fixtures/config_test.yaml"), :ca_root_path => "#{File.dirname(__FILE__)}/../fixtures")
     config.profile("server").subject_item_policy.should be_nil
     config.profile("server_with_subject_item_policy").subject_item_policy.optional.should include("O","OU")
     config.profile("server_with_subject_item_policy").subject_item_policy.required.should include("CN","ST","C")
   end
 
   it "should load YAML which only has a CA Cert and Key defined" do
-    config = R509::Config::CAConfig.from_yaml("test_ca", File.read("#{File.dirname(__FILE__)}/../fixtures/config_test_minimal.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/../fixtures"})
+    config = R509::Config::CAConfig.from_yaml("test_ca", File.read("#{File.dirname(__FILE__)}/../fixtures/config_test_minimal.yaml"), :ca_root_path => "#{File.dirname(__FILE__)}/../fixtures")
     config.num_profiles.should == 0
   end
 
   it "should load YAML which has CA cert and key with password" do
-    expect { R509::Config::CAConfig.from_yaml("password_ca", File.read("#{File.dirname(__FILE__)}/../fixtures/config_test_password.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/../fixtures"}) }.to_not raise_error
+    expect { R509::Config::CAConfig.from_yaml("password_ca", File.read("#{File.dirname(__FILE__)}/../fixtures/config_test_password.yaml"), :ca_root_path => "#{File.dirname(__FILE__)}/../fixtures") }.to_not raise_error
   end
 
   it "should load YAML which has a PKCS12 with password" do
-    expect { R509::Config::CAConfig.from_yaml("pkcs12_ca", File.read("#{File.dirname(__FILE__)}/../fixtures/config_test_various.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/../fixtures"}) }.to_not raise_error
+    expect { R509::Config::CAConfig.from_yaml("pkcs12_ca", File.read("#{File.dirname(__FILE__)}/../fixtures/config_test_various.yaml"), :ca_root_path => "#{File.dirname(__FILE__)}/../fixtures") }.to_not raise_error
   end
 
   it "raises error on YAML with pkcs12 and key" do
-    expect { R509::Config::CAConfig.from_yaml("pkcs12_key_ca", File.read("#{File.dirname(__FILE__)}/../fixtures/config_test_various.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/../fixtures"}) }.to raise_error(ArgumentError, "You can't specify both pkcs12 and key")
+    expect { R509::Config::CAConfig.from_yaml("pkcs12_key_ca", File.read("#{File.dirname(__FILE__)}/../fixtures/config_test_various.yaml"), :ca_root_path => "#{File.dirname(__FILE__)}/../fixtures") }.to raise_error(ArgumentError, "You can't specify both pkcs12 and key")
   end
 
   it "raises error on YAML with pkcs12 and cert" do
-    expect { R509::Config::CAConfig.from_yaml("pkcs12_cert_ca", File.read("#{File.dirname(__FILE__)}/../fixtures/config_test_various.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/../fixtures"}) }.to raise_error(ArgumentError, "You can't specify both pkcs12 and cert")
+    expect { R509::Config::CAConfig.from_yaml("pkcs12_cert_ca", File.read("#{File.dirname(__FILE__)}/../fixtures/config_test_various.yaml"), :ca_root_path => "#{File.dirname(__FILE__)}/../fixtures") }.to raise_error(ArgumentError, "You can't specify both pkcs12 and cert")
   end
 
   it "raises error on YAML with pkcs12 and engine" do
-    expect { R509::Config::CAConfig.from_yaml("pkcs12_engine_ca", File.read("#{File.dirname(__FILE__)}/../fixtures/config_test_various.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/../fixtures"}) }.to raise_error(ArgumentError, "You can't specify both engine and pkcs12")
+    expect { R509::Config::CAConfig.from_yaml("pkcs12_engine_ca", File.read("#{File.dirname(__FILE__)}/../fixtures/config_test_various.yaml"), :ca_root_path => "#{File.dirname(__FILE__)}/../fixtures") }.to raise_error(ArgumentError, "You can't specify both engine and pkcs12")
   end
 
   it "loads config with cert and no key (useful in certain cases)" do
-    config = R509::Config::CAConfig.from_yaml("cert_no_key_ca", File.read("#{File.dirname(__FILE__)}/../fixtures/config_test_various.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/../fixtures"})
+    config = R509::Config::CAConfig.from_yaml("cert_no_key_ca", File.read("#{File.dirname(__FILE__)}/../fixtures/config_test_various.yaml"), :ca_root_path => "#{File.dirname(__FILE__)}/../fixtures")
     config.ca_cert.subject.to_s.should_not be_nil
   end
 
@@ -358,31 +358,31 @@ describe R509::Config::CAConfig do
 
     R509::Engine.instance.should_receive(:load).with(engine).and_return(fake_engine)
 
-    R509::Config::CAConfig.load_from_hash({"ca_cert"=>{"cert"=>"#{File.dirname(__FILE__)}/../fixtures/test_ca.cer", "engine"=>engine, "key_name" => "key"}, "default_md"=>"SHA512", "profiles"=>{}})
+    R509::Config::CAConfig.load_from_hash("ca_cert"=>{"cert"=>"#{File.dirname(__FILE__)}/../fixtures/test_ca.cer", "engine"=>engine, "key_name" => "key"}, "default_md"=>"SHA512", "profiles"=>{})
   end
 
   it "should fail if YAML for ca_cert contains engine and key" do
-    expect { R509::Config::CAConfig.from_yaml("engine_and_key", File.read("#{File.dirname(__FILE__)}/../fixtures/config_test_engine_key.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/../fixtures"}) }.to raise_error(ArgumentError, "You can't specify both key and engine")
+    expect { R509::Config::CAConfig.from_yaml("engine_and_key", File.read("#{File.dirname(__FILE__)}/../fixtures/config_test_engine_key.yaml"), :ca_root_path => "#{File.dirname(__FILE__)}/../fixtures") }.to raise_error(ArgumentError, "You can't specify both key and engine")
   end
 
   it "should fail if YAML for ca_cert contains engine but no key_name" do
-    expect { R509::Config::CAConfig.from_yaml("engine_no_key_name", File.read("#{File.dirname(__FILE__)}/../fixtures/config_test_engine_no_key_name.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/../fixtures"}) }.to raise_error(ArgumentError, 'You must supply a key_name with an engine')
+    expect { R509::Config::CAConfig.from_yaml("engine_no_key_name", File.read("#{File.dirname(__FILE__)}/../fixtures/config_test_engine_no_key_name.yaml"), :ca_root_path => "#{File.dirname(__FILE__)}/../fixtures") }.to raise_error(ArgumentError, 'You must supply a key_name with an engine')
   end
 
   it "should fail if YAML config is null" do
-    expect{ R509::Config::CAConfig.from_yaml("no_config_here", File.read("#{File.dirname(__FILE__)}/../fixtures/config_test.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/../fixtures"}) }.to raise_error(ArgumentError)
+    expect{ R509::Config::CAConfig.from_yaml("no_config_here", File.read("#{File.dirname(__FILE__)}/../fixtures/config_test.yaml"), :ca_root_path => "#{File.dirname(__FILE__)}/../fixtures") }.to raise_error(ArgumentError)
   end
 
   it "should fail if YAML config isn't a hash" do
-    expect{ R509::Config::CAConfig.from_yaml("config_is_string", File.read("#{File.dirname(__FILE__)}/../fixtures/config_test.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/../fixtures"}) }.to raise_error(ArgumentError)
+    expect{ R509::Config::CAConfig.from_yaml("config_is_string", File.read("#{File.dirname(__FILE__)}/../fixtures/config_test.yaml"), :ca_root_path => "#{File.dirname(__FILE__)}/../fixtures") }.to raise_error(ArgumentError)
   end
 
   it "should fail if YAML config doesn't give a root CA directory that's a directory" do
-    expect{ R509::Config::CAConfig.from_yaml("test_ca", File.read("#{File.dirname(__FILE__)}/../fixtures/config_test.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/../fixtures/no_directory_here"}) }.to raise_error(R509::R509Error)
+    expect{ R509::Config::CAConfig.from_yaml("test_ca", File.read("#{File.dirname(__FILE__)}/../fixtures/config_test.yaml"), :ca_root_path => "#{File.dirname(__FILE__)}/../fixtures/no_directory_here") }.to raise_error(R509::R509Error)
   end
 
   it "should load YAML from filename" do
-    config = R509::Config::CAConfig.load_yaml("test_ca", "#{File.dirname(__FILE__)}/../fixtures/config_test.yaml", {:ca_root_path => "#{File.dirname(__FILE__)}/../fixtures"})
+    config = R509::Config::CAConfig.load_yaml("test_ca", "#{File.dirname(__FILE__)}/../fixtures/config_test.yaml", :ca_root_path => "#{File.dirname(__FILE__)}/../fixtures")
     config.crl_validity_hours.should == 72
     config.ocsp_validity_hours.should == 96
     config.num_profiles.should == 9

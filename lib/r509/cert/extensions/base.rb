@@ -59,10 +59,10 @@ module R509
         array.each do |name|
           value = (name.value.kind_of?(R509::Subject))? name.value.to_h : name.value
           data.push(
-            {
+            
               :type => name.short_type,
               :value => value
-            }
+            
           )
         end
         data
