@@ -298,7 +298,7 @@ describe R509::CertificateAuthority::OptionsBuilder do
           :csr => @csr,
           :message_digest => 'sha256',
           :profile_name => 'profile',
-          :not_after => Time.now + 86400*7300*25
+          :not_after => Time.now + 86400 * 7300 * 25
         )
       end.to raise_error(R509::R509Error,'The requested certificate lifetime would exceed the issuing CA.')
     end

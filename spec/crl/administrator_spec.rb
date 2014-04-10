@@ -160,14 +160,14 @@ describe R509::CRL::Administrator do
     t = Time.at Time.now.to_i
     Time.should_receive(:now).twice.and_return(t)
     crl = crl_admin.generate_crl
-    crl.next_update.should == (t.utc+168*3600) # default 168 hours (7 days)
+    crl.next_update.should == (t.utc + 168 * 3600) # default 168 hours (7 days)
   end
   it "has proper defaults for last_update and next_update" do
     crl_admin = R509::CRL::Administrator.new(@test_ca_config)
     now = Time.at Time.now.to_i
     crl = crl_admin.generate_crl
-    crl.last_update.should == now-@test_ca_config.crl_start_skew_seconds
-    crl.next_update.should == now+@test_ca_config.crl_validity_hours*3600
+    crl.last_update.should == now - @test_ca_config.crl_start_skew_seconds
+    crl.next_update.should == now + @test_ca_config.crl_validity_hours * 3600
   end
   it "takes custom last_update and next_update" do
     crl_admin = R509::CRL::Administrator.new(@test_ca_config)

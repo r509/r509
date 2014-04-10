@@ -72,7 +72,7 @@ describe R509::Cert::Extensions::SubjectAlternativeName do
         end
 
         it "builds yaml" do
-          YAML.load(@san.to_yaml).should == { :critical=>false, :value=>[{ :type=>"email", :value=>"random string" }] }
+          YAML.load(@san.to_yaml).should == { :critical => false, :value => [{ :type => "email", :value => "random string" }] }
         end
       end
 

@@ -73,8 +73,8 @@ module R509
 
         def parse_extension
           data = R509::ASN1.get_extension_payload(self)
-          @ocsp= R509::ASN1::GeneralNames.new
-          @ca_issuers= R509::ASN1::GeneralNames.new
+          @ocsp = R509::ASN1::GeneralNames.new
+          @ca_issuers = R509::ASN1::GeneralNames.new
           data.entries.each do |access_description|
             #   AccessDescription  ::=  SEQUENCE {
             #           accessMethod          OBJECT IDENTIFIER,

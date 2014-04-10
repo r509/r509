@@ -98,7 +98,7 @@ module R509
         # We have to supply the curve name to the temporary key object or else #public_key= fails
         curve_name = self.key.group.curve_name
         temp_key = OpenSSL::PKey::EC.new(curve_name)
-        temp_key.public_key=self.key.public_key
+        temp_key.public_key = self.key.public_key
         temp_key
       else
         self.key.public_key

@@ -76,7 +76,7 @@ describe R509::Cert::Extensions::AuthorityInfoAccess do
         end
 
         it "builds yaml" do
-          YAML.load(@aia.to_yaml).should == { :critical=>false, :ocsp_location=>[{ :type=>"email", :value=>"random string" }, { :type=>"dirName", :value=>{ :CN=>"test", :O=>"myOrg", :C=>"US" } }], :ca_issuers_location=>[{ :type=>"email", :value=>"random string" }, { :type=>"dirName", :value=>{ :CN=>"test", :O=>"myOrg", :C=>"US" } }] }
+          YAML.load(@aia.to_yaml).should == { :critical => false, :ocsp_location => [{ :type => "email", :value => "random string" }, { :type => "dirName", :value => { :CN => "test", :O => "myOrg", :C => "US" } }], :ca_issuers_location => [{ :type => "email", :value => "random string" }, { :type => "dirName", :value => { :CN => "test", :O => "myOrg", :C => "US" } }] }
         end
       end
 

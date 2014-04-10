@@ -85,13 +85,13 @@ module R509
           conf = ["[#{section}]"]
           conf.push "policyIdentifier=#{hash[:policy_identifier]}" unless hash[:policy_identifier].nil?
           hash[:cps_uris].each_with_index do |cps,idx|
-            conf.push "CPS.#{idx+1}=\"#{cps}\""
+            conf.push "CPS.#{idx + 1}=\"#{cps}\""
           end if hash[:cps_uris].respond_to?(:each_with_index)
 
           user_notice_confs = []
           hash[:user_notices].each_with_index do |un,k|
-            conf.push "userNotice.#{k+1}=@user_notice#{k+1}#{index}"
-            user_notice_confs.push "[user_notice#{k+1}#{index}]"
+            conf.push "userNotice.#{k + 1}=@user_notice#{k + 1}#{index}"
+            user_notice_confs.push "[user_notice#{k + 1}#{index}]"
             user_notice_confs.push "explicitText=\"#{un[:explicit_text]}\"" unless un[:explicit_text].nil?
             # if org is supplied notice numbers is also required (and vice versa). enforced in CAProfile
             user_notice_confs.push "organization=\"#{un[:organization]}\"" unless un[:organization].nil?

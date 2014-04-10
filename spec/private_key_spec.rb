@@ -14,13 +14,13 @@ describe R509::PrivateKey do
     @ec_key_encrypted = TestFixtures::EC_KEY1_ENCRYPTED
   end
   it "throws an exception when given a type other than DSA, RSA, or EC" do
-    expect { R509::PrivateKey.new(:type=>:not_rsa_or_dsa) }.to raise_error(ArgumentError)
+    expect { R509::PrivateKey.new(:type => :not_rsa_or_dsa) }.to raise_error(ArgumentError)
   end
   it "throws an exception when no hash is provided" do
     expect { R509::PrivateKey.new('string') }.to raise_error(ArgumentError,'Must provide a hash of options')
   end
   it "returns the right value for #rsa?" do
-    private_key = R509::PrivateKey.new(:key=>@key_csr)
+    private_key = R509::PrivateKey.new(:key => @key_csr)
     private_key.dsa?.should == false
     private_key.ec?.should == false
     private_key.rsa?.should == true
@@ -38,11 +38,11 @@ describe R509::PrivateKey do
     private_key.bit_strength.should == 2048
   end
   it "defaults to RSA" do
-    private_key = R509::PrivateKey.new(:bit_length=>1024)
+    private_key = R509::PrivateKey.new(:bit_length => 1024)
     private_key.key.kind_of?(OpenSSL::PKey::RSA).should == true
   end
   it "loads a pre-existing RSA key" do
-    private_key = R509::PrivateKey.new(:key=>@key_csr)
+    private_key = R509::PrivateKey.new(:key => @key_csr)
     private_key.to_pem.should == @key_csr
     @key_csr.should_not == nil
   end

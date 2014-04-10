@@ -137,7 +137,7 @@ describe R509::SPKI do
       spki.to_pem.should == @spki_rsa_newlines.gsub("\n","")
     end
     it "properly strips SPKAC= prefix and loads" do
-      spki = R509::SPKI.new(:spki => "SPKAC="+@spki)
+      spki = R509::SPKI.new(:spki => "SPKAC=" + @spki)
       spki.to_pem.should == @spki
     end
   end

@@ -60,7 +60,7 @@ module R509
         private
 
         def parse_extension
-          @general_names= R509::ASN1::GeneralNames.new
+          @general_names = R509::ASN1::GeneralNames.new
           data = R509::ASN1.get_extension_payload(self)
           data.entries.each do |distribution_point|
             #   DistributionPoint ::= SEQUENCE {

@@ -16,7 +16,7 @@ shared_examples_for "signing" do |selfsign|
     else
       cert = @ca.sign(@options)
     end
-    subject = (@options[:csr].nil?)?@options[:subject]:@options[:csr].subject
+    subject = (@options[:csr].nil?) ? @options[:subject] : @options[:csr].subject
     cert.subject.to_s.should == subject.to_s
   end
 
@@ -156,7 +156,7 @@ describe R509::CertificateAuthority::Signer do
 
     it "raises an error if you pass both csr and spki" do
       csr = R509::CSR.new(:csr => TestFixtures::CSR)
-      spki = R509::SPKI.new(:spki => TestFixtures::SPKI, :subject=>[['CN','test']])
+      spki = R509::SPKI.new(:spki => TestFixtures::SPKI, :subject => [['CN','test']])
       expect { @ca.sign(:spki => spki, :csr => csr) }.to raise_error(ArgumentError, "You can't pass both :csr and :spki")
     end
 

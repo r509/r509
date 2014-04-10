@@ -73,7 +73,7 @@ module R509::CertificateAuthority
         end
       else
         # it doesn't, so either use their md (if valid) or the default one
-        message_digest = (not requested_md.nil?)? R509::MessageDigest.new(requested_md) : R509::MessageDigest.new(profile.default_md)
+        message_digest = (not requested_md.nil?) ? R509::MessageDigest.new(requested_md) : R509::MessageDigest.new(profile.default_md)
       end
       message_digest.name
     end

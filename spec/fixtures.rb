@@ -155,7 +155,7 @@ module TestFixtures
   STCA_OCSP_REQUEST  = read_fixture('stca_ocsp_request.der')
   STCA_OCSP_RESPONSE  = read_fixture('stca_ocsp_response.der')
 
-  CRL_LIST_FILE = (FIXTURES_PATH+'crl_list_file.txt').to_s
+  CRL_LIST_FILE = (FIXTURES_PATH + 'crl_list_file.txt').to_s
 
   CRL_REASON = read_fixture("crl_with_reason.pem")
 

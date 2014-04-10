@@ -110,7 +110,7 @@ module R509
         # so we can make sure they gave us everything that's required
         diff = @required + @match - supplied
         unless diff.empty?
-          raise R509::R509Error, "This profile requires you supply "+(@required+@match).join(", ")
+          raise R509::R509Error, "This profile requires you supply " + (@required + @match).join(", ")
         end
       end
     end

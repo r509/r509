@@ -101,7 +101,7 @@ module R509
       # @param next_update [Time] the nextUpdate for the CRL
       #
       # @return [R509::CRL::SignedList] signed CRL
-      def generate_crl(last_update=Time.at(Time.now.to_i)-@config.crl_start_skew_seconds,next_update=Time.at(Time.now)+@config.crl_validity_hours*3600)
+      def generate_crl(last_update=Time.at(Time.now.to_i) - @config.crl_start_skew_seconds,next_update=Time.at(Time.now) + @config.crl_validity_hours * 3600)
         # Time.at(Time.now.to_i) removes sub-second precision. Subsecond precision is irrelevant
         # for CRL update times and makes testing harder.
         crl = create_crl_object(last_update,next_update)

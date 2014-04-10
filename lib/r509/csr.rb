@@ -172,7 +172,7 @@ module R509
             # if csr is probably PEM (MII is the beginning of every base64
             # encoded DER) then add the wrapping lines if they aren't provided.
             # tools like Microsoft's xenroll do this.
-            csr = "-----BEGIN CERTIFICATE REQUEST-----\n"+csr+"\n-----END CERTIFICATE REQUEST-----"
+            csr = "-----BEGIN CERTIFICATE REQUEST-----\n" + csr + "\n-----END CERTIFICATE REQUEST-----"
           end
         end
         # and now we try again...

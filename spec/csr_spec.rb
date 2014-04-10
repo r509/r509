@@ -141,7 +141,7 @@ describe R509::CSR do
   end
   context "when passing a subject array" do
     it "generates a matching CSR" do
-      csr = R509::CSR.new(:subject=> [['CN','langui.sh'],['ST','Illinois'],['L','Chicago'],['C','US'],['emailAddress','ca@langui.sh']], :bit_length => 1024)
+      csr = R509::CSR.new(:subject => [['CN','langui.sh'],['ST','Illinois'],['L','Chicago'],['C','US'],['emailAddress','ca@langui.sh']], :bit_length => 1024)
       csr.subject.to_s.should == '/CN=langui.sh/ST=Illinois/L=Chicago/C=US/emailAddress=ca@langui.sh'
     end
     it "generates a matching csr when supplying raw oids" do

@@ -145,7 +145,7 @@ module R509
 
         # @return [Hash]
       def to_h
-        val = (@value.kind_of?(R509::Subject))? @value.to_h : @value
+        val = (@value.kind_of?(R509::Subject)) ? @value.to_h : @value
 
         { :type => @short_type, :value => val }
       end
@@ -181,7 +181,7 @@ module R509
         @tag = asn[:tag] || R509::ASN1::GeneralName.map_type_to_tag(asn[:type])
         @type = R509::ASN1::GeneralName.map_tag_to_type(@tag)
         @short_type = R509::ASN1::GeneralName.map_tag_to_short_type(@tag)
-        @value = (@tag == 4)? R509::Subject.new(asn[:value]) : asn[:value]
+        @value = (@tag == 4) ? R509::Subject.new(asn[:value]) : asn[:value]
       end
 
       def parse_asn(asn)

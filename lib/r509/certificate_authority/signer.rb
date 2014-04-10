@@ -140,7 +140,7 @@ module R509::CertificateAuthority
         # to prevent even the incredibly remote possibility of collision we'll
         # concatenate current time (to the microsecond) with a random num
         rand = OpenSSL::BN.rand(96,0) # 96 bits is 12 bytes (octets).
-        serial = OpenSSL::BN.new((Time.now.to_f*1000000).to_i.to_s + rand.to_s)
+        serial = OpenSSL::BN.new((Time.now.to_f * 1000000).to_i.to_s + rand.to_s)
         # since second param is 0 the most significant bit must always be 1
         # this theoretically gives us 95 bits of entropy
         # (see: http://www.openssl.org/docs/crypto/BN_rand.html) + microtime,
@@ -171,7 +171,7 @@ module R509::CertificateAuthority
 
     def self.extract_public_key_subject(options)
       if options.key?(:csr)
-        subject = (options.key?(:subject))? R509::Subject.new(options[:subject]) : options[:csr].subject
+        subject = (options.key?(:subject)) ? R509::Subject.new(options[:subject]) : options[:csr].subject
         public_key = options[:csr].public_key
       else
         # spki

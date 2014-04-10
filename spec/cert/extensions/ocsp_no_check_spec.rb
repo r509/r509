@@ -35,7 +35,7 @@ describe R509::Cert::Extensions::OCSPNoCheck do
         end
 
         it "builds yaml" do
-          YAML.load(@no_check.to_yaml).should == { :critical=>false }
+          YAML.load(@no_check.to_yaml).should == { :critical => false }
         end
       end
 

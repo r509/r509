@@ -56,7 +56,7 @@ module R509
       def self.names_to_h(array)
         data = []
         array.each do |name|
-          value = (name.value.kind_of?(R509::Subject))? name.value.to_h : name.value
+          value = (name.value.kind_of?(R509::Subject)) ? name.value.to_h : name.value
           data.push(
 
               :type => name.short_type,

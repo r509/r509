@@ -136,11 +136,11 @@ describe R509::Subject do
 
     it "recognizes setters for a standard subject oid" do
       subject = R509::Subject.new
-      subject.CN= 'testCN'
+      subject.CN = 'testCN'
       subject.CN.should == 'testCN'
-      subject.common_name= 'testCN2'
+      subject.common_name = 'testCN2'
       subject.common_name.should == 'testCN2'
-      subject.commonName= 'testCN3'
+      subject.commonName = 'testCN3'
       subject.commonName.should == 'testCN3'
       subject.CN.should == 'testCN3'
       subject.common_name.should == 'testCN3'
@@ -164,18 +164,18 @@ describe R509::Subject do
 
     it "errors on invalid method names" do
       subject = R509::Subject.new
-      expect { subject.random_value="assign" }.to raise_error(NoMethodError)
+      expect { subject.random_value = "assign" }.to raise_error(NoMethodError)
       expect { subject.random_value }.to raise_error(NoMethodError)
     end
 
     it "works with an arbitrarily defined OID" do
       R509::OIDMapper.register("1.4.3.2.1.2.3.6.6.6.6", "AOI", "arbitraryName")
       subject = R509::Subject.new
-      subject.AOI= "test"
+      subject.AOI = "test"
       subject.AOI.should == "test"
       subject.arbitrary_name = "test2"
       subject.arbitrary_name.should == "test2"
-      subject.arbitraryName= "test3"
+      subject.arbitraryName = "test3"
       subject.arbitraryName.should == "test3"
       subject.AOI.should == "test3"
       subject.arbitrary_name.should == "test3"

@@ -27,11 +27,11 @@ if opts[:interactive] == true or opts[:subject].nil? then
   if opts[:type].upcase == "RSA" or opts[:type].upcase == "DSA"
     print "CSR Bit Length (2048):"
     bit_length = gets.chomp
-    opts[:bits] = (bit_length.to_i > 0)? bit_length.to_i : 2048
+    opts[:bits] = (bit_length.to_i > 0) ? bit_length.to_i : 2048
   elsif opts[:type].upcase == "EC"
     print "Curve Name (secp384r1):"
     curve_name = gets.chomp
-    opts[:curve_name] = (not curve_name.empty?)? curve_name : 'secp384r1'
+    opts[:curve_name] = (not curve_name.empty?) ? curve_name : 'secp384r1'
   else
     puts "Invalid key type specified. RSA/DSA/EC"
     exit
@@ -51,22 +51,22 @@ if opts[:interactive] == true or opts[:subject].nil? then
 
   print "C (US): "
   c = gets.chomp
-  c = c.empty? ? 'US':c;
+  c = c.empty? ? 'US' : c;
   subject.push ['C',c]
 
   print "ST (Illinois): "
   st = gets.chomp
-  st = st.empty? ? 'Illinois':st;
+  st = st.empty? ? 'Illinois' : st;
   subject.push ['ST',st]
 
   print "L (Chicago): "
   l = gets.chomp
-  l = l.empty? ? 'Chicago':l;
+  l = l.empty? ? 'Chicago' : l;
   subject.push ['L',l]
 
   print "O (r509 LLC): "
   o = gets.chomp
-  o = o.empty? ? 'r509 LLC':o;
+  o = o.empty? ? 'r509 LLC' : o;
   subject.push ['O',o]
 
   print "OU (null by default): "
@@ -104,7 +104,7 @@ selfsign = opts[:duration]
 if selfsign > 0
   csr_or_cert = R509::CertificateAuthority::Signer.selfsign(
     :csr => csr,
-    :not_after => Time.now.to_i+86400*selfsign,
+    :not_after => Time.now.to_i + 86400 * selfsign,
     :message_digest => opts[:message_digest]
   )
 end
