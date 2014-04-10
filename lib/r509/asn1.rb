@@ -40,11 +40,11 @@ module R509
           when R509::Subject, Array
             subject = R509::Subject.new(domain)
             general_names.create_item(:tag => 4, :value => subject)
-          when /:\/\// #URI
+          when /:\/\// # URI
             general_names.create_item(:tag => 6, :value => domain.strip)
-          when /@/ #rfc822Name
+          when /@/ # rfc822Name
             general_names.create_item(:tag => 1, :value => domain.strip)
-          else #dNSName
+          else # dNSName
             general_names.create_item(:tag => 2, :value => domain.strip)
           end
         end
@@ -195,9 +195,9 @@ module R509
         when 7
           if value.size == 4 or value.size == 16
             @value = parse_ip(value)
-          elsif value.size == 8 #IPv4 with netmask
+          elsif value.size == 8 # IPv4 with netmask
             @value = parse_ip(value[0,4],value[4,4])
-          elsif value.size == 32 #IPv6 with netmask
+          elsif value.size == 32 # IPv6 with netmask
             @value = parse_ip(value[0,16],value[16,16])
           end
         end
@@ -332,6 +332,5 @@ module R509
         { :conf => confs.join("\n"), :extension_string => extension_strings.join(",") }
       end
     end
-
   end
 end

@@ -163,7 +163,6 @@ module R509
         @rw.write_number(@crl_number)
         @crl_number
       end
-
     end
   end
 end

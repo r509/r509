@@ -76,7 +76,6 @@ describe R509::Cert::Extensions::KeyUsage do
         end
       end
 
-
       context "multiple KU" do
         before :all do
           @args = { :value => ['digitalSignature','keyAgreement'] }

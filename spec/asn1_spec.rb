@@ -3,7 +3,7 @@ require 'r509/asn1'
 
 describe R509::ASN1 do
   it "does not error with valid extension on get_extension_payload" do
-    #SAN extension
+    # SAN extension
     der = "0L\u0006\u0003U\u001D\u0011\u0001\u0001\xFF\u0004B0@\x82\u000Ewww.test.local\x87\u0004\n\u0001\u0002\u0003\x86\u0015http://www.test.local\x81\u0011myemail@email.com"
     ext = OpenSSL::X509::Extension.new(der)
     payload = R509::ASN1.get_extension_payload(ext)

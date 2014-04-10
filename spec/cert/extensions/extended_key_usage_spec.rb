@@ -40,7 +40,6 @@ shared_examples_for "a correct R509 ExtendedKeyUsage object" do |critical|
   end
 end
 
-
 describe R509::Cert::Extensions::ExtendedKeyUsage do
   include R509::Cert::Extensions
 

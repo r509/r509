@@ -303,7 +303,7 @@ describe R509::Config::CAConfig do
     config.ocsp_cert.subject.to_s.should == "/C=US/ST=Illinois/L=Chicago/O=r509 LLC/CN=r509 OCSP Signer"
   end
   it "loads OCSP cert/key in engine from yaml" do
-    #most of this code path is tested by loading ca_cert engine.
+    # most of this code path is tested by loading ca_cert engine.
     expect { R509::Config::CAConfig.from_yaml("ocsp_engine_ca", File.read("#{File.dirname(__FILE__)}/../fixtures/config_test_various.yaml"), :ca_root_path => "#{File.dirname(__FILE__)}/../fixtures") }.to raise_error(ArgumentError,"You must supply a key_name with an engine")
   end
   it "loads OCSP chain from yaml" do

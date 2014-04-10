@@ -2,7 +2,6 @@ require 'spec_helper'
 require 'stringio'
 require 'r509/csr'
 
-
 describe R509::CSR do
   before :all do
     @csr = TestFixtures::CSR
@@ -60,7 +59,7 @@ describe R509::CSR do
   it "creates a CSR when a key is provided" do
     csr = R509::CSR.new(:key => @key3, :subject => [['CN','pregenerated.com']], :bit_length => 1024)
     csr.to_pem.should match(/CERTIFICATE REQUEST/)
-    #validate the CSR matches the key
+    # validate the CSR matches the key
     csr.req.verify(csr.key.public_key).should == true
   end
   it "loads successfully when an R509::PrivateKey is provided" do
@@ -83,17 +82,17 @@ describe R509::CSR do
     csr = R509::CSR.new(:subject => [["CN","dsasigned.com"]], :key => @dsa_key)
     csr.message_digest.name.should == 'dss1'
     csr.signature_algorithm.should == 'dsaWithSHA1'
-    #dss1 is actually the same as SHA1
-    #Yes this is confusing
-    #see http://www.ruby-doc.org/stdlib-1.9.3/libdoc/openssl/rdoc/OpenSSL/PKey/DSA.html
+    # dss1 is actually the same as SHA1
+    # Yes this is confusing
+    # see http://www.ruby-doc.org/stdlib-1.9.3/libdoc/openssl/rdoc/OpenSSL/PKey/DSA.html
   end
   it "changes the message_digest to DSS1 when creating a DSA key" do
     csr = R509::CSR.new(:subject => [["CN","dsasigned.com"]], :type => "dsa", :bit_length => 512)
     csr.message_digest.name.should == 'dss1'
     csr.signature_algorithm.should == 'dsaWithSHA1'
-    #dss1 is actually the same as SHA1
-    #Yes this is confusing
-    #see http://www.ruby-doc.org/stdlib-1.9.3/libdoc/openssl/rdoc/OpenSSL/PKey/DSA.html
+    # dss1 is actually the same as SHA1
+    # Yes this is confusing
+    # see http://www.ruby-doc.org/stdlib-1.9.3/libdoc/openssl/rdoc/OpenSSL/PKey/DSA.html
   end
   it "signs a CSR properly when passed a DSA key" do
     csr = R509::CSR.new(:subject => [["CN","dsasigned.com"]], :key => @dsa_key)
@@ -197,9 +196,9 @@ describe R509::CSR do
       csr.key_algorithm.should == "DSA"
     end
     it "returns the public key" do
-      #this is more complex than it should have to be. diff versions of openssl
-      #return subtly diff PEM encodings so we need to look at the modulus (n)
-      #but beware, because n is not present for DSA certificates
+      # this is more complex than it should have to be. diff versions of openssl
+      # return subtly diff PEM encodings so we need to look at the modulus (n)
+      # but beware, because n is not present for DSA certificates
       csr = R509::CSR.new( :csr => @csr )
       csr.public_key.n.to_i.should == @csr_public_key_modulus.to_i
     end

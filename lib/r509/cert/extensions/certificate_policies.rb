@@ -15,7 +15,6 @@ module R509
       # You can use this extension to parse an existing extension for easy access
       # to the contents or create a new one.
       class CertificatePolicies < OpenSSL::X509::Extension
-
         # friendly name for CP OID
         OID = "certificatePolicies"
         Extensions.register_class(self)
@@ -199,7 +198,7 @@ module R509
         attr_reader :notice_reference, :explicit_text
         def initialize(data)
           data.each do |qualifier|
-            #if we find another sequence, that's a noticeReference, otherwise it's explicitText
+            # if we find another sequence, that's a noticeReference, otherwise it's explicitText
             if qualifier.kind_of?(OpenSSL::ASN1::Sequence)
               @notice_reference = NoticeReference.new(qualifier)
             else

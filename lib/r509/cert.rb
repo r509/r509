@@ -7,8 +7,8 @@ require 'r509/cert/extensions'
 module R509
   # The primary certificate object.
   class Cert
-  include R509::IOHelpers
-  include R509::Helpers
+    include R509::IOHelpers
+    include R509::Helpers
 
     attr_reader :cert, :key, :subject, :issuer
 
@@ -337,6 +337,5 @@ module R509
     def internal_obj
       @cert
     end
-
   end
 end

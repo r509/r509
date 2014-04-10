@@ -2,6 +2,7 @@ require 'spec_helper'
 require 'pathname'
 require 'r509/io_helpers'
 
+# Contains constants and other values for testing purposes
 module TestFixtures
   extend R509::IOHelpers
 
@@ -11,14 +12,14 @@ module TestFixtures
     read_data((FIXTURES_PATH + filename).to_s)
   end
 
-  #Trustwave cert for langui.sh
+  # Trustwave cert for langui.sh
   CERT = read_fixture('cert1.pem')
 
   CERT_INHIBIT = read_fixture('cert_inhibit.pem')
   CERT_POLICY_CONSTRAINTS = read_fixture('cert_policy_constraints.pem')
   CERT_NAME_CONSTRAINTS = read_fixture('cert_name_constraints.pem')
 
-  #Trustwave root cert
+  # Trustwave root cert
   STCA_CERT = read_fixture('stca.pem')
 
   CERT_PUBLIC_KEY_MODULUS = read_fixture('cert1_public_key_modulus.txt')
@@ -41,11 +42,10 @@ module TestFixtures
   # this CSR has unknown OIDs, which we should successfully parse out into Subject
   CSR_UNKNOWN_OID = read_fixture('unknown_oid.csr')
 
-
-  #san cert from self-signed CA for langui.sh
+  # san cert from self-signed CA for langui.sh
   CERT_SAN = read_fixture('cert_san.pem')
 
-  #Another san cert for langui.sh, but differentiating between the CN and
+  # Another san cert for langui.sh, but differentiating between the CN and
   # SANs.
   CERT_SAN2 = read_fixture('cert_san2.pem')
 
@@ -136,10 +136,10 @@ module TestFixtures
   TEST_CA_SUBROOT_CERT = read_fixture('test_ca_subroot.cer')
   TEST_CA_SUBROOT_KEY  = read_fixture('test_ca_subroot.key')
 
-  #this chain contains 2 certs. root and OCSP delegate
-  #in a prod environment you'd really only need the delegate
-  #since the root would be present in the root store of the
-  #client, but I wanted to test > 1
+  # this chain contains 2 certs. root and OCSP delegate
+  # in a prod environment you'd really only need the delegate
+  # since the root would be present in the root store of the
+  # client, but I wanted to test > 1
   TEST_CA_OCSP_CHAIN  = read_fixture('test_ca_ocsp_chain.txt')
 
   TEST_CA_OCSP_RESPONSE = read_fixture('test_ca_ocsp_response.der')
@@ -202,7 +202,6 @@ module TestFixtures
         ]
       )
     )
-
   end
 
   def self.test_ca_server_profile_with_subject_item_policy

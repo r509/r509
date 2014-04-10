@@ -278,7 +278,7 @@ module R509
       private
 
       def parse_ocsp_data(opts)
-        #ocsp data
+        # ocsp data
         if opts.key?(:ocsp_cert)
           check_ocsp_crl_delegate(opts[:ocsp_cert],'ocsp_cert')
           @ocsp_cert = opts[:ocsp_cert]
@@ -410,7 +410,6 @@ module R509
         end
         ocsp_chain
       end
-
     end
   end
 end

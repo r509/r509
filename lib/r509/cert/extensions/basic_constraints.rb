@@ -12,7 +12,6 @@ module R509
       # You can use this extension to parse an existing extension for easy access
       # to the contents or create a new one.
       class BasicConstraints < OpenSSL::X509::Extension
-
         # friendly name for BasicConstraints OID
         OID = "basicConstraints"
         Extensions.register_class(self)

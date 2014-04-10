@@ -1,7 +1,7 @@
 require 'openssl'
 
 module R509
-  #MessageDigest allows you to specify MDs in a more friendly fashion
+  # MessageDigest allows you to specify MDs in a more friendly fashion
   class MessageDigest
     # a list of message digests that this class understands
     KNOWN_MDS = ['SHA1','SHA224','SHA256','SHA384','SHA512','DSS1','MD5']

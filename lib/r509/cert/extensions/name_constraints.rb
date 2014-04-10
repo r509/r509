@@ -31,7 +31,6 @@ module R509
       # You can use this extension to parse an existing extension for easy access
       # to the contents or create a new one.
       class NameConstraints < OpenSSL::X509::Extension
-
         # friendly name for CP OID
         OID = "nameConstraints"
         Extensions.register_class(self)
@@ -96,7 +95,7 @@ module R509
                 gn = R509::ASN1::GeneralName.new(obj)
                 if gs.tag == 0 # permittedSubtrees
                   @permitted.add_item(gn)
-                elsif gs.tag == 1 #excludedSubtrees
+                elsif gs.tag == 1 # excludedSubtrees
                   @excluded.add_item(gn)
                 end
               end

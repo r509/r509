@@ -2,7 +2,6 @@ module R509
   # Various helper methods to reduce duplication across classes. These methods
   # are used in the Cert, CSR, SPKI, and PrivateKey classes.
   module Helpers
-
     # Returns whether the public key is RSA
     #
     # @return [Boolean] true if the public key is RSA, false otherwise
@@ -80,14 +79,14 @@ module R509
     #
     # @return [String] the object converted into PEM format.
     def to_pem
-        internal_obj.to_pem
+      internal_obj.to_pem
     end
 
     # Converts the object into DER format
     #
     # @return [String] the object converted into DER format.
     def to_der
-        internal_obj.to_der
+      internal_obj.to_der
     end
 
     # @private
@@ -105,6 +104,5 @@ module R509
     def internal_obj
       raise R509::R509Error, "Internal object for helpers not implemented"
     end
-
   end
 end

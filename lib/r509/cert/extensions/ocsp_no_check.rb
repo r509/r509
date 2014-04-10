@@ -18,7 +18,6 @@ module R509
       # You can use this extension to parse an existing extension for easy access
       # to the contents or create a new one.
       class OCSPNoCheck < OpenSSL::X509::Extension
-
         # friendly name for OCSP No Check
         OID = "noCheck"
         Extensions.register_class(self)

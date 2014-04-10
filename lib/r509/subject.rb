@@ -174,8 +174,8 @@ module R509
     end
 
     def oid_check(name)
-        oid = OpenSSL::ASN1::ObjectId.new(camelize(name))
-        oid.short_name
+      oid = OpenSSL::ASN1::ObjectId.new(camelize(name))
+      oid.short_name
     end
 
     def camelize(sym)
@@ -244,5 +244,4 @@ module R509
       components
     end
   end
-
 end

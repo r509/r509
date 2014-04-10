@@ -3,11 +3,11 @@ require 'stringio'
 require 'r509/spki'
 
 shared_examples_for "create spki with private key" do
-    it "generates a spki with default digest" do
-      spki = R509::SPKI.new(:key => @key)
-      spki.to_pem.should_not be_nil
-      spki.verify_signature
-    end
+  it "generates a spki with default digest" do
+    spki = R509::SPKI.new(:key => @key)
+    spki.to_pem.should_not be_nil
+    spki.verify_signature
+  end
 
     it "generates a spki from a pem key" do
       spki = R509::SPKI.new(:key => @key.to_pem)
@@ -40,7 +40,7 @@ end
 
 shared_examples_for "spki + private key" do
   it "verifies they match" do
-      expect { R509::SPKI.new(:key => @key, :spki => @spki) }.to_not raise_error
+    expect { R509::SPKI.new(:key => @key, :spki => @spki) }.to_not raise_error
   end
 
   it "returns the correct signature_algorithm" do
@@ -56,13 +56,13 @@ shared_examples_for "spki + private key" do
   end
 
   it "errors if they don't match" do
-      expect { R509::SPKI.new(:key => @key, :spki => @spki2) }.to raise_error(R509::R509Error,'Key does not match SPKI.')
+    expect { R509::SPKI.new(:key => @key, :spki => @spki2) }.to raise_error(R509::R509Error,'Key does not match SPKI.')
   end
 end
 
 describe R509::SPKI do
   before :all do
-    #also known as SPKAC (signed public key and challenge)
+    # also known as SPKAC (signed public key and challenge)
     @spki_dsa = TestFixtures::SPKI_DSA
     @spki_dsa_no_verify = TestFixtures::SPKI_DSA_NO_VERIFY
     @spki = TestFixtures::SPKI

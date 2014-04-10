@@ -42,7 +42,6 @@ describe R509::Cert::Extensions::CRLDistributionPoints do
     end
   end
 
-
   context "CRLDistributionPoints" do
     context "creation & yaml generation" do
       context "GeneralNames object" do

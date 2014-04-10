@@ -55,7 +55,6 @@ module R509
 
       @key = load_private_key(opts)
 
-
       @type = opts[:type] || R509::PrivateKey::DEFAULT_TYPE
       if not R509::PrivateKey::KNOWN_TYPES.include?(@type.upcase) and @key.nil?
         raise ArgumentError, "Must provide #{R509::PrivateKey::KNOWN_TYPES.join(", ")} as type when key is nil"
@@ -63,7 +62,7 @@ module R509
 
       if opts.key?(:subject)
         san_names = R509::ASN1.general_name_parser(opts[:san_names])
-        create_request(opts[:subject], san_names) #sets @req
+        create_request(opts[:subject], san_names) # sets @req
       elsif opts.key?(:csr)
         if opts.key?(:san_names)
           raise ArgumentError, "You can't add domains to an existing CSR"
@@ -74,9 +73,9 @@ module R509
       end
 
       if dsa?
-        #only DSS1 is acceptable for DSA signing in OpenSSL < 1.0
-        #post-1.0 you can sign with anything, but let's be conservative
-        #see: http://www.ruby-doc.org/stdlib-1.9.3/libdoc/openssl/rdoc/OpenSSL/PKey/DSA.html
+        # only DSS1 is acceptable for DSA signing in OpenSSL < 1.0
+        # post-1.0 you can sign with anything, but let's be conservative
+        # see: http://www.ruby-doc.org/stdlib-1.9.3/libdoc/openssl/rdoc/OpenSSL/PKey/DSA.html
         @message_digest = R509::MessageDigest.new('dss1')
       else
         @message_digest = R509::MessageDigest.new(opts[:message_digest])
@@ -88,7 +87,6 @@ module R509
       if not @key.nil? and not @req.verify(@key.public_key) then
         raise R509Error, 'Key does not match request.'
       end
-
     end
 
     # Helper method to quickly load a CSR from the filesystem
@@ -161,23 +159,23 @@ module R509
       begin
         @req = OpenSSL::X509::Request.new csr
       rescue OpenSSL::X509::RequestError
-        #let's try to load this thing by handling a few
-        #common error cases
+        # let's try to load this thing by handling a few
+        # common error cases
         if csr.kind_of?(String)
-          #normalize line endings (really just for the next replace)
+          # normalize line endings (really just for the next replace)
           csr.gsub!(/\r\n?/, "\n")
-          #remove extraneous newlines
+          # remove extraneous newlines
           csr.gsub!(/^\s*\n/,'')
-          #and leading/trailing whitespace
+          # and leading/trailing whitespace
           csr.gsub!(/^\s*|\s*$/,'')
           if not csr.match(/-----BEGIN.+-----/) and csr.match(/MII/)
-            #if csr is probably PEM (MII is the beginning of every base64
-            #encoded DER) then add the wrapping lines if they aren't provided.
-            #tools like Microsoft's xenroll do this.
+            # if csr is probably PEM (MII is the beginning of every base64
+            # encoded DER) then add the wrapping lines if they aren't provided.
+            # tools like Microsoft's xenroll do this.
             csr = "-----BEGIN CERTIFICATE REQUEST-----\n"+csr+"\n-----END CERTIFICATE REQUEST-----"
           end
         end
-        #and now we try again...
+        # and now we try again...
         @req = OpenSSL::X509::Request.new csr
       end
       @subject = R509::Subject.new(@req.subject)
@@ -227,6 +225,5 @@ module R509
     def internal_obj
       @req
     end
-
   end
 end

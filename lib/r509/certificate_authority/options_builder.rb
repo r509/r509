@@ -73,7 +73,7 @@ module R509::CertificateAuthority
         end
       else
         # it doesn't, so either use their md (if valid) or the default one
-      message_digest = (not requested_md.nil?)? R509::MessageDigest.new(requested_md) : R509::MessageDigest.new(profile.default_md)
+        message_digest = (not requested_md.nil?)? R509::MessageDigest.new(requested_md) : R509::MessageDigest.new(profile.default_md)
       end
       message_digest.name
     end
@@ -95,7 +95,6 @@ module R509::CertificateAuthority
       end
       extensions
     end
-
 
     def merge_extensions(options,extensions)
       ext_hash = {}
@@ -137,6 +136,5 @@ module R509::CertificateAuthority
       extensions << profile.ocsp_no_check
       extensions.compact
     end
-
   end
 end

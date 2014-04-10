@@ -51,7 +51,6 @@ module R509
         return unknown_extensions
       end
 
-
       # Takes an array of R509::ASN1::GeneralName objects and returns a hash that can be
       # encoded to YAML (used by #to_yaml methods)
       def self.names_to_h(array)
@@ -136,7 +135,6 @@ module R509
           return false
         end
       end
-
     end
   end
 end

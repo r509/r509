@@ -47,7 +47,7 @@ describe R509::OCSP::Response do
     ocsp_response.verify([TestFixtures.test_ca_config.ca_cert.cert]).should == false
   end
   it "returns false if response does not verify" do
-    #expired response
+    # expired response
     ocsp_response = R509::OCSP::Response.parse(@ocsp_response_der)
     ocsp_response.verify(OpenSSL::X509::Certificate.new(@stca_cert)).should == false
   end

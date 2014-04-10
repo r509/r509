@@ -13,7 +13,6 @@ module R509
   module Config
     # Provides access to configuration profiles
     class CertProfile
-
       attr_reader :basic_constraints, :key_usage, :extended_key_usage,
                   :certificate_policies, :subject_item_policy, :ocsp_no_check,
                   :inhibit_any_policy, :policy_constraints, :name_constraints,

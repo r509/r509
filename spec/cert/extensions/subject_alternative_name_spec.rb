@@ -44,7 +44,6 @@ end
 describe R509::Cert::Extensions::SubjectAlternativeName do
   include R509::Cert::Extensions
 
-
   context "validation" do
     it "errors when not supplying a hash" do
       expect do

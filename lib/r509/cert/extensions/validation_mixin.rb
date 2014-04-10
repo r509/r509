@@ -7,9 +7,9 @@ module R509
         private
         # used by iap and pc validation methods
         def validate_non_negative_integer(source,value)
-            if not value.kind_of?(Integer) or value < 0
-              raise ArgumentError, "#{source} must be a non-negative integer"
-            end
+          if not value.kind_of?(Integer) or value < 0
+            raise ArgumentError, "#{source} must be a non-negative integer"
+          end
             value
         end
 

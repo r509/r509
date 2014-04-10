@@ -3,7 +3,7 @@ require 'r509/io_helpers'
 require 'r509/exceptions'
 
 module R509
-  #private key management
+  # private key management
   class PrivateKey
     include R509::IOHelpers
 
@@ -44,7 +44,6 @@ module R509
     def self.load_from_file( filename, password = nil )
       return R509::PrivateKey.new(:key => IOHelpers.read_data(filename), :password => password )
     end
-
 
     # Returns the bit length of the key
     #
@@ -133,7 +132,6 @@ module R509
       self.key.to_pem(cipher,password)
     end
 
-
     # Converts the key into the DER format
     #
     # @return [String] the key converted into DER format.
@@ -151,7 +149,6 @@ module R509
     def write_pem(filename_or_io)
       write_data(filename_or_io, self.to_pem)
     end
-
 
     # Writes the key into encrypted PEM format with specified cipher
     #
@@ -172,7 +169,6 @@ module R509
     def write_der(filename_or_io)
       write_data(filename_or_io, self.to_der)
     end
-
 
     # Returns whether the key is RSA
     #
@@ -215,8 +211,8 @@ module R509
 
     def validate_key(opts)
       password = opts[:password] || nil
-      #OpenSSL::PKey.read solves this begin/rescue garbage but is only
-      #available to Ruby 1.9.3+ and may not solve the EC portion
+      # OpenSSL::PKey.read solves this begin/rescue garbage but is only
+      # available to Ruby 1.9.3+ and may not solve the EC portion
       begin
         @key = OpenSSL::PKey::RSA.new(opts[:key],password)
       rescue OpenSSL::PKey::RSAError

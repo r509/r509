@@ -29,6 +29,7 @@ elsif not defined?(OpenSSL::PKey::EC)
       def initialize(*args)
         raise R509::R509Error, "EC is unavailable. You may need to recompile Ruby with an OpenSSL that has elliptic curve support."
       end
+
       def method_missing(method, *args, &block)
         raise R509::R509Error, "EC is unavailable. You may need to recompile Ruby with an OpenSSL that has elliptic curve support."
       end

@@ -74,8 +74,8 @@ describe R509::PrivateKey do
     private_key.key.p.to_i.to_s(2).size.should == 512
   end
   it "has an exponent of 65537 for new RSA keys" do
-    #this test actually checks ruby's underlying libs to make sure they're
-    #doing what they're supposed to be doing.
+    # this test actually checks ruby's underlying libs to make sure they're
+    # doing what they're supposed to be doing.
     private_key = R509::PrivateKey.new(:type => "rsa", :bit_length => 512)
     private_key.key.e.should == 65537
   end
@@ -84,12 +84,12 @@ describe R509::PrivateKey do
     private_key.public_key.n.to_i.should == @csr_public_key_modulus.to_i
   end
   it "returns pem" do
-    #load the DER, check that it matches the PEM on to_pem
+    # load the DER, check that it matches the PEM on to_pem
     private_key = R509::PrivateKey.new(:key => @key_csr_der)
     private_key.to_pem.should == @key_csr
   end
   it "returns der" do
-    #load the PEM, check that it matches the DER on to_der
+    # load the PEM, check that it matches the DER on to_der
     private_key = R509::PrivateKey.new(:key => @key_csr)
     private_key.to_der.should == @key_csr_der
   end
@@ -269,7 +269,6 @@ describe R509::PrivateKey do
       private_key = R509::PrivateKey.new(:key => @ec_key_pem)
       expect { private_key.bit_length }.to raise_error(R509::R509Error,'Bit length is not available for EC at this time.')
     end
-
 
   end
 end

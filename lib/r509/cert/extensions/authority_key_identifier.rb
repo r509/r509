@@ -16,7 +16,6 @@ module R509
       # You can use this extension to parse an existing extension for easy access
       # to the contents or create a new one.
       class AuthorityKeyIdentifier < OpenSSL::X509::Extension
-
         # friendly name for Authority Key Identifier OID
         OID = "authorityKeyIdentifier"
         # default extension behavior when generating
@@ -32,7 +31,6 @@ module R509
         # authority_cert_serial_number, if present, will be a hex string delimited by colons
         # @return [String,nil]
         attr_reader :authority_cert_serial_number
-
 
         # @option arg :public_key [OpenSSL::PKey] Required if embedding keyid
         # @option arg :issuer_subject [R509::Subject] Required if embedding issuer. This should be the issuing certificate's issuer subject name.

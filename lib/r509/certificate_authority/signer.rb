@@ -51,7 +51,7 @@ module R509::CertificateAuthority
         R509::Cert::Extensions::AuthorityKeyIdentifier.new(:public_key => @config.ca_cert.public_key)
       ]
 
-      #@config.ca_cert.key.key ... ugly. ca_cert returns R509::Cert
+      # @config.ca_cert.key.key ... ugly. ca_cert returns R509::Cert
       # #key returns R509::PrivateKey and #key on that returns OpenSSL object we need
       cert.sign( @config.ca_cert.key.key, message_digest.digest )
       cert_opts = { :cert => cert }
@@ -119,7 +119,6 @@ module R509::CertificateAuthority
     end
 
     def self.build_cert(options)
-
       cert = OpenSSL::X509::Certificate.new
 
       cert.subject = options[:subject]
@@ -128,7 +127,7 @@ module R509::CertificateAuthority
       cert.not_after = calculate_not_after(options[:not_after],cert.not_before)
       cert.public_key = options[:public_key]
       cert.serial = create_serial(options[:serial])
-      cert.version = 2 #2 means v3
+      cert.version = 2 # 2 means v3
       cert
     end
 
@@ -156,7 +155,7 @@ module R509::CertificateAuthority
 
     def self.calculate_not_before(not_before)
       if not_before.nil?
-        #not_before will be set to 6 hours before now to prevent issues with bad system clocks (clients don't sync)
+        # not_before will be set to 6 hours before now to prevent issues with bad system clocks (clients don't sync)
         not_before = Time.now - 6 * 60 * 60
       end
       not_before
@@ -184,6 +183,5 @@ module R509::CertificateAuthority
 
       [subject,public_key]
     end
-
   end
 end

@@ -1,7 +1,6 @@
 require 'spec_helper'
 require 'r509/oid_mapper'
 
-
 # NOTE
 # The nature of OID registration means that the state does NOT get reset between
 # each test. Accordingly, we MUST use OIDs (and short names) here that will not

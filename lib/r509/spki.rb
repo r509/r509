@@ -81,9 +81,9 @@ module R509
       spki = OpenSSL::Netscape::SPKI.new
       spki.public_key = @key.public_key
       if @key.dsa?
-        #only DSS1 is acceptable for DSA signing in OpenSSL < 1.0
-        #post-1.0 you can sign with anything, but let's be conservative
-        #see: http://www.ruby-doc.org/stdlib-1.9.3/libdoc/openssl/rdoc/OpenSSL/PKey/DSA.html
+        # only DSS1 is acceptable for DSA signing in OpenSSL < 1.0
+        # post-1.0 you can sign with anything, but let's be conservative
+        # see: http://www.ruby-doc.org/stdlib-1.9.3/libdoc/openssl/rdoc/OpenSSL/PKey/DSA.html
         message_digest = R509::MessageDigest.new('dss1')
       else
         message_digest = R509::MessageDigest.new(md)
@@ -96,6 +96,5 @@ module R509
     def internal_obj
       @spki
     end
-
   end
 end

@@ -30,7 +30,6 @@ describe R509::CertificateAuthority::OptionsBuilder do
     end
   end
 
-
   it "raises error on invalid signature" do
     config = R509::Config::CAConfig.new( :ca_cert => R509::Cert.new( :cert => TestFixtures::TEST_CA_CERT) )
     profile = R509::Config::CertProfile.new(
@@ -304,6 +303,5 @@ describe R509::CertificateAuthority::OptionsBuilder do
       end.to raise_error(R509::R509Error,'The requested certificate lifetime would exceed the issuing CA.')
     end
   end
-
 
 end
