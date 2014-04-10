@@ -41,7 +41,7 @@ module R509
       @spki.verify(public_key)
     end
 
-    alias :to_s :to_pem
+    alias_method :to_s, :to_pem
 
     # Returns the signature algorithm (e.g., RSA-SHA1, ecdsa-with-SHA256)
     #

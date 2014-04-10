@@ -46,7 +46,7 @@ module R509
       return R509::Cert.new(:cert => IOHelpers.read_data(filename) )
     end
 
-    alias :to_s :to_pem
+    alias_method :to_s, :to_pem
 
     # Returns beginning (notBefore) of certificate validity period
     #

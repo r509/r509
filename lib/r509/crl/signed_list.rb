@@ -86,7 +86,7 @@ module R509
         @crl.to_pem
       end
 
-      alias :to_s :to_pem
+      alias_method :to_s, :to_pem
 
       # Returns the CRL in DER format
       #

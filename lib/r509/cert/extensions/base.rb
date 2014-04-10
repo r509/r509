@@ -80,13 +80,13 @@ module R509
         def ip_addresses
           @general_names.ip_addresses
         end
-        alias :ips :ip_addresses
+        alias_method :ips, :ip_addresses
 
         # @return [Array<String>] email addresses
         def rfc_822_names
           @general_names.rfc_822_names
         end
-        alias :email_names :rfc_822_names
+        alias_method :email_names, :rfc_822_names
 
         # @return [Array<String>] URIs (not typically found in SAN extensions)
         def uris
@@ -97,7 +97,7 @@ module R509
         def directory_names
           @general_names.directory_names
         end
-        alias :dir_names :directory_names
+        alias_method :dir_names, :directory_names
 
         # @return [Array] array of GeneralName objects preserving order found in the extension
         def names

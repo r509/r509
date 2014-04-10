@@ -60,7 +60,7 @@ module R509
         raise R509::R509Error, 'Bit length is not available for EC at this time.'
       end
     end
-    alias :bit_strength :bit_length
+    alias_method :bit_strength, :bit_length
 
     # Writes the object into PEM format
     # @param [String, #write] filename_or_io Either a string of the path for

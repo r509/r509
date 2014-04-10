@@ -1,4 +1,5 @@
-# A module for building an easy to use CA. Includes CSR, Certificate, and CRL support.
+# A module for building an easy to use CA. Includes CSR, Certificate, and CRL
+# support.
 module R509
   require('r509/certificate_authority/signer.rb')
   require('r509/certificate_authority/options_builder.rb')
@@ -31,14 +32,27 @@ module R509
 
   # Helper method to check if EC support is built-in
   def self.ec_supported?
-    (not defined?(OpenSSL::PKey::EC::UNSUPPORTED))
+    (!defined?(OpenSSL::PKey::EC::UNSUPPORTED))
   end
 end
 
-#add some global mappings we want available throughout r509
+# add some global mappings we want available throughout r509
 R509::OIDMapper.batch_register([
-  { :oid => "2.5.4.15", :short_name => "businessCategory" }, # extended validation related
-  { :oid => "1.3.6.1.4.1.311.60.2.1.2", :short_name => "jurisdictionOfIncorporationStateOrProvinceName" }, # extended validation related
-  { :oid => "1.3.6.1.4.1.311.60.2.1.3", :short_name => "jurisdictionOfIncorporationCountryName" }, # extended validation related
-  { :oid => "2.5.29.37.0", :short_name => "anyExtendedKeyUsage", :long_name => "Any Extended Key Usage" } # an EKU older OpenSSL frequently lacks
+  {
+    :oid => "2.5.4.15",
+    :short_name => "businessCategory"
+  }, # extended validation related
+  {
+    :oid => "1.3.6.1.4.1.311.60.2.1.2",
+    :short_name => "jurisdictionOfIncorporationStateOrProvinceName"
+  }, # extended validation related
+  {
+    :oid => "1.3.6.1.4.1.311.60.2.1.3",
+    :short_name => "jurisdictionOfIncorporationCountryName"
+  }, # extended validation related
+  {
+    :oid => "2.5.29.37.0",
+    :short_name => "anyExtendedKeyUsage",
+    :long_name => "Any Extended Key Usage"
+  } # an EKU older OpenSSL frequently lacks
 ])

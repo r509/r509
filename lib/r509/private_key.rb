@@ -58,7 +58,7 @@ module R509
         raise R509::R509Error, 'Bit length is not available for EC at this time.'
       end
     end
-    alias :bit_strength :bit_length
+    alias_method :bit_strength, :bit_length
 
     # Returns the short name of the elliptic curve used to generate the private key
     # if the key is EC. If not, raises an error.
@@ -106,7 +106,7 @@ module R509
       end
     end
 
-    alias :to_s :public_key
+    alias_method :to_s, :public_key
 
     # Converts the key into the PEM format
     #

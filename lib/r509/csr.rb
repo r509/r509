@@ -121,7 +121,7 @@ module R509
       end
     end
 
-    alias :to_s :to_pem
+    alias_method :to_s, :to_pem
 
     # Returns subject component
     #
