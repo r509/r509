@@ -114,7 +114,7 @@ describe R509::Cert do
   it "#all_names should return a list of san names in addition to the CN" do
     cert = R509::Cert.new(:cert => @cert_san2)
     cert.all_names.should == ["cn.langui.sh", "san1.langui.sh",
-                    "san2.langui.sh", "san3.langui.sh"]
+                              "san2.langui.sh", "san3.langui.sh"]
   end
   it "#all_names should not have duplicates" do
     cert = R509::Cert.new(:cert => @cert_san)

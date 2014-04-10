@@ -81,18 +81,20 @@ describe R509::Cert::Extensions::CertificatePolicies do
         before :all do
           @args = {
             :critical => false,
-            :value => [ {
-              :policy_identifier => "2.16.840.1.99999.21.234",
-              :cps_uris => ["http://example.com/cps","http://other.com/cps"],
-              :user_notices => [ {:explicit_text => "this is a great thing", :organization => "my org", :notice_numbers => [1,2,3,4]} ]
-            }, {
-              :policy_identifier => "2.16.840.1.99999.21.235",
-              :cps_uris => ["http://example.com/cps2"],
-              :user_notices => [{:explicit_text => "this is a bad thing", :organization => "another org", :notice_numbers => [3,2,1] }, {:explicit_text => "another user notice"}]
-            },
-            {
-              :policy_identifier => "2.16.840.1.99999.0"
-            }]
+            :value => [
+              {
+                :policy_identifier => "2.16.840.1.99999.21.234",
+                :cps_uris => ["http://example.com/cps","http://other.com/cps"],
+                :user_notices => [ {:explicit_text => "this is a great thing", :organization => "my org", :notice_numbers => [1,2,3,4]} ]
+              }, {
+                :policy_identifier => "2.16.840.1.99999.21.235",
+                :cps_uris => ["http://example.com/cps2"],
+                :user_notices => [{:explicit_text => "this is a bad thing", :organization => "another org", :notice_numbers => [3,2,1] }, {:explicit_text => "another user notice"}]
+              },
+              {
+                :policy_identifier => "2.16.840.1.99999.0"
+              }
+            ]
           }
           @cp = R509::Cert::Extensions::CertificatePolicies.new(@args)
         end

@@ -6,10 +6,12 @@ shared_examples_for "a correctly implemented wrap_openssl_extensions" do
   before :each do
     @r509_extensions = R509::Cert::Extensions.wrap_openssl_extensions( @openssl_extensions )
 
-    @r509_classes = [ BasicConstraints, KeyUsage, ExtendedKeyUsage,
-            SubjectKeyIdentifier, AuthorityKeyIdentifier,
-            SubjectAlternativeName, AuthorityInfoAccess,
-            CRLDistributionPoints, OCSPNoCheck ]
+    @r509_classes = [
+      BasicConstraints, KeyUsage, ExtendedKeyUsage,
+      SubjectKeyIdentifier, AuthorityKeyIdentifier,
+      SubjectAlternativeName, AuthorityInfoAccess,
+      CRLDistributionPoints, OCSPNoCheck
+    ]
   end
 
   it "should not have returned values that aren't R509 extensions" do

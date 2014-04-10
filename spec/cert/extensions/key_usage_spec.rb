@@ -157,11 +157,17 @@ describe R509::Cert::Extensions::KeyUsage do
 
     context "with all allowed uses" do
       before :all do
-        @allowed_uses = [ R509::Cert::Extensions::KeyUsage::AU_DIGITAL_SIGNATURE, R509::Cert::Extensions::KeyUsage::AU_NON_REPUDIATION,
-                 R509::Cert::Extensions::KeyUsage::AU_KEY_ENCIPHERMENT, R509::Cert::Extensions::KeyUsage::AU_DATA_ENCIPHERMENT,
-                 R509::Cert::Extensions::KeyUsage::AU_KEY_AGREEMENT, R509::Cert::Extensions::KeyUsage::AU_KEY_CERT_SIGN,
-                 R509::Cert::Extensions::KeyUsage::AU_CRL_SIGN, R509::Cert::Extensions::KeyUsage::AU_ENCIPHER_ONLY,
-                 R509::Cert::Extensions::KeyUsage::AU_DECIPHER_ONLY ]
+        @allowed_uses = [
+          R509::Cert::Extensions::KeyUsage::AU_DIGITAL_SIGNATURE,
+          R509::Cert::Extensions::KeyUsage::AU_NON_REPUDIATION,
+          R509::Cert::Extensions::KeyUsage::AU_KEY_ENCIPHERMENT,
+          R509::Cert::Extensions::KeyUsage::AU_DATA_ENCIPHERMENT,
+          R509::Cert::Extensions::KeyUsage::AU_KEY_AGREEMENT,
+          R509::Cert::Extensions::KeyUsage::AU_KEY_CERT_SIGN,
+          R509::Cert::Extensions::KeyUsage::AU_CRL_SIGN,
+          R509::Cert::Extensions::KeyUsage::AU_ENCIPHER_ONLY,
+          R509::Cert::Extensions::KeyUsage::AU_DECIPHER_ONLY
+        ]
         @extension_value = @allowed_uses.join( ", " )
       end
 

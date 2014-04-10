@@ -159,10 +159,15 @@ describe R509::Cert::Extensions::ExtendedKeyUsage do
 
     context "with all allowed uses" do
       before :all do
-        @allowed_uses = [ ExtendedKeyUsage::AU_WEB_SERVER_AUTH, ExtendedKeyUsage::AU_CODE_SIGNING,
-                  ExtendedKeyUsage::AU_WEB_CLIENT_AUTH, ExtendedKeyUsage::AU_EMAIL_PROTECTION,
-                  ExtendedKeyUsage::AU_TIME_STAMPING, ExtendedKeyUsage::AU_OCSP_SIGNING,
-                  ExtendedKeyUsage::AU_ANY_EXTENDED_KEY_USAGE]
+        @allowed_uses = [
+          ExtendedKeyUsage::AU_WEB_SERVER_AUTH,
+          ExtendedKeyUsage::AU_CODE_SIGNING,
+          ExtendedKeyUsage::AU_WEB_CLIENT_AUTH,
+          ExtendedKeyUsage::AU_EMAIL_PROTECTION,
+          ExtendedKeyUsage::AU_TIME_STAMPING,
+          ExtendedKeyUsage::AU_OCSP_SIGNING,
+          ExtendedKeyUsage::AU_ANY_EXTENDED_KEY_USAGE
+        ]
         @extension_value = @allowed_uses.join( ", " )
       end
 
