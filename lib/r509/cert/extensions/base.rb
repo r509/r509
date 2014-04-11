@@ -29,7 +29,7 @@ module R509
           end
         end
 
-        return r509_extensions
+        r509_extensions
       end
 
       # Given a list of OpenSSL::X509::Extension objects, returns those without
@@ -48,7 +48,7 @@ module R509
           unknown_extensions << openssl_extension unless match_found
         end
 
-        return unknown_extensions
+        unknown_extensions
       end
 
       # Takes an array of R509::ASN1::GeneralName objects and returns a hash that can be

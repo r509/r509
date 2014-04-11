@@ -29,7 +29,7 @@ module R509
 
         # @return value of key
         def key
-          return self.value
+          self.value
         end
 
         private

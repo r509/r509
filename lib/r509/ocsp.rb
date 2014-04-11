@@ -58,7 +58,7 @@ module R509::OCSP
       # still a bit unclear on why we add to store and pass in array to verify
       result = @ocsp_response.basic.verify(stack, store)
       $VERBOSE = original_verbosity
-      return result
+      result
     end
 
     # @param [OpenSSL::OCSP::Request] ocsp_request the OCSP request whose nonce to check

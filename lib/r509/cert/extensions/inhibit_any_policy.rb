@@ -63,7 +63,7 @@ module R509
           ef = OpenSSL::X509::ExtensionFactory.new
           critical = R509::Cert::Extensions.calculate_critical(arg[:critical], true)
           # must be set critical per RFC 5280
-          return ef.create_extension("inhibitAnyPolicy", arg[:value].to_s, critical)
+          ef.create_extension("inhibitAnyPolicy", arg[:value].to_s, critical)
         end
       end
     end

@@ -181,7 +181,7 @@ module R509
           validate_usage(arg)
           ef = OpenSSL::X509::ExtensionFactory.new
           critical = R509::Cert::Extensions.calculate_critical(arg[:critical], false)
-          return ef.create_extension("extendedKeyUsage", arg[:value].join(","), critical)
+          ef.create_extension("extendedKeyUsage", arg[:value].join(","), critical)
         end
       end
     end

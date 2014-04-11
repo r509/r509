@@ -325,7 +325,7 @@ module R509
           ca_cert = self.load_with_key(ca_cert_hash, ca_root_path)
         end
 
-        return ca_cert
+        ca_cert
       end
 
       def self.load_with_engine(ca_cert_hash, ca_root_path)

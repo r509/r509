@@ -79,7 +79,7 @@ module R509
           ef = OpenSSL::X509::ExtensionFactory.new
           ef.config = OpenSSL::Config.parse(conf.join("\n"))
           critical = R509::Cert::Extensions.calculate_critical(arg[:critical], false)
-          return ef.create_extension("certificatePolicies", policy_names.join(","), critical)
+          ef.create_extension("certificatePolicies", policy_names.join(","), critical)
         end
 
         def build_conf(section, hash, index)

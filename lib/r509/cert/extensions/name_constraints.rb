@@ -143,7 +143,7 @@ module R509
           ef.config = OpenSSL::Config.parse nc_conf.join("\n")
           critical = R509::Cert::Extensions.calculate_critical(arg[:critical], true)
           # must be set critical per RFC 5280
-          return ef.create_extension("nameConstraints", nc_data.join(","), critical)
+          ef.create_extension("nameConstraints", nc_data.join(","), critical)
         end
 
         def validate_name_constraints(nc)

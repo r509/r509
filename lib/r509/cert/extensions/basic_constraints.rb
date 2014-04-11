@@ -36,7 +36,7 @@ module R509
         # Check whether the extension value would make the parent certificate a CA
         # @return [Boolean]
         def is_ca?
-          return @is_ca == true
+          @is_ca == true
         end
 
         # Returns true if the path length allows this certificate to be used to
@@ -46,7 +46,7 @@ module R509
         def allows_sub_ca?
           return false unless is_ca?
           return true if @path_length.nil?
-          return @path_length > 0
+          @path_length > 0
         end
 
         # @return [Hash]
@@ -93,7 +93,7 @@ module R509
             bc_value = "CA:FALSE"
           end
           critical = R509::Cert::Extensions.calculate_critical(arg[:critical], true)
-          return ef.create_extension("basicConstraints", bc_value, critical)
+          ef.create_extension("basicConstraints", bc_value, critical)
         end
 
         # validates the structure of the certificate policies array

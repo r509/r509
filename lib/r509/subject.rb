@@ -59,7 +59,7 @@ module R509
           return item[1]
         end
       end
-      return nil
+      nil
     end
 
     # set key and value

@@ -114,7 +114,7 @@ module R509
           ef = OpenSSL::X509::ExtensionFactory.new
           ef.config = OpenSSL::Config.parse(aia_conf.join("\n"))
           critical = R509::Cert::Extensions.calculate_critical(arg[:critical], false)
-          return ef.create_extension("authorityInfoAccess", aia.join(","), critical)
+          ef.create_extension("authorityInfoAccess", aia.join(","), critical)
         end
 
         def validate_authority_info_access(aia)

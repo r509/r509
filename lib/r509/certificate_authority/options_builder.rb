@@ -108,7 +108,7 @@ module R509::CertificateAuthority
       ext_hash.each do |k, v|
         merged_ext.push(v)
       end
-      return merged_ext
+      merged_ext
     end
 
     def build_extensions(options, profile, public_key)

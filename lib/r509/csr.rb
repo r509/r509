@@ -94,7 +94,7 @@ module R509
     # @param [String] filename Path to file you want to load
     # @return [R509::CSR] CSR object
     def self.load_from_file(filename)
-      return R509::CSR.new(:csr => IOHelpers.read_data(filename))
+      R509::CSR.new(:csr => IOHelpers.read_data(filename))
     end
 
     # @return [OpenSSL::PKey::RSA,OpenSSL::PKey::DSA,OpenSSL::PKey::EC] public key

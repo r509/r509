@@ -42,7 +42,7 @@ module R509
     # @param [String] filename Path to file you want to load
     # @return [R509::PrivateKey] PrivateKey object
     def self.load_from_file(filename, password = nil)
-      return R509::PrivateKey.new(:key => IOHelpers.read_data(filename), :password => password)
+      R509::PrivateKey.new(:key => IOHelpers.read_data(filename), :password => password)
     end
 
     # Returns the bit length of the key

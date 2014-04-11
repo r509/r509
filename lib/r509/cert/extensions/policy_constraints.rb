@@ -99,7 +99,7 @@ module R509
           ef = OpenSSL::X509::ExtensionFactory.new
           critical = R509::Cert::Extensions.calculate_critical(arg[:critical], true)
           # must be set critical per RFC 5280
-          return ef.create_extension("policyConstraints", constraints.join(","), critical)
+          ef.create_extension("policyConstraints", constraints.join(","), critical)
         end
 
         def validate_policy_constraints(pc)

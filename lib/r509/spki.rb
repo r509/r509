@@ -48,7 +48,7 @@ module R509
     # @return [String] signature algorithm string
     def signature_algorithm
       data = OpenSSL::ASN1.decode(self.to_der)
-      return data.entries[1].value.entries[0].value
+      data.entries[1].value.entries[0].value
     end
 
     private
@@ -71,7 +71,7 @@ module R509
       if not @key.nil? and not spki.verify(@key.public_key) then
         raise R509Error, 'Key does not match SPKI.'
       end
-      return spki
+      spki
     end
 
     # Tries to build an SPKI using an existing private key
@@ -89,7 +89,7 @@ module R509
         message_digest = R509::MessageDigest.new(md)
       end
       spki.sign(@key.key, message_digest.digest)
-      return spki
+      spki
     end
 
     # Returns the proper instance variable

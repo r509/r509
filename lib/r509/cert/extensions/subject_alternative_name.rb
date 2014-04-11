@@ -74,7 +74,7 @@ module R509
           ef = OpenSSL::X509::ExtensionFactory.new
           ef.config = OpenSSL::Config.parse(serialize[:conf])
           critical = R509::Cert::Extensions.calculate_critical(arg[:critical], false)
-          return ef.create_extension("subjectAltName", serialize[:extension_string], critical)
+          ef.create_extension("subjectAltName", serialize[:extension_string], critical)
         end
 
         def validate_subject_alternative_name(san)

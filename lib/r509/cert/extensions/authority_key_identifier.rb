@@ -82,7 +82,7 @@ module R509
           fake_cert.serial = arg[:issuer_serial] unless arg[:issuer_serial].nil?
           ef.issuer_certificate = fake_cert
           critical = R509::Cert::Extensions.calculate_critical(arg[:critical], false)
-          return ef.create_extension("authorityKeyIdentifier", arg[:value], critical) # this could also be keyid:always,issuer:always
+          ef.create_extension("authorityKeyIdentifier", arg[:value], critical) # this could also be keyid:always,issuer:always
         end
 
         def validate_authority_key_identifier(aki)
