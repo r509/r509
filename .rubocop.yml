@@ -1,0 +1,43 @@
+AllCops:
+  Include:
+    - '**/*.gemspec'
+    - '**/Rakefile'
+
+DefaultScope:
+  Exclude:
+    - lib/r509/trollop.rb
+
+StringLiterals:
+  Enabled: false
+
+HashSyntax:
+  EnforcedStyle: hash_rockets
+
+PredicateName: # is_ prefix
+  Enabled: false
+
+BlockNesting:
+  Max: 4
+
+# Offense count: 7
+# Configuration parameters: EnforcedStyle, SupportedStyles.
+ClassAndModuleChildren:
+  Enabled: false
+
+Void:
+  Enabled: false
+
+WordArray:
+  Enabled: false
+
+SignalException:
+  Enabled: false
+
+CaseIndentation:
+  Enabled: false
+
+NumericLiterals:
+  Enabled: false
+
+IfUnlessModifier:
+  Enabled: false
