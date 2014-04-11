@@ -12,10 +12,10 @@ module R509::CertificateAuthority
     def initialize(config)
       @config = config
 
-      if not @config.nil? and not @config.kind_of?(R509::Config::CAConfig)
+      if !@config.nil? && !@config.kind_of?(R509::Config::CAConfig)
         raise R509::R509Error, "config must be a kind of R509::Config::CAConfig"
       end
-      if not @config.nil? and not @config.ca_cert.has_private_key?
+      if !@config.nil? && !@config.ca_cert.has_private_key?
         raise R509::R509Error, "You must have a private key associated with your CA certificate to issue"
       end
     end

@@ -52,7 +52,7 @@ module R509
         # @return [Hash]
         def to_h
           hash = { :ca => @is_ca, :critical => self.critical? }
-          hash[:path_length] = @path_length unless @path_length.nil? or not is_ca?
+          hash[:path_length] = @path_length unless @path_length.nil? || !is_ca?
           hash
         end
 

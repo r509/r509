@@ -159,7 +159,7 @@ describe R509::Cert::Extensions::AuthorityInfoAccess do
       context "default criticality" do
         before :all do
           @args = { :ocsp_location => [{ :type => 'URI', :value => 'http://ocsp.domain.com' }] }
-        @aia = R509::Cert::Extensions::AuthorityInfoAccess.new(@args)
+          @aia = R509::Cert::Extensions::AuthorityInfoAccess.new(@args)
         end
 
         it "creates extension" do
@@ -174,7 +174,7 @@ describe R509::Cert::Extensions::AuthorityInfoAccess do
       context "non-default criticality" do
         before :all do
           @args = { :ocsp_location => [{ :type => 'URI', :value => 'http://ocsp.domain.com' }], :critical => true }
-        @aia = R509::Cert::Extensions::AuthorityInfoAccess.new(@args)
+          @aia = R509::Cert::Extensions::AuthorityInfoAccess.new(@args)
         end
 
         it "creates extension" do

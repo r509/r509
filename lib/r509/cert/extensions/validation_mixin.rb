@@ -11,7 +11,7 @@ module R509
           if not value.kind_of?(Integer) or value < 0
             raise ArgumentError, "#{source} must be a non-negative integer"
           end
-            value
+          value
         end
 
         # validates key usage array

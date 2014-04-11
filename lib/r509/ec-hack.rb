@@ -4,7 +4,7 @@
 # a method named #private? on the PKey object. OpenSSL::PKey::RSA and OpenSSL::PKey::DSA
 # both define this method, but OpenSSL::PKey::EC defines #private_key? instead. This
 # will open up the class and add #private? as an alias to allow successful signing
-if defined?(OpenSSL::PKey::EC) and not OpenSSL::PKey::EC.method_defined?('private?')
+if defined?(OpenSSL::PKey::EC) && !OpenSSL::PKey::EC.method_defined?('private?')
   # marked as @private so it won't appear in the yard doc
   # @private
   module OpenSSL::PKey
@@ -16,7 +16,7 @@ if defined?(OpenSSL::PKey::EC) and not OpenSSL::PKey::EC.method_defined?('privat
       end
     end
   end
-elsif not defined?(OpenSSL::PKey::EC)
+elsif !defined?(OpenSSL::PKey::EC)
   # this is a stub implementation for when EC is unavailable. Any method called against
   # it will raise an R509Error
   # marked as @private so it won't appear in the yard doc

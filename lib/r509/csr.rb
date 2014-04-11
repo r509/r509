@@ -56,7 +56,7 @@ module R509
       @key = load_private_key(opts)
 
       @type = opts[:type] || R509::PrivateKey::DEFAULT_TYPE
-      if not R509::PrivateKey::KNOWN_TYPES.include?(@type.upcase) and @key.nil?
+      if !R509::PrivateKey::KNOWN_TYPES.include?(@type.upcase) && @key.nil?
         raise ArgumentError, "Must provide #{R509::PrivateKey::KNOWN_TYPES.join(", ")} as type when key is nil"
       end
 
@@ -84,7 +84,7 @@ module R509
       unless opts.key?(:csr)
         @req.sign(@key.key, @message_digest.digest)
       end
-      if not @key.nil? and not @req.verify(@key.public_key) then
+      if !@key.nil? && !@req.verify(@key.public_key) then
         raise R509Error, 'Key does not match request.'
       end
     end
@@ -112,7 +112,7 @@ module R509
 
     # @return [Boolean] Boolean of whether the object contains a private key
     def has_private_key?
-      if not @key.nil?
+      if !@key.nil?
         true
       else
         false

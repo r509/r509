@@ -9,33 +9,33 @@ shared_examples_for "create spki with private key" do
     spki.verify_signature
   end
 
-    it "generates a spki from a pem key" do
-      spki = R509::SPKI.new(:key => @key.to_pem)
-      spki.to_pem.should_not be_nil
-      spki.verify_signature
-    end
+  it "generates a spki from a pem key" do
+    spki = R509::SPKI.new(:key => @key.to_pem)
+    spki.to_pem.should_not be_nil
+    spki.verify_signature
+  end
 
-    it "generates a spki with custom digest" do
-      spki = R509::SPKI.new(:key => @key, :message_digest => "sha256")
-      spki.to_pem.should_not be_nil
-      case
-      when @key.rsa?
-        spki.signature_algorithm.should(match(/sha256/i))
-      when @key.dsa?
-        spki.signature_algorithm.should(match(/sha1/i))
-      end
-      spki.verify_signature
+  it "generates a spki with custom digest" do
+    spki = R509::SPKI.new(:key => @key, :message_digest => "sha256")
+    spki.to_pem.should_not be_nil
+    case
+    when @key.rsa?
+      spki.signature_algorithm.should(match(/sha256/i))
+    when @key.dsa?
+      spki.signature_algorithm.should(match(/sha1/i))
     end
+    spki.verify_signature
+  end
 
-    it "stores the key" do
-      spki = R509::SPKI.new(:key => @key)
-      spki.key.should == @key
-    end
+  it "stores the key" do
+    spki = R509::SPKI.new(:key => @key)
+    spki.key.should == @key
+  end
 
-    it "verifies signature" do
-      spki = R509::SPKI.new(:key => @key)
-      spki.verify_signature
-    end
+  it "verifies signature" do
+    spki = R509::SPKI.new(:key => @key)
+    spki.verify_signature
+  end
 end
 
 shared_examples_for "spki + private key" do

@@ -120,11 +120,7 @@ module R509
 
     # @return [Boolean] Boolean of whether the object contains a private key
     def has_private_key?
-      if not @key.nil?
-        true
-      else
-        false
-      end
+      !@key.nil?
     end
 
     # Return the CN, as well as all the subject alternative names (SANs).
