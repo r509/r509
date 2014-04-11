@@ -20,7 +20,7 @@ module R509
           R509_EXTENSION_CLASSES.each do |r509_class|
             if ( r509_class::OID.downcase == openssl_extension.oid.downcase)
               if r509_extensions.key?(r509_class)
-                raise ArgumentError.new("Only one extension object allowed per OID")
+                raise ArgumentError, "Only one extension object allowed per OID"
               end
 
               r509_extensions[r509_class] = r509_class.new(openssl_extension)
@@ -112,7 +112,7 @@ module R509
       # classes are used by #wrap_openssl_extensions to wrap OpenSSL extensions
       # in R509 extensions, based on the OID.
       def self.register_class(r509_ext_class)
-        raise ArgumentError.new("R509 certificate extensions must have an OID") if r509_ext_class::OID.nil?
+        raise(ArgumentError, "R509 certificate extensions must have an OID") if r509_ext_class::OID.nil?
         R509_EXTENSION_CLASSES << r509_ext_class
       end
 
