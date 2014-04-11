@@ -118,7 +118,7 @@ module R509
     # @private
     def respond_to?(method_sym, include_private = false)
       method_sym.to_s =~ /([^=]*)/
-      oid = oid_check($1)
+      oid = oid_check(Regexp.last_match[1])
       if not oid.nil?
         true
       else
@@ -139,7 +139,7 @@ module R509
     #
     def method_missing(method_sym, *args, &block)
       if method_sym.to_s =~ /(.*)=$/
-        sn = oid_check($1)
+        sn = oid_check(Regexp.last_match[1])
         if not sn.nil?
           define_dynamic_setter(method_sym, sn)
           send(method_sym, args.first)
