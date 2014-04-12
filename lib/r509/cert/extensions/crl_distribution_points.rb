@@ -36,7 +36,7 @@ module R509
         #     :value => [name]
         #   )
         def initialize(arg)
-          if not R509::Cert::Extensions.is_extension?(arg)
+          unless R509::Cert::Extensions.is_extension?(arg)
             arg = build_extension(arg)
           end
 
@@ -60,7 +60,7 @@ module R509
         private
 
         def parse_extension
-          @general_names= R509::ASN1::GeneralNames.new
+          @general_names = R509::ASN1::GeneralNames.new
           data = R509::ASN1.get_extension_payload(self)
           data.entries.each do |distribution_point|
             #   DistributionPoint ::= SEQUENCE {
@@ -79,16 +79,16 @@ module R509
 
         def build_extension(arg)
           validate_crl_distribution_points(arg)
-          validate_location('crl_distribution_points',arg[:value])
+          validate_location('crl_distribution_points', arg[:value])
           serialize = R509::ASN1::GeneralNames.new(arg[:value]).serialize_names
           ef = OpenSSL::X509::ExtensionFactory.new
           ef.config = OpenSSL::Config.parse(serialize[:conf])
           critical = R509::Cert::Extensions.calculate_critical(arg[:critical], false)
-          return ef.create_extension("crlDistributionPoints", serialize[:extension_string],critical)
+          ef.create_extension("crlDistributionPoints", serialize[:extension_string], critical)
         end
 
         def validate_crl_distribution_points(arg)
-          if not arg.kind_of?(Hash)
+          unless arg.kind_of?(Hash)
             raise ArgumentError, "You must pass a hash with a :value key"
           end
         end

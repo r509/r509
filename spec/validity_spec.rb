@@ -49,11 +49,11 @@ describe R509::Validity do
   context "writer base" do
     it "calls issue" do
       writer = R509::Validity::Writer.new
-      expect { writer.issue("a",1) }.to raise_error(NotImplementedError, "You must call #issue on a subclass of Writer")
+      expect { writer.issue("a", 1) }.to raise_error(NotImplementedError, "You must call #issue on a subclass of Writer")
     end
     it "calls revoke" do
       writer = R509::Validity::Writer.new
-      expect { writer.revoke("a",1, 1) }.to raise_error(NotImplementedError, "You must call #revoke on a subclass of Writer")
+      expect { writer.revoke("a", 1, 1) }.to raise_error(NotImplementedError, "You must call #revoke on a subclass of Writer")
     end
     it "calls is_available?" do
       writer = R509::Validity::Writer.new
@@ -63,7 +63,7 @@ describe R509::Validity do
   context "checker base" do
     it "calls check" do
       checker = R509::Validity::Checker.new
-      expect { checker.check("a",1) }.to raise_error(NotImplementedError, "You must call #check on a subclass of Checker")
+      expect { checker.check("a", 1) }.to raise_error(NotImplementedError, "You must call #check on a subclass of Checker")
     end
     it "calls is_available?" do
       checker = R509::Validity::Checker.new
@@ -73,11 +73,11 @@ describe R509::Validity do
   context "writer default" do
     it "calls issue" do
       writer = R509::Validity::DefaultWriter.new
-      writer.issue("a",1)
+      writer.issue("a", 1)
     end
     it "calls revoke" do
       writer = R509::Validity::DefaultWriter.new
-      writer.revoke("a",1, 1)
+      writer.revoke("a", 1, 1)
     end
     it "calls is_available?" do
       writer = R509::Validity::DefaultWriter.new
@@ -87,7 +87,7 @@ describe R509::Validity do
   context "checker default" do
     it "calls check" do
       checker = R509::Validity::DefaultChecker.new
-      status = checker.check("a",1)
+      status = checker.check("a", 1)
       status.status.should == R509::Validity::VALID
     end
     it "calls is_available?" do

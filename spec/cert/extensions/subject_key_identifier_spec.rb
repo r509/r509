@@ -6,8 +6,8 @@ shared_examples_for "a correct R509 SubjectKeyIdentifier object" do
   before :all do
     extension_name = "subjectKeyIdentifier"
     klass = SubjectKeyIdentifier
-    openssl_ext = OpenSSL::X509::Extension.new( extension_name, @extension_value )
-    @r509_ext = klass.new( openssl_ext )
+    openssl_ext = OpenSSL::X509::Extension.new(extension_name, @extension_value)
+    @r509_ext = klass.new(openssl_ext)
   end
 
   it "key should be correct" do
@@ -30,15 +30,15 @@ describe R509::Cert::Extensions::SubjectKeyIdentifier do
       end
 
       it "errors when not supplying a public key" do
-        expect {
+        expect do
           R509::Cert::Extensions::SubjectKeyIdentifier.new({})
-        }.to raise_error(ArgumentError,"You must supply a hash with a :public_key")
+        end.to raise_error(ArgumentError, "You must supply a hash with a :public_key")
       end
 
       it "errors when supplying a non-hash" do
-        expect {
+        expect do
           R509::Cert::Extensions::SubjectKeyIdentifier.new("junk!!!")
-        }.to raise_error(ArgumentError,"You must supply a hash with a :public_key")
+        end.to raise_error(ArgumentError, "You must supply a hash with a :public_key")
       end
 
       it "creates successfully" do

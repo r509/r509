@@ -8,7 +8,7 @@ module R509
     # @param [String] short_name The short name (e.g. CN, O, OU, emailAddress)
     # @param [String] long_name Optional long name. Defaults to the same as short_name
     # @return [Boolean] success/failure
-    def self.register(oid,short_name,long_name=nil)
+    def self.register(oid, short_name, long_name = nil)
       if long_name.nil?
         long_name = short_name
       end
@@ -24,7 +24,7 @@ module R509
     # ]
     def self.batch_register(oids)
       oids.each do |oid_hash|
-        self.register(oid_hash[:oid],oid_hash[:short_name],oid_hash[:long_name])
+        self.register(oid_hash[:oid], oid_hash[:short_name], oid_hash[:long_name])
       end
       nil
     end

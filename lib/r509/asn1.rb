@@ -40,11 +40,11 @@ module R509
           when R509::Subject, Array
             subject = R509::Subject.new(domain)
             general_names.create_item(:tag => 4, :value => subject)
-          when /:\/\// #URI
+          when /:\/\// # URI
             general_names.create_item(:tag => 6, :value => domain.strip)
-          when /@/ #rfc822Name
+          when /@/ # rfc822Name
             general_names.create_item(:tag => 1, :value => domain.strip)
-          else #dNSName
+          else # dNSName
             general_names.create_item(:tag => 2, :value => domain.strip)
           end
         end
@@ -145,7 +145,7 @@ module R509
 
         # @return [Hash]
       def to_h
-        val = (@value.kind_of?(R509::Subject))? @value.to_h : @value
+        val = (@value.kind_of?(R509::Subject)) ? @value.to_h : @value
 
         { :type => @short_type, :value => val }
       end
@@ -181,7 +181,7 @@ module R509
         @tag = asn[:tag] || R509::ASN1::GeneralName.map_type_to_tag(asn[:type])
         @type = R509::ASN1::GeneralName.map_tag_to_type(@tag)
         @short_type = R509::ASN1::GeneralName.map_tag_to_short_type(@tag)
-        @value = (@tag == 4)? R509::Subject.new(asn[:value]) : asn[:value]
+        @value = (@tag == 4) ? R509::Subject.new(asn[:value]) : asn[:value]
       end
 
       def parse_asn(asn)
@@ -190,20 +190,20 @@ module R509
         @short_type = R509::ASN1::GeneralName.map_tag_to_short_type(@tag)
         value = asn.value
         case @tag
-        when 1,2,6 then @value = value
+        when 1, 2, 6 then @value = value
         when 4 then @value = R509::Subject.new(value.first.to_der)
         when 7
           if value.size == 4 or value.size == 16
             @value = parse_ip(value)
-          elsif value.size == 8 #IPv4 with netmask
-            @value = parse_ip(value[0,4],value[4,4])
-          elsif value.size == 32 #IPv6 with netmask
-            @value = parse_ip(value[0,16],value[16,16])
+          elsif value.size == 8 # IPv4 with netmask
+            @value = parse_ip(value[0, 4], value[4, 4])
+          elsif value.size == 32 # IPv6 with netmask
+            @value = parse_ip(value[0, 16], value[16, 16])
           end
         end
       end
 
-      def parse_ip(value,mask=nil)
+      def parse_ip(value, mask = nil)
         ip = IPAddr.new_ntoh(value)
         if mask.nil?
           return ip.to_s
@@ -231,8 +231,10 @@ module R509
     class GeneralNames
       include R509::Cert::Extensions::ValidationMixin
 
+      attr_reader :ordered_names
+
       # @param data [Array,R509::ASN1::GeneralNames] Pass an array of hashes to create R509::ASN1::GeneralName objects or an existing R509::ASN1::GeneralNames object
-      def initialize(data=nil)
+      def initialize(data = nil)
         @types = {
           :otherName => [], # unimplemented
           :rfc822Name => [],
@@ -245,7 +247,7 @@ module R509
           :registeredID => [] # unimplemented
         }
         @ordered_names = []
-        if not data.nil?
+        unless data.nil?
           if data.kind_of?(self.class)
             data.names.each { |n| add_item(n) }
           else
@@ -273,7 +275,7 @@ module R509
       # @param [Hash] hash A hash with (:tag or :type) and :value keys. Allows you to build GeneralName objects and add
       #   them to the GeneralNames object
       def create_item(hash)
-        if not hash.respond_to?(:has_key?) or (not hash.has_key?(:tag) and not hash.has_key?(:type)) or not hash.has_key?(:value)
+        if not hash.respond_to?(:has_key?) or (not hash.key?(:tag) and not hash.key?(:type)) or not hash.key?(:value)
           raise ArgumentError, "Must be a hash with (:tag or :type) and :value nodes"
         end
         gn = R509::ASN1::GeneralName.new(:tag => hash[:tag], :type => hash[:type], :value => hash[:value])
@@ -287,15 +289,13 @@ module R509
 
       # @return [Array] array of GeneralName objects
       # order found in the extension
-      def names
-        @ordered_names
-      end
+      alias_method :names, :ordered_names
 
       # @return [Array] Array of rfc822name strings
       def rfc_822_names
         @types[:rfc822Name]
       end
-      alias :email_names :rfc_822_names
+      alias_method :email_names, :rfc_822_names
 
       # @return [Array] Array of dnsName strings
       def dns_names
@@ -312,26 +312,25 @@ module R509
       def ip_addresses
         @types[:iPAddress]
       end
-      alias :ips :ip_addresses
+      alias_method :ips, :ip_addresses
 
       # @return [Array] Array of directoryNames (R509::Subject objects)
       def directory_names
         @types[:directoryName]
       end
-      alias :dir_names :directory_names
+      alias_method :dir_names, :directory_names
 
       # @return [Array] string of serialized names for OpenSSL extension creation
       def serialize_names
         confs = []
         extension_strings = []
-        @ordered_names.each { |item|
+        @ordered_names.each do |item|
           data = item.serialize_name
           confs << data[:conf]
           extension_strings << data[:extension_string]
-        }
+        end
         { :conf => confs.join("\n"), :extension_string => extension_strings.join(",") }
       end
     end
-
   end
 end

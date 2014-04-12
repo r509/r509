@@ -16,7 +16,6 @@ module R509
       # You can use this extension to parse an existing extension for easy access
       # to the contents or create a new one.
       class AuthorityKeyIdentifier < OpenSSL::X509::Extension
-
         # friendly name for Authority Key Identifier OID
         OID = "authorityKeyIdentifier"
         # default extension behavior when generating
@@ -33,14 +32,13 @@ module R509
         # @return [String,nil]
         attr_reader :authority_cert_serial_number
 
-
         # @option arg :public_key [OpenSSL::PKey] Required if embedding keyid
         # @option arg :issuer_subject [R509::Subject] Required if embedding issuer. This should be the issuing certificate's issuer subject name.
         # @option arg :issuer_serial [Integer] Required if embedding issuer. This should be the issuing certificate's issuer serial number.
         # @option arg :value [String] (keyid) For the rules of :value see: http://www.openssl.org/docs/apps/x509v3_config.html#Authority_Key_Identifier_. If you want to embed issuer you MUST supply :issuer_subject and :issuer_serial and not :public_key
         # @option arg :critical [Boolean] (false)
         def initialize(arg)
-          if not R509::Cert::Extensions.is_extension?(arg)
+          unless R509::Cert::Extensions.is_extension?(arg)
             arg = build_extension(arg)
           end
 
@@ -75,7 +73,7 @@ module R509
         end
 
         def build_extension(arg)
-          arg[:value] = AKI_EXTENSION_DEFAULT unless not arg[:value].nil?
+          arg[:value] = AKI_EXTENSION_DEFAULT if arg[:value].nil?
           validate_authority_key_identifier(arg)
           ef = OpenSSL::X509::ExtensionFactory.new
           fake_cert = OpenSSL::X509::Certificate.new
@@ -84,7 +82,7 @@ module R509
           fake_cert.serial = arg[:issuer_serial] unless arg[:issuer_serial].nil?
           ef.issuer_certificate = fake_cert
           critical = R509::Cert::Extensions.calculate_critical(arg[:critical], false)
-          return ef.create_extension("authorityKeyIdentifier", arg[:value], critical) # this could also be keyid:always,issuer:always
+          ef.create_extension("authorityKeyIdentifier", arg[:value], critical) # this could also be keyid:always,issuer:always
         end
 
         def validate_authority_key_identifier(aki)
@@ -92,10 +90,10 @@ module R509
             raise ArgumentError, "You must supply an OpenSSL::PKey object to :public_key if aki value contains keyid (present by default)"
           end
           if aki[:value].downcase.include?("issuer")
-            if not aki[:issuer_subject].kind_of?(R509::Subject)
+            unless aki[:issuer_subject].kind_of?(R509::Subject)
               raise ArgumentError, "You must supply an R509::Subject object to :issuer_subject if aki value contains issuer"
             end
-            if not aki[:issuer_serial].kind_of?(Integer)
+            unless aki[:issuer_serial].kind_of?(Integer)
               raise ArgumentError, "You must supply an integer to :issuer_serial if aki value contains issuer"
             end
           end

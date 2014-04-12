@@ -1,3 +1,4 @@
+# rubocop:disable all
 ## NOTE: namespaced Trollop inside R509 to prevent conflicts if other libs
 ## choose to load Trollop as well
 

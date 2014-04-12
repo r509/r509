@@ -11,7 +11,7 @@ describe R509::CRL::Administrator do
 
   it "signs CRL with no delegate certificate" do
     config = R509::Config::CAConfig.new(
-      :ca_cert => TestFixtures.test_ca_cert,
+      :ca_cert => TestFixtures.test_ca_cert
     )
     crl_admin = R509::CRL::Administrator.new(config)
     crl = crl_admin.generate_crl
@@ -21,7 +21,7 @@ describe R509::CRL::Administrator do
   it "signs CRL with delegate certificate" do
     config = R509::Config::CAConfig.new(
       :ca_cert => TestFixtures.test_ca_cert,
-      :crl_cert => TestFixtures.test_ca_crl_delegate,
+      :crl_cert => TestFixtures.test_ca_crl_delegate
     )
     crl_admin = R509::CRL::Administrator.new(config)
     crl = crl_admin.generate_crl
@@ -40,7 +40,7 @@ describe R509::CRL::Administrator do
 
   it "signs CRL with default message digest" do
     config = R509::Config::CAConfig.new(
-      :ca_cert => TestFixtures.test_ca_cert,
+      :ca_cert => TestFixtures.test_ca_cert
     )
     crl_admin = R509::CRL::Administrator.new(config)
     crl = crl_admin.generate_crl
@@ -74,7 +74,7 @@ describe R509::CRL::Administrator do
     expect { R509::CRL::Administrator.new(['random']) }.to raise_error(R509::R509Error)
   end
   it "raises exception when reader/writer is passed that is not a subclass of ReaderWriter)" do
-    expect { R509::CRL::Administrator.new(@test_ca_config,{}) }.to raise_error(ArgumentError,'argument reader_writer must be a subclass of R509::CRL::ReaderWriter')
+    expect { R509::CRL::Administrator.new(@test_ca_config, {}) }.to raise_error(ArgumentError, 'argument reader_writer must be a subclass of R509::CRL::ReaderWriter')
   end
   it "adds a cert to the revocation list" do
     crl_admin = R509::CRL::Administrator.new(@test_ca_config)
@@ -120,9 +120,9 @@ describe R509::CRL::Administrator do
   end
   it "adds a cert to the revocation list with an invalid reason code" do
     crl = R509::CRL::Administrator.new(@test_ca_config)
-    expect { crl.revoke_cert(383834832,15) }.to raise_error(ArgumentError, 'Revocation reason must be integer 0-10 (excluding 7) or nil')
-    expect { crl.revoke_cert(383834832,7) }.to raise_error(ArgumentError, 'Revocation reason must be integer 0-10 (excluding 7) or nil')
-    expect { crl.revoke_cert(383834832,'string') }.to raise_error(ArgumentError, 'Revocation reason must be integer 0-10 (excluding 7) or nil')
+    expect { crl.revoke_cert(383834832, 15) }.to raise_error(ArgumentError, 'Revocation reason must be integer 0-10 (excluding 7) or nil')
+    expect { crl.revoke_cert(383834832, 7) }.to raise_error(ArgumentError, 'Revocation reason must be integer 0-10 (excluding 7) or nil')
+    expect { crl.revoke_cert(383834832, 'string') }.to raise_error(ArgumentError, 'Revocation reason must be integer 0-10 (excluding 7) or nil')
   end
   it "removes a cert from the revocation list" do
     crl_admin = R509::CRL::Administrator.new(@test_ca_config)
@@ -160,20 +160,20 @@ describe R509::CRL::Administrator do
     t = Time.at Time.now.to_i
     Time.should_receive(:now).twice.and_return(t)
     crl = crl_admin.generate_crl
-    crl.next_update.should == (t.utc+168*3600) #default 168 hours (7 days)
+    crl.next_update.should == (t.utc + 168 * 3600) # default 168 hours (7 days)
   end
   it "has proper defaults for last_update and next_update" do
     crl_admin = R509::CRL::Administrator.new(@test_ca_config)
     now = Time.at Time.now.to_i
     crl = crl_admin.generate_crl
-    crl.last_update.should == now-@test_ca_config.crl_start_skew_seconds
-    crl.next_update.should == now+@test_ca_config.crl_validity_hours*3600
+    crl.last_update.should == now - @test_ca_config.crl_start_skew_seconds
+    crl.next_update.should == now + @test_ca_config.crl_validity_hours * 3600
   end
   it "takes custom last_update and next_update" do
     crl_admin = R509::CRL::Administrator.new(@test_ca_config)
     last = Time.at Time.now.to_i - 86400
     nex = Time.at Time.now.to_i + 5
-    crl = crl_admin.generate_crl(last,nex)
+    crl = crl_admin.generate_crl(last, nex)
     crl.last_update.should == last
     crl.next_update.should == nex
   end
@@ -183,7 +183,7 @@ describe R509::CRL::Administrator do
     rw.should_receive(:write_list_entry)
     rw.should_receive(:read_number).and_return(0)
     rw.should_receive(:read_list).and_return(nil)
-    crl_admin = R509::CRL::Administrator.new(@test_ca_config,rw)
+    crl_admin = R509::CRL::Administrator.new(@test_ca_config, rw)
     crl_admin.revoked?(383834832).should == false
     crl_admin.revoke_cert(383834832)
   end
@@ -193,7 +193,7 @@ describe R509::CRL::Administrator do
     rw.should_receive(:read_number).and_return(0)
     rw.should_receive(:read_list).and_return(nil)
     rw.should_receive(:write_number).with(1)
-    crl_admin = R509::CRL::Administrator.new(@test_ca_config,rw)
+    crl_admin = R509::CRL::Administrator.new(@test_ca_config, rw)
     crl_admin.generate_crl
   end
 end

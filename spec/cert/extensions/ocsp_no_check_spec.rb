@@ -7,8 +7,8 @@ shared_examples_for "a correct R509 OCSPNoCheck object" do |critical|
     extension_name = "noCheck"
     klass = OCSPNoCheck
     ef = OpenSSL::X509::ExtensionFactory.new
-    openssl_ext = ef.create_extension( extension_name, "irrelevant", critical)
-    @r509_ext = klass.new( openssl_ext )
+    openssl_ext = ef.create_extension(extension_name, "irrelevant", critical)
+    @r509_ext = klass.new(openssl_ext)
   end
 
   it "has the expected type" do
@@ -35,7 +35,7 @@ describe R509::Cert::Extensions::OCSPNoCheck do
         end
 
         it "builds yaml" do
-          YAML.load(@no_check.to_yaml).should == {:critical=>false}
+          YAML.load(@no_check.to_yaml).should == { :critical => false }
         end
       end
 
@@ -49,7 +49,7 @@ describe R509::Cert::Extensions::OCSPNoCheck do
         end
 
         it "builds yaml" do
-          YAML.load(@no_check.to_yaml).should == {:critical => false}
+          YAML.load(@no_check.to_yaml).should == { :critical => false }
         end
       end
 
@@ -63,7 +63,7 @@ describe R509::Cert::Extensions::OCSPNoCheck do
         end
 
         it "builds yaml" do
-          YAML.load(@no_check.to_yaml).should == {:critical => true}
+          YAML.load(@no_check.to_yaml).should == { :critical => true }
         end
       end
 

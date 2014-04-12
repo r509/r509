@@ -44,7 +44,7 @@ module R509
       # Reads a CRL list file from a file or StringIO
       # @yield For each revoked certificate in the CRL
       # @yieldparam serial [Integer] revoked certificate's serial number
-      # @yieldparam reason [Integer,nil] reason for revocation. 
+      # @yieldparam reason [Integer,nil] reason for revocation.
       # @yieldparam revoke_time [Integer]
       def read_list
         return nil if @crl_list_file.nil?
@@ -69,8 +69,8 @@ module R509
       def write_list_entry(serial, revoke_time, reason)
         return nil if @crl_list_file.nil?
 
-        entry = [serial,revoke_time,reason].join(",")
-        write_data(@crl_list_file, entry+"\n" ,'a:ascii-8bit')
+        entry = [serial, revoke_time, reason].join(",")
+        write_data(@crl_list_file, entry + "\n" , 'a:ascii-8bit')
       end
 
       # Remove a CRL list entry
@@ -89,7 +89,7 @@ module R509
             updated_list.push(line)
           end
         end
-        write_data(@crl_list_file, updated_list.join("\n")+"\n")
+        write_data(@crl_list_file, updated_list.join("\n") + "\n")
         nil
       end
 
@@ -104,9 +104,8 @@ module R509
       def write_number(crl_number)
         return nil if @crl_number_file.nil?
 
-        write_data(@crl_number_file,crl_number.to_s)
+        write_data(@crl_number_file, crl_number.to_s)
       end
     end
   end
 end
-

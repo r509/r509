@@ -15,7 +15,6 @@ module R509
       # You can use this extension to parse an existing extension for easy access
       # to the contents or create a new one.
       class CertificatePolicies < OpenSSL::X509::Extension
-
         # friendly name for CP OID
         OID = "certificatePolicies"
         Extensions.register_class(self)
@@ -35,7 +34,7 @@ module R509
         #   }
         #  ])
         def initialize(arg)
-          if not R509::Cert::Extensions.is_extension?(arg)
+          unless R509::Cert::Extensions.is_extension?(arg)
             arg = build_extension(arg)
           end
 
@@ -57,6 +56,7 @@ module R509
         end
 
         private
+
         def parse_extension
           @policies = []
           data = R509::ASN1.get_extension_payload(self)
@@ -72,32 +72,32 @@ module R509
           validate_certificate_policies(arg[:value])
           conf = []
           policy_names = ["ia5org"]
-          arg[:value].each_with_index do |policy,i|
-            conf << build_conf("certPolicies#{i}",policy,i)
+          arg[:value].each_with_index do |policy, i|
+            conf << build_conf("certPolicies#{i}", policy, i)
             policy_names << "@certPolicies#{i}"
           end
           ef = OpenSSL::X509::ExtensionFactory.new
           ef.config = OpenSSL::Config.parse(conf.join("\n"))
           critical = R509::Cert::Extensions.calculate_critical(arg[:critical], false)
-          return ef.create_extension("certificatePolicies", policy_names.join(","),critical)
+          ef.create_extension("certificatePolicies", policy_names.join(","), critical)
         end
 
-        def build_conf(section,hash,index)
+        def build_conf(section, hash, index)
           conf = ["[#{section}]"]
           conf.push "policyIdentifier=#{hash[:policy_identifier]}" unless hash[:policy_identifier].nil?
-          hash[:cps_uris].each_with_index do |cps,idx|
-            conf.push "CPS.#{idx+1}=\"#{cps}\""
+          hash[:cps_uris].each_with_index do |cps, idx|
+            conf.push "CPS.#{idx + 1}=\"#{cps}\""
           end if hash[:cps_uris].respond_to?(:each_with_index)
 
           user_notice_confs = []
-          hash[:user_notices].each_with_index do |un,k|
-            conf.push "userNotice.#{k+1}=@user_notice#{k+1}#{index}"
-            user_notice_confs.push "[user_notice#{k+1}#{index}]"
+          hash[:user_notices].each_with_index do |un, k|
+            conf.push "userNotice.#{k + 1}=@user_notice#{k + 1}#{index}"
+            user_notice_confs.push "[user_notice#{k + 1}#{index}]"
             user_notice_confs.push "explicitText=\"#{un[:explicit_text]}\"" unless un[:explicit_text].nil?
             # if org is supplied notice numbers is also required (and vice versa). enforced in CAProfile
             user_notice_confs.push "organization=\"#{un[:organization]}\"" unless un[:organization].nil?
             user_notice_confs.push "noticeNumbers=\"#{un[:notice_numbers].join(",")}\"" unless un[:notice_numbers].nil?
-          end unless not hash[:user_notices].kind_of?(Array)
+          end if hash[:user_notices].kind_of?(Array)
 
           conf.concat(user_notice_confs)
           conf.join "\n"
@@ -110,8 +110,8 @@ module R509
           policies.each do |policy|
             raise ArgumentError, "Each policy requires a policy identifier" if policy[:policy_identifier].nil?
             raise ArgumentError, "CPS URIs must be an array of strings" if not policy[:cps_uris].nil? and not policy[:cps_uris].respond_to?(:each)
-            if not policy[:user_notices].nil?
-              raise ArgumentError, "User notices must be an array of hashes" if not policy[:user_notices].respond_to?(:each)
+            unless policy[:user_notices].nil?
+              raise ArgumentError, "User notices must be an array of hashes" unless policy[:user_notices].respond_to?(:each)
               policy[:user_notices].each do |un|
                 raise ArgumentError, "If you provide an organization you must provide notice numbers" if not un[:organization].nil? and un[:notice_numbers].nil?
                 raise ArgumentError, "If you provide notice numbers you must provide an organization" if not un[:notice_numbers].nil? and un[:organization].nil?
@@ -132,7 +132,7 @@ module R509
           # store the policy identifier OID
           @policy_identifier = data.entries[0].value
           # iterate the policy qualifiers if any exist
-          if not data.entries[1].nil?
+          unless data.entries[1].nil?
             @policy_qualifiers = PolicyQualifiers.new
             data.entries[1].each do |pq|
               @policy_qualifiers.parse(pq)
@@ -199,7 +199,7 @@ module R509
         attr_reader :notice_reference, :explicit_text
         def initialize(data)
           data.each do |qualifier|
-            #if we find another sequence, that's a noticeReference, otherwise it's explicitText
+            # if we find another sequence, that's a noticeReference, otherwise it's explicitText
             if qualifier.kind_of?(OpenSSL::ASN1::Sequence)
               @notice_reference = NoticeReference.new(qualifier)
             else

@@ -23,33 +23,37 @@ describe R509::Cert do
     @cert_name_constraints = TestFixtures::CERT_NAME_CONSTRAINTS
   end
   it "raises error when no hash supplied" do
-    expect { R509::Cert.new('no hash')}.to raise_error(ArgumentError, 'Must provide a hash of options')
+    expect { R509::Cert.new('no hash') }.to raise_error(ArgumentError, 'Must provide a hash of options')
   end
   it "raises error when no :cert supplied" do
-    expect { R509::Cert.new(:key => "random")}.to raise_error(ArgumentError, 'Must provide :cert or :pkcs12')
+    expect { R509::Cert.new(:key => "random") }.to raise_error(ArgumentError, 'Must provide :cert or :pkcs12')
   end
   it "raises error when a csr is supplied to :cert" do
-    expect { R509::Cert.new(:cert => TestFixtures::CSR)}.to raise_error(ArgumentError, "Cert provided is actually a certificate signing request.")
+    expect { R509::Cert.new(:cert => TestFixtures::CSR) }.to raise_error(ArgumentError, "Cert provided is actually a certificate signing request.")
   end
   it "raises error when :cert and :pkcs12 are both provided" do
-    expect { R509::Cert.new(
-      :key => @key3,
-      :pkcs12 => @cert3_p12,
-      :password => 'whatever'
-    ) }.to raise_error(ArgumentError, 'When providing pkcs12, do not pass cert or key')
+    expect do
+      R509::Cert.new(
+        :key => @key3,
+        :pkcs12 => @cert3_p12,
+        :password => 'whatever'
+      )
+    end.to raise_error(ArgumentError, 'When providing pkcs12, do not pass cert or key')
   end
   it "raises error when :key and :pkcs12 are both provided" do
-    expect { R509::Cert.new(
-      :cert => @cert,
-      :pkcs12 => @cert3_p12,
-      :password => 'whatever'
-    ) }.to raise_error(ArgumentError, 'When providing pkcs12, do not pass cert or key')
+    expect do
+      R509::Cert.new(
+        :cert => @cert,
+        :pkcs12 => @cert3_p12,
+        :password => 'whatever'
+      )
+    end.to raise_error(ArgumentError, 'When providing pkcs12, do not pass cert or key')
   end
   it "has a public_key" do
     cert = R509::Cert.new(:cert => @cert)
-    #this is more complex than it should have to be. diff versions of openssl
-    #return subtly diff PEM encodings so we need to look at the modulus (n)
-    #but beware, because n is not present for DSA certificates
+    # this is more complex than it should have to be. diff versions of openssl
+    # return subtly diff PEM encodings so we need to look at the modulus (n)
+    # but beware, because n is not present for DSA certificates
     cert.public_key.n.to_i.should == @cert_public_key_modulus.to_i
   end
   it "returns bit strength" do
@@ -114,7 +118,7 @@ describe R509::Cert do
   it "#all_names should return a list of san names in addition to the CN" do
     cert = R509::Cert.new(:cert => @cert_san2)
     cert.all_names.should == ["cn.langui.sh", "san1.langui.sh",
-                    "san2.langui.sh", "san3.langui.sh"]
+                              "san2.langui.sh", "san3.langui.sh"]
   end
   it "#all_names should not have duplicates" do
     cert = R509::Cert.new(:cert => @cert_san)
@@ -138,7 +142,7 @@ describe R509::Cert do
   end
   it "loads properly when an R509::PrivateKey is provided" do
     key = R509::PrivateKey.new(:key => @key3)
-    expect { R509::Cert.new(:key => key, :cert => @cert3)}.to_not raise_error
+    expect { R509::Cert.new(:key => key, :cert => @cert3) }.to_not raise_error
   end
   it "writes to pem" do
     cert = R509::Cert.new(:cert => @cert)
@@ -158,12 +162,12 @@ describe R509::Cert do
     cert = R509::Cert.new(:cert => @cert3, :key => @key3)
     sio = StringIO.new
     sio.set_encoding("BINARY") if sio.respond_to?(:set_encoding)
-    cert.write_pkcs12(sio,'r509_password')
+    cert.write_pkcs12(sio, 'r509_password')
     expect { R509::Cert.new(:pkcs12 => sio.string, :password => 'r509_password') }.to_not raise_error
   end
   it "raises error when writing to pkcs12 if key is not present" do
     cert = R509::Cert.new(:cert => @cert3)
-    expect { cert.write_pkcs12('/dev/null','password') }.to raise_error(R509::R509Error, "Writing a PKCS12 requires both key and cert")
+    expect { cert.write_pkcs12('/dev/null', 'password') }.to raise_error(R509::R509Error, "Writing a PKCS12 requires both key and cert")
   end
   it "parses san extension" do
     cert = R509::Cert.new(:cert => @cert_san)
@@ -198,7 +202,7 @@ describe R509::Cert do
     it "returns pem on to_s" do
       cert = R509::Cert.new(:cert => @cert)
       cert.to_s.should == @cert
-     end
+    end
   end
   it "gets the right object from #basic_constraints" do
     cert = R509::Cert.new(:cert => @cert)
@@ -303,10 +307,10 @@ describe R509::Cert do
   end
   it "checks expired_at?" do
     cert = R509::Cert.new(:cert => @cert_expired)
-    cert.valid_at?(Time.utc(2009,1,1)).should == false
-    cert.valid_at?(Time.utc(2011,3,1)).should == true
+    cert.valid_at?(Time.utc(2009, 1, 1)).should == false
+    cert.valid_at?(Time.utc(2011, 3, 1)).should == true
     cert.valid_at?(1298959200).should == true
-    cert.valid_at?(Time.utc(2012,1,1)).should == false
+    cert.valid_at?(Time.utc(2012, 1, 1)).should == false
   end
   it "is revoked by crl" do
     cert = R509::Cert.new(:cert => @cert3)
@@ -347,12 +351,12 @@ describe R509::Cert do
       cert = R509::Cert.new(:cert => @cert_ec, :key => @key_ec)
       sio = StringIO.new
       sio.set_encoding("BINARY") if sio.respond_to?(:set_encoding)
-      cert.write_pkcs12(sio,'r509_password')
+      cert.write_pkcs12(sio, 'r509_password')
       expect { R509::Cert.new(:pkcs12 => sio.string, :password => 'r509_password') }.to_not raise_error
     end
     it "raises error on bit strength" do
       cert = R509::Cert.new(:cert => @cert_ec)
-      expect { cert.bit_strength }.to raise_error(R509::R509Error,'Bit length is not available for EC at this time.')
+      expect { cert.bit_strength }.to raise_error(R509::R509Error, 'Bit length is not available for EC at this time.')
     end
     it "returns curve name" do
       cert = R509::Cert.new(:cert => @cert_ec)
@@ -377,11 +381,11 @@ describe R509::Cert do
 
   context "when elliptic curve support is unavailable" do
     before :all do
-      @ec = OpenSSL::PKey.send(:remove_const,:EC) # remove EC support for test!
+      @ec = OpenSSL::PKey.send(:remove_const, :EC) # remove EC support for test!
       load('r509/ec-hack.rb')
     end
     after :all do
-      OpenSSL::PKey.send(:remove_const,:EC) # remove stubbed EC
+      OpenSSL::PKey.send(:remove_const, :EC) # remove stubbed EC
       OpenSSL::PKey::EC = @ec # add the real one back
     end
     it "checks rsa?" do

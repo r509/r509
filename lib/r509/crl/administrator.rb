@@ -14,18 +14,18 @@ module R509
 
       # @param config [R509::Config::CAConfig]
       # @param reader_writer [R509::CRL::ReaderWriter] A subclass off the R509::CRL::ReaderWriter. Defaults to an instance of R509::CRL::FileReaderWriter.
-      def initialize(config,reader_writer=R509::CRL::FileReaderWriter.new)
+      def initialize(config, reader_writer = R509::CRL::FileReaderWriter.new)
         @config = config
         unless @config.kind_of?(R509::Config::CAConfig)
           raise R509Error, "config must be a kind of R509::Config::CAConfig"
         end
 
-        if not reader_writer.kind_of?(R509::CRL::ReaderWriter)
+        unless reader_writer.kind_of?(R509::CRL::ReaderWriter)
           raise ArgumentError, "argument reader_writer must be a subclass of R509::CRL::ReaderWriter"
         end
         @rw = reader_writer
-        @rw.crl_list_file = @config.crl_list_file unless not @rw.respond_to?(:crl_list_file=)
-        @rw.crl_number_file = @config.crl_number_file unless not @rw.respond_to?(:crl_number_file=)
+        @rw.crl_list_file = @config.crl_list_file if @rw.respond_to?(:crl_list_file=)
+        @rw.crl_number_file = @config.crl_number_file if @rw.respond_to?(:crl_number_file=)
         @crl_number = @rw.read_number
         @revoked_certs = {}
         @rw.read_list do |serial, reason, revoke_time|
@@ -40,7 +40,7 @@ module R509
       # @param [Integer] serial The serial number we want to check
       # @return [Boolean] True if the serial number was revoked. False, otherwise.
       def revoked?(serial)
-        @revoked_certs.has_key?(serial.to_i)
+        @revoked_certs.key?(serial.to_i)
       end
 
       # @return [Array] serial, reason, revoke_time tuple
@@ -68,9 +68,9 @@ module R509
       #     removeFromCRL       (8),
       #     privilegeWithdrawn    (9),
       #     aACompromise       (10) }
-      def revoke_cert(serial,reason=nil, revoke_time=Time.now.to_i, write=true)
-        if not reason.nil?
-          if not reason.kind_of?(Integer) or not reason.between?(0,10) or reason == 7
+      def revoke_cert(serial, reason = nil, revoke_time = Time.now.to_i, write = true)
+        unless reason.nil?
+          if not reason.kind_of?(Integer) or not reason.between?(0, 10) or reason == 7
             raise ArgumentError, "Revocation reason must be integer 0-10 (excluding 7) or nil"
           end
         end
@@ -80,7 +80,7 @@ module R509
         if revoked?(serial)
           raise R509::R509Error, "Cannot revoke a previously revoked certificate"
         end
-        @revoked_certs[serial] = {:reason => reason, :revoke_time => revoke_time}
+        @revoked_certs[serial] = { :reason => reason, :revoke_time => revoke_time }
         if write == true
           @rw.write_list_entry(serial, revoke_time, reason)
         end
@@ -101,16 +101,16 @@ module R509
       # @param next_update [Time] the nextUpdate for the CRL
       #
       # @return [R509::CRL::SignedList] signed CRL
-      def generate_crl(last_update=Time.at(Time.now.to_i)-@config.crl_start_skew_seconds,next_update=Time.at(Time.now)+@config.crl_validity_hours*3600)
+      def generate_crl(last_update = Time.at(Time.now.to_i) - @config.crl_start_skew_seconds, next_update = Time.at(Time.now) + @config.crl_validity_hours * 3600)
         # Time.at(Time.now.to_i) removes sub-second precision. Subsecond precision is irrelevant
         # for CRL update times and makes testing harder.
-        crl = create_crl_object(last_update,next_update)
+        crl = create_crl_object(last_update, next_update)
 
         self.revoked_certs.each do |serial, reason, revoke_time|
           revoked = OpenSSL::X509::Revoked.new
           revoked.serial = OpenSSL::BN.new serial.to_s
           revoked.time = Time.at(revoke_time)
-          if not reason.nil?
+          unless reason.nil?
             enum = OpenSSL::ASN1::Enumerated(reason)
             ext = OpenSSL::X509::Extension.new("CRLReason", enum)
             revoked.add_extension(ext)
@@ -135,7 +135,7 @@ module R509
 
       private
 
-      def create_crl_object(last_update,next_update)
+      def create_crl_object(last_update, next_update)
         crl = OpenSSL::X509::CRL.new
         crl.version = 1
         crl.last_update = last_update
@@ -149,9 +149,9 @@ module R509
         crl.add_extension(OpenSSL::X509::Extension.new("crlNumber", crlnum))
         extensions = []
         extensions << ["authorityKeyIdentifier", "keyid", false]
-        extensions.each{|oid, value, critical|
+        extensions.each do |oid, value, critical|
           crl.add_extension(ef.create_extension(oid, value, critical))
-        }
+        end
         crl
       end
 
@@ -163,8 +163,6 @@ module R509
         @rw.write_number(@crl_number)
         @crl_number
       end
-
     end
   end
 end
-

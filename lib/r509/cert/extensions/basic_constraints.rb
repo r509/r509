@@ -12,7 +12,6 @@ module R509
       # You can use this extension to parse an existing extension for easy access
       # to the contents or create a new one.
       class BasicConstraints < OpenSSL::X509::Extension
-
         # friendly name for BasicConstraints OID
         OID = "basicConstraints"
         Extensions.register_class(self)
@@ -26,7 +25,7 @@ module R509
         # @option arg :path_length optional [Integer] This option is only allowed if ca is set to TRUE. path_length allows you to define the maximum number of non-self-issued intermediate certificates that may follow this certificate in a valid certification path. For example, if you set this value to 0 then the certificate issued can only issue end entity certificates, not additional subroots. This must be a non-negative integer (>=0).
         # @option arg :critical [Boolean] (true)
         def initialize(arg)
-          if not R509::Cert::Extensions.is_extension?(arg)
+          unless R509::Cert::Extensions.is_extension?(arg)
             arg = build_extension(arg)
           end
 
@@ -37,7 +36,7 @@ module R509
         # Check whether the extension value would make the parent certificate a CA
         # @return [Boolean]
         def is_ca?
-          return @is_ca == true
+          @is_ca == true
         end
 
         # Returns true if the path length allows this certificate to be used to
@@ -47,13 +46,13 @@ module R509
         def allows_sub_ca?
           return false unless is_ca?
           return true if @path_length.nil?
-          return @path_length > 0
+          @path_length > 0
         end
 
         # @return [Hash]
         def to_h
           hash = { :ca => @is_ca, :critical => self.critical? }
-          hash[:path_length] = @path_length unless @path_length.nil? or not is_ca?
+          hash[:path_length] = @path_length unless @path_length.nil? || !is_ca?
           hash
         end
 
@@ -87,19 +86,19 @@ module R509
           ef = OpenSSL::X509::ExtensionFactory.new
           if arg[:ca] == true
             bc_value = "CA:TRUE"
-            if not arg[:path_length].nil?
+            unless arg[:path_length].nil?
               bc_value += ",pathlen:#{arg[:path_length]}"
             end
           else
             bc_value = "CA:FALSE"
           end
           critical = R509::Cert::Extensions.calculate_critical(arg[:critical], true)
-          return ef.create_extension("basicConstraints", bc_value, critical)
+          ef.create_extension("basicConstraints", bc_value, critical)
         end
 
         # validates the structure of the certificate policies array
         def validate_basic_constraints(constraints)
-          if constraints.nil? or not constraints.respond_to?(:has_key?) or not constraints.has_key?(:ca)
+          if constraints.nil? or not constraints.respond_to?(:has_key?) or not constraints.key?(:ca)
             raise ArgumentError, "You must supply a hash with a key named :ca with a boolean value"
           end
           if constraints[:ca].nil? or (not constraints[:ca].kind_of?(TrueClass) and not constraints[:ca].kind_of?(FalseClass))

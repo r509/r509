@@ -1,6 +1,9 @@
 source "https://rubygems.org"
 
-gem 'coveralls', require: false
+group :test do
+    gem 'coveralls', require: false
+    gem 'rubocop'
+end
 platforms :rbx do
     gem "rubysl-ipaddr"
     gem "rubysl-singleton"

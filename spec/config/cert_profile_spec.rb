@@ -7,26 +7,26 @@ describe R509::Config::CertProfile do
   context "validates allowed_mds and default_md" do
     it "loads allowed_mds and adds default_md when not present" do
       profile = R509::Config::CertProfile.new(
-        :allowed_mds => ['sha256','sha1'],
+        :allowed_mds => ['sha256', 'sha1'],
         :default_md => 'sha384'
       )
-      profile.allowed_mds.should =~ ['SHA1','SHA256','SHA384']
+      profile.allowed_mds.should =~ ['SHA1', 'SHA256', 'SHA384']
     end
 
     it "loads allowed_mds without an explicit default_md" do
       profile = R509::Config::CertProfile.new(
-        :allowed_mds => ['sha256','sha1']
+        :allowed_mds => ['sha256', 'sha1']
       )
-      profile.allowed_mds.should =~ ['SHA1','SHA256']
+      profile.allowed_mds.should =~ ['SHA1', 'SHA256']
       profile.default_md.should == R509::MessageDigest::DEFAULT_MD
     end
 
     it "loads allowed_mds with an explicit default_md" do
       profile = R509::Config::CertProfile.new(
-        :allowed_mds => ['sha384','sha256'],
+        :allowed_mds => ['sha384', 'sha256'],
         :default_md => "SHA256"
       )
-      profile.allowed_mds.should =~ ['SHA384','SHA256']
+      profile.allowed_mds.should =~ ['SHA384', 'SHA256']
       profile.default_md.should == 'SHA256'
     end
 
@@ -39,11 +39,11 @@ describe R509::Config::CertProfile do
     end
 
     it "errors when supplying invalid default_md" do
-      expect { R509::Config::CertProfile.new( :default_md => "notahash" ) }.to raise_error(ArgumentError, "An unknown message digest was supplied. Permitted: #{R509::MessageDigest::KNOWN_MDS.join(", ")}")
+      expect { R509::Config::CertProfile.new(:default_md => "notahash") }.to raise_error(ArgumentError, "An unknown message digest was supplied. Permitted: #{R509::MessageDigest::KNOWN_MDS.join(", ")}")
     end
 
     it "errors when supplying invalid subject item policy" do
-      expect { R509::Config::CertProfile.new( :subject_item_policy => "notapolicy") }.to raise_error(ArgumentError, 'subject_item_policy must be of type R509::Config::SubjectItemPolicy')
+      expect { R509::Config::CertProfile.new(:subject_item_policy => "notapolicy") }.to raise_error(ArgumentError, 'subject_item_policy must be of type R509::Config::SubjectItemPolicy')
     end
   end
   it "initializes with expected defaults" do
@@ -63,7 +63,7 @@ describe R509::Config::CertProfile do
     profile.subject_item_policy.should == nil
   end
   it "loads profiles from YAML while setting expected defaults" do
-    config = R509::Config::CAConfig.from_yaml("test_ca", File.read("#{File.dirname(__FILE__)}/../fixtures/config_test.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/../fixtures"})
+    config = R509::Config::CAConfig.from_yaml("test_ca", File.read("#{File.dirname(__FILE__)}/../fixtures/config_test.yaml"), :ca_root_path => "#{File.dirname(__FILE__)}/../fixtures")
     server_profile = config.profile("server") # no ocsp_no_check node
     server_profile.ocsp_no_check.should == nil
     ocsp_profile = config.profile("ocsp_delegate_with_no_check") # ocsp_no_check => true
@@ -73,16 +73,16 @@ describe R509::Config::CertProfile do
   end
 
   it "builds YAML" do
-    config = R509::Config::CAConfig.from_yaml("test_ca", File.read("#{File.dirname(__FILE__)}/../fixtures/config_test.yaml"), {:ca_root_path => "#{File.dirname(__FILE__)}/../fixtures"})
-    YAML.load(config.profile("server").to_yaml).should == {"basic_constraints"=>{:ca=>false, :critical=>true}, "key_usage"=>{:value=>["digitalSignature", "keyEncipherment"], :critical=>false}, "extended_key_usage"=>{:value=>["serverAuth"], :critical=>false}, "default_md"=>R509::MessageDigest::DEFAULT_MD}
+    config = R509::Config::CAConfig.from_yaml("test_ca", File.read("#{File.dirname(__FILE__)}/../fixtures/config_test.yaml"), :ca_root_path => "#{File.dirname(__FILE__)}/../fixtures")
+    YAML.load(config.profile("server").to_yaml).should == { "basic_constraints" => { :ca => false, :critical => true }, "key_usage" => { :value => ["digitalSignature", "keyEncipherment"], :critical => false }, "extended_key_usage" => { :value => ["serverAuth"], :critical => false }, "default_md" => R509::MessageDigest::DEFAULT_MD }
   end
 
   it "includes crl distribution points in the yaml" do
     config = R509::Config::CertProfile.new(
       :crl_distribution_points => R509::Cert::Extensions::CRLDistributionPoints.new(
-        :value => [{:type => 'URI', :value => 'http://crl.myca.net/ca.crl'}]
+        :value => [{ :type => 'URI', :value => 'http://crl.myca.net/ca.crl' }]
       )
     )
-    YAML.load(config.to_yaml).should == {"crl_distribution_points"=>{:critical=>false, :value=>[{:type=>"URI", :value=>"http://crl.myca.net/ca.crl"}]}, "default_md"=>"SHA1"}
+    YAML.load(config.to_yaml).should == { "crl_distribution_points" => { :critical => false, :value => [{ :type => "URI", :value => "http://crl.myca.net/ca.crl" }] }, "default_md" => "SHA1" }
   end
 end

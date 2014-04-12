@@ -22,8 +22,8 @@ module R509
       #
       # @param [String] filename Path to file you want to load
       # @return [R509::CRL::SignedList] CRL object
-      def self.load_from_file( filename )
-        return R509::CRL::SignedList.new( IOHelpers.read_data(filename) )
+      def self.load_from_file(filename)
+        R509::CRL::SignedList.new(IOHelpers.read_data(filename))
       end
 
       # @return [String]
@@ -86,7 +86,7 @@ module R509
         @crl.to_pem
       end
 
-      alias :to_s :to_pem
+      alias_method :to_s, :to_pem
 
       # Returns the CRL in DER format
       #
@@ -119,6 +119,7 @@ module R509
       end
 
       private
+
       def get_reason(revocation_object)
         reason = nil
         revocation_object.extensions.each do |extension|
@@ -132,4 +133,3 @@ module R509
     end
   end
 end
-

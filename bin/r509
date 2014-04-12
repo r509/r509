@@ -3,7 +3,7 @@ require 'rubygems'
 require 'r509'
 require 'r509/trollop'
 
-opts = R509::Trollop::options do
+opts = R509::Trollop.options do
   opt :interactive, "Interactive CSR/self-signed certificate generation. Overrides all flags other than keyout and out."
   opt :subject, "X509 subject / delimited. Example: /CN=test.com/O=Org/C=US/ST=Illinois/L=Chicago", :type => :string
   opt :san, "Subject Alternative Name Example: test.com,*.test.com", :type => :string
@@ -27,11 +27,11 @@ if opts[:interactive] == true or opts[:subject].nil? then
   if opts[:type].upcase == "RSA" or opts[:type].upcase == "DSA"
     print "CSR Bit Length (2048):"
     bit_length = gets.chomp
-    opts[:bits] = (bit_length.to_i > 0)? bit_length.to_i : 2048
+    opts[:bits] = (bit_length.to_i > 0) ? bit_length.to_i : 2048
   elsif opts[:type].upcase == "EC"
     print "Curve Name (secp384r1):"
     curve_name = gets.chomp
-    opts[:curve_name] = (not curve_name.empty?)? curve_name : 'secp384r1'
+    opts[:curve_name] = (not curve_name.empty?) ? curve_name : 'secp384r1'
   else
     puts "Invalid key type specified. RSA/DSA/EC"
     exit
@@ -51,52 +51,43 @@ if opts[:interactive] == true or opts[:subject].nil? then
 
   print "C (US): "
   c = gets.chomp
-  c = c.empty? ? 'US':c;
-  subject.push ['C',c]
+  c = c.empty? ? 'US' : c
+  subject.push ['C', c]
 
   print "ST (Illinois): "
   st = gets.chomp
-  st = st.empty? ? 'Illinois':st;
-  subject.push ['ST',st]
+  st = st.empty? ? 'Illinois' : st
+  subject.push ['ST', st]
 
   print "L (Chicago): "
   l = gets.chomp
-  l = l.empty? ? 'Chicago':l;
-  subject.push ['L',l]
+  l = l.empty? ? 'Chicago' : l
+  subject.push ['L', l]
 
   print "O (r509 LLC): "
   o = gets.chomp
-  o = o.empty? ? 'r509 LLC':o;
-  subject.push ['O',o]
+  o = o.empty? ? 'r509 LLC' : o
+  subject.push ['O', o]
 
   print "OU (null by default): "
   ou = gets.chomp
-  if(!ou.empty?) then
-    subject.push ['OU',ou]
+  unless ou.empty? then
+    subject.push ['OU', ou]
   end
 
   print "CN: "
-  subject.push ['CN',gets.chomp]
+  subject.push ['CN', gets.chomp]
   print "SAN Domains (comma separated):"
   opts[:san] = gets.chomp
-
-  csr = R509::CSR.new(
-    :subject => subject,
-    :bit_length => opts[:bits],
-    :type => opts[:type].upcase,
-    :curve_name => opts[:curve_name],
-    :san_names => (opts[:san]||"").split(',').collect { |domain| domain.strip },
-    :message_digest => opts[:message_digest]
-  )
 
   print "Self-signed cert duration in days (null disables self-sign):"
   opts[:duration] = gets.chomp.to_i
 else
-  opts[:subject].chomp.split('/').each { |item|
+  opts[:subject].chomp.split('/').each do |item|
     if item != '' then
       subject.push item.split('=')[0..1]
     end
-  }
+  end
 end
 
 csr_or_cert = csr = R509::CSR.new(
@@ -104,7 +95,7 @@ csr_or_cert = csr = R509::CSR.new(
   :bit_length => opts[:bits],
   :type => opts[:type].upcase,
   :curve_name => opts[:curve_name],
-  :san_names => (opts[:san] || "").split(',').collect { |domain| domain.strip },
+  :san_names => (opts[:san] || "").split(',').map { |domain| domain.strip },
   :message_digest => opts[:message_digest]
 )
 
@@ -113,7 +104,7 @@ selfsign = opts[:duration]
 if selfsign > 0
   csr_or_cert = R509::CertificateAuthority::Signer.selfsign(
     :csr => csr,
-    :not_after => Time.now.to_i+86400*selfsign,
+    :not_after => Time.now.to_i + 86400 * selfsign,
     :message_digest => opts[:message_digest]
   )
 end
@@ -134,5 +125,5 @@ puts csr_or_cert.subject
 puts "SAN(s): #{csr_or_cert.san.names.map { |n| n.value }.join(", ")}" if csr_or_cert.san
 
 if opts[:clipboard]
-  IO.popen('pbcopy','w').puts csr_or_cert
+  IO.popen('pbcopy', 'w').puts csr_or_cert
 end

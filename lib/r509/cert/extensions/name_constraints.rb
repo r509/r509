@@ -31,7 +31,6 @@ module R509
       # You can use this extension to parse an existing extension for easy access
       # to the contents or create a new one.
       class NameConstraints < OpenSSL::X509::Extension
-
         # friendly name for CP OID
         OID = "nameConstraints"
         Extensions.register_class(self)
@@ -63,7 +62,7 @@ module R509
         # @note When supplying dirName the value is an R509::Subject or the hash used to build an R509::Subject
         #
         def initialize(arg)
-          if not R509::Cert::Extensions.is_extension?(arg)
+          unless R509::Cert::Extensions.is_extension?(arg)
             arg = build_extension(arg)
           end
           super(arg)
@@ -85,6 +84,7 @@ module R509
         end
 
         private
+
         def parse_extension
           @permitted = R509::ASN1::GeneralNames.new
           @excluded = R509::ASN1::GeneralNames.new
@@ -96,7 +96,7 @@ module R509
                 gn = R509::ASN1::GeneralName.new(obj)
                 if gs.tag == 0 # permittedSubtrees
                   @permitted.add_item(gn)
-                elsif gs.tag == 1 #excludedSubtrees
+                elsif gs.tag == 1 # excludedSubtrees
                   @excluded.add_item(gn)
                 end
               end
@@ -125,15 +125,15 @@ module R509
           validate_name_constraints(arg)
           nc_data = []
           nc_conf = []
-          [:permitted,:excluded].each do |permit_exclude|
-            if not arg[permit_exclude].nil?
+          [:permitted, :excluded].each do |permit_exclude|
+            unless arg[permit_exclude].nil?
               gns = R509::ASN1::GeneralNames.new
               arg[permit_exclude].each do |p|
                 gns.create_item(p)
               end
               gns.names.each do |name|
                 serialize = name.serialize_name
-                nc_data.push "#{permit_exclude.to_s};#{serialize[:extension_string]}"
+                nc_data.push "#{permit_exclude};#{serialize[:extension_string]}"
                 nc_conf.push serialize[:conf]
               end
             end
@@ -143,16 +143,16 @@ module R509
           ef.config = OpenSSL::Config.parse nc_conf.join("\n")
           critical = R509::Cert::Extensions.calculate_critical(arg[:critical], true)
           # must be set critical per RFC 5280
-          return ef.create_extension("nameConstraints",nc_data.join(","),critical)
+          ef.create_extension("nameConstraints", nc_data.join(","), critical)
         end
 
         def validate_name_constraints(nc)
-          if not nc.kind_of?(Hash)
+          unless nc.kind_of?(Hash)
             raise ArgumentError, "name_constraints must be provided as a hash"
           end
-          [:permitted,:excluded].each do |key|
-            if not nc[key].nil?
-              validate_name_constraints_elements(key,nc[key])
+          [:permitted, :excluded].each do |key|
+            unless nc[key].nil?
+              validate_name_constraints_elements(key, nc[key])
             end
           end
           if (nc[:permitted].nil? or nc[:permitted].empty?) and (nc[:excluded].nil? or nc[:excluded].empty?)
@@ -160,12 +160,12 @@ module R509
           end
         end
 
-        def validate_name_constraints_elements(type,arr)
-          if not arr.kind_of?(Array)
+        def validate_name_constraints_elements(type, arr)
+          unless arr.kind_of?(Array)
             raise ArgumentError, "#{type} must be an array"
           end
           arr.each do |el|
-            if not el.kind_of?(Hash) or not el.has_key?(:type) or not el.has_key?(:value)
+            if not el.kind_of?(Hash) or not el.key?(:type) or not el.key?(:value)
               raise ArgumentError, "Elements within the #{type} array must be hashes with both type and value"
             end
             if R509::ASN1::GeneralName.map_type_to_tag(el[:type]) == nil

@@ -3,7 +3,7 @@ require 'r509/asn1'
 
 describe R509::ASN1 do
   it "does not error with valid extension on get_extension_payload" do
-    #SAN extension
+    # SAN extension
     der = "0L\u0006\u0003U\u001D\u0011\u0001\u0001\xFF\u0004B0@\x82\u000Ewww.test.local\x87\u0004\n\u0001\u0002\u0003\x86\u0015http://www.test.local\x81\u0011myemail@email.com"
     ext = OpenSSL::X509::Extension.new(der)
     payload = R509::ASN1.get_extension_payload(ext)
@@ -21,34 +21,34 @@ describe R509::ASN1 do
       names.should == general_names
     end
     it "correctly parses dns names" do
-      general_names = R509::ASN1.general_name_parser(['domain2.com','domain3.com'])
+      general_names = R509::ASN1.general_name_parser(['domain2.com', 'domain3.com'])
       general_names.dns_names.should == ["domain2.com", "domain3.com"]
     end
 
     it "adds SAN IPv4 names" do
-      general_names = R509::ASN1.general_name_parser(['1.2.3.4','2.3.4.5'])
+      general_names = R509::ASN1.general_name_parser(['1.2.3.4', '2.3.4.5'])
       general_names.ip_addresses.should == ["1.2.3.4", "2.3.4.5"]
     end
 
     it "adds SAN IPv6 names" do
-      general_names = R509::ASN1.general_name_parser(['FE80:0:0:0:0:0:0:1','fe80::2',])
+      general_names = R509::ASN1.general_name_parser(['FE80:0:0:0:0:0:0:1', 'fe80::2'])
       general_names.ip_addresses.should == ["fe80::1", "fe80::2"]
     end
 
     it "adds SAN URI names" do
-      general_names = R509::ASN1.general_name_parser(['http://myuri.com','ftp://whyftp'])
-      general_names.uris.should == ['http://myuri.com','ftp://whyftp']
+      general_names = R509::ASN1.general_name_parser(['http://myuri.com', 'ftp://whyftp'])
+      general_names.uris.should == ['http://myuri.com', 'ftp://whyftp']
     end
 
     it "adds SAN rfc822 names" do
-      general_names = R509::ASN1.general_name_parser(['email@domain.com','some@other.com'])
-      general_names.rfc_822_names.should == ['email@domain.com','some@other.com']
+      general_names = R509::ASN1.general_name_parser(['email@domain.com', 'some@other.com'])
+      general_names.rfc_822_names.should == ['email@domain.com', 'some@other.com']
     end
 
     it "adds directoryNames via R509::Subject objects" do
-      s = R509::Subject.new([['CN','what-what']])
-      s2 = R509::Subject.new([['C','US'],['L','locality']])
-      general_names = R509::ASN1.general_name_parser([s,s2])
+      s = R509::Subject.new([['CN', 'what-what']])
+      s2 = R509::Subject.new([['C', 'US'], ['L', 'locality']])
+      general_names = R509::ASN1.general_name_parser([s, s2])
       general_names.directory_names.size.should == 2
       general_names.directory_names[0].CN.should == 'what-what'
       general_names.directory_names[0].C.should be_nil
@@ -57,9 +57,9 @@ describe R509::ASN1 do
     end
 
     it "adds directoryNames via arrays" do
-      s = [['CN','what-what']]
-      s2 = [['C','US'],['L','locality']]
-      general_names = R509::ASN1.general_name_parser([s,s2])
+      s = [['CN', 'what-what']]
+      s2 = [['C', 'US'], ['L', 'locality']]
+      general_names = R509::ASN1.general_name_parser([s, s2])
       general_names.directory_names.size.should == 2
       general_names.directory_names[0].CN.should == 'what-what'
       general_names.directory_names[0].C.should be_nil
@@ -68,8 +68,8 @@ describe R509::ASN1 do
     end
 
     it "adds a mix of SAN name types" do
-      general_names = R509::ASN1.general_name_parser(['1.2.3.4','http://langui.sh','email@address.local','domain.internal','2.3.4.5'])
-      general_names.ip_addresses.should == ['1.2.3.4','2.3.4.5']
+      general_names = R509::ASN1.general_name_parser(['1.2.3.4', 'http://langui.sh', 'email@address.local', 'domain.internal', '2.3.4.5'])
+      general_names.ip_addresses.should == ['1.2.3.4', '2.3.4.5']
       general_names.dns_names.should == ['domain.internal']
       general_names.uris.should == ['http://langui.sh']
       general_names.rfc_822_names.should == ['email@address.local']
@@ -160,7 +160,7 @@ describe R509::ASN1::GeneralName do
       R509::ASN1::GeneralName.map_tag_to_type(8).should == :registeredID
     end
     it "raises error with invalid tag" do
-      expect { R509::ASN1::GeneralName.map_tag_to_type(28) }.to raise_error(R509::R509Error,"Invalid tag 28")
+      expect { R509::ASN1::GeneralName.map_tag_to_type(28) }.to raise_error(R509::R509Error, "Invalid tag 28")
     end
 
   end
@@ -418,7 +418,7 @@ describe R509::ASN1::GeneralNames do
     gns.add_item(asn)
     gns.add_item(asn2)
     gns.add_item(asn3)
-    gns.dns_names.should == ["www.test.local","www.text.local"]
+    gns.dns_names.should == ["www.test.local", "www.text.local"]
     gns.rfc_822_names.should == ["myemail@email.com"]
   end
   it "errors on unimplemented type" do
@@ -455,21 +455,20 @@ describe R509::ASN1::GeneralNames do
 
   it "errors with invalid params to #create_item" do
     gns = R509::ASN1::GeneralNames.new
-    expect { gns.create_item({}) }.to raise_error(ArgumentError,'Must be a hash with (:tag or :type) and :value nodes')
+    expect { gns.create_item({}) }.to raise_error(ArgumentError, 'Must be a hash with (:tag or :type) and :value nodes')
   end
 
   it "allows addition of directoryNames with #create_item passing existing subject object" do
     gns = R509::ASN1::GeneralNames.new
-    s = R509::Subject.new([['C','US'],['L','locality']])
+    s = R509::Subject.new([['C', 'US'], ['L', 'locality']])
     gns.directory_names.size.should == 0
-    gns.create_item( :tag => 4, :value => s )
+    gns.create_item(:tag => 4, :value => s)
     gns.directory_names.size.should == 1
   end
   it "allows addition of directoryNames with #create_item passing array" do
     gns = R509::ASN1::GeneralNames.new
     gns.directory_names.size.should == 0
-    gns.create_item( :tag => 4, :value => [['C','US'],['L','locality']] )
+    gns.create_item(:tag => 4, :value => [['C', 'US'], ['L', 'locality']])
     gns.directory_names.size.should == 1
   end
 end
-

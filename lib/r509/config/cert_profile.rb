@@ -13,11 +13,11 @@ module R509
   module Config
     # Provides access to configuration profiles
     class CertProfile
-
       attr_reader :basic_constraints, :key_usage, :extended_key_usage,
-        :certificate_policies, :subject_item_policy, :ocsp_no_check,
-        :inhibit_any_policy, :policy_constraints, :name_constraints,
-        :authority_info_access, :crl_distribution_points, :default_md, :allowed_mds
+                  :certificate_policies, :subject_item_policy, :ocsp_no_check,
+                  :inhibit_any_policy, :policy_constraints, :name_constraints,
+                  :authority_info_access, :crl_distribution_points,
+                  :default_md, :allowed_mds
 
       # All hash options for CertProfile are optional.
       # @option opts [Hash] :basic_constraints
@@ -75,13 +75,14 @@ module R509
       end
 
       private
+
       # @private
       def validate_allowed_mds(allowed_mds)
         if allowed_mds.respond_to?(:each)
           allowed_mds = allowed_mds.map { |md| validate_md(md) }
           # case insensitively check if the default_md is in the allowed_mds
           # and add it if it's not there.
-          if not allowed_mds.any?{ |s| s.casecmp(@default_md)==0 }
+          unless allowed_mds.any? { |s| s.casecmp(@default_md) == 0 }
             allowed_mds.push @default_md
           end
         end
@@ -91,7 +92,7 @@ module R509
       # @private
       def validate_md(md)
         md = md.upcase
-        if not R509::MessageDigest::KNOWN_MDS.include?(md)
+        unless R509::MessageDigest::KNOWN_MDS.include?(md)
           raise ArgumentError, "An unknown message digest was supplied. Permitted: #{R509::MessageDigest::KNOWN_MDS.join(", ")}"
         end
         md

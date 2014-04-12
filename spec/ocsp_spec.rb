@@ -40,14 +40,14 @@ describe R509::OCSP::Response do
   end
   it "verify supports an array of certificates and uses all of them to validate a chain" do
     ocsp_response = R509::OCSP::Response.parse(@test_ca_subroot_ocsp_response)
-    ocsp_response.verify([TestFixtures.test_ca_config.ca_cert.cert,TestFixtures.test_ca_subroot_cert.cert]).should == true
+    ocsp_response.verify([TestFixtures.test_ca_config.ca_cert.cert, TestFixtures.test_ca_subroot_cert.cert]).should == true
   end
   it "verify returns false if you don't give it enough certs to build a chain to a trusted root" do
     ocsp_response = R509::OCSP::Response.parse(@test_ca_subroot_ocsp_response)
     ocsp_response.verify([TestFixtures.test_ca_config.ca_cert.cert]).should == false
   end
   it "returns false if response does not verify" do
-    #expired response
+    # expired response
     ocsp_response = R509::OCSP::Response.parse(@ocsp_response_der)
     ocsp_response.verify(OpenSSL::X509::Certificate.new(@stca_cert)).should == false
   end

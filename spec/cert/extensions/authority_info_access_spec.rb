@@ -7,8 +7,8 @@ shared_examples_for "a correct R509 AuthorityInfoAccess object" do |critical|
     extension_name = "authorityInfoAccess"
     klass = AuthorityInfoAccess
     ef = OpenSSL::X509::ExtensionFactory.new
-    openssl_ext = ef.create_extension( extension_name, @extension_value, critical )
-    @r509_ext = klass.new( openssl_ext )
+    openssl_ext = ef.create_extension(extension_name, @extension_value, critical)
+    @r509_ext = klass.new(openssl_ext)
   end
 
   it "ca_issuers_uri should be correct critical:#{critical}" do
@@ -29,30 +29,30 @@ describe R509::Cert::Extensions::AuthorityInfoAccess do
 
   context "validation" do
     it "raises an error when not a hash" do
-      expect { AuthorityInfoAccess.new( "some-url" ) }.to raise_error(ArgumentError, 'You must pass a hash with at least one of the following two keys (:ocsp_location, :ca_issuers_location)')
+      expect { AuthorityInfoAccess.new("some-url") }.to raise_error(ArgumentError, 'You must pass a hash with at least one of the following two keys (:ocsp_location, :ca_issuers_location)')
     end
 
     it "raises an error with empty hash" do
-      expect { AuthorityInfoAccess.new( {} ) }.to raise_error(ArgumentError, 'You must pass a hash with at least one of the following two keys (:ocsp_location, :ca_issuers_location)')
+      expect { AuthorityInfoAccess.new({}) }.to raise_error(ArgumentError, 'You must pass a hash with at least one of the following two keys (:ocsp_location, :ca_issuers_location)')
     end
 
     it "raises an error if you pass an ocsp_location that is not an array" do
-      expect { AuthorityInfoAccess.new( :ocsp_location => "some-url" ) }.to raise_error(ArgumentError, 'ocsp_location must contain an array or R509::ASN1::GeneralNames object if provided')
+      expect { AuthorityInfoAccess.new(:ocsp_location => "some-url") }.to raise_error(ArgumentError, 'ocsp_location must contain an array or R509::ASN1::GeneralNames object if provided')
     end
 
     it "raises an error if you pass a ca_issuers_location that is not an array" do
-      expect { AuthorityInfoAccess.new( :ca_issuers_location => "some-url" ) }.to raise_error(ArgumentError, 'ca_issuers_location must contain an array or R509::ASN1::GeneralNames object if provided')
+      expect { AuthorityInfoAccess.new(:ca_issuers_location => "some-url") }.to raise_error(ArgumentError, 'ca_issuers_location must contain an array or R509::ASN1::GeneralNames object if provided')
     end
 
     it "raises an error if you pass an array that does not contain hashes" do
-      expect { AuthorityInfoAccess.new( :ca_issuers_location => [{},"string"] ) }.to raise_error(ArgumentError, 'All elements of the array must be hashes with a :type and :value')
+      expect { AuthorityInfoAccess.new(:ca_issuers_location => [{}, "string"]) }.to raise_error(ArgumentError, 'All elements of the array must be hashes with a :type and :value')
     end
 
     it "raises an error if you pass an array that does not contain both :type and :value" do
-      expect { AuthorityInfoAccess.new( :ca_issuers_location => [{:type => 'URI'}] ) }.to raise_error(ArgumentError, 'All elements of the array must be hashes with a :type and :value')
-      expect { AuthorityInfoAccess.new( :ca_issuers_location => [{:value => 'value'}] ) }.to raise_error(ArgumentError, 'All elements of the array must be hashes with a :type and :value')
-      expect { AuthorityInfoAccess.new( :ocsp_location => [{:type => 'URI'}] ) }.to raise_error(ArgumentError, 'All elements of the array must be hashes with a :type and :value')
-      expect { AuthorityInfoAccess.new( :ocsp_location => [{:value => 'value'}] ) }.to raise_error(ArgumentError, 'All elements of the array must be hashes with a :type and :value')
+      expect { AuthorityInfoAccess.new(:ca_issuers_location => [{ :type => 'URI' }]) }.to raise_error(ArgumentError, 'All elements of the array must be hashes with a :type and :value')
+      expect { AuthorityInfoAccess.new(:ca_issuers_location => [{ :value => 'value' }]) }.to raise_error(ArgumentError, 'All elements of the array must be hashes with a :type and :value')
+      expect { AuthorityInfoAccess.new(:ocsp_location => [{ :type => 'URI' }]) }.to raise_error(ArgumentError, 'All elements of the array must be hashes with a :type and :value')
+      expect { AuthorityInfoAccess.new(:ocsp_location => [{ :value => 'value' }]) }.to raise_error(ArgumentError, 'All elements of the array must be hashes with a :type and :value')
     end
   end
 
@@ -76,13 +76,13 @@ describe R509::Cert::Extensions::AuthorityInfoAccess do
         end
 
         it "builds yaml" do
-          YAML.load(@aia.to_yaml).should == {:critical=>false, :ocsp_location=>[{:type=>"email", :value=>"random string"}, {:type=>"dirName", :value=>{:CN=>"test", :O=>"myOrg", :C=>"US"}}], :ca_issuers_location=>[{:type=>"email", :value=>"random string"}, {:type=>"dirName", :value=>{:CN=>"test", :O=>"myOrg", :C=>"US"}}]}
+          YAML.load(@aia.to_yaml).should == { :critical => false, :ocsp_location => [{ :type => "email", :value => "random string" }, { :type => "dirName", :value => { :CN => "test", :O => "myOrg", :C => "US" } }], :ca_issuers_location => [{ :type => "email", :value => "random string" }, { :type => "dirName", :value => { :CN => "test", :O => "myOrg", :C => "US" } }] }
         end
       end
 
       context "one OCSP location" do
         before :all do
-          @args = { :ocsp_location => [{:type => "URI", :value => 'http://ocsp.domain.com' }], :critical => false }
+          @args = { :ocsp_location => [{ :type => "URI", :value => 'http://ocsp.domain.com' }], :critical => false }
           @aia = R509::Cert::Extensions::AuthorityInfoAccess.new(@args)
         end
 
@@ -97,12 +97,12 @@ describe R509::Cert::Extensions::AuthorityInfoAccess do
 
       context " multiple OCSP locations" do
         before :all do
-          @args = { :ocsp_location => [ { :type => 'URI', :value => 'http://ocsp.domain.com' }, { :type => "URI", :value => 'http://ocsp2.domain.com' }], :critical => false }
+          @args = { :ocsp_location => [{ :type => 'URI', :value => 'http://ocsp.domain.com' }, { :type => "URI", :value => 'http://ocsp2.domain.com' }], :critical => false }
           @aia = R509::Cert::Extensions::AuthorityInfoAccess.new(@args)
         end
 
         it "creates extension" do
-          @aia.ocsp.uris.should == ['http://ocsp.domain.com','http://ocsp2.domain.com']
+          @aia.ocsp.uris.should == ['http://ocsp.domain.com', 'http://ocsp2.domain.com']
         end
 
         it "builds yaml" do
@@ -112,7 +112,7 @@ describe R509::Cert::Extensions::AuthorityInfoAccess do
 
       context "one caIssuers" do
         before :all do
-          @args = { :ca_issuers_location => [ { :type => 'URI', :value => 'http://www.domain.com' } ], :critical => false }
+          @args = { :ca_issuers_location => [{ :type => 'URI', :value => 'http://www.domain.com' }], :critical => false }
           @aia = R509::Cert::Extensions::AuthorityInfoAccess.new(@args)
         end
 
@@ -127,12 +127,12 @@ describe R509::Cert::Extensions::AuthorityInfoAccess do
 
       context "multiple caIssuers" do
         before :all do
-          @args = { :ca_issuers_location => [ { :type => 'URI', :value => 'http://www.domain.com' }, { :type => "URI", :value => 'http://www2.domain.com' }], :critical => false }
+          @args = { :ca_issuers_location => [{ :type => 'URI', :value => 'http://www.domain.com' }, { :type => "URI", :value => 'http://www2.domain.com' }], :critical => false }
           @aia = R509::Cert::Extensions::AuthorityInfoAccess.new(@args)
         end
 
         it "creates extension" do
-          @aia.ca_issuers.uris.should == ['http://www.domain.com','http://www2.domain.com']
+          @aia.ca_issuers.uris.should == ['http://www.domain.com', 'http://www2.domain.com']
         end
 
         it "builds yaml" do
@@ -158,8 +158,8 @@ describe R509::Cert::Extensions::AuthorityInfoAccess do
 
       context "default criticality" do
         before :all do
-        @args = { :ocsp_location => [{ :type => 'URI', :value => 'http://ocsp.domain.com' }]}
-        @aia = R509::Cert::Extensions::AuthorityInfoAccess.new(@args)
+          @args = { :ocsp_location => [{ :type => 'URI', :value => 'http://ocsp.domain.com' }] }
+          @aia = R509::Cert::Extensions::AuthorityInfoAccess.new(@args)
         end
 
         it "creates extension" do
@@ -173,8 +173,8 @@ describe R509::Cert::Extensions::AuthorityInfoAccess do
 
       context "non-default criticality" do
         before :all do
-        @args = { :ocsp_location => [{ :type => 'URI', :value => 'http://ocsp.domain.com' }], :critical => true}
-        @aia = R509::Cert::Extensions::AuthorityInfoAccess.new(@args)
+          @args = { :ocsp_location => [{ :type => 'URI', :value => 'http://ocsp.domain.com' }], :critical => true }
+          @aia = R509::Cert::Extensions::AuthorityInfoAccess.new(@args)
         end
 
         it "creates extension" do

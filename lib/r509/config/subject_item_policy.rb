@@ -30,17 +30,17 @@ module R509
       #  "C" => { :policy => "required" },
       #  "L" => { :policy => "match", :value => "Chicago" },
       #  "emailAddress" => { :policy => "optional" }
-      def initialize(hash={})
-        if not hash.kind_of?(Hash)
+      def initialize(hash = {})
+        unless hash.kind_of?(Hash)
           raise ArgumentError, "Must supply a hash in form 'shortname'=>hash_with_policy_info"
         end
         @required = []
         @optional = []
         @match_values = {}
         @match = []
-        if not hash.empty?
-          hash.each_pair do |key,value|
-            if not value.kind_of?(Hash)
+        unless hash.empty?
+          hash.each_pair do |key, value|
+            unless value.kind_of?(Hash)
               raise ArgumentError, "Each value must be a hash with a :policy key"
             end
             case value[:policy]
@@ -73,9 +73,9 @@ module R509
     # @return [Hash]
       def to_h
         hash = {}
-        @required.each { |r| hash[r] = {:policy => "required" } }
-        @optional.each { |o| hash[o] = {:policy => "optional" } }
-        @match.each { |m| hash[m] = {:policy => "match", :value => @match_values[m]} }
+        @required.each { |r| hash[r] = { :policy => "required" } }
+        @optional.each { |o| hash[o] = { :policy => "optional" } }
+        @match.each { |m| hash[m] = { :policy => "match", :value => @match_values[m] } }
         hash
       end
 
@@ -85,6 +85,7 @@ module R509
       end
 
       private
+
       # validates that the provided subject has the expected values for the
       # match policy
       def validate_match(subject)
@@ -109,8 +110,8 @@ module R509
         end
         # so we can make sure they gave us everything that's required
         diff = @required + @match - supplied
-        if not diff.empty?
-          raise R509::R509Error, "This profile requires you supply "+(@required+@match).join(", ")
+        unless diff.empty?
+          raise R509::R509Error, "This profile requires you supply " + (@required + @match).join(", ")
         end
       end
     end

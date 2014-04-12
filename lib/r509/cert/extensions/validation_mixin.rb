@@ -5,12 +5,13 @@ module R509
       # Validation methods shared by multiple extensions
       module ValidationMixin
         private
+
         # used by iap and pc validation methods
-        def validate_non_negative_integer(source,value)
-            if not value.kind_of?(Integer) or value < 0
-              raise ArgumentError, "#{source} must be a non-negative integer"
-            end
-            value
+        def validate_non_negative_integer(source, value)
+          if not value.kind_of?(Integer) or value < 0
+            raise ArgumentError, "#{source} must be a non-negative integer"
+          end
+          value
         end
 
         # validates key usage array
@@ -21,7 +22,7 @@ module R509
           ku
         end
 
-        def validate_location(type,location)
+        def validate_location(type, location)
           if not location.nil? and not (location.kind_of?(Array) or location.kind_of?(R509::ASN1::GeneralNames))
             raise ArgumentError, "#{type} must contain an array or R509::ASN1::GeneralNames object if provided"
           end

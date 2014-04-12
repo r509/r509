@@ -14,32 +14,32 @@ module R509
       # R509::Cert::Extensions object, and returns them in a hash. The hash is
       # keyed with the R509 extension class. Extensions without an R509
       # implementation are ignored (see #get_unknown_extensions).
-      def self.wrap_openssl_extensions( extensions )
+      def self.wrap_openssl_extensions(extensions)
         r509_extensions = {}
         extensions.each do |openssl_extension|
           R509_EXTENSION_CLASSES.each do |r509_class|
-            if ( r509_class::OID.downcase == openssl_extension.oid.downcase )
-              if r509_extensions.has_key?(r509_class)
-                raise ArgumentError.new("Only one extension object allowed per OID")
+            if ( r509_class::OID.downcase == openssl_extension.oid.downcase)
+              if r509_extensions.key?(r509_class)
+                raise ArgumentError, "Only one extension object allowed per OID"
               end
 
-              r509_extensions[r509_class] = r509_class.new( openssl_extension )
+              r509_extensions[r509_class] = r509_class.new(openssl_extension)
               break
             end
           end
         end
 
-        return r509_extensions
+        r509_extensions
       end
 
       # Given a list of OpenSSL::X509::Extension objects, returns those without
       # an R509 implementation.
-      def self.get_unknown_extensions( extensions )
+      def self.get_unknown_extensions(extensions)
         unknown_extensions = []
         extensions.each do |openssl_extension|
           match_found = false
           R509_EXTENSION_CLASSES.each do |r509_class|
-            if ( r509_class::OID.downcase == openssl_extension.oid.downcase )
+            if ( r509_class::OID.downcase == openssl_extension.oid.downcase)
               match_found = true
               break
             end
@@ -48,21 +48,20 @@ module R509
           unknown_extensions << openssl_extension unless match_found
         end
 
-        return unknown_extensions
+        unknown_extensions
       end
-
 
       # Takes an array of R509::ASN1::GeneralName objects and returns a hash that can be
       # encoded to YAML (used by #to_yaml methods)
       def self.names_to_h(array)
         data = []
         array.each do |name|
-          value = (name.value.kind_of?(R509::Subject))? name.value.to_h : name.value
+          value = (name.value.kind_of?(R509::Subject)) ? name.value.to_h : name.value
           data.push(
-            {
+
               :type => name.short_type,
               :value => value
-            }
+
           )
         end
         data
@@ -80,13 +79,13 @@ module R509
         def ip_addresses
           @general_names.ip_addresses
         end
-        alias :ips :ip_addresses
+        alias_method :ips, :ip_addresses
 
         # @return [Array<String>] email addresses
         def rfc_822_names
           @general_names.rfc_822_names
         end
-        alias :email_names :rfc_822_names
+        alias_method :email_names, :rfc_822_names
 
         # @return [Array<String>] URIs (not typically found in SAN extensions)
         def uris
@@ -97,7 +96,7 @@ module R509
         def directory_names
           @general_names.directory_names
         end
-        alias :dir_names :directory_names
+        alias_method :dir_names, :directory_names
 
         # @return [Array] array of GeneralName objects preserving order found in the extension
         def names
@@ -106,17 +105,18 @@ module R509
       end
 
       private
+
       R509_EXTENSION_CLASSES = Set.new
 
       # Registers a class as being an R509 certificate extension class. Registered
       # classes are used by #wrap_openssl_extensions to wrap OpenSSL extensions
       # in R509 extensions, based on the OID.
-      def self.register_class( r509_ext_class )
-        raise ArgumentError.new("R509 certificate extensions must have an OID") if r509_ext_class::OID.nil?
+      def self.register_class(r509_ext_class)
+        raise(ArgumentError, "R509 certificate extensions must have an OID") if r509_ext_class::OID.nil?
         R509_EXTENSION_CLASSES << r509_ext_class
       end
 
-      def self.calculate_critical(critical,default)
+      def self.calculate_critical(critical, default)
         if critical.kind_of?(TrueClass) or critical.kind_of?(FalseClass)
           critical
         else
@@ -128,7 +128,7 @@ module R509
       # an extension/asn.1 data or not.
       def self.is_extension?(data)
         return true if data.kind_of?(OpenSSL::X509::Extension)
-        return false if not data.kind_of?(String)
+        return false unless data.kind_of?(String)
         begin
           OpenSSL::X509::Extension.new(data)
           return true
@@ -136,7 +136,6 @@ module R509
           return false
         end
       end
-
     end
   end
 end

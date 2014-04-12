@@ -2,7 +2,7 @@ module R509::CertificateAuthority
   # A class to build hashes to send to the R509::CertificateAuthority::Signer. These are built from R509::Config::CertProfile objects and additional data supplied to the #build_and_enforce method.
   class OptionsBuilder
     def initialize(config)
-      if not config.kind_of?(R509::Config::CAConfig)
+      unless config.kind_of?(R509::Config::CAConfig)
         raise ArgumentError, "You must supply a R509::Config::CAConfig object to this class at instantiation"
       end
       @config = config
@@ -22,15 +22,15 @@ module R509::CertificateAuthority
 
       R509::CertificateAuthority::Signer.check_options(options)
 
-      if (options.has_key?(:csr) and not options[:csr].verify_signature) or
-         (options.has_key?(:spki) and not options[:spki].verify_signature)
+      if (options.key?(:csr) and not options[:csr].verify_signature) or
+         (options.key?(:spki) and not options[:spki].verify_signature)
         raise R509::R509Error, "Request signature is invalid."
       end
 
       raw_subject, public_key = R509::CertificateAuthority::Signer.extract_public_key_subject(options)
 
-      message_digest = enforce_md(options[:message_digest],profile)
-      subject = enforce_subject_item_policy(raw_subject,profile)
+      message_digest = enforce_md(options[:message_digest], profile)
+      subject = enforce_subject_item_policy(raw_subject, profile)
       enforce_not_after(options[:not_after])
 
       extensions = build_and_merge_extensions(options, profile, public_key)
@@ -44,7 +44,7 @@ module R509::CertificateAuthority
       return_hash = {
         :subject => subject,
         :extensions => extensions,
-        :message_digest => message_digest,
+        :message_digest => message_digest
       }
       return_hash[:csr] = options[:csr] unless options[:csr].nil?
       return_hash[:spki] = options[:spki] unless options[:spki].nil?
@@ -59,7 +59,7 @@ module R509::CertificateAuthority
       end
     end
 
-    def enforce_md(requested_md,profile)
+    def enforce_md(requested_md, profile)
       # prior to OpenSSL 1.0 DSA could only use DSS1 (aka SHA1) signatures. post-1.0 anything
       # goes but at the moment we don't enforce this restriction so an OpenSSL error could
       # bubble up if they do it wrong.
@@ -73,13 +73,13 @@ module R509::CertificateAuthority
         end
       else
         # it doesn't, so either use their md (if valid) or the default one
-      message_digest = (not requested_md.nil?)? R509::MessageDigest.new(requested_md) : R509::MessageDigest.new(profile.default_md)
+        message_digest = (not requested_md.nil?) ? R509::MessageDigest.new(requested_md) : R509::MessageDigest.new(profile.default_md)
       end
       message_digest.name
     end
 
     # @return [R509::Subject]
-    def enforce_subject_item_policy(subject,profile)
+    def enforce_subject_item_policy(subject, profile)
       if profile.subject_item_policy.nil? then
         subject
       else
@@ -88,16 +88,15 @@ module R509::CertificateAuthority
     end
 
     def build_and_merge_extensions(options, profile, public_key)
-      extensions = build_extensions(options,profile,public_key)
+      extensions = build_extensions(options, profile, public_key)
 
-      if not options[:extensions].nil?
-        extensions = merge_extensions(options,extensions)
+      unless options[:extensions].nil?
+        extensions = merge_extensions(options, extensions)
       end
       extensions
     end
 
-
-    def merge_extensions(options,extensions)
+    def merge_extensions(options, extensions)
       ext_hash = {}
       extensions.each do |e|
         ext_hash[e.class] = e
@@ -106,13 +105,13 @@ module R509::CertificateAuthority
         ext_hash[e.class] = e
       end
       merged_ext = []
-      ext_hash.each do |k,v|
+      ext_hash.each do |k, v|
         merged_ext.push(v)
       end
-      return merged_ext
+      merged_ext
     end
 
-    def build_extensions(options,profile,public_key)
+    def build_extensions(options, profile, public_key)
       extensions = []
 
       extensions << profile.basic_constraints unless profile.basic_constraints.nil?
@@ -137,6 +136,5 @@ module R509::CertificateAuthority
       extensions << profile.ocsp_no_check
       extensions.compact
     end
-
   end
 end

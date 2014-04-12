@@ -43,11 +43,11 @@ module R509
     #   :subject => [
     #     ['CN','somedomain.com'],
     #   ]
-    def initialize(opts={})
-      if not opts.kind_of?(Hash)
+    def initialize(opts = {})
+      unless opts.kind_of?(Hash)
         raise ArgumentError, 'Must provide a hash of options'
       end
-      if opts.has_key?(:subject) and opts.has_key?(:csr)
+      if opts.key?(:subject) and opts.key?(:csr)
         raise ArgumentError, "You must provide :subject or :csr, not both"
       end
       @bit_length = opts[:bit_length] || opts[:bit_strength] || R509::PrivateKey::DEFAULT_STRENGTH
@@ -55,17 +55,16 @@ module R509
 
       @key = load_private_key(opts)
 
-
       @type = opts[:type] || R509::PrivateKey::DEFAULT_TYPE
-      if not R509::PrivateKey::KNOWN_TYPES.include?(@type.upcase) and @key.nil?
+      if !R509::PrivateKey::KNOWN_TYPES.include?(@type.upcase) && @key.nil?
         raise ArgumentError, "Must provide #{R509::PrivateKey::KNOWN_TYPES.join(", ")} as type when key is nil"
       end
 
-      if opts.has_key?(:subject)
+      if opts.key?(:subject)
         san_names = R509::ASN1.general_name_parser(opts[:san_names])
-        create_request(opts[:subject], san_names) #sets @req
-      elsif opts.has_key?(:csr)
-        if opts.has_key?(:san_names)
+        create_request(opts[:subject], san_names) # sets @req
+      elsif opts.key?(:csr)
+        if opts.key?(:san_names)
           raise ArgumentError, "You can't add domains to an existing CSR"
         end
         parse_csr(opts[:csr])
@@ -74,34 +73,33 @@ module R509
       end
 
       if dsa?
-        #only DSS1 is acceptable for DSA signing in OpenSSL < 1.0
-        #post-1.0 you can sign with anything, but let's be conservative
-        #see: http://www.ruby-doc.org/stdlib-1.9.3/libdoc/openssl/rdoc/OpenSSL/PKey/DSA.html
+        # only DSS1 is acceptable for DSA signing in OpenSSL < 1.0
+        # post-1.0 you can sign with anything, but let's be conservative
+        # see: http://www.ruby-doc.org/stdlib-1.9.3/libdoc/openssl/rdoc/OpenSSL/PKey/DSA.html
         @message_digest = R509::MessageDigest.new('dss1')
       else
         @message_digest = R509::MessageDigest.new(opts[:message_digest])
       end
 
-      if not opts.has_key?(:csr)
+      unless opts.key?(:csr)
         @req.sign(@key.key, @message_digest.digest)
       end
-      if not @key.nil? and not @req.verify(@key.public_key) then
+      if !@key.nil? && !@req.verify(@key.public_key) then
         raise R509Error, 'Key does not match request.'
       end
-
     end
 
     # Helper method to quickly load a CSR from the filesystem
     #
     # @param [String] filename Path to file you want to load
     # @return [R509::CSR] CSR object
-    def self.load_from_file( filename )
-      return R509::CSR.new(:csr => IOHelpers.read_data(filename) )
+    def self.load_from_file(filename)
+      R509::CSR.new(:csr => IOHelpers.read_data(filename))
     end
 
     # @return [OpenSSL::PKey::RSA,OpenSSL::PKey::DSA,OpenSSL::PKey::EC] public key
     def public_key
-      if(@req.kind_of?(OpenSSL::X509::Request)) then
+      if (@req.kind_of?(OpenSSL::X509::Request)) then
         @req.public_key
       end
     end
@@ -114,14 +112,14 @@ module R509
 
     # @return [Boolean] Boolean of whether the object contains a private key
     def has_private_key?
-      if not @key.nil?
+      if !@key.nil?
         true
       else
         false
       end
     end
 
-    alias :to_s :to_pem
+    alias_method :to_s, :to_pem
 
     # Returns subject component
     #
@@ -161,30 +159,30 @@ module R509
       begin
         @req = OpenSSL::X509::Request.new csr
       rescue OpenSSL::X509::RequestError
-        #let's try to load this thing by handling a few
-        #common error cases
+        # let's try to load this thing by handling a few
+        # common error cases
         if csr.kind_of?(String)
-          #normalize line endings (really just for the next replace)
+          # normalize line endings (really just for the next replace)
           csr.gsub!(/\r\n?/, "\n")
-          #remove extraneous newlines
-          csr.gsub!(/^\s*\n/,'')
-          #and leading/trailing whitespace
-          csr.gsub!(/^\s*|\s*$/,'')
+          # remove extraneous newlines
+          csr.gsub!(/^\s*\n/, '')
+          # and leading/trailing whitespace
+          csr.gsub!(/^\s*|\s*$/, '')
           if not csr.match(/-----BEGIN.+-----/) and csr.match(/MII/)
-            #if csr is probably PEM (MII is the beginning of every base64
-            #encoded DER) then add the wrapping lines if they aren't provided.
-            #tools like Microsoft's xenroll do this.
-            csr = "-----BEGIN CERTIFICATE REQUEST-----\n"+csr+"\n-----END CERTIFICATE REQUEST-----"
+            # if csr is probably PEM (MII is the beginning of every base64
+            # encoded DER) then add the wrapping lines if they aren't provided.
+            # tools like Microsoft's xenroll do this.
+            csr = "-----BEGIN CERTIFICATE REQUEST-----\n" + csr + "\n-----END CERTIFICATE REQUEST-----"
           end
         end
-        #and now we try again...
+        # and now we try again...
         @req = OpenSSL::X509::Request.new csr
       end
       @subject = R509::Subject.new(@req.subject)
       parse_san_attribute_from_csr(@req)
     end
 
-    def create_request(subject,san_names)
+    def create_request(subject, san_names)
       @req = OpenSSL::X509::Request.new
       @req.version = 0
       @subject = R509::Subject.new(subject)
@@ -201,9 +199,9 @@ module R509
       req.attributes.each do |attribute|
         if attribute.oid == 'extReq'
           set = OpenSSL::ASN1.decode attribute.value
-          extensions = set.value[0].value.collect{|asn1ext| OpenSSL::X509::Extension.new(asn1ext) }
-          r509_extensions = R509::Cert::Extensions.wrap_openssl_extensions( extensions )
-          if not r509_extensions[R509::Cert::Extensions::SubjectAlternativeName].nil?
+          extensions = set.value[0].value.map { |asn1ext| OpenSSL::X509::Extension.new(asn1ext) }
+          r509_extensions = R509::Cert::Extensions.wrap_openssl_extensions(extensions)
+          unless r509_extensions[R509::Cert::Extensions::SubjectAlternativeName].nil?
             @san = r509_extensions[R509::Cert::Extensions::SubjectAlternativeName].general_names
           end
           break
@@ -224,9 +222,7 @@ module R509
       end
     end
 
-    def internal_obj
-      @req
-    end
-
+    # Returns the proper instance variable
+    alias_method :internal_obj, :req
   end
 end

@@ -19,7 +19,7 @@ describe R509::Engine do
 
   it "raises an error if you don't supply an :so_path and :id" do
     expect { R509::Engine.instance.load("not even a hash") }.to raise_error(ArgumentError, "You must supply a hash with both :so_path and :id")
-    expect { R509::Engine.instance.load({:so_path => "path"}) }.to raise_error(ArgumentError, "You must supply a hash with both :so_path and :id")
+    expect { R509::Engine.instance.load(:so_path => "path") }.to raise_error(ArgumentError, "You must supply a hash with both :so_path and :id")
   end
 
   it "load returns a new engine" do

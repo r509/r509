@@ -8,8 +8,8 @@ shared_examples_for "a correct R509 AuthorityKeyIdentifier object" do
     klass = AuthorityKeyIdentifier
     ef = OpenSSL::X509::ExtensionFactory.new
     ef.issuer_certificate = OpenSSL::X509::Certificate.new TestFixtures::TEST_CA_CERT
-    openssl_ext = ef.create_extension( extension_name, @extension_value )
-    @r509_ext = klass.new( openssl_ext )
+    openssl_ext = ef.create_extension(extension_name, @extension_value)
+    @r509_ext = klass.new(openssl_ext)
   end
 
   it "has the expected type" do
@@ -34,21 +34,21 @@ describe R509::Cert::Extensions::AuthorityKeyIdentifier do
     end
 
     it "errors when not supplying a public_key" do
-      expect {
+      expect do
         R509::Cert::Extensions::AuthorityKeyIdentifier.new({})
-      }.to raise_error(ArgumentError,'You must supply an OpenSSL::PKey object to :public_key if aki value contains keyid (present by default)')
+      end.to raise_error(ArgumentError, 'You must supply an OpenSSL::PKey object to :public_key if aki value contains keyid (present by default)')
     end
 
     it "errors when not supplying an issuer subject when embedding issuer info" do
-      expect {
+      expect do
         R509::Cert::Extensions::AuthorityKeyIdentifier.new(:value => "issuer:always", :issuer_serial => 3)
-      }.to raise_error(ArgumentError,'You must supply an R509::Subject object to :issuer_subject if aki value contains issuer')
+      end.to raise_error(ArgumentError, 'You must supply an R509::Subject object to :issuer_subject if aki value contains issuer')
     end
 
     it "errors when not supplying an issuer serial when embedding issuer info" do
-      expect {
+      expect do
         R509::Cert::Extensions::AuthorityKeyIdentifier.new(:value => "issuer:always", :issuer_subject => R509::Subject.new(:CN => 'something'))
-      }.to raise_error(ArgumentError,'You must supply an integer to :issuer_serial if aki value contains issuer')
+      end.to raise_error(ArgumentError, 'You must supply an integer to :issuer_serial if aki value contains issuer')
     end
 
     it "creates successfully with default value" do
@@ -59,13 +59,13 @@ describe R509::Cert::Extensions::AuthorityKeyIdentifier do
 
     it "creates successfully with issuer value" do
       aki = R509::Cert::Extensions::AuthorityKeyIdentifier.new(:issuer_subject => @cert.subject, :issuer_serial => 5, :value => "issuer:always")
-      aki.authority_cert_issuer.to_h.should == { :type=>"dirName", :value=>{:C=>"US", :ST=>"Illinois", :L=>"Chicago", :O=>"Ruby CA Project", :CN=>"Test CA"} }
+      aki.authority_cert_issuer.to_h.should == { :type => "dirName", :value => { :C => "US", :ST => "Illinois", :L => "Chicago", :O => "Ruby CA Project", :CN => "Test CA" } }
       aki.authority_cert_serial_number.should == "05"
     end
 
     it "creates successfully with issuer+keyid value" do
       aki = R509::Cert::Extensions::AuthorityKeyIdentifier.new(:issuer_subject => @cert.subject, :issuer_serial => 5, :public_key => @cert.public_key, :value => "issuer:always,keyid:always")
-      aki.authority_cert_issuer.to_h.should == { :type=>"dirName", :value=>{:C=>"US", :ST=>"Illinois", :L=>"Chicago", :O=>"Ruby CA Project", :CN=>"Test CA"} }
+      aki.authority_cert_issuer.to_h.should == { :type => "dirName", :value => { :C => "US", :ST => "Illinois", :L => "Chicago", :O => "Ruby CA Project", :CN => "Test CA" } }
       aki.authority_cert_serial_number.should_not be_nil
       aki.key_identifier.should_not be_nil
     end
@@ -80,7 +80,7 @@ describe R509::Cert::Extensions::AuthorityKeyIdentifier do
       aki.critical?.should be_true
     end
 
-    end
+  end
   context "AuthorityKeyIdentifier" do
     before :all do
       @extension_value = "keyid:always,issuer:always"

@@ -2,14 +2,13 @@ require 'openssl'
 require 'r509/exceptions'
 require 'r509/config'
 
-#OCSP module
+# OCSP module
 module R509::OCSP
-
-  #builds OCSP responses
+  # builds OCSP responses
   class Response
     # @param ocsp_response [OpenSSL::OCSP::Response]
     def initialize(ocsp_response)
-      if not ocsp_response.kind_of?(OpenSSL::OCSP::Response)
+      unless ocsp_response.kind_of?(OpenSSL::OCSP::Response)
         raise R509::R509Error, 'You must pass an OpenSSL::OCSP::Response object to the constructor. See R509::OCSP::Response.parse if you are trying to parse'
       end
       @ocsp_response = ocsp_response
@@ -52,14 +51,14 @@ module R509::OCSP
         store.add_cert(certs)
       end
 
-      #suppress verbosity since #verify will output a warning if it does not match
-      #as well as returning false. we just want the boolean
+      # suppress verbosity since #verify will output a warning if it does not match
+      # as well as returning false. we just want the boolean
       original_verbosity = $VERBOSE
       $VERBOSE = nil
-      #still a bit unclear on why we add to store and pass in array to verify
+      # still a bit unclear on why we add to store and pass in array to verify
       result = @ocsp_response.basic.verify(stack, store)
       $VERBOSE = original_verbosity
-      return result
+      result
     end
 
     # @param [OpenSSL::OCSP::Request] ocsp_request the OCSP request whose nonce to check
@@ -69,12 +68,12 @@ module R509::OCSP
     end
   end
 
-  #holds OCSP request related items
+  # holds OCSP request related items
   module Request
     # contains constants r509 uses for OCSP responses
     module Nonce
-      #these values are defined at
-      #http://www.ruby-doc.org/stdlib-1.9.3/libdoc/openssl/rdoc/OpenSSL/OCSP/Request.html
+      # these values are defined at
+      # http://www.ruby-doc.org/stdlib-1.9.3/libdoc/openssl/rdoc/OpenSSL/OCSP/Request.html
       # nonce is present and matches
       PRESENT_AND_EQUAL = 1
 
@@ -89,7 +88,6 @@ module R509::OCSP
 
       # nonce is present in request only
       REQUEST_ONLY = -1
-
     end
   end
 end

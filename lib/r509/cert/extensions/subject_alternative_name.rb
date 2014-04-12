@@ -41,7 +41,7 @@ module R509
         #   You can also pass a pre-existing GeneralNames object
         # @option arg :critical [Boolean] (false)
         def initialize(arg)
-          if not R509::Cert::Extensions.is_extension?(arg)
+          unless R509::Cert::Extensions.is_extension?(arg)
             arg = build_extension(arg)
           end
           super(arg)
@@ -50,7 +50,7 @@ module R509
 
         # @return [Hash]
         def to_h
-          {:critical => self.critical?, :value => @general_names.to_h }
+          { :critical => self.critical?, :value => @general_names.to_h }
         end
 
         # @return [YAML]
@@ -59,6 +59,7 @@ module R509
         end
 
         private
+
         def parse_extension
           data = R509::ASN1.get_extension_payload(self)
           @general_names = R509::ASN1::GeneralNames.new
@@ -73,7 +74,7 @@ module R509
           ef = OpenSSL::X509::ExtensionFactory.new
           ef.config = OpenSSL::Config.parse(serialize[:conf])
           critical = R509::Cert::Extensions.calculate_critical(arg[:critical], false)
-          return ef.create_extension("subjectAltName", serialize[:extension_string],critical)
+          ef.create_extension("subjectAltName", serialize[:extension_string], critical)
         end
 
         def validate_subject_alternative_name(san)

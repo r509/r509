@@ -48,7 +48,7 @@ module R509
         #     :ca_issuers_location => [name]
         #   )
         def initialize(arg)
-          if not R509::Cert::Extensions.is_extension?(arg)
+          unless R509::Cert::Extensions.is_extension?(arg)
             arg = build_extension(arg)
           end
 
@@ -73,8 +73,8 @@ module R509
 
         def parse_extension
           data = R509::ASN1.get_extension_payload(self)
-          @ocsp= R509::ASN1::GeneralNames.new
-          @ca_issuers= R509::ASN1::GeneralNames.new
+          @ocsp = R509::ASN1::GeneralNames.new
+          @ca_issuers = R509::ASN1::GeneralNames.new
           data.entries.each do |access_description|
             #   AccessDescription  ::=  SEQUENCE {
             #           accessMethod          OBJECT IDENTIFIER,
@@ -99,9 +99,9 @@ module R509
           ]
 
           locations.each do |pair|
-            validate_location(pair[:key].to_s,arg[pair[:key]])
+            validate_location(pair[:key].to_s, arg[pair[:key]])
             data = arg[pair[:key]]
-            if not data.nil?
+            unless data.nil?
               elements = R509::ASN1::GeneralNames.new(data)
               elements.names.each do |name|
                 serialize = name.serialize_name
@@ -114,7 +114,7 @@ module R509
           ef = OpenSSL::X509::ExtensionFactory.new
           ef.config = OpenSSL::Config.parse(aia_conf.join("\n"))
           critical = R509::Cert::Extensions.calculate_critical(arg[:critical], false)
-          return ef.create_extension("authorityInfoAccess",aia.join(","),critical)
+          ef.create_extension("authorityInfoAccess", aia.join(","), critical)
         end
 
         def validate_authority_info_access(aia)

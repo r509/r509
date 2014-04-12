@@ -3,12 +3,12 @@ require 'r509/io_helpers'
 require 'r509/exceptions'
 
 module R509
-  #private key management
+  # private key management
   class PrivateKey
     include R509::IOHelpers
 
     # a list of key types
-    KNOWN_TYPES = ["RSA","DSA","EC"]
+    KNOWN_TYPES = ["RSA", "DSA", "EC"]
     # the default type
     DEFAULT_TYPE = "RSA"
     # default bit length for DSA/RSA
@@ -24,13 +24,13 @@ module R509
     # @option opts [String,OpenSSL::PKey::RSA,OpenSSL::PKey::DSA,OpenSSL::PKey::EC] :key
     # @option opts [OpenSSL::Engine] :engine
     # @option opts [string] :key_name (used with engine)
-    def initialize(opts={})
-      if not opts.kind_of?(Hash)
+    def initialize(opts = {})
+      unless opts.kind_of?(Hash)
         raise ArgumentError, 'Must provide a hash of options'
       end
       validate_engine(opts)
 
-      if opts.has_key?(:key)
+      if opts.key?(:key)
         validate_key(opts)
       else
         generate_key(opts)
@@ -41,10 +41,9 @@ module R509
     #
     # @param [String] filename Path to file you want to load
     # @return [R509::PrivateKey] PrivateKey object
-    def self.load_from_file( filename, password = nil )
-      return R509::PrivateKey.new(:key => IOHelpers.read_data(filename), :password => password )
+    def self.load_from_file(filename, password = nil)
+      R509::PrivateKey.new(:key => IOHelpers.read_data(filename), :password => password)
     end
-
 
     # Returns the bit length of the key
     #
@@ -58,7 +57,7 @@ module R509
         raise R509::R509Error, 'Bit length is not available for EC at this time.'
       end
     end
-    alias :bit_strength :bit_length
+    alias_method :bit_strength, :bit_length
 
     # Returns the short name of the elliptic curve used to generate the private key
     # if the key is EC. If not, raises an error.
@@ -83,7 +82,7 @@ module R509
 
     # @return [Boolean] whether the key is resident in hardware or not
     def in_hardware?
-      if not @engine.nil?
+      if !@engine.nil?
         true
       else
         false
@@ -99,14 +98,14 @@ module R509
         # We have to supply the curve name to the temporary key object or else #public_key= fails
         curve_name = self.key.group.curve_name
         temp_key = OpenSSL::PKey::EC.new(curve_name)
-        temp_key.public_key=self.key.public_key
+        temp_key.public_key = self.key.public_key
         temp_key
       else
         self.key.public_key
       end
     end
 
-    alias :to_s :public_key
+    alias_method :to_s, :public_key
 
     # Converts the key into the PEM format
     #
@@ -125,14 +124,13 @@ module R509
     # (common ones are des3, aes256, aes128)
     # @param [String] password password
     # @return [String] the key converted into encrypted PEM format.
-    def to_encrypted_pem(cipher,password)
+    def to_encrypted_pem(cipher, password)
       if in_hardware?
         raise R509::R509Error, "This method cannot be called when using keys in hardware"
       end
       cipher = OpenSSL::Cipher::Cipher.new(cipher)
-      self.key.to_pem(cipher,password)
+      self.key.to_pem(cipher, password)
     end
-
 
     # Converts the key into the DER format
     #
@@ -152,7 +150,6 @@ module R509
       write_data(filename_or_io, self.to_pem)
     end
 
-
     # Writes the key into encrypted PEM format with specified cipher
     #
     # @param [String, #write] filename_or_io Either a string of the path for
@@ -161,8 +158,8 @@ module R509
     # full list of available ciphers can be obtained with OpenSSL::Cipher.ciphers
     # (common ones are des3, aes256, aes128)
     # @param [String] password password
-    def write_encrypted_pem(filename_or_io,cipher,password)
-      write_data(filename_or_io, to_encrypted_pem(cipher,password))
+    def write_encrypted_pem(filename_or_io, cipher, password)
+      write_data(filename_or_io, to_encrypted_pem(cipher, password))
     end
 
     # Writes the key into the DER format
@@ -172,7 +169,6 @@ module R509
     def write_der(filename_or_io)
       write_data(filename_or_io, self.to_der)
     end
-
 
     # Returns whether the key is RSA
     #
@@ -198,14 +194,14 @@ module R509
     private
 
     def validate_engine(opts)
-      if opts.has_key?(:engine) and opts.has_key?(:key)
+      if opts.key?(:engine) and opts.key?(:key)
         raise ArgumentError, 'You can\'t pass both :key and :engine'
-      elsif opts.has_key?(:key_name) and not opts.has_key?(:engine)
+      elsif opts.key?(:key_name) and not opts.key?(:engine)
         raise ArgumentError, 'When providing a :key_name you MUST provide an :engine'
-      elsif opts.has_key?(:engine) and not opts.has_key?(:key_name)
+      elsif opts.key?(:engine) and not opts.key?(:key_name)
         raise ArgumentError, 'When providing an :engine you MUST provide a :key_name'
-      elsif opts.has_key?(:engine) and opts.has_key?(:key_name)
-        if not opts[:engine].kind_of?(OpenSSL::Engine)
+      elsif opts.key?(:engine) and opts.key?(:key_name)
+        unless opts[:engine].kind_of?(OpenSSL::Engine)
           raise ArgumentError, 'When providing an engine, it must be of type OpenSSL::Engine'
         end
         @engine = opts[:engine]
@@ -215,16 +211,16 @@ module R509
 
     def validate_key(opts)
       password = opts[:password] || nil
-      #OpenSSL::PKey.read solves this begin/rescue garbage but is only
-      #available to Ruby 1.9.3+ and may not solve the EC portion
+      # OpenSSL::PKey.read solves this begin/rescue garbage but is only
+      # available to Ruby 1.9.3+ and may not solve the EC portion
       begin
-        @key = OpenSSL::PKey::RSA.new(opts[:key],password)
+        @key = OpenSSL::PKey::RSA.new(opts[:key], password)
       rescue OpenSSL::PKey::RSAError
         begin
-          @key = OpenSSL::PKey::DSA.new(opts[:key],password)
+          @key = OpenSSL::PKey::DSA.new(opts[:key], password)
         rescue
           begin
-            @key = OpenSSL::PKey::EC.new(opts[:key],password)
+            @key = OpenSSL::PKey::EC.new(opts[:key], password)
           rescue
             raise R509::R509Error, "Failed to load private key. Invalid key or incorrect password."
           end

@@ -69,7 +69,7 @@ module R509
         #     :value => ['digitalSignature,'keyEncipherment']
         #   )
         def initialize(arg)
-          if not R509::Cert::Extensions.is_extension?(arg)
+          unless R509::Cert::Extensions.is_extension?(arg)
             arg = build_extension(arg)
           end
 
@@ -81,8 +81,8 @@ module R509
         # @param [String] friendly_use_name key usage short name (e.g. digitalSignature, cRLSign, etc)
         #   or one of the AU_* constants in this class
         # @return [Boolean]
-        def allows?( friendly_use_name )
-          @allowed_uses.include?( friendly_use_name )
+        def allows?(friendly_use_name)
+          @allowed_uses.include?(friendly_use_name)
         end
 
         def digital_signature?
@@ -140,7 +140,7 @@ module R509
           validate_usage(arg)
           ef = OpenSSL::X509::ExtensionFactory.new
           critical = R509::Cert::Extensions.calculate_critical(arg[:critical], false)
-          return ef.create_extension("keyUsage", arg[:value].join(","),critical)
+          ef.create_extension("keyUsage", arg[:value].join(","), critical)
         end
 
         def parse_extension

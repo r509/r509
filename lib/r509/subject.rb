@@ -21,11 +21,11 @@ module R509
   #   subject.custom_oid="test"
   class Subject
     # @param [Array, OpenSSL::X509::Name, R509::Subject, DER, Hash, nil] arg
-    def initialize(arg=nil)
+    def initialize(arg = nil)
       if arg.kind_of?(Array)
         @array = arg
       elsif arg.kind_of?(Hash)
-        @array = arg.map { |k,v| [k.to_s.upcase,v] }
+        @array = arg.map { |k, v| [k.to_s.upcase, v] }
       elsif arg.kind_of?(OpenSSL::X509::Name)
         sanitizer = R509::NameSanitizer.new
         @array = sanitizer.sanitize(arg)
@@ -33,7 +33,7 @@ module R509
         @array = arg.to_a
       else
         @array = []
-        if not (begin OpenSSL::ASN1.decode(arg) rescue nil end).nil?
+        unless (begin OpenSSL::ASN1.decode(arg) rescue nil end).nil?
           parse_asn1(arg)
         end
       end
@@ -59,22 +59,22 @@ module R509
           return item[1]
         end
       end
-      return nil
+      nil
     end
 
     # set key and value
     def []=(key, value)
       added = false
-      @array = @array.map{ |item|
+      @array = @array.map do |item|
         if key == item[0]
           added = true
           [key, value]
         else
           item
         end
-      }
+      end
 
-      if not added
+      unless added
         @array << [key, value]
       end
 
@@ -118,7 +118,7 @@ module R509
     # @private
     def respond_to?(method_sym, include_private = false)
       method_sym.to_s =~ /([^=]*)/
-      oid = oid_check($1)
+      oid = oid_check(Regexp.last_match[1])
       if not oid.nil?
         true
       else
@@ -139,9 +139,9 @@ module R509
     #
     def method_missing(method_sym, *args, &block)
       if method_sym.to_s =~ /(.*)=$/
-        sn = oid_check($1)
+        sn = oid_check(Regexp.last_match[1])
         if not sn.nil?
-          define_dynamic_setter(method_sym,sn)
+          define_dynamic_setter(method_sym, sn)
           send(method_sym, args.first)
         else
           return super(method_sym, *args, &block)
@@ -149,7 +149,7 @@ module R509
       else
         sn = oid_check(method_sym)
         if not sn.nil?
-          define_dynamic_getter(method_sym,sn)
+          define_dynamic_getter(method_sym, sn)
           send(method_sym)
         else
           return super(method_sym, *args, &block)
@@ -157,29 +157,29 @@ module R509
       end
     end
 
-    def define_dynamic_setter(name,sn)
+    def define_dynamic_setter(name, sn)
       instance_eval <<-RUBY
-        def #{name.to_s}(value)
+        def #{name}(value)
           self["#{sn}"]= value
         end
       RUBY
     end
 
-    def define_dynamic_getter(name,sn)
+    def define_dynamic_getter(name, sn)
       instance_eval <<-RUBY
-        def #{name.to_s}
+        def #{name}
           self["#{sn}"]
         end
       RUBY
     end
 
     def oid_check(name)
-        oid = OpenSSL::ASN1::ObjectId.new(camelize(name))
-        oid.short_name
+      oid = OpenSSL::ASN1::ObjectId.new(camelize(name))
+      oid.short_name
     end
 
     def camelize(sym)
-      sym.to_s.split('_').inject([]){ |buffer,e| buffer.push(buffer.empty? ? e : e.capitalize) }.join
+      sym.to_s.split('_').reduce([]) { |a, e| a.push(a.empty? ? e : e.capitalize) }.join
     end
 
     def parse_asn1(asn)
@@ -213,7 +213,7 @@ module R509
           if oids.size == 1
             oid = oids.first
           else
-            oid = oids.select{ |match| not used_oids.include?(match) }.first
+            oid = oids.select { |match| not used_oids.include?(match) }.first
           end
           # replace the "UNDEF" OID name in the array at the index the UNDEF was found
           array[component[:index]][0] = oid
@@ -244,5 +244,4 @@ module R509
       components
     end
   end
-
 end

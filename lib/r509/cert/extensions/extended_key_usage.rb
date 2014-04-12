@@ -64,7 +64,7 @@ module R509
         #     :value => ['clientAuth,'serverAuth']
         #   )
         def initialize(arg)
-          if not R509::Cert::Extensions.is_extension?(arg)
+          unless R509::Cert::Extensions.is_extension?(arg)
             arg = build_extension(arg)
           end
 
@@ -74,8 +74,8 @@ module R509
 
         # Returns true if the given use is allowed by this extension.
         # @param [string] friendly_use_name One of the AU_* constants in this class.
-        def allows?( friendly_use_name )
-          @allowed_uses.include?( friendly_use_name )
+        def allows?(friendly_use_name)
+          @allowed_uses.include?(friendly_use_name)
         end
 
         def web_server_authentication?
@@ -181,7 +181,7 @@ module R509
           validate_usage(arg)
           ef = OpenSSL::X509::ExtensionFactory.new
           critical = R509::Cert::Extensions.calculate_critical(arg[:critical], false)
-          return ef.create_extension("extendedKeyUsage", arg[:value].join(","),critical)
+          ef.create_extension("extendedKeyUsage", arg[:value].join(","), critical)
         end
       end
     end

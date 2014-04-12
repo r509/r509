@@ -11,7 +11,6 @@ module R509
       # You can use this extension to parse an existing extension for easy access
       # to the contents or create a new one.
       class SubjectKeyIdentifier < OpenSSL::X509::Extension
-
         # friendly name for Subject Key Identifier OID
         OID = "subjectKeyIdentifier"
         # default extension behavior when generating
@@ -22,7 +21,7 @@ module R509
         # @option arg :public_key [OpenSSL::PKey] (Cert/CSR/PrivateKey return this type from #public_key)
         # @option arg :critical [Boolean] (false)
         def initialize(arg)
-          if not R509::Cert::Extensions.is_extension?(arg)
+          unless R509::Cert::Extensions.is_extension?(arg)
             arg = build_extension(arg)
           end
           super(arg)
@@ -30,10 +29,11 @@ module R509
 
         # @return value of key
         def key
-          return self.value
+          self.value
         end
 
         private
+
         def build_extension(arg)
           validate_subject_key_identifier(arg)
           ef = OpenSSL::X509::ExtensionFactory.new
@@ -41,7 +41,7 @@ module R509
           cert.public_key = arg[:public_key]
           ef.subject_certificate = cert
           critical = R509::Cert::Extensions.calculate_critical(arg[:critical], false)
-          arg = ef.create_extension("subjectKeyIdentifier", SKI_EXTENSION_DEFAULT, critical)
+          ef.create_extension("subjectKeyIdentifier", SKI_EXTENSION_DEFAULT, critical)
         end
 
         def validate_subject_key_identifier(ski)

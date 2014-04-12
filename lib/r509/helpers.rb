@@ -2,7 +2,6 @@ module R509
   # Various helper methods to reduce duplication across classes. These methods
   # are used in the Cert, CSR, SPKI, and PrivateKey classes.
   module Helpers
-
     # Returns whether the public key is RSA
     #
     # @return [Boolean] true if the public key is RSA, false otherwise
@@ -60,7 +59,7 @@ module R509
         raise R509::R509Error, 'Bit length is not available for EC at this time.'
       end
     end
-    alias :bit_strength :bit_length
+    alias_method :bit_strength, :bit_length
 
     # Writes the object into PEM format
     # @param [String, #write] filename_or_io Either a string of the path for
@@ -80,19 +79,19 @@ module R509
     #
     # @return [String] the object converted into PEM format.
     def to_pem
-        internal_obj.to_pem
+      internal_obj.to_pem
     end
 
     # Converts the object into DER format
     #
     # @return [String] the object converted into DER format.
     def to_der
-        internal_obj.to_der
+      internal_obj.to_der
     end
 
     # @private
     def load_private_key(opts)
-      if opts.has_key?(:key)
+      if opts.key?(:key)
         if opts[:key].kind_of?(R509::PrivateKey)
           return opts[:key]
         else
@@ -105,6 +104,5 @@ module R509
     def internal_obj
       raise R509::R509Error, "Internal object for helpers not implemented"
     end
-
   end
 end

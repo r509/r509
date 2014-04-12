@@ -2,6 +2,7 @@ require 'spec_helper'
 require 'pathname'
 require 'r509/io_helpers'
 
+# Contains constants and other values for testing purposes
 module TestFixtures
   extend R509::IOHelpers
 
@@ -11,14 +12,14 @@ module TestFixtures
     read_data((FIXTURES_PATH + filename).to_s)
   end
 
-  #Trustwave cert for langui.sh
+  # Trustwave cert for langui.sh
   CERT = read_fixture('cert1.pem')
 
   CERT_INHIBIT = read_fixture('cert_inhibit.pem')
   CERT_POLICY_CONSTRAINTS = read_fixture('cert_policy_constraints.pem')
   CERT_NAME_CONSTRAINTS = read_fixture('cert_name_constraints.pem')
 
-  #Trustwave root cert
+  # Trustwave root cert
   STCA_CERT = read_fixture('stca.pem')
 
   CERT_PUBLIC_KEY_MODULUS = read_fixture('cert1_public_key_modulus.txt')
@@ -41,11 +42,10 @@ module TestFixtures
   # this CSR has unknown OIDs, which we should successfully parse out into Subject
   CSR_UNKNOWN_OID = read_fixture('unknown_oid.csr')
 
-
-  #san cert from self-signed CA for langui.sh
+  # san cert from self-signed CA for langui.sh
   CERT_SAN = read_fixture('cert_san.pem')
 
-  #Another san cert for langui.sh, but differentiating between the CN and
+  # Another san cert for langui.sh, but differentiating between the CN and
   # SANs.
   CERT_SAN2 = read_fixture('cert_san2.pem')
 
@@ -136,10 +136,10 @@ module TestFixtures
   TEST_CA_SUBROOT_CERT = read_fixture('test_ca_subroot.cer')
   TEST_CA_SUBROOT_KEY  = read_fixture('test_ca_subroot.key')
 
-  #this chain contains 2 certs. root and OCSP delegate
-  #in a prod environment you'd really only need the delegate
-  #since the root would be present in the root store of the
-  #client, but I wanted to test > 1
+  # this chain contains 2 certs. root and OCSP delegate
+  # in a prod environment you'd really only need the delegate
+  # since the root would be present in the root store of the
+  # client, but I wanted to test > 1
   TEST_CA_OCSP_CHAIN  = read_fixture('test_ca_ocsp_chain.txt')
 
   TEST_CA_OCSP_RESPONSE = read_fixture('test_ca_ocsp_response.der')
@@ -155,7 +155,7 @@ module TestFixtures
   STCA_OCSP_REQUEST  = read_fixture('stca_ocsp_request.der')
   STCA_OCSP_RESPONSE  = read_fixture('stca_ocsp_response.der')
 
-  CRL_LIST_FILE = (FIXTURES_PATH+'crl_list_file.txt').to_s
+  CRL_LIST_FILE = (FIXTURES_PATH + 'crl_list_file.txt').to_s
 
   CRL_REASON = read_fixture("crl_with_reason.pem")
 
@@ -184,53 +184,69 @@ module TestFixtures
 
   def self.test_ca_server_profile
     R509::Config::CertProfile.new(
-      :basic_constraints => R509::Cert::Extensions::BasicConstraints.new({:ca => false }),
-      :key_usage => R509::Cert::Extensions::KeyUsage.new(:value => ["digitalSignature","keyEncipherment"]),
+      :basic_constraints => R509::Cert::Extensions::BasicConstraints.new(:ca => false),
+      :key_usage => R509::Cert::Extensions::KeyUsage.new(:value => ["digitalSignature", "keyEncipherment"]),
       :extended_key_usage => R509::Cert::Extensions::ExtendedKeyUsage.new(:value => ["serverAuth"]),
-      :certificate_policies => R509::Cert::Extensions::CertificatePolicies.new(:value => [
+      :certificate_policies => R509::Cert::Extensions::CertificatePolicies.new(
+        :value => [
           { :policy_identifier => "2.16.840.1.12345.1.2.3.4.1",
-  :cps_uris => ["http://example.com/cps","http://other.com/cps"],
-  :user_notices => [ {:explicit_text => "thing", :organization => "my org", :notice_numbers => [1,2,3,4]} ]
-        }
-      ])
+            :cps_uris => ["http://example.com/cps", "http://other.com/cps"],
+            :user_notices => [
+              {
+                :explicit_text => "thing",
+                :organization => "my org",
+                :notice_numbers => [1, 2, 3, 4]
+              }
+            ]
+          }
+        ]
+      )
     )
-
   end
 
   def self.test_ca_server_profile_with_subject_item_policy
     subject_item_policy = R509::Config::SubjectItemPolicy.new(
-      "CN" => { :policy => "required"},
-      "O" => { :policy => "optional"},
-      "ST" => { :policy => "required"},
-      "C" => { :policy => "required"},
-      "OU" => { :policy => "optional"}
+      "CN" => { :policy => "required" },
+      "O" => { :policy => "optional" },
+      "ST" => { :policy => "required" },
+      "C" => { :policy => "required" },
+      "OU" => { :policy => "optional" }
     )
     R509::Config::CertProfile.new(
-      :basic_constraints => R509::Cert::Extensions::BasicConstraints.new({:ca => false }),
-      :key_usage => R509::Cert::Extensions::KeyUsage.new(:value => ["digitalSignature","keyEncipherment"]),
+      :basic_constraints => R509::Cert::Extensions::BasicConstraints.new(:ca => false),
+      :key_usage => R509::Cert::Extensions::KeyUsage.new(:value => ["digitalSignature", "keyEncipherment"]),
       :extended_key_usage => R509::Cert::Extensions::ExtendedKeyUsage.new(:value => ["serverAuth"]),
-      :certificate_policies => R509::Cert::Extensions::CertificatePolicies.new(:value => [
-          { :policy_identifier => "2.16.840.1.12345.1.2.3.4.1",
-  :cps_uris => ["http://example.com/cps","http://other.com/cps"],
-  :user_notices => [ {:explicit_text => "thing", :organization => "my org", :notice_numbers => [1,2,3,4]} ]
-        }
-      ]),
+      :certificate_policies => R509::Cert::Extensions::CertificatePolicies.new(
+        :value => [
+          {
+            :policy_identifier => "2.16.840.1.12345.1.2.3.4.1",
+            :cps_uris => ["http://example.com/cps", "http://other.com/cps"],
+            :user_notices => [
+              {
+                :explicit_text => "thing",
+                :organization => "my org",
+                :notice_numbers => [1, 2, 3, 4]
+              }
+            ]
+          }
+        ]
+      ),
       :subject_item_policy => subject_item_policy
     )
   end
 
   def self.test_ca_subroot_profile
     R509::Config::CertProfile.new(
-          :basic_constraints => {:ca => true, :path_length => 0 },
-          :key_usage => {:value => ["keyCertSign","cRLSign"]},
+          :basic_constraints => { :ca => true, :path_length => 0 },
+          :key_usage => { :value => ["keyCertSign", "cRLSign"] },
           :certificate_policies => nil)
   end
 
   def self.test_ca_ocspsigner_profile
     R509::Config::CertProfile.new(
           :basic_constraints => { :ca => false },
-          :key_usage => {:value => ["digitalSignature"]},
-          :extended_key_usage => {:value => ["OCSPSigning"]},
+          :key_usage => { :value => ["digitalSignature"] },
+          :extended_key_usage => { :value => ["OCSPSigning"] },
           :certificate_policies => nil)
   end
 
@@ -242,7 +258,7 @@ module TestFixtures
     crl_number_sio.set_encoding("BINARY") if crl_number_sio.respond_to?(:set_encoding)
 
     opts = {
-      :ca_cert => test_ca_cert(),
+      :ca_cert => test_ca_cert,
       :ocsp_start_skew_seconds => 3600,
       :ocsp_validity_hours => 48,
       :crl_list_file => crl_list_sio,
@@ -266,7 +282,7 @@ module TestFixtures
     crl_number_sio.set_encoding("BINARY") if crl_number_sio.respond_to?(:set_encoding)
 
     opts = {
-      :ca_cert => test_ca_cert(),
+      :ca_cert => test_ca_cert,
       :ocsp_start_skew_seconds => 3600,
       :ocsp_validity_hours => 48,
       :crl_list_file => crl_list_sio,
@@ -282,7 +298,7 @@ module TestFixtures
     crl_number_sio.set_encoding("BINARY") if crl_number_sio.respond_to?(:set_encoding)
 
     opts = {
-      :ca_cert => test_ca_ec_cert(),
+      :ca_cert => test_ca_ec_cert,
       :ocsp_start_skew_seconds => 3600,
       :ocsp_validity_hours => 48,
       :crl_list_file => crl_list_sio,
@@ -298,7 +314,7 @@ module TestFixtures
     crl_number_sio.set_encoding("BINARY") if crl_number_sio.respond_to?(:set_encoding)
 
     opts = {
-      :ca_cert => test_ca_dsa_cert(),
+      :ca_cert => test_ca_dsa_cert,
       :ocsp_start_skew_seconds => 3600,
       :ocsp_validity_hours => 48,
       :crl_list_file => crl_list_sio,

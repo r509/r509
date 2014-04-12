@@ -12,10 +12,10 @@ module R509::CertificateAuthority
     def initialize(config)
       @config = config
 
-      if not @config.nil? and not @config.kind_of?(R509::Config::CAConfig)
+      if !@config.nil? && !@config.kind_of?(R509::Config::CAConfig)
         raise R509::R509Error, "config must be a kind of R509::Config::CAConfig"
       end
-      if not @config.nil? and not @config.ca_cert.has_private_key?
+      if !@config.nil? && !@config.ca_cert.has_private_key?
         raise R509::R509Error, "You must have a private key associated with your CA certificate to issue"
       end
     end
@@ -51,9 +51,9 @@ module R509::CertificateAuthority
         R509::Cert::Extensions::AuthorityKeyIdentifier.new(:public_key => @config.ca_cert.public_key)
       ]
 
-      #@config.ca_cert.key.key ... ugly. ca_cert returns R509::Cert
+      # @config.ca_cert.key.key ... ugly. ca_cert returns R509::Cert
       # #key returns R509::PrivateKey and #key on that returns OpenSSL object we need
-      cert.sign( @config.ca_cert.key.key, message_digest.digest )
+      cert.sign(@config.ca_cert.key.key, message_digest.digest)
       cert_opts = { :cert => cert }
       cert_opts[:key] = options[:csr].key if not options[:csr].nil? and not options[:csr].key.nil?
       R509::Cert.new(cert_opts)
@@ -68,7 +68,7 @@ module R509::CertificateAuthority
     # @option options :not_after [Time] (Time.now + 365 days) the notAfter for the certificate
     # @return [R509::Cert] the signed cert object
     def self.selfsign(options)
-      if not options.kind_of?(Hash)
+      unless options.kind_of?(Hash)
         raise ArgumentError, "You must pass a hash of options consisting of at minimum :csr"
       end
       csr = options[:csr]
@@ -93,42 +93,39 @@ module R509::CertificateAuthority
         R509::Cert::Extensions::AuthorityKeyIdentifier.new(:public_key => public_key)
       ]
 
-      if options.has_key?(:message_digest)
+      if options.key?(:message_digest)
         message_digest = R509::MessageDigest.new(options[:message_digest])
       else
         message_digest = R509::MessageDigest.new(R509::MessageDigest::DEFAULT_MD)
       end
 
-      cert.sign( csr.key.key, message_digest.digest )
+      cert.sign(csr.key.key, message_digest.digest)
 
       R509::Cert.new(:cert => cert, :key => csr.key)
     end
 
-    private
-
     def self.check_options(options)
-      if options.has_key?(:csr) and options.has_key?(:spki)
+      if options.key?(:csr) and options.key?(:spki)
         raise ArgumentError, "You can't pass both :csr and :spki"
-      elsif not options.has_key?(:csr) and not options.has_key?(:spki)
+      elsif not options.key?(:csr) and not options.key?(:spki)
         raise ArgumentError, "You must supply either :csr or :spki"
-      elsif options.has_key?(:csr) and not options[:csr].kind_of?(R509::CSR)
+      elsif options.key?(:csr) and not options[:csr].kind_of?(R509::CSR)
         raise ArgumentError, "You must pass an R509::CSR object for :csr"
-      elsif options.has_key?(:spki) and not options[:spki].kind_of?(R509::SPKI)
+      elsif options.key?(:spki) and not options[:spki].kind_of?(R509::SPKI)
         raise ArgumentError, "You must pass an R509::SPKI object for :spki"
       end
     end
 
     def self.build_cert(options)
-
       cert = OpenSSL::X509::Certificate.new
 
       cert.subject = options[:subject]
       cert.issuer = options[:issuer]
       cert.not_before = calculate_not_before(options[:not_before])
-      cert.not_after = calculate_not_after(options[:not_after],cert.not_before)
+      cert.not_after = calculate_not_after(options[:not_after], cert.not_before)
       cert.public_key = options[:public_key]
       cert.serial = create_serial(options[:serial])
-      cert.version = 2 #2 means v3
+      cert.version = 2 # 2 means v3
       cert
     end
 
@@ -142,8 +139,8 @@ module R509::CertificateAuthority
         # per rfc5280 conforming CAs can make the serial field up to 20 octets
         # to prevent even the incredibly remote possibility of collision we'll
         # concatenate current time (to the microsecond) with a random num
-        rand = OpenSSL::BN.rand(96,0) # 96 bits is 12 bytes (octets).
-        serial = OpenSSL::BN.new((Time.now.to_f*1000000).to_i.to_s + rand.to_s)
+        rand = OpenSSL::BN.rand(96, 0) # 96 bits is 12 bytes (octets).
+        serial = OpenSSL::BN.new((Time.now.to_f * 1000000).to_i.to_s + rand.to_s)
         # since second param is 0 the most significant bit must always be 1
         # this theoretically gives us 95 bits of entropy
         # (see: http://www.openssl.org/docs/crypto/BN_rand.html) + microtime,
@@ -153,37 +150,39 @@ module R509::CertificateAuthority
       end
       serial
     end
+    private_class_method :create_serial
 
     def self.calculate_not_before(not_before)
       if not_before.nil?
-        #not_before will be set to 6 hours before now to prevent issues with bad system clocks (clients don't sync)
+        # not_before will be set to 6 hours before now to prevent issues with bad system clocks (clients don't sync)
         not_before = Time.now - 6 * 60 * 60
       end
       not_before
     end
+    private_class_method :calculate_not_before
 
-    def self.calculate_not_after(not_after,not_before)
+    def self.calculate_not_after(not_after, not_before)
       if not_after.nil?
         not_after = not_before + 365 * 24 * 60 * 60
       end
       not_after
     end
+    private_class_method :calculate_not_after
 
     def self.extract_public_key_subject(options)
-      if options.has_key?(:csr)
-        subject = (options.has_key?(:subject))? R509::Subject.new(options[:subject]) : options[:csr].subject
+      if options.key?(:csr)
+        subject = (options.key?(:subject)) ? R509::Subject.new(options[:subject]) : options[:csr].subject
         public_key = options[:csr].public_key
       else
         # spki
-        if not options.has_key?(:subject)
+        unless options.key?(:subject)
           raise ArgumentError, "You must supply :subject when passing :spki"
         end
         public_key = options[:spki].public_key
         subject = R509::Subject.new(options[:subject])
       end
 
-      [subject,public_key]
+      [subject, public_key]
     end
-
   end
 end
