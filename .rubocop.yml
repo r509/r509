@@ -41,3 +41,7 @@ NumericLiterals:
 
 IfUnlessModifier:
   Enabled: false
+
+# false positive
+LiteralInInterpolation:
+  Enabled: false

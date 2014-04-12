@@ -120,12 +120,12 @@ module R509
 
       # @return [R509::Cert] either a custom OCSP cert or the ca_cert
       def ocsp_cert
-        if @ocsp_cert.nil? then @ca_cert else @ocsp_cert end
+        (@ocsp_cert.nil?) ? @ca_cert : @ocsp_cert
       end
 
       # @return [R509::Cert] either a custom CRL cert or the ca_cert
       def crl_cert
-        if @crl_cert.nil? then @ca_cert else @crl_cert end
+        (@crl_cert.nil?) ? @ca_cert : @crl_cert
       end
 
       # @param [String] name The name of the profile
