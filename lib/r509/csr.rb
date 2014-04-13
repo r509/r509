@@ -99,7 +99,7 @@ module R509
 
     # @return [OpenSSL::PKey::RSA,OpenSSL::PKey::DSA,OpenSSL::PKey::EC] public key
     def public_key
-      if (@req.kind_of?(OpenSSL::X509::Request)) then
+      if @req.kind_of?(OpenSSL::X509::Request) then
         @req.public_key
       end
     end
