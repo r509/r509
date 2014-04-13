@@ -18,7 +18,7 @@ module R509
         r509_extensions = {}
         extensions.each do |openssl_extension|
           R509_EXTENSION_CLASSES.each do |r509_class|
-            if ( r509_class::OID.downcase == openssl_extension.oid.downcase)
+            if  r509_class::OID.downcase == openssl_extension.oid.downcase
               if r509_extensions.key?(r509_class)
                 raise ArgumentError, "Only one extension object allowed per OID"
               end
@@ -39,7 +39,7 @@ module R509
         extensions.each do |openssl_extension|
           match_found = false
           R509_EXTENSION_CLASSES.each do |r509_class|
-            if ( r509_class::OID.downcase == openssl_extension.oid.downcase)
+            if  r509_class::OID.downcase == openssl_extension.oid.downcase
               match_found = true
               break
             end
