@@ -122,9 +122,10 @@ module R509
     alias_method :to_s, :to_pem
 
     # Returns subject component
+    # @param [String] short_name short name subject component (e.g. CN, O, ST)
     #
     # @return [String] value of the subject component requested
-    def subject_component short_name
+    def subject_component(short_name)
       @req.subject.to_a.each do |element|
         if element[0].downcase == short_name.downcase
           return element[1]
