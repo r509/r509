@@ -14,8 +14,8 @@ module R509
       # cRLDistributionPoints extension.)  This extension may be included in
       # end entity or CA certificates.  Conforming CAs MUST mark this
       # extension as non-critical.
-      # You can use this extension to parse an existing extension for easy access
-      # to the contents or create a new one.
+      # You can use this extension to parse an existing extension for easy
+      # access to the contents or create a new one.
       class AuthorityInfoAccess < OpenSSL::X509::Extension
         include R509::Cert::Extensions::ValidationMixin
 
@@ -23,27 +23,41 @@ module R509
         OID = "authorityInfoAccess"
         Extensions.register_class(self)
 
-        # An R509::ASN1::GeneralNames object of OCSP endpoints (or nil if not present)
+        # An R509::ASN1::GeneralNames object of OCSP endpoints (or nil if not
+        #   present)
         # @return [R509::ASN1::GeneralNames,nil]
         attr_reader :ocsp
-        # An R509::ASN1::GeneralNames object of CA Issuers (or nil if not present)
+        # An R509::ASN1::GeneralNames object of CA Issuers (or nil if not
+        #   present)
         # @return [R509::ASN1::GeneralNames,nil]
         attr_reader :ca_issuers
 
-        # This method takes a hash or an existing Extension object to parse. If passing
-        # a hash you must supply :ocsp_location and/or :ca_issuers_location. These values
-        # must be in the form seen in the examples below.
+        # This method takes a hash or an existing Extension object to parse. If
+        # passing a hash you must supply :ocsp_location and/or
+        # :ca_issuers_location. These values must be in the form seen in the
+        # examples below.
         #
-        # @option arg :ocsp_location [Array,R509::ASN1::GeneralNames] Array of hashes (see examples) or GeneralNames object
-        # @option arg :ca_issuers_location [Array] Array of hashes (see examples) or GeneralNames object
+        # @option arg :ocsp_location [Array,R509::ASN1::GeneralNames] Array of
+        #   hashes (see examples) or GeneralNames object
+        # @option arg :ca_issuers_location [Array] Array of hashes (see
+        #   examples) or GeneralNames object
         # @option arg :critical [Boolean] (false)
         # @example
         #   R509::Cert::Extensions::AuthorityInfoAccess.new(
-        #     :ocsp_location => [ { :type => "URI", :value => "http://ocsp.domain.com" } ],
-        #     :ca_issuers_location => [ { :type => "dirName", :value => { :CN => 'myCN', :O => 'some Org' } ]
+        #     :ocsp_location => [
+        #       { :type => "URI", :value => "http://ocsp.domain.com" }
+        #     ],
+        #     :ca_issuers_location => [
+        #       {
+        #         :type => "dirName",
+        #         :value => { :CN => 'myCN', :O => 'some Org' }
+        #       }
+        #     ]
         #   )
         # @example
-        #   name = R509::ASN1::GeneralName.new(:type => "IP", :value => "127.0.0.1")
+        #   name = R509::ASN1::GeneralName.new(
+        #     :type => "IP", :value => "127.0.0.1"
+        #   )
         #   R509::Cert::Extensions::AuthorityInfoAccess.new(
         #     :ca_issuers_location => [name]
         #   )
@@ -59,8 +73,16 @@ module R509
         # @return [Hash]
         def to_h
           hash = { :critical => self.critical? }
-          hash[:ocsp_location] = R509::Cert::Extensions.names_to_h(@ocsp.names) unless @ocsp.names.empty?
-          hash[:ca_issuers_location] = R509::Cert::Extensions.names_to_h(@ca_issuers.names) unless @ca_issuers.names.empty?
+          unless @ocsp.names.empty?
+            hash[:ocsp_location] = R509::Cert::Extensions.names_to_h(
+              @ocsp.names
+            )
+          end
+          unless @ca_issuers.names.empty?
+            hash[:ca_issuers_location] = R509::Cert::Extensions.names_to_h(
+              @ca_issuers.names
+            )
+          end
           hash
         end
 
@@ -113,13 +135,17 @@ module R509
 
           ef = OpenSSL::X509::ExtensionFactory.new
           ef.config = OpenSSL::Config.parse(aia_conf.join("\n"))
-          critical = R509::Cert::Extensions.calculate_critical(arg[:critical], false)
+          critical = R509::Cert::Extensions.calculate_critical(
+            arg[:critical], false
+          )
           ef.create_extension("authorityInfoAccess", aia.join(","), critical)
         end
 
         def validate_authority_info_access(aia)
-          if not aia.kind_of?(Hash) or (aia[:ocsp_location].nil? and aia[:ca_issuers_location].nil?)
-            raise ArgumentError, "You must pass a hash with at least one of the following two keys (:ocsp_location, :ca_issuers_location)"
+          if !aia.kind_of?(Hash) ||
+             (aia[:ocsp_location].nil? && aia[:ca_issuers_location].nil?)
+            raise ArgumentError, "You must pass a hash with at least one of "\
+            "the following two keys (:ocsp_location, :ca_issuers_location)"
           end
         end
       end

@@ -32,7 +32,7 @@ module R509
       general_names = R509::ASN1::GeneralNames.new
       names.uniq!
       names.map do |domain|
-        if !(IPAddr.new(domain.strip) rescue nil).nil?
+        if self.ip_check(domain)
           ip = IPAddr.new(domain.strip)
           general_names.create_item(:tag => 7, :value => ip.to_s)
         else
@@ -50,6 +50,20 @@ module R509
         end
       end
       general_names
+    end
+
+    # Checks if a given string is an IP or not.
+    #
+    # @param [String] domain The string to check
+    #
+    # @return [Boolean]
+    def self.ip_check(domain)
+      begin
+        IPAddr.new(domain.strip)
+        true
+      rescue
+        false
+      end
     end
 
     # This class parses ASN.1 GeneralName objects. At the moment it supports
