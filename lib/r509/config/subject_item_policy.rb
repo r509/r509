@@ -105,9 +105,8 @@ module R509
         # those that are on the required list
         supplied = subject.to_a.each do |item|
           @required.include?(item[0]) or @match.include?(item[0])
-        end.map do |item|
-          item[0]
         end
+        supplied = supplied.map { |item| item[0] }
         # so we can make sure they gave us everything that's required
         diff = @required + @match - supplied
         unless diff.empty?

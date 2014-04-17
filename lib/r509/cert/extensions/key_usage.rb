@@ -152,7 +152,7 @@ module R509
           # the second byte is not encoded. let's add it back so we can
           # have the full bitmask for comparison
           if data.size == 1
-            data = data + "\0"
+            data += "\0"
           end
           bit_mask = data.unpack('n')[0] # treat it as a 16-bit unsigned big endian
           #      KeyUsage ::= BIT STRING {
