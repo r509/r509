@@ -80,7 +80,7 @@ module R509::CertificateAuthority
 
     # @return [R509::Subject]
     def enforce_subject_item_policy(subject, profile)
-      if profile.subject_item_policy.nil? then
+      if profile.subject_item_policy.nil?
         subject
       else
         profile.subject_item_policy.validate_subject(subject)

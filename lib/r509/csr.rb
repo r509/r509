@@ -84,7 +84,7 @@ module R509
       unless opts.key?(:csr)
         @req.sign(@key.key, @message_digest.digest)
       end
-      if !@key.nil? && !@req.verify(@key.public_key) then
+      if !@key.nil? && !@req.verify(@key.public_key)
         raise R509Error, 'Key does not match request.'
       end
     end
@@ -99,7 +99,7 @@ module R509
 
     # @return [OpenSSL::PKey::RSA,OpenSSL::PKey::DSA,OpenSSL::PKey::EC] public key
     def public_key
-      if @req.kind_of?(OpenSSL::X509::Request) then
+      if @req.kind_of?(OpenSSL::X509::Request)
         @req.public_key
       end
     end
@@ -126,7 +126,7 @@ module R509
     # @return [String] value of the subject component requested
     def subject_component short_name
       @req.subject.to_a.each do |element|
-        if element[0].downcase == short_name.downcase then
+        if element[0].downcase == short_name.downcase
           return element[1]
         end
       end
@@ -144,11 +144,11 @@ module R509
     #
     # @return [String] value of the key algorithm. RSA, DSA, or EC
     def key_algorithm
-      if @req.public_key.kind_of? OpenSSL::PKey::RSA then
+      if @req.public_key.kind_of? OpenSSL::PKey::RSA
         "RSA"
-      elsif @req.public_key.kind_of? OpenSSL::PKey::DSA then
+      elsif @req.public_key.kind_of? OpenSSL::PKey::DSA
         "DSA"
-      elsif @req.public_key.kind_of? OpenSSL::PKey::EC then
+      elsif @req.public_key.kind_of? OpenSSL::PKey::EC
         "EC"
       end
     end

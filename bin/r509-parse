@@ -2,7 +2,7 @@
 require 'rubygems'
 require 'r509'
 
-if ARGV[0].nil? then
+if ARGV[0].nil?
   puts "CSR and certificate parsing using r509 v#{R509::VERSION}."
   puts "Usage: r509-parse <cert or csr>"
 else

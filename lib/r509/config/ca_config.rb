@@ -97,13 +97,13 @@ module R509
       # @option opts [Integer] :crl_start_skew_seconds The number of seconds to subtract from Time.now when calculating the signing time of a CRL. This is important to handle bad user clocks.
       #
       def initialize(opts = {})
-        unless opts.key?(:ca_cert) then
+        unless opts.key?(:ca_cert)
           raise ArgumentError, 'Config object requires that you pass :ca_cert'
         end
 
         @ca_cert = opts[:ca_cert]
 
-        unless @ca_cert.kind_of?(R509::Cert) then
+        unless @ca_cert.kind_of?(R509::Cert)
           raise ArgumentError, ':ca_cert must be of type R509::Cert'
         end
 

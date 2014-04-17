@@ -23,7 +23,7 @@ end
 opts[:duration] = opts[:duration].to_i
 subject = []
 
-if opts[:interactive] == true or opts[:subject].nil? then
+if opts[:interactive] == true or opts[:subject].nil?
   if opts[:type].upcase == "RSA" or opts[:type].upcase == "DSA"
     print "CSR Bit Length (2048):"
     bit_length = gets.chomp
@@ -71,7 +71,7 @@ if opts[:interactive] == true or opts[:subject].nil? then
 
   print "OU (null by default): "
   ou = gets.chomp
-  unless ou.empty? then
+  unless ou.empty?
     subject.push ['OU', ou]
   end
 
@@ -84,7 +84,7 @@ if opts[:interactive] == true or opts[:subject].nil? then
   opts[:duration] = gets.chomp.to_i
 else
   opts[:subject].chomp.split('/').each do |item|
-    if item != '' then
+    if item != ''
       subject.push item.split('=')[0..1]
     end
   end

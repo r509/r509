@@ -68,7 +68,7 @@ module R509
       # ...and leading/trailing whitespace
       spki.strip!
       spki = OpenSSL::Netscape::SPKI.new(spki)
-      if !@key.nil? and not spki.verify(@key.public_key) then
+      if !@key.nil? and not spki.verify(@key.public_key)
         raise R509Error, 'Key does not match SPKI.'
       end
       spki
