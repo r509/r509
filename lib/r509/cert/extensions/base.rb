@@ -117,7 +117,7 @@ module R509
       end
 
       def self.calculate_critical(critical, default)
-        if critical.kind_of?(TrueClass) or critical.kind_of?(FalseClass)
+        if critical.kind_of?(TrueClass) || critical.kind_of?(FalseClass)
           critical
         else
           default

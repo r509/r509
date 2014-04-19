@@ -45,6 +45,9 @@ IfUnlessModifier:
 RedundantBegin:
   Enabled: false
 
+RegexpLiteral:
+  MaxSlashes: 2
+
 # False positive
 LiteralInInterpolation:
   Enabled: false
@@ -55,11 +58,6 @@ FileName:
 
 
 # Future work
-
-# Offense count: 82
-# Cop supports --auto-correct.
-AndOr:
-  Enabled: false
 
 # Offense count: 8
 # Configuration parameters: CountComments.
@@ -87,7 +85,3 @@ MethodLength:
 # Cop supports --auto-correct.
 RedundantSelf:
   Enabled: false
-
-# Offense count: 1
-RegexpLiteral:
-  MaxSlashes: 2

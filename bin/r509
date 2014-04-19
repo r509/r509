@@ -23,8 +23,8 @@ end
 opts[:duration] = opts[:duration].to_i
 subject = []
 
-if opts[:interactive] == true or opts[:subject].nil?
-  if opts[:type].upcase == "RSA" or opts[:type].upcase == "DSA"
+if opts[:interactive] == true || opts[:subject].nil?
+  if opts[:type].upcase == "RSA" || opts[:type].upcase == "DSA"
     print "CSR Bit Length (2048):"
     bit_length = gets.chomp
     opts[:bits] = (bit_length.to_i > 0) ? bit_length.to_i : 2048

@@ -113,8 +113,8 @@ module R509
             unless policy[:user_notices].nil?
               raise ArgumentError, "User notices must be an array of hashes" unless policy[:user_notices].respond_to?(:each)
               policy[:user_notices].each do |un|
-                raise ArgumentError, "If you provide an organization you must provide notice numbers" if un[:organization] and un[:notice_numbers].nil?
-                raise ArgumentError, "If you provide notice numbers you must provide an organization" if un[:notice_numbers] and un[:organization].nil?
+                raise ArgumentError, "If you provide an organization you must provide notice numbers" if un[:organization] && un[:notice_numbers].nil?
+                raise ArgumentError, "If you provide notice numbers you must provide an organization" if un[:notice_numbers] && un[:organization].nil?
               end
             end
           end

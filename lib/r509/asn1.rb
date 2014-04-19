@@ -24,7 +24,7 @@ module R509
     #   You can also supply a directoryName, but this must be an R509::Subject or array of arrays
     # @return [R509::ASN1::GeneralNames]
     def self.general_name_parser(names)
-      if names.nil? or names.kind_of?(R509::ASN1::GeneralNames)
+      if names.nil? || names.kind_of?(R509::ASN1::GeneralNames)
         return names
       elsif !names.kind_of?(Array)
         raise ArgumentError, "You must supply an array or existing R509::ASN1 GeneralNames object to general_name_parser"
@@ -168,7 +168,7 @@ module R509
       # required for #uniq comparisons
       # @return [Boolean] equality between objects
       def ==(other)
-        (other.class == self.class and self.type == other.type && self.value == other.value)
+        (other.class == self.class && self.type == other.type && self.value == other.value)
       end
       alias_method :eql?, :==
 
@@ -207,7 +207,7 @@ module R509
         when 1, 2, 6 then @value = value
         when 4 then @value = R509::Subject.new(value.first.to_der)
         when 7
-          if value.size == 4 or value.size == 16
+          if value.size == 4 || value.size == 16
             @value = parse_ip(value)
           elsif value.size == 8 # IPv4 with netmask
             @value = parse_ip(value[0, 4], value[4, 4])

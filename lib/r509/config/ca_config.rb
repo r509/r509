@@ -302,7 +302,7 @@ module R509
 
       def build_cert_hash(obj)
         hash = { "cert" => "<add_path>" }
-        if obj.key and obj.key.in_hardware?
+        if obj.key && obj.key.in_hardware?
           hash["engine"] = { :so_path => "<add_path>", :id => "<add_name>" }
           return hash
         elsif obj.key
@@ -317,11 +317,11 @@ module R509
           ca_cert = self.load_with_engine(ca_cert_hash, ca_root_path)
         end
 
-        if ca_cert.nil? and ca_cert_hash.key?('pkcs12')
+        if ca_cert.nil? && ca_cert_hash.key?('pkcs12')
           ca_cert = self.load_with_pkcs12(ca_cert_hash, ca_root_path)
         end
 
-        if ca_cert.nil? and ca_cert_hash.key?('cert')
+        if ca_cert.nil? && ca_cert_hash.key?('cert')
           ca_cert = self.load_with_key(ca_cert_hash, ca_root_path)
         end
 

@@ -155,7 +155,7 @@ module R509
               validate_name_constraints_elements(key, nc[key])
             end
           end
-          if (nc[:permitted].nil? or nc[:permitted].empty?) and (nc[:excluded].nil? or nc[:excluded].empty?)
+          if (nc[:permitted].nil? || nc[:permitted].empty?) && (nc[:excluded].nil? || nc[:excluded].empty?)
             raise ArgumentError, "If name_constraints are supplied you must have at least one valid :permitted or :excluded element"
           end
         end

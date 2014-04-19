@@ -86,7 +86,7 @@ module R509
         end
 
         def validate_authority_key_identifier(aki)
-          if aki[:value].downcase.include?("keyid") and aki[:public_key].nil?
+          if aki[:value].downcase.include?("keyid") && aki[:public_key].nil?
             raise ArgumentError, "You must supply an OpenSSL::PKey object to :public_key if aki value contains keyid (present by default)"
           end
           if aki[:value].downcase.include?("issuer")

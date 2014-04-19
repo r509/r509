@@ -9,7 +9,7 @@ module R509
     # @param [String] mode The write mode
     def self.write_data(filename_or_io, data, mode = 'wb:ascii-8bit')
       if filename_or_io.respond_to?(:write)
-        if filename_or_io.kind_of?(StringIO) and mode != "a:ascii-8bit"
+        if filename_or_io.kind_of?(StringIO) && mode != "a:ascii-8bit"
           # Writing to a StringIO in a non-append mode. This requires
           # us to rewind and truncate it first.
           filename_or_io.rewind

@@ -20,7 +20,7 @@ module R509
       unless opts.kind_of?(Hash)
         raise ArgumentError, 'Must provide a hash of options'
       end
-      if opts.key?(:pkcs12) and ( opts.key?(:key) or opts.key?(:cert))
+      if opts.key?(:pkcs12) && ( opts.key?(:key) || opts.key?(:cert))
         raise ArgumentError, "When providing pkcs12, do not pass cert or key"
       elsif opts.key?(:pkcs12)
         pkcs12 = OpenSSL::PKCS12.new(opts[:pkcs12], opts[:password])
@@ -111,7 +111,7 @@ module R509
         time = Time.at(time)
       end
 
-      if (self.not_after < time) or (self.not_before > time)
+      if (self.not_after < time) || (self.not_before > time)
         false
       else
         true

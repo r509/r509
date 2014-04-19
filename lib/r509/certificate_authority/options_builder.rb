@@ -22,7 +22,7 @@ module R509::CertificateAuthority
 
       R509::CertificateAuthority::Signer.check_options(options)
 
-      if (options.key?(:csr) && !options[:csr].verify_signature) or
+      if (options.key?(:csr) && !options[:csr].verify_signature) ||
          (options.key?(:spki) && !options[:spki].verify_signature)
         raise R509::R509Error, "Request signature is invalid."
       end
@@ -54,7 +54,7 @@ module R509::CertificateAuthority
     end
 
     def enforce_not_after(not_after)
-      if not_after and @config.ca_cert.not_after < not_after
+      if not_after && @config.ca_cert.not_after < not_after
         raise R509::R509Error, 'The requested certificate lifetime would exceed the issuing CA.'
       end
     end
@@ -65,7 +65,7 @@ module R509::CertificateAuthority
       # bubble up if they do it wrong.
       #
       # First let's check to see if the config restricts the allowed mds
-      if profile.allowed_mds and requested_md
+      if profile.allowed_mds && requested_md
         if profile.allowed_mds.include?(requested_md.upcase)
           message_digest = R509::MessageDigest.new(requested_md)
         else

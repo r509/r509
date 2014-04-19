@@ -194,7 +194,7 @@ module R509
     private
 
     def validate_engine(opts)
-      if opts.key?(:engine) and opts.key?(:key)
+      if opts.key?(:engine) && opts.key?(:key)
         raise ArgumentError, 'You can\'t pass both :key and :engine'
       elsif opts.key?(:key_name) && !opts.key?(:engine)
         raise ArgumentError, 'When providing a :key_name you MUST provide an :engine'

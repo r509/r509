@@ -47,7 +47,7 @@ module R509
       unless opts.kind_of?(Hash)
         raise ArgumentError, 'Must provide a hash of options'
       end
-      if opts.key?(:subject) and opts.key?(:csr)
+      if opts.key?(:subject) && opts.key?(:csr)
         raise ArgumentError, "You must provide :subject or :csr, not both"
       end
       @bit_length = opts[:bit_length] || opts[:bit_strength] || R509::PrivateKey::DEFAULT_STRENGTH

@@ -55,7 +55,7 @@ module R509::CertificateAuthority
       # #key returns R509::PrivateKey and #key on that returns OpenSSL object we need
       cert.sign(@config.ca_cert.key.key, message_digest.digest)
       cert_opts = { :cert => cert }
-      cert_opts[:key] = options[:csr].key if options[:csr] and options[:csr].key
+      cert_opts[:key] = options[:csr].key if options[:csr] && options[:csr].key
       R509::Cert.new(cert_opts)
     end
 
