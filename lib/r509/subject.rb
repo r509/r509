@@ -213,7 +213,7 @@ module R509
           if oids.size == 1
             oid = oids.first
           else
-            oid = oids.select { |match| not used_oids.include?(match) }.first
+            oid = oids.select { |match| !used_oids.include?(match) }.first
           end
           # replace the "UNDEF" OID name in the array at the index the UNDEF was found
           array[component[:index]][0] = oid

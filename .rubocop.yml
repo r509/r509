@@ -61,11 +61,6 @@ FileName:
 AndOr:
   Enabled: false
 
-# Offense count: 150
-# Cop supports --auto-correct.
-Not:
-  Enabled: false
-
 # Offense count: 8
 # Configuration parameters: CountComments.
 ClassLength:

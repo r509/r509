@@ -165,7 +165,7 @@ module R509
             raise ArgumentError, "#{type} must be an array"
           end
           arr.each do |el|
-            if not el.kind_of?(Hash) or not el.key?(:type) or not el.key?(:value)
+            if !el.kind_of?(Hash) || !el.key?(:type) || !el.key?(:value)
               raise ArgumentError, "Elements within the #{type} array must be hashes with both type and value"
             end
             if R509::ASN1::GeneralName.map_type_to_tag(el[:type]).nil?

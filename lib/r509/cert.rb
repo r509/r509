@@ -26,7 +26,7 @@ module R509
         pkcs12 = OpenSSL::PKCS12.new(opts[:pkcs12], opts[:password])
         parse_certificate(pkcs12.certificate)
         parse_private_key(pkcs12.key)
-      elsif not opts.key?(:cert)
+      elsif !opts.key?(:cert)
         raise ArgumentError, 'Must provide :cert or :pkcs12'
       else
         csr_check(opts[:cert])

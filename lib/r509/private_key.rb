@@ -196,11 +196,11 @@ module R509
     def validate_engine(opts)
       if opts.key?(:engine) and opts.key?(:key)
         raise ArgumentError, 'You can\'t pass both :key and :engine'
-      elsif opts.key?(:key_name) and not opts.key?(:engine)
+      elsif opts.key?(:key_name) && !opts.key?(:engine)
         raise ArgumentError, 'When providing a :key_name you MUST provide an :engine'
-      elsif opts.key?(:engine) and not opts.key?(:key_name)
+      elsif opts.key?(:engine) && !opts.key?(:key_name)
         raise ArgumentError, 'When providing an :engine you MUST provide a :key_name'
-      elsif opts.key?(:engine) and opts.key?(:key_name)
+      elsif opts.key?(:engine) && opts.key?(:key_name)
         unless opts[:engine].kind_of?(OpenSSL::Engine)
           raise ArgumentError, 'When providing an engine, it must be of type OpenSSL::Engine'
         end

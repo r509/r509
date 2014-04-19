@@ -31,7 +31,7 @@ if opts[:interactive] == true or opts[:subject].nil?
   elsif opts[:type].upcase == "EC"
     print "Curve Name (secp384r1):"
     curve_name = gets.chomp
-    opts[:curve_name] = (not curve_name.empty?) ? curve_name : 'secp384r1'
+    opts[:curve_name] = (!curve_name.empty?) ? curve_name : 'secp384r1'
   else
     puts "Invalid key type specified. RSA/DSA/EC"
     exit

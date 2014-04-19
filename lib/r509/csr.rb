@@ -169,7 +169,7 @@ module R509
           csr.gsub!(/^\s*\n/, '')
           # and leading/trailing whitespace
           csr.gsub!(/^\s*|\s*$/, '')
-          if not csr.match(/-----BEGIN.+-----/) and csr.match(/MII/)
+          if !csr.match(/-----BEGIN.+-----/) && csr.match(/MII/)
             # if csr is probably PEM (MII is the beginning of every base64
             # encoded DER) then add the wrapping lines if they aren't provided.
             # tools like Microsoft's xenroll do this.
@@ -211,7 +211,7 @@ module R509
     end
 
     def add_san_extension(san_names)
-      if san_names.kind_of?(R509::ASN1::GeneralNames) and not san_names.names.empty?
+      if san_names.kind_of?(R509::ASN1::GeneralNames) && !san_names.names.empty?
         ef = OpenSSL::X509::ExtensionFactory.new
         serialized = san_names.serialize_names
         ef.config = OpenSSL::Config.parse(serialized[:conf])

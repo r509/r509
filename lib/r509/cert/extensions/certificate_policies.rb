@@ -109,7 +109,7 @@ module R509
 
           policies.each do |policy|
             raise ArgumentError, "Each policy requires a policy identifier" if policy[:policy_identifier].nil?
-            raise ArgumentError, "CPS URIs must be an array of strings" if policy[:cps_uris] and not policy[:cps_uris].respond_to?(:each)
+            raise ArgumentError, "CPS URIs must be an array of strings" if policy[:cps_uris] && !policy[:cps_uris].respond_to?(:each)
             unless policy[:user_notices].nil?
               raise ArgumentError, "User notices must be an array of hashes" unless policy[:user_notices].respond_to?(:each)
               policy[:user_notices].each do |un|

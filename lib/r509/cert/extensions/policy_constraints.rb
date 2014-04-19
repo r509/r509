@@ -112,7 +112,7 @@ module R509
           unless pc[:require_explicit_policy].nil?
             rep = validate_non_negative_integer("require_explicit_policy", pc[:require_explicit_policy])
           end
-          if not ipm and not rep
+          if !ipm && !rep
             raise ArgumentError, 'Policy constraints must have at least one of two keys: :inhibit_policy_mapping and :require_explicit_policy and the value must be non-negative'
           end
         end

@@ -45,7 +45,7 @@ module R509
         end
 
         def validate_subject_key_identifier(ski)
-          if not ski.kind_of?(Hash) or ski[:public_key].nil?
+          if !ski.kind_of?(Hash) || ski[:public_key].nil?
             raise ArgumentError, "You must supply a hash with a :public_key"
           end
           ski

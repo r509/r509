@@ -70,7 +70,7 @@ module R509
       #     aACompromise       (10) }
       def revoke_cert(serial, reason = nil, revoke_time = Time.now.to_i, write = true)
         unless reason.nil?
-          if not reason.kind_of?(Integer) or not reason.between?(0, 10) or reason == 7
+          if !reason.kind_of?(Integer) || !reason.between?(0, 10) || reason == 7
             raise ArgumentError, "Revocation reason must be integer 0-10 (excluding 7) or nil"
           end
         end

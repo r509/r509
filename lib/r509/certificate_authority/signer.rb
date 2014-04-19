@@ -105,13 +105,13 @@ module R509::CertificateAuthority
     end
 
     def self.check_options(options)
-      if options.key?(:csr) and options.key?(:spki)
+      if options.key?(:csr) && options.key?(:spki)
         raise ArgumentError, "You can't pass both :csr and :spki"
-      elsif not options.key?(:csr) and not options.key?(:spki)
+      elsif !options.key?(:csr) && !options.key?(:spki)
         raise ArgumentError, "You must supply either :csr or :spki"
-      elsif options.key?(:csr) and not options[:csr].kind_of?(R509::CSR)
+      elsif options.key?(:csr) && !options[:csr].kind_of?(R509::CSR)
         raise ArgumentError, "You must pass an R509::CSR object for :csr"
-      elsif options.key?(:spki) and not options[:spki].kind_of?(R509::SPKI)
+      elsif options.key?(:spki) && !options[:spki].kind_of?(R509::SPKI)
         raise ArgumentError, "You must pass an R509::SPKI object for :spki"
       end
     end

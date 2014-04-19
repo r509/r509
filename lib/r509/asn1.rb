@@ -26,7 +26,7 @@ module R509
     def self.general_name_parser(names)
       if names.nil? or names.kind_of?(R509::ASN1::GeneralNames)
         return names
-      elsif not names.kind_of?(Array)
+      elsif !names.kind_of?(Array)
         raise ArgumentError, "You must supply an array or existing R509::ASN1 GeneralNames object to general_name_parser"
       end
       general_names = R509::ASN1::GeneralNames.new
@@ -289,7 +289,7 @@ module R509
       # @param [Hash] hash A hash with (:tag or :type) and :value keys. Allows you to build GeneralName objects and add
       #   them to the GeneralNames object
       def create_item(hash)
-        if not hash.respond_to?(:has_key?) or (not hash.key?(:tag) and not hash.key?(:type)) or not hash.key?(:value)
+        if !hash.respond_to?(:has_key?) || (!hash.key?(:tag) && !hash.key?(:type)) || !hash.key?(:value)
           raise ArgumentError, "Must be a hash with (:tag or :type) and :value nodes"
         end
         gn = R509::ASN1::GeneralName.new(:tag => hash[:tag], :type => hash[:type], :value => hash[:value])
