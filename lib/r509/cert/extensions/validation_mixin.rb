@@ -23,7 +23,7 @@ module R509
         end
 
         def validate_location(type, location)
-          if not location.nil? and not (location.kind_of?(Array) or location.kind_of?(R509::ASN1::GeneralNames))
+          if location and not (location.kind_of?(Array) or location.kind_of?(R509::ASN1::GeneralNames))
             raise ArgumentError, "#{type} must contain an array or R509::ASN1::GeneralNames object if provided"
           end
           validate_general_name_hash_array(location) unless location.nil?

@@ -82,7 +82,7 @@ module R509
 
     # @return [Boolean] whether the key is resident in hardware or not
     def in_hardware?
-      if !@engine.nil?
+      if @engine
         true
       else
         false

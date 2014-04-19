@@ -84,7 +84,7 @@ module R509
       unless opts.key?(:csr)
         @req.sign(@key.key, @message_digest.digest)
       end
-      if !@key.nil? && !@req.verify(@key.public_key)
+      if @key && !@req.verify(@key.public_key)
         raise R509Error, 'Key does not match request.'
       end
     end
@@ -112,7 +112,7 @@ module R509
 
     # @return [Boolean] Boolean of whether the object contains a private key
     def has_private_key?
-      if !@key.nil?
+      if @key
         true
       else
         false

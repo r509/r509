@@ -104,10 +104,10 @@ module R509
           if constraints[:ca].nil? or (not constraints[:ca].kind_of?(TrueClass) and not constraints[:ca].kind_of?(FalseClass))
             raise ArgumentError, "You must supply true/false for the :ca key when specifying basic constraints"
           end
-          if constraints[:ca] == false and not constraints[:path_length].nil?
+          if constraints[:ca] == false and constraints[:path_length]
             raise ArgumentError, ":path_length is not allowed when :ca is false"
           end
-          if constraints[:ca] == true and not constraints[:path_length].nil? and (constraints[:path_length] < 0 or not constraints[:path_length].kind_of?(Integer))
+          if constraints[:ca] == true and constraints[:path_length] and (constraints[:path_length] < 0 or not constraints[:path_length].kind_of?(Integer))
             raise ArgumentError, "Path length must be a positive integer (>= 0)"
           end
           constraints

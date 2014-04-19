@@ -54,7 +54,7 @@ module R509::CertificateAuthority
     end
 
     def enforce_not_after(not_after)
-      if not not_after.nil? and @config.ca_cert.not_after < not_after
+      if not_after and @config.ca_cert.not_after < not_after
         raise R509::R509Error, 'The requested certificate lifetime would exceed the issuing CA.'
       end
     end
@@ -65,7 +65,7 @@ module R509::CertificateAuthority
       # bubble up if they do it wrong.
       #
       # First let's check to see if the config restricts the allowed mds
-      if not profile.allowed_mds.nil? and not requested_md.nil?
+      if profile.allowed_mds and requested_md
         if profile.allowed_mds.include?(requested_md.upcase)
           message_digest = R509::MessageDigest.new(requested_md)
         else
@@ -73,7 +73,7 @@ module R509::CertificateAuthority
         end
       else
         # it doesn't, so either use their md (if valid) or the default one
-        message_digest = (not requested_md.nil?) ? R509::MessageDigest.new(requested_md) : R509::MessageDigest.new(profile.default_md)
+        message_digest = (requested_md) ? R509::MessageDigest.new(requested_md) : R509::MessageDigest.new(profile.default_md)
       end
       message_digest.name
     end

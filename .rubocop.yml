@@ -88,16 +88,6 @@ LineLength:
 MethodLength:
   Max: 42
 
-# Offense count: 40
-# Cop supports --auto-correct.
-# NilComparison:
-#   Enabled: false
-
-# Offense count: 48
-# Cop supports --auto-correct.
-NonNilCheck:
-  Enabled: false
-
 # Offense count: 71
 # Cop supports --auto-correct.
 RedundantSelf:

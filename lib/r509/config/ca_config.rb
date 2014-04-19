@@ -302,10 +302,10 @@ module R509
 
       def build_cert_hash(obj)
         hash = { "cert" => "<add_path>" }
-        if not obj.key.nil? and obj.key.in_hardware?
+        if obj.key and obj.key.in_hardware?
           hash["engine"] = { :so_path => "<add_path>", :id => "<add_name>" }
           return hash
-        elsif not obj.key.nil?
+        elsif obj.key
           hash["key"] = "<add_path>"
         end
         hash
@@ -391,10 +391,10 @@ module R509
       end
 
       def check_ocsp_crl_delegate(cert, kind)
-        if not cert.kind_of?(R509::Cert) and not cert.nil?
+        if cert && !cert.kind_of?(R509::Cert)
           raise ArgumentError, ":#{kind}, if provided, must be of type R509::Cert"
         end
-        if not cert.nil? and not cert.has_private_key?
+        if cert && !cert.has_private_key?
           raise ArgumentError, ":#{kind} must contain a private key, not just a certificate"
         end
       end

@@ -101,7 +101,7 @@ module R509
       # @private
       # validates subject item policy
       def validate_subject_item_policy(sip)
-        if not sip.nil? and not sip.kind_of?(R509::Config::SubjectItemPolicy)
+        if sip && !sip.kind_of?(R509::Config::SubjectItemPolicy)
           raise ArgumentError, "subject_item_policy must be of type R509::Config::SubjectItemPolicy"
         end
         sip
