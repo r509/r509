@@ -168,7 +168,7 @@ module R509
             if not el.kind_of?(Hash) or not el.key?(:type) or not el.key?(:value)
               raise ArgumentError, "Elements within the #{type} array must be hashes with both type and value"
             end
-            if R509::ASN1::GeneralName.map_type_to_tag(el[:type]) == nil
+            if R509::ASN1::GeneralName.map_type_to_tag(el[:type]).nil?
               raise ArgumentError, "#{el[:type]} is not an allowed type. Check R509::ASN1::GeneralName.map_type_to_tag to see a list of types"
             end
           end

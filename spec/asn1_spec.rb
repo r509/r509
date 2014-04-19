@@ -399,7 +399,7 @@ describe R509::ASN1::GeneralNames do
   context "constructor" do
     it "creates an empty object when passed nil" do
       gns = R509::ASN1::GeneralNames.new
-      gns.should_not == nil
+      gns.should_not be_nil
     end
     it "builds a GeneralNames object when passed an array of GeneralName hashes" do
       gns = R509::ASN1::GeneralNames.new

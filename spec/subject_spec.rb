@@ -81,7 +81,7 @@ describe R509::Subject do
   it "can get a component out of the subject" do
     subject = R509::Subject.new([["CN", "domain.com"]])
     subject["CN"].should == "domain.com"
-    subject["O"].should == nil
+    subject["O"].should be_nil
   end
 
   it "adds an OID" do

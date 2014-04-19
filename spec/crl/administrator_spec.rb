@@ -146,7 +146,7 @@ describe R509::CRL::Administrator do
     crl.revoked_cert(12345)[:reason].should == 0
     crl.revoked?(12346).should == true
     crl.revoked_cert(12346)[:revoke_time].should == 1323983885
-    crl.revoked_cert(12346)[:reason].should == nil
+    crl.revoked_cert(12346)[:reason].should be_nil
   end
   it "load when nil crl_list_file" do
     config = R509::Config::CAConfig.new(

@@ -48,28 +48,28 @@ describe R509::Config::CertProfile do
   end
   it "initializes with expected defaults" do
     profile = R509::Config::CertProfile.new
-    profile.basic_constraints.should == nil
-    profile.key_usage.should == nil
-    profile.extended_key_usage.should == nil
-    profile.certificate_policies.should == nil
-    profile.inhibit_any_policy.should == nil
-    profile.policy_constraints.should == nil
-    profile.name_constraints.should == nil
-    profile.ocsp_no_check.should == nil
-    profile.authority_info_access.should == nil
-    profile.crl_distribution_points.should == nil
-    profile.allowed_mds.should == nil
+    profile.basic_constraints.should be_nil
+    profile.key_usage.should be_nil
+    profile.extended_key_usage.should be_nil
+    profile.certificate_policies.should be_nil
+    profile.inhibit_any_policy.should be_nil
+    profile.policy_constraints.should be_nil
+    profile.name_constraints.should be_nil
+    profile.ocsp_no_check.should be_nil
+    profile.authority_info_access.should be_nil
+    profile.crl_distribution_points.should be_nil
+    profile.allowed_mds.should be_nil
     profile.default_md.should == R509::MessageDigest::DEFAULT_MD
-    profile.subject_item_policy.should == nil
+    profile.subject_item_policy.should be_nil
   end
   it "loads profiles from YAML while setting expected defaults" do
     config = R509::Config::CAConfig.from_yaml("test_ca", File.read("#{File.dirname(__FILE__)}/../fixtures/config_test.yaml"), :ca_root_path => "#{File.dirname(__FILE__)}/../fixtures")
     server_profile = config.profile("server") # no ocsp_no_check node
-    server_profile.ocsp_no_check.should == nil
+    server_profile.ocsp_no_check.should be_nil
     ocsp_profile = config.profile("ocsp_delegate_with_no_check") # ocsp_no_check => true
-    ocsp_profile.ocsp_no_check.should_not == nil
+    ocsp_profile.ocsp_no_check.should_not be_nil
     client_profile = config.profile("client") # ocsp_no_check => false
-    client_profile.ocsp_no_check.should == nil
+    client_profile.ocsp_no_check.should be_nil
   end
 
   it "builds YAML" do

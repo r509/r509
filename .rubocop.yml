@@ -42,6 +42,67 @@ NumericLiterals:
 IfUnlessModifier:
   Enabled: false
 
-# false positive
+RedundantBegin:
+  Enabled: false
+
+# False positive
 LiteralInInterpolation:
   Enabled: false
+
+# False positive
+FileName:
+  Enabled: false
+
+
+# Future work
+
+# Offense count: 82
+# Cop supports --auto-correct.
+AndOr:
+  Enabled: false
+
+# Offense count: 150
+# Cop supports --auto-correct.
+Not:
+  Enabled: false
+
+# Offense count: 8
+# Configuration parameters: CountComments.
+ClassLength:
+  Max: 248
+
+# Offense count: 26
+CyclomaticComplexity:
+  Max: 17
+
+# Offense count: 5
+HandleExceptions:
+  Enabled: false
+
+# Offense count: 1085
+LineLength:
+  Max: 564
+
+# Offense count: 67
+# Configuration parameters: CountComments.
+MethodLength:
+  Max: 42
+
+# Offense count: 40
+# Cop supports --auto-correct.
+# NilComparison:
+#   Enabled: false
+
+# Offense count: 48
+# Cop supports --auto-correct.
+NonNilCheck:
+  Enabled: false
+
+# Offense count: 71
+# Cop supports --auto-correct.
+RedundantSelf:
+  Enabled: false
+
+# Offense count: 1
+RegexpLiteral:
+  MaxSlashes: 2

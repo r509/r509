@@ -7,7 +7,7 @@ describe R509::Config::CAConfigPool do
     it "has no configs" do
       pool = R509::Config::CAConfigPool.new({})
 
-      pool["first"].should == nil
+      pool["first"].should be_nil
     end
 
     it "has one config" do
@@ -126,9 +126,9 @@ describe R509::Config::CAConfigPool do
 
       pool.names.should include("test_ca", "second_ca")
 
-      pool["test_ca"].should_not == nil
+      pool["test_ca"].should_not be_nil
       pool["test_ca"].num_profiles.should == 0
-      pool["second_ca"].should_not == nil
+      pool["second_ca"].should_not be_nil
       pool["second_ca"].num_profiles.should == 0
     end
   end

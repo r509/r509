@@ -143,7 +143,7 @@ describe R509::SPKI do
   end
   it "returns the public key" do
     spki = R509::SPKI.new(:spki => @spki)
-    spki.public_key.should_not == nil
+    spki.public_key.should_not be_nil
   end
   it "returns pem" do
     spki = R509::SPKI.new(:spki => @spki)
@@ -222,7 +222,7 @@ describe R509::SPKI do
     end
     it "returns the public key" do
       spki = R509::SPKI.new(:spki => @spki_ec)
-      spki.public_key.should_not == nil
+      spki.public_key.should_not be_nil
     end
     it "ec?" do
       spki = R509::SPKI.new(:spki => @spki_ec)

@@ -49,11 +49,11 @@ describe R509::CRL::SignedList do
     @crl.revoked[123456][:reason].should == "Unspecified"
     @crl.revoked[1234567][:time].should == Time.at(1327449693)
     @crl.revoked[1234567][:reason].should == "Unspecified"
-    @crl.revoked[12345678].should == nil
+    @crl.revoked[12345678].should be_nil
   end
 
   it "returns revocation information for a serial" do
-    @crl.revoked_cert(11111).should == nil
+    @crl.revoked_cert(11111).should be_nil
     revoked_info = @crl.revoked_cert(12345)
     revoked_info[:time].should == Time.at(1327449693)
     revoked_info[:reason].should == "Key Compromise"

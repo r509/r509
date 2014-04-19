@@ -10,7 +10,7 @@ shared_examples_for "a correct R509 KeyUsage object" do |critical|
   end
 
   it "allowed_uses should be non-nil critical:#{critical}" do
-    @r509_ext.allowed_uses.should_not == nil
+    @r509_ext.allowed_uses.should_not be_nil
   end
 
   it "allowed_uses should be correct critical:#{critical}" do
