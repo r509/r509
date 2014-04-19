@@ -48,6 +48,9 @@ RedundantBegin:
 RegexpLiteral:
   MaxSlashes: 2
 
+HandleExceptions:
+  Enabled: false
+
 # False positive
 LiteralInInterpolation:
   Enabled: false
@@ -67,10 +70,6 @@ ClassLength:
 # Offense count: 26
 CyclomaticComplexity:
   Max: 17
-
-# Offense count: 5
-HandleExceptions:
-  Enabled: false
 
 # Offense count: 1085
 LineLength:
