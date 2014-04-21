@@ -34,12 +34,12 @@ describe R509::CRL::FileReaderWriter do
 
   it "handles nil crl_list_file in read_list" do
     @rw.crl_list_file = nil
-    @rw.read_list.should == nil
+    @rw.read_list.should be_nil
   end
 
   it "handles nil crl_list_file in write_list_entry" do
     @rw.crl_list_file = nil
-    @rw.write_list_entry(1, 1, nil).should == nil
+    @rw.write_list_entry(1, 1, nil).should be_nil
   end
 
   it "handles nil crl_number_file in read_number" do
@@ -49,7 +49,7 @@ describe R509::CRL::FileReaderWriter do
 
   it "handles nil crl_number_file in write_number" do
     @rw.crl_number_file = nil
-    @rw.write_number(0).should == nil
+    @rw.write_number(0).should be_nil
   end
 
   it "reads a crl list" do

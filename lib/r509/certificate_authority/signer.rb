@@ -12,10 +12,10 @@ module R509::CertificateAuthority
     def initialize(config)
       @config = config
 
-      if !@config.nil? && !@config.kind_of?(R509::Config::CAConfig)
+      if @config && !@config.kind_of?(R509::Config::CAConfig)
         raise R509::R509Error, "config must be a kind of R509::Config::CAConfig"
       end
-      if !@config.nil? && !@config.ca_cert.has_private_key?
+      if @config && !@config.ca_cert.has_private_key?
         raise R509::R509Error, "You must have a private key associated with your CA certificate to issue"
       end
     end
@@ -55,7 +55,7 @@ module R509::CertificateAuthority
       # #key returns R509::PrivateKey and #key on that returns OpenSSL object we need
       cert.sign(@config.ca_cert.key.key, message_digest.digest)
       cert_opts = { :cert => cert }
-      cert_opts[:key] = options[:csr].key if not options[:csr].nil? and not options[:csr].key.nil?
+      cert_opts[:key] = options[:csr].key if options[:csr] && options[:csr].key
       R509::Cert.new(cert_opts)
     end
 
@@ -105,13 +105,13 @@ module R509::CertificateAuthority
     end
 
     def self.check_options(options)
-      if options.key?(:csr) and options.key?(:spki)
+      if options.key?(:csr) && options.key?(:spki)
         raise ArgumentError, "You can't pass both :csr and :spki"
-      elsif not options.key?(:csr) and not options.key?(:spki)
+      elsif !options.key?(:csr) && !options.key?(:spki)
         raise ArgumentError, "You must supply either :csr or :spki"
-      elsif options.key?(:csr) and not options[:csr].kind_of?(R509::CSR)
+      elsif options.key?(:csr) && !options[:csr].kind_of?(R509::CSR)
         raise ArgumentError, "You must pass an R509::CSR object for :csr"
-      elsif options.key?(:spki) and not options[:spki].kind_of?(R509::SPKI)
+      elsif options.key?(:spki) && !options[:spki].kind_of?(R509::SPKI)
         raise ArgumentError, "You must pass an R509::SPKI object for :spki"
       end
     end
@@ -130,7 +130,7 @@ module R509::CertificateAuthority
     end
 
     def self.create_serial(serial)
-      if not serial.nil?
+      if serial
         serial = OpenSSL::BN.new(serial.to_s)
       else
         # generate random serial in accordance with best practices

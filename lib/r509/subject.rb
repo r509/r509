@@ -119,7 +119,7 @@ module R509
     def respond_to?(method_sym, include_private = false)
       method_sym.to_s =~ /([^=]*)/
       oid = oid_check(Regexp.last_match[1])
-      if not oid.nil?
+      if oid
         true
       else
         super(method_sym, include_private)
@@ -140,7 +140,7 @@ module R509
     def method_missing(method_sym, *args, &block)
       if method_sym.to_s =~ /(.*)=$/
         sn = oid_check(Regexp.last_match[1])
-        if not sn.nil?
+        if sn
           define_dynamic_setter(method_sym, sn)
           send(method_sym, args.first)
         else
@@ -148,7 +148,7 @@ module R509
         end
       else
         sn = oid_check(method_sym)
-        if not sn.nil?
+        if sn
           define_dynamic_getter(method_sym, sn)
           send(method_sym)
         else
@@ -213,7 +213,7 @@ module R509
           if oids.size == 1
             oid = oids.first
           else
-            oid = oids.select { |match| not used_oids.include?(match) }.first
+            oid = oids.select { |match| !used_oids.include?(match) }.first
           end
           # replace the "UNDEF" OID name in the array at the index the UNDEF was found
           array[component[:index]][0] = oid

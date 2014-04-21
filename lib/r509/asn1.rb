@@ -24,15 +24,15 @@ module R509
     #   You can also supply a directoryName, but this must be an R509::Subject or array of arrays
     # @return [R509::ASN1::GeneralNames]
     def self.general_name_parser(names)
-      if names.nil? or names.kind_of?(R509::ASN1::GeneralNames)
+      if names.nil? || names.kind_of?(R509::ASN1::GeneralNames)
         return names
-      elsif not names.kind_of?(Array)
+      elsif !names.kind_of?(Array)
         raise ArgumentError, "You must supply an array or existing R509::ASN1 GeneralNames object to general_name_parser"
       end
       general_names = R509::ASN1::GeneralNames.new
       names.uniq!
       names.map do |domain|
-        if !(IPAddr.new(domain.strip) rescue nil).nil?
+        if self.ip_check(domain)
           ip = IPAddr.new(domain.strip)
           general_names.create_item(:tag => 7, :value => ip.to_s)
         else
@@ -50,6 +50,20 @@ module R509
         end
       end
       general_names
+    end
+
+    # Checks if a given string is an IP or not.
+    #
+    # @param [String] domain The string to check
+    #
+    # @return [Boolean]
+    def self.ip_check(domain)
+      begin
+        IPAddr.new(domain.strip)
+        true
+      rescue
+        false
+      end
     end
 
     # This class parses ASN.1 GeneralName objects. At the moment it supports
@@ -154,7 +168,7 @@ module R509
       # required for #uniq comparisons
       # @return [Boolean] equality between objects
       def ==(other)
-        (other.class == self.class and self.type == other.type && self.value == other.value)
+        (other.class == self.class && self.type == other.type && self.value == other.value)
       end
       alias_method :eql?, :==
 
@@ -193,7 +207,7 @@ module R509
         when 1, 2, 6 then @value = value
         when 4 then @value = R509::Subject.new(value.first.to_der)
         when 7
-          if value.size == 4 or value.size == 16
+          if value.size == 4 || value.size == 16
             @value = parse_ip(value)
           elsif value.size == 8 # IPv4 with netmask
             @value = parse_ip(value[0, 4], value[4, 4])
@@ -275,7 +289,7 @@ module R509
       # @param [Hash] hash A hash with (:tag or :type) and :value keys. Allows you to build GeneralName objects and add
       #   them to the GeneralNames object
       def create_item(hash)
-        if not hash.respond_to?(:has_key?) or (not hash.key?(:tag) and not hash.key?(:type)) or not hash.key?(:value)
+        if !hash.respond_to?(:has_key?) || (!hash.key?(:tag) && !hash.key?(:type)) || !hash.key?(:value)
           raise ArgumentError, "Must be a hash with (:tag or :type) and :value nodes"
         end
         gn = R509::ASN1::GeneralName.new(:tag => hash[:tag], :type => hash[:type], :value => hash[:value])

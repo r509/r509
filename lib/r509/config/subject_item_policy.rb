@@ -66,7 +66,7 @@ module R509
         # the validated subject contains only those subject components that are either
         # required, optional, or match
         R509::Subject.new(subject.to_a.select do |item|
-          @required.include?(item[0]) or @optional.include?(item[0]) or @match.include?(item[0])
+          @required.include?(item[0]) || @optional.include?(item[0]) || @match.include?(item[0])
         end)
       end
 
@@ -104,10 +104,9 @@ module R509
         # convert the subject components into an array of component names that match
         # those that are on the required list
         supplied = subject.to_a.each do |item|
-          @required.include?(item[0]) or @match.include?(item[0])
-        end.map do |item|
-          item[0]
+          @required.include?(item[0]) || @match.include?(item[0])
         end
+        supplied = supplied.map { |item| item[0] }
         # so we can make sure they gave us everything that's required
         diff = @required + @match - supplied
         unless diff.empty?

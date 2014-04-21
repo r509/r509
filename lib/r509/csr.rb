@@ -47,7 +47,7 @@ module R509
       unless opts.kind_of?(Hash)
         raise ArgumentError, 'Must provide a hash of options'
       end
-      if opts.key?(:subject) and opts.key?(:csr)
+      if opts.key?(:subject) && opts.key?(:csr)
         raise ArgumentError, "You must provide :subject or :csr, not both"
       end
       @bit_length = opts[:bit_length] || opts[:bit_strength] || R509::PrivateKey::DEFAULT_STRENGTH
@@ -84,7 +84,7 @@ module R509
       unless opts.key?(:csr)
         @req.sign(@key.key, @message_digest.digest)
       end
-      if !@key.nil? && !@req.verify(@key.public_key) then
+      if @key && !@req.verify(@key.public_key)
         raise R509Error, 'Key does not match request.'
       end
     end
@@ -99,7 +99,7 @@ module R509
 
     # @return [OpenSSL::PKey::RSA,OpenSSL::PKey::DSA,OpenSSL::PKey::EC] public key
     def public_key
-      if @req.kind_of?(OpenSSL::X509::Request) then
+      if @req.kind_of?(OpenSSL::X509::Request)
         @req.public_key
       end
     end
@@ -112,7 +112,7 @@ module R509
 
     # @return [Boolean] Boolean of whether the object contains a private key
     def has_private_key?
-      if !@key.nil?
+      if @key
         true
       else
         false
@@ -122,11 +122,12 @@ module R509
     alias_method :to_s, :to_pem
 
     # Returns subject component
+    # @param [String] short_name short name subject component (e.g. CN, O, ST)
     #
     # @return [String] value of the subject component requested
-    def subject_component short_name
+    def subject_component(short_name)
       @req.subject.to_a.each do |element|
-        if element[0].downcase == short_name.downcase then
+        if element[0].downcase == short_name.downcase
           return element[1]
         end
       end
@@ -144,11 +145,11 @@ module R509
     #
     # @return [String] value of the key algorithm. RSA, DSA, or EC
     def key_algorithm
-      if @req.public_key.kind_of? OpenSSL::PKey::RSA then
+      if @req.public_key.kind_of? OpenSSL::PKey::RSA
         "RSA"
-      elsif @req.public_key.kind_of? OpenSSL::PKey::DSA then
+      elsif @req.public_key.kind_of? OpenSSL::PKey::DSA
         "DSA"
-      elsif @req.public_key.kind_of? OpenSSL::PKey::EC then
+      elsif @req.public_key.kind_of? OpenSSL::PKey::EC
         "EC"
       end
     end
@@ -168,7 +169,7 @@ module R509
           csr.gsub!(/^\s*\n/, '')
           # and leading/trailing whitespace
           csr.gsub!(/^\s*|\s*$/, '')
-          if not csr.match(/-----BEGIN.+-----/) and csr.match(/MII/)
+          if !csr.match(/-----BEGIN.+-----/) && csr.match(/MII/)
             # if csr is probably PEM (MII is the beginning of every base64
             # encoded DER) then add the wrapping lines if they aren't provided.
             # tools like Microsoft's xenroll do this.
@@ -210,7 +211,7 @@ module R509
     end
 
     def add_san_extension(san_names)
-      if san_names.kind_of?(R509::ASN1::GeneralNames) and not san_names.names.empty?
+      if san_names.kind_of?(R509::ASN1::GeneralNames) && !san_names.names.empty?
         ef = OpenSSL::X509::ExtensionFactory.new
         serialized = san_names.serialize_names
         ef.config = OpenSSL::Config.parse(serialized[:conf])

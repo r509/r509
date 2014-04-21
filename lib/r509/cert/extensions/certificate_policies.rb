@@ -109,12 +109,12 @@ module R509
 
           policies.each do |policy|
             raise ArgumentError, "Each policy requires a policy identifier" if policy[:policy_identifier].nil?
-            raise ArgumentError, "CPS URIs must be an array of strings" if not policy[:cps_uris].nil? and not policy[:cps_uris].respond_to?(:each)
+            raise ArgumentError, "CPS URIs must be an array of strings" if policy[:cps_uris] && !policy[:cps_uris].respond_to?(:each)
             unless policy[:user_notices].nil?
               raise ArgumentError, "User notices must be an array of hashes" unless policy[:user_notices].respond_to?(:each)
               policy[:user_notices].each do |un|
-                raise ArgumentError, "If you provide an organization you must provide notice numbers" if not un[:organization].nil? and un[:notice_numbers].nil?
-                raise ArgumentError, "If you provide notice numbers you must provide an organization" if not un[:notice_numbers].nil? and un[:organization].nil?
+                raise ArgumentError, "If you provide an organization you must provide notice numbers" if un[:organization] && un[:notice_numbers].nil?
+                raise ArgumentError, "If you provide notice numbers you must provide an organization" if un[:notice_numbers] && un[:organization].nil?
               end
             end
           end

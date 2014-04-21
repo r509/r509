@@ -24,7 +24,7 @@ describe R509::OCSP::Response do
   end
   it "returns data on to_der" do
     ocsp_response = R509::OCSP::Response.parse(@ocsp_response_der)
-    ocsp_response.to_der.should_not == nil
+    ocsp_response.to_der.should_not be_nil
   end
   it "returns a BasicResponse object on #basic" do
     ocsp_response = R509::OCSP::Response.parse(@ocsp_response_der)

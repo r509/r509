@@ -14,9 +14,9 @@ module R509
     # @option opts [R509::PrivateKey,String] :key optional private key to supply. either an unencrypted PEM/DER string or an R509::PrivateKey object (use the latter if you need password/hardware support). if supplied you do not need to pass an spki.
     # @option opts [String] :message_digest Optional digest. sha1, sha224, sha256, sha384, sha512, md5. Defaults to sha1. Only used if you supply a :key and no :spki
     def initialize(opts = {})
-      if not opts.kind_of?(Hash)
+      if !opts.kind_of?(Hash)
         raise ArgumentError, 'Must provide a hash of options'
-      elsif not opts.key?(:spki) and not opts.key?(:key)
+      elsif !opts.key?(:spki) && !opts.key?(:key)
         raise ArgumentError, 'Must provide either :spki or :key'
       end
 
@@ -68,7 +68,7 @@ module R509
       # ...and leading/trailing whitespace
       spki.strip!
       spki = OpenSSL::Netscape::SPKI.new(spki)
-      if !@key.nil? and not spki.verify(@key.public_key) then
+      if @key && !spki.verify(@key.public_key)
         raise R509Error, 'Key does not match SPKI.'
       end
       spki

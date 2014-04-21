@@ -97,13 +97,13 @@ module R509
       # @option opts [Integer] :crl_start_skew_seconds The number of seconds to subtract from Time.now when calculating the signing time of a CRL. This is important to handle bad user clocks.
       #
       def initialize(opts = {})
-        unless opts.key?(:ca_cert) then
+        unless opts.key?(:ca_cert)
           raise ArgumentError, 'Config object requires that you pass :ca_cert'
         end
 
         @ca_cert = opts[:ca_cert]
 
-        unless @ca_cert.kind_of?(R509::Cert) then
+        unless @ca_cert.kind_of?(R509::Cert)
           raise ArgumentError, ':ca_cert must be of type R509::Cert'
         end
 
@@ -302,10 +302,10 @@ module R509
 
       def build_cert_hash(obj)
         hash = { "cert" => "<add_path>" }
-        if not obj.key.nil? and obj.key.in_hardware?
+        if obj.key && obj.key.in_hardware?
           hash["engine"] = { :so_path => "<add_path>", :id => "<add_name>" }
           return hash
-        elsif not obj.key.nil?
+        elsif obj.key
           hash["key"] = "<add_path>"
         end
         hash
@@ -317,11 +317,11 @@ module R509
           ca_cert = self.load_with_engine(ca_cert_hash, ca_root_path)
         end
 
-        if ca_cert.nil? and ca_cert_hash.key?('pkcs12')
+        if ca_cert.nil? && ca_cert_hash.key?('pkcs12')
           ca_cert = self.load_with_pkcs12(ca_cert_hash, ca_root_path)
         end
 
-        if ca_cert.nil? and ca_cert_hash.key?('cert')
+        if ca_cert.nil? && ca_cert_hash.key?('cert')
           ca_cert = self.load_with_key(ca_cert_hash, ca_root_path)
         end
 
@@ -391,10 +391,10 @@ module R509
       end
 
       def check_ocsp_crl_delegate(cert, kind)
-        if not cert.kind_of?(R509::Cert) and not cert.nil?
+        if cert && !cert.kind_of?(R509::Cert)
           raise ArgumentError, ":#{kind}, if provided, must be of type R509::Cert"
         end
-        if not cert.nil? and not cert.has_private_key?
+        if cert && !cert.has_private_key?
           raise ArgumentError, ":#{kind} must contain a private key, not just a certificate"
         end
       end

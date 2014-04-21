@@ -44,7 +44,7 @@ describe R509::PrivateKey do
   it "loads a pre-existing RSA key" do
     private_key = R509::PrivateKey.new(:key => @key_csr)
     private_key.to_pem.should == @key_csr
-    @key_csr.should_not == nil
+    @key_csr.should_not be_nil
   end
   it "generates an RSA key at the default bit length (2048)" do
     private_key = R509::PrivateKey.new(:type => "rsa")
@@ -60,7 +60,7 @@ describe R509::PrivateKey do
     private_key = R509::PrivateKey.new(:key => @dsa_key)
     private_key.key.kind_of?(OpenSSL::PKey::DSA).should == true
     private_key.key.to_pem.should == @dsa_key
-    @dsa_key.should_not == nil
+    @dsa_key.should_not be_nil
   end
   it "generates a DSA key at the default bit length (2048)" do
     private_key = R509::PrivateKey.new(:type => "dsa")
@@ -125,21 +125,21 @@ describe R509::PrivateKey do
     sio = StringIO.new
     sio.set_encoding("BINARY") if sio.respond_to?(:set_encoding)
     private_key.write_encrypted_pem(sio, 'des3', 'Testing1')
-    sio.string.match(/Proc-Type: 4,ENCRYPTED/).should_not == nil
+    sio.string.match(/Proc-Type: 4,ENCRYPTED/).should_not be_nil
   end
   it "creates an encrypted private key with des3 cipher" do
     private_key = R509::PrivateKey.new(:key => @key_csr)
     sio = StringIO.new
     sio.set_encoding("BINARY") if sio.respond_to?(:set_encoding)
     private_key.write_encrypted_pem(sio, 'des3', 'Testing1')
-    sio.string.match(/DES-EDE3-CBC/).should_not == nil
+    sio.string.match(/DES-EDE3-CBC/).should_not be_nil
   end
   it "creates an encrypted private key with aes128 cipher" do
     private_key = R509::PrivateKey.new(:key => @key_csr)
     sio = StringIO.new
     sio.set_encoding("BINARY") if sio.respond_to?(:set_encoding)
     private_key.write_encrypted_pem(sio, 'aes128', 'Testing1')
-    sio.string.match(/AES-128-CBC/).should_not == nil
+    sio.string.match(/AES-128-CBC/).should_not be_nil
   end
   it "returns false for in_hardware? when not using an engine" do
     private_key = R509::PrivateKey.new(:key => @key_csr)

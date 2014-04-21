@@ -6,7 +6,7 @@ describe R509::Validity do
   context "status" do
     it "has no status" do
       status = R509::Validity::Status.new
-      status.status.should == nil
+      status.status.should be_nil
       status.ocsp_status.should == OpenSSL::OCSP::V_CERTSTATUS_UNKNOWN
     end
     it "has a valid status" do
@@ -18,7 +18,7 @@ describe R509::Validity do
       status = R509::Validity::Status.new(:status => R509::Validity::REVOKED)
       status.status.should == R509::Validity::REVOKED
       status.ocsp_status.should == OpenSSL::OCSP::V_CERTSTATUS_REVOKED
-      status.revocation_time.should_not == nil
+      status.revocation_time.should_not be_nil
       status.revocation_reason.should == 0
     end
     it "has an unknown status" do
@@ -33,7 +33,7 @@ describe R509::Validity do
     end
     it "has no revocation time or reason specified (and isn't revoked)" do
       status = R509::Validity::Status.new
-      status.revocation_time.should == nil
+      status.revocation_time.should be_nil
       status.revocation_reason.should == 0
     end
     it "specifies a revocation time" do
