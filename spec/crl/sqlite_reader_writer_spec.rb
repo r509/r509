@@ -3,17 +3,17 @@ require 'r509/crl/sqlite_reader_writer'
 module R509
   module CRL
     describe SqliteReaderWriter do
-  
+
       let(:empty_db) { SQLite3::Database.new ':memory:' }
       let(:db) {
         db = SQLite3::Database.new ':memory:'
         db.execute_batch TestFixtures::CRL_LIST_SQLITE
         db
       }
-      let(:rw) { SqliteReaderWriter.new db } 
+      let(:rw) { SqliteReaderWriter.new db }
 
-      it 'creates the schema automaticaly if its missing' do
-        SqliteReaderWriter.new empty_db 
+      it 'creates the schema automatically if its missing' do
+        SqliteReaderWriter.new empty_db
         db.execute('SELECT * FROM sqlite_master').should_not be_empty
       end
 

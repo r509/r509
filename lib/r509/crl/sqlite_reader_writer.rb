@@ -32,7 +32,7 @@ module R509
       # @param reason [Integer,nil] reason for revocation
       # @param revoke_time [Integer]
       def write_list_entry(serial, revoke_time, reason)
-        @db.execute('INSERT OR REPLACE INTO revoked_serials (serial, revoked_at, reason) VALUES (?,?,?)', serial.to_s, revoke_time, reason)
+        @db.execute('INSERT INTO revoked_serials (serial, revoked_at, reason) VALUES (?,?,?)', serial.to_s, revoke_time, reason)
       end
 
       # Remove a CRL list entry from SQLite
@@ -41,12 +41,12 @@ module R509
         @db.execute('DELETE FROM revoked_serials WHERE serial=?', serial.to_s)
       end
 
-      # read the CRL number from SQLite 
+      # read the CRL number from SQLite
       def read_number
         @db.get_first_value 'SELECT number from crl_number'
       end
 
-      # write the CRL number to SQLite 
+      # write the CRL number to SQLite
       def write_number(crl_number)
         @db.execute('UPDATE crl_number SET number=?', crl_number)
       end
