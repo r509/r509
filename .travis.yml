@@ -12,7 +12,7 @@ matrix:
   - rvm: 1.9.3
     env: R509_EC_SUPPORT_DISABLED=true
   allow_failures:
-     - rbx
+    - rvm: rbx
     - rvm: 1.9.3
       env: R509_EC_SUPPORT_DISABLED=true
 before_install:
