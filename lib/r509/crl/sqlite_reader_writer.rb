@@ -1,17 +1,17 @@
 require 'sqlite3'
 module R509
   module CRL
-    class SqliteReaderWriter < R509::CRL::ReaderWriter
-
-      #Create an SQLite based persitence
-      #@param filename_or_db filepath to an SQLite database or an SQLite3::Database object
+    # SQLite-based reader/writer for CRL data.
+    class SQLiteReaderWriter < R509::CRL::ReaderWriter
+      # Create an SQLite based persistence
+      # @param filename_or_db filepath to an SQLite database or an SQLite3::Database object
       def initialize(filename_or_db)
         if filename_or_db.kind_of? SQLite3::Database
           @db = filename_or_db
         else
           @db = SQLite3::Database.new(file)
         end
-        #create tables if missing
+        # create tables if missing
         ensure_schema
       end
 
@@ -52,6 +52,7 @@ module R509
       end
 
       private
+
       def ensure_schema
         if @db.execute('SELECT * FROM sqlite_master WHERE type=? AND name=?', 'table', 'revoked_serials').empty?
           @db.execute_batch <<-EOSCHEMA
