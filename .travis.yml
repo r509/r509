@@ -5,6 +5,7 @@ rvm:
  - 2.0.0
  - 2.1.0
  - ruby-head
+ - rbx
 matrix:
   include:
   # This tests the X509Name UNDEF fix in R509::Subject. My patch to remove the need for this code landed in 1.9.3-p125
