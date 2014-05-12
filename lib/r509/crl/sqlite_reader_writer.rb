@@ -16,13 +16,16 @@ module R509
       end
 
       # Reads a CRL list file from the SQLite database
-      # @param admin [R509::CRL::Administrator] the parent CRL Administrator object
-      def read_list(admin)
+      # @yield For each revoked certificate in the CRL
+      # @yieldparam serial [Integer] revoked certificate's serial number
+      # @yieldparam reason [Integer,nil] reason for revocation.
+      # @yieldparam revoke_time [Integer]
+      def read_list
         @db.execute('SELECT serial,reason,revoked_at from revoked_serials') do |row|
           serial = row[0].to_i
           reason = row[1]
           revoke_time = row[2]
-          admin.revoke_cert(serial, reason, revoke_time, false)
+          yield serial, reason, revoke_time
         end
         nil
       end
