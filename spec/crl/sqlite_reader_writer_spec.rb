@@ -17,10 +17,7 @@ describe R509::CRL::SQLiteReaderWriter do
   end
 
   it 'reads a crl list' do
-    admin = double("admin")
-    admin.should_receive(:revoke_cert).with(12345, 0, 1323983885, false)
-    admin.should_receive(:revoke_cert).with(12346, nil, 1323983885, false)
-    rw.read_list(admin)
+    expect { |b| rw.read_list(&b) }.to yield_successive_args([12345, 0, 1323983885], [12346, nil, 1323983885])
   end
 
   it 'writes a crl list entry' do
