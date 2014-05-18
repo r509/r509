@@ -1,4 +1,4 @@
-$:.push File.expand_path("../lib", __FILE__)
+$LOAD_PATH.push File.expand_path("../lib", __FILE__)
 require "r509/version"
 
 Gem::Specification.new do |s|
@@ -16,8 +16,7 @@ Gem::Specification.new do |s|
   s.homepage = "http://r509.org"
   s.required_ruby_version = ">= 1.9.3"
   s.files = %w(README.mdown CONTRIBUTING.mdown LICENSE r509.yaml Rakefile) + Dir["{lib,bin,spec,doc}/**/*"]
-  s.executables = ["r509","r509-parse"]
-  s.test_files= Dir.glob('spec/*_spec.rb')
+  s.executables = ["r509", "r509-parse"]
+  s.test_files = Dir.glob('spec/*_spec.rb')
   s.require_path = "lib"
 end
-

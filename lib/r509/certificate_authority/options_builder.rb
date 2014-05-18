@@ -88,7 +88,7 @@ module R509::CertificateAuthority
     end
 
     def build_and_merge_extensions(options, profile, public_key)
-      extensions = build_extensions(options, profile, public_key)
+      extensions = build_extensions(profile, public_key)
 
       unless options[:extensions].nil?
         extensions = merge_extensions(options, extensions)
@@ -105,13 +105,13 @@ module R509::CertificateAuthority
         ext_hash[e.class] = e
       end
       merged_ext = []
-      ext_hash.each do |k, v|
+      ext_hash.each do |_k, v|
         merged_ext.push(v)
       end
       merged_ext
     end
 
-    def build_extensions(options, profile, public_key)
+    def build_extensions(profile, public_key)
       extensions = []
 
       extensions << profile.basic_constraints unless profile.basic_constraints.nil?

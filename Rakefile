@@ -30,14 +30,13 @@ end
 
 desc "Open an irb session with the lib dir included"
 task :irb do
-  $:.unshift File.expand_path("../../lib", __FILE__)
-  $:.unshift File.expand_path("../", __FILE__)
+  $LOAD_PATH.unshift File.expand_path("../../lib", __FILE__)
+  $LOAD_PATH.unshift File.expand_path("../", __FILE__)
   require 'r509'
   require 'irb'
   ARGV.clear
   IRB.start
 end
-
 
 desc 'Build yard documentation'
 task :yard do

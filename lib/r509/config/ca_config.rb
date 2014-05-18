@@ -37,7 +37,7 @@ module R509
 
       # @return [Hash]
       def to_h
-        @configs.merge(@configs) { |k, v| v.to_h }
+        @configs.merge(@configs) { |_k, v| v.to_h }
       end
 
       # @return [YAML]
@@ -165,7 +165,7 @@ module R509
         hash["crl_list_file"] = @crl_list_file unless @crl_list_file.nil?
         hash["crl_number_file"] = @crl_number_file unless @crl_number_file.nil?
         hash["crl_md"] = @crl_md
-        hash["profiles"] = @profiles.merge(@profiles) { |k, v| v.to_h } unless @profiles.empty?
+        hash["profiles"] = @profiles.merge(@profiles) { |_k, v| v.to_h } unless @profiles.empty?
         hash
       end
 
