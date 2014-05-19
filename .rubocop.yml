@@ -84,3 +84,6 @@ MethodLength:
 # Cop supports --auto-correct.
 RedundantSelf:
   Enabled: false
+
+UnusedMethodArgument:
+  Enabled: false

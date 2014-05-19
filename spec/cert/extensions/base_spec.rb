@@ -33,7 +33,7 @@ shared_examples_for "a correctly implemented wrap_openssl_extensions" do
   it "should not have failed to map an implemented extension" do
     missing_extensions = []
     @wrappable_extensions.each do |openssl_ext|
-      if (@r509_extensions.select { |r509_class, r509_ext| r509_ext.oid == openssl_ext.oid }) == {}
+      if (@r509_extensions.select { |_r509_class, r509_ext| r509_ext.oid == openssl_ext.oid }) == {}
         missing_extensions << openssl_ext.oid
       end
     end
