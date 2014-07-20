@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.platform = Gem::Platform::RUBY
   s.summary = "A (relatively) simple X.509 certification authority API"
   s.description = 'A module that allows you to create CSRs, issue certs off a CA, view the certs, create CRLs, run an OCSP responder, and much more'
-  s.add_development_dependency 'rspec'
+  s.add_development_dependency 'rspec', "~>2.0"
   s.add_development_dependency 'rake'
   s.add_development_dependency 'simplecov'
   s.author = "Paul Kehrer"
