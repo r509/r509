@@ -7,7 +7,7 @@ shared_examples_for "a correct R509 CRLDistributionPoints object" do |critical|
     extension_name = "crlDistributionPoints"
     klass = CRLDistributionPoints
     ef = OpenSSL::X509::ExtensionFactory.new
-    openssl_ext = ef.create_extension(extension_name, @extension_value , critical)
+    openssl_ext = ef.create_extension(extension_name, @extension_value, critical)
     @r509_ext = klass.new(openssl_ext)
   end
 

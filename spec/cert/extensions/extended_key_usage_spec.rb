@@ -7,7 +7,7 @@ shared_examples_for "a correct R509 ExtendedKeyUsage object" do |critical|
     extension_name = "extendedKeyUsage"
     klass = ExtendedKeyUsage
     ef = OpenSSL::X509::ExtensionFactory.new
-    openssl_ext = ef.create_extension(extension_name, @extension_value , critical)
+    openssl_ext = ef.create_extension(extension_name, @extension_value, critical)
     @r509_ext = klass.new(openssl_ext)
   end
 
