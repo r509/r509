@@ -10,7 +10,7 @@ describe R509::CertificateAuthority::OptionsBuilder do
   context "enforces subject item policies" do
     before :all do
       config = R509::Config::CAConfig.new(:ca_cert => R509::Cert.new(:cert => TestFixtures::TEST_CA_CERT))
-      subject_item_policy = R509::Config::SubjectItemPolicy.new("CN" => { :policy => "required" } , "O" => { :policy => "required" }, "OU" => { :policy => "optional" }, "L" => { :policy => "required" })
+      subject_item_policy = R509::Config::SubjectItemPolicy.new("CN" => { :policy => "required" }, "O" => { :policy => "required" }, "OU" => { :policy => "optional" }, "L" => { :policy => "required" })
       profile = R509::Config::CertProfile.new(
         :default_md => "SHA512",
         :subject_item_policy => subject_item_policy
@@ -245,7 +245,7 @@ describe R509::CertificateAuthority::OptionsBuilder do
       expect { @builder.build_and_enforce(:csr => @csr, :message_digest => 'md5', :profile_name => "profile") }.to raise_error(R509::R509Error, 'The message digest passed is not allowed by this configuration. Allowed digests: SHA256, SHA1, SHA384')
     end
     it "permits an allowed hash (not default)" do
-      data = @builder.build_and_enforce(:csr => @csr, :message_digest => "sha384" , :profile_name => "profile")
+      data = @builder.build_and_enforce(:csr => @csr, :message_digest => "sha384", :profile_name => "profile")
       data[:message_digest].should == 'sha384'
     end
     it "returns the default hash if no hash is passed" do

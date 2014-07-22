@@ -70,7 +70,7 @@ module R509
         return nil if @crl_list_file.nil?
 
         entry = [serial, revoke_time, reason].join(",")
-        write_data(@crl_list_file, entry + "\n" , 'a:ascii-8bit')
+        write_data(@crl_list_file, entry + "\n", 'a:ascii-8bit')
       end
 
       # Remove a CRL list entry
