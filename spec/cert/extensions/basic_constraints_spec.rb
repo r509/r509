@@ -10,19 +10,19 @@ shared_examples_for "a correct R509 BasicConstraints object" do |critical|
   end
 
   it "is_ca? should correctly report whether it's a CA certificate (critical:#{critical})" do
-    @r509_ext.is_ca?.should == @is_ca
+    expect(@r509_ext.is_ca?).to eq(@is_ca)
   end
 
   it "the path length should be correct (critical:#{critical})" do
-    @r509_ext.path_length.should == @pathlen
+    expect(@r509_ext.path_length).to eq(@pathlen)
   end
 
   it "allows_sub_ca? should correctly report whether its path length allows it to issue CA certs (critical:#{critical})" do
-    @r509_ext.allows_sub_ca?.should == @allows_sub_ca
+    expect(@r509_ext.allows_sub_ca?).to eq(@allows_sub_ca)
   end
 
   it "reports #critical? properly" do
-    @r509_ext.critical?.should == critical
+    expect(@r509_ext.critical?).to eq(critical)
   end
 end
 
@@ -55,12 +55,12 @@ describe R509::Cert::Extensions::BasicConstraints do
         end
 
         it "creates extension" do
-          @bc.is_ca?.should be_true
-          @bc.path_length.should be_nil
+          expect(@bc.is_ca?).to be true
+          expect(@bc.path_length).to be_nil
         end
 
         it "builds yaml" do
-          YAML.load(@bc.to_yaml).should == @args
+          expect(YAML.load(@bc.to_yaml)).to eq(@args)
         end
       end
 
@@ -71,12 +71,12 @@ describe R509::Cert::Extensions::BasicConstraints do
         end
 
         it "creates extension" do
-          @bc.is_ca?.should be_true
-          @bc.path_length.should == 3
+          expect(@bc.is_ca?).to be true
+          expect(@bc.path_length).to eq(3)
         end
 
         it "builds yaml" do
-          YAML.load(@bc.to_yaml).should == @args
+          expect(YAML.load(@bc.to_yaml)).to eq(@args)
         end
       end
 
@@ -87,12 +87,12 @@ describe R509::Cert::Extensions::BasicConstraints do
         end
 
         it "creates extension" do
-          @bc.is_ca?.should be_false
-          @bc.path_length.should be_nil
+          expect(@bc.is_ca?).to be false
+          expect(@bc.path_length).to be_nil
         end
 
         it "builds yaml" do
-          YAML.load(@bc.to_yaml).should == @args
+          expect(YAML.load(@bc.to_yaml)).to eq(@args)
         end
       end
 
@@ -103,11 +103,11 @@ describe R509::Cert::Extensions::BasicConstraints do
         end
 
         it "creates extension" do
-          @bc.critical?.should be_true
+          expect(@bc.critical?).to be true
         end
 
         it "builds yaml" do
-          YAML.load(@bc.to_yaml).should == @args.merge(:critical => true)
+          expect(YAML.load(@bc.to_yaml)).to eq(@args.merge(:critical => true))
         end
       end
 
@@ -118,11 +118,11 @@ describe R509::Cert::Extensions::BasicConstraints do
         end
 
         it "creates extension" do
-          @bc.critical?.should be_false
+          expect(@bc.critical?).to be false
         end
 
         it "builds yaml" do
-          YAML.load(@bc.to_yaml).should == @args
+          expect(YAML.load(@bc.to_yaml)).to eq(@args)
         end
       end
 

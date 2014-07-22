@@ -12,11 +12,11 @@ shared_examples_for "a correct R509 OCSPNoCheck object" do |critical|
   end
 
   it "has the expected type" do
-    @r509_ext.oid.should == "noCheck"
+    expect(@r509_ext.oid).to eq("noCheck")
   end
 
   it "reports #critical? properly" do
-    @r509_ext.critical?.should == critical
+    expect(@r509_ext.critical?).to eq(critical)
   end
 end
 
@@ -31,11 +31,11 @@ describe R509::Cert::Extensions::OCSPNoCheck do
         end
 
         it "creates extension" do
-          @no_check.should_not be_nil
+          expect(@no_check).not_to be_nil
         end
 
         it "builds yaml" do
-          YAML.load(@no_check.to_yaml).should == { :critical => false }
+          expect(YAML.load(@no_check.to_yaml)).to eq({ :critical => false })
         end
       end
 
@@ -45,11 +45,11 @@ describe R509::Cert::Extensions::OCSPNoCheck do
         end
 
         it "creates extension" do
-          @no_check.critical?.should be_false
+          expect(@no_check.critical?).to be false
         end
 
         it "builds yaml" do
-          YAML.load(@no_check.to_yaml).should == { :critical => false }
+          expect(YAML.load(@no_check.to_yaml)).to eq({ :critical => false })
         end
       end
 
@@ -59,11 +59,11 @@ describe R509::Cert::Extensions::OCSPNoCheck do
         end
 
         it "creates extension" do
-          @no_check.critical?.should be_true
+          expect(@no_check.critical?).to be true
         end
 
         it "builds yaml" do
-          YAML.load(@no_check.to_yaml).should == { :critical => true }
+          expect(YAML.load(@no_check.to_yaml)).to eq({ :critical => true })
         end
       end
 

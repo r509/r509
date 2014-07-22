@@ -17,7 +17,7 @@ shared_examples_for "signing" do |selfsign|
       cert = @ca.sign(@options)
     end
     subject = (@options[:csr].nil?) ? @options[:subject] : @options[:csr].subject
-    cert.subject.to_s.should == subject.to_s
+    expect(cert.subject.to_s).to eq(subject.to_s)
   end
 
   it "with specified subject (selfsign:#{selfsign})" do
@@ -30,13 +30,13 @@ shared_examples_for "signing" do |selfsign|
     else
       cert = @ca.sign(@options)
     end
-    cert.subject.to_s.should == '/CN=myCN/O=Org'
+    expect(cert.subject.to_s).to eq('/CN=myCN/O=Org')
   end
 
   it "with default md (selfsign:#{selfsign})" do
     cert = @ca.sign(@options)
     regex = Regexp.new(R509::MessageDigest::DEFAULT_MD, Regexp::IGNORECASE)
-    cert.signature_algorithm.should match(regex)
+    expect(cert.signature_algorithm).to match(regex)
   end
 
   it "with specified md (selfsign:#{selfsign})" do
@@ -46,7 +46,7 @@ shared_examples_for "signing" do |selfsign|
     else
       cert = @ca.sign(@options)
     end
-    cert.signature_algorithm.should match(/sha256/i)
+    expect(cert.signature_algorithm).to match(/sha256/i)
   end
 
   it "with no :extensions in options hash (selfsign:#{selfsign})" do
@@ -57,7 +57,7 @@ shared_examples_for "signing" do |selfsign|
       cert = @ca.sign(@options)
       size = 2
     end
-    cert.extensions.size.should == size
+    expect(cert.extensions.size).to eq(size)
   end
 
   it "with empty extensions array (selfsign:#{selfsign})" do
@@ -67,7 +67,7 @@ shared_examples_for "signing" do |selfsign|
     else
       cert = @ca.sign(@options)
     end
-    cert.extensions.size.should == 0
+    expect(cert.extensions.size).to eq(0)
   end
 
   it "with multiple extensions (selfsign:#{selfsign})" do
@@ -80,22 +80,22 @@ shared_examples_for "signing" do |selfsign|
     else
       cert = @ca.sign(@options)
     end
-    cert.extensions.size.should == 2
-    cert.basic_constraints.is_ca?.should == false
-    cert.inhibit_any_policy.value.should == 4
+    expect(cert.extensions.size).to eq(2)
+    expect(cert.basic_constraints.is_ca?).to eq(false)
+    expect(cert.inhibit_any_policy.value).to eq(4)
   end
 
   it "with random serial when serial is not specified and uses microtime as part of the serial to prevent collision (selfsign:#{selfsign})" do
     now = Time.now
-    Time.stub(:now).and_return(now)
+    allow(Time).to receive(:now).and_return(now)
     time = now.to_i.to_s
     if selfsign
       cert = R509::CertificateAuthority::Signer.selfsign(@options)
     else
       cert = @ca.sign(@options)
     end
-    cert.serial.to_s.size.should be >= 45
-    cert.serial.to_s.index(time).should_not be_nil
+    expect(cert.serial.to_s.size).to be >= 45
+    expect(cert.serial.to_s.index(time)).not_to be_nil
   end
 
   it "with specified serial number (selfsign:#{selfsign})" do
@@ -105,7 +105,7 @@ shared_examples_for "signing" do |selfsign|
     else
       cert = @ca.sign(@options)
     end
-    cert.serial.should == 11223344
+    expect(cert.serial).to eq(11223344)
   end
 
   it "with default notBefore/notAfter dates (selfsign:#{selfsign})" do
@@ -116,8 +116,8 @@ shared_examples_for "signing" do |selfsign|
     else
       cert = @ca.sign(@options)
     end
-    cert.not_before.ctime.should == @options[:not_before].utc.ctime
-    cert.not_after.ctime.should == @options[:not_after].utc.ctime
+    expect(cert.not_before.ctime).to eq(@options[:not_before].utc.ctime)
+    expect(cert.not_after.ctime).to eq(@options[:not_after].utc.ctime)
   end
 
   it "with specified notBefore/notAfter dates (selfsign:#{selfsign})" do
@@ -128,8 +128,8 @@ shared_examples_for "signing" do |selfsign|
     else
       cert = @ca.sign(@options)
     end
-    cert.not_before.ctime.should == @options[:not_before].utc.ctime
-    cert.not_after.ctime.should == @options[:not_after].utc.ctime
+    expect(cert.not_before.ctime).to eq(@options[:not_before].utc.ctime)
+    expect(cert.not_after.ctime).to eq(@options[:not_after].utc.ctime)
   end
 
 end
@@ -199,16 +199,16 @@ describe R509::CertificateAuthority::Signer do
     context "key in signed cert" do
       it "returns key when CSR contains key" do
         cert = R509::CertificateAuthority::Signer.selfsign(:csr => @csr)
-        cert.key.should_not be_nil
-        cert.key.should == @csr.key
+        expect(cert.key).not_to be_nil
+        expect(cert.key).to eq(@csr.key)
         cert = @ca.sign(:csr => @csr)
-        cert.key.should_not be_nil
-        cert.key.should == @csr.key
+        expect(cert.key).not_to be_nil
+        expect(cert.key).to eq(@csr.key)
       end
       it "does not return key when CSR has no key" do
         csr = R509::CSR.new(:csr => TestFixtures::CSR)
         cert = @ca.sign(:csr => csr)
-        cert.key.should be_nil
+        expect(cert.key).to be_nil
       end
     end
   end
@@ -226,7 +226,7 @@ describe R509::CertificateAuthority::Signer do
     context "key in signed cert" do
       it "does not return key with SPKI" do
         cert = @ca.sign(:spki => @spki, :subject => R509::Subject.new(:CN => 'test'))
-        cert.key.should be_nil
+        expect(cert.key).to be_nil
       end
     end
   end

@@ -17,17 +17,17 @@ shared_examples_for "a correctly implemented wrap_openssl_extensions" do
   it "should not have returned values that aren't R509 extensions" do
     classes = @r509_extensions.values.map { |ext| ext.class }
     non_r509_classes = classes.reject { |ext_class| @r509_classes.include?(ext_class) }
-    non_r509_classes.should == []
+    expect(non_r509_classes).to eq([])
   end
 
   it "should have returned the right number of extensions" do
-    @r509_extensions.count.should == @wrappable_extensions.count
+    expect(@r509_extensions.count).to eq(@wrappable_extensions.count)
   end
 
   it "should not have returned keys improperly mapped to values" do
     incorrect_mappings = @r509_extensions.select { |key_class, ext| ext.class != key_class }
     incorrect_mappings = {} if incorrect_mappings == [] # compatibility for old versions of Ruby
-    incorrect_mappings.should == {}
+    expect(incorrect_mappings).to eq({})
   end
 
   it "should not have failed to map an implemented extension" do
@@ -38,13 +38,13 @@ shared_examples_for "a correctly implemented wrap_openssl_extensions" do
       end
     end
 
-    missing_extensions.should == []
+    expect(missing_extensions).to eq([])
   end
 end
 
 shared_examples_for "a correctly implemented get_unknown_extensions" do
   it "should not have returned values that are R509 extensions" do
-    R509::Cert::Extensions.get_unknown_extensions(@openssl_extensions).should == @unknown_extensions
+    expect(R509::Cert::Extensions.get_unknown_extensions(@openssl_extensions)).to eq(@unknown_extensions)
   end
 end
 

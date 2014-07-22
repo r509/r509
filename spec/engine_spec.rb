@@ -23,29 +23,29 @@ describe R509::Engine do
   end
 
   it "load returns a new engine" do
-    OpenSSL::Engine.should_receive(:load)
+    expect(OpenSSL::Engine).to receive(:load)
     engine_double = double('engine')
-    OpenSSL::Engine.should_receive(:by_id).and_yield(engine_double).and_return(engine_double)
-    engine_double.should_receive(:ctrl_cmd).with("SO_PATH", "/some/path")
-    engine_double.should_receive(:ctrl_cmd).with("ID", "mocked")
-    engine_double.should_receive(:ctrl_cmd).with("LOAD")
+    expect(OpenSSL::Engine).to receive(:by_id).and_yield(engine_double).and_return(engine_double)
+    expect(engine_double).to receive(:ctrl_cmd).with("SO_PATH", "/some/path")
+    expect(engine_double).to receive(:ctrl_cmd).with("ID", "mocked")
+    expect(engine_double).to receive(:ctrl_cmd).with("LOAD")
     engine = R509::Engine.instance.load(:so_path => "/some/path", :id => "mocked")
-    engine.should == engine_double
+    expect(engine).to eq(engine_double)
   end
 
   it "load returns pre-existing engine" do
-    OpenSSL::Engine.should_receive(:load)
-    OpenSSL::Engine.should_receive(:by_id).and_return("mocked_engine")
+    expect(OpenSSL::Engine).to receive(:load)
+    expect(OpenSSL::Engine).to receive(:by_id).and_return("mocked_engine")
     R509::Engine.instance.load(:so_path => "/some/path", :id => "mocked")
     engine = R509::Engine.instance.load(:so_path => "/some/path", :id => "mocked")
-    engine.should == 'mocked_engine'
+    expect(engine).to eq('mocked_engine')
   end
 
   it "returns an engine with []" do
-    OpenSSL::Engine.should_receive(:load)
-    OpenSSL::Engine.should_receive(:by_id).and_return("mocked_engine")
+    expect(OpenSSL::Engine).to receive(:load)
+    expect(OpenSSL::Engine).to receive(:by_id).and_return("mocked_engine")
     R509::Engine.instance.load(:so_path => "/some/path", :id => "mocked")
-    R509::Engine.instance["mocked"].should == "mocked_engine"
-    R509::Engine.instance["other"].should be_nil
+    expect(R509::Engine.instance["mocked"]).to eq("mocked_engine")
+    expect(R509::Engine.instance["other"]).to be_nil
   end
 end

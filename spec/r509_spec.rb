@@ -14,18 +14,18 @@ end
 describe R509 do
   it "prints version and feature info with ::print_debug" do
     output = capture_stdout { R509.print_debug }
-    output.should match(/^r509 v/)
-    output.should match(/^OpenSSL/)
-    output.should match(/^Ruby/)
-    output.should match(/^Elliptic/)
+    expect(output).to match(/^r509 v/)
+    expect(output).to match(/^OpenSSL/)
+    expect(output).to match(/^Ruby/)
+    expect(output).to match(/^Elliptic/)
   end
   it "checks if ec is supported", :ec => true do
-    R509.ec_supported?.should == true
+    expect(R509.ec_supported?).to eq(true)
   end
   it "checks if EC is unsupported" do
     ec = OpenSSL::PKey.send(:remove_const, :EC) # remove EC support for test!
     load('r509/ec-hack.rb')
-    R509.ec_supported?.should == false
+    expect(R509.ec_supported?).to eq(false)
     expect { OpenSSL::PKey::EC.new }.to raise_error(R509::R509Error)
     OpenSSL::PKey.send(:remove_const, :EC) # remove stubbed EC
     OpenSSL::PKey::EC = ec # add the real one back

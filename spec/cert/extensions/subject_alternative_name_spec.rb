@@ -13,31 +13,31 @@ shared_examples_for "a correct R509 SubjectAlternativeName object" do |critical|
   end
 
   it "dns_names should be correct critical:#{critical}" do
-    @r509_ext.dns_names.should == @dns_names
+    expect(@r509_ext.dns_names).to eq(@dns_names)
   end
 
   it "ip_addresses should be correct critical:#{critical}" do
-    @r509_ext.ip_addresses.should == @ip_addresses
+    expect(@r509_ext.ip_addresses).to eq(@ip_addresses)
   end
 
   it "rfc_822names should be correct critical:#{critical}" do
-    @r509_ext.rfc_822_names.should == @rfc_822_names
+    expect(@r509_ext.rfc_822_names).to eq(@rfc_822_names)
   end
 
   it "uris should be correct critical:#{critical}" do
-    @r509_ext.uris.should == @uris
+    expect(@r509_ext.uris).to eq(@uris)
   end
 
   it "dirNames should be correct critical:#{critical}" do
-    @r509_ext.directory_names.size.should == @directory_names.size
+    expect(@r509_ext.directory_names.size).to eq(@directory_names.size)
   end
 
   it "ordered should be correct critical:#{critical}" do
-    @r509_ext.names.size.should == @dns_names.size + @ip_addresses.size + @rfc_822_names.size + @uris.size + @directory_names.size
+    expect(@r509_ext.names.size).to eq(@dns_names.size + @ip_addresses.size + @rfc_822_names.size + @uris.size + @directory_names.size)
   end
 
   it "reports #critical? properly" do
-    @r509_ext.critical?.should == critical
+    expect(@r509_ext.critical?).to eq(critical)
   end
 end
 
@@ -68,11 +68,11 @@ describe R509::Cert::Extensions::SubjectAlternativeName do
         end
 
         it "creates extension" do
-          @san.rfc_822_names.should == ['random string']
+          expect(@san.rfc_822_names).to eq(['random string'])
         end
 
         it "builds yaml" do
-          YAML.load(@san.to_yaml).should == { :critical => false, :value => [{ :type => "email", :value => "random string" }] }
+          expect(YAML.load(@san.to_yaml)).to eq({ :critical => false, :value => [{ :type => "email", :value => "random string" }] })
         end
       end
 
@@ -83,11 +83,11 @@ describe R509::Cert::Extensions::SubjectAlternativeName do
         end
 
         it "creates extension" do
-          @san.dns_names.should == ['domain.com']
+          expect(@san.dns_names).to eq(['domain.com'])
         end
 
         it "builds yaml" do
-          @san.to_h.should == @args
+          expect(@san.to_h).to eq(@args)
         end
       end
 
@@ -97,12 +97,12 @@ describe R509::Cert::Extensions::SubjectAlternativeName do
           @san = R509::Cert::Extensions::SubjectAlternativeName.new(@args)
         end
         it "creates extension" do
-          @san.dns_names.should == ['domain.com']
-          @san.ip_addresses.should == ['127.0.0.1']
+          expect(@san.dns_names).to eq(['domain.com'])
+          expect(@san.ip_addresses).to eq(['127.0.0.1'])
         end
 
         it "builds yaml" do
-          @san.to_h.should == @args
+          expect(@san.to_h).to eq(@args)
         end
       end
 
@@ -113,11 +113,11 @@ describe R509::Cert::Extensions::SubjectAlternativeName do
         end
 
         it "creates extension" do
-          @san.critical?.should be_false
+          expect(@san.critical?).to be false
         end
 
         it "builds yaml" do
-          @san.to_h.should == @args.merge(:critical => false)
+          expect(@san.to_h).to eq(@args.merge(:critical => false))
         end
       end
 
@@ -128,11 +128,11 @@ describe R509::Cert::Extensions::SubjectAlternativeName do
         end
 
         it "creates extension" do
-          @san.critical?.should be_true
+          expect(@san.critical?).to be true
         end
 
         it "builds yaml" do
-          @san.to_h.should == @args
+          expect(@san.to_h).to eq(@args)
         end
       end
 

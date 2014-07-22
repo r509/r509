@@ -9,12 +9,12 @@ require 'r509/oid_mapper'
 describe R509::OIDMapper do
   it "registers one new oid" do
     subject = R509::Subject.new [['1.4.3.2.1.2.3.5.5.5.5.5', 'random_oid']]
-    subject['1.4.3.2.1.2.3.5.5.5.5.5'].should == 'random_oid'
+    expect(subject['1.4.3.2.1.2.3.5.5.5.5.5']).to eq('random_oid')
     expect { R509::Subject.new [['myOIDName', 'random_oid']] }.to raise_error(OpenSSL::X509::NameError, 'invalid field name')
 
-    R509::OIDMapper.register('1.4.3.2.1.2.3.5.5.5.5.5', 'myOIDName').should == true
+    expect(R509::OIDMapper.register('1.4.3.2.1.2.3.5.5.5.5.5', 'myOIDName')).to eq(true)
     subject_new = R509::Subject.new [['myOIDName', 'random_oid']]
-    subject_new['myOIDName'].should == 'random_oid'
+    expect(subject_new['myOIDName']).to eq('random_oid')
   end
 
   it "registers a batch of new oids" do
@@ -25,8 +25,8 @@ describe R509::OIDMapper do
       { :oid => '1.4.3.2.1.2.5.4.4.4.4', :short_name => 'anotherOIDName' }
     ])
     subject_new = R509::Subject.new [['testOIDName', 'random_oid'], ['anotherOIDName', 'second_random']]
-    subject_new['testOIDName'].should == 'random_oid'
-    subject_new['anotherOIDName'].should == 'second_random'
+    expect(subject_new['testOIDName']).to eq('random_oid')
+    expect(subject_new['anotherOIDName']).to eq('second_random')
   end
 
   it "registers a batch of oids from YAML" do
@@ -35,7 +35,7 @@ describe R509::OIDMapper do
     yaml_data = "---\ncustom_oids:\n- :oid: 1.4.3.2.1.2.3.4.4.4.5\n  :short_name: thirdOIDName\n- :oid: 1.4.3.2.1.2.5.4.4.4.5\n  :short_name: fourthOIDName\n"
     R509::OIDMapper.register_from_yaml("custom_oids", yaml_data)
     subject_new = R509::Subject.new [['thirdOIDName', 'random_oid'], ['fourthOIDName', 'second_random']]
-    subject_new['thirdOIDName'].should == 'random_oid'
-    subject_new['fourthOIDName'].should == 'second_random'
+    expect(subject_new['thirdOIDName']).to eq('random_oid')
+    expect(subject_new['fourthOIDName']).to eq('second_random')
   end
 end

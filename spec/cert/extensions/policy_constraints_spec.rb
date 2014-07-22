@@ -12,10 +12,10 @@ shared_examples_for "a correct R509 PolicyConstraints object" do |critical|
   end
 
   it "should have the expected require policy" do
-    @r509_ext.require_explicit_policy.should == @require_explicit_policy
+    expect(@r509_ext.require_explicit_policy).to eq(@require_explicit_policy)
   end
   it "should have the expected inhibit mapping" do
-    @r509_ext.inhibit_policy_mapping.should == @inhibit_policy_mapping
+    expect(@r509_ext.inhibit_policy_mapping).to eq(@inhibit_policy_mapping)
   end
 end
 
@@ -49,11 +49,11 @@ describe R509::Cert::Extensions::PolicyConstraints do
         end
 
         it "creates extension" do
-          @pc.require_explicit_policy.should == 1
+          expect(@pc.require_explicit_policy).to eq(1)
         end
 
         it "builds yaml" do
-          YAML.load(@pc.to_yaml).should == @args
+          expect(YAML.load(@pc.to_yaml)).to eq(@args)
         end
       end
 
@@ -64,11 +64,11 @@ describe R509::Cert::Extensions::PolicyConstraints do
         end
 
         it "creates extension" do
-          @pc.inhibit_policy_mapping.should == 1
+          expect(@pc.inhibit_policy_mapping).to eq(1)
         end
 
         it "builds yaml" do
-          YAML.load(@pc.to_yaml).should == @args
+          expect(YAML.load(@pc.to_yaml)).to eq(@args)
         end
       end
 
@@ -83,12 +83,12 @@ describe R509::Cert::Extensions::PolicyConstraints do
         end
 
         it "creates extension" do
-          @pc.inhibit_policy_mapping.should == 1
-          @pc.require_explicit_policy.should == 3
+          expect(@pc.inhibit_policy_mapping).to eq(1)
+          expect(@pc.require_explicit_policy).to eq(3)
         end
 
         it "builds yaml" do
-          YAML.load(@pc.to_yaml).should == @args
+          expect(YAML.load(@pc.to_yaml)).to eq(@args)
         end
       end
 
@@ -99,11 +99,11 @@ describe R509::Cert::Extensions::PolicyConstraints do
         end
 
         it "creates extension" do
-          @pc.critical?.should == true
+          expect(@pc.critical?).to eq(true)
         end
 
         it "builds yaml" do
-          YAML.load(@pc.to_yaml).should == @args.merge(:critical => true)
+          expect(YAML.load(@pc.to_yaml)).to eq(@args.merge(:critical => true))
         end
       end
 
@@ -114,11 +114,11 @@ describe R509::Cert::Extensions::PolicyConstraints do
         end
 
         it "creates extension" do
-          @pc.critical?.should == false
+          expect(@pc.critical?).to eq(false)
         end
 
         it "builds yaml" do
-          YAML.load(@pc.to_yaml).should == @args
+          expect(YAML.load(@pc.to_yaml)).to eq(@args)
         end
       end
 

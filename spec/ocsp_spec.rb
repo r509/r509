@@ -19,37 +19,37 @@ describe R509::OCSP::Response do
   end
   it "parses a response der and returns the right object on #parse" do
     ocsp_response = R509::OCSP::Response.parse(@ocsp_response_der)
-    ocsp_response.kind_of?(R509::OCSP::Response).should == true
-    ocsp_response.status.should == OpenSSL::OCSP::RESPONSE_STATUS_SUCCESSFUL
+    expect(ocsp_response.kind_of?(R509::OCSP::Response)).to eq(true)
+    expect(ocsp_response.status).to eq(OpenSSL::OCSP::RESPONSE_STATUS_SUCCESSFUL)
   end
   it "returns data on to_der" do
     ocsp_response = R509::OCSP::Response.parse(@ocsp_response_der)
-    ocsp_response.to_der.should_not be_nil
+    expect(ocsp_response.to_der).not_to be_nil
   end
   it "returns a BasicResponse object on #basic" do
     ocsp_response = R509::OCSP::Response.parse(@ocsp_response_der)
-    ocsp_response.basic.kind_of?(OpenSSL::OCSP::BasicResponse).should == true
+    expect(ocsp_response.basic.kind_of?(OpenSSL::OCSP::BasicResponse)).to eq(true)
   end
   it "returns true if response verifies (in validity period, chain builds to trusted root that's provided)" do
     ocsp_response = R509::OCSP::Response.parse(@test_ca_ocsp_response)
-    ocsp_response.verify(TestFixtures.test_ca_config.ca_cert.cert).should == true
+    expect(ocsp_response.verify(TestFixtures.test_ca_config.ca_cert.cert)).to eq(true)
   end
   it "verify supports an single certificate and uses it to validate" do
     ocsp_response = R509::OCSP::Response.parse(@test_ca_ocsp_response)
-    ocsp_response.verify(TestFixtures.test_ca_config.ca_cert.cert).should == true
+    expect(ocsp_response.verify(TestFixtures.test_ca_config.ca_cert.cert)).to eq(true)
   end
   it "verify supports an array of certificates and uses all of them to validate a chain" do
     ocsp_response = R509::OCSP::Response.parse(@test_ca_subroot_ocsp_response)
-    ocsp_response.verify([TestFixtures.test_ca_config.ca_cert.cert, TestFixtures.test_ca_subroot_cert.cert]).should == true
+    expect(ocsp_response.verify([TestFixtures.test_ca_config.ca_cert.cert, TestFixtures.test_ca_subroot_cert.cert])).to eq(true)
   end
   it "verify returns false if you don't give it enough certs to build a chain to a trusted root" do
     ocsp_response = R509::OCSP::Response.parse(@test_ca_subroot_ocsp_response)
-    ocsp_response.verify([TestFixtures.test_ca_config.ca_cert.cert]).should == false
+    expect(ocsp_response.verify([TestFixtures.test_ca_config.ca_cert.cert])).to eq(false)
   end
   it "returns false if response does not verify" do
     # expired response
     ocsp_response = R509::OCSP::Response.parse(@ocsp_response_der)
-    ocsp_response.verify(OpenSSL::X509::Certificate.new(@stca_cert)).should == false
+    expect(ocsp_response.verify(OpenSSL::X509::Certificate.new(@stca_cert))).to eq(false)
   end
   it "nonce is present and equal" do
     ocsp_request = OpenSSL::OCSP::Request.new
@@ -57,20 +57,20 @@ describe R509::OCSP::Response do
     basic_response = OpenSSL::OCSP::BasicResponse.new
     basic_response.copy_nonce(ocsp_request)
     response_double = double("ocsp_response")
-    response_double.should_receive(:kind_of?).and_return('OpenSSL::OCSP::Response')
-    response_double.should_receive(:basic).and_return(basic_response)
+    expect(response_double).to receive(:kind_of?).and_return('OpenSSL::OCSP::Response')
+    expect(response_double).to receive(:basic).and_return(basic_response)
     ocsp_response = R509::OCSP::Response.new(response_double)
-    ocsp_response.check_nonce(ocsp_request).should == R509::OCSP::Request::Nonce::PRESENT_AND_EQUAL
+    expect(ocsp_response.check_nonce(ocsp_request)).to eq(R509::OCSP::Request::Nonce::PRESENT_AND_EQUAL)
   end
   it "no nonce" do
     ocsp_request = OpenSSL::OCSP::Request.new
     basic_response = OpenSSL::OCSP::BasicResponse.new
     basic_response.copy_nonce(ocsp_request)
     response_double = double("ocsp_response")
-    response_double.should_receive(:kind_of?).and_return('OpenSSL::OCSP::Response')
-    response_double.should_receive(:basic).and_return(basic_response)
+    expect(response_double).to receive(:kind_of?).and_return('OpenSSL::OCSP::Response')
+    expect(response_double).to receive(:basic).and_return(basic_response)
     ocsp_response = R509::OCSP::Response.new(response_double)
-    ocsp_response.check_nonce(ocsp_request).should == R509::OCSP::Request::Nonce::BOTH_ABSENT
+    expect(ocsp_response.check_nonce(ocsp_request)).to eq(R509::OCSP::Request::Nonce::BOTH_ABSENT)
   end
   it "has a nonce in the response only" do
     ocsp_request = OpenSSL::OCSP::Request.new
@@ -79,10 +79,10 @@ describe R509::OCSP::Response do
     basic_response = OpenSSL::OCSP::BasicResponse.new
     basic_response.copy_nonce(nonce_request)
     response_double = double("ocsp_response")
-    response_double.should_receive(:kind_of?).and_return('OpenSSL::OCSP::Response')
-    response_double.should_receive(:basic).and_return(basic_response)
+    expect(response_double).to receive(:kind_of?).and_return('OpenSSL::OCSP::Response')
+    expect(response_double).to receive(:basic).and_return(basic_response)
     ocsp_response = R509::OCSP::Response.new(response_double)
-    ocsp_response.check_nonce(ocsp_request).should == R509::OCSP::Request::Nonce::RESPONSE_ONLY
+    expect(ocsp_response.check_nonce(ocsp_request)).to eq(R509::OCSP::Request::Nonce::RESPONSE_ONLY)
   end
   it "nonce in request and response is not equal" do
     ocsp_request = OpenSSL::OCSP::Request.new
@@ -92,20 +92,20 @@ describe R509::OCSP::Response do
     basic_response = OpenSSL::OCSP::BasicResponse.new
     basic_response.copy_nonce(ocsp_request)
     response_double = double("ocsp_response")
-    response_double.should_receive(:kind_of?).and_return('OpenSSL::OCSP::Response')
-    response_double.should_receive(:basic).and_return(basic_response)
+    expect(response_double).to receive(:kind_of?).and_return('OpenSSL::OCSP::Response')
+    expect(response_double).to receive(:basic).and_return(basic_response)
     ocsp_response = R509::OCSP::Response.new(response_double)
-    ocsp_response.check_nonce(second_request).should == R509::OCSP::Request::Nonce::NOT_EQUAL
+    expect(ocsp_response.check_nonce(second_request)).to eq(R509::OCSP::Request::Nonce::NOT_EQUAL)
   end
   it "nonce in request only" do
     ocsp_request = OpenSSL::OCSP::Request.new
     ocsp_request.add_nonce
     basic_response = OpenSSL::OCSP::BasicResponse.new
     response_double = double("ocsp_response")
-    response_double.should_receive(:kind_of?).and_return('OpenSSL::OCSP::Response')
-    response_double.should_receive(:basic).and_return(basic_response)
+    expect(response_double).to receive(:kind_of?).and_return('OpenSSL::OCSP::Response')
+    expect(response_double).to receive(:basic).and_return(basic_response)
     ocsp_response = R509::OCSP::Response.new(response_double)
-    ocsp_response.check_nonce(ocsp_request).should == R509::OCSP::Request::Nonce::REQUEST_ONLY
+    expect(ocsp_response.check_nonce(ocsp_request)).to eq(R509::OCSP::Request::Nonce::REQUEST_ONLY)
   end
 
 end

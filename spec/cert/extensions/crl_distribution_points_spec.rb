@@ -12,11 +12,11 @@ shared_examples_for "a correct R509 CRLDistributionPoints object" do |critical|
   end
 
   it "crl_uri should be correct critical:#{critical}" do
-    @r509_ext.uris.should == @crl_uris
+    expect(@r509_ext.uris).to eq(@crl_uris)
   end
 
   it "reports #critical? properly" do
-    @r509_ext.critical?.should == critical
+    expect(@r509_ext.critical?).to eq(critical)
   end
 end
 
@@ -53,11 +53,11 @@ describe R509::Cert::Extensions::CRLDistributionPoints do
         end
 
         it "creates extension" do
-          @cdp.rfc_822_names.should == ['random string']
+          expect(@cdp.rfc_822_names).to eq(['random string'])
         end
 
         it "builds yaml" do
-          YAML.load(@cdp.to_yaml).should == { :critical => false, :value => [{ :type => "email", :value => "random string" }] }
+          expect(YAML.load(@cdp.to_yaml)).to eq({ :critical => false, :value => [{ :type => "email", :value => "random string" }] })
         end
       end
 
@@ -68,11 +68,11 @@ describe R509::Cert::Extensions::CRLDistributionPoints do
         end
 
         it "creates extension" do
-          @cdp.uris.should == ['http://crl.r509.org/ca.crl']
+          expect(@cdp.uris).to eq(['http://crl.r509.org/ca.crl'])
         end
 
         it "builds yaml" do
-          YAML.load(@cdp.to_yaml).should == @args
+          expect(YAML.load(@cdp.to_yaml)).to eq(@args)
         end
       end
 
@@ -83,12 +83,12 @@ describe R509::Cert::Extensions::CRLDistributionPoints do
         end
 
         it "creates extension" do
-          @cdp.uris.should == ['http://crl.r509.org/ca.crl']
-          @cdp.directory_names[0].to_s.should == '/CN=myCN'
+          expect(@cdp.uris).to eq(['http://crl.r509.org/ca.crl'])
+          expect(@cdp.directory_names[0].to_s).to eq('/CN=myCN')
         end
 
         it "builds yaml" do
-          YAML.load(@cdp.to_yaml).should == @args
+          expect(YAML.load(@cdp.to_yaml)).to eq(@args)
         end
       end
 
@@ -99,11 +99,11 @@ describe R509::Cert::Extensions::CRLDistributionPoints do
         end
 
         it "creates extension" do
-          @cdp.critical?.should be_false
+          expect(@cdp.critical?).to be false
         end
 
         it "builds yaml" do
-          YAML.load(@cdp.to_yaml).should == @args.merge(:critical => false)
+          expect(YAML.load(@cdp.to_yaml)).to eq(@args.merge(:critical => false))
         end
       end
 
@@ -114,11 +114,11 @@ describe R509::Cert::Extensions::CRLDistributionPoints do
         end
 
         it "creates extension" do
-          @cdp.critical?.should be_true
+          expect(@cdp.critical?).to be true
         end
 
         it "builds yaml" do
-          YAML.load(@cdp.to_yaml).should == @args
+          expect(YAML.load(@cdp.to_yaml)).to eq(@args)
         end
       end
 

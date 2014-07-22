@@ -14,14 +14,14 @@ shared_examples_for "a correct R509 NameConstraints object" do |critical|
 
   it "should have the permitted names" do
     @permitted.each_with_index do |name, index|
-      @r509_ext.permitted.names[index].tag.should == name[:tag]
-      @r509_ext.permitted.names[index].value.should == name[:value]
+      expect(@r509_ext.permitted.names[index].tag).to eq(name[:tag])
+      expect(@r509_ext.permitted.names[index].value).to eq(name[:value])
     end
   end
   it "should have the excluded names" do
     @excluded.each_with_index do |name, index|
-      @r509_ext.excluded.names[index].tag.should == name[:tag]
-      @r509_ext.excluded.names[index].value.should == name[:value]
+      expect(@r509_ext.excluded.names[index].tag).to eq(name[:tag])
+      expect(@r509_ext.excluded.names[index].value).to eq(name[:value])
     end
   end
 end
@@ -61,13 +61,13 @@ describe R509::Cert::Extensions::NameConstraints do
         end
 
         it "creates extension" do
-          @nc.permitted.names.size.should == 1
-          @nc.permitted.names[0].value.should == 'domain.com'
-          @nc.permitted.names[0].short_type.should == 'DNS'
+          expect(@nc.permitted.names.size).to eq(1)
+          expect(@nc.permitted.names[0].value).to eq('domain.com')
+          expect(@nc.permitted.names[0].short_type).to eq('DNS')
         end
 
         it "builds yaml" do
-          YAML.load(@nc.to_yaml).should == @args
+          expect(YAML.load(@nc.to_yaml)).to eq(@args)
         end
       end
 
@@ -85,17 +85,17 @@ describe R509::Cert::Extensions::NameConstraints do
         end
 
         it "creates extension" do
-          @nc.permitted.names.size.should == 3
-          @nc.permitted.names[0].value.should == 'domain.com'
-          @nc.permitted.names[0].short_type.should == 'DNS'
-          @nc.permitted.names[1].value.should == '127.0.0.1/255.255.255.255'
-          @nc.permitted.names[1].short_type.should == 'IP'
-          @nc.permitted.names[2].value.to_s.should == '/CN=myCN/O=myO/C=US'
-          @nc.permitted.names[2].short_type.should == 'dirName'
+          expect(@nc.permitted.names.size).to eq(3)
+          expect(@nc.permitted.names[0].value).to eq('domain.com')
+          expect(@nc.permitted.names[0].short_type).to eq('DNS')
+          expect(@nc.permitted.names[1].value).to eq('127.0.0.1/255.255.255.255')
+          expect(@nc.permitted.names[1].short_type).to eq('IP')
+          expect(@nc.permitted.names[2].value.to_s).to eq('/CN=myCN/O=myO/C=US')
+          expect(@nc.permitted.names[2].short_type).to eq('dirName')
         end
 
         it "builds yaml" do
-          YAML.load(@nc.to_yaml).should == @args
+          expect(YAML.load(@nc.to_yaml)).to eq(@args)
         end
       end
 
@@ -106,13 +106,13 @@ describe R509::Cert::Extensions::NameConstraints do
         end
 
         it "creates extension" do
-          @nc.excluded.names.size.should == 1
-          @nc.excluded.names[0].value.should == 'domain.com'
-          @nc.excluded.names[0].short_type.should == 'DNS'
+          expect(@nc.excluded.names.size).to eq(1)
+          expect(@nc.excluded.names[0].value).to eq('domain.com')
+          expect(@nc.excluded.names[0].short_type).to eq('DNS')
         end
 
         it "builds yaml" do
-          YAML.load(@nc.to_yaml).should == @args
+          expect(YAML.load(@nc.to_yaml)).to eq(@args)
         end
       end
 
@@ -130,17 +130,17 @@ describe R509::Cert::Extensions::NameConstraints do
         end
 
         it "creates extension" do
-          @nc.excluded.names.size.should == 3
-          @nc.excluded.names[0].value.should == 'domain.com'
-          @nc.excluded.names[0].short_type.should == 'DNS'
-          @nc.excluded.names[1].value.should == '127.0.0.1/255.255.255.255'
-          @nc.excluded.names[1].short_type.should == 'IP'
-          @nc.excluded.names[2].value.to_s.should == '/CN=myCN/O=myO/C=US'
-          @nc.excluded.names[2].short_type.should == 'dirName'
+          expect(@nc.excluded.names.size).to eq(3)
+          expect(@nc.excluded.names[0].value).to eq('domain.com')
+          expect(@nc.excluded.names[0].short_type).to eq('DNS')
+          expect(@nc.excluded.names[1].value).to eq('127.0.0.1/255.255.255.255')
+          expect(@nc.excluded.names[1].short_type).to eq('IP')
+          expect(@nc.excluded.names[2].value.to_s).to eq('/CN=myCN/O=myO/C=US')
+          expect(@nc.excluded.names[2].short_type).to eq('dirName')
         end
 
         it "builds yaml" do
-          YAML.load(@nc.to_yaml).should == @args
+          expect(YAML.load(@nc.to_yaml)).to eq(@args)
         end
       end
 
@@ -163,24 +163,24 @@ describe R509::Cert::Extensions::NameConstraints do
         end
 
         it "creates extension" do
-          @nc.permitted.names.size.should == 3
-          @nc.permitted.names[0].value.should == 'domain.com'
-          @nc.permitted.names[0].short_type.should == 'DNS'
-          @nc.permitted.names[1].value.should == '127.0.0.1/255.255.255.255'
-          @nc.permitted.names[1].short_type.should == 'IP'
-          @nc.permitted.names[2].value.to_s.should == '/CN=myCN/O=myO/C=US'
-          @nc.permitted.names[2].short_type.should == 'dirName'
-          @nc.excluded.names.size.should == 3
-          @nc.excluded.names[0].value.should == 'domain.com'
-          @nc.excluded.names[0].short_type.should == 'DNS'
-          @nc.excluded.names[1].value.should == '127.0.0.1/255.255.255.255'
-          @nc.excluded.names[1].short_type.should == 'IP'
-          @nc.excluded.names[2].value.to_s.should == '/CN=myCN/O=myO/C=US'
-          @nc.excluded.names[2].short_type.should == 'dirName'
+          expect(@nc.permitted.names.size).to eq(3)
+          expect(@nc.permitted.names[0].value).to eq('domain.com')
+          expect(@nc.permitted.names[0].short_type).to eq('DNS')
+          expect(@nc.permitted.names[1].value).to eq('127.0.0.1/255.255.255.255')
+          expect(@nc.permitted.names[1].short_type).to eq('IP')
+          expect(@nc.permitted.names[2].value.to_s).to eq('/CN=myCN/O=myO/C=US')
+          expect(@nc.permitted.names[2].short_type).to eq('dirName')
+          expect(@nc.excluded.names.size).to eq(3)
+          expect(@nc.excluded.names[0].value).to eq('domain.com')
+          expect(@nc.excluded.names[0].short_type).to eq('DNS')
+          expect(@nc.excluded.names[1].value).to eq('127.0.0.1/255.255.255.255')
+          expect(@nc.excluded.names[1].short_type).to eq('IP')
+          expect(@nc.excluded.names[2].value.to_s).to eq('/CN=myCN/O=myO/C=US')
+          expect(@nc.excluded.names[2].short_type).to eq('dirName')
         end
 
         it "builds yaml" do
-          YAML.load(@nc.to_yaml).should == @args
+          expect(YAML.load(@nc.to_yaml)).to eq(@args)
         end
       end
 
@@ -191,11 +191,11 @@ describe R509::Cert::Extensions::NameConstraints do
         end
 
         it "creates extension" do
-          @nc.critical?.should == true
+          expect(@nc.critical?).to eq(true)
         end
 
         it "builds yaml" do
-          YAML.load(@nc.to_yaml).should == @args.merge(:critical => true)
+          expect(YAML.load(@nc.to_yaml)).to eq(@args.merge(:critical => true))
         end
       end
 
@@ -206,11 +206,11 @@ describe R509::Cert::Extensions::NameConstraints do
         end
 
         it "creates extension" do
-          @nc.critical?.should == false
+          expect(@nc.critical?).to eq(false)
         end
 
         it "builds yaml" do
-          YAML.load(@nc.to_yaml).should == @args
+          expect(YAML.load(@nc.to_yaml)).to eq(@args)
         end
       end
 
