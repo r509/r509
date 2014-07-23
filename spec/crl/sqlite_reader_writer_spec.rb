@@ -13,7 +13,7 @@ describe R509::CRL::SQLiteReaderWriter do
 
   it 'creates the schema automatically if its missing' do
     R509::CRL::SQLiteReaderWriter.new empty_db
-    db.execute('SELECT * FROM sqlite_master').should_not be_empty
+    expect(db.execute('SELECT * FROM sqlite_master')).not_to be_empty
   end
 
   it 'reads a crl list' do
@@ -22,21 +22,21 @@ describe R509::CRL::SQLiteReaderWriter do
 
   it 'writes a crl list entry' do
     rw.write_list_entry(1, 1, nil)
-    db.execute("SELECT * FROM revoked_serials WHERE serial='1' AND revoked_at=1 AND reason is null").should_not be_empty
+    expect(db.execute("SELECT * FROM revoked_serials WHERE serial='1' AND revoked_at=1 AND reason is null")).not_to be_empty
   end
 
   it 'removes a crl list entry' do
     rw.remove_list_entry(12345)
-    db.execute("SELECT * FROM revoked_serials WHERE serial='12345'").should be_empty
+    expect(db.execute("SELECT * FROM revoked_serials WHERE serial='12345'")).to be_empty
   end
 
   it 'reads a number' do
     db.execute("UPDATE crl_number set number=5")
-    rw.read_number.should == 5
+    expect(rw.read_number).to eq(5)
   end
 
   it 'writes a crl number' do
     rw.write_number 6
-    db.get_first_value("SELECT number from crl_number").should == 6
+    expect(db.get_first_value("SELECT number from crl_number")).to eq(6)
   end
 end

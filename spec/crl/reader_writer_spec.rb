@@ -34,22 +34,22 @@ describe R509::CRL::FileReaderWriter do
 
   it "handles nil crl_list_file in read_list" do
     @rw.crl_list_file = nil
-    @rw.read_list.should be_nil
+    expect(@rw.read_list).to be_nil
   end
 
   it "handles nil crl_list_file in write_list_entry" do
     @rw.crl_list_file = nil
-    @rw.write_list_entry(1, 1, nil).should be_nil
+    expect(@rw.write_list_entry(1, 1, nil)).to be_nil
   end
 
   it "handles nil crl_number_file in read_number" do
     @rw.crl_number_file = nil
-    @rw.read_number.should == 0
+    expect(@rw.read_number).to eq(0)
   end
 
   it "handles nil crl_number_file in write_number" do
     @rw.crl_number_file = nil
-    @rw.write_number(0).should be_nil
+    expect(@rw.write_number(0)).to be_nil
   end
 
   it "reads a crl list" do
@@ -65,20 +65,20 @@ describe R509::CRL::FileReaderWriter do
     sio = StringIO.new
     @rw.crl_list_file = sio
     @rw.write_list_entry(1, 1, nil)
-    sio.string.should == "1,1,\n"
+    expect(sio.string).to eq("1,1,\n")
     @rw.write_list_entry(2, 2, 1)
-    sio.string.should == "1,1,\n2,2,1\n"
+    expect(sio.string).to eq("1,1,\n2,2,1\n")
   end
 
   it "removes a crl list entry" do
     sio = StringIO.new
     @rw.crl_list_file = sio
     @rw.write_list_entry(1, 1, nil)
-    sio.string.should == "1,1,\n"
+    expect(sio.string).to eq("1,1,\n")
     @rw.write_list_entry(2, 2, 1)
-    sio.string.should == "1,1,\n2,2,1\n"
+    expect(sio.string).to eq("1,1,\n2,2,1\n")
     @rw.remove_list_entry(2)
-    sio.string.should == "1,1,\n"
+    expect(sio.string).to eq("1,1,\n")
   end
 
   it "reads a number" do
@@ -86,13 +86,13 @@ describe R509::CRL::FileReaderWriter do
     sio.write("500")
     sio.rewind # rewind the pointer to the beginning so the next read catche the 500
     @rw.crl_number_file = sio
-    @rw.read_number.should == 500
+    expect(@rw.read_number).to eq(500)
   end
 
   it "writes a crl number" do
     sio = StringIO.new
     @rw.crl_number_file = sio
     @rw.write_number(30)
-    @rw.crl_number_file.string.should == "30"
+    expect(@rw.crl_number_file.string).to eq("30")
   end
 end

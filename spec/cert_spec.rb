@@ -54,79 +54,79 @@ describe R509::Cert do
     # this is more complex than it should have to be. diff versions of openssl
     # return subtly diff PEM encodings so we need to look at the modulus (n)
     # but beware, because n is not present for DSA certificates
-    cert.public_key.n.to_i.should == @cert_public_key_modulus.to_i
+    expect(cert.public_key.n.to_i).to eq(@cert_public_key_modulus.to_i)
   end
   it "returns bit strength" do
     cert = R509::Cert.new(:cert => @cert)
-    cert.bit_strength.should == 2048
+    expect(cert.bit_strength).to eq(2048)
   end
   it "has the right issuer" do
     cert = R509::Cert.new(:cert => @cert)
-    cert.issuer.to_s.should == "/C=US/O=SecureTrust Corporation/CN=SecureTrust CA"
+    expect(cert.issuer.to_s).to eq("/C=US/O=SecureTrust Corporation/CN=SecureTrust CA")
   end
   it "generates certificate fingerprints" do
     cert = R509::Cert.new(:cert => @cert)
-    cert.fingerprint.should == '863bbb58877b426eb10ccfd34d3056b8c961f627'
-    cert.fingerprint('sha256').should == '65d624f5a6937c3005d78b3f4ff09164649dd5aeb3fd8a93d6fd420e8b587fa2'
-    cert.fingerprint('sha512').should == 'a07d87f04161f52ef671c9d616530d07ebadef9c93c0470091617363c9ce8618dcb7931414e599d25cb032d68597111719e76d7de4bb7a92bf5ca7c08c36cf12'
-    cert.fingerprint('md5').should == 'aa78501c41b19252dfbe8ba509cc21f4'
+    expect(cert.fingerprint).to eq('863bbb58877b426eb10ccfd34d3056b8c961f627')
+    expect(cert.fingerprint('sha256')).to eq('65d624f5a6937c3005d78b3f4ff09164649dd5aeb3fd8a93d6fd420e8b587fa2')
+    expect(cert.fingerprint('sha512')).to eq('a07d87f04161f52ef671c9d616530d07ebadef9c93c0470091617363c9ce8618dcb7931414e599d25cb032d68597111719e76d7de4bb7a92bf5ca7c08c36cf12')
+    expect(cert.fingerprint('md5')).to eq('aa78501c41b19252dfbe8ba509cc21f4')
   end
   it "returns true from has_private_key? when a key is present" do
     cert = R509::Cert.new(:cert => @cert3, :key => @key3)
-    cert.has_private_key?.should == true
+    expect(cert.has_private_key?).to eq(true)
   end
   it "returns false from has_private_key? when a key is not present" do
     cert = R509::Cert.new(:cert => @cert)
-    cert.has_private_key?.should == false
+    expect(cert.has_private_key?).to eq(false)
   end
   it "loads encrypted private key with cert" do
     expect { R509::Cert.new(:cert => @cert3, :key => @key3_encrypted, :password => "r509") }.to_not raise_error
   end
   it "loads pkcs12" do
     cert = R509::Cert.new(:pkcs12 => @cert3_p12, :password => "r509")
-    cert.has_private_key?.should == true
-    cert.subject.to_s.should == '/CN=futurama.com/O=Farnsworth Enterprises'
+    expect(cert.has_private_key?).to eq(true)
+    expect(cert.subject.to_s).to eq('/CN=futurama.com/O=Farnsworth Enterprises')
   end
   it "has the right not_before" do
     cert = R509::Cert.new(:cert => @cert)
-    cert.not_before.to_i.should == 1282659002
+    expect(cert.not_before.to_i).to eq(1282659002)
   end
   it "has the right not_after" do
     cert = R509::Cert.new(:cert => @cert)
-    cert.not_after.to_i.should == 1377267002
+    expect(cert.not_after.to_i).to eq(1377267002)
   end
   it "returns signature algorithm" do
     cert = R509::Cert.new(:cert => @cert)
-    cert.signature_algorithm.should == 'sha1WithRSAEncryption'
+    expect(cert.signature_algorithm).to eq('sha1WithRSAEncryption')
   end
   it "returns the RSA key algorithm" do
     cert = R509::Cert.new(:cert => @cert)
-    cert.key_algorithm.should == "RSA"
+    expect(cert.key_algorithm).to eq("RSA")
   end
   it "returns the DSA key algorithm" do
     cert = R509::Cert.new(:cert => @cert6)
-    cert.key_algorithm.should == "DSA"
+    expect(cert.key_algorithm).to eq("DSA")
   end
   it "returns list of san names when it is a san cert" do
     cert = R509::Cert.new(:cert => @cert_san)
-    cert.san.dns_names.should == ['langui.sh']
+    expect(cert.san.dns_names).to eq(['langui.sh'])
   end
   it "#san returns nil when it is not a san cert" do
     cert = R509::Cert.new(:cert => @cert)
-    cert.san.should be_nil
+    expect(cert.san).to be_nil
   end
   it "#all_names should return a list of san names in addition to the CN" do
     cert = R509::Cert.new(:cert => @cert_san2)
-    cert.all_names.should == ["cn.langui.sh", "san1.langui.sh",
-                              "san2.langui.sh", "san3.langui.sh"]
+    expect(cert.all_names).to eq(["cn.langui.sh", "san1.langui.sh",
+                              "san2.langui.sh", "san3.langui.sh"])
   end
   it "#all_names should not have duplicates" do
     cert = R509::Cert.new(:cert => @cert_san)
-    cert.all_names.should == ["langui.sh"]
+    expect(cert.all_names).to eq(["langui.sh"])
   end
   it "#all_names should return the CN in the array even if there are no SANs" do
     cert = R509::Cert.new(:cert => @cert)
-    cert.all_names.should == ["langui.sh"]
+    expect(cert.all_names).to eq(["langui.sh"])
   end
   it "raises exception when providing invalid cert" do
     expect { R509::Cert.new(:cert => "invalid cert") }.to raise_error(OpenSSL::X509::CertificateError)
@@ -149,14 +149,14 @@ describe R509::Cert do
     sio = StringIO.new
     sio.set_encoding("BINARY") if sio.respond_to?(:set_encoding)
     cert.write_pem(sio)
-    sio.string.should == @cert
+    expect(sio.string).to eq(@cert)
   end
   it "writes to der" do
     cert = R509::Cert.new(:cert => @cert)
     sio = StringIO.new
     sio.set_encoding("BINARY") if sio.respond_to?(:set_encoding)
     cert.write_der(sio)
-    sio.string.should == @cert_der
+    expect(sio.string).to eq(@cert_der)
   end
   it "writes to pkcs12 when key/cert are present" do
     cert = R509::Cert.new(:cert => @cert3, :key => @key3)
@@ -171,105 +171,105 @@ describe R509::Cert do
   end
   it "parses san extension" do
     cert = R509::Cert.new(:cert => @cert_san)
-    cert.san.dns_names.should == ["langui.sh"]
+    expect(cert.san.dns_names).to eq(["langui.sh"])
   end
   context "when initialized with an OpenSSL::X509::Certificate" do
     it "returns pem on to_pem" do
       test_cert = OpenSSL::X509::Certificate.new(@cert)
       cert = R509::Cert.new(:cert => test_cert)
-      cert.to_pem.should == @cert
+      expect(cert.to_pem).to eq(@cert)
     end
     it "returns der on to_der" do
       test_cert = OpenSSL::X509::Certificate.new(@cert)
       cert = R509::Cert.new(:cert => test_cert)
-      cert.to_der.should == @cert_der
+      expect(cert.to_der).to eq(@cert_der)
     end
     it "returns pem on to_s" do
       test_cert = OpenSSL::X509::Certificate.new(@cert)
       cert = R509::Cert.new(:cert => test_cert)
-      cert.to_s.should == @cert
+      expect(cert.to_s).to eq(@cert)
     end
   end
   context "when initialized with a pem" do
     it "returns on to_pem" do
       cert = R509::Cert.new(:cert => @cert)
-      cert.to_pem.should == @cert
+      expect(cert.to_pem).to eq(@cert)
     end
     it "returns der on to_der" do
       cert = R509::Cert.new(:cert => @cert)
-      cert.to_der.should == @cert_der
+      expect(cert.to_der).to eq(@cert_der)
     end
     it "returns pem on to_s" do
       cert = R509::Cert.new(:cert => @cert)
-      cert.to_s.should == @cert
+      expect(cert.to_s).to eq(@cert)
     end
   end
   it "gets the right object from #basic_constraints" do
     cert = R509::Cert.new(:cert => @cert)
-    cert.basic_constraints.class.should == R509::Cert::Extensions::BasicConstraints
+    expect(cert.basic_constraints.class).to eq(R509::Cert::Extensions::BasicConstraints)
   end
   it "gets the right object from #key_usage" do
     cert = R509::Cert.new(:cert => @cert)
-    cert.key_usage.class.should == R509::Cert::Extensions::KeyUsage
+    expect(cert.key_usage.class).to eq(R509::Cert::Extensions::KeyUsage)
   end
   it "gets the right object from #key_usage" do
     cert = R509::Cert.new(:cert => @cert)
-    cert.extended_key_usage.class.should == R509::Cert::Extensions::ExtendedKeyUsage
+    expect(cert.extended_key_usage.class).to eq(R509::Cert::Extensions::ExtendedKeyUsage)
   end
   it "gets the right object from #subject_key_identifier" do
     cert = R509::Cert.new(:cert => @cert)
-    cert.subject_key_identifier.class.should == R509::Cert::Extensions::SubjectKeyIdentifier
+    expect(cert.subject_key_identifier.class).to eq(R509::Cert::Extensions::SubjectKeyIdentifier)
   end
   it "gets the right object from #authority_key_identifier" do
     cert = R509::Cert.new(:cert => @cert)
-    cert.authority_key_identifier.class.should == R509::Cert::Extensions::AuthorityKeyIdentifier
+    expect(cert.authority_key_identifier.class).to eq(R509::Cert::Extensions::AuthorityKeyIdentifier)
   end
   it "gets the right object from #subject_alternative_name" do
     cert = R509::Cert.new(:cert => @cert5)
-    cert.subject_alternative_name.class.should == R509::Cert::Extensions::SubjectAlternativeName
+    expect(cert.subject_alternative_name.class).to eq(R509::Cert::Extensions::SubjectAlternativeName)
   end
   it "gets the right object from #authority_info_access" do
     cert = R509::Cert.new(:cert => @cert5)
-    cert.authority_info_access.class.should == R509::Cert::Extensions::AuthorityInfoAccess
+    expect(cert.authority_info_access.class).to eq(R509::Cert::Extensions::AuthorityInfoAccess)
   end
   it "gets the right object from #crl_distribution_points" do
     cert = R509::Cert.new(:cert => @cert)
-    cert.crl_distribution_points.class.should == R509::Cert::Extensions::CRLDistributionPoints
+    expect(cert.crl_distribution_points.class).to eq(R509::Cert::Extensions::CRLDistributionPoints)
   end
   it "gets the right object from #certificate_policies" do
     cert = R509::Cert.new(:cert => @cert)
-    cert.certificate_policies.class.should == R509::Cert::Extensions::CertificatePolicies
+    expect(cert.certificate_policies.class).to eq(R509::Cert::Extensions::CertificatePolicies)
   end
   it "gets the right object from #inhibit_any_policy" do
     cert = R509::Cert.new(:cert => @cert_inhibit)
-    cert.inhibit_any_policy.class.should == R509::Cert::Extensions::InhibitAnyPolicy
+    expect(cert.inhibit_any_policy.class).to eq(R509::Cert::Extensions::InhibitAnyPolicy)
   end
   it "gets the right object from #policy_constraints" do
     cert = R509::Cert.new(:cert => @cert_policy_constraints)
-    cert.policy_constraints.class.should == R509::Cert::Extensions::PolicyConstraints
+    expect(cert.policy_constraints.class).to eq(R509::Cert::Extensions::PolicyConstraints)
   end
   it "gets the right object from #name_constraints" do
     cert = R509::Cert.new(:cert => @cert_name_constraints)
-    cert.name_constraints.class.should == R509::Cert::Extensions::NameConstraints
+    expect(cert.name_constraints.class).to eq(R509::Cert::Extensions::NameConstraints)
   end
   it "returns true from #ocsp_no_check? when the extension is present" do
     cert = R509::Cert.new(:cert => @cert_ocsp_no_check)
-    cert.ocsp_no_check?.should == true
+    expect(cert.ocsp_no_check?).to eq(true)
   end
   it "returns false from #ocsp_no_check? when the extension is not present" do
     cert = R509::Cert.new(:cert => @cert)
-    cert.ocsp_no_check?.should == false
+    expect(cert.ocsp_no_check?).to eq(false)
   end
 
   it "checks rsa?" do
     cert = R509::Cert.new(:cert => @cert)
-    cert.rsa?.should == true
-    cert.ec?.should == false
-    cert.dsa?.should == false
+    expect(cert.rsa?).to eq(true)
+    expect(cert.ec?).to eq(false)
+    expect(cert.dsa?).to eq(false)
   end
   it "gets RSA bit strength" do
     cert = R509::Cert.new(:cert => @cert)
-    cert.bit_strength.should == 2048
+    expect(cert.bit_strength).to eq(2048)
   end
   it "returns an error for curve_name for DSA/RSA" do
     cert = R509::Cert.new(:cert => @cert)
@@ -277,66 +277,66 @@ describe R509::Cert do
   end
   it "checks dsa?" do
     cert = R509::Cert.new(:cert => @cert6)
-    cert.rsa?.should == false
-    cert.ec?.should == false
-    cert.dsa?.should == true
+    expect(cert.rsa?).to eq(false)
+    expect(cert.ec?).to eq(false)
+    expect(cert.dsa?).to eq(true)
   end
   it "gets DSA bit strength" do
     cert = R509::Cert.new(:cert => @cert6)
-    cert.bit_strength.should == 1024
+    expect(cert.bit_strength).to eq(1024)
   end
   it "gets serial of cert" do
     cert = R509::Cert.new(:cert => @cert6)
-    cert.serial.should == 951504
+    expect(cert.serial).to eq(951504)
   end
   it "gets hexserial of cert" do
     cert = R509::Cert.new(:cert => @cert6)
-    cert.hexserial.should == "0E84D0"
+    expect(cert.hexserial).to eq("0E84D0")
   end
   it "checks a cert that is not yet valid" do
     cert = R509::Cert.new(:cert => @cert_not_yet_valid)
-    cert.valid?.should == false
+    expect(cert.valid?).to eq(false)
   end
   it "checks a cert that is in validity range" do
     cert = R509::Cert.new(:cert => @test_ca_cert)
-    cert.valid?.should == true
+    expect(cert.valid?).to eq(true)
   end
   it "checks a cert that is expired" do
     cert = R509::Cert.new(:cert => @cert_expired)
-    cert.valid?.should == false
+    expect(cert.valid?).to eq(false)
   end
   it "checks expired_at?" do
     cert = R509::Cert.new(:cert => @cert_expired)
-    cert.valid_at?(Time.utc(2009, 1, 1)).should == false
-    cert.valid_at?(Time.utc(2011, 3, 1)).should == true
-    cert.valid_at?(1298959200).should == true
-    cert.valid_at?(Time.utc(2012, 1, 1)).should == false
+    expect(cert.valid_at?(Time.utc(2009, 1, 1))).to eq(false)
+    expect(cert.valid_at?(Time.utc(2011, 3, 1))).to eq(true)
+    expect(cert.valid_at?(1298959200)).to eq(true)
+    expect(cert.valid_at?(Time.utc(2012, 1, 1))).to eq(false)
   end
   it "is revoked by crl" do
     cert = R509::Cert.new(:cert => @cert3)
     crl_admin = R509::CRL::Administrator.new(TestFixtures.test_ca_config)
     crl_admin.revoke_cert(1425751142578902223005775172931960716533532010870)
     crl = crl_admin.generate_crl
-    cert.is_revoked_by_crl?(crl).should == true
+    expect(cert.is_revoked_by_crl?(crl)).to eq(true)
   end
   it "is not revoked by crl" do
     cert = R509::Cert.new(:cert => @cert3)
     crl_admin = R509::CRL::Administrator.new(TestFixtures.test_ca_config)
     crl = crl_admin.generate_crl
-    cert.is_revoked_by_crl?(crl).should == false
+    expect(cert.is_revoked_by_crl?(crl)).to eq(false)
   end
   it "loads a cert with load_from_file" do
     path = File.dirname(__FILE__) + '/fixtures/cert1.pem'
     cert = R509::Cert.load_from_file path
-    cert.serial.to_i.should == 211653423715
+    expect(cert.serial.to_i).to eq(211653423715)
   end
   it "returns a hash for #extensions" do
     cert = R509::Cert.new(:cert => @cert3)
-    cert.extensions.kind_of?(Hash).should == true
+    expect(cert.extensions.kind_of?(Hash)).to eq(true)
   end
   it "returns an array for #unknown_extensions" do
     cert = R509::Cert.new(:cert => @cert3)
-    cert.unknown_extensions.should == []
+    expect(cert.unknown_extensions).to eq([])
   end
 
   context "elliptic curve certs", :ec => true do
@@ -360,22 +360,22 @@ describe R509::Cert do
     end
     it "returns curve name" do
       cert = R509::Cert.new(:cert => @cert_ec)
-      cert.curve_name.should == 'secp384r1'
+      expect(cert.curve_name).to eq('secp384r1')
     end
     it "checks ec?" do
       cert = R509::Cert.new(:cert => @cert_ec)
-      cert.rsa?.should == false
-      cert.dsa?.should == false
-      cert.ec?.should == true
+      expect(cert.rsa?).to eq(false)
+      expect(cert.dsa?).to eq(false)
+      expect(cert.ec?).to eq(true)
     end
     it "returns the public key" do
       cert = R509::Cert.new(:cert => @cert_ec)
       private_key = R509::PrivateKey.new(:key => @key_ec)
-      cert.public_key.to_der.should == private_key.public_key.to_der
+      expect(cert.public_key.to_der).to eq(private_key.public_key.to_der)
     end
     it "returns the key algorithm" do
       cert = R509::Cert.new(:cert => @cert_ec)
-      cert.key_algorithm.should == "EC"
+      expect(cert.key_algorithm).to eq("EC")
     end
   end
 
@@ -390,13 +390,13 @@ describe R509::Cert do
     end
     it "checks rsa?" do
       cert = R509::Cert.new(:cert => @cert)
-      cert.rsa?.should == true
-      cert.ec?.should == false
-      cert.dsa?.should == false
+      expect(cert.rsa?).to eq(true)
+      expect(cert.ec?).to eq(false)
+      expect(cert.dsa?).to eq(false)
     end
     it "returns RSA key algorithm for RSA CSR" do
       cert = R509::Cert.new(:cert => @cert)
-      cert.key_algorithm.should == "RSA"
+      expect(cert.key_algorithm).to eq("RSA")
     end
   end
 end

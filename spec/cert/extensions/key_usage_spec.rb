@@ -10,33 +10,33 @@ shared_examples_for "a correct R509 KeyUsage object" do |critical|
   end
 
   it "allowed_uses should be non-nil critical:#{critical}" do
-    @r509_ext.allowed_uses.should_not be_nil
+    expect(@r509_ext.allowed_uses).not_to be_nil
   end
 
   it "allowed_uses should be correct critical:#{critical}" do
-    @r509_ext.allowed_uses.should == @allowed_uses
+    expect(@r509_ext.allowed_uses).to eq(@allowed_uses)
   end
 
   it "the individual allowed-use functions should be correct critical:#{critical}" do
-    @r509_ext.digital_signature?.should == @allowed_uses.include?(R509::Cert::Extensions::KeyUsage::AU_DIGITAL_SIGNATURE)
-    @r509_ext.non_repudiation?.should == @allowed_uses.include?(R509::Cert::Extensions::KeyUsage::AU_NON_REPUDIATION)
-    @r509_ext.key_encipherment?.should == @allowed_uses.include?(R509::Cert::Extensions::KeyUsage::AU_KEY_ENCIPHERMENT)
-    @r509_ext.data_encipherment?.should == @allowed_uses.include?(R509::Cert::Extensions::KeyUsage::AU_DATA_ENCIPHERMENT)
-    @r509_ext.key_agreement?.should == @allowed_uses.include?(R509::Cert::Extensions::KeyUsage::AU_KEY_AGREEMENT)
-    @r509_ext.key_cert_sign?.should == @allowed_uses.include?(R509::Cert::Extensions::KeyUsage::AU_KEY_CERT_SIGN)
-    @r509_ext.crl_sign?.should == @allowed_uses.include?(R509::Cert::Extensions::KeyUsage::AU_CRL_SIGN)
-    @r509_ext.encipher_only?.should == @allowed_uses.include?(R509::Cert::Extensions::KeyUsage::AU_ENCIPHER_ONLY)
-    @r509_ext.decipher_only?.should == @allowed_uses.include?(R509::Cert::Extensions::KeyUsage::AU_DECIPHER_ONLY)
+    expect(@r509_ext.digital_signature?).to eq(@allowed_uses.include?(R509::Cert::Extensions::KeyUsage::AU_DIGITAL_SIGNATURE))
+    expect(@r509_ext.non_repudiation?).to eq(@allowed_uses.include?(R509::Cert::Extensions::KeyUsage::AU_NON_REPUDIATION))
+    expect(@r509_ext.key_encipherment?).to eq(@allowed_uses.include?(R509::Cert::Extensions::KeyUsage::AU_KEY_ENCIPHERMENT))
+    expect(@r509_ext.data_encipherment?).to eq(@allowed_uses.include?(R509::Cert::Extensions::KeyUsage::AU_DATA_ENCIPHERMENT))
+    expect(@r509_ext.key_agreement?).to eq(@allowed_uses.include?(R509::Cert::Extensions::KeyUsage::AU_KEY_AGREEMENT))
+    expect(@r509_ext.key_cert_sign?).to eq(@allowed_uses.include?(R509::Cert::Extensions::KeyUsage::AU_KEY_CERT_SIGN))
+    expect(@r509_ext.crl_sign?).to eq(@allowed_uses.include?(R509::Cert::Extensions::KeyUsage::AU_CRL_SIGN))
+    expect(@r509_ext.encipher_only?).to eq(@allowed_uses.include?(R509::Cert::Extensions::KeyUsage::AU_ENCIPHER_ONLY))
+    expect(@r509_ext.decipher_only?).to eq(@allowed_uses.include?(R509::Cert::Extensions::KeyUsage::AU_DECIPHER_ONLY))
   end
 
   it "the #allows? method should work critical:#{critical}" do
     @allowed_uses.each do |au|
-      @r509_ext.allows?(au).should == true
+      expect(@r509_ext.allows?(au)).to eq(true)
     end
   end
 
   it "reports #critical? properly" do
-    @r509_ext.critical?.should == critical
+    expect(@r509_ext.critical?).to eq(critical)
   end
 end
 
@@ -68,11 +68,11 @@ describe R509::Cert::Extensions::KeyUsage do
         end
 
         it "creates extension" do
-          @ku.allowed_uses.should == ['digitalSignature']
+          expect(@ku.allowed_uses).to eq(['digitalSignature'])
         end
 
         it "builds yaml" do
-          YAML.load(@ku.to_yaml).should == @args.merge(:critical => false)
+          expect(YAML.load(@ku.to_yaml)).to eq(@args.merge(:critical => false))
         end
       end
 
@@ -83,11 +83,11 @@ describe R509::Cert::Extensions::KeyUsage do
         end
 
         it "creates extension" do
-          @ku.allowed_uses.should == ['digitalSignature', 'keyAgreement']
+          expect(@ku.allowed_uses).to eq(['digitalSignature', 'keyAgreement'])
         end
 
         it "builds_yaml" do
-          YAML.load(@ku.to_yaml).should == @args.merge(:critical => false)
+          expect(YAML.load(@ku.to_yaml)).to eq(@args.merge(:critical => false))
         end
       end
 
@@ -98,11 +98,11 @@ describe R509::Cert::Extensions::KeyUsage do
         end
 
         it "creates extension" do
-          @ku.critical?.should be_false
+          expect(@ku.critical?).to be false
         end
 
         it "builds yaml" do
-          YAML.load(@ku.to_yaml).should == @args.merge(:critical => false)
+          expect(YAML.load(@ku.to_yaml)).to eq(@args.merge(:critical => false))
         end
       end
 
@@ -113,11 +113,11 @@ describe R509::Cert::Extensions::KeyUsage do
         end
 
         it "creates extension" do
-          @ku.critical?.should be_true
+          expect(@ku.critical?).to be true
         end
 
         it "builds yaml" do
-          YAML.load(@ku.to_yaml).should == @args
+          expect(YAML.load(@ku.to_yaml)).to eq(@args)
         end
       end
 

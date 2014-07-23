@@ -31,51 +31,51 @@ describe R509::Config::SubjectItemPolicy do
     subject_item_policy = R509::Config::SubjectItemPolicy.new("CN" => { :policy => "required" }, "O" => { :policy => "required" }, "OU" => { :policy => "optional" })
     subject = R509::Subject.new [["CN", "langui.sh"], ["OU", "Org Unit"], ["O", "Org"]]
     validated_subject = subject_item_policy.validate_subject(subject)
-    validated_subject.to_s.should == subject.to_s
+    expect(validated_subject.to_s).to eq(subject.to_s)
   end
   it "allows matched fields" do
     sip = R509::Config::SubjectItemPolicy.new("CN" => { :policy => "match", :value => "langui.sh" }, "O" => { :policy => "match", :value => "ooooor" })
     subject = R509::Subject.new [['CN', 'langui.sh'], ['O', 'ooooor']]
     validated_subject = sip.validate_subject(subject)
-    validated_subject.to_s.should == subject.to_s
+    expect(validated_subject.to_s).to eq(subject.to_s)
   end
   it "builds hash" do
     args = { "CN" => { :policy => "match", :value => "langui.sh" }, "O" => { :policy => "match", :value => "ooooor" } }
     sip = R509::Config::SubjectItemPolicy.new(args)
     # this equality check works because ruby does not compare hash order (which exists in 1.9+)
     # when doing comparison
-    sip.to_h.should == args
+    expect(sip.to_h).to eq(args)
   end
   it "builds yaml" do
     args = { "CN" => { :policy => "match", :value => "langui.sh" }, "O" => { :policy => "match", :value => "ooooor" } }
     sip = R509::Config::SubjectItemPolicy.new(args)
     # this equality check works because ruby does not compare hash order (which exists in 1.9+)
     # when doing comparison
-    YAML.load(sip.to_yaml).should == args
+    expect(YAML.load(sip.to_yaml)).to eq(args)
   end
   it "preserves subject order when applying policies" do
     subject_item_policy = R509::Config::SubjectItemPolicy.new("CN" => { :policy => "required" }, "O" => { :policy => "required" }, "OU" => { :policy => "optional" }, "L" => { :policy => "required" }, "C" => { :policy => "required" })
     subject = R509::Subject.new [["C", "US"], ["L", "Chicago"], ["ST", "Illinois"], ["CN", "langui.sh"], ["OU", "Org Unit"], ["O", "Org"]]
     validated_subject = subject_item_policy.validate_subject(subject)
-    validated_subject.to_s.should == "/C=US/L=Chicago/CN=langui.sh/OU=Org Unit/O=Org"
+    expect(validated_subject.to_s).to eq("/C=US/L=Chicago/CN=langui.sh/OU=Org Unit/O=Org")
   end
   it "removes subject items that are not in the policy" do
     subject_item_policy = R509::Config::SubjectItemPolicy.new("CN" => { :policy => "required" })
     subject = R509::Subject.new [["CN", "langui.sh"], ["OU", "Org Unit"], ["O", "Org"]]
     validated_subject = subject_item_policy.validate_subject(subject)
-    validated_subject.to_s.should == "/CN=langui.sh"
+    expect(validated_subject.to_s).to eq("/CN=langui.sh")
   end
   it "does not reorder subject items as it validates" do
     subject_item_policy = R509::Config::SubjectItemPolicy.new("CN" => { :policy => "required" }, "O" => { :policy => "required" }, "OU" => { :policy => "optional" }, "L" => { :policy => "match", :value => "Chicago" })
     subject = R509::Subject.new [["L", "Chicago"], ["CN", "langui.sh"], ["OU", "Org Unit"], ["O", "Org"]]
     validated_subject = subject_item_policy.validate_subject(subject)
-    validated_subject.to_s.should == subject.to_s
+    expect(validated_subject.to_s).to eq(subject.to_s)
   end
   it "loads all the required, optional, and match elements" do
     subject_item_policy = R509::Config::SubjectItemPolicy.new("CN" => { :policy => "required" }, "O" => { :policy => "required" }, "OU" => { :policy => "optional" }, "L" => { :policy => "required" }, "emailAddress" => { :policy => "match", :value => "some@emailaddress.com" })
-    subject_item_policy.optional.should include("OU")
-    subject_item_policy.match.should include("emailAddress")
-    subject_item_policy.match_values["emailAddress"].should == "some@emailaddress.com"
-    subject_item_policy.required.should include("CN", "O", "L")
+    expect(subject_item_policy.optional).to include("OU")
+    expect(subject_item_policy.match).to include("emailAddress")
+    expect(subject_item_policy.match_values["emailAddress"]).to eq("some@emailaddress.com")
+    expect(subject_item_policy.required).to include("CN", "O", "L")
   end
 end

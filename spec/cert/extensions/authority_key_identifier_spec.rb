@@ -13,15 +13,15 @@ shared_examples_for "a correct R509 AuthorityKeyIdentifier object" do
   end
 
   it "has the expected type" do
-    @r509_ext.oid.should == "authorityKeyIdentifier"
+    expect(@r509_ext.oid).to eq("authorityKeyIdentifier")
   end
 
   it "contains the key identifier" do
-    @r509_ext.key_identifier.should == "79:75:BB:84:3A:CB:2C:DE:7A:09:BE:31:1B:43:BC:1C:2A:4D:53:58"
+    expect(@r509_ext.key_identifier).to eq("79:75:BB:84:3A:CB:2C:DE:7A:09:BE:31:1B:43:BC:1C:2A:4D:53:58")
   end
   it "parses the authority cert issuer and serial number" do
-    @r509_ext.authority_cert_issuer.value.to_s.should == "/C=US/ST=Illinois/L=Chicago/O=Ruby CA Project/CN=Test CA"
-    @r509_ext.authority_cert_serial_number.should == 'FF:D9:C7:0B:87:37:D1:94'
+    expect(@r509_ext.authority_cert_issuer.value.to_s).to eq("/C=US/ST=Illinois/L=Chicago/O=Ruby CA Project/CN=Test CA")
+    expect(@r509_ext.authority_cert_serial_number).to eq('FF:D9:C7:0B:87:37:D1:94')
   end
 end
 
@@ -53,31 +53,31 @@ describe R509::Cert::Extensions::AuthorityKeyIdentifier do
 
     it "creates successfully with default value" do
       aki = R509::Cert::Extensions::AuthorityKeyIdentifier.new(:public_key => @cert.public_key)
-      aki.key_identifier.should_not be_nil
-      aki.authority_cert_issuer.should be_nil
+      expect(aki.key_identifier).not_to be_nil
+      expect(aki.authority_cert_issuer).to be_nil
     end
 
     it "creates successfully with issuer value" do
       aki = R509::Cert::Extensions::AuthorityKeyIdentifier.new(:issuer_subject => @cert.subject, :issuer_serial => 5, :value => "issuer:always")
-      aki.authority_cert_issuer.to_h.should == { :type => "dirName", :value => { :C => "US", :ST => "Illinois", :L => "Chicago", :O => "Ruby CA Project", :CN => "Test CA" } }
-      aki.authority_cert_serial_number.should == "05"
+      expect(aki.authority_cert_issuer.to_h).to eq({ :type => "dirName", :value => { :C => "US", :ST => "Illinois", :L => "Chicago", :O => "Ruby CA Project", :CN => "Test CA" } })
+      expect(aki.authority_cert_serial_number).to eq("05")
     end
 
     it "creates successfully with issuer+keyid value" do
       aki = R509::Cert::Extensions::AuthorityKeyIdentifier.new(:issuer_subject => @cert.subject, :issuer_serial => 5, :public_key => @cert.public_key, :value => "issuer:always,keyid:always")
-      aki.authority_cert_issuer.to_h.should == { :type => "dirName", :value => { :C => "US", :ST => "Illinois", :L => "Chicago", :O => "Ruby CA Project", :CN => "Test CA" } }
-      aki.authority_cert_serial_number.should_not be_nil
-      aki.key_identifier.should_not be_nil
+      expect(aki.authority_cert_issuer.to_h).to eq({ :type => "dirName", :value => { :C => "US", :ST => "Illinois", :L => "Chicago", :O => "Ruby CA Project", :CN => "Test CA" } })
+      expect(aki.authority_cert_serial_number).not_to be_nil
+      expect(aki.key_identifier).not_to be_nil
     end
 
     it "creates with default criticality" do
       aki = R509::Cert::Extensions::AuthorityKeyIdentifier.new(:public_key => @cert.public_key)
-      aki.critical?.should be_false
+      expect(aki.critical?).to be false
     end
 
     it "creates with non-default criticality" do
       aki = R509::Cert::Extensions::AuthorityKeyIdentifier.new(:public_key => @cert.public_key, :critical => true)
-      aki.critical?.should be_true
+      expect(aki.critical?).to be true
     end
 
   end

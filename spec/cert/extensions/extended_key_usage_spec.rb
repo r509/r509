@@ -12,31 +12,31 @@ shared_examples_for "a correct R509 ExtendedKeyUsage object" do |critical|
   end
 
   it "allowed_uses should be non-nil critical:#{critical}" do
-    @r509_ext.allowed_uses.should_not be_nil
+    expect(@r509_ext.allowed_uses).not_to be_nil
   end
 
   it "allowed_uses should be correct critical:#{critical}" do
-    @r509_ext.allowed_uses.should == @allowed_uses
+    expect(@r509_ext.allowed_uses).to eq(@allowed_uses)
   end
 
   it "the individual allowed-use functions should be correct critical:#{critical}" do
-    @r509_ext.web_server_authentication?.should == @allowed_uses.include?(ExtendedKeyUsage::AU_WEB_SERVER_AUTH)
-    @r509_ext.web_client_authentication?.should == @allowed_uses.include?(ExtendedKeyUsage::AU_WEB_CLIENT_AUTH)
-    @r509_ext.code_signing?.should == @allowed_uses.include?(ExtendedKeyUsage::AU_CODE_SIGNING)
-    @r509_ext.email_protection?.should == @allowed_uses.include?(ExtendedKeyUsage::AU_EMAIL_PROTECTION)
-    @r509_ext.ocsp_signing?.should == @allowed_uses.include?(ExtendedKeyUsage::AU_OCSP_SIGNING)
-    @r509_ext.time_stamping?.should == @allowed_uses.include?(ExtendedKeyUsage::AU_TIME_STAMPING)
-    @r509_ext.any_extended_key_usage?.should == @allowed_uses.include?(ExtendedKeyUsage::AU_ANY_EXTENDED_KEY_USAGE)
+    expect(@r509_ext.web_server_authentication?).to eq(@allowed_uses.include?(ExtendedKeyUsage::AU_WEB_SERVER_AUTH))
+    expect(@r509_ext.web_client_authentication?).to eq(@allowed_uses.include?(ExtendedKeyUsage::AU_WEB_CLIENT_AUTH))
+    expect(@r509_ext.code_signing?).to eq(@allowed_uses.include?(ExtendedKeyUsage::AU_CODE_SIGNING))
+    expect(@r509_ext.email_protection?).to eq(@allowed_uses.include?(ExtendedKeyUsage::AU_EMAIL_PROTECTION))
+    expect(@r509_ext.ocsp_signing?).to eq(@allowed_uses.include?(ExtendedKeyUsage::AU_OCSP_SIGNING))
+    expect(@r509_ext.time_stamping?).to eq(@allowed_uses.include?(ExtendedKeyUsage::AU_TIME_STAMPING))
+    expect(@r509_ext.any_extended_key_usage?).to eq(@allowed_uses.include?(ExtendedKeyUsage::AU_ANY_EXTENDED_KEY_USAGE))
   end
 
   it "the #allows? method should work critical:#{critical}" do
     @allowed_uses.each do |au|
-      @r509_ext.allows?(au).should == true
+      expect(@r509_ext.allows?(au)).to eq(true)
     end
   end
 
   it "reports #critical? properly" do
-    @r509_ext.critical?.should == critical
+    expect(@r509_ext.critical?).to eq(critical)
   end
 end
 
@@ -70,11 +70,11 @@ describe R509::Cert::Extensions::ExtendedKeyUsage do
         end
 
         it "creates extension" do
-          @eku.allowed_uses.should == ['serverAuth']
+          expect(@eku.allowed_uses).to eq(['serverAuth'])
         end
 
         it "builds yaml" do
-          YAML.load(@eku.to_yaml).should == @args
+          expect(YAML.load(@eku.to_yaml)).to eq(@args)
         end
       end
 
@@ -85,11 +85,11 @@ describe R509::Cert::Extensions::ExtendedKeyUsage do
         end
 
         it "creates extension" do
-          @eku.allowed_uses.should == ['serverAuth', 'codeSigning']
+          expect(@eku.allowed_uses).to eq(['serverAuth', 'codeSigning'])
         end
 
         it "builds yaml" do
-          YAML.load(@eku.to_yaml).should == @args
+          expect(YAML.load(@eku.to_yaml)).to eq(@args)
         end
       end
 
@@ -100,11 +100,11 @@ describe R509::Cert::Extensions::ExtendedKeyUsage do
         end
 
         it "creates extension" do
-          @eku.critical?.should be_false
+          expect(@eku.critical?).to be false
         end
 
         it "builds yaml" do
-          YAML.load(@eku.to_yaml).should == @args.merge(:critical => false)
+          expect(YAML.load(@eku.to_yaml)).to eq(@args.merge(:critical => false))
         end
       end
 
@@ -115,11 +115,11 @@ describe R509::Cert::Extensions::ExtendedKeyUsage do
         end
 
         it "creates extension" do
-          @eku.critical?.should be_true
+          expect(@eku.critical?).to be true
         end
 
         it "builds yaml" do
-          YAML.load(@eku.to_yaml).should == @args
+          expect(YAML.load(@eku.to_yaml)).to eq(@args)
         end
       end
 

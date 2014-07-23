@@ -11,7 +11,7 @@ shared_examples_for "a correct R509 SubjectKeyIdentifier object" do
   end
 
   it "key should be correct" do
-    @r509_ext.key.should == @key
+    expect(@r509_ext.key).to eq(@key)
   end
 end
 
@@ -43,17 +43,17 @@ describe R509::Cert::Extensions::SubjectKeyIdentifier do
 
       it "creates successfully" do
         ski = R509::Cert::Extensions::SubjectKeyIdentifier.new(:public_key => @pk.public_key)
-        ski.key.should_not be_nil
+        expect(ski.key).not_to be_nil
       end
 
       it "creates with default criticality" do
         ski = R509::Cert::Extensions::SubjectKeyIdentifier.new(:public_key => @pk.public_key)
-        ski.critical?.should be_false
+        expect(ski.critical?).to be false
       end
 
       it "creates with non-default criticality" do
         ski = R509::Cert::Extensions::SubjectKeyIdentifier.new(:public_key => @pk.public_key, :critical => true)
-        ski.critical?.should be_true
+        expect(ski.critical?).to be true
       end
 
     end

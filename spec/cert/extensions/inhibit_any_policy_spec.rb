@@ -12,11 +12,11 @@ shared_examples_for "a correct R509 InhibitAnyPolicy object" do |critical|
   end
 
   it "should parse the integer value out of the extension" do
-    @r509_ext.value.should == @value
+    expect(@r509_ext.value).to eq(@value)
   end
 
   it "reports #critical? properly" do
-    @r509_ext.critical?.should == critical
+    expect(@r509_ext.critical?).to eq(critical)
   end
 end
 
@@ -45,11 +45,11 @@ describe R509::Cert::Extensions::InhibitAnyPolicy do
         end
 
         it "creates extension" do
-          @iap.value.should == 1
+          expect(@iap.value).to eq(1)
         end
 
         it "builds yaml" do
-          YAML.load(@iap.to_yaml).should == @args
+          expect(YAML.load(@iap.to_yaml)).to eq(@args)
         end
       end
 
@@ -60,11 +60,11 @@ describe R509::Cert::Extensions::InhibitAnyPolicy do
         end
 
         it "creates extension" do
-          @iap.critical?.should == true
+          expect(@iap.critical?).to eq(true)
         end
 
         it "builds yaml" do
-          YAML.load(@iap.to_yaml).should == @args.merge(:critical => true)
+          expect(YAML.load(@iap.to_yaml)).to eq(@args.merge(:critical => true))
         end
       end
 
@@ -75,11 +75,11 @@ describe R509::Cert::Extensions::InhibitAnyPolicy do
         end
 
         it "creates extension" do
-          @iap.critical?.should == false
+          expect(@iap.critical?).to eq(false)
         end
 
         it "builds yaml" do
-          YAML.load(@iap.to_yaml).should == @args
+          expect(YAML.load(@iap.to_yaml)).to eq(@args)
         end
       end
 

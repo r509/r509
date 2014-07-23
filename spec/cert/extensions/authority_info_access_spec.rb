@@ -12,15 +12,15 @@ shared_examples_for "a correct R509 AuthorityInfoAccess object" do |critical|
   end
 
   it "ca_issuers_uri should be correct critical:#{critical}" do
-    @r509_ext.ca_issuers.uris.should == @ca_issuers_uris
+    expect(@r509_ext.ca_issuers.uris).to eq(@ca_issuers_uris)
   end
 
   it "ocsp_uri should be correct critical:#{critical}" do
-    @r509_ext.ocsp.uris.should == @ocsp_uris
+    expect(@r509_ext.ocsp.uris).to eq(@ocsp_uris)
   end
 
   it "reports #critical? properly" do
-    @r509_ext.critical?.should == critical
+    expect(@r509_ext.critical?).to eq(critical)
   end
 end
 
@@ -70,13 +70,13 @@ describe R509::Cert::Extensions::AuthorityInfoAccess do
         end
 
         it "creates extension" do
-          @aia.ocsp.rfc_822_names.should == ['random string']
-          @aia.ocsp.directory_names[0].to_s.should == '/CN=test/O=myOrg/C=US'
-          @aia.ca_issuers.rfc_822_names.should == ['random string']
+          expect(@aia.ocsp.rfc_822_names).to eq(['random string'])
+          expect(@aia.ocsp.directory_names[0].to_s).to eq('/CN=test/O=myOrg/C=US')
+          expect(@aia.ca_issuers.rfc_822_names).to eq(['random string'])
         end
 
         it "builds yaml" do
-          YAML.load(@aia.to_yaml).should == { :critical => false, :ocsp_location => [{ :type => "email", :value => "random string" }, { :type => "dirName", :value => { :CN => "test", :O => "myOrg", :C => "US" } }], :ca_issuers_location => [{ :type => "email", :value => "random string" }, { :type => "dirName", :value => { :CN => "test", :O => "myOrg", :C => "US" } }] }
+          expect(YAML.load(@aia.to_yaml)).to eq({ :critical => false, :ocsp_location => [{ :type => "email", :value => "random string" }, { :type => "dirName", :value => { :CN => "test", :O => "myOrg", :C => "US" } }], :ca_issuers_location => [{ :type => "email", :value => "random string" }, { :type => "dirName", :value => { :CN => "test", :O => "myOrg", :C => "US" } }] })
         end
       end
 
@@ -87,11 +87,11 @@ describe R509::Cert::Extensions::AuthorityInfoAccess do
         end
 
         it "creates extension" do
-          @aia.ocsp.uris.should == ['http://ocsp.domain.com']
+          expect(@aia.ocsp.uris).to eq(['http://ocsp.domain.com'])
         end
 
         it "builds yaml" do
-          YAML.load(@aia.to_yaml).should == @args
+          expect(YAML.load(@aia.to_yaml)).to eq(@args)
         end
       end
 
@@ -102,11 +102,11 @@ describe R509::Cert::Extensions::AuthorityInfoAccess do
         end
 
         it "creates extension" do
-          @aia.ocsp.uris.should == ['http://ocsp.domain.com', 'http://ocsp2.domain.com']
+          expect(@aia.ocsp.uris).to eq(['http://ocsp.domain.com', 'http://ocsp2.domain.com'])
         end
 
         it "builds yaml" do
-          YAML.load(@aia.to_yaml).should == @args
+          expect(YAML.load(@aia.to_yaml)).to eq(@args)
         end
       end
 
@@ -117,11 +117,11 @@ describe R509::Cert::Extensions::AuthorityInfoAccess do
         end
 
         it "creates extension" do
-          @aia.ca_issuers.uris.should == ['http://www.domain.com']
+          expect(@aia.ca_issuers.uris).to eq(['http://www.domain.com'])
         end
 
         it "builds yaml" do
-          YAML.load(@aia.to_yaml).should == @args
+          expect(YAML.load(@aia.to_yaml)).to eq(@args)
         end
       end
 
@@ -132,11 +132,11 @@ describe R509::Cert::Extensions::AuthorityInfoAccess do
         end
 
         it "creates extension" do
-          @aia.ca_issuers.uris.should == ['http://www.domain.com', 'http://www2.domain.com']
+          expect(@aia.ca_issuers.uris).to eq(['http://www.domain.com', 'http://www2.domain.com'])
         end
 
         it "builds yaml" do
-          YAML.load(@aia.to_yaml).should == @args
+          expect(YAML.load(@aia.to_yaml)).to eq(@args)
         end
       end
 
@@ -147,12 +147,12 @@ describe R509::Cert::Extensions::AuthorityInfoAccess do
         end
 
         it "creates extension" do
-          @aia.ca_issuers.uris.should == ['http://www.domain.com']
-          @aia.ocsp.uris.should == ['http://ocsp.domain.com']
+          expect(@aia.ca_issuers.uris).to eq(['http://www.domain.com'])
+          expect(@aia.ocsp.uris).to eq(['http://ocsp.domain.com'])
         end
 
         it "builds yaml" do
-          YAML.load(@aia.to_yaml).should == @args
+          expect(YAML.load(@aia.to_yaml)).to eq(@args)
         end
       end
 
@@ -163,11 +163,11 @@ describe R509::Cert::Extensions::AuthorityInfoAccess do
         end
 
         it "creates extension" do
-          @aia.critical?.should be_false
+          expect(@aia.critical?).to be false
         end
 
         it "builds yaml" do
-          YAML.load(@aia.to_yaml).should == @args.merge(:critical => false)
+          expect(YAML.load(@aia.to_yaml)).to eq(@args.merge(:critical => false))
         end
       end
 
@@ -178,11 +178,11 @@ describe R509::Cert::Extensions::AuthorityInfoAccess do
         end
 
         it "creates extension" do
-          @aia.critical?.should be_true
+          expect(@aia.critical?).to be true
         end
 
         it "builds yaml" do
-          YAML.load(@aia.to_yaml).should == @args
+          expect(YAML.load(@aia.to_yaml)).to eq(@args)
         end
       end
 

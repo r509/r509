@@ -21,95 +21,95 @@ describe R509::PrivateKey do
   end
   it "returns the right value for #rsa?" do
     private_key = R509::PrivateKey.new(:key => @key_csr)
-    private_key.dsa?.should == false
-    private_key.ec?.should == false
-    private_key.rsa?.should == true
+    expect(private_key.dsa?).to eq(false)
+    expect(private_key.ec?).to eq(false)
+    expect(private_key.rsa?).to eq(true)
   end
   it "returns the right value for #dsa?" do
     private_key = R509::PrivateKey.new(:key => @dsa_key)
-    private_key.rsa?.should == false
-    private_key.ec?.should == false
-    private_key.dsa?.should == true
+    expect(private_key.rsa?).to eq(false)
+    expect(private_key.ec?).to eq(false)
+    expect(private_key.dsa?).to eq(true)
   end
   it "generates a default 2048-bit RSA key when nothing is passed to the constructor" do
     private_key = R509::PrivateKey.new
-    private_key.rsa?.should == true
-    private_key.bit_length.should == 2048
-    private_key.bit_strength.should == 2048
+    expect(private_key.rsa?).to eq(true)
+    expect(private_key.bit_length).to eq(2048)
+    expect(private_key.bit_strength).to eq(2048)
   end
   it "defaults to RSA" do
     private_key = R509::PrivateKey.new(:bit_length => 1024)
-    private_key.key.kind_of?(OpenSSL::PKey::RSA).should == true
+    expect(private_key.key.kind_of?(OpenSSL::PKey::RSA)).to eq(true)
   end
   it "loads a pre-existing RSA key" do
     private_key = R509::PrivateKey.new(:key => @key_csr)
-    private_key.to_pem.should == @key_csr
-    @key_csr.should_not be_nil
+    expect(private_key.to_pem).to eq(@key_csr)
+    expect(@key_csr).not_to be_nil
   end
   it "generates an RSA key at the default bit length (2048)" do
     private_key = R509::PrivateKey.new(:type => "rsa")
-    private_key.bit_length.should == 2048
-    private_key.key.n.to_i.to_s(2).size.should == 2048
+    expect(private_key.bit_length).to eq(2048)
+    expect(private_key.key.n.to_i.to_s(2).size).to eq(2048)
   end
   it "generates an RSA key at a custom bit length" do
     private_key = R509::PrivateKey.new(:type => "rsa", :bit_length => 512)
-    private_key.bit_length.should == 512
-    private_key.key.n.to_i.to_s(2).size.should == 512
+    expect(private_key.bit_length).to eq(512)
+    expect(private_key.key.n.to_i.to_s(2).size).to eq(512)
   end
   it "loads a pre-existing DSA key" do
     private_key = R509::PrivateKey.new(:key => @dsa_key)
-    private_key.key.kind_of?(OpenSSL::PKey::DSA).should == true
-    private_key.key.to_pem.should == @dsa_key
-    @dsa_key.should_not be_nil
+    expect(private_key.key.kind_of?(OpenSSL::PKey::DSA)).to eq(true)
+    expect(private_key.key.to_pem).to eq(@dsa_key)
+    expect(@dsa_key).not_to be_nil
   end
   it "generates a DSA key at the default bit length (2048)" do
     private_key = R509::PrivateKey.new(:type => "dsa")
-    private_key.dsa?.should == true
-    private_key.bit_length.should == 2048
-    private_key.key.p.to_i.to_s(2).size.should == 2048
+    expect(private_key.dsa?).to eq(true)
+    expect(private_key.bit_length).to eq(2048)
+    expect(private_key.key.p.to_i.to_s(2).size).to eq(2048)
   end
   it "generates a DSA key at a custom bit length" do
     private_key = R509::PrivateKey.new(:type => "dsa", :bit_length => 512)
-    private_key.bit_length.should == 512
-    private_key.key.p.to_i.to_s(2).size.should == 512
+    expect(private_key.bit_length).to eq(512)
+    expect(private_key.key.p.to_i.to_s(2).size).to eq(512)
   end
   it "has an exponent of 65537 for new RSA keys" do
     # this test actually checks ruby's underlying libs to make sure they're
     # doing what they're supposed to be doing.
     private_key = R509::PrivateKey.new(:type => "rsa", :bit_length => 512)
-    private_key.key.e.should == 65537
+    expect(private_key.key.e).to eq(65537)
   end
   it "returns the public key" do
     private_key = R509::PrivateKey.new(:key => @key_csr)
-    private_key.public_key.n.to_i.should == @csr_public_key_modulus.to_i
+    expect(private_key.public_key.n.to_i).to eq(@csr_public_key_modulus.to_i)
   end
   it "returns pem" do
     # load the DER, check that it matches the PEM on to_pem
     private_key = R509::PrivateKey.new(:key => @key_csr_der)
-    private_key.to_pem.should == @key_csr
+    expect(private_key.to_pem).to eq(@key_csr)
   end
   it "returns der" do
     # load the PEM, check that it matches the DER on to_der
     private_key = R509::PrivateKey.new(:key => @key_csr)
-    private_key.to_der.should == @key_csr_der
+    expect(private_key.to_der).to eq(@key_csr_der)
   end
   it "writes pem" do
     private_key = R509::PrivateKey.new(:key => @key_csr)
     sio = StringIO.new
     sio.set_encoding("BINARY") if sio.respond_to?(:set_encoding)
     private_key.write_pem(sio)
-    sio.string.should == @key_csr
+    expect(sio.string).to eq(@key_csr)
   end
   it "writes der" do
     private_key = R509::PrivateKey.new(:key => @key_csr_der)
     sio = StringIO.new
     sio.set_encoding("BINARY") if sio.respond_to?(:set_encoding)
     private_key.write_der(sio)
-    sio.string.should == @key_csr_der
+    expect(sio.string).to eq(@key_csr_der)
   end
   it "loads an encrypted private key with the right password" do
     private_key = R509::PrivateKey.new(:key => @key_csr_encrypted, :password => 'Testing1')
-    private_key.public_key.n.to_i.should == @csr_public_key_modulus.to_i
+    expect(private_key.public_key.n.to_i).to eq(@csr_public_key_modulus.to_i)
   end
   it "fails to load an encrypted private key with wrong password" do
     expect { R509::PrivateKey.new(:key => @key_csr_encrypted, :password => 'wrongPassword') }.to raise_error(R509::R509Error, "Failed to load private key. Invalid key or incorrect password.")
@@ -118,42 +118,42 @@ describe R509::PrivateKey do
     private_key = R509::PrivateKey.new(:key => @key_csr)
     encrypted_private_key = private_key.to_encrypted_pem('des3', 'Testing1')
     decrypted_private_key = R509::PrivateKey.new(:key => encrypted_private_key, :password => 'Testing1')
-    private_key.to_pem.should == decrypted_private_key.to_pem
+    expect(private_key.to_pem).to eq(decrypted_private_key.to_pem)
   end
   it "writes an encrypted pem" do
     private_key = R509::PrivateKey.new(:key => @key_csr)
     sio = StringIO.new
     sio.set_encoding("BINARY") if sio.respond_to?(:set_encoding)
     private_key.write_encrypted_pem(sio, 'des3', 'Testing1')
-    sio.string.match(/Proc-Type: 4,ENCRYPTED/).should_not be_nil
+    expect(sio.string.match(/Proc-Type: 4,ENCRYPTED/)).not_to be_nil
   end
   it "creates an encrypted private key with des3 cipher" do
     private_key = R509::PrivateKey.new(:key => @key_csr)
     sio = StringIO.new
     sio.set_encoding("BINARY") if sio.respond_to?(:set_encoding)
     private_key.write_encrypted_pem(sio, 'des3', 'Testing1')
-    sio.string.match(/DES-EDE3-CBC/).should_not be_nil
+    expect(sio.string.match(/DES-EDE3-CBC/)).not_to be_nil
   end
   it "creates an encrypted private key with aes128 cipher" do
     private_key = R509::PrivateKey.new(:key => @key_csr)
     sio = StringIO.new
     sio.set_encoding("BINARY") if sio.respond_to?(:set_encoding)
     private_key.write_encrypted_pem(sio, 'aes128', 'Testing1')
-    sio.string.match(/AES-128-CBC/).should_not be_nil
+    expect(sio.string.match(/AES-128-CBC/)).not_to be_nil
   end
   it "returns false for in_hardware? when not using an engine" do
     private_key = R509::PrivateKey.new(:key => @key_csr)
-    private_key.in_hardware?.should == false
+    expect(private_key.in_hardware?).to eq(false)
   end
   it "returns true for in_hardware? when an engine is present" do
     engine = double("engine")
-    engine.should_receive(:kind_of?).with(OpenSSL::Engine).and_return(true)
+    expect(engine).to receive(:kind_of?).with(OpenSSL::Engine).and_return(true)
     key_name = "r509_key"
     key = R509::PrivateKey.new(
       :engine => engine,
       :key_name => key_name
     )
-    key.in_hardware?.should == true
+    expect(key.in_hardware?).to eq(true)
   end
   it "raises an error if you provide engine and key" do
     expect { R509::PrivateKey.new(:key => @key_csr, :engine => 'not really an engine') }.to raise_error(ArgumentError, "You can't pass both :key and :engine")
@@ -169,7 +169,7 @@ describe R509::PrivateKey do
   end
   it "raises an error if you call output methods (pem,der,write) when using a hardware key" do
     engine = double("engine")
-    engine.should_receive(:kind_of?).with(OpenSSL::Engine).and_return(true)
+    expect(engine).to receive(:kind_of?).with(OpenSSL::Engine).and_return(true)
     key_name = "r509_key"
     key = R509::PrivateKey.new(
       :engine => engine,
@@ -183,27 +183,27 @@ describe R509::PrivateKey do
   end
   it "loads a hardware key successfully" do
     engine = double("engine")
-    engine.should_receive(:kind_of?).with(OpenSSL::Engine).and_return(true)
+    expect(engine).to receive(:kind_of?).with(OpenSSL::Engine).and_return(true)
     faux_key = double("faux_key")
-    faux_key.should_receive(:public_key).and_return("returning public key")
+    expect(faux_key).to receive(:public_key).and_return("returning public key")
     key_name = "r509_key"
-    engine.should_receive(:load_private_key).twice.with(key_name).and_return(faux_key)
+    expect(engine).to receive(:load_private_key).twice.with(key_name).and_return(faux_key)
     key = R509::PrivateKey.new(
       :engine => engine,
       :key_name => key_name
     )
-    key.kind_of?(R509::PrivateKey).should == true
-    key.public_key.should == "returning public key"
+    expect(key.kind_of?(R509::PrivateKey)).to eq(true)
+    expect(key.public_key).to eq("returning public key")
   end
   it "loads a private key with load_from_file" do
     path = File.dirname(__FILE__) + '/fixtures/key4.pem'
     key = R509::PrivateKey.load_from_file path
-    key.rsa?.should == true
+    expect(key.rsa?).to eq(true)
   end
   it "loads a private key with load_from_file with password" do
     path = File.dirname(__FILE__) + '/fixtures/key4_encrypted_des3.pem'
     key = R509::PrivateKey.load_from_file(path, 'r509')
-    key.rsa?.should == true
+    expect(key.rsa?).to eq(true)
   end
 
   it "returns an error for curve_name for dsa/rsa" do
@@ -214,55 +214,55 @@ describe R509::PrivateKey do
   context "elliptic curves", :ec => true do
     it "loads a pre-existing EC key" do
       private_key = R509::PrivateKey.new(:key => @ec_key_pem)
-      private_key.to_pem.should == @ec_key_pem
-      @ec_key_pem.should_not be_nil
+      expect(private_key.to_pem).to eq(@ec_key_pem)
+      expect(@ec_key_pem).not_to be_nil
     end
 
     it "loads an encrypted private key with the right password" do
       private_key = R509::PrivateKey.new(:key => @ec_key_encrypted, :password => 'Testing1')
-      private_key.to_pem.should == @ec_key_pem
-      @ec_key_encrypted.should_not be_nil
-      @ec_key_pem.should_not be_nil
+      expect(private_key.to_pem).to eq(@ec_key_pem)
+      expect(@ec_key_encrypted).not_to be_nil
+      expect(@ec_key_pem).not_to be_nil
     end
 
     it "returns the right value for #ec?" do
       path = File.dirname(__FILE__) + '/fixtures/ec_key1.der'
       private_key = R509::PrivateKey.load_from_file path
-      private_key.rsa?.should == false
-      private_key.dsa?.should == false
-      private_key.ec?.should == true
+      expect(private_key.rsa?).to eq(false)
+      expect(private_key.dsa?).to eq(false)
+      expect(private_key.ec?).to eq(true)
     end
 
     it "returns the curve_name" do
       private_key = R509::PrivateKey.new(:key => @ec_key_pem)
-      private_key.curve_name.should == 'secp384r1'
+      expect(private_key.curve_name).to eq('secp384r1')
     end
 
     it "generates an elliptic curve key using the default curve (secp384r1)" do
       private_key = R509::PrivateKey.new(:type => "ec")
-      private_key.curve_name.should == 'secp384r1'
+      expect(private_key.curve_name).to eq('secp384r1')
     end
 
     it "generates an elliptic curve key using a specified curve" do
       private_key = R509::PrivateKey.new(:type => "ec", :curve_name => 'sect283r1')
-      private_key.curve_name.should == 'sect283r1'
+      expect(private_key.curve_name).to eq('sect283r1')
     end
 
     it "returns the public key" do
       private_key = R509::PrivateKey.new(:key => @ec_key_pem)
       public_key = private_key.public_key
-      public_key.public_key?.should == true
-      public_key.private_key?.should == false
+      expect(public_key.public_key?).to eq(true)
+      expect(public_key.private_key?).to eq(false)
     end
 
     it "returns the pem" do
       private_key = R509::PrivateKey.new(:key => @ec_key_pem)
-      private_key.to_pem.should == @ec_key_pem
+      expect(private_key.to_pem).to eq(@ec_key_pem)
     end
 
     it "returns the der" do
       private_key = R509::PrivateKey.new(:key => @ec_key_pem)
-      private_key.to_der.should == @ec_key_der
+      expect(private_key.to_der).to eq(@ec_key_der)
     end
 
     it "returns error for bit_length" do

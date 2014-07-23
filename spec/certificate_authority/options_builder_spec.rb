@@ -21,7 +21,7 @@ describe R509::CertificateAuthority::OptionsBuilder do
     it "removes disallowed and keeps required/optional items" do
       csr = R509::CSR.new(:subject => [['C', 'US'], ['ST', 'Illinois'], ['L', 'Chicago'], ['O', 'Paul Kehrer'], ['OU', 'Enginerding'], ['CN', 'langui.sh']], :bit_strength => 1024)
       data = @builder.build_and_enforce(:csr => csr, :profile_name => 'profile')
-      data[:subject].to_s.should == '/L=Chicago/O=Paul Kehrer/OU=Enginerding/CN=langui.sh'
+      expect(data[:subject].to_s).to eq('/L=Chicago/O=Paul Kehrer/OU=Enginerding/CN=langui.sh')
     end
 
     it "raises error when required item is missing" do
@@ -57,8 +57,8 @@ describe R509::CertificateAuthority::OptionsBuilder do
       builder = R509::CertificateAuthority::OptionsBuilder.new(@config)
       data = builder.build_and_enforce(:csr => @csr, :profile_name => 'profile')
       ext = data[:extensions].select { |el| el.kind_of?(R509::Cert::Extensions::BasicConstraints) }
-      ext.size.should == 1
-      ext[0].is_ca?.should be_false
+      expect(ext.size).to eq(1)
+      expect(ext[0].is_ca?).to be false
     end
 
     it "creates subject key identifier" do
@@ -66,7 +66,7 @@ describe R509::CertificateAuthority::OptionsBuilder do
       @config.set_profile("profile", profile)
       builder = R509::CertificateAuthority::OptionsBuilder.new(@config)
       data = builder.build_and_enforce(:csr => @csr, :profile_name => 'profile')
-      data[:extensions].select { |el| el.kind_of?(R509::Cert::Extensions::SubjectKeyIdentifier) }.size.should == 1
+      expect(data[:extensions].select { |el| el.kind_of?(R509::Cert::Extensions::SubjectKeyIdentifier) }.size).to eq(1)
     end
 
     it "creates authority key identifier" do
@@ -74,7 +74,7 @@ describe R509::CertificateAuthority::OptionsBuilder do
       @config.set_profile("profile", profile)
       builder = R509::CertificateAuthority::OptionsBuilder.new(@config)
       data = builder.build_and_enforce(:csr => @csr, :profile_name => 'profile')
-      data[:extensions].select { |el| el.kind_of?(R509::Cert::Extensions::AuthorityKeyIdentifier) }.size.should == 1
+      expect(data[:extensions].select { |el| el.kind_of?(R509::Cert::Extensions::AuthorityKeyIdentifier) }.size).to eq(1)
     end
 
     it "adds key usage" do
@@ -85,8 +85,8 @@ describe R509::CertificateAuthority::OptionsBuilder do
       builder = R509::CertificateAuthority::OptionsBuilder.new(@config)
       data = builder.build_and_enforce(:csr => @csr, :profile_name => 'profile')
       ext = data[:extensions].select { |el| el.kind_of?(R509::Cert::Extensions::KeyUsage) }
-      ext.size.should == 1
-      ext[0].allowed_uses.should == ['keyEncipherment']
+      expect(ext.size).to eq(1)
+      expect(ext[0].allowed_uses).to eq(['keyEncipherment'])
     end
 
     it "adds extended key usage" do
@@ -97,8 +97,8 @@ describe R509::CertificateAuthority::OptionsBuilder do
       builder = R509::CertificateAuthority::OptionsBuilder.new(@config)
       data = builder.build_and_enforce(:csr => @csr, :profile_name => 'profile')
       ext = data[:extensions].select { |el| el.kind_of?(R509::Cert::Extensions::ExtendedKeyUsage) }
-      ext.size.should == 1
-      ext[0].allowed_uses.should == ['serverAuth']
+      expect(ext.size).to eq(1)
+      expect(ext[0].allowed_uses).to eq(['serverAuth'])
     end
 
     it "adds certificate policies" do
@@ -108,7 +108,7 @@ describe R509::CertificateAuthority::OptionsBuilder do
       @config.set_profile("profile", profile)
       builder = R509::CertificateAuthority::OptionsBuilder.new(@config)
       data = builder.build_and_enforce(:csr => @csr, :profile_name => 'profile')
-      data[:extensions].select { |el| el.kind_of?(R509::Cert::Extensions::CertificatePolicies) }.size.should == 1
+      expect(data[:extensions].select { |el| el.kind_of?(R509::Cert::Extensions::CertificatePolicies) }.size).to eq(1)
     end
 
     it "adds CRL distribution points" do
@@ -119,7 +119,7 @@ describe R509::CertificateAuthority::OptionsBuilder do
       @config.set_profile("profile", profile)
       builder = R509::CertificateAuthority::OptionsBuilder.new(@config)
       data = builder.build_and_enforce(:csr => @csr, :profile_name => 'profile')
-      data[:extensions].select { |el| el.kind_of?(R509::Cert::Extensions::CRLDistributionPoints) }.size.should == 1
+      expect(data[:extensions].select { |el| el.kind_of?(R509::Cert::Extensions::CRLDistributionPoints) }.size).to eq(1)
     end
 
     it "adds authority info access" do
@@ -131,7 +131,7 @@ describe R509::CertificateAuthority::OptionsBuilder do
       @config.set_profile("profile", profile)
       builder = R509::CertificateAuthority::OptionsBuilder.new(@config)
       data = builder.build_and_enforce(:csr => @csr, :profile_name => 'profile')
-      data[:extensions].select { |el| el.kind_of?(R509::Cert::Extensions::AuthorityInfoAccess) }.size.should == 1
+      expect(data[:extensions].select { |el| el.kind_of?(R509::Cert::Extensions::AuthorityInfoAccess) }.size).to eq(1)
     end
 
     it "adds inhibit any policy" do
@@ -141,7 +141,7 @@ describe R509::CertificateAuthority::OptionsBuilder do
       @config.set_profile("profile", profile)
       builder = R509::CertificateAuthority::OptionsBuilder.new(@config)
       data = builder.build_and_enforce(:csr => @csr, :profile_name => 'profile')
-      data[:extensions].select { |el| el.kind_of?(R509::Cert::Extensions::InhibitAnyPolicy) }.size.should == 1
+      expect(data[:extensions].select { |el| el.kind_of?(R509::Cert::Extensions::InhibitAnyPolicy) }.size).to eq(1)
     end
 
     it "adds policy constraints" do
@@ -151,7 +151,7 @@ describe R509::CertificateAuthority::OptionsBuilder do
       @config.set_profile("profile", profile)
       builder = R509::CertificateAuthority::OptionsBuilder.new(@config)
       data = builder.build_and_enforce(:csr => @csr, :profile_name => 'profile')
-      data[:extensions].select { |el| el.kind_of?(R509::Cert::Extensions::PolicyConstraints) }.size.should == 1
+      expect(data[:extensions].select { |el| el.kind_of?(R509::Cert::Extensions::PolicyConstraints) }.size).to eq(1)
     end
 
     it "adds name constraints" do
@@ -161,7 +161,7 @@ describe R509::CertificateAuthority::OptionsBuilder do
       @config.set_profile("profile", profile)
       builder = R509::CertificateAuthority::OptionsBuilder.new(@config)
       data = builder.build_and_enforce(:csr => @csr, :profile_name => 'profile')
-      data[:extensions].select { |el| el.kind_of?(R509::Cert::Extensions::NameConstraints) }.size.should == 1
+      expect(data[:extensions].select { |el| el.kind_of?(R509::Cert::Extensions::NameConstraints) }.size).to eq(1)
     end
 
     it "adds OCSP no check" do
@@ -171,7 +171,7 @@ describe R509::CertificateAuthority::OptionsBuilder do
       @config.set_profile("profile", profile)
       builder = R509::CertificateAuthority::OptionsBuilder.new(@config)
       data = builder.build_and_enforce(:csr => @csr, :profile_name => 'profile')
-      data[:extensions].select { |el| el.kind_of?(R509::Cert::Extensions::OCSPNoCheck) }.size.should == 1
+      expect(data[:extensions].select { |el| el.kind_of?(R509::Cert::Extensions::OCSPNoCheck) }.size).to eq(1)
     end
 
   end
@@ -190,19 +190,19 @@ describe R509::CertificateAuthority::OptionsBuilder do
     it "adds extensions that don't exist in the profile" do
       exts = [R509::Cert::Extensions::ExtendedKeyUsage.new(:value => ['timeStamping']), R509::Cert::Extensions::InhibitAnyPolicy.new(:value => 1)]
       data = @builder.build_and_enforce(:csr => @csr, :extensions => exts, :profile_name => 'profile')
-      data[:extensions].size.should == 6
-      data[:extensions].select { |el| el.kind_of?(R509::Cert::Extensions::InhibitAnyPolicy) }.size.should == 1
-      data[:extensions].select { |el| el.kind_of?(R509::Cert::Extensions::ExtendedKeyUsage) }.size.should == 1
-      data[:extensions].select { |el| el.kind_of?(R509::Cert::Extensions::KeyUsage) }.size.should == 1
-      data[:extensions].select { |el| el.kind_of?(R509::Cert::Extensions::OCSPNoCheck) }.size.should == 1
+      expect(data[:extensions].size).to eq(6)
+      expect(data[:extensions].select { |el| el.kind_of?(R509::Cert::Extensions::InhibitAnyPolicy) }.size).to eq(1)
+      expect(data[:extensions].select { |el| el.kind_of?(R509::Cert::Extensions::ExtendedKeyUsage) }.size).to eq(1)
+      expect(data[:extensions].select { |el| el.kind_of?(R509::Cert::Extensions::KeyUsage) }.size).to eq(1)
+      expect(data[:extensions].select { |el| el.kind_of?(R509::Cert::Extensions::OCSPNoCheck) }.size).to eq(1)
     end
     it "replaces extensions that already exist in the profile" do
       exts = [R509::Cert::Extensions::KeyUsage.new(:value => ['digitalSignature'])]
       data = @builder.build_and_enforce(:csr => @csr, :extensions => exts, :profile_name => 'profile')
-      data[:extensions].size.should == 4
-      data[:extensions].select { |el| el.kind_of?(R509::Cert::Extensions::OCSPNoCheck) }.size.should == 1
+      expect(data[:extensions].size).to eq(4)
+      expect(data[:extensions].select { |el| el.kind_of?(R509::Cert::Extensions::OCSPNoCheck) }.size).to eq(1)
       ku = data[:extensions].select { |el| el.kind_of?(R509::Cert::Extensions::KeyUsage) }
-      ku[0].allowed_uses.should == ['digitalSignature']
+      expect(ku[0].allowed_uses).to eq(['digitalSignature'])
     end
   end
 
@@ -224,7 +224,7 @@ describe R509::CertificateAuthority::OptionsBuilder do
           :profile_name => 'profile'
         }
         enforced = @builder.build_and_enforce(options)
-        enforced[:message_digest].upcase.should == md
+        expect(enforced[:message_digest].upcase).to eq(md)
       end
     end
   end
@@ -246,11 +246,11 @@ describe R509::CertificateAuthority::OptionsBuilder do
     end
     it "permits an allowed hash (not default)" do
       data = @builder.build_and_enforce(:csr => @csr, :message_digest => "sha384", :profile_name => "profile")
-      data[:message_digest].should == 'sha384'
+      expect(data[:message_digest]).to eq('sha384')
     end
     it "returns the default hash if no hash is passed" do
       data = @builder.build_and_enforce(:csr => @csr, :profile_name => "profile")
-      data[:message_digest].should == 'sha1'
+      expect(data[:message_digest]).to eq('sha1')
     end
   end
 
@@ -278,8 +278,8 @@ describe R509::CertificateAuthority::OptionsBuilder do
         :not_before => not_before,
         :not_after => not_after
       )
-      hash[:not_before].should == not_before
-      hash[:not_after].should == not_after
+      expect(hash[:not_before]).to eq(not_before)
+      expect(hash[:not_after]).to eq(not_after)
     end
 
     it "does not add a not_before or not_after key if not passed" do
@@ -288,8 +288,8 @@ describe R509::CertificateAuthority::OptionsBuilder do
         :message_digest => 'sha256',
         :profile_name => 'profile'
       )
-      hash.key?(:not_before).should be_false
-      hash.key?(:not_after).should be_false
+      expect(hash.key?(:not_before)).to be false
+      expect(hash.key?(:not_after)).to be false
     end
 
     it "raises error when not_after is after the issuing CA's expiry" do
