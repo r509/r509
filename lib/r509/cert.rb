@@ -17,7 +17,7 @@ module R509
     # @option opts [String] :pkcs12 a PKCS12 object containing both key and cert
     # @option opts [String] :password password for PKCS12 or private key (if supplied)
     def initialize(opts = {})
-      unless opts.kind_of?(Hash)
+      unless opts.is_a?(Hash)
         raise ArgumentError, 'Must provide a hash of options'
       end
       if opts.key?(:pkcs12) && ( opts.key?(:key) || opts.key?(:cert))
@@ -107,7 +107,7 @@ module R509
     # @param [Time,Integer] time Time object or integer timestamp
     # @return [Boolean]
     def valid_at?(time)
-      if time.kind_of?(Integer)
+      if time.is_a?(Integer)
         time = Time.at(time)
       end
 
@@ -321,7 +321,7 @@ module R509
     end
 
     def parse_private_key(key, password = nil)
-      unless key.kind_of?(R509::PrivateKey)
+      unless key.is_a?(R509::PrivateKey)
         key = R509::PrivateKey.new(:key => key, :password => password)
       end
       unless @cert.public_key.to_der == key.public_key.to_der

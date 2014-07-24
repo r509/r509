@@ -6,21 +6,21 @@ module R509
     #
     # @return [Boolean] true if the public key is RSA, false otherwise
     def rsa?
-      internal_obj.public_key.kind_of?(OpenSSL::PKey::RSA)
+      internal_obj.public_key.is_a?(OpenSSL::PKey::RSA)
     end
 
     # Returns whether the public key is DSA
     #
     # @return [Boolean] true if the public key is DSA, false otherwise
     def dsa?
-      internal_obj.public_key.kind_of?(OpenSSL::PKey::DSA)
+      internal_obj.public_key.is_a?(OpenSSL::PKey::DSA)
     end
 
     # Returns whether the public key is EC
     #
     # @return [Boolean] true if the public key is EC, false otherwise
     def ec?
-      internal_obj.public_key.kind_of?(OpenSSL::PKey::EC)
+      internal_obj.public_key.is_a?(OpenSSL::PKey::EC)
     end
 
     # Returns key algorithm (RSA/DSA/EC)
@@ -92,7 +92,7 @@ module R509
     # @private
     def load_private_key(opts)
       if opts.key?(:key)
-        if opts[:key].kind_of?(R509::PrivateKey)
+        if opts[:key].is_a?(R509::PrivateKey)
           return opts[:key]
         else
           return R509::PrivateKey.new(:key => opts[:key])

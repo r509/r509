@@ -179,7 +179,7 @@ describe R509::CRL::Administrator do
   end
   it "calls write_list_entry when revoking" do
     rw = double("rw")
-    expect(rw).to receive(:kind_of?).and_return(true)
+    expect(rw).to receive(:is_a?).and_return(true)
     expect(rw).to receive(:write_list_entry)
     expect(rw).to receive(:read_number).and_return(0)
     expect(rw).to receive(:read_list).and_return(nil)
@@ -189,7 +189,7 @@ describe R509::CRL::Administrator do
   end
   it "calls write_number when incrementing crl_number" do
     rw = double("rw")
-    expect(rw).to receive(:kind_of?).and_return(true)
+    expect(rw).to receive(:is_a?).and_return(true)
     expect(rw).to receive(:read_number).and_return(0)
     expect(rw).to receive(:read_list).and_return(nil)
     expect(rw).to receive(:write_number).with(1)

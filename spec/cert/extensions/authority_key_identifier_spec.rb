@@ -59,13 +59,13 @@ describe R509::Cert::Extensions::AuthorityKeyIdentifier do
 
     it "creates successfully with issuer value" do
       aki = R509::Cert::Extensions::AuthorityKeyIdentifier.new(:issuer_subject => @cert.subject, :issuer_serial => 5, :value => "issuer:always")
-      expect(aki.authority_cert_issuer.to_h).to eq({ :type => "dirName", :value => { :C => "US", :ST => "Illinois", :L => "Chicago", :O => "Ruby CA Project", :CN => "Test CA" } })
+      expect(aki.authority_cert_issuer.to_h).to eq(:type => "dirName", :value => { :C => "US", :ST => "Illinois", :L => "Chicago", :O => "Ruby CA Project", :CN => "Test CA" })
       expect(aki.authority_cert_serial_number).to eq("05")
     end
 
     it "creates successfully with issuer+keyid value" do
       aki = R509::Cert::Extensions::AuthorityKeyIdentifier.new(:issuer_subject => @cert.subject, :issuer_serial => 5, :public_key => @cert.public_key, :value => "issuer:always,keyid:always")
-      expect(aki.authority_cert_issuer.to_h).to eq({ :type => "dirName", :value => { :C => "US", :ST => "Illinois", :L => "Chicago", :O => "Ruby CA Project", :CN => "Test CA" } })
+      expect(aki.authority_cert_issuer.to_h).to eq(:type => "dirName", :value => { :C => "US", :ST => "Illinois", :L => "Chicago", :O => "Ruby CA Project", :CN => "Test CA" })
       expect(aki.authority_cert_serial_number).not_to be_nil
       expect(aki.key_identifier).not_to be_nil
     end

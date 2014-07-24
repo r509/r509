@@ -39,7 +39,7 @@ describe R509::PrivateKey do
   end
   it "defaults to RSA" do
     private_key = R509::PrivateKey.new(:bit_length => 1024)
-    expect(private_key.key.kind_of?(OpenSSL::PKey::RSA)).to eq(true)
+    expect(private_key.key.is_a?(OpenSSL::PKey::RSA)).to eq(true)
   end
   it "loads a pre-existing RSA key" do
     private_key = R509::PrivateKey.new(:key => @key_csr)
@@ -58,7 +58,7 @@ describe R509::PrivateKey do
   end
   it "loads a pre-existing DSA key" do
     private_key = R509::PrivateKey.new(:key => @dsa_key)
-    expect(private_key.key.kind_of?(OpenSSL::PKey::DSA)).to eq(true)
+    expect(private_key.key.is_a?(OpenSSL::PKey::DSA)).to eq(true)
     expect(private_key.key.to_pem).to eq(@dsa_key)
     expect(@dsa_key).not_to be_nil
   end
@@ -147,7 +147,7 @@ describe R509::PrivateKey do
   end
   it "returns true for in_hardware? when an engine is present" do
     engine = double("engine")
-    expect(engine).to receive(:kind_of?).with(OpenSSL::Engine).and_return(true)
+    expect(engine).to receive(:is_a?).with(OpenSSL::Engine).and_return(true)
     key_name = "r509_key"
     key = R509::PrivateKey.new(
       :engine => engine,
@@ -169,7 +169,7 @@ describe R509::PrivateKey do
   end
   it "raises an error if you call output methods (pem,der,write) when using a hardware key" do
     engine = double("engine")
-    expect(engine).to receive(:kind_of?).with(OpenSSL::Engine).and_return(true)
+    expect(engine).to receive(:is_a?).with(OpenSSL::Engine).and_return(true)
     key_name = "r509_key"
     key = R509::PrivateKey.new(
       :engine => engine,
@@ -183,7 +183,7 @@ describe R509::PrivateKey do
   end
   it "loads a hardware key successfully" do
     engine = double("engine")
-    expect(engine).to receive(:kind_of?).with(OpenSSL::Engine).and_return(true)
+    expect(engine).to receive(:is_a?).with(OpenSSL::Engine).and_return(true)
     faux_key = double("faux_key")
     expect(faux_key).to receive(:public_key).and_return("returning public key")
     key_name = "r509_key"
@@ -192,7 +192,7 @@ describe R509::PrivateKey do
       :engine => engine,
       :key_name => key_name
     )
-    expect(key.kind_of?(R509::PrivateKey)).to eq(true)
+    expect(key.is_a?(R509::PrivateKey)).to eq(true)
     expect(key.public_key).to eq("returning public key")
   end
   it "loads a private key with load_from_file" do

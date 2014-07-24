@@ -97,7 +97,7 @@ module R509
             # if org is supplied notice numbers is also required (and vice versa). enforced in CAProfile
             user_notice_confs.push "organization=\"#{un[:organization]}\"" unless un[:organization].nil?
             user_notice_confs.push "noticeNumbers=\"#{un[:notice_numbers].join(",")}\"" unless un[:notice_numbers].nil?
-          end if hash[:user_notices].kind_of?(Array)
+          end if hash[:user_notices].is_a?(Array)
 
           conf.concat(user_notice_confs)
           conf.join "\n"
@@ -105,7 +105,7 @@ module R509
 
         # validates the structure of the certificate policies array
         def validate_certificate_policies(policies)
-          raise ArgumentError, "Not a valid certificate policy structure. Must be an array of hashes" unless policies.kind_of?(Array)
+          raise ArgumentError, "Not a valid certificate policy structure. Must be an array of hashes" unless policies.is_a?(Array)
 
           policies.each do |policy|
             raise ArgumentError, "Each policy requires a policy identifier" if policy[:policy_identifier].nil?
@@ -200,7 +200,7 @@ module R509
         def initialize(data)
           data.each do |qualifier|
             # if we find another sequence, that's a noticeReference, otherwise it's explicitText
-            if qualifier.kind_of?(OpenSSL::ASN1::Sequence)
+            if qualifier.is_a?(OpenSSL::ASN1::Sequence)
               @notice_reference = NoticeReference.new(qualifier)
             else
               @explicit_text = qualifier.value
@@ -233,7 +233,7 @@ module R509
           data.each do |notice_reference|
             # if it's displaytext then it's the organization
             # if it's YET ANOTHER ASN1::Sequence, then it's noticeNumbers
-            if notice_reference.kind_of?(OpenSSL::ASN1::Sequence)
+            if notice_reference.is_a?(OpenSSL::ASN1::Sequence)
               @notice_numbers = []
               notice_reference.each do |ints|
                 @notice_numbers << ints.value.to_i

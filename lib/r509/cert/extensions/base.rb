@@ -56,7 +56,7 @@ module R509
       def self.names_to_h(array)
         data = []
         array.each do |name|
-          value = (name.value.kind_of?(R509::Subject)) ? name.value.to_h : name.value
+          value = (name.value.is_a?(R509::Subject)) ? name.value.to_h : name.value
           data.push(
 
               :type => name.short_type,
@@ -117,7 +117,7 @@ module R509
       end
 
       def self.calculate_critical(critical, default)
-        if critical.kind_of?(TrueClass) || critical.kind_of?(FalseClass)
+        if critical.is_a?(TrueClass) || critical.is_a?(FalseClass)
           critical
         else
           default
@@ -127,8 +127,8 @@ module R509
       # Method attempts to determine if data being passed to an extension is already
       # an extension/asn.1 data or not.
       def self.is_extension?(data)
-        return true if data.kind_of?(OpenSSL::X509::Extension)
-        return false unless data.kind_of?(String)
+        return true if data.is_a?(OpenSSL::X509::Extension)
+        return false unless data.is_a?(String)
         begin
           OpenSSL::X509::Extension.new(data)
           return true

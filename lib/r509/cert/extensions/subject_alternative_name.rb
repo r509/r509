@@ -78,7 +78,7 @@ module R509
         end
 
         def validate_subject_alternative_name(san)
-          if !san.kind_of?(Hash) || !(san[:value].kind_of?(R509::ASN1::GeneralNames) || san[:value].kind_of?(Array))
+          if !san.is_a?(Hash) || !(san[:value].is_a?(R509::ASN1::GeneralNames) || san[:value].is_a?(Array))
             raise ArgumentError, "You must supply a hash with a :value"
           end
           validate_general_name_hash_array(san[:value])

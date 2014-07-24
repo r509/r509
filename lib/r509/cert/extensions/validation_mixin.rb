@@ -8,7 +8,7 @@ module R509
 
         # used by iap and pc validation methods
         def validate_non_negative_integer(source, value)
-          if !value.kind_of?(Integer) || value < 0
+          if !value.is_a?(Integer) || value < 0
             raise ArgumentError, "#{source} must be a non-negative integer"
           end
           value
@@ -16,14 +16,14 @@ module R509
 
         # validates key usage array
         def validate_usage(ku)
-          if ku.nil? || !ku.kind_of?(Hash) || !ku[:value].kind_of?(Array)
+          if ku.nil? || !ku.is_a?(Hash) || !ku[:value].is_a?(Array)
             raise ArgumentError, 'You must pass a hash with a key :value that contains an array of strings (see README)'
           end
           ku
         end
 
         def validate_location(type, location)
-          if location && !(location.kind_of?(Array) || location.kind_of?(R509::ASN1::GeneralNames))
+          if location && !(location.is_a?(Array) || location.is_a?(R509::ASN1::GeneralNames))
             raise ArgumentError, "#{type} must contain an array or R509::ASN1::GeneralNames object if provided"
           end
           validate_general_name_hash_array(location) unless location.nil?
@@ -32,10 +32,10 @@ module R509
 
         def validate_general_name_hash_array(arr)
           arr.each do |l|
-            if !l.kind_of?(Hash) || l[:type].nil? || l[:value].nil?
+            if !l.is_a?(Hash) || l[:type].nil? || l[:value].nil?
               raise ArgumentError, "All elements of the array must be hashes with a :type and :value"
             end
-          end unless arr.kind_of?(R509::ASN1::GeneralNames)
+          end unless arr.is_a?(R509::ASN1::GeneralNames)
         end
       end
     end

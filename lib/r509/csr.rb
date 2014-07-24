@@ -44,7 +44,7 @@ module R509
     #     ['CN','somedomain.com'],
     #   ]
     def initialize(opts = {})
-      unless opts.kind_of?(Hash)
+      unless opts.is_a?(Hash)
         raise ArgumentError, 'Must provide a hash of options'
       end
       if opts.key?(:subject) && opts.key?(:csr)
@@ -99,7 +99,7 @@ module R509
 
     # @return [OpenSSL::PKey::RSA,OpenSSL::PKey::DSA,OpenSSL::PKey::EC] public key
     def public_key
-      if @req.kind_of?(OpenSSL::X509::Request)
+      if @req.is_a?(OpenSSL::X509::Request)
         @req.public_key
       end
     end
@@ -145,11 +145,11 @@ module R509
     #
     # @return [String] value of the key algorithm. RSA, DSA, or EC
     def key_algorithm
-      if @req.public_key.kind_of? OpenSSL::PKey::RSA
+      if @req.public_key.is_a? OpenSSL::PKey::RSA
         "RSA"
-      elsif @req.public_key.kind_of? OpenSSL::PKey::DSA
+      elsif @req.public_key.is_a? OpenSSL::PKey::DSA
         "DSA"
-      elsif @req.public_key.kind_of? OpenSSL::PKey::EC
+      elsif @req.public_key.is_a? OpenSSL::PKey::EC
         "EC"
       end
     end
@@ -162,7 +162,7 @@ module R509
       rescue OpenSSL::X509::RequestError
         # let's try to load this thing by handling a few
         # common error cases
-        if csr.kind_of?(String)
+        if csr.is_a?(String)
           # normalize line endings (really just for the next replace)
           csr.gsub!(/\r\n?/, "\n")
           # remove extraneous newlines
@@ -211,7 +211,7 @@ module R509
     end
 
     def add_san_extension(san_names)
-      if san_names.kind_of?(R509::ASN1::GeneralNames) && !san_names.names.empty?
+      if san_names.is_a?(R509::ASN1::GeneralNames) && !san_names.names.empty?
         ef = OpenSSL::X509::ExtensionFactory.new
         serialized = san_names.serialize_names
         ef.config = OpenSSL::Config.parse(serialized[:conf])

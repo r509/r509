@@ -31,7 +31,7 @@ module R509
       #  "L" => { :policy => "match", :value => "Chicago" },
       #  "emailAddress" => { :policy => "optional" }
       def initialize(hash = {})
-        unless hash.kind_of?(Hash)
+        unless hash.is_a?(Hash)
           raise ArgumentError, "Must supply a hash in form 'shortname'=>hash_with_policy_info"
         end
         @required = []
@@ -40,7 +40,7 @@ module R509
         @match = []
         unless hash.empty?
           hash.each_pair do |key, value|
-            unless value.kind_of?(Hash)
+            unless value.is_a?(Hash)
               raise ArgumentError, "Each value must be a hash with a :policy key"
             end
             case value[:policy]

@@ -6,7 +6,7 @@ module R509
       # Create an SQLite based persistence
       # @param filename_or_db filepath to an SQLite database or an SQLite3::Database object
       def initialize(filename_or_db)
-        if filename_or_db.kind_of? SQLite3::Database
+        if filename_or_db.is_a? SQLite3::Database
           @db = filename_or_db
         else
           @db = SQLite3::Database.new(file)
