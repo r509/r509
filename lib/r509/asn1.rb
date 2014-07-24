@@ -24,9 +24,9 @@ module R509
     #   You can also supply a directoryName, but this must be an R509::Subject or array of arrays
     # @return [R509::ASN1::GeneralNames]
     def self.general_name_parser(names)
-      if names.nil? || names.kind_of?(R509::ASN1::GeneralNames)
+      if names.nil? || names.is_a?(R509::ASN1::GeneralNames)
         return names
-      elsif !names.kind_of?(Array)
+      elsif !names.is_a?(Array)
         raise ArgumentError, "You must supply an array or existing R509::ASN1 GeneralNames object to general_name_parser"
       end
       general_names = R509::ASN1::GeneralNames.new
@@ -91,7 +91,7 @@ module R509
 
       # @param [OpenSSL::ASN1::ASN1Data,Hash] asn ASN.1 input data. Can also pass a hash with (:tag or :type) and :value keys
       def initialize(asn)
-        if asn.kind_of?(Hash)
+        if asn.is_a?(Hash)
           # this is added via create_item
           parse_hash(asn)
         else
@@ -159,7 +159,7 @@ module R509
 
         # @return [Hash]
       def to_h
-        val = (@value.kind_of?(R509::Subject)) ? @value.to_h : @value
+        val = (@value.is_a?(R509::Subject)) ? @value.to_h : @value
 
         { :type => @short_type, :value => val }
       end
@@ -262,7 +262,7 @@ module R509
         }
         @ordered_names = []
         unless data.nil?
-          if data.kind_of?(self.class)
+          if data.is_a?(self.class)
             data.names.each { |n| add_item(n) }
           else
             validate_general_name_hash_array(data)
@@ -276,7 +276,7 @@ module R509
       # @param [OpenSSL::ASN1::ASN1Data] asn Takes ASN.1 data in for parsing GeneralName structures
       def add_item(asn)
         # map general names into our hash of arrays
-        if asn.kind_of?(R509::ASN1::GeneralName)
+        if asn.is_a?(R509::ASN1::GeneralName)
           @ordered_names << asn
           @types[asn.type] << asn.value
         else

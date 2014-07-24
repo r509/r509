@@ -103,7 +103,7 @@ module R509
 
         @ca_cert = opts[:ca_cert]
 
-        unless @ca_cert.kind_of?(R509::Cert)
+        unless @ca_cert.is_a?(R509::Cert)
           raise ArgumentError, ':ca_cert must be of type R509::Cert'
         end
 
@@ -185,7 +185,7 @@ module R509
         if conf.nil?
           raise ArgumentError, "conf not found"
         end
-        unless conf.kind_of?(Hash)
+        unless conf.is_a?(Hash)
           raise ArgumentError, "conf must be a Hash"
         end
 
@@ -283,7 +283,7 @@ module R509
           check_ocsp_crl_delegate(opts[:ocsp_cert], 'ocsp_cert')
           @ocsp_cert = opts[:ocsp_cert]
         end
-        @ocsp_chain = opts[:ocsp_chain] if opts[:ocsp_chain].kind_of?(Array)
+        @ocsp_chain = opts[:ocsp_chain] if opts[:ocsp_chain].is_a?(Array)
         @ocsp_validity_hours = opts[:ocsp_validity_hours] || DEFAULT_OCSP_VALIDITY_HOURS
         @ocsp_start_skew_seconds = opts[:ocsp_start_skew_seconds] || DEFAULT_OCSP_START_SKEW_SECONDS
       end
@@ -391,7 +391,7 @@ module R509
       end
 
       def check_ocsp_crl_delegate(cert, kind)
-        if cert && !cert.kind_of?(R509::Cert)
+        if cert && !cert.is_a?(R509::Cert)
           raise ArgumentError, ":#{kind}, if provided, must be of type R509::Cert"
         end
         if cert && !cert.has_private_key?

@@ -56,7 +56,7 @@ describe R509::CertificateAuthority::OptionsBuilder do
       @config.set_profile("profile", profile)
       builder = R509::CertificateAuthority::OptionsBuilder.new(@config)
       data = builder.build_and_enforce(:csr => @csr, :profile_name => 'profile')
-      ext = data[:extensions].select { |el| el.kind_of?(R509::Cert::Extensions::BasicConstraints) }
+      ext = data[:extensions].select { |el| el.is_a?(R509::Cert::Extensions::BasicConstraints) }
       expect(ext.size).to eq(1)
       expect(ext[0].is_ca?).to be false
     end
@@ -66,7 +66,7 @@ describe R509::CertificateAuthority::OptionsBuilder do
       @config.set_profile("profile", profile)
       builder = R509::CertificateAuthority::OptionsBuilder.new(@config)
       data = builder.build_and_enforce(:csr => @csr, :profile_name => 'profile')
-      expect(data[:extensions].select { |el| el.kind_of?(R509::Cert::Extensions::SubjectKeyIdentifier) }.size).to eq(1)
+      expect(data[:extensions].select { |el| el.is_a?(R509::Cert::Extensions::SubjectKeyIdentifier) }.size).to eq(1)
     end
 
     it "creates authority key identifier" do
@@ -74,7 +74,7 @@ describe R509::CertificateAuthority::OptionsBuilder do
       @config.set_profile("profile", profile)
       builder = R509::CertificateAuthority::OptionsBuilder.new(@config)
       data = builder.build_and_enforce(:csr => @csr, :profile_name => 'profile')
-      expect(data[:extensions].select { |el| el.kind_of?(R509::Cert::Extensions::AuthorityKeyIdentifier) }.size).to eq(1)
+      expect(data[:extensions].select { |el| el.is_a?(R509::Cert::Extensions::AuthorityKeyIdentifier) }.size).to eq(1)
     end
 
     it "adds key usage" do
@@ -84,7 +84,7 @@ describe R509::CertificateAuthority::OptionsBuilder do
       @config.set_profile("profile", profile)
       builder = R509::CertificateAuthority::OptionsBuilder.new(@config)
       data = builder.build_and_enforce(:csr => @csr, :profile_name => 'profile')
-      ext = data[:extensions].select { |el| el.kind_of?(R509::Cert::Extensions::KeyUsage) }
+      ext = data[:extensions].select { |el| el.is_a?(R509::Cert::Extensions::KeyUsage) }
       expect(ext.size).to eq(1)
       expect(ext[0].allowed_uses).to eq(['keyEncipherment'])
     end
@@ -96,7 +96,7 @@ describe R509::CertificateAuthority::OptionsBuilder do
       @config.set_profile("profile", profile)
       builder = R509::CertificateAuthority::OptionsBuilder.new(@config)
       data = builder.build_and_enforce(:csr => @csr, :profile_name => 'profile')
-      ext = data[:extensions].select { |el| el.kind_of?(R509::Cert::Extensions::ExtendedKeyUsage) }
+      ext = data[:extensions].select { |el| el.is_a?(R509::Cert::Extensions::ExtendedKeyUsage) }
       expect(ext.size).to eq(1)
       expect(ext[0].allowed_uses).to eq(['serverAuth'])
     end
@@ -108,7 +108,7 @@ describe R509::CertificateAuthority::OptionsBuilder do
       @config.set_profile("profile", profile)
       builder = R509::CertificateAuthority::OptionsBuilder.new(@config)
       data = builder.build_and_enforce(:csr => @csr, :profile_name => 'profile')
-      expect(data[:extensions].select { |el| el.kind_of?(R509::Cert::Extensions::CertificatePolicies) }.size).to eq(1)
+      expect(data[:extensions].select { |el| el.is_a?(R509::Cert::Extensions::CertificatePolicies) }.size).to eq(1)
     end
 
     it "adds CRL distribution points" do
@@ -119,7 +119,7 @@ describe R509::CertificateAuthority::OptionsBuilder do
       @config.set_profile("profile", profile)
       builder = R509::CertificateAuthority::OptionsBuilder.new(@config)
       data = builder.build_and_enforce(:csr => @csr, :profile_name => 'profile')
-      expect(data[:extensions].select { |el| el.kind_of?(R509::Cert::Extensions::CRLDistributionPoints) }.size).to eq(1)
+      expect(data[:extensions].select { |el| el.is_a?(R509::Cert::Extensions::CRLDistributionPoints) }.size).to eq(1)
     end
 
     it "adds authority info access" do
@@ -131,7 +131,7 @@ describe R509::CertificateAuthority::OptionsBuilder do
       @config.set_profile("profile", profile)
       builder = R509::CertificateAuthority::OptionsBuilder.new(@config)
       data = builder.build_and_enforce(:csr => @csr, :profile_name => 'profile')
-      expect(data[:extensions].select { |el| el.kind_of?(R509::Cert::Extensions::AuthorityInfoAccess) }.size).to eq(1)
+      expect(data[:extensions].select { |el| el.is_a?(R509::Cert::Extensions::AuthorityInfoAccess) }.size).to eq(1)
     end
 
     it "adds inhibit any policy" do
@@ -141,7 +141,7 @@ describe R509::CertificateAuthority::OptionsBuilder do
       @config.set_profile("profile", profile)
       builder = R509::CertificateAuthority::OptionsBuilder.new(@config)
       data = builder.build_and_enforce(:csr => @csr, :profile_name => 'profile')
-      expect(data[:extensions].select { |el| el.kind_of?(R509::Cert::Extensions::InhibitAnyPolicy) }.size).to eq(1)
+      expect(data[:extensions].select { |el| el.is_a?(R509::Cert::Extensions::InhibitAnyPolicy) }.size).to eq(1)
     end
 
     it "adds policy constraints" do
@@ -151,7 +151,7 @@ describe R509::CertificateAuthority::OptionsBuilder do
       @config.set_profile("profile", profile)
       builder = R509::CertificateAuthority::OptionsBuilder.new(@config)
       data = builder.build_and_enforce(:csr => @csr, :profile_name => 'profile')
-      expect(data[:extensions].select { |el| el.kind_of?(R509::Cert::Extensions::PolicyConstraints) }.size).to eq(1)
+      expect(data[:extensions].select { |el| el.is_a?(R509::Cert::Extensions::PolicyConstraints) }.size).to eq(1)
     end
 
     it "adds name constraints" do
@@ -161,7 +161,7 @@ describe R509::CertificateAuthority::OptionsBuilder do
       @config.set_profile("profile", profile)
       builder = R509::CertificateAuthority::OptionsBuilder.new(@config)
       data = builder.build_and_enforce(:csr => @csr, :profile_name => 'profile')
-      expect(data[:extensions].select { |el| el.kind_of?(R509::Cert::Extensions::NameConstraints) }.size).to eq(1)
+      expect(data[:extensions].select { |el| el.is_a?(R509::Cert::Extensions::NameConstraints) }.size).to eq(1)
     end
 
     it "adds OCSP no check" do
@@ -171,7 +171,7 @@ describe R509::CertificateAuthority::OptionsBuilder do
       @config.set_profile("profile", profile)
       builder = R509::CertificateAuthority::OptionsBuilder.new(@config)
       data = builder.build_and_enforce(:csr => @csr, :profile_name => 'profile')
-      expect(data[:extensions].select { |el| el.kind_of?(R509::Cert::Extensions::OCSPNoCheck) }.size).to eq(1)
+      expect(data[:extensions].select { |el| el.is_a?(R509::Cert::Extensions::OCSPNoCheck) }.size).to eq(1)
     end
 
   end
@@ -191,17 +191,17 @@ describe R509::CertificateAuthority::OptionsBuilder do
       exts = [R509::Cert::Extensions::ExtendedKeyUsage.new(:value => ['timeStamping']), R509::Cert::Extensions::InhibitAnyPolicy.new(:value => 1)]
       data = @builder.build_and_enforce(:csr => @csr, :extensions => exts, :profile_name => 'profile')
       expect(data[:extensions].size).to eq(6)
-      expect(data[:extensions].select { |el| el.kind_of?(R509::Cert::Extensions::InhibitAnyPolicy) }.size).to eq(1)
-      expect(data[:extensions].select { |el| el.kind_of?(R509::Cert::Extensions::ExtendedKeyUsage) }.size).to eq(1)
-      expect(data[:extensions].select { |el| el.kind_of?(R509::Cert::Extensions::KeyUsage) }.size).to eq(1)
-      expect(data[:extensions].select { |el| el.kind_of?(R509::Cert::Extensions::OCSPNoCheck) }.size).to eq(1)
+      expect(data[:extensions].select { |el| el.is_a?(R509::Cert::Extensions::InhibitAnyPolicy) }.size).to eq(1)
+      expect(data[:extensions].select { |el| el.is_a?(R509::Cert::Extensions::ExtendedKeyUsage) }.size).to eq(1)
+      expect(data[:extensions].select { |el| el.is_a?(R509::Cert::Extensions::KeyUsage) }.size).to eq(1)
+      expect(data[:extensions].select { |el| el.is_a?(R509::Cert::Extensions::OCSPNoCheck) }.size).to eq(1)
     end
     it "replaces extensions that already exist in the profile" do
       exts = [R509::Cert::Extensions::KeyUsage.new(:value => ['digitalSignature'])]
       data = @builder.build_and_enforce(:csr => @csr, :extensions => exts, :profile_name => 'profile')
       expect(data[:extensions].size).to eq(4)
-      expect(data[:extensions].select { |el| el.kind_of?(R509::Cert::Extensions::OCSPNoCheck) }.size).to eq(1)
-      ku = data[:extensions].select { |el| el.kind_of?(R509::Cert::Extensions::KeyUsage) }
+      expect(data[:extensions].select { |el| el.is_a?(R509::Cert::Extensions::OCSPNoCheck) }.size).to eq(1)
+      ku = data[:extensions].select { |el| el.is_a?(R509::Cert::Extensions::KeyUsage) }
       expect(ku[0].allowed_uses).to eq(['digitalSignature'])
     end
   end

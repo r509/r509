@@ -118,7 +118,7 @@ describe R509::Cert do
   it "#all_names should return a list of san names in addition to the CN" do
     cert = R509::Cert.new(:cert => @cert_san2)
     expect(cert.all_names).to eq(["cn.langui.sh", "san1.langui.sh",
-                              "san2.langui.sh", "san3.langui.sh"])
+                                  "san2.langui.sh", "san3.langui.sh"])
   end
   it "#all_names should not have duplicates" do
     cert = R509::Cert.new(:cert => @cert_san)
@@ -332,7 +332,7 @@ describe R509::Cert do
   end
   it "returns a hash for #extensions" do
     cert = R509::Cert.new(:cert => @cert3)
-    expect(cert.extensions.kind_of?(Hash)).to eq(true)
+    expect(cert.extensions.is_a?(Hash)).to eq(true)
   end
   it "returns an array for #unknown_extensions" do
     cert = R509::Cert.new(:cert => @cert3)

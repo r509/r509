@@ -205,7 +205,7 @@ describe R509::Cert::Extensions::CertificatePolicies::PolicyInformation do
   it "builds yaml" do
     data = OpenSSL::ASN1.decode "0\x81\x94\u0006\n`\x86H\u0001\x86\x8D\u001F\u0015\x81k0\x81\x850#\u0006\b+\u0006\u0001\u0005\u0005\a\u0002\u0001\u0016\u0017http://example.com/cps20;\u0006\b+\u0006\u0001\u0005\u0005\a\u0002\u00020/0\u0018\u0016\vanother org0\t\u0002\u0001\u0003\u0002\u0001\u0002\u0002\u0001\u0001\u001A\u0013this is a bad thing0!\u0006\b+\u0006\u0001\u0005\u0005\a\u0002\u00020\u0015\u001A\u0013another user notice"
     pi = R509::Cert::Extensions::CertificatePolicies::PolicyInformation.new(data)
-    expect(YAML.load(pi.to_yaml)).to eq({ :policy_identifier => "2.16.840.1.99999.21.235", :cps_uris => ["http://example.com/cps2"], :user_notices => [{ :explicit_text => "this is a bad thing", :organization => "another org", :notice_numbers => [3, 2, 1] }, { :explicit_text => "another user notice" }] })
+    expect(YAML.load(pi.to_yaml)).to eq(:policy_identifier => "2.16.840.1.99999.21.235", :cps_uris => ["http://example.com/cps2"], :user_notices => [{ :explicit_text => "this is a bad thing", :organization => "another org", :notice_numbers => [3, 2, 1] }, { :explicit_text => "another user notice" }])
   end
 end
 
@@ -237,7 +237,7 @@ describe R509::Cert::Extensions::CertificatePolicies::PolicyQualifiers do
   it "builds yaml" do
     data = OpenSSL::ASN1.decode "0#\u0006\b+\u0006\u0001\u0005\u0005\a\u0002\u0001\u0016\u0017http://example.com/cps2"
     @pq.parse(data)
-    expect(YAML.load(@pq.to_yaml)).to eq({ :cps_uris => ["http://example.com/cps2"] })
+    expect(YAML.load(@pq.to_yaml)).to eq(:cps_uris => ["http://example.com/cps2"])
   end
 end
 
@@ -266,7 +266,7 @@ describe R509::Cert::Extensions::CertificatePolicies::UserNotice do
   it "builds yaml" do
     data = OpenSSL::ASN1.decode "0\a\u001A\u0005thing"
     un = R509::Cert::Extensions::CertificatePolicies::UserNotice.new(data)
-    expect(YAML.load(un.to_yaml)).to eq({ :explicit_text => "thing" })
+    expect(YAML.load(un.to_yaml)).to eq(:explicit_text => "thing")
   end
 end
 
@@ -295,6 +295,6 @@ describe R509::Cert::Extensions::CertificatePolicies::NoticeReference do
   it "builds yaml" do
     data = OpenSSL::ASN1.decode "0\u0016\u0016\u0006my org0\f\u0002\u0001\u0001\u0002\u0001\u0002\u0002\u0001\u0003\u0002\u0001\u0004"
     nr = R509::Cert::Extensions::CertificatePolicies::NoticeReference.new(data)
-    expect(YAML.load(nr.to_yaml)).to eq({ :organization => "my org", :notice_numbers => [1, 2, 3, 4] })
+    expect(YAML.load(nr.to_yaml)).to eq(:organization => "my org", :notice_numbers => [1, 2, 3, 4])
   end
 end

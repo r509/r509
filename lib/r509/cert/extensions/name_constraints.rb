@@ -147,7 +147,7 @@ module R509
         end
 
         def validate_name_constraints(nc)
-          unless nc.kind_of?(Hash)
+          unless nc.is_a?(Hash)
             raise ArgumentError, "name_constraints must be provided as a hash"
           end
           [:permitted, :excluded].each do |key|
@@ -161,11 +161,11 @@ module R509
         end
 
         def validate_name_constraints_elements(type, arr)
-          unless arr.kind_of?(Array)
+          unless arr.is_a?(Array)
             raise ArgumentError, "#{type} must be an array"
           end
           arr.each do |el|
-            if !el.kind_of?(Hash) || !el.key?(:type) || !el.key?(:value)
+            if !el.is_a?(Hash) || !el.key?(:type) || !el.key?(:value)
               raise ArgumentError, "Elements within the #{type} array must be hashes with both type and value"
             end
             if R509::ASN1::GeneralName.map_type_to_tag(el[:type]).nil?

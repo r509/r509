@@ -72,7 +72,7 @@ describe R509::Cert::Extensions::SubjectAlternativeName do
         end
 
         it "builds yaml" do
-          expect(YAML.load(@san.to_yaml)).to eq({ :critical => false, :value => [{ :type => "email", :value => "random string" }] })
+          expect(YAML.load(@san.to_yaml)).to eq(:critical => false, :value => [{ :type => "email", :value => "random string" }])
         end
       end
 

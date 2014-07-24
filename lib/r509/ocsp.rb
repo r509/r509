@@ -8,7 +8,7 @@ module R509::OCSP
   class Response
     # @param ocsp_response [OpenSSL::OCSP::Response]
     def initialize(ocsp_response)
-      unless ocsp_response.kind_of?(OpenSSL::OCSP::Response)
+      unless ocsp_response.is_a?(OpenSSL::OCSP::Response)
         raise R509::R509Error, 'You must pass an OpenSSL::OCSP::Response object to the constructor. See R509::OCSP::Response.parse if you are trying to parse'
       end
       @ocsp_response = ocsp_response
@@ -41,7 +41,7 @@ module R509::OCSP
     # @return [Boolean] true if the response is valid according to the given root
     def verify(certs)
       store = OpenSSL::X509::Store.new
-      if certs.kind_of?(Array)
+      if certs.is_a?(Array)
         stack = certs
         certs.each do |cert|
           store.add_cert(cert)

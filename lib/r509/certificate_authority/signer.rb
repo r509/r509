@@ -12,7 +12,7 @@ module R509::CertificateAuthority
     def initialize(config)
       @config = config
 
-      if @config && !@config.kind_of?(R509::Config::CAConfig)
+      if @config && !@config.is_a?(R509::Config::CAConfig)
         raise R509::R509Error, "config must be a kind of R509::Config::CAConfig"
       end
       if @config && !@config.ca_cert.has_private_key?
@@ -68,7 +68,7 @@ module R509::CertificateAuthority
     # @option options :not_after [Time] (Time.now + 365 days) the notAfter for the certificate
     # @return [R509::Cert] the signed cert object
     def self.selfsign(options)
-      unless options.kind_of?(Hash)
+      unless options.is_a?(Hash)
         raise ArgumentError, "You must pass a hash of options consisting of at minimum :csr"
       end
       csr = options[:csr]
@@ -109,9 +109,9 @@ module R509::CertificateAuthority
         raise ArgumentError, "You can't pass both :csr and :spki"
       elsif !options.key?(:csr) && !options.key?(:spki)
         raise ArgumentError, "You must supply either :csr or :spki"
-      elsif options.key?(:csr) && !options[:csr].kind_of?(R509::CSR)
+      elsif options.key?(:csr) && !options[:csr].is_a?(R509::CSR)
         raise ArgumentError, "You must pass an R509::CSR object for :csr"
-      elsif options.key?(:spki) && !options[:spki].kind_of?(R509::SPKI)
+      elsif options.key?(:spki) && !options[:spki].is_a?(R509::SPKI)
         raise ArgumentError, "You must pass an R509::SPKI object for :spki"
       end
     end

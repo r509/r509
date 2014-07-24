@@ -57,7 +57,7 @@ describe R509::Cert::Extensions::CRLDistributionPoints do
         end
 
         it "builds yaml" do
-          expect(YAML.load(@cdp.to_yaml)).to eq({ :critical => false, :value => [{ :type => "email", :value => "random string" }] })
+          expect(YAML.load(@cdp.to_yaml)).to eq(:critical => false, :value => [{ :type => "email", :value => "random string" }])
         end
       end
 

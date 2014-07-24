@@ -16,11 +16,11 @@ module R509
       # @param reader_writer [R509::CRL::ReaderWriter] A subclass off the R509::CRL::ReaderWriter. Defaults to an instance of R509::CRL::FileReaderWriter.
       def initialize(config, reader_writer = R509::CRL::FileReaderWriter.new)
         @config = config
-        unless @config.kind_of?(R509::Config::CAConfig)
+        unless @config.is_a?(R509::Config::CAConfig)
           raise R509Error, "config must be a kind of R509::Config::CAConfig"
         end
 
-        unless reader_writer.kind_of?(R509::CRL::ReaderWriter)
+        unless reader_writer.is_a?(R509::CRL::ReaderWriter)
           raise ArgumentError, "argument reader_writer must be a subclass of R509::CRL::ReaderWriter"
         end
         @rw = reader_writer
@@ -70,7 +70,7 @@ module R509
       #     aACompromise       (10) }
       def revoke_cert(serial, reason = nil, revoke_time = Time.now.to_i, write = true)
         unless reason.nil?
-          if !reason.kind_of?(Integer) || !reason.between?(0, 10) || reason == 7
+          if !reason.is_a?(Integer) || !reason.between?(0, 10) || reason == 7
             raise ArgumentError, "Revocation reason must be integer 0-10 (excluding 7) or nil"
           end
         end

@@ -14,7 +14,7 @@ module R509
 
     # @param [String,OpenSSL::Digest] arg
     def initialize(arg = nil)
-      if arg.kind_of?(String)
+      if arg.is_a?(String)
         @name = arg.downcase
         @digest = translate_name_to_digest
       elsif arg.nil?

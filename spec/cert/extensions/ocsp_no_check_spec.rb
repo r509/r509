@@ -35,7 +35,7 @@ describe R509::Cert::Extensions::OCSPNoCheck do
         end
 
         it "builds yaml" do
-          expect(YAML.load(@no_check.to_yaml)).to eq({ :critical => false })
+          expect(YAML.load(@no_check.to_yaml)).to eq(:critical => false)
         end
       end
 
@@ -49,7 +49,7 @@ describe R509::Cert::Extensions::OCSPNoCheck do
         end
 
         it "builds yaml" do
-          expect(YAML.load(@no_check.to_yaml)).to eq({ :critical => false })
+          expect(YAML.load(@no_check.to_yaml)).to eq(:critical => false)
         end
       end
 
@@ -63,7 +63,7 @@ describe R509::Cert::Extensions::OCSPNoCheck do
         end
 
         it "builds yaml" do
-          expect(YAML.load(@no_check.to_yaml)).to eq({ :critical => true })
+          expect(YAML.load(@no_check.to_yaml)).to eq(:critical => true)
         end
       end
 

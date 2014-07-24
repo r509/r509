@@ -22,14 +22,14 @@ module R509
   class Subject
     # @param [Array, OpenSSL::X509::Name, R509::Subject, DER, Hash, nil] arg
     def initialize(arg = nil)
-      if arg.kind_of?(Array)
+      if arg.is_a?(Array)
         @array = arg
-      elsif arg.kind_of?(Hash)
+      elsif arg.is_a?(Hash)
         @array = arg.map { |k, v| [k.to_s.upcase, v] }
-      elsif arg.kind_of?(OpenSSL::X509::Name)
+      elsif arg.is_a?(OpenSSL::X509::Name)
         sanitizer = R509::NameSanitizer.new
         @array = sanitizer.sanitize(arg)
-      elsif arg.kind_of?(R509::Subject)
+      elsif arg.is_a?(R509::Subject)
         @array = arg.to_a
       else
         @array = []

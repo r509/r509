@@ -19,7 +19,7 @@ describe R509::OCSP::Response do
   end
   it "parses a response der and returns the right object on #parse" do
     ocsp_response = R509::OCSP::Response.parse(@ocsp_response_der)
-    expect(ocsp_response.kind_of?(R509::OCSP::Response)).to eq(true)
+    expect(ocsp_response.is_a?(R509::OCSP::Response)).to eq(true)
     expect(ocsp_response.status).to eq(OpenSSL::OCSP::RESPONSE_STATUS_SUCCESSFUL)
   end
   it "returns data on to_der" do
@@ -28,7 +28,7 @@ describe R509::OCSP::Response do
   end
   it "returns a BasicResponse object on #basic" do
     ocsp_response = R509::OCSP::Response.parse(@ocsp_response_der)
-    expect(ocsp_response.basic.kind_of?(OpenSSL::OCSP::BasicResponse)).to eq(true)
+    expect(ocsp_response.basic.is_a?(OpenSSL::OCSP::BasicResponse)).to eq(true)
   end
   it "returns true if response verifies (in validity period, chain builds to trusted root that's provided)" do
     ocsp_response = R509::OCSP::Response.parse(@test_ca_ocsp_response)
@@ -57,7 +57,7 @@ describe R509::OCSP::Response do
     basic_response = OpenSSL::OCSP::BasicResponse.new
     basic_response.copy_nonce(ocsp_request)
     response_double = double("ocsp_response")
-    expect(response_double).to receive(:kind_of?).and_return('OpenSSL::OCSP::Response')
+    expect(response_double).to receive(:is_a?).and_return('OpenSSL::OCSP::Response')
     expect(response_double).to receive(:basic).and_return(basic_response)
     ocsp_response = R509::OCSP::Response.new(response_double)
     expect(ocsp_response.check_nonce(ocsp_request)).to eq(R509::OCSP::Request::Nonce::PRESENT_AND_EQUAL)
@@ -67,7 +67,7 @@ describe R509::OCSP::Response do
     basic_response = OpenSSL::OCSP::BasicResponse.new
     basic_response.copy_nonce(ocsp_request)
     response_double = double("ocsp_response")
-    expect(response_double).to receive(:kind_of?).and_return('OpenSSL::OCSP::Response')
+    expect(response_double).to receive(:is_a?).and_return('OpenSSL::OCSP::Response')
     expect(response_double).to receive(:basic).and_return(basic_response)
     ocsp_response = R509::OCSP::Response.new(response_double)
     expect(ocsp_response.check_nonce(ocsp_request)).to eq(R509::OCSP::Request::Nonce::BOTH_ABSENT)
@@ -79,7 +79,7 @@ describe R509::OCSP::Response do
     basic_response = OpenSSL::OCSP::BasicResponse.new
     basic_response.copy_nonce(nonce_request)
     response_double = double("ocsp_response")
-    expect(response_double).to receive(:kind_of?).and_return('OpenSSL::OCSP::Response')
+    expect(response_double).to receive(:is_a?).and_return('OpenSSL::OCSP::Response')
     expect(response_double).to receive(:basic).and_return(basic_response)
     ocsp_response = R509::OCSP::Response.new(response_double)
     expect(ocsp_response.check_nonce(ocsp_request)).to eq(R509::OCSP::Request::Nonce::RESPONSE_ONLY)
@@ -92,7 +92,7 @@ describe R509::OCSP::Response do
     basic_response = OpenSSL::OCSP::BasicResponse.new
     basic_response.copy_nonce(ocsp_request)
     response_double = double("ocsp_response")
-    expect(response_double).to receive(:kind_of?).and_return('OpenSSL::OCSP::Response')
+    expect(response_double).to receive(:is_a?).and_return('OpenSSL::OCSP::Response')
     expect(response_double).to receive(:basic).and_return(basic_response)
     ocsp_response = R509::OCSP::Response.new(response_double)
     expect(ocsp_response.check_nonce(second_request)).to eq(R509::OCSP::Request::Nonce::NOT_EQUAL)
@@ -102,7 +102,7 @@ describe R509::OCSP::Response do
     ocsp_request.add_nonce
     basic_response = OpenSSL::OCSP::BasicResponse.new
     response_double = double("ocsp_response")
-    expect(response_double).to receive(:kind_of?).and_return('OpenSSL::OCSP::Response')
+    expect(response_double).to receive(:is_a?).and_return('OpenSSL::OCSP::Response')
     expect(response_double).to receive(:basic).and_return(basic_response)
     ocsp_response = R509::OCSP::Response.new(response_double)
     expect(ocsp_response.check_nonce(ocsp_request)).to eq(R509::OCSP::Request::Nonce::REQUEST_ONLY)

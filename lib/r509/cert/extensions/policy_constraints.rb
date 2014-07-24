@@ -103,7 +103,7 @@ module R509
         end
 
         def validate_policy_constraints(pc)
-          unless pc.kind_of?(Hash)
+          unless pc.is_a?(Hash)
             raise ArgumentError, 'Policy constraints must be provided as a hash with at least one of the two allowed keys: :inhibit_policy_mapping and :require_explicit_policy'
           end
           unless pc[:inhibit_policy_mapping].nil?

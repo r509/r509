@@ -142,7 +142,7 @@ module R509
         end
 
         def validate_authority_info_access(aia)
-          if !aia.kind_of?(Hash) ||
+          if !aia.is_a?(Hash) ||
              (aia[:ocsp_location].nil? && aia[:ca_issuers_location].nil?)
             raise ArgumentError, "You must pass a hash with at least one of "\
             "the following two keys (:ocsp_location, :ca_issuers_location)"
