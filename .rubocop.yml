@@ -87,3 +87,13 @@ RedundantSelf:
 
 UnusedMethodArgument:
   Enabled: false
+
+# Offense count: 21
+# Configuration parameters: MinBodyLength.
+Style/GuardClause:
+  Enabled: false
+
+# Offense count: 14
+# Configuration parameters: EnforcedStyle, SupportedStyles.
+Style/Next:
+  Enabled: false

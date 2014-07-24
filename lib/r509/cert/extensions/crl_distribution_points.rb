@@ -88,9 +88,7 @@ module R509
         end
 
         def validate_crl_distribution_points(arg)
-          unless arg.is_a?(Hash)
-            raise ArgumentError, "You must pass a hash with a :value key"
-          end
+          raise ArgumentError, "You must pass a hash with a :value key" unless arg.is_a?(Hash)
         end
       end
     end

@@ -25,7 +25,7 @@ module R509
       if opts.key?(:spki)
         @spki = parse_spki(opts[:spki])
       else
-      # create the SPKI from the private key if it wasn't passed in
+        # create the SPKI from the private key if it wasn't passed in
         @spki = build_spki(opts[:message_digest])
       end
     end

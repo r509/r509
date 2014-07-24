@@ -38,9 +38,8 @@ module R509
     end
 
     def validate_hash(hash)
-      if !hash.respond_to?(:has_key?) || !hash.key?(:so_path) || !hash.key?(:id)
-        raise ArgumentError, "You must supply a hash with both :so_path and :id"
-      end
+      return unless !hash.respond_to?(:key?) || !hash.key?(:so_path) || !hash.key?(:id)
+      raise ArgumentError, "You must supply a hash with both :so_path and :id"
     end
   end
 end

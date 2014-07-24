@@ -91,12 +91,11 @@ module R509
 
     # @private
     def load_private_key(opts)
-      if opts.key?(:key)
-        if opts[:key].is_a?(R509::PrivateKey)
-          return opts[:key]
-        else
-          return R509::PrivateKey.new(:key => opts[:key])
-        end
+      return unless opts.key?(:key)
+      if opts[:key].is_a?(R509::PrivateKey)
+        return opts[:key]
+      else
+        return R509::PrivateKey.new(:key => opts[:key])
       end
     end
 

@@ -57,19 +57,18 @@ module R509
       private
 
       def ensure_schema
-        if @db.execute('SELECT * FROM sqlite_master WHERE type=? AND name=?', 'table', 'revoked_serials').empty?
-          @db.execute_batch <<-EOSCHEMA
-            CREATE TABLE revoked_serials(
-               serial TEXT NOT NULL PRIMARY KEY,
-               reason INTEGER,
-               revoked_at INTEGER NOT NULL
-            );
-            CREATE TABLE crl_number(
-              number INTEGER NOT NULL DEFAULT 0
-            );
-            INSERT INTO crl_number DEFAULT VALUES;
-          EOSCHEMA
-        end
+        return unless @db.execute('SELECT * FROM sqlite_master WHERE type=? AND name=?', 'table', 'revoked_serials').empty?
+        @db.execute_batch <<-EOSCHEMA
+          CREATE TABLE revoked_serials(
+             serial TEXT NOT NULL PRIMARY KEY,
+             reason INTEGER,
+             revoked_at INTEGER NOT NULL
+          );
+          CREATE TABLE crl_number(
+            number INTEGER NOT NULL DEFAULT 0
+          );
+          INSERT INTO crl_number DEFAULT VALUES;
+        EOSCHEMA
       end
     end
   end

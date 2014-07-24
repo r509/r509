@@ -82,7 +82,7 @@ module R509
       # @option opts [Hash<String, R509::Config::CertProfile>] :profiles
       # @option opts [String] :crl_number_file A file to save the CRL number
       #  into. This is only used if you use the default FileReaderWriter in CRL::Administrator
-    # @option opts [String] :crl_md Optional digest for signing CRLs. sha1, sha224, sha256, sha384, sha512, md5. Defaults to R509::MessageDigest::DEFAULT_MD
+      # @option opts [String] :crl_md Optional digest for signing CRLs. sha1, sha224, sha256, sha384, sha512, md5. Defaults to R509::MessageDigest::DEFAULT_MD
       # @option opts [String] :crl_list_file A file to serialize revoked certificates into. This
       #  is only used if you use the default FileReaderWriter in CRL::Administrator
       # @option opts [R509::Cert] :ocsp_cert An optional cert+key pair
@@ -111,11 +111,9 @@ module R509
         parse_crl_data(opts)
 
         @profiles = {}
-        if opts[:profiles]
-          opts[:profiles].each_pair do |name, prof|
-            set_profile(name, prof)
-          end
-        end
+        opts[:profiles].each_pair do |name, prof|
+          set_profile(name, prof)
+        end if opts[:profiles]
       end
 
       # @return [R509::Cert] either a custom OCSP cert or the ca_cert
@@ -391,12 +389,8 @@ module R509
       end
 
       def check_ocsp_crl_delegate(cert, kind)
-        if cert && !cert.is_a?(R509::Cert)
-          raise ArgumentError, ":#{kind}, if provided, must be of type R509::Cert"
-        end
-        if cert && !cert.has_private_key?
-          raise ArgumentError, ":#{kind} must contain a private key, not just a certificate"
-        end
+        raise ArgumentError, ":#{kind}, if provided, must be of type R509::Cert" if cert && !cert.is_a?(R509::Cert)
+        raise ArgumentError, ":#{kind} must contain a private key, not just a certificate" if cert && !cert.has_private_key?
       end
 
       def self.build_ocsp_chain(ocsp_chain_path, ca_root_path)

@@ -157,7 +157,7 @@ module R509
         end
       end
 
-        # @return [Hash]
+      # @return [Hash]
       def to_h
         val = (@value.is_a?(R509::Subject)) ? @value.to_h : @value
 
