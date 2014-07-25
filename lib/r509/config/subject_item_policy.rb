@@ -38,20 +38,19 @@ module R509
         @optional = []
         @match_values = {}
         @match = []
-        unless hash.empty?
-          hash.each_pair do |key, value|
-            unless value.is_a?(Hash)
-              raise ArgumentError, "Each value must be a hash with a :policy key"
-            end
-            case value[:policy]
-            when 'required' then @required.push(key)
-            when 'optional' then @optional.push(key)
-            when 'match' then
-              @match_values[key] = value[:value]
-              @match.push(key)
-            else
-              raise ArgumentError, "Unknown subject item policy value. Allowed values are required, optional, or match"
-            end
+        return if hash.empty?
+        hash.each_pair do |key, value|
+          unless value.is_a?(Hash)
+            raise ArgumentError, "Each value must be a hash with a :policy key"
+          end
+          case value[:policy]
+          when 'required' then @required.push(key)
+          when 'optional' then @optional.push(key)
+          when 'match' then
+            @match_values[key] = value[:value]
+            @match.push(key)
+          else
+            raise ArgumentError, "Unknown subject item policy value. Allowed values are required, optional, or match"
           end
         end
       end
@@ -70,7 +69,7 @@ module R509
         end)
       end
 
-    # @return [Hash]
+      # @return [Hash]
       def to_h
         hash = {}
         @required.each { |r| hash[r] = { :policy => "required" } }
@@ -79,7 +78,7 @@ module R509
         hash
       end
 
-    # @return [YAML]
+      # @return [YAML]
       def to_yaml
         self.to_h.to_yaml
       end
@@ -109,9 +108,7 @@ module R509
         supplied = supplied.map { |item| item[0] }
         # so we can make sure they gave us everything that's required
         diff = @required + @match - supplied
-        unless diff.empty?
-          raise R509::R509Error, "This profile requires you supply " + (@required + @match).join(", ")
-        end
+        raise R509::R509Error, "This profile requires you supply " + (@required + @match).join(", ") unless diff.empty?
       end
     end
   end

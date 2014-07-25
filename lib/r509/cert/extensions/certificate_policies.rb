@@ -131,12 +131,12 @@ module R509
         def initialize(data)
           # store the policy identifier OID
           @policy_identifier = data.entries[0].value
+
           # iterate the policy qualifiers if any exist
-          unless data.entries[1].nil?
-            @policy_qualifiers = PolicyQualifiers.new
-            data.entries[1].each do |pq|
-              @policy_qualifiers.parse(pq)
-            end
+          return if data.entries[1].nil?
+          @policy_qualifiers = PolicyQualifiers.new
+          data.entries[1].each do |pq|
+            @policy_qualifiers.parse(pq)
           end
         end
 

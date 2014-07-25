@@ -99,9 +99,7 @@ module R509
 
     # @return [OpenSSL::PKey::RSA,OpenSSL::PKey::DSA,OpenSSL::PKey::EC] public key
     def public_key
-      if @req.is_a?(OpenSSL::X509::Request)
-        @req.public_key
-      end
+      @req.public_key
     end
 
     # Verifies the integrity of the signature on the request
@@ -211,16 +209,15 @@ module R509
     end
 
     def add_san_extension(san_names)
-      if san_names.is_a?(R509::ASN1::GeneralNames) && !san_names.names.empty?
-        ef = OpenSSL::X509::ExtensionFactory.new
-        serialized = san_names.serialize_names
-        ef.config = OpenSSL::Config.parse(serialized[:conf])
-        ex = []
-        ex << ef.create_extension("subjectAltName", serialized[:extension_string])
-        request_extension_set = OpenSSL::ASN1::Set([OpenSSL::ASN1::Sequence(ex)])
-        @req.add_attribute(OpenSSL::X509::Attribute.new("extReq", request_extension_set))
-        parse_san_attribute_from_csr(@req)
-      end
+      return unless san_names.is_a?(R509::ASN1::GeneralNames) && !san_names.names.empty?
+      ef = OpenSSL::X509::ExtensionFactory.new
+      serialized = san_names.serialize_names
+      ef.config = OpenSSL::Config.parse(serialized[:conf])
+      ex = []
+      ex << ef.create_extension("subjectAltName", serialized[:extension_string])
+      request_extension_set = OpenSSL::ASN1::Set([OpenSSL::ASN1::Sequence(ex)])
+      @req.add_attribute(OpenSSL::X509::Attribute.new("extReq", request_extension_set))
+      parse_san_attribute_from_csr(@req)
     end
 
     # Returns the proper instance variable
