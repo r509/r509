@@ -396,7 +396,7 @@ subject.common_name = "newdomain.com"
 subject.organization = "Org 2.0"
 ext = []
 ext << R509::Cert::Extensions::BasicConstraints.new(:ca => false)
-ext << R509::Cert::Extensions::SubjectAlternativeName.new(:names => san_names)
+ext << R509::Cert::Extensions::SubjectAlternativeName.new(:value => san_names)
 # assume config from yaml load above
 ca = R509::CertificateAuthority::Signer.new(config)
 cert = ca.sign(
