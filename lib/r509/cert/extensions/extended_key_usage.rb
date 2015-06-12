@@ -61,7 +61,7 @@ module R509
         # @example
         #   R509::Cert::Extensions::ExtendedKeyUsage.new(
         #     :critical => false,
-        #     :value => ['clientAuth,'serverAuth']
+        #     :value => ['clientAuth','serverAuth']
         #   )
         def initialize(arg)
           unless R509::Cert::Extensions.is_extension?(arg)
