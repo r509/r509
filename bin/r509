@@ -14,6 +14,7 @@ opts = R509::Trollop.options do
   opt :keyout, "File name to save generated key.", :type => :string
   opt :out, "File name to save generated CSR or self-signed certificate", :type => :string
   opt :type, "Type of key to generate. RSA/DSA/EC", :type => :string, :default => "RSA"
+  opt :password, "Password to encrypt generated key", :type => :string
   if RUBY_PLATFORM.match('darwin')
     opt :clipboard, "Copy CSR or certificate to the clipboard", :default => false, :short => :p
   end
@@ -82,6 +83,10 @@ if opts[:interactive] == true || opts[:subject].nil?
 
   print "Self-signed cert duration in days (null disables self-sign):"
   opts[:duration] = gets.chomp.to_i
+
+  print "Password to encrypt generated key (empty disables encryption):"
+  password = gets.chomp
+  opts[:password] = password unless password.empty?
 else
   opts[:subject].chomp.split('/').each do |item|
     if item != ''
@@ -110,9 +115,17 @@ if selfsign > 0
 end
 
 if opts[:keyout]
-  csr.key.write_pem(opts[:keyout])
+  if opts[:password]
+    csr.key.write_encrypted_pem(opts[:keyout], "aes256", opts[:password])
+  else
+    csr.key.write_pem(opts[:keyout])
+  end
 else
-  puts csr.key.to_pem
+  if opts[:password]
+    puts csr.key.to_encrypted_pem("aes256", opts[:password])
+  else
+    puts csr.key.to_pem
+  end
 end
 
 if opts[:out]
