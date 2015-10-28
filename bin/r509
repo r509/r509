@@ -2,6 +2,7 @@
 require 'rubygems'
 require 'r509'
 require 'r509/trollop'
+require 'io/console'
 
 opts = R509::Trollop.options do
   opt :interactive, "Interactive CSR/self-signed certificate generation. Overrides all flags other than keyout and out."
@@ -85,8 +86,9 @@ if opts[:interactive] == true || opts[:subject].nil?
   opts[:duration] = gets.chomp.to_i
 
   print "Password to encrypt generated key (empty disables encryption):"
-  password = gets.chomp
+  password = STDIN.noecho(&:gets).chomp
   opts[:password] = password unless password.empty?
+  puts ""
 else
   opts[:subject].chomp.split('/').each do |item|
     if item != ''
