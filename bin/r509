@@ -87,8 +87,17 @@ if opts[:interactive] == true || opts[:subject].nil?
 
   print "Password to encrypt generated key (empty disables encryption):"
   password = STDIN.noecho(&:gets).chomp
-  opts[:password] = password unless password.empty?
   puts ""
+  unless password.empty?
+    print "Retype password:"
+    password_confirm = STDIN.noecho(&:gets).chomp
+    puts ""
+    unless password == password_confirm
+      puts "Passwords do not match."
+      exit
+    end
+    opts[:password] = password
+  end
 else
   opts[:subject].chomp.split('/').each do |item|
     if item != ''
