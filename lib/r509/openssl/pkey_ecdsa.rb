@@ -49,7 +49,7 @@ if defined?(OpenSSL::PKey::EC) && !defined?(OpenSSL::PKey::EC::UNSUPPORTED)
 
       def initialize(arg, pass = (no_pass = true; nil))
         if arg.kind_of? OpenSSL::PKey::EC::Group
-          if !no_pass
+          if !pass.nil?
             if !pass.kind_of OpenSSL::PKey::EC::Point
               raise OpenSSL::PKey::ECError, "only a Point is allowed when supplying group"
             elsif !pass.group.eql? arg
@@ -57,7 +57,7 @@ if defined?(OpenSSL::PKey::EC) && !defined?(OpenSSL::PKey::EC::UNSUPPORTED)
             end
           end
           super(arg)
-          if no_pass
+          if pass.nil?
             self.generate_key
           else
             self.pub_key = pass
@@ -68,7 +68,7 @@ if defined?(OpenSSL::PKey::EC) && !defined?(OpenSSL::PKey::EC::UNSUPPORTED)
           self.pub_key = arg
         elsif arg.is_a? OpenSSL::PKey::EC
           # "Cast" to ECDSA
-          if !no_pass
+          if !pass.nil?
             raise OpenSSL::PKey::ECError, "password not allowed when supplying key"
           end
           if !(arg.public_key? || arg.private_key?)
@@ -90,9 +90,9 @@ if defined?(OpenSSL::PKey::EC) && !defined?(OpenSSL::PKey::EC::UNSUPPORTED)
           if !(self.public? || self.private?)
             raise OpenSSL::PKey::ECError, "Neither PUB key nor PRIV key found"
           end
-          k.check_key
+          self.check_key
         elsif arg.kind_of? Symbol
-          if !no_pass
+          if !pass.nil?
             raise OpenSSL::PKey::ECError, "password not allowed when supplying curve name"
           end
           curve_name = arg.to_s

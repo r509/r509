@@ -265,9 +265,9 @@ describe R509::PrivateKey do
       expect(private_key.to_der).to eq(@ec_key_der)
     end
 
-    it "returns error for bit_length" do
+    it "returns the bit-length" do
       private_key = R509::PrivateKey.new(:key => @ec_key_pem)
-      expect { private_key.bit_length }.to raise_error(R509::R509Error, 'Bit length is not available for EC at this time.')
+      expect(private_key.bit_length).to eq(384)
     end
 
   end

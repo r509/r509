@@ -212,9 +212,9 @@ describe R509::SPKI do
       spki = R509::SPKI.new(:spki => @spki_ec)
       expect(spki.curve_name).to eq('secp384r1')
     end
-    it "raises error on bit length" do
+    it "gets ECDSA bit length" do
       spki = R509::SPKI.new(:spki => @spki_ec)
-      expect { spki.bit_length }.to raise_error(R509::R509Error, 'Bit length is not available for EC at this time.')
+      expect(spki.bit_length).to eq(384)
     end
     it "returns the key algorithm" do
       spki = R509::SPKI.new(:spki => @spki_ec)
