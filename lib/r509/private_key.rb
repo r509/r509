@@ -185,13 +185,6 @@ module R509
       self.key.is_a?(OpenSSL::PKey::EC)
     end
 
-    # Returns whether the key is ECDSA (meaning it has they PKey API rather than the EC API)
-    #
-    # @return [Boolean] true if the key is EC, false otherwise
-    def ecdsa?
-      self.key.is_a?(OpenSSL::PKey::ECDSA)
-    end
-
     private
 
     def validate_engine(opts)
