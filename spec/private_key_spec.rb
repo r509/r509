@@ -187,7 +187,7 @@ describe R509::PrivateKey do
     faux_key = double("faux_key")
     expect(faux_key).to receive(:public_key).and_return("returning public key")
     key_name = "r509_key"
-    expect(engine).to receive(:load_private_key).twice.with(key_name).and_return(faux_key)
+    expect(engine).to receive(:load_private_key).with(key_name).and_return(faux_key)
     key = R509::PrivateKey.new(
       :engine => engine,
       :key_name => key_name

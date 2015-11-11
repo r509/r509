@@ -401,7 +401,7 @@ describe R509::Config::CAConfig do
     fake_engine = double("fake_engine")
     expect(fake_engine).to receive(:is_a?).with(OpenSSL::Engine).and_return(true)
     faux_key = OpenSSL::PKey::RSA.new(TestFixtures::TEST_CA_KEY)
-    expect(fake_engine).to receive(:load_private_key).twice.with("key").and_return(faux_key)
+    expect(fake_engine).to receive(:load_private_key).with("key").and_return(faux_key)
     engine = { "SO_PATH" => "path", "ID" => "id" }
 
     expect(R509::Engine.instance).to receive(:load).with(engine).and_return(fake_engine)
