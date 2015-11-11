@@ -2,7 +2,7 @@ require 'openssl'
 require 'r509/config'
 require 'r509/cert'
 require 'r509/exceptions'
-require 'r509/ec-hack'
+require 'r509/openssl/ec-hack'
 
 # CertificateAuthority related classes
 module R509::CertificateAuthority

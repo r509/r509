@@ -1,9 +1,10 @@
 require 'openssl'
+require 'r509/openssl/pkey_ecdsa'
 require 'r509/exceptions'
 require 'r509/io_helpers'
 require 'r509/helpers'
 require 'r509/private_key'
-require 'r509/ec-hack'
+require 'r509/openssl/ec-hack'
 require 'r509/asn1'
 
 module R509
@@ -97,9 +98,13 @@ module R509
       R509::CSR.new(:csr => IOHelpers.read_data(filename))
     end
 
-    # @return [OpenSSL::PKey::RSA,OpenSSL::PKey::DSA,OpenSSL::PKey::EC] public key
+    # @return [OpenSSL::PKey::RSA,OpenSSL::PKey::DSA,OpenSSL::PKey::EC,OpenSSL::PKey::ECDSA] public key
     def public_key
-      @req.public_key
+      pk = @req.public_key
+      if defined?(OpenSSL::PKey::ECDSA) && pk.is_a?(OpenSSL::PKey::EC)
+        pk = OpenSSL::PKey::ECDSA.new(pk)
+      end
+      pk
     end
 
     # Verifies the integrity of the signature on the request

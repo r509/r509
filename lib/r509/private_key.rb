@@ -1,4 +1,5 @@
 require 'openssl'
+require 'r509/openssl/pkey_ecdsa'
 require 'r509/io_helpers'
 require 'r509/exceptions'
 
@@ -54,7 +55,7 @@ module R509
       elsif self.dsa?
         return self.public_key.p.num_bits
       elsif self.ec?
-        raise R509::R509Error, 'Bit length is not available for EC at this time.'
+        return self.public_key.group.degree
       end
     end
     alias_method :bit_strength, :bit_length
@@ -91,7 +92,7 @@ module R509
 
     # @return [OpenSSL::PKey::RSA,OpenSSL::PKey::DSA,OpenSSL::PKey::EC] public key
     def public_key
-      if self.ec?
+      if self.ec? && !self.ecdsa?
         # OpenSSL::PKey::EC.public_key returns an OpenSSL::PKey::EC::Point, which isn't consistent
         # with the way OpenSSL::PKey::RSA/DSA do it. We could return the original PKey::EC object
         # but if we do that then it has the private_key as well. Here's a ghetto workaround.
@@ -191,6 +192,13 @@ module R509
       self.key.is_a?(OpenSSL::PKey::EC)
     end
 
+    # Returns whether the key is ECDSA (meaning it has they PKey API rather than the EC API)
+    #
+    # @return [Boolean] true if the key is EC, false otherwise
+    def ecdsa?
+      defined?(OpenSSL::PKey::ECDSA) && self.key.is_a?(OpenSSL::PKey::ECDSA)
+    end
+
     private
 
     def validate_engine(opts)
@@ -220,7 +228,11 @@ module R509
           @key = OpenSSL::PKey::DSA.new(opts[:key], password)
         rescue
           begin
-            @key = OpenSSL::PKey::EC.new(opts[:key], password)
+            if defined?(OpenSSL::PKey::ECDSA)
+              @key = OpenSSL::PKey::ECDSA.new(opts[:key], password)
+            else
+              @key = OpenSSL::PKey::EC.new(opts[:key], password)
+            end
           rescue
             raise R509::R509Error, "Failed to load private key. Invalid key or incorrect password."
           end
@@ -238,8 +250,12 @@ module R509
         @key = OpenSSL::PKey::DSA.new(bit_length)
       when "EC"
         curve_name = opts[:curve_name] || DEFAULT_CURVE
-        @key = OpenSSL::PKey::EC.new(curve_name)
-        @key.generate_key
+        if defined?(OpenSSL::PKey::ECSDA)
+          @key = OpenSSL::PKey::ECDSA.new(curve_name)
+        else
+          @key = OpenSSL::PKey::EC.new(curve_name)
+          @key.generate_key
+        end
       else
         raise ArgumentError, "Must provide #{KNOWN_TYPES.join(", ")} as type when key or engine is nil"
       end
