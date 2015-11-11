@@ -79,10 +79,10 @@ module R509
 
     # Returns the certificate public key
     #
-    # @return [OpenSSL::PKey::RSA,OpenSSL::PKey::DSA,OpenSSL::PKey::EC,OpenSSL::PKey::ECDSA] public key object
+    # @return [OpenSSL::PKey::RSA,OpenSSL::PKey::DSA,OpenSSL::PKey::ECDSA] public key object
     def public_key
       pk = @cert.public_key
-      if defined?(OpenSSL::PKey::ECDSA) && pk.is_a?(OpenSSL::PKey::EC)
+      if pk.is_a?(OpenSSL::PKey::EC)
         pk = OpenSSL::PKey::ECDSA.new(pk)
       end
       pk

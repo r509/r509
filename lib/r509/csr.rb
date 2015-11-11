@@ -98,10 +98,10 @@ module R509
       R509::CSR.new(:csr => IOHelpers.read_data(filename))
     end
 
-    # @return [OpenSSL::PKey::RSA,OpenSSL::PKey::DSA,OpenSSL::PKey::EC,OpenSSL::PKey::ECDSA] public key
+    # @return [OpenSSL::PKey::RSA,OpenSSL::PKey::DSA,OpenSSL::PKey::ECDSA] public key
     def public_key
       pk = @req.public_key
-      if defined?(OpenSSL::PKey::ECDSA) && pk.is_a?(OpenSSL::PKey::EC)
+      if pk.is_a?(OpenSSL::PKey::EC)
         pk = OpenSSL::PKey::ECDSA.new(pk)
       end
       pk

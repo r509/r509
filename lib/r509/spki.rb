@@ -34,7 +34,7 @@ module R509
     # @return [OpenSSL::PKey::RSA,OpenSSL::PKey::ECDSA] public key
     def public_key
       pk = @spki.public_key
-      if defined?(OpenSSL::PKey::ECDSA) && pk.is_a?(OpenSSL::PKey::EC)
+      if pk.is_a?(OpenSSL::PKey::EC)
         pk = OpenSSL::PKey::ECDSA.new(pk)
       end
       pk
