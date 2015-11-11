@@ -332,7 +332,7 @@ describe R509::CSR do
   context "when elliptic curve support is unavailable" do
     before :all do
       @ec = OpenSSL::PKey.send(:remove_const, :EC) # remove EC support for test!
-      load('r509/ec-hack.rb')
+      load('r509/openssl/ec-hack.rb')
     end
     after :all do
       OpenSSL::PKey.send(:remove_const, :EC) # remove stubbed EC
