@@ -250,7 +250,7 @@ module R509
         @key = OpenSSL::PKey::DSA.new(bit_length)
       when "EC"
         curve_name = opts[:curve_name] || DEFAULT_CURVE
-        if defined?(OpenSSL::PKey::ECSDA)
+        if defined?(OpenSSL::PKey::ECDSA)
           @key = OpenSSL::PKey::ECDSA.new(curve_name)
         else
           @key = OpenSSL::PKey::EC.new(curve_name)
