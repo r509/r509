@@ -12,12 +12,16 @@ module R509::Validity
 
   # data about the status of a certificate
   class Status
-    attr_reader :status, :revocation_time, :revocation_reason
+    attr_reader :status,
+                :revocation_time,
+                :revocation_reason,
+                :revocation_int_reason
 
     def initialize(options = {})
       @status = options[:status]
       @revocation_time = options[:revocation_time] || nil
       @revocation_reason = options[:revocation_reason] || 0
+      @revocation_int_reason = options[:revocation_int_reason] || 0
 
       if @status == R509::Validity::REVOKED && @revocation_time.nil?
         @revocation_time = Time.now.to_i
