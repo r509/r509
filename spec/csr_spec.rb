@@ -12,6 +12,7 @@ describe R509::CSR do
     @csr_invalid_signature = TestFixtures::CSR_INVALID_SIGNATURE
     @csr2 = TestFixtures::CSR2
     @csr3 = TestFixtures::CSR3
+    @csr_wildcard_cn_no_san = TestFixtures::CSR_WILDCARD_NO_SAN
     @csr_der = TestFixtures::CSR_DER
     @csr_dsa = TestFixtures::CSR_DSA
     @csr4_multiple_attrs = TestFixtures::CSR4_MULTIPLE_ATTRS
@@ -214,6 +215,11 @@ describe R509::CSR do
       csr = R509::CSR.new(:csr => @csr_unknown_oid)
       expect(csr.subject["1.2.3.4.5.6.7.8.9.8.7.6.5.4.3.2.1.0.0"]).to eq("random oid!")
       expect(csr.subject["1.3.3.543.567.32.43.335.1.1.1"]).to eq("another random oid!")
+    end
+    it "works when the CN is a wildcard with no SAN" do
+      csr = R509::CSR.new(:csr => @csr_wildcard_cn_no_san)
+      expect(csr.subject_component('CN').to_s).to eq('*.local')
+      expect(csr.san).to be_nil
     end
   end
   context "when supplying a key with csr" do

@@ -95,6 +95,8 @@ module TestFixtures
 
   KEY3 = read_fixture('cert3_key.pem')
 
+  CSR_WILDCARD_NO_SAN = read_fixture('csr_wildcard_no_san.pem')
+
   KEY3_ENCRYPTED = read_fixture('cert3_key_des3.pem')
 
   CERT3_P12 = read_fixture('cert3.p12')
