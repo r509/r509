@@ -8,7 +8,7 @@ module R509
 
     # this constant defines the default message digest if it is not supplied
     # or an invalid digest is passed
-    DEFAULT_MD = 'SHA1'
+    DEFAULT_MD = 'SHA256'
 
     attr_reader :name, :digest
 
