@@ -65,8 +65,8 @@ describe R509::MessageDigest do
   end
   it "translates unknown name -> digest" do
     md = R509::MessageDigest.new("unknown")
-    expect(md.name).to eq("sha1")
-    expect(md.digest.is_a?(OpenSSL::Digest::SHA1)).to eq(true)
+    expect(md.name).to eq("sha256")
+    expect(md.digest.is_a?(OpenSSL::Digest::SHA256)).to eq(true)
   end
   it "translates sha1 digest -> name" do
     md = R509::MessageDigest.new(OpenSSL::Digest::SHA1.new)

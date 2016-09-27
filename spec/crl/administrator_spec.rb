@@ -44,20 +44,20 @@ describe R509::CRL::Administrator do
     )
     crl_admin = R509::CRL::Administrator.new(config)
     crl = crl_admin.generate_crl
-    expect(crl.signature_algorithm).to eq('sha1WithRSAEncryption')
+    expect(crl.signature_algorithm).to eq('sha256WithRSAEncryption')
   end
 
   it "generates CRL with no entries in revocation list (RSA key)" do
     crl_admin = R509::CRL::Administrator.new(@test_ca_config)
     crl = crl_admin.generate_crl
     expect(crl.to_pem).to match(/BEGIN X509 CRL/)
-    expect(crl.signature_algorithm).to eq('sha1WithRSAEncryption')
+    expect(crl.signature_algorithm).to eq('sha256WithRSAEncryption')
   end
   it "generates CRL with no entries in revocation list (DSA key)" do
     crl_admin = R509::CRL::Administrator.new(@test_ca_dsa_config)
     crl = crl_admin.generate_crl
     expect(crl.to_pem).to match(/BEGIN X509 CRL/)
-    expect(crl.signature_algorithm).to eq('dsaWithSHA1')
+    expect(crl.signature_algorithm).to eq('dsa_with_SHA256')
   end
   context "elliptic curve", :ec => true do
     before :all do
@@ -67,7 +67,7 @@ describe R509::CRL::Administrator do
       crl_admin = R509::CRL::Administrator.new(@test_ca_ec_config)
       crl = crl_admin.generate_crl
       expect(crl.to_pem).to match(/BEGIN X509 CRL/)
-      expect(crl.signature_algorithm).to eq('ecdsa-with-SHA1')
+      expect(crl.signature_algorithm).to eq('ecdsa-with-SHA256')
     end
   end
   it "raises exception when no R509::Config::CAConfig object is passed to the constructor" do

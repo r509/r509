@@ -235,7 +235,7 @@ describe R509::CertificateAuthority::OptionsBuilder do
         :basic_constraints => { :ca => false },
         :key_usage => { :value => ["digitalSignature"] },
         :allowed_mds => ['sha256', 'sha1', 'sha384'],
-        :default_md => 'sha1'
+        :default_md => 'sha256'
       )
       config.set_profile("profile", profile)
       @builder = R509::CertificateAuthority::OptionsBuilder.new(config)
@@ -250,7 +250,7 @@ describe R509::CertificateAuthority::OptionsBuilder do
     end
     it "returns the default hash if no hash is passed" do
       data = @builder.build_and_enforce(:csr => @csr, :profile_name => "profile")
-      expect(data[:message_digest]).to eq('sha1')
+      expect(data[:message_digest]).to eq('sha256')
     end
   end
 
@@ -261,7 +261,7 @@ describe R509::CertificateAuthority::OptionsBuilder do
         :basic_constraints => { :ca => false },
         :key_usage => { :value => ["digitalSignature"] },
         :allowed_mds => ['sha256', 'sha1', 'sha384'],
-        :default_md => 'sha1'
+        :default_md => 'sha256'
       )
       config.set_profile("profile", profile)
       @builder = R509::CertificateAuthority::OptionsBuilder.new(config)
