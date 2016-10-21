@@ -1,7 +1,0 @@
-#!/usr/bin/env sh
-
-if [ -n "$R509_EC_SUPPORT_DISABLED" ]; then
-    wget http://langui.sh/r509-travis-testing/ssl-no-ec_1.0_amd64.deb
-    sudo dpkg -i ssl-no-ec_1.0_amd64.deb
-    rvm mount -r http://langui.sh/r509-travis-testing/ubuntu/12.04/x86_64/ruby-1.9.3-p0.tar.bz2 --verify-downloads 1
-fi
