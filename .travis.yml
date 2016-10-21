@@ -1,42 +1,13 @@
 bundler_args: --without documentation
 language: ruby
 rvm:
- - 1.9.3
  - 2.0.0
- - 2.1.2
+ - 2.3.1
  - ruby-head
  - rbx
 matrix:
-  include:
-  # This tests the X509Name UNDEF fix in R509::Subject. My patch to remove the need for this code landed in 1.9.3-p125
-  # so we'll just ask for 1.9.3, install p0 + non-EC OpenSSL via before_install, and test UNDEF + non-EC in one test
-  - rvm: 1.9.3
-    env: R509_EC_SUPPORT_DISABLED=true
   allow_failures:
     - rvm: rbx
-    - rvm: 1.9.3
-      env: R509_EC_SUPPORT_DISABLED=true
-before_install:
-  # instructions for building OpenSSL and Ruby on Ubuntu 12.04 64-bit LTS (current Travis-CI build slaves)
-  # apt-get update
-  # apt-get install build-essential
-  # apt-get source openssl
-  # cd openssl-1.0.1
-  # ./Configure shared no-ec no-idea no-mdc2 no-rc5 zlib enable-tlsext no-ssl2 debian-amd64
-  # make depend && make install
-  # (now make the deb via fpm)
-  # gem install fpm --no-ri --no-rdoc
-  # fpm -s dir -t deb -n ssl-no-ec /usr/local/ssl
-  #
-  # and then install a prepped ruby through rvm made with these commands:
-  # (assumed rvm is installed already)
-  # rvm install ruby-1.9.3-p0 --with-openssl-dir=/usr/local/ssl
-  # rvm prepare ruby-1.9.3-p0 --install -r example.com:/path/to/r509-travis-testing
-  #
-  # Then upload all that stuff to the right places. Fun!
-  #
-  - ./.travis-scripts/setup
-  - if [ -n "$R509_EC_SUPPORT_DISABLED" ]; then rvm use ruby-1.9.3-p0 && gem install bundler --no-ri --no-rdoc; fi
 notifications:
   irc:
     channels:
