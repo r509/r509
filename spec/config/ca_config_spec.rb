@@ -55,7 +55,7 @@ describe R509::Config::CAConfigPool do
       end
 
       it "builds yaml" do
-        expect(YAML.load(@pool.to_yaml)).to eq("first" => { "ca_cert" => { "cert" => "<add_path>", "key" => "<add_path>" }, "ocsp_start_skew_seconds" => 3600, "ocsp_validity_hours" => 168, "crl_start_skew_seconds" => 3600, "crl_validity_hours" => 168, "crl_md" => "SHA1", "profiles" => { "first_profile" => { "default_md" => "SHA1" } } })
+        expect(YAML.load(@pool.to_yaml)).to eq("first" => { "ca_cert" => { "cert" => "<add_path>", "key" => "<add_path>" }, "ocsp_start_skew_seconds" => 3600, "ocsp_validity_hours" => 168, "crl_start_skew_seconds" => 3600, "crl_validity_hours" => 168, "crl_md" => "SHA256", "profiles" => { "first_profile" => { "default_md" => "SHA256" } } })
       end
     end
 
@@ -92,10 +92,10 @@ describe R509::Config::CAConfigPool do
                                                    "ocsp_validity_hours" => 168,
                                                    "crl_start_skew_seconds" => 3600,
                                                    "crl_validity_hours" => 168,
-                                                   "crl_md" => "SHA1",
+                                                   "crl_md" => "SHA256",
                                                    "profiles" => {
                                                      "first_profile" => {
-                                                       "default_md" => "SHA1"
+                                                       "default_md" => "SHA256"
                                                      }
                                                    }
                                                  },
@@ -108,10 +108,10 @@ describe R509::Config::CAConfigPool do
                                                    "ocsp_validity_hours" => 168,
                                                    "crl_start_skew_seconds" => 3600,
                                                    "crl_validity_hours" => 168,
-                                                   "crl_md" => "SHA1",
+                                                   "crl_md" => "SHA256",
                                                    "profiles" => {
                                                      "first_profile" => {
-                                                       "default_md" => "SHA1"
+                                                       "default_md" => "SHA256"
                                                      }
                                                    }
                                                  }
@@ -176,27 +176,27 @@ describe R509::Config::CAConfig do
     it "includes engine stub if in hardware" do
       config = R509::Config::CAConfig.new(:ca_cert => TestFixtures.test_ca_cert)
       expect(config.ca_cert.key).to receive(:in_hardware?).and_return(true)
-      expect(YAML.load(config.to_yaml)).to eq("ca_cert" => { "cert" => "<add_path>", "engine" => { :so_path => "<add_path>", :id => "<add_name>" } }, "ocsp_start_skew_seconds" => 3600, "ocsp_validity_hours" => 168, "crl_start_skew_seconds" => 3600, "crl_validity_hours" => 168, "crl_md" => "SHA1")
+      expect(YAML.load(config.to_yaml)).to eq("ca_cert" => { "cert" => "<add_path>", "engine" => { :so_path => "<add_path>", :id => "<add_name>" } }, "ocsp_start_skew_seconds" => 3600, "ocsp_validity_hours" => 168, "crl_start_skew_seconds" => 3600, "crl_validity_hours" => 168, "crl_md" => "SHA256")
     end
     it "includes ocsp_cert stub if not nil" do
       config = R509::Config::CAConfig.new(:ca_cert => TestFixtures.test_ca_cert, :ocsp_cert => TestFixtures.test_ca_cert)
-      expect(YAML.load(config.to_yaml)).to eq("ca_cert" => { "cert" => "<add_path>", "key" => "<add_path>" }, "ocsp_cert" => { "cert" => "<add_path>", "key" => "<add_path>" }, "ocsp_start_skew_seconds" => 3600, "ocsp_validity_hours" => 168, "crl_start_skew_seconds" => 3600, "crl_validity_hours" => 168, "crl_md" => "SHA1")
+      expect(YAML.load(config.to_yaml)).to eq("ca_cert" => { "cert" => "<add_path>", "key" => "<add_path>" }, "ocsp_cert" => { "cert" => "<add_path>", "key" => "<add_path>" }, "ocsp_start_skew_seconds" => 3600, "ocsp_validity_hours" => 168, "crl_start_skew_seconds" => 3600, "crl_validity_hours" => 168, "crl_md" => "SHA256")
     end
     it "includes crl_cert stub if not nil" do
       config = R509::Config::CAConfig.new(:ca_cert => TestFixtures.test_ca_cert, :crl_cert => TestFixtures.test_ca_cert)
-      expect(YAML.load(config.to_yaml)).to eq("ca_cert" => { "cert" => "<add_path>", "key" => "<add_path>" }, "crl_cert" => { "cert" => "<add_path>", "key" => "<add_path>" }, "ocsp_start_skew_seconds" => 3600, "ocsp_validity_hours" => 168, "crl_start_skew_seconds" => 3600, "crl_validity_hours" => 168, "crl_md" => "SHA1")
+      expect(YAML.load(config.to_yaml)).to eq("ca_cert" => { "cert" => "<add_path>", "key" => "<add_path>" }, "crl_cert" => { "cert" => "<add_path>", "key" => "<add_path>" }, "ocsp_start_skew_seconds" => 3600, "ocsp_validity_hours" => 168, "crl_start_skew_seconds" => 3600, "crl_validity_hours" => 168, "crl_md" => "SHA256")
     end
     it "includes ocsp_chain if not nil" do
       config = R509::Config::CAConfig.new(:ca_cert => TestFixtures.test_ca_cert, :ocsp_chain => [OpenSSL::X509::Certificate.new])
-      expect(YAML.load(config.to_yaml)).to eq("ca_cert" => { "cert" => "<add_path>", "key" => "<add_path>" }, "ocsp_chain" => "<add_path>", "ocsp_start_skew_seconds" => 3600, "ocsp_validity_hours" => 168, "crl_start_skew_seconds" => 3600, "crl_validity_hours" => 168, "crl_md" => "SHA1")
+      expect(YAML.load(config.to_yaml)).to eq("ca_cert" => { "cert" => "<add_path>", "key" => "<add_path>" }, "ocsp_chain" => "<add_path>", "ocsp_start_skew_seconds" => 3600, "ocsp_validity_hours" => 168, "crl_start_skew_seconds" => 3600, "crl_validity_hours" => 168, "crl_md" => "SHA256")
     end
     it "includes crl_list_file if not nil" do
       config = R509::Config::CAConfig.new(:ca_cert => TestFixtures.test_ca_cert, :crl_list_file => '/some/path')
-      expect(YAML.load(config.to_yaml)).to eq("ca_cert" => { "cert" => "<add_path>", "key" => "<add_path>" }, "ocsp_start_skew_seconds" => 3600, "ocsp_validity_hours" => 168, "crl_start_skew_seconds" => 3600, "crl_validity_hours" => 168, "crl_list_file" => "/some/path", "crl_md" => "SHA1")
+      expect(YAML.load(config.to_yaml)).to eq("ca_cert" => { "cert" => "<add_path>", "key" => "<add_path>" }, "ocsp_start_skew_seconds" => 3600, "ocsp_validity_hours" => 168, "crl_start_skew_seconds" => 3600, "crl_validity_hours" => 168, "crl_list_file" => "/some/path", "crl_md" => "SHA256")
     end
     it "includes crl_number_file if not nil" do
       config = R509::Config::CAConfig.new(:ca_cert => TestFixtures.test_ca_cert, :crl_number_file => '/some/path')
-      expect(YAML.load(config.to_yaml)).to eq("ca_cert" => { "cert" => "<add_path>", "key" => "<add_path>" }, "ocsp_start_skew_seconds" => 3600, "ocsp_validity_hours" => 168, "crl_start_skew_seconds" => 3600, "crl_validity_hours" => 168, "crl_number_file" => "/some/path", "crl_md" => "SHA1")
+      expect(YAML.load(config.to_yaml)).to eq("ca_cert" => { "cert" => "<add_path>", "key" => "<add_path>" }, "ocsp_start_skew_seconds" => 3600, "ocsp_validity_hours" => 168, "crl_start_skew_seconds" => 3600, "crl_validity_hours" => 168, "crl_number_file" => "/some/path", "crl_md" => "SHA256")
     end
     it "includes profiles" do
       config = R509::Config::CAConfig.new(:ca_cert => TestFixtures.test_ca_cert)
@@ -205,11 +205,11 @@ describe R509::Config::CAConfig do
       )
       config.set_profile("subroot", profile)
       config.set_profile("subroot_also", profile)
-      expect(YAML.load(config.to_yaml)).to eq("ca_cert" => { "cert" => "<add_path>", "key" => "<add_path>" }, "ocsp_start_skew_seconds" => 3600, "ocsp_validity_hours" => 168, "crl_start_skew_seconds" => 3600, "crl_validity_hours" => 168, "crl_md" => "SHA1", "profiles" => { "subroot" => { "basic_constraints" => { :ca => true, :critical => true }, "default_md" => "SHA1" }, "subroot_also" => { "basic_constraints" => { :ca => true, :critical => true }, "default_md" => "SHA1" } })
+      expect(YAML.load(config.to_yaml)).to eq("ca_cert" => { "cert" => "<add_path>", "key" => "<add_path>" }, "ocsp_start_skew_seconds" => 3600, "ocsp_validity_hours" => 168, "crl_start_skew_seconds" => 3600, "crl_validity_hours" => 168, "crl_md" => "SHA256", "profiles" => { "subroot" => { "basic_constraints" => { :ca => true, :critical => true }, "default_md" => "SHA256" }, "subroot_also" => { "basic_constraints" => { :ca => true, :critical => true }, "default_md" => "SHA256" } })
     end
     it "includes defaults" do
       config = R509::Config::CAConfig.new(:ca_cert => TestFixtures.test_ca_cert)
-      expect(YAML.load(config.to_yaml)).to eq("ca_cert" => { "cert" => "<add_path>", "key" => "<add_path>" }, "ocsp_start_skew_seconds" => 3600, "ocsp_validity_hours" => 168, "crl_start_skew_seconds" => 3600, "crl_validity_hours" => 168, "crl_md" => "SHA1")
+      expect(YAML.load(config.to_yaml)).to eq("ca_cert" => { "cert" => "<add_path>", "key" => "<add_path>" }, "ocsp_start_skew_seconds" => 3600, "ocsp_validity_hours" => 168, "crl_start_skew_seconds" => 3600, "crl_validity_hours" => 168, "crl_md" => "SHA256")
     end
   end
 

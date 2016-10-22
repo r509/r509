@@ -23,7 +23,7 @@ certificate_authorities:
     crl_list_file: spec/fixtures/test_ca_crl_list.txt
     crl_number_file: spec/fixtures/test_ca_crl_number.txt
     crl_validity_hours: 168
-    crl_md: SHA1
+    crl_md: SHA256
     profiles:
       server:
         basic_constraints:
@@ -64,11 +64,10 @@ certificate_authorities:
           :value:
           - :type: URI
             :value: http://crl.domain.com/test_ca.crl
-        default_md: SHA1
+        default_md: SHA256
         allowed_mds:
         - SHA256
         - SHA512
-        - SHA1
       client:
         basic_constraints:
           :ca: false
@@ -91,11 +90,10 @@ certificate_authorities:
           :value:
           - :type: URI
             :value: http://crl.domain.com/test_ca.crl
-        default_md: SHA1
+        default_md: SHA256
         allowed_mds:
         - SHA256
         - SHA512
-        - SHA1
       email:
         basic_constraints:
           :ca: false
@@ -118,11 +116,10 @@ certificate_authorities:
           :value:
           - :type: URI
             :value: http://crl.domain.com/test_ca.crl
-        default_md: SHA1
+        default_md: SHA256
         allowed_mds:
         - SHA256
         - SHA512
-        - SHA1
       clientserver:
         basic_constraints:
           :ca: false
@@ -146,11 +143,10 @@ certificate_authorities:
           :value:
           - :type: URI
             :value: http://crl.domain.com/test_ca.crl
-        default_md: SHA1
+        default_md: SHA256
         allowed_mds:
         - SHA256
         - SHA512
-        - SHA1
       codesigning:
         basic_constraints:
           :ca: false
@@ -172,11 +168,10 @@ certificate_authorities:
           :value:
           - :type: URI
             :value: http://crl.domain.com/test_ca.crl
-        default_md: SHA1
+        default_md: SHA256
         allowed_mds:
         - SHA256
         - SHA512
-        - SHA1
       timestamping:
         basic_constraints:
           :ca: false
@@ -198,11 +193,10 @@ certificate_authorities:
           :value:
           - :type: URI
             :value: http://crl.domain.com/test_ca.crl
-        default_md: SHA1
+        default_md: SHA256
         allowed_mds:
         - SHA256
         - SHA512
-        - SHA1
       subroot:
         basic_constraints:
           :ca: true
@@ -261,11 +255,10 @@ certificate_authorities:
           :value:
           - :type: URI
             :value: http://crl.domain.com/test_ca.crl
-        default_md: SHA1
+        default_md: SHA256
         allowed_mds:
         - SHA256
         - SHA512
-        - SHA1
       ocsp_delegate:
         basic_constraints:
           :ca: false
@@ -282,8 +275,7 @@ certificate_authorities:
         ocsp_no_check:
           :critical: false
           :value: true
-        default_md: SHA1
+        default_md: SHA256
         allowed_mds:
         - SHA256
         - SHA512
-        - SHA1

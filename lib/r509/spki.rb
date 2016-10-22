@@ -12,7 +12,7 @@ module R509
     attr_reader :spki, :key
     # @option opts [String,OpenSSL::Netscape::SPKI] :spki the spki you want to parse
     # @option opts [R509::PrivateKey,String] :key optional private key to supply. either an unencrypted PEM/DER string or an R509::PrivateKey object (use the latter if you need password/hardware support). if supplied you do not need to pass an spki.
-    # @option opts [String] :message_digest Optional digest. sha1, sha224, sha256, sha384, sha512, md5. Defaults to sha1. Only used if you supply a :key and no :spki
+    # @option opts [String] :message_digest Optional digest. sha1, sha224, sha256, sha384, sha512, md5. Defaults to sha256. Only used if you supply a :key and no :spki
     def initialize(opts = {})
       if !opts.is_a?(Hash)
         raise ArgumentError, 'Must provide a hash of options'

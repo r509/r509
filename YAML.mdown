@@ -57,9 +57,9 @@ Integer seconds to skew back the "thisUpdate" field. This prevents issues where 
 ###message\_digest
 String value of the message digest to use for signing (both CRL and certificates). Allowed values are:
 
-* SHA1 (default)
+* SHA1
 * SHA224
-* SHA256
+* SHA256 (default)
 * SHA384
 * SHA512
 * MD5 (Don't use this unless you have a really, really good reason. Even then, you shouldn't)
@@ -143,8 +143,8 @@ certificate_authorities:
           :ca_issuers_location:
           - :type: URI
             :value: http://www.domain.com/my_roots.html
-        default_md: SHA1
+        default_md: SHA256
         allowed_mds:
+        - SHA512
         - SHA256
-        - SHA1
 ```

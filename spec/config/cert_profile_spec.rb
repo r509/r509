@@ -83,6 +83,6 @@ describe R509::Config::CertProfile do
         :value => [{ :type => 'URI', :value => 'http://crl.myca.net/ca.crl' }]
       )
     )
-    expect(YAML.load(config.to_yaml)).to eq("crl_distribution_points" => { :critical => false, :value => [{ :type => "URI", :value => "http://crl.myca.net/ca.crl" }] }, "default_md" => "SHA1")
+    expect(YAML.load(config.to_yaml)).to eq("crl_distribution_points" => { :critical => false, :value => [{ :type => "URI", :value => "http://crl.myca.net/ca.crl" }] }, "default_md" => "SHA256")
   end
 end

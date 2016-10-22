@@ -66,8 +66,8 @@ describe R509::Cert do
   end
   it "generates certificate fingerprints" do
     cert = R509::Cert.new(:cert => @cert)
-    expect(cert.fingerprint).to eq('863bbb58877b426eb10ccfd34d3056b8c961f627')
-    expect(cert.fingerprint('sha256')).to eq('65d624f5a6937c3005d78b3f4ff09164649dd5aeb3fd8a93d6fd420e8b587fa2')
+    expect(cert.fingerprint).to eq('65d624f5a6937c3005d78b3f4ff09164649dd5aeb3fd8a93d6fd420e8b587fa2')
+    expect(cert.fingerprint('sha1')).to eq('863bbb58877b426eb10ccfd34d3056b8c961f627')
     expect(cert.fingerprint('sha512')).to eq('a07d87f04161f52ef671c9d616530d07ebadef9c93c0470091617363c9ce8618dcb7931414e599d25cb032d68597111719e76d7de4bb7a92bf5ca7c08c36cf12')
     expect(cert.fingerprint('md5')).to eq('aa78501c41b19252dfbe8ba509cc21f4')
   end

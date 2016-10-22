@@ -83,11 +83,11 @@ module R509
       @cert.public_key
     end
 
-    # Returns the certificate fingerprint with the specified algorithm (default sha1)
+    # Returns the certificate fingerprint with the specified algorithm (default sha256)
     #
     # @param [String] algorithm Which algorithm to use for the fingerprint. See R509::MessageDigest for supported algorithm names
     # @return [String] hex digest of the certificate
-    def fingerprint(algorithm = 'sha1')
+    def fingerprint(algorithm = 'sha256')
       message_digest = R509::MessageDigest.new(algorithm)
       md = message_digest.digest
       md.update(@cert.to_der)

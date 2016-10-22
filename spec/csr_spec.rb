@@ -185,7 +185,7 @@ describe R509::CSR do
     end
     it "returns the signature algorithm" do
       csr = R509::CSR.new(:csr => @csr)
-      expect(csr.signature_algorithm).to eq('sha1WithRSAEncryption')
+      expect(csr.signature_algorithm).to eq('sha256WithRSAEncryption')
     end
     it "returns RSA key algorithm for RSA CSR" do
       csr = R509::CSR.new(:csr => @csr)
@@ -226,8 +226,13 @@ describe R509::CSR do
     end
   end
   context "when setting alternate signature algorithms" do
-    it "sets sha1 if you pass an invalid message digest" do
+    it "sets sha256 if you pass an invalid message digest" do
       csr = R509::CSR.new(:message_digest => 'sha88', :bit_length => 512, :subject => [['CN', 'langui.sh']])
+      expect(csr.message_digest.name).to eq('sha256')
+      expect(csr.signature_algorithm).to eq("sha256WithRSAEncryption")
+    end
+    it "sets sha1 properly" do
+      csr = R509::CSR.new(:message_digest => 'sha1', :bit_length => 512, :subject => [['CN', 'sha1-signature-alg.test']])
       expect(csr.message_digest.name).to eq('sha1')
       expect(csr.signature_algorithm).to eq("sha1WithRSAEncryption")
     end
@@ -285,7 +290,7 @@ describe R509::CSR do
   it "loads a csr with load_from_file" do
     path = File.dirname(__FILE__) + '/fixtures/csr1.pem'
     csr = R509::CSR.load_from_file path
-    expect(csr.message_digest.name).to eq('sha1')
+    expect(csr.message_digest.name).to eq('sha256')
   end
 
   context "when using elliptic curves", :ec => true do

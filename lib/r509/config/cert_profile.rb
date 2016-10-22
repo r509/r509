@@ -31,7 +31,7 @@ module R509
       # @option opts [Hash] :crl_distribution_points
       # @option opts [Hash] :name_constraints Sets the value of the nameConstraints extension
       # @option opts [R509::Config::SubjectItemPolicy] :subject_item_policy
-      # @option opts [String] :default_md (SHA1) The hashing algorithm to use.
+      # @option opts [String] :default_md (SHA256) The hashing algorithm to use.
       # @option opts [Array] :allowed_mds (nil) Array of allowed hashes.
       #  default_md will be automatically added to this list if it isn't already listed.
       def initialize(opts = {})
