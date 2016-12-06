@@ -2,12 +2,11 @@ bundler_args: --without documentation
 language: ruby
 rvm:
  - 2.0.0
- - 2.3.1
+ - 2.3.3
  - ruby-head
- - rbx
 matrix:
   allow_failures:
-    - rvm: rbx
+    - rvm: ruby-head
 notifications:
   irc:
     channels:
