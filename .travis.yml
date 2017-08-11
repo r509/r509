@@ -1,8 +1,12 @@
+sudo: false
+dist: trusty
+
 bundler_args: --without documentation
 language: ruby
 rvm:
  - 2.0.0
  - 2.3.3
+ - 2.4.1
  - ruby-head
 matrix:
   allow_failures:

@@ -1,14 +1,14 @@
-#r509 [![Build Status](https://secure.travis-ci.org/r509/r509.png)](http://travis-ci.org/r509/r509) [![Coverage Status](https://coveralls.io/repos/r509/r509/badge.png?branch=master)](https://coveralls.io/r/r509/r509?branch=master)
+# r509 [![Build Status](https://secure.travis-ci.org/r509/r509.png)](http://travis-ci.org/r509/r509) [![Coverage Status](https://coveralls.io/repos/r509/r509/badge.png?branch=master)](https://coveralls.io/r/r509/r509?branch=master)
 r509 is a Ruby gem built using OpenSSL that is designed to ease management of a public key infrastructure. The r509 API facilitates easy creation of CSRs, signing of certificates, revocation (CRL/OCSP), and much more. Together with projects like [r509-ocsp-responder](https://github.com/r509/r509-ocsp-responder) and [r509-ca-http](https://github.com/r509/r509-ca-http) it is intended to be a complete [RFC 5280](http://www.ietf.org/rfc/rfc5280.txt)-compliant certificate authority for use in production environments.
 
-##Why?
+## Why?
 Certificates are hard, and the Ruby OpenSSL APIs aren't easy to use (because they hew closely to OpenSSL itself). Additionally, as SSL/TLS has aged a variety of best practices and workarounds around certificate issuance have grown up around it that are not easy to discover. r509 is an attempt to build a straightforward API that allows you to do things as simple as parsing a certificate all the way up to operating an entire certificate authority.
 
-##Requirements
+## Requirements
 
-r509 requires Ruby 1.9.3+ compiled with OpenSSL and YAML support (this is a typical default). It is recommended that you compile Ruby against OpenSSL 1.0.0+ (with elliptic curve support enabled). Red Hat-derived distributions prior to RHEL/CentOS 6.5 ship with EC disabled in OpenSSL, so if you need EC support you will need to recompile.
+r509 requires Ruby 2.0.0+ compiled with OpenSSL and YAML support (this is a typical default). It is recommended that you compile Ruby against OpenSSL 1.0.1+ (with elliptic curve support enabled). Red Hat-derived distributions prior to RHEL/CentOS 6.5 ship with EC disabled in OpenSSL, so if you need EC support you will need to recompile.
 
-##Installation
+## Installation
 You can install via rubygems with ```gem install r509```
 
 To install the gem from your own clone (you will need to satisfy the dependencies via ```bundle install``` or other means):
@@ -18,27 +18,27 @@ rake gem:build
 rake gem:install
 ```
 
-##Documentation
-There is documentation available for every method and class in r509 available via yardoc. You can view the latest release docs at [r509.org](http://r509.org). If you installed via gem it should be pre-generated in the doc directory. If you cloned this repo, just type ```rake yard``` with the yard gem installed. You will also need the redcarpet and github-markup gems to properly parse the README.md.
+## Documentation
+There is documentation available for every method and class in r509 available via yardoc. If you installed via gem it should be pre-generated in the doc directory. If you cloned this repo, just type ```rake yard``` with the yard gem installed. You will also need the redcarpet and github-markup gems to properly parse the README.md.
 
-##Support
+## Support
 You can [file bugs](https://github.com/r509/r509/issues), contact me directly, or join the #r509 channel on irc.freenode.net to ask questions.
 
-##Running Tests/Building Gem
+## Running Tests/Building Gem
 If you want to run the tests for r509 you'll need rspec. Additionally, you should install simplecov and yard for running the code coverage and documentation tasks in the Rakefile. ```rake -T``` for a complete list of rake tasks available.
 
-##Continuous Integration
+## Continuous Integration
 We run continuous integration tests (using Travis-CI) against 1.9.3, 2.0.0, 2.1.0, ruby-head, and rubinius. 1.8.7 is no longer a supported configuration due to issues with its elliptic curve methods. 0.8.1 was the last official r509 release with 1.8.7 support.
 
-##Executables
+## Executables
 
 r509 ships with a binary named ```r509``` that can generate CSRs, keys, and create self-signed certificates. Type ```r509 -h``` to see a list of options.
 
-##Basic Certificate Authority Tutorial
+## Basic Certificate Authority Tutorial
 [This guide](http://langui.sh/2012/11/02/building-a-ca-r509-howto/) provides instructions on building a basic CA using r509, [r509-ca-http](https://github.com/r509/r509-ca-http), and [r509-ocsp-responder](https://github.com/r509/r509-ocsp-responder). In it you will learn how to create a root, set up the configuration profiles, issue certificates, revoke certificates, and see responses from an OCSP responder.
 
-##Quick Start
-###CSR
+## Quick Start
+### CSR
 To generate a 2048-bit RSA CSR
 
 ```ruby
@@ -101,7 +101,7 @@ csr = R509::CSR.new(
 )
 ```
 
-###Cert
+### Cert
 To load an existing certificate
 
 ```ruby
@@ -144,7 +144,7 @@ cert = R509::Cert.new(
 )
 ```
 
-###PrivateKey
+### PrivateKey
 Generate a 1536-bit RSA key
 
 ```ruby
@@ -160,7 +160,7 @@ encrypted_pem = key.to_encrypted_pem("aes256","my-password")
 key.write_encrypted_pem("/tmp/path","aes256","my-password")
 ```
 
-####Load Hardware Engines in PrivateKey
+#### Load Hardware Engines in PrivateKey
 
 The engine you want to load must already be available to OpenSSL. How to compile/install OpenSSL engines is outside the scope of this document.
 
@@ -174,7 +174,7 @@ key = R509::PrivateKey(
 
 You can then use this key for signing.
 
-###SPKI/SPKAC
+### SPKI/SPKAC
 To generate a 2048-bit RSA SPKI
 
 ```ruby
@@ -182,7 +182,7 @@ key = R509::PrivateKey.new(:type => "RSA", :bit_length => 1024)
 spki = R509::SPKI.new(:key => key)
 ```
 
-###Self-Signed Certificate
+### Self-Signed Certificate
 To create a self-signed certificate
 
 ```ruby
@@ -199,9 +199,9 @@ cert = R509::CertificateAuthority::Signer.selfsign(
 )
 ```
 
-###Config
+### Config
 
-####CAConfig
+#### CAConfig
 Create a basic CAConfig object
 
 ```ruby
@@ -216,7 +216,7 @@ config = R509::Config::CAConfig.new(
 )
 ```
 
-####SubjectItemPolicy
+#### SubjectItemPolicy
 Subject Item Policy allows you to define what subject fields are allowed in a certificate. Required means that field *must* be supplied, optional means it will be encoded if provided, and match means the field must be present and must match the value specified. The keys must match OpenSSL's short names.
 
 
@@ -228,7 +228,7 @@ sip = 509::Config::SubjectItemPolicy.new(
 )
 ```
 
-####CertProfile
+#### CertProfile
 Certificate profiles hold extensions you want to put in a certificate, allowed/default message digests, and subject item policies. You can build them programmatically or load them via YAML. When building programmatically you can also serialize to YAML for future use. This is the preferred way to build the YAML.
 
 The CertProfile object can either take objects or the hash that would build those objects.
@@ -299,7 +299,7 @@ profile = R509::Config::CertProfile.new(
 config.set_profile("server",profile)
 ```
 
-####CAConfigPool
+#### CAConfigPool
 Multiple CAConfigs can be loaded via CAConfigPool
 
 ```ruby
@@ -323,7 +323,7 @@ certificate_authorities:
       key: second_ca.key
 ```
 
-####Building YAML
+#### Building YAML
 You can serialize a CAConfig (or CAConfigPool) via ```#to_yaml```. The output of the YAML will vary depending upon what data you have supplied to the object, but the output does require the following manual configuration:
 
 * Add paths to the requested files where you see add_path (or change the options entirely. See the YAML config section below)
@@ -352,7 +352,7 @@ example_ca:
       default_md: SHA512
 ```
 
-###CertificateAuthority::Signer (sans CertProfile)
+### CertificateAuthority::Signer (sans CertProfile)
 
 Sign a CSR
 
@@ -431,7 +431,7 @@ cert = ca.sign(
 
 ```
 
-###CertificateAuthority::OptionsBuilder
+### CertificateAuthority::OptionsBuilder
 The OptionsBuilder takes in a CAConfig with CertProfiles. You then call ```#build_and_enforce``` to have it create a hash that can be passed to ```R509::CertificateAuthority::Signer#sign```. The OptionsBuilder is responsible for enforcing restrictions on subject DN (via SubjectItemPolicy), determing allowed message digest, and adding a profile's extensions.
 
 ```ruby
@@ -474,14 +474,14 @@ scrubbed_data = builder.build_and_enforce(
 )
 ```
 
-###CRL Administration
+### CRL Administration
 The CRL administrator object takes an ```R509::Config::CAConfig``` and an optional ```R509::CRL::ReaderWriter``` subclass. By default it will use an ```R509::CRL::FileReaderWriter``` class that assumes the presence of ```crl_number_file``` and ```crl_list_file``` in the CAConfig.
 
 ```ruby
 admin = R509::CRL::Administrator.new(config)
 ```
 
-####Revoking a certificate
+#### Revoking a certificate
 To revoke a certificate and generate a new CRL
 
 ```ruby
@@ -491,7 +491,7 @@ crl = admin.generate_crl
 
 This revokes on the root configured by the CAConfig that was passed into the Administrator constructor.
 
-###OID Mapping
+### OID Mapping
 
 Register one
 
@@ -508,14 +508,14 @@ R509::OIDMapper.batch_register([
 ])
 ```
 
-###Alternate Key Algorithms
+### Alternate Key Algorithms
 In addition to the default RSA objects that are created above, r509 supports DSA and elliptic curve (EC). EC support is present only if Ruby has been linked against a version of OpenSSL compiled with EC enabled. This excludes Red Hat-based distributions at this time (unless you build it yourself). Take a look at the documentation for R509::PrivateKey, R509::Cert, and R509::CSR to see how to create DSA and EC types. You can test if elliptic curve support is available in your Ruby with:
 
 ```ruby
 R509.ec_supported?
 ```
 
-####NIST Recommended Elliptic Curves
+#### NIST Recommended Elliptic Curves
 These curves are set via ```:curve_name```. The system defaults to using ```secp384r1```
 
  * secp224r1 -- NIST/SECG curve over a 224 bit prime field
@@ -534,15 +534,15 @@ These curves are set via ```:curve_name```. The system defaults to using ```secp
  * sect571r1 -- NIST/SECG curve over a 571 bit binary field
 
 
-##Created by...
+## Created by...
 __Paul Kehrer__ ([Twitter](https://twitter.com/reaperhulk) | [GitHub](https://github.com/reaperhulk))
 
-##Contributors
+## Contributors
 * [Sean Schulte](https://github.com/sirsean)
 * [Mike Ryan](https://github.com/justfalter)
 * [Chris Woodbury](https://github.com/woodbusy)
 
-##License
+## License
 See the LICENSE file. Licensed under the Apache 2.0 License.
 
-##[YAML Documentation](YAML.mdown)
+##[YAML Documentation](YAML.md)

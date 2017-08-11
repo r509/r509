@@ -1,8 +1,8 @@
-#YAML Config Options
+# YAML Config Options
 r509 configs are nested hashes that define the behavior of each CA. See r509.yaml for a full example config. These options can also be defined programmatically via R509::Config::CAConfig and R509::Config::CertProfile.
 
-##ca\_name
-###ca\_cert
+## ca\_name
+### ca\_cert
 This hash defines the certificate + key that will be used to sign for the ca\_name. Depending on desired configuration various elements are optional. You can even supply just __cert__ (for example, if you are using an ocsp\_cert hash and only using the configured CA for OCSP responses)
 
 * cert (cannot use with pkcs12)
@@ -12,7 +12,7 @@ This hash defines the certificate + key that will be used to sign for the ca\_na
 * pkcs12 (optional, cannot be used with key or cert)
 * password (optional, used for pkcs12 or passworded private key)
 
-###ocsp\_cert
+### ocsp\_cert
 This hash defines the certificate + key that will be used to sign for OCSP responses. OCSP responses cannot be directly created with r509, but require the ancillary gem [r509-ocsp-responder](https://github.com/reaperhulk/r509-ocsp-responder). This hash is optional and if not provided r509 will automatically use the ca\_cert as the OCSP certificate.
 
 * cert (cannot use with pkcs12)
@@ -22,7 +22,7 @@ This hash defines the certificate + key that will be used to sign for OCSP respo
 * pkcs12 (optional, cannot be used with key or cert)
 * password (optional, used for pkcs12 or passworded private key)
 
-###crl\_cert
+### crl\_cert
 This hash defines the certificate + key that will be used to sign CRLs. This hash is optional and if not provided r509 will automatically use the ca\_cert as the CRL delegate certificate.
 
 * cert (cannot use with pkcs12)
@@ -32,29 +32,29 @@ This hash defines the certificate + key that will be used to sign CRLs. This has
 * pkcs12 (optional, cannot be used with key or cert)
 * password (optional, used for pkcs12 or passworded private key)
 
-###crl\_list\_file
+### crl\_list\_file
 The path on the filesystem of the list of revoked certificates for this CA.
 
 Example: '/path/to/my\_ca\_crl\_list.txt'
 
-###crl\_number\_file
+### crl\_number\_file
 The path on the filesystem of the current CRL number for this CA.
 
 Example: '/path/to/my\_ca\_crl\_number.txt'
 
-###crl\_validity\_hours
+### crl\_validity\_hours
 Integer hours for CRL validity.
 
-###ocsp\_chain
+### ocsp\_chain
 An optional path to a concatenated text file of PEMs that should be attached to OCSP responses
 
-###ocsp\_validity\_hours
+### ocsp\_validity\_hours
 Integer hours for OCSP response validity.
 
-###ocsp\_start\_skew\_seconds
+### ocsp\_start\_skew\_seconds
 Integer seconds to skew back the "thisUpdate" field. This prevents issues where the OCSP responder signs a response and the client rejects it because the response is "not yet valid" due to slight clock synchronization problems.
 
-###message\_digest
+### message\_digest
 String value of the message digest to use for signing (both CRL and certificates). Allowed values are:
 
 * SHA1
@@ -64,12 +64,12 @@ String value of the message digest to use for signing (both CRL and certificates
 * SHA512
 * MD5 (Don't use this unless you have a really, really good reason. Even then, you shouldn't)
 
-###profiles
+### profiles
 Each CA can have an arbitrary number of issuance profiles (with arbitrary names). For example, a CA named __test\_ca__ might have 3 issuance profiles: server, email, clientserver. Each of these profiles then has a set of options that define the encoded extensions in the certificate for that profile. If no profiles are defined the root cannot issue certs, but can still issue CRLs.
 
 Profiles are defined by an object (R509::Config::CertProfile) and can be serialized to YAML after being built via ```#to_yaml```. This is the suggested way to generate the profile YAML.
 
-###Example YAML
+### Example YAML
 
 This example YAML would be loaded via ```R509::Config::CAConfigPool.from_yaml```. It has a CA named test_ca and a profile named server.
 
