@@ -1,3 +1,6 @@
+sudo: false
+dist: trusty
+
 bundler_args: --without documentation
 language: ruby
 rvm:
