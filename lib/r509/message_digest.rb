@@ -4,7 +4,7 @@ module R509
   # MessageDigest allows you to specify MDs in a more friendly fashion
   class MessageDigest
     # a list of message digests that this class understands
-    KNOWN_MDS = ['SHA1', 'SHA224', 'SHA256', 'SHA384', 'SHA512', 'DSS1', 'MD5']
+    KNOWN_MDS = ['SHA1', 'SHA224', 'SHA256', 'SHA384', 'SHA512', 'MD5']
 
     # this constant defines the default message digest if it is not supplied
     # or an invalid digest is passed
@@ -37,7 +37,6 @@ module R509
       when 'sha384' then OpenSSL::Digest::SHA384.new
       when 'sha512' then OpenSSL::Digest::SHA512.new
       when 'md5' then OpenSSL::Digest::MD5.new
-      when 'dss1' then OpenSSL::Digest::DSS1.new
       else
         @name = DEFAULT_MD.downcase
         translate_name_to_digest
@@ -53,7 +52,6 @@ module R509
       when OpenSSL::Digest::SHA384 then 'sha384'
       when OpenSSL::Digest::SHA512 then 'sha512'
       when OpenSSL::Digest::MD5 then 'md5'
-      when OpenSSL::Digest::DSS1 then 'dss1'
       else
         raise ArgumentError, "Unknown digest"
       end

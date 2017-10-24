@@ -22,7 +22,7 @@ shared_examples_for "create spki with private key" do
     when @key.rsa?
       expect(spki.signature_algorithm).to(match(/sha256/i))
     when @key.dsa?
-      expect(spki.signature_algorithm).to(match(/sha1/i))
+      expect(spki.signature_algorithm).to(match(/sha256/i))
     end
     spki.verify_signature
   end

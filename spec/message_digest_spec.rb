@@ -53,16 +53,6 @@ describe R509::MessageDigest do
     expect(md.name).to eq("md5")
     expect(md.digest.is_a?(OpenSSL::Digest::MD5)).to eq(true)
   end
-  it "translates dss1 name -> digest" do
-    md = R509::MessageDigest.new("dss1")
-    expect(md.name).to eq("dss1")
-    expect(md.digest.is_a?(OpenSSL::Digest::DSS1)).to eq(true)
-  end
-  it "translates DSS1 name -> digest" do
-    md = R509::MessageDigest.new("DSS1")
-    expect(md.name).to eq("dss1")
-    expect(md.digest.is_a?(OpenSSL::Digest::DSS1)).to eq(true)
-  end
   it "translates unknown name -> digest" do
     md = R509::MessageDigest.new("unknown")
     expect(md.name).to eq("sha256")
@@ -97,11 +87,6 @@ describe R509::MessageDigest do
     md = R509::MessageDigest.new(OpenSSL::Digest::MD5.new)
     expect(md.name).to eq("md5")
     expect(md.digest.is_a?(OpenSSL::Digest::MD5)).to eq(true)
-  end
-  it "translates dss1 digest -> name" do
-    md = R509::MessageDigest.new(OpenSSL::Digest::DSS1.new)
-    expect(md.name).to eq("dss1")
-    expect(md.digest.is_a?(OpenSSL::Digest::DSS1)).to eq(true)
   end
   it "creates a default digest with no params or nil" do
     md = R509::MessageDigest.new

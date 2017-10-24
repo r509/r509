@@ -78,18 +78,18 @@ describe R509::CSR do
   it "raises an exception if you provide a list of domains with an existing CSR" do
     expect { R509::CSR.new(:csr => @csr, :san_names => ['moredomainsiwanttoadd.com']) }.to raise_error(ArgumentError, 'You can\'t add domains to an existing CSR')
   end
-  it "changes the message_digest to DSS1 when passed a DSA key" do
+  it "changes the message_digest to SHA256 when passed a DSA key" do
     csr = R509::CSR.new(:subject => [["CN", "dsasigned.com"]], :key => @dsa_key)
-    expect(csr.message_digest.name).to eq('dss1')
-    expect(csr.signature_algorithm).to eq('dsaWithSHA1')
+    expect(csr.message_digest.name).to eq('sha256')
+    expect(csr.signature_algorithm).to eq('dsa_with_SHA256')
     # dss1 is actually the same as SHA1
     # Yes this is confusing
     # see http://www.ruby-doc.org/stdlib-1.9.3/libdoc/openssl/rdoc/OpenSSL/PKey/DSA.html
   end
-  it "changes the message_digest to DSS1 when creating a DSA key" do
+  it "changes the message_digest to SHA256 when creating a DSA key" do
     csr = R509::CSR.new(:subject => [["CN", "dsasigned.com"]], :type => "dsa", :bit_length => 512)
-    expect(csr.message_digest.name).to eq('dss1')
-    expect(csr.signature_algorithm).to eq('dsaWithSHA1')
+    expect(csr.message_digest.name).to eq('sha256')
+    expect(csr.signature_algorithm).to eq('dsa_with_SHA256')
     # dss1 is actually the same as SHA1
     # Yes this is confusing
     # see http://www.ruby-doc.org/stdlib-1.9.3/libdoc/openssl/rdoc/OpenSSL/PKey/DSA.html
@@ -146,7 +146,13 @@ describe R509::CSR do
     end
     it "generates a matching csr when supplying raw oids" do
       csr = R509::CSR.new(:subject => [['2.5.4.3', 'common name'], ['2.5.4.15', 'business category'], ['2.5.4.7', 'locality'], ['1.3.6.1.4.1.311.60.2.1.3', 'jurisdiction oid openssl typically does not know']], :bit_length => 1024)
-      expect(csr.subject.to_s).to eq("/CN=common name/businessCategory=business category/L=locality/jurisdictionOfIncorporationCountryName=jurisdiction oid openssl typically does not know")
+      if ruby_24?
+        # The sn for jurisdiction oid changed in ruby 2.4
+        expected = "/CN=common name/businessCategory=business category/L=locality/jurisdictionC=jurisdiction oid openssl typically does not know"
+      else
+        expected = "/CN=common name/businessCategory=business category/L=locality/jurisdictionOfIncorporationCountryName=jurisdiction oid openssl typically does not know"
+      end
+      expect(csr.subject.to_s).to eq(expected)
     end
     it "adds SAN names to a generated CSR" do
       csr = R509::CSR.new(:subject => [['CN', 'test']], :bit_length => 1024, :san_names => ['1.2.3.4', 'http://langui.sh', 'email@address.local', 'domain.internal', '2.3.4.5', [['CN', 'dirnametest']]])
@@ -171,6 +177,7 @@ describe R509::CSR do
       csr = R509::CSR.new(:csr => @csr)
       expect(csr.san.dns_names).to eq(["test.local", "additionaldomains.com", "saniam.com"])
     end
+    # csr4.pem does not parse in openssl 1.1.0f
     it "parses san names when there are multiple non-SAN attributes" do
       csr = R509::CSR.new(:csr => @csr4_multiple_attrs)
       expect(csr.san.dns_names).to eq(["adomain.com", "anotherdomain.com", "justanexample.com"])

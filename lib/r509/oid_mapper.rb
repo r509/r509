@@ -12,7 +12,12 @@ module R509
       if long_name.nil?
         long_name = short_name
       end
-      OpenSSL::ASN1::ObjectId.register(oid, short_name, long_name)
+
+      begin
+        OpenSSL::ASN1::ObjectId.register(oid, short_name, long_name)
+      rescue OpenSSL::ASN1::ASN1Error
+        false
+      end
     end
 
     # Register a batch of OIDs so we have friendly short names
