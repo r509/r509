@@ -177,7 +177,6 @@ describe R509::CSR do
       csr = R509::CSR.new(:csr => @csr)
       expect(csr.san.dns_names).to eq(["test.local", "additionaldomains.com", "saniam.com"])
     end
-    # csr4.pem does not parse in openssl 1.1.0f
     it "parses san names when there are multiple non-SAN attributes" do
       csr = R509::CSR.new(:csr => @csr4_multiple_attrs)
       expect(csr.san.dns_names).to eq(["adomain.com", "anotherdomain.com", "justanexample.com"])
