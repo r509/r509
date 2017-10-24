@@ -47,13 +47,7 @@ describe R509::Subject do
   end
   it "preserves order with raw OIDs, and potentially fills in known OID names" do
     subject = R509::Subject.new([['2.5.4.3', 'common name'], ['2.5.4.15', 'business category'], ['2.5.4.7', 'locality'], ['1.3.6.1.4.1.311.60.2.1.3', 'jurisdiction oid openssl typically does not know']])
-    if ruby_24?
-      # Ruby 2.4 (more likely openssl bundled with 2.4) changed sn for 1.3.6.1.4.1.311.60.2.1.3
-      expected = "/CN=common name/businessCategory=business category/L=locality/jurisdictionC=jurisdiction oid openssl typically does not know"
-    else
-      expected = "/CN=common name/businessCategory=business category/L=locality/jurisdictionOfIncorporationCountryName=jurisdiction oid openssl typically does not know"
-    end
-    expect(subject.to_s).to eq(expected)
+    expect(subject.to_s).to eq("/CN=common name/businessCategory=business category/L=locality/jurisdictionOfIncorporationCountryName=jurisdiction oid openssl typically does not know")
   end
 
   it "edits an existing subject entry" do

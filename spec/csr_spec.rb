@@ -146,13 +146,7 @@ describe R509::CSR do
     end
     it "generates a matching csr when supplying raw oids" do
       csr = R509::CSR.new(:subject => [['2.5.4.3', 'common name'], ['2.5.4.15', 'business category'], ['2.5.4.7', 'locality'], ['1.3.6.1.4.1.311.60.2.1.3', 'jurisdiction oid openssl typically does not know']], :bit_length => 1024)
-      if ruby_24?
-        # The sn for jurisdiction oid changed in ruby 2.4
-        expected = "/CN=common name/businessCategory=business category/L=locality/jurisdictionC=jurisdiction oid openssl typically does not know"
-      else
-        expected = "/CN=common name/businessCategory=business category/L=locality/jurisdictionOfIncorporationCountryName=jurisdiction oid openssl typically does not know"
-      end
-      expect(csr.subject.to_s).to eq(expected)
+      expect(csr.subject.to_s).to eq("/CN=common name/businessCategory=business category/L=locality/jurisdictionOfIncorporationCountryName=jurisdiction oid openssl typically does not know")
     end
     it "adds SAN names to a generated CSR" do
       csr = R509::CSR.new(:subject => [['CN', 'test']], :bit_length => 1024, :san_names => ['1.2.3.4', 'http://langui.sh', 'email@address.local', 'domain.internal', '2.3.4.5', [['CN', 'dirnametest']]])

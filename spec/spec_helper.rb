@@ -22,10 +22,6 @@ unless R509.ec_supported?
   end
 end
 
-def ruby_24?
-  Gem::Version.new(RUBY_VERSION) >= Gem::Version.new("2.4.0")
-end
-
 RSpec.configure do |config|
   config.alias_it_should_behave_like_to :it_validates, "it validates"
 end
