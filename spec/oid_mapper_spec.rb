@@ -18,7 +18,7 @@ describe R509::OIDMapper do
   end
 
   it "returns false when registering an oid that already exists" do
-    expect(R509::OIDMapper.register('1.4.3.2.1.2.7.4.4.4.4', 'someOtherName')).to eq(true)
+    allow(OpenSSL::ASN1::ObjectId).to receive(:register).and_raise(OpenSSL::ASN1::ASN1Error)
     expect(R509::OIDMapper.register('1.4.3.2.1.2.7.4.4.4.4', 'someOtherName')).to eq(false)
   end
 
