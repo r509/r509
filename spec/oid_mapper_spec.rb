@@ -17,6 +17,11 @@ describe R509::OIDMapper do
     expect(subject_new['myOIDName']).to eq('random_oid')
   end
 
+  it "returns false when registering an oid that already exists" do
+    expect(R509::OIDMapper.register('1.4.3.2.1.2.7.4.4.4.4', 'someOtherName')).to eq(true)
+    expect(R509::OIDMapper.register('1.4.3.2.1.2.7.4.4.4.4', 'someOtherName')).to eq(false)
+  end
+
   it "registers a batch of new oids" do
     expect { R509::Subject.new [['testOIDName', 'random_oid']] }.to raise_error(OpenSSL::X509::NameError, 'invalid field name')
     expect { R509::Subject.new [['anotherOIDName', 'second_random']] }.to raise_error(OpenSSL::X509::NameError, 'invalid field name')
