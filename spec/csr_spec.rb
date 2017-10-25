@@ -78,18 +78,18 @@ describe R509::CSR do
   it "raises an exception if you provide a list of domains with an existing CSR" do
     expect { R509::CSR.new(:csr => @csr, :san_names => ['moredomainsiwanttoadd.com']) }.to raise_error(ArgumentError, 'You can\'t add domains to an existing CSR')
   end
-  it "changes the message_digest to DSS1 when passed a DSA key" do
+  it "changes the message_digest to SHA256 when passed a DSA key" do
     csr = R509::CSR.new(:subject => [["CN", "dsasigned.com"]], :key => @dsa_key)
-    expect(csr.message_digest.name).to eq('dss1')
-    expect(csr.signature_algorithm).to eq('dsaWithSHA1')
+    expect(csr.message_digest.name).to eq('sha256')
+    expect(csr.signature_algorithm).to eq('dsa_with_SHA256')
     # dss1 is actually the same as SHA1
     # Yes this is confusing
     # see http://www.ruby-doc.org/stdlib-1.9.3/libdoc/openssl/rdoc/OpenSSL/PKey/DSA.html
   end
-  it "changes the message_digest to DSS1 when creating a DSA key" do
+  it "changes the message_digest to SHA256 when creating a DSA key" do
     csr = R509::CSR.new(:subject => [["CN", "dsasigned.com"]], :type => "dsa", :bit_length => 512)
-    expect(csr.message_digest.name).to eq('dss1')
-    expect(csr.signature_algorithm).to eq('dsaWithSHA1')
+    expect(csr.message_digest.name).to eq('sha256')
+    expect(csr.signature_algorithm).to eq('dsa_with_SHA256')
     # dss1 is actually the same as SHA1
     # Yes this is confusing
     # see http://www.ruby-doc.org/stdlib-1.9.3/libdoc/openssl/rdoc/OpenSSL/PKey/DSA.html
