@@ -2,5 +2,5 @@
 # support.
 module R509
   # The version of the r509 gem
-  VERSION = "1.0"
+  VERSION = "1.0.1"
 end

@@ -14,7 +14,7 @@ Gem::Specification.new do |s|
   s.author = "Paul Kehrer"
   s.email = "paul.l.kehrer@gmail.com"
   s.homepage = "http://r509.org"
-  s.required_ruby_version = ">= 1.9.3"
+  s.required_ruby_version = ">= 2.0"
   s.files = %w(README.md CONTRIBUTING.md LICENSE r509.yaml Rakefile) + Dir["{lib,bin,spec,doc}/**/*"]
   s.executables = ["r509", "r509-parse"]
   s.test_files = Dir.glob('spec/*_spec.rb')

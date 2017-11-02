@@ -21,14 +21,20 @@ rake gem:install
 ## Documentation
 There is documentation available for every method and class in r509 available via yardoc. If you installed via gem it should be pre-generated in the doc directory. If you cloned this repo, just type ```rake yard``` with the yard gem installed. You will also need the redcarpet and github-markup gems to properly parse the README.md.
 
+## Changelog
+
+### 1.0.1
+
+* Support Rubies compiled against OpenSSL 1.1.0.
+
 ## Support
-You can [file bugs](https://github.com/r509/r509/issues), contact me directly, or join the #r509 channel on irc.freenode.net to ask questions.
+You can [file bugs](https://github.com/r509/r509/issues) to get support from the community.
 
 ## Running Tests/Building Gem
 If you want to run the tests for r509 you'll need rspec. Additionally, you should install simplecov and yard for running the code coverage and documentation tasks in the Rakefile. ```rake -T``` for a complete list of rake tasks available.
 
 ## Continuous Integration
-We run continuous integration tests (using Travis-CI) against 1.9.3, 2.0.0, 2.1.0, ruby-head, and rubinius. 1.8.7 is no longer a supported configuration due to issues with its elliptic curve methods. 0.8.1 was the last official r509 release with 1.8.7 support.
+We run continuous integration tests (using Travis-CI) against 2.2, 2.3, and 2.4. 1.8.7 is no longer a supported configuration due to issues with its elliptic curve methods. 0.8.1 was the last official r509 release with 1.8.7 support.
 
 ## Executables
 
