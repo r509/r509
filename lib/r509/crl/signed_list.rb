@@ -95,12 +95,29 @@ module R509
         @crl.to_der
       end
 
-      # @return [Hash] hash of serial => { :time, :reason } hashes
+      # @return [Hash] hash of serial => { :time, :reason, :int_reason } hashes
       def revoked
+        reason_codes = Hash.new
+        reason_codes[:unspecified] = 0
+        reason_codes[:keyCompromise] = 1
+        reason_codes[:cACompromise] = 2
+        reason_codes[:affiliationChanged] = 3
+        reason_codes[:superseded] = 4
+        reason_codes[:cessationOfOperation] = 5
+        reason_codes[:certificateHold] = 6
+        reason_codes[:removeFromCRL] = 8
+        reason_codes[:privilegeWithdrawn] = 9
+        reason_codes[:aACompromise] = 10
+
         revoked_list = {}
         @crl.revoked.each do |revoked|
           reason = get_reason(revoked)
-          revoked_list[revoked.serial.to_i] = { :time => revoked.time, :reason => reason }
+          int_reason = reason_codes[reason]
+          revoked_list[revoked.serial.to_i] = {
+            :time => revoked.time,
+            :reason => reason,
+            :int_reason => int_reason
+          }
         end
 
         revoked_list
