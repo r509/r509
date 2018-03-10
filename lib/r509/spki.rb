@@ -1,4 +1,5 @@
 require 'openssl'
+require 'r509/openssl/pkey_ecdsa'
 require 'r509/exceptions'
 require 'r509/io_helpers'
 require 'r509/helpers'
@@ -30,9 +31,13 @@ module R509
       end
     end
 
-    # @return [OpenSSL::PKey::RSA] public key
+    # @return [OpenSSL::PKey::RSA,OpenSSL::PKey::ECDSA] public key
     def public_key
-      @spki.public_key
+      pk = @spki.public_key
+      if pk.is_a?(OpenSSL::PKey::EC)
+        pk = OpenSSL::PKey::ECDSA.new(pk)
+      end
+      pk
     end
 
     # Verifies the integrity of the signature on the SPKI

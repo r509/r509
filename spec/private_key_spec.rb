@@ -187,7 +187,7 @@ describe R509::PrivateKey do
     faux_key = double("faux_key")
     expect(faux_key).to receive(:public_key).and_return("returning public key")
     key_name = "r509_key"
-    expect(engine).to receive(:load_private_key).twice.with(key_name).and_return(faux_key)
+    expect(engine).to receive(:load_private_key).with(key_name).and_return(faux_key)
     key = R509::PrivateKey.new(
       :engine => engine,
       :key_name => key_name
@@ -265,9 +265,9 @@ describe R509::PrivateKey do
       expect(private_key.to_der).to eq(@ec_key_der)
     end
 
-    it "returns error for bit_length" do
+    it "returns the bit-length" do
       private_key = R509::PrivateKey.new(:key => @ec_key_pem)
-      expect { private_key.bit_length }.to raise_error(R509::R509Error, 'Bit length is not available for EC at this time.')
+      expect(private_key.bit_length).to eq(384)
     end
 
   end

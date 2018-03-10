@@ -1,4 +1,5 @@
 require 'openssl'
+require 'r509/openssl/pkey_ecdsa'
 require 'r509/io_helpers'
 require 'r509/exceptions'
 
@@ -54,7 +55,7 @@ module R509
       elsif self.dsa?
         return self.public_key.p.num_bits
       elsif self.ec?
-        raise R509::R509Error, 'Bit length is not available for EC at this time.'
+        return self.public_key.group.degree
       end
     end
     alias_method :bit_strength, :bit_length
@@ -74,7 +75,11 @@ module R509
     # @return [OpenSSL::PKey::RSA,OpenSSL::PKey::DSA,OpenSSL::Engine pkey] this method may return the PKey object itself or a handle to the private key in the HSM (which will not show the private key, just public)
     def key
       if in_hardware?
-        @engine.load_private_key(@key_name)
+        k = @engine.load_private_key(@key_name)
+        if k.is_a?(OpenSSL::PKey::EC)
+          k = OpenSSL::PKey::ECDSA.new(k)
+        end
+        k
       else
         @key
       end
@@ -89,20 +94,9 @@ module R509
       end
     end
 
-    # @return [OpenSSL::PKey::RSA,OpenSSL::PKey::DSA,OpenSSL::PKey::EC] public key
+    # @return [OpenSSL::PKey::RSA,OpenSSL::PKey::DSA,OpenSSL::PKey::ECDSA] public key
     def public_key
-      if self.ec?
-        # OpenSSL::PKey::EC.public_key returns an OpenSSL::PKey::EC::Point, which isn't consistent
-        # with the way OpenSSL::PKey::RSA/DSA do it. We could return the original PKey::EC object
-        # but if we do that then it has the private_key as well. Here's a ghetto workaround.
-        # We have to supply the curve name to the temporary key object or else #public_key= fails
-        curve_name = self.key.group.curve_name
-        temp_key = OpenSSL::PKey::EC.new(curve_name)
-        temp_key.public_key = self.key.public_key
-        temp_key
-      else
-        self.key.public_key
-      end
+      self.key.public_key
     end
 
     alias_method :to_s, :public_key
@@ -220,7 +214,7 @@ module R509
           @key = OpenSSL::PKey::DSA.new(opts[:key], password)
         rescue
           begin
-            @key = OpenSSL::PKey::EC.new(opts[:key], password)
+            @key = OpenSSL::PKey::ECDSA.new(opts[:key], password)
           rescue
             raise R509::R509Error, "Failed to load private key. Invalid key or incorrect password."
           end
@@ -238,8 +232,7 @@ module R509
         @key = OpenSSL::PKey::DSA.new(bit_length)
       when "EC"
         curve_name = opts[:curve_name] || DEFAULT_CURVE
-        @key = OpenSSL::PKey::EC.new(curve_name)
-        @key.generate_key
+        @key = OpenSSL::PKey::ECDSA.new(curve_name.to_sym)
       else
         raise ArgumentError, "Must provide #{KNOWN_TYPES.join(", ")} as type when key or engine is nil"
       end

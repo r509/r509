@@ -1,4 +1,5 @@
 require 'openssl'
+require 'r509/openssl/pkey_ecdsa'
 require 'r509/exceptions'
 require 'r509/io_helpers'
 require 'r509/helpers'
@@ -78,9 +79,13 @@ module R509
 
     # Returns the certificate public key
     #
-    # @return [OpenSSL::PKey::RSA] public key object
+    # @return [OpenSSL::PKey::RSA,OpenSSL::PKey::DSA,OpenSSL::PKey::ECDSA] public key object
     def public_key
-      @cert.public_key
+      pk = @cert.public_key
+      if pk.is_a?(OpenSSL::PKey::EC)
+        pk = OpenSSL::PKey::ECDSA.new(pk)
+      end
+      pk
     end
 
     # Returns the certificate fingerprint with the specified algorithm (default sha256)

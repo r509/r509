@@ -354,9 +354,9 @@ describe R509::Cert do
       cert.write_pkcs12(sio, 'r509_password')
       expect { R509::Cert.new(:pkcs12 => sio.string, :password => 'r509_password') }.to_not raise_error
     end
-    it "raises error on bit strength" do
+    it "returns bit strength" do
       cert = R509::Cert.new(:cert => @cert_ec)
-      expect { cert.bit_strength }.to raise_error(R509::R509Error, 'Bit length is not available for EC at this time.')
+      expect(cert.bit_strength).to eq(384)
     end
     it "returns curve name" do
       cert = R509::Cert.new(:cert => @cert_ec)
@@ -382,7 +382,7 @@ describe R509::Cert do
   context "when elliptic curve support is unavailable" do
     before :all do
       @ec = OpenSSL::PKey.send(:remove_const, :EC) # remove EC support for test!
-      load('r509/ec-hack.rb')
+      load('r509/openssl/ec-hack.rb')
     end
     after :all do
       OpenSSL::PKey.send(:remove_const, :EC) # remove stubbed EC

@@ -310,9 +310,9 @@ describe R509::CSR do
       csr = R509::CSR.new(:type => "EC", :curve_name => "sect283r1", :subject => [["CN", "ec-test.local"]])
       expect(csr.curve_name).to eq("sect283r1")
     end
-    it "raises error on bit length" do
+    it "gets ECDSA bit length" do
       csr = R509::CSR.new(:csr => @ec_csr2_der)
-      expect { csr.bit_length }.to raise_error(R509::R509Error, 'Bit length is not available for EC at this time.')
+      expect(csr.bit_length).to eq(384)
     end
     it "returns the key algorithm" do
       csr = R509::CSR.new(:csr => @ec_csr2_pem)
@@ -337,7 +337,7 @@ describe R509::CSR do
   context "when elliptic curve support is unavailable" do
     before :all do
       @ec = OpenSSL::PKey.send(:remove_const, :EC) # remove EC support for test!
-      load('r509/ec-hack.rb')
+      load('r509/openssl/ec-hack.rb')
     end
     after :all do
       OpenSSL::PKey.send(:remove_const, :EC) # remove stubbed EC

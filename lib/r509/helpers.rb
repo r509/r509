@@ -56,7 +56,7 @@ module R509
       elsif self.dsa?
         return internal_obj.public_key.p.num_bits
       elsif self.ec?
-        raise R509::R509Error, 'Bit length is not available for EC at this time.'
+        return internal_obj.public_key.group.degree
       end
     end
     alias_method :bit_strength, :bit_length
