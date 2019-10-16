@@ -129,6 +129,7 @@ module R509
       # @return [String] serial prefix
       def self.map_tag_to_short_type(tag)
         case tag
+        when 0 then "other"
         when 1 then "email"
         when 2 then "DNS"
         when 4 then "dirName"
